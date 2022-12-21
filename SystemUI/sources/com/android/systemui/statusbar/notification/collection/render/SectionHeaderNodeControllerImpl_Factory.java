@@ -4,7 +4,7 @@ import android.view.LayoutInflater;
 import com.android.systemui.plugins.ActivityStarter;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class SectionHeaderNodeControllerImpl_Factory implements Factory<SectionHeaderNodeControllerImpl> {
     private final Provider<ActivityStarter> activityStarterProvider;
     private final Provider<String> clickIntentActionProvider;
@@ -20,10 +20,8 @@ public final class SectionHeaderNodeControllerImpl_Factory implements Factory<Se
         this.clickIntentActionProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SectionHeaderNodeControllerImpl mo1933get() {
-        return newInstance(this.nodeLabelProvider.mo1933get(), this.layoutInflaterProvider.mo1933get(), this.headerTextResIdProvider.mo1933get().intValue(), this.activityStarterProvider.mo1933get(), this.clickIntentActionProvider.mo1933get());
+    public SectionHeaderNodeControllerImpl get() {
+        return newInstance(this.nodeLabelProvider.get(), this.layoutInflaterProvider.get(), this.headerTextResIdProvider.get().intValue(), this.activityStarterProvider.get(), this.clickIntentActionProvider.get());
     }
 
     public static SectionHeaderNodeControllerImpl_Factory create(Provider<String> provider, Provider<LayoutInflater> provider2, Provider<Integer> provider3, Provider<ActivityStarter> provider4, Provider<String> provider5) {

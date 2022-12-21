@@ -1,18 +1,14 @@
 package com.android.systemui.screenshot;
 
-import android.view.View;
-import android.view.WindowInsets;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ScreenshotController$$ExternalSyntheticLambda0 implements View.OnApplyWindowInsetsListener {
-    public static final /* synthetic */ ScreenshotController$$ExternalSyntheticLambda0 INSTANCE = new ScreenshotController$$ExternalSyntheticLambda0();
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class ScreenshotController$$ExternalSyntheticLambda0 implements Runnable {
+    public final /* synthetic */ ScreenshotController f$0;
 
-    private /* synthetic */ ScreenshotController$$ExternalSyntheticLambda0() {
+    public /* synthetic */ ScreenshotController$$ExternalSyntheticLambda0(ScreenshotController screenshotController) {
+        this.f$0 = screenshotController;
     }
 
-    @Override // android.view.View.OnApplyWindowInsetsListener
-    public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
-        WindowInsets windowInsets2;
-        windowInsets2 = WindowInsets.CONSUMED;
-        return windowInsets2;
+    public final void run() {
+        this.f$0.mo37419x2cda1652();
     }
 }

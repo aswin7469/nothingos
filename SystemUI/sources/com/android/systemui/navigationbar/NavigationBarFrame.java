@@ -3,11 +3,26 @@ package com.android.systemui.navigationbar;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import com.android.systemui.navigationbar.buttons.DeadZone;
-/* loaded from: classes.dex */
+
 public class NavigationBarFrame extends FrameLayout {
     private DeadZone mDeadZone = null;
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
 
     public NavigationBarFrame(Context context) {
         super(context);
@@ -25,12 +40,11 @@ public class NavigationBarFrame extends FrameLayout {
         this.mDeadZone = deadZone;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
     public boolean dispatchTouchEvent(MotionEvent motionEvent) {
         DeadZone deadZone;
-        if (motionEvent.getAction() == 4 && (deadZone = this.mDeadZone) != null) {
-            return deadZone.onTouchEvent(motionEvent);
+        if (motionEvent.getAction() != 4 || (deadZone = this.mDeadZone) == null) {
+            return super.dispatchTouchEvent(motionEvent);
         }
-        return super.dispatchTouchEvent(motionEvent);
+        return deadZone.onTouchEvent(motionEvent);
     }
 }

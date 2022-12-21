@@ -24,6 +24,12 @@
         <item quantity="few">%s kontrolniki dodani.</item>
         <item quantity="other">%s kontrolnikov dodanih.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s aplikacija je aktivna</item>
+        <item quantity="two">%s aplikaciji sta aktivni</item>
+        <item quantity="few">%s aplikacije so aktivne</item>
+        <item quantity="other">%s aplikacij je aktivnih</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">Vnesite kodo PIN kartice SIM. Na voljo imate še %d poskus.</item>
         <item quantity="two">Vnesite kodo PIN kartice SIM. Na voljo imate še %d poskusa.</item>
@@ -42,35 +48,15 @@
         <item quantity="few">Napačna koda PIN kartice SIM. Na voljo imate še %d poskuse.</item>
         <item quantity="other">Napačna koda PIN kartice SIM. Na voljo imate še %d poskusov.</item>
     </plurals>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">Napačna PIN koda SIM%d kartice, imate še %d poskusov, preden se boste morali glede vaše naprave obrniti na vaše podjetje za telefonijo.</item>
+        <item quantity="other">Napačna PIN koda SIM%d , imate še %d preostalih poskusov.</item>
+    </plurals>
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">Napačna koda PUK kartice SIM. Na voljo imate še %d poskus. Potem bo kartica SIM postala trajno neuporabna.</item>
         <item quantity="two">Napačna koda PUK kartice SIM. Na voljo imate še %d poskusa. Potem bo kartica SIM postala trajno neuporabna.</item>
         <item quantity="few">Napačna koda PUK kartice SIM. Na voljo imate še %d poskuse. Potem bo kartica SIM postala trajno neuporabna.</item>
         <item quantity="other">Napačna koda PUK kartice SIM. Na voljo imate še %d poskusov. Potem bo kartica SIM postala trajno neuporabna.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Naprava ni bila odklenjena %d uro. Potrdite geslo.</item>
-        <item quantity="two">Naprava ni bila odklenjena %d uri. Potrdite geslo.</item>
-        <item quantity="few">Naprava ni bila odklenjena %d ure. Potrdite geslo.</item>
-        <item quantity="other">Naprava ni bila odklenjena %d ur. Potrdite geslo.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Naprava ni bila odklenjena %d uro. Potrdite vzorec.</item>
-        <item quantity="two">Naprava ni bila odklenjena %d uri. Potrdite vzorec.</item>
-        <item quantity="few">Naprava ni bila odklenjena %d ure. Potrdite vzorec.</item>
-        <item quantity="other">Naprava ni bila odklenjena %d ur. Potrdite vzorec.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Naprava ni bila odklenjena %d uro. Potrdite kodo PIN.</item>
-        <item quantity="two">Naprava ni bila odklenjena %d uri. Potrdite kodo PIN.</item>
-        <item quantity="few">Naprava ni bila odklenjena %d ure. Potrdite kodo PIN.</item>
-        <item quantity="other">Naprava ni bila odklenjena %d ur. Potrdite kodo PIN.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">Poskusite znova čez %d sekundo.</item>
-        <item quantity="two">Poskusite znova čez %d sekundi.</item>
-        <item quantity="few">Poskusite znova čez %d sekunde.</item>
-        <item quantity="other">Poskusite znova čez %d sekund.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d novo obvestilo</item>
@@ -107,11 +93,5 @@
         <item quantity="two">Dodate lahko do %d uporabnika.</item>
         <item quantity="few">Dodate lahko do %d uporabnike.</item>
         <item quantity="other">Dodate lahko do %d uporabnikov.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">Povezana je %1$d naprava</item>
-        <item quantity="two">Povezani sta %1$d napravi</item>
-        <item quantity="few">Povezane so %1$d naprave</item>
-        <item quantity="other">Povezanih je %1$d naprav</item>
     </plurals>
 </resources>

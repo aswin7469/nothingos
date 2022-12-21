@@ -3,82 +3,77 @@ package com.android.systemui.accessibility.floatingmenu;
 import android.content.Context;
 import android.os.UserHandle;
 import android.text.TextUtils;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.systemui.accessibility.AccessibilityButtonModeObserver;
 import com.android.systemui.accessibility.AccessibilityButtonTargetsObserver;
-/* loaded from: classes.dex */
+import com.android.systemui.dagger.SysUISingleton;
+import javax.inject.Inject;
+
+@SysUISingleton
 public class AccessibilityFloatingMenuController implements AccessibilityButtonModeObserver.ModeChangedListener, AccessibilityButtonTargetsObserver.TargetsChangedListener {
-    private final AccessibilityButtonModeObserver mAccessibilityButtonModeObserver;
-    private final AccessibilityButtonTargetsObserver mAccessibilityButtonTargetsObserver;
-    private int mBtnMode;
-    private String mBtnTargets;
-    private Context mContext;
-    @VisibleForTesting
+    /* access modifiers changed from: private */
+    public final AccessibilityButtonModeObserver mAccessibilityButtonModeObserver;
+    /* access modifiers changed from: private */
+    public final AccessibilityButtonTargetsObserver mAccessibilityButtonTargetsObserver;
+    /* access modifiers changed from: private */
+    public int mBtnMode;
+    /* access modifiers changed from: private */
+    public String mBtnTargets;
+    /* access modifiers changed from: private */
+    public Context mContext;
     IAccessibilityFloatingMenu mFloatingMenu;
-    private boolean mIsAccessibilityManagerServiceReady;
-    private boolean mIsKeyguardVisible;
-    @VisibleForTesting
-    final KeyguardUpdateMonitorCallback mKeyguardCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenuController.1
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+    /* access modifiers changed from: private */
+    public boolean mIsKeyguardVisible;
+    final KeyguardUpdateMonitorCallback mKeyguardCallback = new KeyguardUpdateMonitorCallback() {
         public void onUserUnlocked() {
-            AccessibilityFloatingMenuController.this.mIsAccessibilityManagerServiceReady = true;
             AccessibilityFloatingMenuController accessibilityFloatingMenuController = AccessibilityFloatingMenuController.this;
             accessibilityFloatingMenuController.handleFloatingMenuVisibility(accessibilityFloatingMenuController.mIsKeyguardVisible, AccessibilityFloatingMenuController.this.mBtnMode, AccessibilityFloatingMenuController.this.mBtnTargets);
         }
 
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
-            AccessibilityFloatingMenuController.this.mIsKeyguardVisible = z;
-            if (AccessibilityFloatingMenuController.this.mIsAccessibilityManagerServiceReady) {
-                AccessibilityFloatingMenuController accessibilityFloatingMenuController = AccessibilityFloatingMenuController.this;
-                accessibilityFloatingMenuController.handleFloatingMenuVisibility(accessibilityFloatingMenuController.mIsKeyguardVisible, AccessibilityFloatingMenuController.this.mBtnMode, AccessibilityFloatingMenuController.this.mBtnTargets);
-            }
+            boolean unused = AccessibilityFloatingMenuController.this.mIsKeyguardVisible = z;
+            AccessibilityFloatingMenuController accessibilityFloatingMenuController = AccessibilityFloatingMenuController.this;
+            accessibilityFloatingMenuController.handleFloatingMenuVisibility(accessibilityFloatingMenuController.mIsKeyguardVisible, AccessibilityFloatingMenuController.this.mBtnMode, AccessibilityFloatingMenuController.this.mBtnTargets);
         }
 
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onUserSwitching(int i) {
             AccessibilityFloatingMenuController.this.destroyFloatingMenu();
         }
 
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onUserSwitchComplete(int i) {
             AccessibilityFloatingMenuController accessibilityFloatingMenuController = AccessibilityFloatingMenuController.this;
-            accessibilityFloatingMenuController.mContext = accessibilityFloatingMenuController.mContext.createContextAsUser(UserHandle.of(i), 0);
+            Context unused = accessibilityFloatingMenuController.mContext = accessibilityFloatingMenuController.mContext.createContextAsUser(UserHandle.of(i), 0);
             AccessibilityFloatingMenuController accessibilityFloatingMenuController2 = AccessibilityFloatingMenuController.this;
-            accessibilityFloatingMenuController2.mBtnMode = accessibilityFloatingMenuController2.mAccessibilityButtonModeObserver.getCurrentAccessibilityButtonMode();
+            int unused2 = accessibilityFloatingMenuController2.mBtnMode = accessibilityFloatingMenuController2.mAccessibilityButtonModeObserver.getCurrentAccessibilityButtonMode();
             AccessibilityFloatingMenuController accessibilityFloatingMenuController3 = AccessibilityFloatingMenuController.this;
-            accessibilityFloatingMenuController3.mBtnTargets = accessibilityFloatingMenuController3.mAccessibilityButtonTargetsObserver.getCurrentAccessibilityButtonTargets();
+            String unused3 = accessibilityFloatingMenuController3.mBtnTargets = accessibilityFloatingMenuController3.mAccessibilityButtonTargetsObserver.getCurrentAccessibilityButtonTargets();
             AccessibilityFloatingMenuController accessibilityFloatingMenuController4 = AccessibilityFloatingMenuController.this;
             accessibilityFloatingMenuController4.handleFloatingMenuVisibility(accessibilityFloatingMenuController4.mIsKeyguardVisible, AccessibilityFloatingMenuController.this.mBtnMode, AccessibilityFloatingMenuController.this.mBtnTargets);
         }
     };
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
 
+    @Inject
     public AccessibilityFloatingMenuController(Context context, AccessibilityButtonTargetsObserver accessibilityButtonTargetsObserver, AccessibilityButtonModeObserver accessibilityButtonModeObserver, KeyguardUpdateMonitor keyguardUpdateMonitor) {
         this.mContext = context;
         this.mAccessibilityButtonTargetsObserver = accessibilityButtonTargetsObserver;
         this.mAccessibilityButtonModeObserver = accessibilityButtonModeObserver;
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
-        init();
+        this.mIsKeyguardVisible = false;
     }
 
-    @Override // com.android.systemui.accessibility.AccessibilityButtonModeObserver.ModeChangedListener
     public void onAccessibilityButtonModeChanged(int i) {
         this.mBtnMode = i;
         handleFloatingMenuVisibility(this.mIsKeyguardVisible, i, this.mBtnTargets);
     }
 
-    @Override // com.android.systemui.accessibility.AccessibilityButtonTargetsObserver.TargetsChangedListener
     public void onAccessibilityButtonTargetsChanged(String str) {
         this.mBtnTargets = str;
         handleFloatingMenuVisibility(this.mIsKeyguardVisible, this.mBtnMode, str);
     }
 
-    private void init() {
-        this.mIsKeyguardVisible = false;
-        this.mIsAccessibilityManagerServiceReady = false;
+    public void init() {
         this.mBtnMode = this.mAccessibilityButtonModeObserver.getCurrentAccessibilityButtonMode();
         this.mBtnTargets = this.mAccessibilityButtonTargetsObserver.getCurrentAccessibilityButtonTargets();
         registerContentObservers();
@@ -90,7 +85,7 @@ public class AccessibilityFloatingMenuController implements AccessibilityButtonM
         this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardCallback);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void handleFloatingMenuVisibility(boolean z, int i, String str) {
         if (z) {
             destroyFloatingMenu();
@@ -112,13 +107,12 @@ public class AccessibilityFloatingMenuController implements AccessibilityButtonM
         this.mFloatingMenu.show();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void destroyFloatingMenu() {
         IAccessibilityFloatingMenu iAccessibilityFloatingMenu = this.mFloatingMenu;
-        if (iAccessibilityFloatingMenu == null) {
-            return;
+        if (iAccessibilityFloatingMenu != null) {
+            iAccessibilityFloatingMenu.hide();
+            this.mFloatingMenu = null;
         }
-        iAccessibilityFloatingMenu.hide();
-        this.mFloatingMenu = null;
     }
 }

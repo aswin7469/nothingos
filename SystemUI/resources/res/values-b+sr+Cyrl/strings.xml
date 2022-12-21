@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="camera_mode_portrait_mode">Усправни режим</string>
-    <string name="click_again">Поново кликните</string>
-    <string name="empty_shade_text">Нема обавјештења</string>
+    <string name="anc_noise_adaptive">Прилагодљиво</string>
+    <string name="anc_noise_cancellation_single_line">Умањивање шума</string>
+    <string name="anc_noise_high">Високо</string>
+    <string name="anc_noise_low">Ниско</string>
+    <string name="anc_noise_mid">Средње</string>
+    <string name="anc_noise_off">Искључено</string>
+    <string name="anc_noise_transparency">Transparency</string>
+    <string name="camera_mode_portrait_mode">Портретни режим</string>
+    <string name="click_again">Кликните поново</string>
+    <string name="critical_temperature_warning_content">ваш телефон мора да се охлади пре него што будете могли да га користите</string>
+    <string name="critical_temperature_warning_title">Висока температура</string>
+    <string name="empty_shade_text">Нема обавештења</string>
     <string name="mic_mode_ambient_sound">Окружење</string>
     <string name="mic_mode_standard">Нормално</string>
-    <string name="mic_mode_voice_focus">Гласовни фокус</string>
-    <string name="nt_face_recognition_error">Лице није препознато. Системска грешка.</string>
+    <string name="mic_mode_voice_focus">Фокус гласа</string>
+    <string name="nt_face_recognition_error">Лице није препознато. Грешка система.</string>
     <string name="nt_face_recognition_fail">Лице није препознато. Покушајте поново.</string>
-    <string name="nt_face_recognition_timeout">Додирните икону и покушајте поново</string>
-    <string name="quick_settings_batteryshare_label">Дијељење батерије</string>
+    <string name="nt_face_recognition_timeout">Куцните иконицу и покушајте поново</string>
+    <string name="qs_tesla_def_label">Ваш „Tesla“</string>
+    <string name="qs_tesla_def_second_label">Нема мреже</string>
+    <string name="quick_settings_batteryshare_label">Дељење батерије</string>
     <string name="quick_settings_glyphs_label">Glyphs</string>
-    <string name="swipe_again">Поново превуците прстом</string>
+    <string name="shutdown_temperature_warning_content">Ради ваше безбедности, ваш телефон ће се искључити за %d секунди.</string>
+    <string name="shutdown_temperature_warning_title">Упозорење на високу температуру</string>
+    <string name="swipe_again">Поново превуците</string>
+    <string name="temperature_turn_off_now">Искључи одмах</string>
 </resources>

@@ -1,0 +1,5 @@
+signature,file,startline,startcol,endline,endcol,properties
+Ldalvik/system/BlockGuard;->LAX_POLICY:Ldalvik/system/BlockGuard$Policy;,libcore/dalvik/src/main/java/dalvik/system/BlockGuard.java,193,5,193,25,
+Ldalvik/system/BlockGuard;->threadPolicy:Ljava/lang/ThreadLocal;,libcore/dalvik/src/main/java/dalvik/system/BlockGuard.java,220,5,220,25,
+Ldalvik/system/BlockGuard;->getThreadPolicy()Ldalvik/system/BlockGuard$Policy;,libcore/dalvik/src/main/java/dalvik/system/BlockGuard.java,237,5,237,25,
+Ldalvik/system/BlockGuard;->setThreadPolicy(Ldalvik/system/BlockGuard$Policy;)V,libcore/dalvik/src/main/java/dalvik/system/BlockGuard.java,255,5,255,25,

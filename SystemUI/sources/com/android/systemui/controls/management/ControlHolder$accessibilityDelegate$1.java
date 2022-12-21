@@ -1,27 +1,21 @@
 package com.android.systemui.controls.management;
 
+import kotlin.Metadata;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.FunctionReferenceImpl;
-import org.jetbrains.annotations.Nullable;
-/* JADX INFO: Access modifiers changed from: package-private */
+
+@Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ControlAdapter.kt */
-/* loaded from: classes.dex */
-public /* synthetic */ class ControlHolder$accessibilityDelegate$1 extends FunctionReferenceImpl implements Function1<Boolean, CharSequence> {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ControlHolder$accessibilityDelegate$1(ControlHolder controlHolder) {
-        super(1, controlHolder, ControlHolder.class, "stateDescription", "stateDescription(Z)Ljava/lang/CharSequence;", 0);
+/* synthetic */ class ControlHolder$accessibilityDelegate$1 extends FunctionReferenceImpl implements Function1<Boolean, CharSequence> {
+    ControlHolder$accessibilityDelegate$1(Object obj) {
+        super(1, obj, ControlHolder.class, "stateDescription", "stateDescription(Z)Ljava/lang/CharSequence;", 0);
     }
 
-    @Nullable
     public final CharSequence invoke(boolean z) {
-        CharSequence stateDescription;
-        stateDescription = ((ControlHolder) this.receiver).stateDescription(z);
-        return stateDescription;
+        return ((ControlHolder) this.receiver).stateDescription(z);
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    /* renamed from: invoke */
-    public /* bridge */ /* synthetic */ CharSequence mo1949invoke(Boolean bool) {
-        return invoke(bool.booleanValue());
+    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
+        return invoke(((Boolean) obj).booleanValue());
     }
 }

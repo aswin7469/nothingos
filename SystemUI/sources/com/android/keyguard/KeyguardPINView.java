@@ -4,136 +4,137 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import com.android.settingslib.animation.AppearAnimationUtils;
 import com.android.settingslib.animation.DisappearAnimationUtils;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.R$string;
-import java.util.List;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+
 public class KeyguardPINView extends KeyguardPinBasedInputView {
     private final AppearAnimationUtils mAppearAnimationUtils;
-    private ViewGroup mContainer;
+    private ConstraintLayout mContainer;
     private final DisappearAnimationUtils mDisappearAnimationUtils;
     private final DisappearAnimationUtils mDisappearAnimationUtilsLocked;
     private int mDisappearYTranslation;
-    private ViewGroup mRow0;
-    private ViewGroup mRow1;
-    private ViewGroup mRow2;
-    private ViewGroup mRow3;
+    private int mLastDevicePosture;
     private View[][] mViews;
 
-    @Override // android.view.View
+    /* access modifiers changed from: protected */
+    public int getPasswordTextViewId() {
+        return C1893R.C1897id.pinEntry;
+    }
+
+    public int getWrongPasswordStringId() {
+        return C1893R.string.kg_wrong_pin;
+    }
+
     public boolean hasOverlappingRendering() {
         return false;
     }
 
+    /* access modifiers changed from: protected */
+    public void resetState() {
+    }
+
     public KeyguardPINView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public KeyguardPINView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mLastDevicePosture = 0;
         this.mAppearAnimationUtils = new AppearAnimationUtils(context);
-        this.mDisappearAnimationUtils = new DisappearAnimationUtils(context, 125L, 0.6f, 0.45f, AnimationUtils.loadInterpolator(((LinearLayout) this).mContext, 17563663));
-        this.mDisappearAnimationUtilsLocked = new DisappearAnimationUtils(context, 187L, 0.6f, 0.45f, AnimationUtils.loadInterpolator(((LinearLayout) this).mContext, 17563663));
-        this.mDisappearYTranslation = getResources().getDimensionPixelSize(R$dimen.disappear_y_translation);
+        Context context2 = context;
+        this.mDisappearAnimationUtils = new DisappearAnimationUtils(context2, 125, 0.6f, 0.45f, AnimationUtils.loadInterpolator(this.mContext, AndroidResources.FAST_OUT_LINEAR_IN));
+        this.mDisappearAnimationUtilsLocked = new DisappearAnimationUtils(context2, 187, 0.6f, 0.45f, AnimationUtils.loadInterpolator(this.mContext, AndroidResources.FAST_OUT_LINEAR_IN));
+        this.mDisappearYTranslation = getResources().getDimensionPixelSize(C1893R.dimen.disappear_y_translation);
     }
 
-    @Override // android.view.View
-    protected void onConfigurationChanged(Configuration configuration) {
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
         updateMargins();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
-    public int getPasswordTextViewId() {
-        return R$id.pinEntry;
+    /* access modifiers changed from: package-private */
+    public void onDevicePostureChanged(int i) {
+        this.mLastDevicePosture = i;
+        updateMargins();
     }
 
     private void updateMargins() {
-        int dimensionPixelSize = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(R$dimen.num_pad_row_margin_bottom);
-        for (ViewGroup viewGroup : List.of(this.mRow1, this.mRow2, this.mRow3)) {
-            ((LinearLayout.LayoutParams) viewGroup.getLayoutParams()).setMargins(0, 0, 0, dimensionPixelSize);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.num_pad_entry_row_margin_bottom);
+        int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.num_pad_key_margin_end);
+        String string = this.mContext.getResources().getString(C1893R.string.num_pad_key_ratio);
+        for (int i = 1; i < 5; i++) {
+            for (int i2 = 0; i2 < 3; i2++) {
+                View view = this.mViews[i][i2];
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) view.getLayoutParams();
+                layoutParams.dimensionRatio = string;
+                if (i != 4) {
+                    layoutParams.bottomMargin = dimensionPixelSize;
+                }
+                if (i2 != 2) {
+                    layoutParams.rightMargin = dimensionPixelSize2;
+                }
+                view.setLayoutParams(layoutParams);
+            }
         }
-        ((LinearLayout.LayoutParams) this.mRow0.getLayoutParams()).setMargins(0, 0, 0, ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(R$dimen.num_pad_entry_row_margin_bottom));
-        if (this.mEcaView != null) {
-            ((LinearLayout.LayoutParams) this.mEcaView.getLayoutParams()).setMargins(0, ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(R$dimen.keyguard_eca_top_margin), 0, ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(R$dimen.keyguard_eca_bottom_margin));
+        float f = this.mContext.getResources().getFloat(C1893R.dimen.half_opened_bouncer_height_ratio);
+        ConstraintSet constraintSet = new ConstraintSet();
+        constraintSet.clone(this.mContainer);
+        if (this.mLastDevicePosture != 2) {
+            f = 0.0f;
         }
-        View findViewById = findViewById(R$id.pinEntry);
-        ViewGroup.LayoutParams layoutParams = findViewById.getLayoutParams();
-        layoutParams.height = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(R$dimen.keyguard_password_height);
-        findViewById.setLayoutParams(layoutParams);
+        constraintSet.setGuidelinePercent(C1893R.C1897id.pin_pad_top_guideline, f);
+        constraintSet.applyTo(this.mContainer);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardPinBasedInputView, com.android.keyguard.KeyguardAbsKeyInputView, android.view.View
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mContainer = (ViewGroup) findViewById(R$id.pin_container);
-        this.mRow0 = (ViewGroup) findViewById(R$id.row0);
-        this.mRow1 = (ViewGroup) findViewById(R$id.row1);
-        this.mRow2 = (ViewGroup) findViewById(R$id.row2);
-        this.mRow3 = (ViewGroup) findViewById(R$id.row3);
-        this.mViews = new View[][]{new View[]{this.mRow0, null, null}, new View[]{findViewById(R$id.key1), findViewById(R$id.key2), findViewById(R$id.key3)}, new View[]{findViewById(R$id.key4), findViewById(R$id.key5), findViewById(R$id.key6)}, new View[]{findViewById(R$id.key7), findViewById(R$id.key8), findViewById(R$id.key9)}, new View[]{findViewById(R$id.delete_button), findViewById(R$id.key0), findViewById(R$id.key_enter)}, new View[]{null, this.mEcaView, null}};
+        this.mContainer = (ConstraintLayout) findViewById(C1893R.C1897id.pin_container);
+        this.mViews = new View[][]{new View[]{findViewById(C1893R.C1897id.row0), null, null}, new View[]{findViewById(C1893R.C1897id.key1), findViewById(C1893R.C1897id.key2), findViewById(C1893R.C1897id.key3)}, new View[]{findViewById(C1893R.C1897id.key4), findViewById(C1893R.C1897id.key5), findViewById(C1893R.C1897id.key6)}, new View[]{findViewById(C1893R.C1897id.key7), findViewById(C1893R.C1897id.key8), findViewById(C1893R.C1897id.key9)}, new View[]{findViewById(C1893R.C1897id.delete_button), findViewById(C1893R.C1897id.key0), findViewById(C1893R.C1897id.key_enter)}, new View[]{null, this.mEcaView, null}};
     }
 
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
-    public int getWrongPasswordStringId() {
-        return R$string.kg_wrong_pin;
-    }
-
-    @Override // com.android.keyguard.KeyguardInputView
     public void startAppearAnimation() {
         enableClipping(false);
         setAlpha(1.0f);
         setTranslationY(this.mAppearAnimationUtils.getStartTranslation());
-        AppearAnimationUtils.startTranslationYAnimation(this, 0L, 500L, 0.0f, this.mAppearAnimationUtils.getInterpolator(), getAnimationListener(19));
-        this.mAppearAnimationUtils.startAnimation2d(this.mViews, new Runnable() { // from class: com.android.keyguard.KeyguardPINView.1
-            @Override // java.lang.Runnable
+        AppearAnimationUtils.startTranslationYAnimation(this, 0, 500, 0.0f, this.mAppearAnimationUtils.getInterpolator(), getAnimationListener(19));
+        this.mAppearAnimationUtils.startAnimation2d(this.mViews, new Runnable() {
             public void run() {
                 KeyguardPINView.this.enableClipping(true);
             }
         });
     }
 
-    public boolean startDisappearAnimation(boolean z, final Runnable runnable) {
+    public boolean startDisappearAnimation(boolean z, Runnable runnable) {
         DisappearAnimationUtils disappearAnimationUtils;
         enableClipping(false);
         setTranslationY(0.0f);
-        AppearAnimationUtils.startTranslationYAnimation(this, 0L, 280L, this.mDisappearYTranslation, this.mDisappearAnimationUtils.getInterpolator(), getAnimationListener(22));
         if (z) {
             disappearAnimationUtils = this.mDisappearAnimationUtilsLocked;
         } else {
             disappearAnimationUtils = this.mDisappearAnimationUtils;
         }
-        disappearAnimationUtils.startAnimation2d(this.mViews, new Runnable() { // from class: com.android.keyguard.KeyguardPINView$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                KeyguardPINView.this.lambda$startDisappearAnimation$0(runnable);
-            }
-        });
+        disappearAnimationUtils.createAnimation((View) this, 0, 200, (float) this.mDisappearYTranslation, false, this.mDisappearAnimationUtils.getInterpolator(), (Runnable) new KeyguardPINView$$ExternalSyntheticLambda0(this, runnable), getAnimationListener(22));
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$startDisappearAnimation$0(Runnable runnable) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$startDisappearAnimation$0$com-android-keyguard-KeyguardPINView */
+    public /* synthetic */ void mo25930xdaec1c89(Runnable runnable) {
         enableClipping(true);
         if (runnable != null) {
             runnable.run();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void enableClipping(boolean z) {
         this.mContainer.setClipToPadding(z);
         this.mContainer.setClipChildren(z);
-        this.mRow1.setClipToPadding(z);
-        this.mRow2.setClipToPadding(z);
-        this.mRow3.setClipToPadding(z);
         setClipChildren(z);
     }
 }

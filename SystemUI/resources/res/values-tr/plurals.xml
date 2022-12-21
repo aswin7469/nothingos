@@ -16,6 +16,10 @@
         <item quantity="one">%s kontrol eklendi.</item>
         <item quantity="other">%s kontrol eklendi.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s uygulama etkin</item>
+        <item quantity="other">%s uygulama etkin</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">SIM PIN&apos;inizi girin. Cihazınızın kilidini açmak için operatörünüzle bağlantı kurmak zorunda kalmadan önce %d deneme hakkınız kaldı.</item>
         <item quantity="other">SIM PIN&apos;inizi girin. %d deneme hakkınız kaldı.</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">Yanlış SIM PUK kodu. SIM kalıcı olarak kullanılmaz hale gelmeden önce %d deneme hakkınız kaldı.</item>
         <item quantity="other">Yanlış SIM PUK kodu, SIM kalıcı olarak kullanılmaz hale gelmeden önce %d deneme hakkınız kaldı.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Cihazın kilidi son %d saattir açılmadı. Şifreyi doğrulayın.</item>
-        <item quantity="other">Cihazın kilidi son %d saattir açılmadı. Şifreyi doğrulayın.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Cihazın kilidi son %d saattir açılmadı. Deseni doğrulayın.</item>
-        <item quantity="other">Cihazın kilidi son %d saattir açılmadı. Deseni doğrulayın.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Cihazın kilidi son %d saattir açılmadı. PIN&apos;i doğrulayın.</item>
-        <item quantity="other">Cihazın kilidi son %d saattir açılmadı. PIN&apos;i doğrulayın.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">1 saniye içinde tekrar deneyin.</item>
-        <item quantity="other">%d saniye içinde tekrar deneyin.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d yeni bildirim</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">Yalnızca bir kullanıcı oluşturulabilir.</item>
         <item quantity="other">En fazla %d kullanıcı ekleyebilirsiniz.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d cihaz bağlı</item>
-        <item quantity="other">%1$d cihaz bağlı</item>
     </plurals>
 </resources>

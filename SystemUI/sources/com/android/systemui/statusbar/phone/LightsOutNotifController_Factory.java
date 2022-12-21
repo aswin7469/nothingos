@@ -1,33 +1,34 @@
 package com.android.systemui.statusbar.phone;
 
+import android.view.View;
 import android.view.WindowManager;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.collection.NotifLiveDataStore;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class LightsOutNotifController_Factory implements Factory<LightsOutNotifController> {
     private final Provider<CommandQueue> commandQueueProvider;
-    private final Provider<NotificationEntryManager> entryManagerProvider;
+    private final Provider<View> lightsOutNotifViewProvider;
+    private final Provider<NotifLiveDataStore> notifDataStoreProvider;
     private final Provider<WindowManager> windowManagerProvider;
 
-    public LightsOutNotifController_Factory(Provider<WindowManager> provider, Provider<NotificationEntryManager> provider2, Provider<CommandQueue> provider3) {
-        this.windowManagerProvider = provider;
-        this.entryManagerProvider = provider2;
-        this.commandQueueProvider = provider3;
+    public LightsOutNotifController_Factory(Provider<View> provider, Provider<WindowManager> provider2, Provider<NotifLiveDataStore> provider3, Provider<CommandQueue> provider4) {
+        this.lightsOutNotifViewProvider = provider;
+        this.windowManagerProvider = provider2;
+        this.notifDataStoreProvider = provider3;
+        this.commandQueueProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LightsOutNotifController mo1933get() {
-        return newInstance(this.windowManagerProvider.mo1933get(), this.entryManagerProvider.mo1933get(), this.commandQueueProvider.mo1933get());
+    public LightsOutNotifController get() {
+        return newInstance(this.lightsOutNotifViewProvider.get(), this.windowManagerProvider.get(), this.notifDataStoreProvider.get(), this.commandQueueProvider.get());
     }
 
-    public static LightsOutNotifController_Factory create(Provider<WindowManager> provider, Provider<NotificationEntryManager> provider2, Provider<CommandQueue> provider3) {
-        return new LightsOutNotifController_Factory(provider, provider2, provider3);
+    public static LightsOutNotifController_Factory create(Provider<View> provider, Provider<WindowManager> provider2, Provider<NotifLiveDataStore> provider3, Provider<CommandQueue> provider4) {
+        return new LightsOutNotifController_Factory(provider, provider2, provider3, provider4);
     }
 
-    public static LightsOutNotifController newInstance(WindowManager windowManager, NotificationEntryManager notificationEntryManager, CommandQueue commandQueue) {
-        return new LightsOutNotifController(windowManager, notificationEntryManager, commandQueue);
+    public static LightsOutNotifController newInstance(View view, WindowManager windowManager, NotifLiveDataStore notifLiveDataStore, CommandQueue commandQueue) {
+        return new LightsOutNotifController(view, windowManager, notifLiveDataStore, commandQueue);
     }
 }

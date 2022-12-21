@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.collection.render;
 import com.android.systemui.statusbar.notification.collection.ListEntry;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public interface GroupMembershipManager {
     List<NotificationEntry> getChildren(ListEntry listEntry);
 
@@ -15,7 +15,7 @@ public interface GroupMembershipManager {
 
     boolean isOnlyChildInGroup(NotificationEntry notificationEntry);
 
-    default NotificationEntry getLogicalGroupSummary(NotificationEntry notificationEntry) {
+    NotificationEntry getLogicalGroupSummary(NotificationEntry notificationEntry) {
         return getGroupSummary(notificationEntry);
     }
 }

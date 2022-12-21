@@ -6,6 +6,7 @@ import android.app.INotificationManager;
 import android.app.ITransientNotificationCallback;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.hardware.display.DisplayManager;
 import android.os.IBinder;
 import android.os.ServiceManager;
 import android.os.UserHandle;
@@ -13,11 +14,17 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.IAccessibilityManager;
 import android.widget.ToastPresenter;
-import com.android.systemui.SystemUI;
+import com.android.systemui.CoreStartable;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.CommandQueue;
 import java.util.Objects;
-/* loaded from: classes2.dex */
-public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
+import javax.inject.Inject;
+
+@SysUISingleton
+public class ToastUI extends CoreStartable implements CommandQueue.Callbacks {
+    private static final String TAG = "ToastUI";
+    private static final int TOAST_LONG_TIME = 3500;
+    private static final int TOAST_SHORT_TIME = 2000;
     private final AccessibilityManager mAccessibilityManager;
     private ITransientNotificationCallback mCallback;
     private final CommandQueue mCommandQueue;
@@ -28,8 +35,10 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
     SystemUIToast mToast;
     private final ToastFactory mToastFactory;
     private final ToastLogger mToastLogger;
-    private ToastOutAnimatorListener mToastOutAnimatorListener;
+    /* access modifiers changed from: private */
+    public ToastOutAnimatorListener mToastOutAnimatorListener;
 
+    @Inject
     public ToastUI(Context context, CommandQueue commandQueue, ToastFactory toastFactory, ToastLogger toastLogger) {
         this(context, commandQueue, INotificationManager.Stub.asInterface(ServiceManager.getService("notification")), IAccessibilityManager.Stub.asInterface(ServiceManager.getService("accessibility")), toastFactory, toastLogger);
     }
@@ -45,55 +54,50 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
         this.mToastLogger = toastLogger;
     }
 
-    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
-    public void showToast(final int i, final String str, final IBinder iBinder, final CharSequence charSequence, final IBinder iBinder2, final int i2, final ITransientNotificationCallback iTransientNotificationCallback) {
-        Runnable runnable = new Runnable() { // from class: com.android.systemui.toast.ToastUI$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                ToastUI.this.lambda$showToast$0(i, charSequence, str, iTransientNotificationCallback, iBinder, iBinder2, i2);
-            }
-        };
+    public void showToast(int i, String str, IBinder iBinder, CharSequence charSequence, IBinder iBinder2, int i2, ITransientNotificationCallback iTransientNotificationCallback, int i3) {
+        ToastUI$$ExternalSyntheticLambda0 toastUI$$ExternalSyntheticLambda0 = new ToastUI$$ExternalSyntheticLambda0(this, i, i3, charSequence, str, iTransientNotificationCallback, iBinder, iBinder2, i2);
         ToastOutAnimatorListener toastOutAnimatorListener = this.mToastOutAnimatorListener;
         if (toastOutAnimatorListener != null) {
-            toastOutAnimatorListener.setShowNextToastRunnable(runnable);
+            toastOutAnimatorListener.setShowNextToastRunnable(toastUI$$ExternalSyntheticLambda0);
         } else if (this.mPresenter != null) {
-            hideCurrentToast(runnable);
+            hideCurrentToast(toastUI$$ExternalSyntheticLambda0);
         } else {
-            runnable.run();
+            toastUI$$ExternalSyntheticLambda0.run();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$showToast$0(int i, CharSequence charSequence, String str, ITransientNotificationCallback iTransientNotificationCallback, IBinder iBinder, IBinder iBinder2, int i2) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$showToast$0$com-android-systemui-toast-ToastUI  reason: not valid java name */
+    public /* synthetic */ void m3251lambda$showToast$0$comandroidsystemuitoastToastUI(int i, int i2, CharSequence charSequence, String str, ITransientNotificationCallback iTransientNotificationCallback, IBinder iBinder, IBinder iBinder2, int i3) {
+        String str2 = str;
         UserHandle userHandleForUid = UserHandle.getUserHandleForUid(i);
-        Context createContextAsUser = this.mContext.createContextAsUser(userHandleForUid, 0);
-        SystemUIToast createToast = this.mToastFactory.createToast(this.mContext, charSequence, str, userHandleForUid.getIdentifier(), this.mOrientation);
+        Context createDisplayContext = this.mContext.createContextAsUser(userHandleForUid, 0).createDisplayContext(((DisplayManager) this.mContext.getSystemService(DisplayManager.class)).getDisplay(i2));
+        ToastFactory toastFactory = this.mToastFactory;
+        SystemUIToast createToast = toastFactory.createToast(this.mContext, charSequence, str, userHandleForUid.getIdentifier(), this.mOrientation);
         this.mToast = createToast;
         if (createToast.getInAnimation() != null) {
             this.mToast.getInAnimation().start();
         }
         this.mCallback = iTransientNotificationCallback;
-        ToastPresenter toastPresenter = new ToastPresenter(createContextAsUser, this.mIAccessibilityManager, this.mNotificationManager, str);
+        ToastPresenter toastPresenter = new ToastPresenter(createDisplayContext, this.mIAccessibilityManager, this.mNotificationManager, str2);
         this.mPresenter = toastPresenter;
         toastPresenter.getLayoutParams().setTrustedOverlay();
-        this.mToastLogger.logOnShowToast(i, str, charSequence.toString(), iBinder.toString());
-        this.mPresenter.show(this.mToast.getView(), iBinder, iBinder2, i2, this.mToast.getGravity().intValue(), this.mToast.getXOffset().intValue(), this.mToast.getYOffset().intValue(), this.mToast.getHorizontalMargin().intValue(), this.mToast.getVerticalMargin().intValue(), this.mCallback, this.mToast.hasCustomAnimation());
+        this.mToastLogger.logOnShowToast(i, str2, charSequence.toString(), iBinder.toString());
+        this.mPresenter.show(this.mToast.getView(), iBinder, iBinder2, i3, this.mToast.getGravity().intValue(), this.mToast.getXOffset().intValue(), this.mToast.getYOffset().intValue(), (float) this.mToast.getHorizontalMargin().intValue(), (float) this.mToast.getVerticalMargin().intValue(), this.mCallback, this.mToast.hasCustomAnimation());
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void hideToast(String str, IBinder iBinder) {
         ToastPresenter toastPresenter = this.mPresenter;
         if (toastPresenter == null || !Objects.equals(toastPresenter.getPackageName(), str) || !Objects.equals(this.mPresenter.getToken(), iBinder)) {
-            Log.w("ToastUI", "Attempt to hide non-current toast from package " + str);
+            Log.w(TAG, "Attempt to hide non-current toast from package " + str);
             return;
         }
         this.mToastLogger.logOnHideToast(str, iBinder.toString());
-        hideCurrentToast(null);
+        hideCurrentToast((Runnable) null);
     }
 
     private void hideCurrentToast(Runnable runnable) {
@@ -114,31 +118,26 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
         this.mCallback = null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.SystemUI
+    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
-        int i = configuration.orientation;
-        if (i != this.mOrientation) {
-            this.mOrientation = i;
+        if (configuration.orientation != this.mOrientation) {
+            this.mOrientation = configuration.orientation;
             SystemUIToast systemUIToast = this.mToast;
-            if (systemUIToast == null) {
-                return;
+            if (systemUIToast != null) {
+                ToastLogger toastLogger = this.mToastLogger;
+                String charSequence = systemUIToast.mText.toString();
+                boolean z = true;
+                if (this.mOrientation != 1) {
+                    z = false;
+                }
+                toastLogger.logOrientationChange(charSequence, z);
+                this.mToast.onOrientationChange(this.mOrientation);
+                this.mPresenter.updateLayoutParams(this.mToast.getXOffset().intValue(), this.mToast.getYOffset().intValue(), (float) this.mToast.getHorizontalMargin().intValue(), (float) this.mToast.getVerticalMargin().intValue(), this.mToast.getGravity().intValue());
             }
-            ToastLogger toastLogger = this.mToastLogger;
-            String charSequence = systemUIToast.mText.toString();
-            boolean z = true;
-            if (this.mOrientation != 1) {
-                z = false;
-            }
-            toastLogger.logOrientationChange(charSequence, z);
-            this.mToast.onOrientationChange(this.mOrientation);
-            this.mPresenter.updateLayoutParams(this.mToast.getXOffset().intValue(), this.mToast.getYOffset().intValue(), this.mToast.getHorizontalMargin().intValue(), this.mToast.getVerticalMargin().intValue(), this.mToast.getGravity().intValue());
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public class ToastOutAnimatorListener extends AnimatorListenerAdapter {
+    class ToastOutAnimatorListener extends AnimatorListenerAdapter {
         final ITransientNotificationCallback mPrevCallback;
         final ToastPresenter mPrevPresenter;
         Runnable mShowNextToastRunnable;
@@ -149,18 +148,18 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
             this.mShowNextToastRunnable = runnable;
         }
 
-        void setShowNextToastRunnable(Runnable runnable) {
+        /* access modifiers changed from: package-private */
+        public void setShowNextToastRunnable(Runnable runnable) {
             this.mShowNextToastRunnable = runnable;
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationEnd(Animator animator) {
             this.mPrevPresenter.hide(this.mPrevCallback);
             Runnable runnable = this.mShowNextToastRunnable;
             if (runnable != null) {
                 runnable.run();
             }
-            ToastUI.this.mToastOutAnimatorListener = null;
+            ToastOutAnimatorListener unused = ToastUI.this.mToastOutAnimatorListener = null;
         }
     }
 }

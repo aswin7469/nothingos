@@ -1,90 +1,111 @@
 package com.android.systemui.statusbar.notification.dagger;
 
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.collection.render.NodeController;
 import com.android.systemui.statusbar.notification.collection.render.SectionHeaderController;
 import com.android.systemui.statusbar.notification.dagger.SectionHeaderControllerSubcomponent;
+import dagger.Module;
+import dagger.Provides;
 import javax.inject.Provider;
+import kotlin.Metadata;
+import kotlin.jvm.JvmStatic;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000,\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\n\bÇ\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u0012\u0010\u0003\u001a\u00020\u00042\b\b\u0001\u0010\u0005\u001a\u00020\u0006H\u0007J\u0012\u0010\u0007\u001a\u00020\b2\b\b\u0001\u0010\u0005\u001a\u00020\u0006H\u0007J\u0016\u0010\t\u001a\u00020\u00062\f\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0007J\u0012\u0010\r\u001a\u00020\u00042\b\b\u0001\u0010\u0005\u001a\u00020\u0006H\u0007J\u0012\u0010\u000e\u001a\u00020\b2\b\b\u0001\u0010\u0005\u001a\u00020\u0006H\u0007J\u0016\u0010\u000f\u001a\u00020\u00062\f\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0007J\u0012\u0010\u0010\u001a\u00020\u00042\b\b\u0001\u0010\u0005\u001a\u00020\u0006H\u0007J\u0012\u0010\u0011\u001a\u00020\b2\b\b\u0001\u0010\u0005\u001a\u00020\u0006H\u0007J\u0016\u0010\u0012\u001a\u00020\u00062\f\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0007J\u0012\u0010\u0013\u001a\u00020\u00042\b\b\u0001\u0010\u0005\u001a\u00020\u0006H\u0007J\u0012\u0010\u0014\u001a\u00020\b2\b\b\u0001\u0010\u0005\u001a\u00020\u0006H\u0007J\u0016\u0010\u0015\u001a\u00020\u00062\f\u0010\n\u001a\b\u0012\u0004\u0012\u00020\f0\u000bH\u0007¨\u0006\u0016"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/dagger/NotificationSectionHeadersModule;", "", "()V", "providesAlertingHeaderController", "Lcom/android/systemui/statusbar/notification/collection/render/SectionHeaderController;", "subcomponent", "Lcom/android/systemui/statusbar/notification/dagger/SectionHeaderControllerSubcomponent;", "providesAlertingHeaderNodeController", "Lcom/android/systemui/statusbar/notification/collection/render/NodeController;", "providesAlertingHeaderSubcomponent", "builder", "Ljavax/inject/Provider;", "Lcom/android/systemui/statusbar/notification/dagger/SectionHeaderControllerSubcomponent$Builder;", "providesIncomingHeaderController", "providesIncomingHeaderNodeController", "providesIncomingHeaderSubcomponent", "providesPeopleHeaderController", "providesPeopleHeaderNodeController", "providesPeopleHeaderSubcomponent", "providesSilentHeaderController", "providesSilentHeaderNodeController", "providesSilentHeaderSubcomponent", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+@Module(subcomponents = {SectionHeaderControllerSubcomponent.class})
 /* compiled from: NotificationSectionHeadersModule.kt */
-/* loaded from: classes.dex */
 public final class NotificationSectionHeadersModule {
-    @NotNull
     public static final NotificationSectionHeadersModule INSTANCE = new NotificationSectionHeadersModule();
 
     private NotificationSectionHeadersModule() {
     }
 
-    @NotNull
-    public static final SectionHeaderControllerSubcomponent providesIncomingHeaderSubcomponent(@NotNull Provider<SectionHeaderControllerSubcomponent.Builder> builder) {
-        Intrinsics.checkNotNullParameter(builder, "builder");
-        return builder.mo1933get().mo1416nodeLabel("incoming header").mo1415headerText(R$string.notification_section_header_incoming).mo1414clickIntentAction("android.settings.NOTIFICATION_SETTINGS").build();
+    @SysUISingleton
+    @JvmStatic
+    @Provides
+    public static final SectionHeaderControllerSubcomponent providesIncomingHeaderSubcomponent(Provider<SectionHeaderControllerSubcomponent.Builder> provider) {
+        Intrinsics.checkNotNullParameter(provider, "builder");
+        return provider.get().nodeLabel("incoming header").headerText(C1893R.string.notification_section_header_incoming).clickIntentAction("android.settings.NOTIFICATION_SETTINGS").build();
     }
 
-    @NotNull
-    public static final SectionHeaderControllerSubcomponent providesAlertingHeaderSubcomponent(@NotNull Provider<SectionHeaderControllerSubcomponent.Builder> builder) {
-        Intrinsics.checkNotNullParameter(builder, "builder");
-        return builder.mo1933get().mo1416nodeLabel("alerting header").mo1415headerText(R$string.notification_section_header_alerting).mo1414clickIntentAction("android.settings.NOTIFICATION_SETTINGS").build();
+    @SysUISingleton
+    @JvmStatic
+    @Provides
+    public static final SectionHeaderControllerSubcomponent providesAlertingHeaderSubcomponent(Provider<SectionHeaderControllerSubcomponent.Builder> provider) {
+        Intrinsics.checkNotNullParameter(provider, "builder");
+        return provider.get().nodeLabel("alerting header").headerText(C1893R.string.notification_section_header_alerting).clickIntentAction("android.settings.NOTIFICATION_SETTINGS").build();
     }
 
-    @NotNull
-    public static final SectionHeaderControllerSubcomponent providesPeopleHeaderSubcomponent(@NotNull Provider<SectionHeaderControllerSubcomponent.Builder> builder) {
-        Intrinsics.checkNotNullParameter(builder, "builder");
-        return builder.mo1933get().mo1416nodeLabel("people header").mo1415headerText(R$string.notification_section_header_conversations).mo1414clickIntentAction("android.settings.CONVERSATION_SETTINGS").build();
+    @SysUISingleton
+    @JvmStatic
+    @Provides
+    public static final SectionHeaderControllerSubcomponent providesPeopleHeaderSubcomponent(Provider<SectionHeaderControllerSubcomponent.Builder> provider) {
+        Intrinsics.checkNotNullParameter(provider, "builder");
+        return provider.get().nodeLabel("people header").headerText(C1893R.string.notification_section_header_conversations).clickIntentAction("android.settings.CONVERSATION_SETTINGS").build();
     }
 
-    @NotNull
-    public static final SectionHeaderControllerSubcomponent providesSilentHeaderSubcomponent(@NotNull Provider<SectionHeaderControllerSubcomponent.Builder> builder) {
-        Intrinsics.checkNotNullParameter(builder, "builder");
-        return builder.mo1933get().mo1416nodeLabel("silent header").mo1415headerText(R$string.notification_section_header_gentle).mo1414clickIntentAction("android.settings.NOTIFICATION_SETTINGS").build();
+    @SysUISingleton
+    @JvmStatic
+    @Provides
+    public static final SectionHeaderControllerSubcomponent providesSilentHeaderSubcomponent(Provider<SectionHeaderControllerSubcomponent.Builder> provider) {
+        Intrinsics.checkNotNullParameter(provider, "builder");
+        return provider.get().nodeLabel("silent header").headerText(C1893R.string.notification_section_header_gentle).clickIntentAction("android.settings.NOTIFICATION_SETTINGS").build();
     }
 
-    @NotNull
-    public static final NodeController providesSilentHeaderNodeController(@NotNull SectionHeaderControllerSubcomponent subcomponent) {
-        Intrinsics.checkNotNullParameter(subcomponent, "subcomponent");
-        return subcomponent.getNodeController();
+    @JvmStatic
+    @Provides
+    public static final NodeController providesSilentHeaderNodeController(SectionHeaderControllerSubcomponent sectionHeaderControllerSubcomponent) {
+        Intrinsics.checkNotNullParameter(sectionHeaderControllerSubcomponent, "subcomponent");
+        return sectionHeaderControllerSubcomponent.getNodeController();
     }
 
-    @NotNull
-    public static final SectionHeaderController providesSilentHeaderController(@NotNull SectionHeaderControllerSubcomponent subcomponent) {
-        Intrinsics.checkNotNullParameter(subcomponent, "subcomponent");
-        return subcomponent.getHeaderController();
+    @JvmStatic
+    @Provides
+    public static final SectionHeaderController providesSilentHeaderController(SectionHeaderControllerSubcomponent sectionHeaderControllerSubcomponent) {
+        Intrinsics.checkNotNullParameter(sectionHeaderControllerSubcomponent, "subcomponent");
+        return sectionHeaderControllerSubcomponent.getHeaderController();
     }
 
-    @NotNull
-    public static final NodeController providesAlertingHeaderNodeController(@NotNull SectionHeaderControllerSubcomponent subcomponent) {
-        Intrinsics.checkNotNullParameter(subcomponent, "subcomponent");
-        return subcomponent.getNodeController();
+    @JvmStatic
+    @Provides
+    public static final NodeController providesAlertingHeaderNodeController(SectionHeaderControllerSubcomponent sectionHeaderControllerSubcomponent) {
+        Intrinsics.checkNotNullParameter(sectionHeaderControllerSubcomponent, "subcomponent");
+        return sectionHeaderControllerSubcomponent.getNodeController();
     }
 
-    @NotNull
-    public static final SectionHeaderController providesAlertingHeaderController(@NotNull SectionHeaderControllerSubcomponent subcomponent) {
-        Intrinsics.checkNotNullParameter(subcomponent, "subcomponent");
-        return subcomponent.getHeaderController();
+    @JvmStatic
+    @Provides
+    public static final SectionHeaderController providesAlertingHeaderController(SectionHeaderControllerSubcomponent sectionHeaderControllerSubcomponent) {
+        Intrinsics.checkNotNullParameter(sectionHeaderControllerSubcomponent, "subcomponent");
+        return sectionHeaderControllerSubcomponent.getHeaderController();
     }
 
-    @NotNull
-    public static final NodeController providesPeopleHeaderNodeController(@NotNull SectionHeaderControllerSubcomponent subcomponent) {
-        Intrinsics.checkNotNullParameter(subcomponent, "subcomponent");
-        return subcomponent.getNodeController();
+    @JvmStatic
+    @Provides
+    public static final NodeController providesPeopleHeaderNodeController(SectionHeaderControllerSubcomponent sectionHeaderControllerSubcomponent) {
+        Intrinsics.checkNotNullParameter(sectionHeaderControllerSubcomponent, "subcomponent");
+        return sectionHeaderControllerSubcomponent.getNodeController();
     }
 
-    @NotNull
-    public static final SectionHeaderController providesPeopleHeaderController(@NotNull SectionHeaderControllerSubcomponent subcomponent) {
-        Intrinsics.checkNotNullParameter(subcomponent, "subcomponent");
-        return subcomponent.getHeaderController();
+    @JvmStatic
+    @Provides
+    public static final SectionHeaderController providesPeopleHeaderController(SectionHeaderControllerSubcomponent sectionHeaderControllerSubcomponent) {
+        Intrinsics.checkNotNullParameter(sectionHeaderControllerSubcomponent, "subcomponent");
+        return sectionHeaderControllerSubcomponent.getHeaderController();
     }
 
-    @NotNull
-    public static final NodeController providesIncomingHeaderNodeController(@NotNull SectionHeaderControllerSubcomponent subcomponent) {
-        Intrinsics.checkNotNullParameter(subcomponent, "subcomponent");
-        return subcomponent.getNodeController();
+    @JvmStatic
+    @Provides
+    public static final NodeController providesIncomingHeaderNodeController(SectionHeaderControllerSubcomponent sectionHeaderControllerSubcomponent) {
+        Intrinsics.checkNotNullParameter(sectionHeaderControllerSubcomponent, "subcomponent");
+        return sectionHeaderControllerSubcomponent.getNodeController();
     }
 
-    @NotNull
-    public static final SectionHeaderController providesIncomingHeaderController(@NotNull SectionHeaderControllerSubcomponent subcomponent) {
-        Intrinsics.checkNotNullParameter(subcomponent, "subcomponent");
-        return subcomponent.getHeaderController();
+    @JvmStatic
+    @Provides
+    public static final SectionHeaderController providesIncomingHeaderController(SectionHeaderControllerSubcomponent sectionHeaderControllerSubcomponent) {
+        Intrinsics.checkNotNullParameter(sectionHeaderControllerSubcomponent, "subcomponent");
+        return sectionHeaderControllerSubcomponent.getHeaderController();
     }
 }

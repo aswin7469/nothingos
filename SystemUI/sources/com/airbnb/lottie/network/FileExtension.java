@@ -1,12 +1,14 @@
 package com.airbnb.lottie.network;
-/* loaded from: classes.dex */
+
+import com.airbnb.lottie.utils.Logger;
+
 public enum FileExtension {
     JSON(".json"),
     ZIP(".zip");
     
     public final String extension;
 
-    FileExtension(String str) {
+    private FileExtension(String str) {
         this.extension = str;
     }
 
@@ -14,8 +16,17 @@ public enum FileExtension {
         return ".temp" + this.extension;
     }
 
-    @Override // java.lang.Enum
     public String toString() {
         return this.extension;
+    }
+
+    public static FileExtension forFile(String str) {
+        for (FileExtension fileExtension : values()) {
+            if (str.endsWith(fileExtension.extension)) {
+                return fileExtension;
+            }
+        }
+        Logger.warning("Unable to find correct extension for " + str);
+        return JSON;
     }
 }

@@ -17,6 +17,8 @@
         <item>সৰ্বাধিক ৩টা প্ৰক্ৰিয়া</item>
         <item>সৰ্বাধিক ৪টা প্ৰক্ৰিয়া</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>০%</item>
         <item>৫০%</item>
@@ -67,6 +69,8 @@
         <item>৪৮.০ কিল’হাৰ্টজ</item>
         <item>৮৮.২ কিল&apos;হাৰ্টজ</item>
         <item>৯৬.০ কিল’হাৰ্টজ</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>ছিষ্টেমৰ বাছনি ব্যৱহাৰ কৰক (ডিফ&apos;ল্ট)</item>
@@ -74,6 +78,8 @@
         <item>৪৮.০ কিল’হাৰ্টজ</item>
         <item>৮৮.২ কিল&apos;হাৰ্টজ</item>
         <item>৯৬.০ কিল’হাৰ্টজ</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>ছিষ্টেমৰ বাছনি ব্যৱহাৰ কৰক (ডিফ&apos;ল্ট)</item>
@@ -84,6 +90,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive অডিঅ&apos;</item>
         <item>Qualcomm® aptX™ TWS+ অডিঅ&apos;</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>ছিষ্টেমৰ বাছনি ব্যৱহাৰ কৰক (ডিফ&apos;ল্ট)</item>
@@ -94,6 +104,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive অডিঅ&apos;</item>
         <item>Qualcomm® aptX™ TWS+ অডিঅ&apos;</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -214,14 +228,14 @@
     </array>
     <array name="select_logpersist_summaries">
         <item>অফ কৰক</item>
-        <item>সকলো লগ বাফাৰ</item>
-        <item>ৰেডিঅ&apos; লগ বাফাৰৰ বাহিৰে সকলো</item>
+        <item>আটাইবোৰ লগ বাফাৰ</item>
+        <item>ৰেডিঅ&apos; লগ বাফাৰৰ বাহিৰে আটাইবোৰ</item>
         <item>কেৱল কাৰ্ণেল লগ বাফাৰ</item>
     </array>
     <array name="select_logpersist_titles">
         <item>অফ অৱস্থাত আছে</item>
-        <item>সকলো</item>
-        <item>ৰেডিঅ&apos;ৰ বাহিৰে সকলো</item>
+        <item>আটাইবোৰ</item>
+        <item>ৰেডিঅ&apos;ৰ বাহিৰে আটাইবোৰ</item>
         <item>কেৱল কাৰ্ণেল</item>
     </array>
     <array name="show_non_rect_clip_entries">
@@ -260,6 +274,11 @@
         <item>অন কৰা আছে</item>
     </array>
     <array name="tile_states_cell">
+        <item>উপলব্ধ নহয়</item>
+        <item>অফ আছে</item>
+        <item>অন কৰা আছে</item>
+    </array>
+    <array name="tile_states_color_correction">
         <item>উপলব্ধ নহয়</item>
         <item>অফ আছে</item>
         <item>অন কৰা আছে</item>
@@ -313,6 +332,16 @@
         <item>উপলব্ধ নহয়</item>
         <item>অফ আছে</item>
         <item>অন কৰা আছে</item>
+    </array>
+    <array name="tile_states_onehanded">
+        <item>উপলব্ধ নহয়</item>
+        <item>অফ</item>
+        <item>অন</item>
+    </array>
+    <array name="tile_states_qr_code_scanner">
+        <item>উপলব্ধ নহয়</item>
+        <item>অফ আছে</item>
+        <item>অন আছে</item>
     </array>
     <array name="tile_states_reduce_brightness">
         <item>উপলব্ধ নহয়</item>
@@ -378,6 +407,12 @@
         <item>দ্ৰুত</item>
         <item>অতি দ্ৰুত</item>
         <item>দ্ৰুততম</item>
+    </array>
+    <array name="udfps_accessibility_touch_hints">
+        <item>বাওঁফাললৈ নিয়ক</item>
+        <item>তললৈ নিয়ক</item>
+        <item>সোঁফাললৈ নিয়ক</item>
+        <item>ওপৰলৈ নিয়ক</item>
     </array>
     <array name="usb_configuration_titles">
         <item>চ্চাৰ্জ কৰি থকা হৈছে</item>

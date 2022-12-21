@@ -1,10 +1,8 @@
 package androidx.transition;
 
 import android.graphics.Rect;
-import android.view.View;
 import android.view.ViewGroup;
-import androidx.core.view.ViewCompat;
-/* loaded from: classes.dex */
+
 public class SidePropagation extends VisibilityPropagation {
     private float mPropagationSpeed = 3.0f;
     private int mSide = 80;
@@ -13,14 +11,21 @@ public class SidePropagation extends VisibilityPropagation {
         this.mSide = i;
     }
 
-    @Override // androidx.transition.TransitionPropagation
+    public void setPropagationSpeed(float f) {
+        if (f != 0.0f) {
+            this.mPropagationSpeed = f;
+            return;
+        }
+        throw new IllegalArgumentException("propagationSpeed may not be 0");
+    }
+
     public long getStartDelay(ViewGroup viewGroup, Transition transition, TransitionValues transitionValues, TransitionValues transitionValues2) {
         int i;
         int i2;
         int i3;
         TransitionValues transitionValues3 = transitionValues;
         if (transitionValues3 == null && transitionValues2 == null) {
-            return 0L;
+            return 0;
         }
         Rect epicenter = transition.getEpicenter();
         if (transitionValues2 == null || getViewVisibility(transitionValues3) == 0) {
@@ -38,60 +43,101 @@ public class SidePropagation extends VisibilityPropagation {
         int width = round + viewGroup.getWidth();
         int height = round2 + viewGroup.getHeight();
         if (epicenter != null) {
-            i2 = epicenter.centerX();
-            i3 = epicenter.centerY();
+            i3 = epicenter.centerX();
+            i2 = epicenter.centerY();
         } else {
-            i2 = (round + width) / 2;
-            i3 = (round2 + height) / 2;
+            i3 = (round + width) / 2;
+            i2 = (round2 + height) / 2;
         }
-        float distance = distance(viewGroup, viewX, viewY, i2, i3, round, round2, width, height) / getMaxDistance(viewGroup);
+        float distance = ((float) distance(viewGroup, viewX, viewY, i3, i2, round, round2, width, height)) / ((float) getMaxDistance(viewGroup));
         long duration = transition.getDuration();
         if (duration < 0) {
             duration = 300;
         }
-        return Math.round((((float) (duration * i)) / this.mPropagationSpeed) * distance);
+        return (long) Math.round((((float) (duration * ((long) i))) / this.mPropagationSpeed) * distance);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:24:0x0017, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:13:0x0026, code lost:
+        if (r4 != false) goto L_0x0017;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:5:0x0013, code lost:
+        if (r4 != false) goto L_0x0015;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:7:0x0017, code lost:
         r5 = 3;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x0026, code lost:
-        if (r3 != false) goto L24;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:6:0x0013, code lost:
-        if (r3 != false) goto L7;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:7:0x0015, code lost:
-        r5 = 5;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private int distance(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
-        int i9 = this.mSide;
-        boolean z = true;
-        if (i9 == 8388611) {
-            if (ViewCompat.getLayoutDirection(view) != 1) {
-                z = false;
-            }
-        } else if (i9 == 8388613) {
-            if (ViewCompat.getLayoutDirection(view) != 1) {
-                z = false;
-            }
-        }
-        if (i9 != 3) {
-            if (i9 == 5) {
-                return (i - i5) + Math.abs(i4 - i2);
-            }
-            if (i9 == 48) {
-                return (i8 - i2) + Math.abs(i3 - i);
-            }
-            if (i9 == 80) {
-                return (i2 - i6) + Math.abs(i3 - i);
-            }
-            return 0;
-        }
-        return (i7 - i) + Math.abs(i4 - i2);
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x002b  */
+    /* JADX WARNING: Removed duplicated region for block: B:23:0x0051  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private int distance(android.view.View r6, int r7, int r8, int r9, int r10, int r11, int r12, int r13, int r14) {
+        /*
+            r5 = this;
+            int r5 = r5.mSide
+            r0 = 8388611(0x800003, float:1.1754948E-38)
+            r1 = 5
+            r2 = 3
+            r3 = 0
+            r4 = 1
+            if (r5 != r0) goto L_0x0019
+            int r5 = androidx.core.view.ViewCompat.getLayoutDirection(r6)
+            if (r5 != r4) goto L_0x0012
+            goto L_0x0013
+        L_0x0012:
+            r4 = r3
+        L_0x0013:
+            if (r4 == 0) goto L_0x0017
+        L_0x0015:
+            r5 = r1
+            goto L_0x0029
+        L_0x0017:
+            r5 = r2
+            goto L_0x0029
+        L_0x0019:
+            r0 = 8388613(0x800005, float:1.175495E-38)
+            if (r5 != r0) goto L_0x0029
+            int r5 = androidx.core.view.ViewCompat.getLayoutDirection(r6)
+            if (r5 != r4) goto L_0x0025
+            goto L_0x0026
+        L_0x0025:
+            r4 = r3
+        L_0x0026:
+            if (r4 == 0) goto L_0x0015
+            goto L_0x0017
+        L_0x0029:
+            if (r5 == r2) goto L_0x0051
+            if (r5 == r1) goto L_0x0048
+            r6 = 48
+            if (r5 == r6) goto L_0x003f
+            r6 = 80
+            if (r5 == r6) goto L_0x0036
+            goto L_0x0059
+        L_0x0036:
+            int r8 = r8 - r12
+            int r9 = r9 - r7
+            int r5 = java.lang.Math.abs((int) r9)
+            int r3 = r8 + r5
+            goto L_0x0059
+        L_0x003f:
+            int r14 = r14 - r8
+            int r9 = r9 - r7
+            int r5 = java.lang.Math.abs((int) r9)
+            int r3 = r14 + r5
+            goto L_0x0059
+        L_0x0048:
+            int r7 = r7 - r11
+            int r10 = r10 - r8
+            int r5 = java.lang.Math.abs((int) r10)
+            int r3 = r7 + r5
+            goto L_0x0059
+        L_0x0051:
+            int r13 = r13 - r7
+            int r10 = r10 - r8
+            int r5 = java.lang.Math.abs((int) r10)
+            int r3 = r13 + r5
+        L_0x0059:
+            return r3
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.transition.SidePropagation.distance(android.view.View, int, int, int, int, int, int, int, int):int");
     }
 
     private int getMaxDistance(ViewGroup viewGroup) {

@@ -17,83 +17,92 @@ import android.view.RenderNodeAnimator;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
-import com.android.systemui.R$dimen;
-import com.android.systemui.animation.Interpolators;
+import android.view.animation.PathInterpolator;
+import androidx.core.view.ViewCompat;
 import java.util.ArrayList;
 import java.util.HashSet;
-/* loaded from: classes.dex */
+
 public class KeyButtonRipple extends Drawable {
+    private static final Interpolator ALPHA_OUT_INTERPOLATOR = new PathInterpolator(0.0f, 0.0f, 0.8f, 1.0f);
+    private static final int ANIMATION_DURATION_FADE = 450;
+    private static final int ANIMATION_DURATION_SCALE = 350;
+    private static final float GLOW_MAX_ALPHA = 0.2f;
+    private static final float GLOW_MAX_ALPHA_DARK = 0.1f;
+    private static final float GLOW_MAX_SCALE_FACTOR = 1.35f;
+    private final AnimatorListenerAdapter mAnimatorListener = new AnimatorListenerAdapter() {
+        public void onAnimationEnd(Animator animator) {
+            KeyButtonRipple.this.mRunningAnimations.remove(animator);
+            if (KeyButtonRipple.this.mRunningAnimations.isEmpty() && !KeyButtonRipple.this.mPressed) {
+                boolean unused = KeyButtonRipple.this.mVisible = false;
+                boolean unused2 = KeyButtonRipple.this.mDrawingHardwareGlow = false;
+                KeyButtonRipple.this.invalidateSelf();
+            }
+        }
+    };
     private CanvasProperty<Float> mBottomProp;
     private boolean mDark;
     private boolean mDelayTouchFeedback;
-    private boolean mDrawingHardwareGlow;
+    /* access modifiers changed from: private */
+    public boolean mDrawingHardwareGlow;
+    private final TraceAnimatorListener mEnterHwTraceAnimator = new TraceAnimatorListener("enterHardware");
+    private final TraceAnimatorListener mExitHwTraceAnimator = new TraceAnimatorListener("exitHardware");
+    private float mGlowAlpha = 0.0f;
+    private float mGlowScale = 1.0f;
+    private final Handler mHandler = new Handler();
+    private final Interpolator mInterpolator = new LogInterpolator();
     private boolean mLastDark;
     private CanvasProperty<Float> mLeftProp;
     private int mMaxWidth;
+    private final int mMaxWidthResource;
     private CanvasProperty<Paint> mPaintProp;
-    private boolean mPressed;
+    /* access modifiers changed from: private */
+    public boolean mPressed;
     private CanvasProperty<Float> mRightProp;
     private Paint mRipplePaint;
+    /* access modifiers changed from: private */
+    public final HashSet<Animator> mRunningAnimations = new HashSet<>();
     private CanvasProperty<Float> mRxProp;
     private CanvasProperty<Float> mRyProp;
     private boolean mSupportHardware;
     private final View mTargetView;
-    private CanvasProperty<Float> mTopProp;
-    private boolean mVisible;
-    private float mGlowAlpha = 0.0f;
-    private float mGlowScale = 1.0f;
-    private final Interpolator mInterpolator = new LogInterpolator();
-    private final Handler mHandler = new Handler();
-    private final HashSet<Animator> mRunningAnimations = new HashSet<>();
     private final ArrayList<Animator> mTmpArray = new ArrayList<>();
-    private final TraceAnimatorListener mExitHwTraceAnimator = new TraceAnimatorListener("exitHardware");
-    private final TraceAnimatorListener mEnterHwTraceAnimator = new TraceAnimatorListener("enterHardware");
+    private CanvasProperty<Float> mTopProp;
     private Type mType = Type.ROUNDED_RECT;
-    private final AnimatorListenerAdapter mAnimatorListener = new AnimatorListenerAdapter() { // from class: com.android.systemui.navigationbar.buttons.KeyButtonRipple.1
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-        public void onAnimationEnd(Animator animator) {
-            KeyButtonRipple.this.mRunningAnimations.remove(animator);
-            if (!KeyButtonRipple.this.mRunningAnimations.isEmpty() || KeyButtonRipple.this.mPressed) {
-                return;
-            }
-            KeyButtonRipple.this.mVisible = false;
-            KeyButtonRipple.this.mDrawingHardwareGlow = false;
-            KeyButtonRipple.this.invalidateSelf();
-        }
-    };
+    /* access modifiers changed from: private */
+    public boolean mVisible;
 
-    /* loaded from: classes.dex */
     public enum Type {
         OVAL,
         ROUNDED_RECT
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return -3;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public boolean hasFocusStateSpecified() {
         return true;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public boolean isStateful() {
         return true;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setAlpha(int i) {
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
     }
 
-    public KeyButtonRipple(Context context, View view) {
-        this.mMaxWidth = context.getResources().getDimensionPixelSize(R$dimen.key_button_ripple_max_width);
+    public KeyButtonRipple(Context context, View view, int i) {
+        this.mMaxWidthResource = i;
+        this.mMaxWidth = context.getResources().getDimensionPixelSize(i);
         this.mTargetView = view;
+    }
+
+    public void updateResources() {
+        this.mMaxWidth = this.mTargetView.getContext().getResources().getDimensionPixelSize(this.mMaxWidthResource);
+        invalidateSelf();
     }
 
     public void setDarkIntensity(float f) {
@@ -113,7 +122,7 @@ public class KeyButtonRipple extends Drawable {
             Paint paint = new Paint();
             this.mRipplePaint = paint;
             paint.setAntiAlias(true);
-            this.mRipplePaint.setColor(this.mLastDark ? -16777216 : -1);
+            this.mRipplePaint.setColor(this.mLastDark ? ViewCompat.MEASURED_STATE_MASK : -1);
         }
         return this.mRipplePaint;
     }
@@ -122,10 +131,10 @@ public class KeyButtonRipple extends Drawable {
         if (this.mGlowAlpha > 0.0f) {
             Paint ripplePaint = getRipplePaint();
             ripplePaint.setAlpha((int) (this.mGlowAlpha * 255.0f));
-            float width = getBounds().width();
-            float height = getBounds().height();
+            float width = (float) getBounds().width();
+            float height = (float) getBounds().height();
             boolean z = width > height;
-            float rippleSize = getRippleSize() * this.mGlowScale * 0.5f;
+            float rippleSize = ((float) getRippleSize()) * this.mGlowScale * 0.5f;
             float f = width * 0.5f;
             float f2 = height * 0.5f;
             float f3 = z ? rippleSize : f;
@@ -146,7 +155,6 @@ public class KeyButtonRipple extends Drawable {
         }
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         boolean isHardwareAccelerated = canvas.isHardwareAccelerated();
         this.mSupportHardware = isHardwareAccelerated;
@@ -162,13 +170,14 @@ public class KeyButtonRipple extends Drawable {
     }
 
     private void drawHardware(RecordingCanvas recordingCanvas) {
-        if (this.mDrawingHardwareGlow) {
-            if (this.mType == Type.ROUNDED_RECT) {
-                recordingCanvas.drawRoundRect(this.mLeftProp, this.mTopProp, this.mRightProp, this.mBottomProp, this.mRxProp, this.mRyProp, this.mPaintProp);
-            } else {
-                recordingCanvas.drawCircle(CanvasProperty.createFloat(getBounds().width() / 2), CanvasProperty.createFloat(getBounds().height() / 2), CanvasProperty.createFloat((Math.min(getBounds().width(), getBounds().height()) * 1.0f) / 2.0f), this.mPaintProp);
-            }
+        if (!this.mDrawingHardwareGlow) {
+            return;
         }
+        if (this.mType == Type.ROUNDED_RECT) {
+            recordingCanvas.drawRoundRect(this.mLeftProp, this.mTopProp, this.mRightProp, this.mBottomProp, this.mRxProp, this.mRyProp, this.mPaintProp);
+            return;
+        }
+        recordingCanvas.drawCircle(CanvasProperty.createFloat((float) (getBounds().width() / 2)), CanvasProperty.createFloat((float) (getBounds().height() / 2)), CanvasProperty.createFloat((((float) Math.min(getBounds().width(), getBounds().height())) * 1.0f) / 2.0f), this.mPaintProp);
     }
 
     public float getGlowAlpha() {
@@ -193,8 +202,8 @@ public class KeyButtonRipple extends Drawable {
         return this.mLastDark ? 0.1f : 0.2f;
     }
 
-    @Override // android.graphics.drawable.Drawable
-    protected boolean onStateChange(int[] iArr) {
+    /* access modifiers changed from: protected */
+    public boolean onStateChange(int[] iArr) {
         boolean z;
         int i = 0;
         while (true) {
@@ -208,15 +217,14 @@ public class KeyButtonRipple extends Drawable {
                 i++;
             }
         }
-        if (z != this.mPressed) {
-            setPressed(z);
-            this.mPressed = z;
-            return true;
+        if (z == this.mPressed) {
+            return false;
         }
-        return false;
+        setPressed(z);
+        this.mPressed = z;
+        return true;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public boolean setVisible(boolean z, boolean z2) {
         boolean visible = super.setVisible(z, z2);
         if (visible) {
@@ -225,7 +233,6 @@ public class KeyButtonRipple extends Drawable {
         return visible;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void jumpToCurrentState() {
         endAnimations("jumpToCurrentState", false);
     }
@@ -244,7 +251,7 @@ public class KeyButtonRipple extends Drawable {
     }
 
     public void abortDelayedRipple() {
-        this.mHandler.removeCallbacksAndMessages(null);
+        this.mHandler.removeCallbacksAndMessages((Object) null);
     }
 
     private void endAnimations(String str, boolean z) {
@@ -263,83 +270,58 @@ public class KeyButtonRipple extends Drawable {
         }
         this.mTmpArray.clear();
         this.mRunningAnimations.clear();
-        this.mHandler.removeCallbacksAndMessages(null);
+        this.mHandler.removeCallbacksAndMessages((Object) null);
     }
 
     private void setPressedSoftware(boolean z) {
-        if (z) {
-            if (this.mDelayTouchFeedback) {
-                if (this.mRunningAnimations.isEmpty()) {
-                    this.mHandler.removeCallbacksAndMessages(null);
-                    this.mHandler.postDelayed(new Runnable() { // from class: com.android.systemui.navigationbar.buttons.KeyButtonRipple$$ExternalSyntheticLambda0
-                        @Override // java.lang.Runnable
-                        public final void run() {
-                            KeyButtonRipple.this.enterSoftware();
-                        }
-                    }, ViewConfiguration.getTapTimeout());
-                    return;
-                } else if (!this.mVisible) {
-                    return;
-                } else {
-                    enterSoftware();
-                    return;
-                }
-            }
+        if (!z) {
+            exitSoftware();
+        } else if (!this.mDelayTouchFeedback) {
             enterSoftware();
-            return;
+        } else if (this.mRunningAnimations.isEmpty()) {
+            this.mHandler.removeCallbacksAndMessages((Object) null);
+            this.mHandler.postDelayed(new KeyButtonRipple$$ExternalSyntheticLambda1(this), (long) ViewConfiguration.getTapTimeout());
+        } else if (this.mVisible) {
+            enterSoftware();
         }
-        exitSoftware();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void enterSoftware() {
         endAnimations("enterSoftware", true);
         this.mVisible = true;
         this.mGlowAlpha = getMaxGlowAlpha();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowScale", 0.0f, 1.35f);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowScale", new float[]{0.0f, GLOW_MAX_SCALE_FACTOR});
         ofFloat.setInterpolator(this.mInterpolator);
-        ofFloat.setDuration(350L);
+        ofFloat.setDuration(350);
         ofFloat.addListener(this.mAnimatorListener);
         ofFloat.start();
         this.mRunningAnimations.add(ofFloat);
-        if (!this.mDelayTouchFeedback || this.mPressed) {
-            return;
+        if (this.mDelayTouchFeedback && !this.mPressed) {
+            exitSoftware();
         }
-        exitSoftware();
     }
 
     private void exitSoftware() {
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowAlpha", this.mGlowAlpha, 0.0f);
-        ofFloat.setInterpolator(Interpolators.ALPHA_OUT);
-        ofFloat.setDuration(450L);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowAlpha", new float[]{this.mGlowAlpha, 0.0f});
+        ofFloat.setInterpolator(ALPHA_OUT_INTERPOLATOR);
+        ofFloat.setDuration(450);
         ofFloat.addListener(this.mAnimatorListener);
         ofFloat.start();
         this.mRunningAnimations.add(ofFloat);
     }
 
     private void setPressedHardware(boolean z) {
-        if (z) {
-            if (this.mDelayTouchFeedback) {
-                if (this.mRunningAnimations.isEmpty()) {
-                    this.mHandler.removeCallbacksAndMessages(null);
-                    this.mHandler.postDelayed(new Runnable() { // from class: com.android.systemui.navigationbar.buttons.KeyButtonRipple$$ExternalSyntheticLambda1
-                        @Override // java.lang.Runnable
-                        public final void run() {
-                            KeyButtonRipple.this.enterHardware();
-                        }
-                    }, ViewConfiguration.getTapTimeout());
-                    return;
-                } else if (!this.mVisible) {
-                    return;
-                } else {
-                    enterHardware();
-                    return;
-                }
-            }
+        if (!z) {
+            exitHardware();
+        } else if (!this.mDelayTouchFeedback) {
             enterHardware();
-            return;
+        } else if (this.mRunningAnimations.isEmpty()) {
+            this.mHandler.removeCallbacksAndMessages((Object) null);
+            this.mHandler.postDelayed(new KeyButtonRipple$$ExternalSyntheticLambda0(this), (long) ViewConfiguration.getTapTimeout());
+        } else if (this.mVisible) {
+            enterHardware();
         }
-        exitHardware();
     }
 
     private void setExtendStart(CanvasProperty<Float> canvasProperty) {
@@ -376,36 +358,36 @@ public class KeyButtonRipple extends Drawable {
         return Math.min(isHorizontal() ? getBounds().width() : getBounds().height(), this.mMaxWidth);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void enterHardware() {
         endAnimations("enterHardware", true);
         this.mVisible = true;
         this.mDrawingHardwareGlow = true;
-        setExtendStart(CanvasProperty.createFloat(getExtendSize() / 2));
-        Animator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), (getExtendSize() / 2) - ((getRippleSize() * 1.35f) / 2.0f));
-        renderNodeAnimator.setDuration(350L);
+        setExtendStart(CanvasProperty.createFloat((float) (getExtendSize() / 2)));
+        RenderNodeAnimator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), ((float) (getExtendSize() / 2)) - ((((float) getRippleSize()) * GLOW_MAX_SCALE_FACTOR) / 2.0f));
+        renderNodeAnimator.setDuration(350);
         renderNodeAnimator.setInterpolator(this.mInterpolator);
         renderNodeAnimator.addListener(this.mAnimatorListener);
         renderNodeAnimator.setTarget(this.mTargetView);
-        setExtendEnd(CanvasProperty.createFloat(getExtendSize() / 2));
-        Animator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), (getExtendSize() / 2) + ((getRippleSize() * 1.35f) / 2.0f));
-        renderNodeAnimator2.setDuration(350L);
+        setExtendEnd(CanvasProperty.createFloat((float) (getExtendSize() / 2)));
+        RenderNodeAnimator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), ((float) (getExtendSize() / 2)) + ((((float) getRippleSize()) * GLOW_MAX_SCALE_FACTOR) / 2.0f));
+        renderNodeAnimator2.setDuration(350);
         renderNodeAnimator2.setInterpolator(this.mInterpolator);
         renderNodeAnimator2.addListener(this.mAnimatorListener);
         renderNodeAnimator2.addListener(this.mEnterHwTraceAnimator);
         renderNodeAnimator2.setTarget(this.mTargetView);
         if (isHorizontal()) {
             this.mTopProp = CanvasProperty.createFloat(0.0f);
-            this.mBottomProp = CanvasProperty.createFloat(getBounds().height());
-            this.mRxProp = CanvasProperty.createFloat(getBounds().height() / 2);
-            this.mRyProp = CanvasProperty.createFloat(getBounds().height() / 2);
+            this.mBottomProp = CanvasProperty.createFloat((float) getBounds().height());
+            this.mRxProp = CanvasProperty.createFloat((float) (getBounds().height() / 2));
+            this.mRyProp = CanvasProperty.createFloat((float) (getBounds().height() / 2));
         } else {
             this.mLeftProp = CanvasProperty.createFloat(0.0f);
-            this.mRightProp = CanvasProperty.createFloat(getBounds().width());
-            this.mRxProp = CanvasProperty.createFloat(getBounds().width() / 2);
-            this.mRyProp = CanvasProperty.createFloat(getBounds().width() / 2);
+            this.mRightProp = CanvasProperty.createFloat((float) getBounds().width());
+            this.mRxProp = CanvasProperty.createFloat((float) (getBounds().width() / 2));
+            this.mRyProp = CanvasProperty.createFloat((float) (getBounds().width() / 2));
         }
-        this.mGlowScale = 1.35f;
+        this.mGlowScale = GLOW_MAX_SCALE_FACTOR;
         this.mGlowAlpha = getMaxGlowAlpha();
         Paint ripplePaint = getRipplePaint();
         this.mRipplePaint = ripplePaint;
@@ -416,17 +398,16 @@ public class KeyButtonRipple extends Drawable {
         this.mRunningAnimations.add(renderNodeAnimator);
         this.mRunningAnimations.add(renderNodeAnimator2);
         invalidateSelf();
-        if (!this.mDelayTouchFeedback || this.mPressed) {
-            return;
+        if (this.mDelayTouchFeedback && !this.mPressed) {
+            exitHardware();
         }
-        exitHardware();
     }
 
     private void exitHardware() {
         this.mPaintProp = CanvasProperty.createPaint(getRipplePaint());
-        Animator renderNodeAnimator = new RenderNodeAnimator(this.mPaintProp, 1, 0.0f);
-        renderNodeAnimator.setDuration(450L);
-        renderNodeAnimator.setInterpolator(Interpolators.ALPHA_OUT);
+        RenderNodeAnimator renderNodeAnimator = new RenderNodeAnimator(this.mPaintProp, 1, 0.0f);
+        renderNodeAnimator.setDuration(450);
+        renderNodeAnimator.setInterpolator(ALPHA_OUT_INTERPOLATOR);
         renderNodeAnimator.addListener(this.mAnimatorListener);
         renderNodeAnimator.addListener(this.mExitHwTraceAnimator);
         renderNodeAnimator.setTarget(this.mTargetView);
@@ -435,42 +416,35 @@ public class KeyButtonRipple extends Drawable {
         invalidateSelf();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class TraceAnimatorListener extends AnimatorListenerAdapter {
+    private static final class TraceAnimatorListener extends AnimatorListenerAdapter {
         private final String mName;
 
         TraceAnimatorListener(String str) {
             this.mName = str;
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationStart(Animator animator) {
             Trace.beginSection("KeyButtonRipple.start." + this.mName);
             Trace.endSection();
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationCancel(Animator animator) {
             Trace.beginSection("KeyButtonRipple.cancel." + this.mName);
             Trace.endSection();
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationEnd(Animator animator) {
             Trace.beginSection("KeyButtonRipple.end." + this.mName);
             Trace.endSection();
         }
     }
 
-    /* loaded from: classes.dex */
     private static final class LogInterpolator implements Interpolator {
         private LogInterpolator() {
         }
 
-        @Override // android.animation.TimeInterpolator
         public float getInterpolation(float f) {
-            return 1.0f - ((float) Math.pow(400.0d, (-f) * 1.4d));
+            return 1.0f - ((float) Math.pow(400.0d, ((double) (-f)) * 1.4d));
         }
     }
 }

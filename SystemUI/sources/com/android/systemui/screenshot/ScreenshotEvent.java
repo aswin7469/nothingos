@@ -1,7 +1,8 @@
 package com.android.systemui.screenshot;
 
+import android.icu.lang.UCharacter;
 import com.android.internal.logging.UiEventLogger;
-/* loaded from: classes.dex */
+
 public enum ScreenshotEvent implements UiEventLogger.UiEventEnum {
     SCREENSHOT_REQUESTED_GLOBAL_ACTIONS(302),
     SCREENSHOT_REQUESTED_KEY_CHORD(303),
@@ -10,16 +11,17 @@ public enum ScreenshotEvent implements UiEventLogger.UiEventEnum {
     SCREENSHOT_REQUESTED_ACCESSIBILITY_ACTIONS(382),
     SCREENSHOT_REQUESTED_VENDOR_GESTURE(638),
     SCREENSHOT_REQUESTED_OTHER(305),
-    SCREENSHOT_SAVED(306),
+    SCREENSHOT_SAVED(UCharacter.UnicodeBlock.SYMBOLS_FOR_LEGACY_COMPUTING_ID),
     SCREENSHOT_NOT_SAVED(336),
     SCREENSHOT_PREVIEW_TAPPED(307),
     SCREENSHOT_EDIT_TAPPED(308),
-    SCREENSHOT_SHARE_TAPPED(309),
+    SCREENSHOT_SHARE_TAPPED(UCharacter.UnicodeBlock.ARABIC_EXTENDED_B_ID),
     SCREENSHOT_SMART_ACTION_TAPPED(374),
     SCREENSHOT_SCROLL_TAPPED(373),
-    SCREENSHOT_INTERACTION_TIMEOUT(310),
-    SCREENSHOT_EXPLICIT_DISMISSAL(311),
+    SCREENSHOT_INTERACTION_TIMEOUT(UCharacter.UnicodeBlock.CYPRO_MINOAN_ID),
+    SCREENSHOT_EXPLICIT_DISMISSAL(UCharacter.UnicodeBlock.ETHIOPIC_EXTENDED_B_ID),
     SCREENSHOT_SWIPE_DISMISSED(656),
+    SCREENSHOT_DISMISSED_OTHER(1076),
     SCREENSHOT_REENTERED(640),
     SCREENSHOT_LONG_SCREENSHOT_IMPRESSION(687),
     SCREENSHOT_LONG_SCREENSHOT_REQUESTED(688),
@@ -30,11 +32,13 @@ public enum ScreenshotEvent implements UiEventLogger.UiEventEnum {
     SCREENSHOT_LONG_SCREENSHOT_COMPLETED(882),
     SCREENSHOT_LONG_SCREENSHOT_ACTIVITY_STARTED(889),
     SCREENSHOT_LONG_SCREENSHOT_ACTIVITY_CACHED_IMAGE_LOADED(890),
-    SCREENSHOT_LONG_SCREENSHOT_ACTIVITY_FINISHED(891);
+    SCREENSHOT_LONG_SCREENSHOT_ACTIVITY_FINISHED(891),
+    SCREENSHOT_LONG_SCREENSHOT_SAVED(910),
+    SCREENSHOT_LONG_SCREENSHOT_EXIT(911);
     
     private final int mId;
 
-    ScreenshotEvent(int i) {
+    private ScreenshotEvent(int i) {
         this.mId = i;
     }
 
@@ -42,26 +46,25 @@ public enum ScreenshotEvent implements UiEventLogger.UiEventEnum {
         return this.mId;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static ScreenshotEvent getScreenshotSource(int i) {
-        if (i != 0) {
-            if (i == 1) {
-                return SCREENSHOT_REQUESTED_KEY_CHORD;
-            }
-            if (i == 2) {
-                return SCREENSHOT_REQUESTED_KEY_OTHER;
-            }
-            if (i == 3) {
-                return SCREENSHOT_REQUESTED_OVERVIEW;
-            }
-            if (i == 4) {
-                return SCREENSHOT_REQUESTED_ACCESSIBILITY_ACTIONS;
-            }
-            if (i == 6) {
-                return SCREENSHOT_REQUESTED_VENDOR_GESTURE;
-            }
+    static ScreenshotEvent getScreenshotSource(int i) {
+        if (i == 0) {
+            return SCREENSHOT_REQUESTED_GLOBAL_ACTIONS;
+        }
+        if (i == 1) {
+            return SCREENSHOT_REQUESTED_KEY_CHORD;
+        }
+        if (i == 2) {
+            return SCREENSHOT_REQUESTED_KEY_OTHER;
+        }
+        if (i == 3) {
+            return SCREENSHOT_REQUESTED_OVERVIEW;
+        }
+        if (i == 4) {
+            return SCREENSHOT_REQUESTED_ACCESSIBILITY_ACTIONS;
+        }
+        if (i != 6) {
             return SCREENSHOT_REQUESTED_OTHER;
         }
-        return SCREENSHOT_REQUESTED_GLOBAL_ACTIONS;
+        return SCREENSHOT_REQUESTED_VENDOR_GESTURE;
     }
 }

@@ -7,12 +7,14 @@ import android.telephony.TelephonyManager;
 import com.android.keyguard.CarrierTextManager;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.telephony.TelephonyListenerManager;
+import com.android.systemui.util.CarrierNameCustomization;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class CarrierTextManager_Builder_Factory implements Factory<CarrierTextManager.Builder> {
     private final Provider<Executor> bgExecutorProvider;
+    private final Provider<CarrierNameCustomization> carrierNameCustomizationProvider;
     private final Provider<Context> contextProvider;
     private final Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
     private final Provider<Executor> mainExecutorProvider;
@@ -22,7 +24,7 @@ public final class CarrierTextManager_Builder_Factory implements Factory<Carrier
     private final Provider<WakefulnessLifecycle> wakefulnessLifecycleProvider;
     private final Provider<WifiManager> wifiManagerProvider;
 
-    public CarrierTextManager_Builder_Factory(Provider<Context> provider, Provider<Resources> provider2, Provider<WifiManager> provider3, Provider<TelephonyManager> provider4, Provider<TelephonyListenerManager> provider5, Provider<WakefulnessLifecycle> provider6, Provider<Executor> provider7, Provider<Executor> provider8, Provider<KeyguardUpdateMonitor> provider9) {
+    public CarrierTextManager_Builder_Factory(Provider<Context> provider, Provider<Resources> provider2, Provider<WifiManager> provider3, Provider<TelephonyManager> provider4, Provider<TelephonyListenerManager> provider5, Provider<WakefulnessLifecycle> provider6, Provider<Executor> provider7, Provider<Executor> provider8, Provider<KeyguardUpdateMonitor> provider9, Provider<CarrierNameCustomization> provider10) {
         this.contextProvider = provider;
         this.resourcesProvider = provider2;
         this.wifiManagerProvider = provider3;
@@ -32,19 +34,18 @@ public final class CarrierTextManager_Builder_Factory implements Factory<Carrier
         this.mainExecutorProvider = provider7;
         this.bgExecutorProvider = provider8;
         this.keyguardUpdateMonitorProvider = provider9;
+        this.carrierNameCustomizationProvider = provider10;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public CarrierTextManager.Builder mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.resourcesProvider.mo1933get(), this.wifiManagerProvider.mo1933get(), this.telephonyManagerProvider.mo1933get(), this.telephonyListenerManagerProvider.mo1933get(), this.wakefulnessLifecycleProvider.mo1933get(), this.mainExecutorProvider.mo1933get(), this.bgExecutorProvider.mo1933get(), this.keyguardUpdateMonitorProvider.mo1933get());
+    public CarrierTextManager.Builder get() {
+        return newInstance(this.contextProvider.get(), this.resourcesProvider.get(), this.wifiManagerProvider.get(), this.telephonyManagerProvider.get(), this.telephonyListenerManagerProvider.get(), this.wakefulnessLifecycleProvider.get(), this.mainExecutorProvider.get(), this.bgExecutorProvider.get(), this.keyguardUpdateMonitorProvider.get(), this.carrierNameCustomizationProvider.get());
     }
 
-    public static CarrierTextManager_Builder_Factory create(Provider<Context> provider, Provider<Resources> provider2, Provider<WifiManager> provider3, Provider<TelephonyManager> provider4, Provider<TelephonyListenerManager> provider5, Provider<WakefulnessLifecycle> provider6, Provider<Executor> provider7, Provider<Executor> provider8, Provider<KeyguardUpdateMonitor> provider9) {
-        return new CarrierTextManager_Builder_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9);
+    public static CarrierTextManager_Builder_Factory create(Provider<Context> provider, Provider<Resources> provider2, Provider<WifiManager> provider3, Provider<TelephonyManager> provider4, Provider<TelephonyListenerManager> provider5, Provider<WakefulnessLifecycle> provider6, Provider<Executor> provider7, Provider<Executor> provider8, Provider<KeyguardUpdateMonitor> provider9, Provider<CarrierNameCustomization> provider10) {
+        return new CarrierTextManager_Builder_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10);
     }
 
-    public static CarrierTextManager.Builder newInstance(Context context, Resources resources, WifiManager wifiManager, TelephonyManager telephonyManager, TelephonyListenerManager telephonyListenerManager, WakefulnessLifecycle wakefulnessLifecycle, Executor executor, Executor executor2, KeyguardUpdateMonitor keyguardUpdateMonitor) {
-        return new CarrierTextManager.Builder(context, resources, wifiManager, telephonyManager, telephonyListenerManager, wakefulnessLifecycle, executor, executor2, keyguardUpdateMonitor);
+    public static CarrierTextManager.Builder newInstance(Context context, Resources resources, WifiManager wifiManager, TelephonyManager telephonyManager, TelephonyListenerManager telephonyListenerManager, WakefulnessLifecycle wakefulnessLifecycle, Executor executor, Executor executor2, KeyguardUpdateMonitor keyguardUpdateMonitor, CarrierNameCustomization carrierNameCustomization) {
+        return new CarrierTextManager.Builder(context, resources, wifiManager, telephonyManager, telephonyListenerManager, wakefulnessLifecycle, executor, executor2, keyguardUpdateMonitor, carrierNameCustomization);
     }
 }

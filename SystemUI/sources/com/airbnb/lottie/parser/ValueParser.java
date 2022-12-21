@@ -1,9 +1,8 @@
 package com.airbnb.lottie.parser;
 
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
-/* loaded from: classes.dex */
+import java.p026io.IOException;
+
 interface ValueParser<V> {
-    /* renamed from: parse */
-    V mo201parse(JsonReader jsonReader, float f) throws IOException;
+    V parse(JsonReader jsonReader, float f) throws IOException;
 }

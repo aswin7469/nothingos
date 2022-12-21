@@ -5,7 +5,7 @@ import android.content.pm.PackageManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvidePackageManagerFactory implements Factory<PackageManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvidePackageManagerFactory implemen
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PackageManager mo1933get() {
-        return providePackageManager(this.contextProvider.mo1933get());
+    public PackageManager get() {
+        return providePackageManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvidePackageManagerFactory create(Provider<Context> provider) {

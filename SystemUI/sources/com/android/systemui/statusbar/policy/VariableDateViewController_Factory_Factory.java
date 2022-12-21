@@ -6,7 +6,7 @@ import com.android.systemui.statusbar.policy.VariableDateViewController;
 import com.android.systemui.util.time.SystemClock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class VariableDateViewController_Factory_Factory implements Factory<VariableDateViewController.Factory> {
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
     private final Provider<Handler> handlerProvider;
@@ -18,10 +18,8 @@ public final class VariableDateViewController_Factory_Factory implements Factory
         this.handlerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public VariableDateViewController.Factory mo1933get() {
-        return newInstance(this.systemClockProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.handlerProvider.mo1933get());
+    public VariableDateViewController.Factory get() {
+        return newInstance(this.systemClockProvider.get(), this.broadcastDispatcherProvider.get(), this.handlerProvider.get());
     }
 
     public static VariableDateViewController_Factory_Factory create(Provider<SystemClock> provider, Provider<BroadcastDispatcher> provider2, Provider<Handler> provider3) {

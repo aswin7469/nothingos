@@ -3,12 +3,14 @@ package com.android.systemui.screenshot;
 import android.app.ActivityManager;
 import android.content.Context;
 import com.android.internal.logging.UiEventLogger;
+import com.android.systemui.broadcast.BroadcastSender;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ScreenshotController_Factory implements Factory<ScreenshotController> {
     private final Provider<ActivityManager> activityManagerProvider;
+    private final Provider<BroadcastSender> broadcastSenderProvider;
     private final Provider<Context> contextProvider;
     private final Provider<ImageExporter> imageExporterProvider;
     private final Provider<LongScreenshotData> longScreenshotHolderProvider;
@@ -17,9 +19,10 @@ public final class ScreenshotController_Factory implements Factory<ScreenshotCon
     private final Provider<ScreenshotSmartActions> screenshotSmartActionsProvider;
     private final Provider<ScrollCaptureClient> scrollCaptureClientProvider;
     private final Provider<ScrollCaptureController> scrollCaptureControllerProvider;
+    private final Provider<TimeoutHandler> timeoutHandlerProvider;
     private final Provider<UiEventLogger> uiEventLoggerProvider;
 
-    public ScreenshotController_Factory(Provider<Context> provider, Provider<ScreenshotSmartActions> provider2, Provider<ScreenshotNotificationsController> provider3, Provider<ScrollCaptureClient> provider4, Provider<UiEventLogger> provider5, Provider<ImageExporter> provider6, Provider<Executor> provider7, Provider<ScrollCaptureController> provider8, Provider<LongScreenshotData> provider9, Provider<ActivityManager> provider10) {
+    public ScreenshotController_Factory(Provider<Context> provider, Provider<ScreenshotSmartActions> provider2, Provider<ScreenshotNotificationsController> provider3, Provider<ScrollCaptureClient> provider4, Provider<UiEventLogger> provider5, Provider<ImageExporter> provider6, Provider<Executor> provider7, Provider<ScrollCaptureController> provider8, Provider<LongScreenshotData> provider9, Provider<ActivityManager> provider10, Provider<TimeoutHandler> provider11, Provider<BroadcastSender> provider12) {
         this.contextProvider = provider;
         this.screenshotSmartActionsProvider = provider2;
         this.screenshotNotificationsControllerProvider = provider3;
@@ -30,19 +33,19 @@ public final class ScreenshotController_Factory implements Factory<ScreenshotCon
         this.scrollCaptureControllerProvider = provider8;
         this.longScreenshotHolderProvider = provider9;
         this.activityManagerProvider = provider10;
+        this.timeoutHandlerProvider = provider11;
+        this.broadcastSenderProvider = provider12;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ScreenshotController mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.screenshotSmartActionsProvider.mo1933get(), this.screenshotNotificationsControllerProvider.mo1933get(), this.scrollCaptureClientProvider.mo1933get(), this.uiEventLoggerProvider.mo1933get(), this.imageExporterProvider.mo1933get(), this.mainExecutorProvider.mo1933get(), this.scrollCaptureControllerProvider.mo1933get(), this.longScreenshotHolderProvider.mo1933get(), this.activityManagerProvider.mo1933get());
+    public ScreenshotController get() {
+        return newInstance(this.contextProvider.get(), this.screenshotSmartActionsProvider.get(), this.screenshotNotificationsControllerProvider.get(), this.scrollCaptureClientProvider.get(), this.uiEventLoggerProvider.get(), this.imageExporterProvider.get(), this.mainExecutorProvider.get(), this.scrollCaptureControllerProvider.get(), this.longScreenshotHolderProvider.get(), this.activityManagerProvider.get(), this.timeoutHandlerProvider.get(), this.broadcastSenderProvider.get());
     }
 
-    public static ScreenshotController_Factory create(Provider<Context> provider, Provider<ScreenshotSmartActions> provider2, Provider<ScreenshotNotificationsController> provider3, Provider<ScrollCaptureClient> provider4, Provider<UiEventLogger> provider5, Provider<ImageExporter> provider6, Provider<Executor> provider7, Provider<ScrollCaptureController> provider8, Provider<LongScreenshotData> provider9, Provider<ActivityManager> provider10) {
-        return new ScreenshotController_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10);
+    public static ScreenshotController_Factory create(Provider<Context> provider, Provider<ScreenshotSmartActions> provider2, Provider<ScreenshotNotificationsController> provider3, Provider<ScrollCaptureClient> provider4, Provider<UiEventLogger> provider5, Provider<ImageExporter> provider6, Provider<Executor> provider7, Provider<ScrollCaptureController> provider8, Provider<LongScreenshotData> provider9, Provider<ActivityManager> provider10, Provider<TimeoutHandler> provider11, Provider<BroadcastSender> provider12) {
+        return new ScreenshotController_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12);
     }
 
-    public static ScreenshotController newInstance(Context context, ScreenshotSmartActions screenshotSmartActions, ScreenshotNotificationsController screenshotNotificationsController, ScrollCaptureClient scrollCaptureClient, UiEventLogger uiEventLogger, Object obj, Executor executor, ScrollCaptureController scrollCaptureController, LongScreenshotData longScreenshotData, ActivityManager activityManager) {
-        return new ScreenshotController(context, screenshotSmartActions, screenshotNotificationsController, scrollCaptureClient, uiEventLogger, (ImageExporter) obj, executor, scrollCaptureController, longScreenshotData, activityManager);
+    public static ScreenshotController newInstance(Context context, ScreenshotSmartActions screenshotSmartActions, ScreenshotNotificationsController screenshotNotificationsController, ScrollCaptureClient scrollCaptureClient, UiEventLogger uiEventLogger, Object obj, Executor executor, ScrollCaptureController scrollCaptureController, LongScreenshotData longScreenshotData, ActivityManager activityManager, TimeoutHandler timeoutHandler, BroadcastSender broadcastSender) {
+        return new ScreenshotController(context, screenshotSmartActions, screenshotNotificationsController, scrollCaptureClient, uiEventLogger, (ImageExporter) obj, executor, scrollCaptureController, longScreenshotData, activityManager, timeoutHandler, broadcastSender);
     }
 }

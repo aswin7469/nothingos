@@ -1,16 +1,17 @@
 package com.android.systemui.navigationbar.buttons;
 
 import android.view.View;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class NearestTouchFrame$$ExternalSyntheticLambda3 implements Predicate {
-    public static final /* synthetic */ NearestTouchFrame$$ExternalSyntheticLambda3 INSTANCE = new NearestTouchFrame$$ExternalSyntheticLambda3();
+import java.util.Comparator;
 
-    private /* synthetic */ NearestTouchFrame$$ExternalSyntheticLambda3() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class NearestTouchFrame$$ExternalSyntheticLambda3 implements Comparator {
+    public final /* synthetic */ NearestTouchFrame f$0;
+
+    public /* synthetic */ NearestTouchFrame$$ExternalSyntheticLambda3(NearestTouchFrame nearestTouchFrame) {
+        this.f$0 = nearestTouchFrame;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        return ((View) obj).isAttachedToWindow();
+    public final int compare(Object obj, Object obj2) {
+        return this.f$0.mo35019x2049347((View) obj, (View) obj2);
     }
 }

@@ -7,12 +7,15 @@ import android.provider.DeviceConfig;
 import android.text.TextUtils;
 import android.util.KeyValueListParser;
 import android.util.Log;
-import com.android.systemui.R$bool;
-import com.android.systemui.R$integer;
+import com.android.systemui.C1893R;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.util.DeviceConfigProxy;
-import java.util.concurrent.Executor;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public final class SmartReplyConstants {
+    private static final String TAG = "SmartReplyConstants";
     private final Context mContext;
     private final boolean mDefaultEditChoicesBeforeSending;
     private final boolean mDefaultEnabled;
@@ -30,51 +33,47 @@ public final class SmartReplyConstants {
     private volatile int mMaxSqueezeRemeasureAttempts;
     private volatile int mMinNumSystemGeneratedReplies;
     private volatile long mOnClickInitDelay;
-    private volatile boolean mRequiresTargetingP;
-    private volatile boolean mShowInHeadsUp;
-    private final KeyValueListParser mParser = new KeyValueListParser(',');
-    private final DeviceConfig.OnPropertiesChangedListener mOnPropertiesChangedListener = new DeviceConfig.OnPropertiesChangedListener() { // from class: com.android.systemui.statusbar.policy.SmartReplyConstants.1
+    private final DeviceConfig.OnPropertiesChangedListener mOnPropertiesChangedListener = new DeviceConfig.OnPropertiesChangedListener() {
         public void onPropertiesChanged(DeviceConfig.Properties properties) {
-            if ("systemui".equals(properties.getNamespace())) {
+            if (!"systemui".equals(properties.getNamespace())) {
+                Log.e(SmartReplyConstants.TAG, "Received update from DeviceConfig for unrelated namespace: " + properties.getNamespace());
+            } else {
                 SmartReplyConstants.this.updateConstants();
-                return;
             }
-            Log.e("SmartReplyConstants", "Received update from DeviceConfig for unrelated namespace: " + properties.getNamespace());
         }
     };
+    private final KeyValueListParser mParser = new KeyValueListParser(',');
+    private volatile boolean mRequiresTargetingP;
+    private volatile boolean mShowInHeadsUp;
 
-    public SmartReplyConstants(Handler handler, Context context, DeviceConfigProxy deviceConfigProxy) {
+    @Inject
+    public SmartReplyConstants(@Main Handler handler, Context context, DeviceConfigProxy deviceConfigProxy) {
         this.mHandler = handler;
         this.mContext = context;
         Resources resources = context.getResources();
-        this.mDefaultEnabled = resources.getBoolean(R$bool.config_smart_replies_in_notifications_enabled);
-        this.mDefaultRequiresP = resources.getBoolean(R$bool.config_smart_replies_in_notifications_requires_targeting_p);
-        this.mDefaultMaxSqueezeRemeasureAttempts = resources.getInteger(R$integer.config_smart_replies_in_notifications_max_squeeze_remeasure_attempts);
-        this.mDefaultEditChoicesBeforeSending = resources.getBoolean(R$bool.config_smart_replies_in_notifications_edit_choices_before_sending);
-        this.mDefaultShowInHeadsUp = resources.getBoolean(R$bool.config_smart_replies_in_notifications_show_in_heads_up);
-        this.mDefaultMinNumSystemGeneratedReplies = resources.getInteger(R$integer.config_smart_replies_in_notifications_min_num_system_generated_replies);
-        this.mDefaultMaxNumActions = resources.getInteger(R$integer.config_smart_replies_in_notifications_max_num_actions);
-        this.mDefaultOnClickInitDelay = resources.getInteger(R$integer.config_smart_replies_in_notifications_onclick_init_delay);
+        this.mDefaultEnabled = resources.getBoolean(C1893R.bool.config_smart_replies_in_notifications_enabled);
+        this.mDefaultRequiresP = resources.getBoolean(C1893R.bool.config_smart_replies_in_notifications_requires_targeting_p);
+        this.mDefaultMaxSqueezeRemeasureAttempts = resources.getInteger(C1893R.integer.f259xb8282359);
+        this.mDefaultEditChoicesBeforeSending = resources.getBoolean(C1893R.bool.f254xa48abd95);
+        this.mDefaultShowInHeadsUp = resources.getBoolean(C1893R.bool.config_smart_replies_in_notifications_show_in_heads_up);
+        this.mDefaultMinNumSystemGeneratedReplies = resources.getInteger(C1893R.integer.f260xce369515);
+        this.mDefaultMaxNumActions = resources.getInteger(C1893R.integer.config_smart_replies_in_notifications_max_num_actions);
+        this.mDefaultOnClickInitDelay = resources.getInteger(C1893R.integer.config_smart_replies_in_notifications_onclick_init_delay);
         this.mDeviceConfig = deviceConfigProxy;
         registerDeviceConfigListener();
         updateConstants();
     }
 
     private void registerDeviceConfigListener() {
-        this.mDeviceConfig.addOnPropertiesChangedListener("systemui", new Executor() { // from class: com.android.systemui.statusbar.policy.SmartReplyConstants$$ExternalSyntheticLambda0
-            @Override // java.util.concurrent.Executor
-            public final void execute(Runnable runnable) {
-                SmartReplyConstants.this.postToHandler(runnable);
-            }
-        }, this.mOnPropertiesChangedListener);
+        this.mDeviceConfig.addOnPropertiesChangedListener("systemui", new SmartReplyConstants$$ExternalSyntheticLambda0(this), this.mOnPropertiesChangedListener);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void postToHandler(Runnable runnable) {
         this.mHandler.post(runnable);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateConstants() {
         synchronized (this) {
             this.mEnabled = readDeviceConfigBooleanOrDefaultIfEmpty("ssin_enabled", this.mDefaultEnabled);
@@ -84,7 +83,7 @@ public final class SmartReplyConstants {
             this.mShowInHeadsUp = readDeviceConfigBooleanOrDefaultIfEmpty("ssin_show_in_heads_up", this.mDefaultShowInHeadsUp);
             this.mMinNumSystemGeneratedReplies = this.mDeviceConfig.getInt("systemui", "ssin_min_num_system_generated_replies", this.mDefaultMinNumSystemGeneratedReplies);
             this.mMaxNumActions = this.mDeviceConfig.getInt("systemui", "ssin_max_num_actions", this.mDefaultMaxNumActions);
-            this.mOnClickInitDelay = this.mDeviceConfig.getInt("systemui", "ssin_onclick_init_delay", this.mDefaultOnClickInitDelay);
+            this.mOnClickInitDelay = (long) this.mDeviceConfig.getInt("systemui", "ssin_onclick_init_delay", this.mDefaultOnClickInitDelay);
         }
     }
 
@@ -96,10 +95,10 @@ public final class SmartReplyConstants {
         if ("true".equals(property)) {
             return true;
         }
-        if (!"false".equals(property)) {
-            return z;
+        if ("false".equals(property)) {
+            return false;
         }
-        return false;
+        return z;
     }
 
     public boolean isEnabled() {
@@ -115,13 +114,13 @@ public final class SmartReplyConstants {
     }
 
     public boolean getEffectiveEditChoicesBeforeSending(int i) {
-        if (i != 1) {
-            if (i == 2) {
-                return true;
-            }
+        if (i == 1) {
+            return false;
+        }
+        if (i != 2) {
             return this.mEditChoicesBeforeSending;
         }
-        return false;
+        return true;
     }
 
     public boolean getShowInHeadsUp() {

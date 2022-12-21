@@ -1,17 +1,11 @@
 package com.google.android.material.datepicker;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import com.google.android.material.R$layout;
 import java.util.Collection;
-import java.util.Iterator;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public class MonthAdapter extends BaseAdapter {
+
+class MonthAdapter extends BaseAdapter {
     static final int MAXIMUM_WEEKS = UtcDates.getUtcCalendar().getMaximum(4);
     final CalendarConstraints calendarConstraints;
     CalendarStyle calendarStyle;
@@ -19,89 +13,113 @@ public class MonthAdapter extends BaseAdapter {
     final Month month;
     private Collection<Long> previouslySelectedDates;
 
-    @Override // android.widget.BaseAdapter, android.widget.Adapter
     public boolean hasStableIds() {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MonthAdapter(Month month, DateSelector<?> dateSelector, CalendarConstraints calendarConstraints) {
-        this.month = month;
-        this.dateSelector = dateSelector;
-        this.calendarConstraints = calendarConstraints;
-        this.previouslySelectedDates = dateSelector.getSelectedDays();
+    MonthAdapter(Month month2, DateSelector<?> dateSelector2, CalendarConstraints calendarConstraints2) {
+        this.month = month2;
+        this.dateSelector = dateSelector2;
+        this.calendarConstraints = calendarConstraints2;
+        this.previouslySelectedDates = dateSelector2.getSelectedDays();
     }
 
-    @Override // android.widget.Adapter
-    /* renamed from: getItem */
-    public Long mo1825getItem(int i) {
+    public Long getItem(int i) {
         if (i < this.month.daysFromStartOfWeekToFirstOfMonth() || i > lastPositionInMonth()) {
             return null;
         }
         return Long.valueOf(this.month.getDay(positionToDay(i)));
     }
 
-    @Override // android.widget.Adapter
     public long getItemId(int i) {
-        return i / this.month.daysInWeek;
+        return (long) (i / this.month.daysInWeek);
     }
 
-    @Override // android.widget.Adapter
     public int getCount() {
         return this.month.daysInMonth + firstPositionInMonth();
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:14:0x0083 A[RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:16:0x0084  */
-    @Override // android.widget.Adapter
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public TextView getView(int i, View view, ViewGroup viewGroup) {
-        Long mo1825getItem;
-        initializeStyles(viewGroup.getContext());
-        TextView textView = (TextView) view;
-        if (view == null) {
-            textView = (TextView) LayoutInflater.from(viewGroup.getContext()).inflate(R$layout.mtrl_calendar_day, viewGroup, false);
-        }
-        int firstPositionInMonth = i - firstPositionInMonth();
-        if (firstPositionInMonth >= 0) {
-            Month month = this.month;
-            if (firstPositionInMonth < month.daysInMonth) {
-                int i2 = firstPositionInMonth + 1;
-                textView.setTag(month);
-                textView.setText(String.format(textView.getResources().getConfiguration().locale, "%d", Integer.valueOf(i2)));
-                long day = this.month.getDay(i2);
-                if (this.month.year == Month.current().year) {
-                    textView.setContentDescription(DateStrings.getMonthDayOfWeekDay(day));
-                } else {
-                    textView.setContentDescription(DateStrings.getYearMonthDayOfWeekDay(day));
-                }
-                textView.setVisibility(0);
-                textView.setEnabled(true);
-                mo1825getItem = mo1825getItem(i);
-                if (mo1825getItem != null) {
-                    return textView;
-                }
-                updateSelectedState(textView, mo1825getItem.longValue());
-                return textView;
-            }
-        }
-        textView.setVisibility(8);
-        textView.setEnabled(false);
-        mo1825getItem = mo1825getItem(i);
-        if (mo1825getItem != null) {
-        }
+    /* JADX WARNING: type inference failed for: r7v11, types: [android.view.View] */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public android.widget.TextView getView(int r6, android.view.View r7, android.view.ViewGroup r8) {
+        /*
+            r5 = this;
+            android.content.Context r0 = r8.getContext()
+            r5.initializeStyles(r0)
+            r0 = r7
+            android.widget.TextView r0 = (android.widget.TextView) r0
+            r1 = 0
+            if (r7 != 0) goto L_0x001e
+            android.content.Context r7 = r8.getContext()
+            android.view.LayoutInflater r7 = android.view.LayoutInflater.from(r7)
+            int r0 = com.google.android.material.C3621R.layout.mtrl_calendar_day
+            android.view.View r7 = r7.inflate(r0, r8, r1)
+            r0 = r7
+            android.widget.TextView r0 = (android.widget.TextView) r0
+        L_0x001e:
+            int r7 = r5.firstPositionInMonth()
+            int r7 = r6 - r7
+            if (r7 < 0) goto L_0x0077
+            com.google.android.material.datepicker.Month r8 = r5.month
+            int r8 = r8.daysInMonth
+            if (r7 < r8) goto L_0x002d
+            goto L_0x0077
+        L_0x002d:
+            r8 = 1
+            int r7 = r7 + r8
+            com.google.android.material.datepicker.Month r2 = r5.month
+            r0.setTag(r2)
+            android.content.res.Resources r2 = r0.getResources()
+            android.content.res.Configuration r2 = r2.getConfiguration()
+            java.util.Locale r2 = r2.locale
+            java.lang.Object[] r3 = new java.lang.Object[r8]
+            java.lang.Integer r4 = java.lang.Integer.valueOf((int) r7)
+            r3[r1] = r4
+            java.lang.String r4 = "%d"
+            java.lang.String r2 = java.lang.String.format(r2, r4, r3)
+            r0.setText(r2)
+            com.google.android.material.datepicker.Month r2 = r5.month
+            long r2 = r2.getDay(r7)
+            com.google.android.material.datepicker.Month r7 = r5.month
+            int r7 = r7.year
+            com.google.android.material.datepicker.Month r4 = com.google.android.material.datepicker.Month.current()
+            int r4 = r4.year
+            if (r7 != r4) goto L_0x0069
+            java.lang.String r7 = com.google.android.material.datepicker.DateStrings.getMonthDayOfWeekDay(r2)
+            r0.setContentDescription(r7)
+            goto L_0x0070
+        L_0x0069:
+            java.lang.String r7 = com.google.android.material.datepicker.DateStrings.getYearMonthDayOfWeekDay(r2)
+            r0.setContentDescription(r7)
+        L_0x0070:
+            r0.setVisibility(r1)
+            r0.setEnabled(r8)
+            goto L_0x007f
+        L_0x0077:
+            r7 = 8
+            r0.setVisibility(r7)
+            r0.setEnabled(r1)
+        L_0x007f:
+            java.lang.Long r6 = r5.getItem((int) r6)
+            if (r6 != 0) goto L_0x0086
+            return r0
+        L_0x0086:
+            long r6 = r6.longValue()
+            r5.updateSelectedState(r0, r6)
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.android.material.datepicker.MonthAdapter.getView(int, android.view.View, android.view.ViewGroup):android.widget.TextView");
     }
 
     public void updateSelectedStates(MaterialCalendarGridView materialCalendarGridView) {
-        for (Long l : this.previouslySelectedDates) {
-            updateSelectedStateForDate(materialCalendarGridView, l.longValue());
+        for (Long longValue : this.previouslySelectedDates) {
+            updateSelectedStateForDate(materialCalendarGridView, longValue.longValue());
         }
-        DateSelector<?> dateSelector = this.dateSelector;
-        if (dateSelector != null) {
-            for (Long l2 : dateSelector.getSelectedDays()) {
-                updateSelectedStateForDate(materialCalendarGridView, l2.longValue());
+        DateSelector<?> dateSelector2 = this.dateSelector;
+        if (dateSelector2 != null) {
+            for (Long longValue2 : dateSelector2.getSelectedDays()) {
+                updateSelectedStateForDate(materialCalendarGridView, longValue2.longValue());
             }
             this.previouslySelectedDates = this.dateSelector.getSelectedDays();
         }
@@ -109,35 +127,33 @@ public class MonthAdapter extends BaseAdapter {
 
     private void updateSelectedStateForDate(MaterialCalendarGridView materialCalendarGridView, long j) {
         if (Month.create(j).equals(this.month)) {
-            updateSelectedState((TextView) materialCalendarGridView.getChildAt(materialCalendarGridView.getAdapter2().dayToPosition(this.month.getDayOfMonth(j)) - materialCalendarGridView.getFirstVisiblePosition()), j);
+            updateSelectedState((TextView) materialCalendarGridView.getChildAt(materialCalendarGridView.getAdapter().dayToPosition(this.month.getDayOfMonth(j)) - materialCalendarGridView.getFirstVisiblePosition()), j);
         }
     }
 
     private void updateSelectedState(TextView textView, long j) {
         CalendarItemStyle calendarItemStyle;
-        if (textView == null) {
-            return;
-        }
-        if (this.calendarConstraints.getDateValidator().isValid(j)) {
-            textView.setEnabled(true);
-            if (isSelected(j)) {
-                calendarItemStyle = this.calendarStyle.selectedDay;
-            } else if (UtcDates.getTodayCalendar().getTimeInMillis() == j) {
-                calendarItemStyle = this.calendarStyle.todayDay;
+        if (textView != null) {
+            if (this.calendarConstraints.getDateValidator().isValid(j)) {
+                textView.setEnabled(true);
+                if (isSelected(j)) {
+                    calendarItemStyle = this.calendarStyle.selectedDay;
+                } else if (UtcDates.getTodayCalendar().getTimeInMillis() == j) {
+                    calendarItemStyle = this.calendarStyle.todayDay;
+                } else {
+                    calendarItemStyle = this.calendarStyle.day;
+                }
             } else {
-                calendarItemStyle = this.calendarStyle.day;
+                textView.setEnabled(false);
+                calendarItemStyle = this.calendarStyle.invalidDay;
             }
-        } else {
-            textView.setEnabled(false);
-            calendarItemStyle = this.calendarStyle.invalidDay;
+            calendarItemStyle.styleItem(textView);
         }
-        calendarItemStyle.styleItem(textView);
     }
 
     private boolean isSelected(long j) {
-        Iterator<Long> it = this.dateSelector.getSelectedDays().iterator();
-        while (it.hasNext()) {
-            if (UtcDates.canonicalYearMonthDay(j) == UtcDates.canonicalYearMonthDay(it.next().longValue())) {
+        for (Long longValue : this.dateSelector.getSelectedDays()) {
+            if (UtcDates.canonicalYearMonthDay(j) == UtcDates.canonicalYearMonthDay(longValue.longValue())) {
                 return true;
             }
         }
@@ -150,36 +166,37 @@ public class MonthAdapter extends BaseAdapter {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int firstPositionInMonth() {
         return this.month.daysFromStartOfWeekToFirstOfMonth();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int lastPositionInMonth() {
         return (this.month.daysFromStartOfWeekToFirstOfMonth() + this.month.daysInMonth) - 1;
     }
 
-    int positionToDay(int i) {
+    /* access modifiers changed from: package-private */
+    public int positionToDay(int i) {
         return (i - this.month.daysFromStartOfWeekToFirstOfMonth()) + 1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int dayToPosition(int i) {
         return firstPositionInMonth() + (i - 1);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean withinMonth(int i) {
         return i >= firstPositionInMonth() && i <= lastPositionInMonth();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isFirstInRow(int i) {
         return i % this.month.daysInWeek == 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isLastInRow(int i) {
         return (i + 1) % this.month.daysInWeek == 0;
     }

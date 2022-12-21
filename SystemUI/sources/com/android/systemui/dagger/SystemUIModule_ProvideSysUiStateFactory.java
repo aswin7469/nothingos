@@ -1,27 +1,27 @@
 package com.android.systemui.dagger;
 
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.model.SysUiState;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
-/* loaded from: classes.dex */
+import javax.inject.Provider;
+
 public final class SystemUIModule_ProvideSysUiStateFactory implements Factory<SysUiState> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SysUiState mo1933get() {
-        return provideSysUiState();
+    private final Provider<DumpManager> dumpManagerProvider;
+
+    public SystemUIModule_ProvideSysUiStateFactory(Provider<DumpManager> provider) {
+        this.dumpManagerProvider = provider;
     }
 
-    public static SystemUIModule_ProvideSysUiStateFactory create() {
-        return InstanceHolder.INSTANCE;
+    public SysUiState get() {
+        return provideSysUiState(this.dumpManagerProvider.get());
     }
 
-    public static SysUiState provideSysUiState() {
-        return (SysUiState) Preconditions.checkNotNullFromProvides(SystemUIModule.provideSysUiState());
+    public static SystemUIModule_ProvideSysUiStateFactory create(Provider<DumpManager> provider) {
+        return new SystemUIModule_ProvideSysUiStateFactory(provider);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class InstanceHolder {
-        private static final SystemUIModule_ProvideSysUiStateFactory INSTANCE = new SystemUIModule_ProvideSysUiStateFactory();
+    public static SysUiState provideSysUiState(DumpManager dumpManager) {
+        return (SysUiState) Preconditions.checkNotNullFromProvides(SystemUIModule.provideSysUiState(dumpManager));
     }
 }

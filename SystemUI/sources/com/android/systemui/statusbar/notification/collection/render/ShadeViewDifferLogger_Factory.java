@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.collection.render;
 import com.android.systemui.log.LogBuffer;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ShadeViewDifferLogger_Factory implements Factory<ShadeViewDifferLogger> {
     private final Provider<LogBuffer> bufferProvider;
 
@@ -11,10 +11,8 @@ public final class ShadeViewDifferLogger_Factory implements Factory<ShadeViewDif
         this.bufferProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ShadeViewDifferLogger mo1933get() {
-        return newInstance(this.bufferProvider.mo1933get());
+    public ShadeViewDifferLogger get() {
+        return newInstance(this.bufferProvider.get());
     }
 
     public static ShadeViewDifferLogger_Factory create(Provider<LogBuffer> provider) {

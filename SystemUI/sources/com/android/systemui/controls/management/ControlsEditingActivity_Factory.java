@@ -3,10 +3,10 @@ package com.android.systemui.controls.management;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.CustomIconCache;
 import com.android.systemui.controls.controller.ControlsControllerImpl;
-import com.android.systemui.controls.ui.ControlsUiController;
+import com.android.systemui.controls.p010ui.ControlsUiController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ControlsEditingActivity_Factory implements Factory<ControlsEditingActivity> {
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
     private final Provider<ControlsControllerImpl> controllerProvider;
@@ -20,10 +20,8 @@ public final class ControlsEditingActivity_Factory implements Factory<ControlsEd
         this.uiControllerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ControlsEditingActivity mo1933get() {
-        return newInstance(this.controllerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.customIconCacheProvider.mo1933get(), this.uiControllerProvider.mo1933get());
+    public ControlsEditingActivity get() {
+        return newInstance(this.controllerProvider.get(), this.broadcastDispatcherProvider.get(), this.customIconCacheProvider.get(), this.uiControllerProvider.get());
     }
 
     public static ControlsEditingActivity_Factory create(Provider<ControlsControllerImpl> provider, Provider<BroadcastDispatcher> provider2, Provider<CustomIconCache> provider3, Provider<ControlsUiController> provider4) {

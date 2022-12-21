@@ -4,12 +4,12 @@ import android.app.smartspace.SmartspaceManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Handler;
+import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.BcSmartspaceDataPlugin;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.settings.UserTracker;
-import com.android.systemui.statusbar.FeatureFlags;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.util.concurrency.Execution;
@@ -18,7 +18,7 @@ import dagger.internal.Factory;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class LockscreenSmartspaceController_Factory implements Factory<LockscreenSmartspaceController> {
     private final Provider<ActivityStarter> activityStarterProvider;
     private final Provider<ConfigurationController> configurationControllerProvider;
@@ -54,10 +54,8 @@ public final class LockscreenSmartspaceController_Factory implements Factory<Loc
         this.optionalPluginProvider = provider15;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LockscreenSmartspaceController mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.featureFlagsProvider.mo1933get(), this.smartspaceManagerProvider.mo1933get(), this.activityStarterProvider.mo1933get(), this.falsingManagerProvider.mo1933get(), this.secureSettingsProvider.mo1933get(), this.userTrackerProvider.mo1933get(), this.contentResolverProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.deviceProvisionedControllerProvider.mo1933get(), this.executionProvider.mo1933get(), this.uiExecutorProvider.mo1933get(), this.handlerProvider.mo1933get(), this.optionalPluginProvider.mo1933get());
+    public LockscreenSmartspaceController get() {
+        return newInstance(this.contextProvider.get(), this.featureFlagsProvider.get(), this.smartspaceManagerProvider.get(), this.activityStarterProvider.get(), this.falsingManagerProvider.get(), this.secureSettingsProvider.get(), this.userTrackerProvider.get(), this.contentResolverProvider.get(), this.configurationControllerProvider.get(), this.statusBarStateControllerProvider.get(), this.deviceProvisionedControllerProvider.get(), this.executionProvider.get(), this.uiExecutorProvider.get(), this.handlerProvider.get(), this.optionalPluginProvider.get());
     }
 
     public static LockscreenSmartspaceController_Factory create(Provider<Context> provider, Provider<FeatureFlags> provider2, Provider<SmartspaceManager> provider3, Provider<ActivityStarter> provider4, Provider<FalsingManager> provider5, Provider<SecureSettings> provider6, Provider<UserTracker> provider7, Provider<ContentResolver> provider8, Provider<ConfigurationController> provider9, Provider<StatusBarStateController> provider10, Provider<DeviceProvisionedController> provider11, Provider<Execution> provider12, Provider<Executor> provider13, Provider<Handler> provider14, Provider<Optional<BcSmartspaceDataPlugin>> provider15) {

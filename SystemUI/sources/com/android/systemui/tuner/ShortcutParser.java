@@ -9,16 +9,18 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Icon;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Xml;
 import com.android.internal.R;
-import java.io.IOException;
+import java.p026io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes2.dex */
+import org.xmlpull.p032v1.XmlPullParserException;
+
 public class ShortcutParser {
+    private static final String INTENT = "intent";
+    private static final String SHORTCUT = "shortcut";
+    private static final String SHORTCUTS = "android.app.shortcuts";
     private AttributeSet mAttrs;
     private final Context mContext;
     private final String mName;
@@ -32,11 +34,10 @@ public class ShortcutParser {
 
     private static int getResId(Context context, ComponentName componentName) throws PackageManager.NameNotFoundException {
         ActivityInfo activityInfo = context.getPackageManager().getActivityInfo(componentName, 128);
-        Bundle bundle = activityInfo.metaData;
-        if (bundle == null || !bundle.containsKey("android.app.shortcuts")) {
+        if (activityInfo.metaData == null || !activityInfo.metaData.containsKey(SHORTCUTS)) {
             return 0;
         }
-        return activityInfo.metaData.getInt("android.app.shortcuts");
+        return activityInfo.metaData.getInt(SHORTCUTS);
     }
 
     public ShortcutParser(Context context, String str, String str2, int i) {
@@ -59,8 +60,10 @@ public class ShortcutParser {
                     int next = xml.next();
                     if (next == 1) {
                         break;
-                    } else if (next == 2 && xml.getName().equals("shortcut") && (parseShortcut = parseShortcut(xml)) != null) {
-                        arrayList.add(parseShortcut);
+                    } else if (next == 2) {
+                        if (xml.getName().equals(SHORTCUT) && (parseShortcut = parseShortcut(xml)) != null) {
+                            arrayList.add(parseShortcut);
+                        }
                     }
                 }
             } catch (Exception e) {
@@ -79,30 +82,30 @@ public class ShortcutParser {
         String string = obtainAttributes.getString(2);
         int resourceId = obtainAttributes.getResourceId(0, 0);
         int resourceId2 = obtainAttributes.getResourceId(3, 0);
-        String str = this.mPkg;
-        shortcut.pkg = str;
-        shortcut.icon = Icon.createWithResource(str, resourceId);
-        shortcut.id = string;
+        shortcut.pkg = this.mPkg;
+        shortcut.icon = Icon.createWithResource(this.mPkg, resourceId);
+        shortcut.f396id = string;
         shortcut.label = this.mResources.getString(resourceId2);
         shortcut.name = this.mName;
         while (true) {
             int next = xmlResourceParser.next();
             if (next == 3) {
                 break;
-            } else if (next == 2 && xmlResourceParser.getName().equals("intent")) {
+            } else if (next == 2 && xmlResourceParser.getName().equals(INTENT)) {
                 shortcut.intent = Intent.parseIntent(this.mResources, xmlResourceParser, this.mAttrs);
             }
         }
-        if (shortcut.intent == null) {
-            return null;
+        if (shortcut.intent != null) {
+            return shortcut;
         }
-        return shortcut;
+        return null;
     }
 
-    /* loaded from: classes2.dex */
     public static class Shortcut {
         public Icon icon;
-        public String id;
+
+        /* renamed from: id */
+        public String f396id;
         public Intent intent;
         public String label;
         public String name;
@@ -111,9 +114,9 @@ public class ShortcutParser {
         public static Shortcut create(Context context, String str) {
             String[] split = str.split("::");
             try {
-                for (Shortcut shortcut : new ShortcutParser(context, new ComponentName(split[0], split[1])).getShortcuts()) {
-                    if (shortcut.id.equals(split[2])) {
-                        return shortcut;
+                for (Shortcut next : new ShortcutParser(context, new ComponentName(split[0], split[1])).getShortcuts()) {
+                    if (next.f396id.equals(split[2])) {
+                        return next;
                     }
                 }
                 return null;
@@ -123,7 +126,7 @@ public class ShortcutParser {
         }
 
         public String toString() {
-            return this.pkg + "::" + this.name + "::" + this.id;
+            return this.pkg + "::" + this.name + "::" + this.f396id;
         }
     }
 }

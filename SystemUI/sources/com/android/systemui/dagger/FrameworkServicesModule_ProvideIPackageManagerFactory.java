@@ -3,11 +3,9 @@ package com.android.systemui.dagger;
 import android.content.pm.IPackageManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideIPackageManagerFactory implements Factory<IPackageManager> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public IPackageManager mo1933get() {
+    public IPackageManager get() {
         return provideIPackageManager();
     }
 
@@ -19,8 +17,11 @@ public final class FrameworkServicesModule_ProvideIPackageManagerFactory impleme
         return (IPackageManager) Preconditions.checkNotNullFromProvides(FrameworkServicesModule.provideIPackageManager());
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final FrameworkServicesModule_ProvideIPackageManagerFactory INSTANCE = new FrameworkServicesModule_ProvideIPackageManagerFactory();
+        /* access modifiers changed from: private */
+        public static final FrameworkServicesModule_ProvideIPackageManagerFactory INSTANCE = new FrameworkServicesModule_ProvideIPackageManagerFactory();
+
+        private InstanceHolder() {
+        }
     }
 }

@@ -1,10 +1,11 @@
 package com.android.systemui.statusbar.notification.collection.listbuilder.pluggable;
-/* loaded from: classes.dex */
+
+import android.os.Trace;
+
 public abstract class Pluggable<This> {
     private PluggableListener<This> mListener;
     private final String mName;
 
-    /* loaded from: classes.dex */
     public interface PluggableListener<T> {
         void onPluggableInvalidated(T t);
     }
@@ -12,8 +13,7 @@ public abstract class Pluggable<This> {
     public void onCleanup() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public Pluggable(String str) {
+    Pluggable(String str) {
         this.mName = str;
     }
 
@@ -22,9 +22,10 @@ public abstract class Pluggable<This> {
     }
 
     public final void invalidateList() {
-        PluggableListener<This> pluggableListener = this.mListener;
-        if (pluggableListener != null) {
-            pluggableListener.onPluggableInvalidated(this);
+        if (this.mListener != null) {
+            Trace.beginSection("Pluggable<" + this.mName + ">.invalidateList");
+            this.mListener.onPluggableInvalidated(this);
+            Trace.endSection();
         }
     }
 

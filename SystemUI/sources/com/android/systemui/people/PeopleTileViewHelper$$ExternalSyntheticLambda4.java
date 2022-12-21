@@ -1,18 +1,11 @@
 package com.android.systemui.people;
 
 import android.app.people.ConversationStatus;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class PeopleTileViewHelper$$ExternalSyntheticLambda4 implements Predicate {
-    public static final /* synthetic */ PeopleTileViewHelper$$ExternalSyntheticLambda4 INSTANCE = new PeopleTileViewHelper$$ExternalSyntheticLambda4();
+import java.util.function.Function;
 
-    private /* synthetic */ PeopleTileViewHelper$$ExternalSyntheticLambda4() {
-    }
-
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$getHasNewStory$4;
-        lambda$getHasNewStory$4 = PeopleTileViewHelper.lambda$getHasNewStory$4((ConversationStatus) obj);
-        return lambda$getHasNewStory$4;
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class PeopleTileViewHelper$$ExternalSyntheticLambda4 implements Function {
+    public final Object apply(Object obj) {
+        return Long.valueOf(((ConversationStatus) obj).getStartTimeMillis());
     }
 }

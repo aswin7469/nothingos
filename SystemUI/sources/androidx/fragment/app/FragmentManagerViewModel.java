@@ -8,80 +8,74 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class FragmentManagerViewModel extends ViewModel {
-    private static final ViewModelProvider.Factory FACTORY = new ViewModelProvider.Factory() { // from class: androidx.fragment.app.FragmentManagerViewModel.1
-        @Override // androidx.lifecycle.ViewModelProvider.Factory
+import java.util.Map;
+
+final class FragmentManagerViewModel extends ViewModel {
+    private static final ViewModelProvider.Factory FACTORY = new ViewModelProvider.Factory() {
         public <T extends ViewModel> T create(Class<T> cls) {
             return new FragmentManagerViewModel(true);
         }
     };
-    private final boolean mStateAutomaticallySaved;
-    private final HashMap<String, Fragment> mRetainedFragments = new HashMap<>();
+    private static final String TAG = "FragmentManager";
     private final HashMap<String, FragmentManagerViewModel> mChildNonConfigs = new HashMap<>();
-    private final HashMap<String, ViewModelStore> mViewModelStores = new HashMap<>();
     private boolean mHasBeenCleared = false;
     private boolean mHasSavedSnapshot = false;
     private boolean mIsStateSaved = false;
+    private final HashMap<String, Fragment> mRetainedFragments = new HashMap<>();
+    private final boolean mStateAutomaticallySaved;
+    private final HashMap<String, ViewModelStore> mViewModelStores = new HashMap<>();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static FragmentManagerViewModel getInstance(ViewModelStore viewModelStore) {
+    static FragmentManagerViewModel getInstance(ViewModelStore viewModelStore) {
         return (FragmentManagerViewModel) new ViewModelProvider(viewModelStore, FACTORY).get(FragmentManagerViewModel.class);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public FragmentManagerViewModel(boolean z) {
+    FragmentManagerViewModel(boolean z) {
         this.mStateAutomaticallySaved = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setIsStateSaved(boolean z) {
         this.mIsStateSaved = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.lifecycle.ViewModel
+    /* access modifiers changed from: protected */
     public void onCleared() {
         if (FragmentManager.isLoggingEnabled(3)) {
-            Log.d("FragmentManager", "onCleared called for " + this);
+            Log.d(TAG, "onCleared called for " + this);
         }
         this.mHasBeenCleared = true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isCleared() {
         return this.mHasBeenCleared;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void addRetainedFragment(Fragment fragment) {
         if (this.mIsStateSaved) {
-            if (!FragmentManager.isLoggingEnabled(2)) {
-                return;
+            if (FragmentManager.isLoggingEnabled(2)) {
+                Log.v(TAG, "Ignoring addRetainedFragment as the state is already saved");
             }
-            Log.v("FragmentManager", "Ignoring addRetainedFragment as the state is already saved");
-        } else if (this.mRetainedFragments.containsKey(fragment.mWho)) {
-        } else {
+        } else if (!this.mRetainedFragments.containsKey(fragment.mWho)) {
             this.mRetainedFragments.put(fragment.mWho, fragment);
-            if (!FragmentManager.isLoggingEnabled(2)) {
-                return;
+            if (FragmentManager.isLoggingEnabled(2)) {
+                Log.v(TAG, "Updating retained Fragments: Added " + fragment);
             }
-            Log.v("FragmentManager", "Updating retained Fragments: Added " + fragment);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Fragment findRetainedFragmentByWho(String str) {
         return this.mRetainedFragments.get(str);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Collection<Fragment> getRetainedFragments() {
         return new ArrayList(this.mRetainedFragments.values());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean shouldDestroy(Fragment fragment) {
         if (!this.mRetainedFragments.containsKey(fragment.mWho)) {
             return true;
@@ -92,47 +86,43 @@ public final class FragmentManagerViewModel extends ViewModel {
         return !this.mHasSavedSnapshot;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void removeRetainedFragment(Fragment fragment) {
-        if (this.mIsStateSaved) {
-            if (!FragmentManager.isLoggingEnabled(2)) {
-                return;
+        if (!this.mIsStateSaved) {
+            if ((this.mRetainedFragments.remove(fragment.mWho) != null) && FragmentManager.isLoggingEnabled(2)) {
+                Log.v(TAG, "Updating retained Fragments: Removed " + fragment);
             }
-            Log.v("FragmentManager", "Ignoring removeRetainedFragment as the state is already saved");
-            return;
+        } else if (FragmentManager.isLoggingEnabled(2)) {
+            Log.v(TAG, "Ignoring removeRetainedFragment as the state is already saved");
         }
-        if (!(this.mRetainedFragments.remove(fragment.mWho) != null) || !FragmentManager.isLoggingEnabled(2)) {
-            return;
-        }
-        Log.v("FragmentManager", "Updating retained Fragments: Removed " + fragment);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public FragmentManagerViewModel getChildNonConfig(Fragment fragment) {
         FragmentManagerViewModel fragmentManagerViewModel = this.mChildNonConfigs.get(fragment.mWho);
-        if (fragmentManagerViewModel == null) {
-            FragmentManagerViewModel fragmentManagerViewModel2 = new FragmentManagerViewModel(this.mStateAutomaticallySaved);
-            this.mChildNonConfigs.put(fragment.mWho, fragmentManagerViewModel2);
-            return fragmentManagerViewModel2;
+        if (fragmentManagerViewModel != null) {
+            return fragmentManagerViewModel;
         }
-        return fragmentManagerViewModel;
+        FragmentManagerViewModel fragmentManagerViewModel2 = new FragmentManagerViewModel(this.mStateAutomaticallySaved);
+        this.mChildNonConfigs.put(fragment.mWho, fragmentManagerViewModel2);
+        return fragmentManagerViewModel2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ViewModelStore getViewModelStore(Fragment fragment) {
         ViewModelStore viewModelStore = this.mViewModelStores.get(fragment.mWho);
-        if (viewModelStore == null) {
-            ViewModelStore viewModelStore2 = new ViewModelStore();
-            this.mViewModelStores.put(fragment.mWho, viewModelStore2);
-            return viewModelStore2;
+        if (viewModelStore != null) {
+            return viewModelStore;
         }
-        return viewModelStore;
+        ViewModelStore viewModelStore2 = new ViewModelStore();
+        this.mViewModelStores.put(fragment.mWho, viewModelStore2);
+        return viewModelStore2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void clearNonConfigState(Fragment fragment) {
         if (FragmentManager.isLoggingEnabled(3)) {
-            Log.d("FragmentManager", "Clearing non-config state for " + fragment);
+            Log.d(TAG, "Clearing non-config state for " + fragment);
         }
         FragmentManagerViewModel fragmentManagerViewModel = this.mChildNonConfigs.get(fragment.mWho);
         if (fragmentManagerViewModel != null) {
@@ -146,15 +136,69 @@ public final class FragmentManagerViewModel extends ViewModel {
         }
     }
 
+    /* access modifiers changed from: package-private */
+    @Deprecated
+    public void restoreFromSnapshot(FragmentManagerNonConfig fragmentManagerNonConfig) {
+        this.mRetainedFragments.clear();
+        this.mChildNonConfigs.clear();
+        this.mViewModelStores.clear();
+        if (fragmentManagerNonConfig != null) {
+            Collection<Fragment> fragments = fragmentManagerNonConfig.getFragments();
+            if (fragments != null) {
+                for (Fragment next : fragments) {
+                    if (next != null) {
+                        this.mRetainedFragments.put(next.mWho, next);
+                    }
+                }
+            }
+            Map<String, FragmentManagerNonConfig> childNonConfigs = fragmentManagerNonConfig.getChildNonConfigs();
+            if (childNonConfigs != null) {
+                for (Map.Entry next2 : childNonConfigs.entrySet()) {
+                    FragmentManagerViewModel fragmentManagerViewModel = new FragmentManagerViewModel(this.mStateAutomaticallySaved);
+                    fragmentManagerViewModel.restoreFromSnapshot((FragmentManagerNonConfig) next2.getValue());
+                    this.mChildNonConfigs.put(next2.getKey(), fragmentManagerViewModel);
+                }
+            }
+            Map<String, ViewModelStore> viewModelStores = fragmentManagerNonConfig.getViewModelStores();
+            if (viewModelStores != null) {
+                this.mViewModelStores.putAll(viewModelStores);
+            }
+        }
+        this.mHasSavedSnapshot = false;
+    }
+
+    /* access modifiers changed from: package-private */
+    @Deprecated
+    public FragmentManagerNonConfig getSnapshot() {
+        if (this.mRetainedFragments.isEmpty() && this.mChildNonConfigs.isEmpty() && this.mViewModelStores.isEmpty()) {
+            return null;
+        }
+        HashMap hashMap = new HashMap();
+        for (Map.Entry next : this.mChildNonConfigs.entrySet()) {
+            FragmentManagerNonConfig snapshot = ((FragmentManagerViewModel) next.getValue()).getSnapshot();
+            if (snapshot != null) {
+                hashMap.put(next.getKey(), snapshot);
+            }
+        }
+        this.mHasSavedSnapshot = true;
+        if (!this.mRetainedFragments.isEmpty() || !hashMap.isEmpty() || !this.mViewModelStores.isEmpty()) {
+            return new FragmentManagerNonConfig(new ArrayList(this.mRetainedFragments.values()), hashMap, new HashMap(this.mViewModelStores));
+        }
+        return null;
+    }
+
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
-        if (obj == null || FragmentManagerViewModel.class != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         FragmentManagerViewModel fragmentManagerViewModel = (FragmentManagerViewModel) obj;
-        return this.mRetainedFragments.equals(fragmentManagerViewModel.mRetainedFragments) && this.mChildNonConfigs.equals(fragmentManagerViewModel.mChildNonConfigs) && this.mViewModelStores.equals(fragmentManagerViewModel.mViewModelStores);
+        if (!this.mRetainedFragments.equals(fragmentManagerViewModel.mRetainedFragments) || !this.mChildNonConfigs.equals(fragmentManagerViewModel.mChildNonConfigs) || !this.mViewModelStores.equals(fragmentManagerViewModel.mViewModelStores)) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {
@@ -167,7 +211,7 @@ public final class FragmentManagerViewModel extends ViewModel {
         sb.append("} Fragments (");
         Iterator<Fragment> it = this.mRetainedFragments.values().iterator();
         while (it.hasNext()) {
-            sb.append(it.next());
+            sb.append((Object) it.next());
             if (it.hasNext()) {
                 sb.append(", ");
             }

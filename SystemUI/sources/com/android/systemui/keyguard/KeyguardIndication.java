@@ -4,7 +4,7 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.View;
-/* loaded from: classes.dex */
+
 public class KeyguardIndication {
     private final Drawable mBackground;
     private final Drawable mIcon;
@@ -47,10 +47,7 @@ public class KeyguardIndication {
     }
 
     public String toString() {
-        String str = "KeyguardIndication{";
-        if (!TextUtils.isEmpty(this.mMessage)) {
-            str = str + "mMessage=" + ((Object) this.mMessage);
-        }
+        String str = !TextUtils.isEmpty(this.mMessage) ? "KeyguardIndication{mMessage=" + this.mMessage : "KeyguardIndication{";
         if (this.mIcon != null) {
             str = str + " mIcon=" + this.mIcon;
         }
@@ -66,7 +63,6 @@ public class KeyguardIndication {
         return str + "}";
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
         private Drawable mBackground;
         private Drawable mIcon;
@@ -82,6 +78,11 @@ public class KeyguardIndication {
 
         public Builder setTextColor(ColorStateList colorStateList) {
             this.mTextColor = colorStateList;
+            return this;
+        }
+
+        public Builder setIcon(Drawable drawable) {
+            this.mIcon = drawable;
             return this;
         }
 
@@ -103,12 +104,11 @@ public class KeyguardIndication {
         public KeyguardIndication build() {
             if (TextUtils.isEmpty(this.mMessage) && this.mIcon == null) {
                 throw new IllegalStateException("message or icon must be set");
-            }
-            ColorStateList colorStateList = this.mTextColor;
-            if (colorStateList == null) {
+            } else if (this.mTextColor != null) {
+                return new KeyguardIndication(this.mMessage, this.mTextColor, this.mIcon, this.mOnClickListener, this.mBackground, this.mMinVisibilityMillis);
+            } else {
                 throw new IllegalStateException("text color must be set");
             }
-            return new KeyguardIndication(this.mMessage, colorStateList, this.mIcon, this.mOnClickListener, this.mBackground, this.mMinVisibilityMillis);
         }
     }
 }

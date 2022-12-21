@@ -1,16 +1,11 @@
 package com.android.systemui.people;
 
-import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class NotificationHelper$$ExternalSyntheticLambda1 implements Predicate {
-    public static final /* synthetic */ NotificationHelper$$ExternalSyntheticLambda1 INSTANCE = new NotificationHelper$$ExternalSyntheticLambda1();
+import android.app.Notification;
+import java.util.function.Function;
 
-    private /* synthetic */ NotificationHelper$$ExternalSyntheticLambda1() {
-    }
-
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        return NotificationHelper.isMissedCallOrHasContent((NotificationEntry) obj);
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class NotificationHelper$$ExternalSyntheticLambda1 implements Function {
+    public final Object apply(Object obj) {
+        return Long.valueOf(((Notification.MessagingStyle.Message) obj).getTimestamp());
     }
 }

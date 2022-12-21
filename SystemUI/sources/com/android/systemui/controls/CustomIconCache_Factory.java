@@ -1,11 +1,9 @@
 package com.android.systemui.controls;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class CustomIconCache_Factory implements Factory<CustomIconCache> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public CustomIconCache mo1933get() {
+    public CustomIconCache get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class CustomIconCache_Factory implements Factory<CustomIconCache> {
         return new CustomIconCache();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final CustomIconCache_Factory INSTANCE = new CustomIconCache_Factory();
+        /* access modifiers changed from: private */
+        public static final CustomIconCache_Factory INSTANCE = new CustomIconCache_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

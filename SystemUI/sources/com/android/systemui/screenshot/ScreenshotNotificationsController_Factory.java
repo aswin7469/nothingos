@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.WindowManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ScreenshotNotificationsController_Factory implements Factory<ScreenshotNotificationsController> {
     private final Provider<Context> contextProvider;
     private final Provider<WindowManager> windowManagerProvider;
@@ -14,10 +14,8 @@ public final class ScreenshotNotificationsController_Factory implements Factory<
         this.windowManagerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ScreenshotNotificationsController mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.windowManagerProvider.mo1933get());
+    public ScreenshotNotificationsController get() {
+        return newInstance(this.contextProvider.get(), this.windowManagerProvider.get());
     }
 
     public static ScreenshotNotificationsController_Factory create(Provider<Context> provider, Provider<WindowManager> provider2) {

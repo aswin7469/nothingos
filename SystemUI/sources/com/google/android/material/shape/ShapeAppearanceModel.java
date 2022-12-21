@@ -6,8 +6,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
-import com.google.android.material.R$styleable;
-/* loaded from: classes2.dex */
+import com.google.android.material.C3621R;
+
 public class ShapeAppearanceModel {
     public static final CornerSize PILL = new RelativeCornerSize(0.5f);
     EdgeTreatment bottomEdge;
@@ -23,54 +23,40 @@ public class ShapeAppearanceModel {
     CornerTreatment topRightCorner;
     CornerSize topRightCornerSize;
 
-    /* loaded from: classes2.dex */
     public interface CornerSizeUnaryOperator {
         CornerSize apply(CornerSize cornerSize);
     }
 
-    /* loaded from: classes2.dex */
     public static final class Builder {
-        private EdgeTreatment bottomEdge;
-        private CornerTreatment bottomLeftCorner;
-        private CornerSize bottomLeftCornerSize;
-        private CornerTreatment bottomRightCorner;
-        private CornerSize bottomRightCornerSize;
-        private EdgeTreatment leftEdge;
-        private EdgeTreatment rightEdge;
-        private EdgeTreatment topEdge;
-        private CornerTreatment topLeftCorner;
-        private CornerSize topLeftCornerSize;
-        private CornerTreatment topRightCorner;
-        private CornerSize topRightCornerSize;
+        /* access modifiers changed from: private */
+        public EdgeTreatment bottomEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
+        /* access modifiers changed from: private */
+        public CornerTreatment bottomLeftCorner = MaterialShapeUtils.createDefaultCornerTreatment();
+        /* access modifiers changed from: private */
+        public CornerSize bottomLeftCornerSize = new AbsoluteCornerSize(0.0f);
+        /* access modifiers changed from: private */
+        public CornerTreatment bottomRightCorner = MaterialShapeUtils.createDefaultCornerTreatment();
+        /* access modifiers changed from: private */
+        public CornerSize bottomRightCornerSize = new AbsoluteCornerSize(0.0f);
+        /* access modifiers changed from: private */
+        public EdgeTreatment leftEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
+        /* access modifiers changed from: private */
+        public EdgeTreatment rightEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
+        /* access modifiers changed from: private */
+        public EdgeTreatment topEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
+        /* access modifiers changed from: private */
+        public CornerTreatment topLeftCorner = MaterialShapeUtils.createDefaultCornerTreatment();
+        /* access modifiers changed from: private */
+        public CornerSize topLeftCornerSize = new AbsoluteCornerSize(0.0f);
+        /* access modifiers changed from: private */
+        public CornerTreatment topRightCorner = MaterialShapeUtils.createDefaultCornerTreatment();
+        /* access modifiers changed from: private */
+        public CornerSize topRightCornerSize = new AbsoluteCornerSize(0.0f);
 
         public Builder() {
-            this.topLeftCorner = MaterialShapeUtils.createDefaultCornerTreatment();
-            this.topRightCorner = MaterialShapeUtils.createDefaultCornerTreatment();
-            this.bottomRightCorner = MaterialShapeUtils.createDefaultCornerTreatment();
-            this.bottomLeftCorner = MaterialShapeUtils.createDefaultCornerTreatment();
-            this.topLeftCornerSize = new AbsoluteCornerSize(0.0f);
-            this.topRightCornerSize = new AbsoluteCornerSize(0.0f);
-            this.bottomRightCornerSize = new AbsoluteCornerSize(0.0f);
-            this.bottomLeftCornerSize = new AbsoluteCornerSize(0.0f);
-            this.topEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
-            this.rightEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
-            this.bottomEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
-            this.leftEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
         }
 
         public Builder(ShapeAppearanceModel shapeAppearanceModel) {
-            this.topLeftCorner = MaterialShapeUtils.createDefaultCornerTreatment();
-            this.topRightCorner = MaterialShapeUtils.createDefaultCornerTreatment();
-            this.bottomRightCorner = MaterialShapeUtils.createDefaultCornerTreatment();
-            this.bottomLeftCorner = MaterialShapeUtils.createDefaultCornerTreatment();
-            this.topLeftCornerSize = new AbsoluteCornerSize(0.0f);
-            this.topRightCornerSize = new AbsoluteCornerSize(0.0f);
-            this.bottomRightCornerSize = new AbsoluteCornerSize(0.0f);
-            this.bottomLeftCornerSize = new AbsoluteCornerSize(0.0f);
-            this.topEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
-            this.rightEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
-            this.bottomEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
-            this.leftEdge = MaterialShapeUtils.createDefaultEdgeTreatment();
             this.topLeftCorner = shapeAppearanceModel.topLeftCorner;
             this.topRightCorner = shapeAppearanceModel.topRightCorner;
             this.bottomRightCorner = shapeAppearanceModel.bottomRightCorner;
@@ -141,6 +127,10 @@ public class ShapeAppearanceModel {
             return this;
         }
 
+        public Builder setTopLeftCorner(int i, float f) {
+            return setTopLeftCorner(MaterialShapeUtils.createCornerTreatment(i)).setTopLeftCornerSize(f);
+        }
+
         public Builder setTopLeftCorner(int i, CornerSize cornerSize) {
             return setTopLeftCorner(MaterialShapeUtils.createCornerTreatment(i)).setTopLeftCornerSize(cornerSize);
         }
@@ -152,6 +142,10 @@ public class ShapeAppearanceModel {
                 setTopLeftCornerSize(compatCornerTreatmentSize);
             }
             return this;
+        }
+
+        public Builder setTopRightCorner(int i, float f) {
+            return setTopRightCorner(MaterialShapeUtils.createCornerTreatment(i)).setTopRightCornerSize(f);
         }
 
         public Builder setTopRightCorner(int i, CornerSize cornerSize) {
@@ -167,6 +161,10 @@ public class ShapeAppearanceModel {
             return this;
         }
 
+        public Builder setBottomRightCorner(int i, float f) {
+            return setBottomRightCorner(MaterialShapeUtils.createCornerTreatment(i)).setBottomRightCornerSize(f);
+        }
+
         public Builder setBottomRightCorner(int i, CornerSize cornerSize) {
             return setBottomRightCorner(MaterialShapeUtils.createCornerTreatment(i)).setBottomRightCornerSize(cornerSize);
         }
@@ -178,6 +176,10 @@ public class ShapeAppearanceModel {
                 setBottomRightCornerSize(compatCornerTreatmentSize);
             }
             return this;
+        }
+
+        public Builder setBottomLeftCorner(int i, float f) {
+            return setBottomLeftCorner(MaterialShapeUtils.createCornerTreatment(i)).setBottomLeftCornerSize(f);
         }
 
         public Builder setBottomLeftCorner(int i, CornerSize cornerSize) {
@@ -193,8 +195,22 @@ public class ShapeAppearanceModel {
             return this;
         }
 
+        public Builder setAllEdges(EdgeTreatment edgeTreatment) {
+            return setLeftEdge(edgeTreatment).setTopEdge(edgeTreatment).setRightEdge(edgeTreatment).setBottomEdge(edgeTreatment);
+        }
+
+        public Builder setLeftEdge(EdgeTreatment edgeTreatment) {
+            this.leftEdge = edgeTreatment;
+            return this;
+        }
+
         public Builder setTopEdge(EdgeTreatment edgeTreatment) {
             this.topEdge = edgeTreatment;
+            return this;
+        }
+
+        public Builder setRightEdge(EdgeTreatment edgeTreatment) {
+            this.rightEdge = edgeTreatment;
             return this;
         }
 
@@ -207,10 +223,10 @@ public class ShapeAppearanceModel {
             if (cornerTreatment instanceof RoundedCornerTreatment) {
                 return ((RoundedCornerTreatment) cornerTreatment).radius;
             }
-            if (!(cornerTreatment instanceof CutCornerTreatment)) {
-                return -1.0f;
+            if (cornerTreatment instanceof CutCornerTreatment) {
+                return ((CutCornerTreatment) cornerTreatment).size;
             }
-            return ((CutCornerTreatment) cornerTreatment).size;
+            return -1.0f;
         }
 
         public ShapeAppearanceModel build() {
@@ -227,13 +243,13 @@ public class ShapeAppearanceModel {
     }
 
     public static Builder builder(Context context, AttributeSet attributeSet, int i, int i2, int i3) {
-        return builder(context, attributeSet, i, i2, new AbsoluteCornerSize(i3));
+        return builder(context, attributeSet, i, i2, (CornerSize) new AbsoluteCornerSize((float) i3));
     }
 
     public static Builder builder(Context context, AttributeSet attributeSet, int i, int i2, CornerSize cornerSize) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.MaterialShape, i, i2);
-        int resourceId = obtainStyledAttributes.getResourceId(R$styleable.MaterialShape_shapeAppearance, 0);
-        int resourceId2 = obtainStyledAttributes.getResourceId(R$styleable.MaterialShape_shapeAppearanceOverlay, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C3621R.styleable.MaterialShape, i, i2);
+        int resourceId = obtainStyledAttributes.getResourceId(C3621R.styleable.MaterialShape_shapeAppearance, 0);
+        int resourceId2 = obtainStyledAttributes.getResourceId(C3621R.styleable.MaterialShape_shapeAppearanceOverlay, 0);
         obtainStyledAttributes.recycle();
         return builder(context, resourceId, resourceId2, cornerSize);
     }
@@ -243,7 +259,7 @@ public class ShapeAppearanceModel {
     }
 
     private static Builder builder(Context context, int i, int i2, int i3) {
-        return builder(context, i, i2, new AbsoluteCornerSize(i3));
+        return builder(context, i, i2, (CornerSize) new AbsoluteCornerSize((float) i3));
     }
 
     private static Builder builder(Context context, int i, int i2, CornerSize cornerSize) {
@@ -252,18 +268,18 @@ public class ShapeAppearanceModel {
             i = i2;
             context = contextThemeWrapper;
         }
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(i, R$styleable.ShapeAppearance);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(i, C3621R.styleable.ShapeAppearance);
         try {
-            int i3 = obtainStyledAttributes.getInt(R$styleable.ShapeAppearance_cornerFamily, 0);
-            int i4 = obtainStyledAttributes.getInt(R$styleable.ShapeAppearance_cornerFamilyTopLeft, i3);
-            int i5 = obtainStyledAttributes.getInt(R$styleable.ShapeAppearance_cornerFamilyTopRight, i3);
-            int i6 = obtainStyledAttributes.getInt(R$styleable.ShapeAppearance_cornerFamilyBottomRight, i3);
-            int i7 = obtainStyledAttributes.getInt(R$styleable.ShapeAppearance_cornerFamilyBottomLeft, i3);
-            CornerSize cornerSize2 = getCornerSize(obtainStyledAttributes, R$styleable.ShapeAppearance_cornerSize, cornerSize);
-            CornerSize cornerSize3 = getCornerSize(obtainStyledAttributes, R$styleable.ShapeAppearance_cornerSizeTopLeft, cornerSize2);
-            CornerSize cornerSize4 = getCornerSize(obtainStyledAttributes, R$styleable.ShapeAppearance_cornerSizeTopRight, cornerSize2);
-            CornerSize cornerSize5 = getCornerSize(obtainStyledAttributes, R$styleable.ShapeAppearance_cornerSizeBottomRight, cornerSize2);
-            return new Builder().setTopLeftCorner(i4, cornerSize3).setTopRightCorner(i5, cornerSize4).setBottomRightCorner(i6, cornerSize5).setBottomLeftCorner(i7, getCornerSize(obtainStyledAttributes, R$styleable.ShapeAppearance_cornerSizeBottomLeft, cornerSize2));
+            int i3 = obtainStyledAttributes.getInt(C3621R.styleable.ShapeAppearance_cornerFamily, 0);
+            int i4 = obtainStyledAttributes.getInt(C3621R.styleable.ShapeAppearance_cornerFamilyTopLeft, i3);
+            int i5 = obtainStyledAttributes.getInt(C3621R.styleable.ShapeAppearance_cornerFamilyTopRight, i3);
+            int i6 = obtainStyledAttributes.getInt(C3621R.styleable.ShapeAppearance_cornerFamilyBottomRight, i3);
+            int i7 = obtainStyledAttributes.getInt(C3621R.styleable.ShapeAppearance_cornerFamilyBottomLeft, i3);
+            CornerSize cornerSize2 = getCornerSize(obtainStyledAttributes, C3621R.styleable.ShapeAppearance_cornerSize, cornerSize);
+            CornerSize cornerSize3 = getCornerSize(obtainStyledAttributes, C3621R.styleable.ShapeAppearance_cornerSizeTopLeft, cornerSize2);
+            CornerSize cornerSize4 = getCornerSize(obtainStyledAttributes, C3621R.styleable.ShapeAppearance_cornerSizeTopRight, cornerSize2);
+            CornerSize cornerSize5 = getCornerSize(obtainStyledAttributes, C3621R.styleable.ShapeAppearance_cornerSizeBottomRight, cornerSize2);
+            return new Builder().setTopLeftCorner(i4, cornerSize3).setTopRightCorner(i5, cornerSize4).setBottomRightCorner(i6, cornerSize5).setBottomLeftCorner(i7, getCornerSize(obtainStyledAttributes, C3621R.styleable.ShapeAppearance_cornerSizeBottomLeft, cornerSize2));
         } finally {
             obtainStyledAttributes.recycle();
         }
@@ -274,11 +290,10 @@ public class ShapeAppearanceModel {
         if (peekValue == null) {
             return cornerSize;
         }
-        int i2 = peekValue.type;
-        if (i2 == 5) {
-            return new AbsoluteCornerSize(TypedValue.complexToDimensionPixelSize(peekValue.data, typedArray.getResources().getDisplayMetrics()));
+        if (peekValue.type == 5) {
+            return new AbsoluteCornerSize((float) TypedValue.complexToDimensionPixelSize(peekValue.data, typedArray.getResources().getDisplayMetrics()));
         }
-        return i2 == 6 ? new RelativeCornerSize(peekValue.getFraction(1.0f, 1.0f)) : cornerSize;
+        return peekValue.type == 6 ? new RelativeCornerSize(peekValue.getFraction(1.0f, 1.0f)) : cornerSize;
     }
 
     private ShapeAppearanceModel(Builder builder) {
@@ -378,6 +393,11 @@ public class ShapeAppearanceModel {
     public boolean isRoundRect(RectF rectF) {
         boolean z = this.leftEdge.getClass().equals(EdgeTreatment.class) && this.rightEdge.getClass().equals(EdgeTreatment.class) && this.topEdge.getClass().equals(EdgeTreatment.class) && this.bottomEdge.getClass().equals(EdgeTreatment.class);
         float cornerSize = this.topLeftCornerSize.getCornerSize(rectF);
-        return z && ((this.topRightCornerSize.getCornerSize(rectF) > cornerSize ? 1 : (this.topRightCornerSize.getCornerSize(rectF) == cornerSize ? 0 : -1)) == 0 && (this.bottomLeftCornerSize.getCornerSize(rectF) > cornerSize ? 1 : (this.bottomLeftCornerSize.getCornerSize(rectF) == cornerSize ? 0 : -1)) == 0 && (this.bottomRightCornerSize.getCornerSize(rectF) > cornerSize ? 1 : (this.bottomRightCornerSize.getCornerSize(rectF) == cornerSize ? 0 : -1)) == 0) && ((this.topRightCorner instanceof RoundedCornerTreatment) && (this.topLeftCorner instanceof RoundedCornerTreatment) && (this.bottomRightCorner instanceof RoundedCornerTreatment) && (this.bottomLeftCorner instanceof RoundedCornerTreatment));
+        boolean z2 = this.topRightCornerSize.getCornerSize(rectF) == cornerSize && this.bottomLeftCornerSize.getCornerSize(rectF) == cornerSize && this.bottomRightCornerSize.getCornerSize(rectF) == cornerSize;
+        boolean z3 = (this.topRightCorner instanceof RoundedCornerTreatment) && (this.topLeftCorner instanceof RoundedCornerTreatment) && (this.bottomRightCorner instanceof RoundedCornerTreatment) && (this.bottomLeftCorner instanceof RoundedCornerTreatment);
+        if (!z || !z2 || !z3) {
+            return false;
+        }
+        return true;
     }
 }

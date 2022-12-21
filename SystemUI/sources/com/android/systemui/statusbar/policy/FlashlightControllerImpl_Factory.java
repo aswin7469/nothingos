@@ -1,27 +1,28 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
+import com.android.systemui.dump.DumpManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class FlashlightControllerImpl_Factory implements Factory<FlashlightControllerImpl> {
     private final Provider<Context> contextProvider;
+    private final Provider<DumpManager> dumpManagerProvider;
 
-    public FlashlightControllerImpl_Factory(Provider<Context> provider) {
+    public FlashlightControllerImpl_Factory(Provider<Context> provider, Provider<DumpManager> provider2) {
         this.contextProvider = provider;
+        this.dumpManagerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public FlashlightControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public FlashlightControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.dumpManagerProvider.get());
     }
 
-    public static FlashlightControllerImpl_Factory create(Provider<Context> provider) {
-        return new FlashlightControllerImpl_Factory(provider);
+    public static FlashlightControllerImpl_Factory create(Provider<Context> provider, Provider<DumpManager> provider2) {
+        return new FlashlightControllerImpl_Factory(provider, provider2);
     }
 
-    public static FlashlightControllerImpl newInstance(Context context) {
-        return new FlashlightControllerImpl(context);
+    public static FlashlightControllerImpl newInstance(Context context, DumpManager dumpManager) {
+        return new FlashlightControllerImpl(context, dumpManager);
     }
 }

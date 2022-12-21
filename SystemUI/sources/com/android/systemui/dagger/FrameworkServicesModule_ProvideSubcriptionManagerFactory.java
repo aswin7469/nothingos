@@ -5,7 +5,7 @@ import android.telephony.SubscriptionManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideSubcriptionManagerFactory implements Factory<SubscriptionManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideSubcriptionManagerFactory impl
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SubscriptionManager mo1933get() {
-        return provideSubcriptionManager(this.contextProvider.mo1933get());
+    public SubscriptionManager get() {
+        return provideSubcriptionManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideSubcriptionManagerFactory create(Provider<Context> provider) {

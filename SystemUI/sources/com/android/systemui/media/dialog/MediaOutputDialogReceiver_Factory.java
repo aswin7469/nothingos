@@ -2,25 +2,25 @@ package com.android.systemui.media.dialog;
 
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class MediaOutputDialogReceiver_Factory implements Factory<MediaOutputDialogReceiver> {
+    private final Provider<MediaOutputBroadcastDialogFactory> mediaOutputBroadcastDialogFactoryProvider;
     private final Provider<MediaOutputDialogFactory> mediaOutputDialogFactoryProvider;
 
-    public MediaOutputDialogReceiver_Factory(Provider<MediaOutputDialogFactory> provider) {
+    public MediaOutputDialogReceiver_Factory(Provider<MediaOutputDialogFactory> provider, Provider<MediaOutputBroadcastDialogFactory> provider2) {
         this.mediaOutputDialogFactoryProvider = provider;
+        this.mediaOutputBroadcastDialogFactoryProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaOutputDialogReceiver mo1933get() {
-        return newInstance(this.mediaOutputDialogFactoryProvider.mo1933get());
+    public MediaOutputDialogReceiver get() {
+        return newInstance(this.mediaOutputDialogFactoryProvider.get(), this.mediaOutputBroadcastDialogFactoryProvider.get());
     }
 
-    public static MediaOutputDialogReceiver_Factory create(Provider<MediaOutputDialogFactory> provider) {
-        return new MediaOutputDialogReceiver_Factory(provider);
+    public static MediaOutputDialogReceiver_Factory create(Provider<MediaOutputDialogFactory> provider, Provider<MediaOutputBroadcastDialogFactory> provider2) {
+        return new MediaOutputDialogReceiver_Factory(provider, provider2);
     }
 
-    public static MediaOutputDialogReceiver newInstance(MediaOutputDialogFactory mediaOutputDialogFactory) {
-        return new MediaOutputDialogReceiver(mediaOutputDialogFactory);
+    public static MediaOutputDialogReceiver newInstance(MediaOutputDialogFactory mediaOutputDialogFactory, MediaOutputBroadcastDialogFactory mediaOutputBroadcastDialogFactory) {
+        return new MediaOutputDialogReceiver(mediaOutputDialogFactory, mediaOutputBroadcastDialogFactory);
     }
 }

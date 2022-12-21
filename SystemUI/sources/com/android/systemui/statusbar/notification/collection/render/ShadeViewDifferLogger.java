@@ -2,89 +2,63 @@ package com.android.systemui.statusbar.notification.collection.render;
 
 import com.android.systemui.log.LogBuffer;
 import com.android.systemui.log.LogLevel;
-import com.android.systemui.log.LogMessageImpl;
+import com.android.systemui.log.LogMessage;
+import com.android.systemui.log.dagger.NotificationLog;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u0000<\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\u0018\u00002\u00020\u0001B\u0011\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0016\u0010\u0005\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\bJ2\u0010\n\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\b2\u0006\u0010\u000b\u001a\u00020\f2\u0006\u0010\r\u001a\u00020\f2\b\u0010\u000e\u001a\u0004\u0018\u00010\b2\b\u0010\u000f\u001a\u0004\u0018\u00010\bJ\u0016\u0010\u0010\u001a\u00020\u00062\u0006\u0010\u0011\u001a\u00020\u00122\u0006\u0010\u0013\u001a\u00020\u0014J\u001e\u0010\u0015\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\b2\u0006\u0010\u0016\u001a\u00020\u0017R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0018"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/collection/render/ShadeViewDifferLogger;", "", "buffer", "Lcom/android/systemui/log/LogBuffer;", "(Lcom/android/systemui/log/LogBuffer;)V", "logAttachingChild", "", "key", "", "parent", "logDetachingChild", "isTransfer", "", "isParentRemoved", "oldParent", "newParent", "logDuplicateNodeInTree", "node", "Lcom/android/systemui/statusbar/notification/collection/render/NodeSpec;", "ex", "Ljava/lang/RuntimeException;", "logMovingChild", "toIndex", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ShadeViewDifferLogger.kt */
-/* loaded from: classes.dex */
 public final class ShadeViewDifferLogger {
-    @NotNull
     private final LogBuffer buffer;
 
-    public ShadeViewDifferLogger(@NotNull LogBuffer buffer) {
-        Intrinsics.checkNotNullParameter(buffer, "buffer");
-        this.buffer = buffer;
+    @Inject
+    public ShadeViewDifferLogger(@NotificationLog LogBuffer logBuffer) {
+        Intrinsics.checkNotNullParameter(logBuffer, "buffer");
+        this.buffer = logBuffer;
     }
 
-    public final void logDetachingChild(@NotNull String key, boolean z, @Nullable String str, @Nullable String str2) {
-        Intrinsics.checkNotNullParameter(key, "key");
+    public final void logDetachingChild(String str, boolean z, boolean z2, String str2, String str3) {
+        Intrinsics.checkNotNullParameter(str, "key");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.DEBUG;
-        ShadeViewDifferLogger$logDetachingChild$2 shadeViewDifferLogger$logDetachingChild$2 = ShadeViewDifferLogger$logDetachingChild$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifViewManager", logLevel, shadeViewDifferLogger$logDetachingChild$2);
-            obtain.setStr1(key);
-            obtain.setBool1(z);
-            obtain.setStr2(str);
-            obtain.setStr3(str2);
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifViewManager", LogLevel.DEBUG, ShadeViewDifferLogger$logDetachingChild$2.INSTANCE);
+        obtain.setStr1(str);
+        obtain.setBool1(z);
+        obtain.setBool2(z2);
+        obtain.setStr2(str2);
+        obtain.setStr3(str3);
+        logBuffer.commit(obtain);
     }
 
-    public final void logSkippingDetach(@NotNull String key, @Nullable String str) {
-        Intrinsics.checkNotNullParameter(key, "key");
+    public final void logAttachingChild(String str, String str2) {
+        Intrinsics.checkNotNullParameter(str, "key");
+        Intrinsics.checkNotNullParameter(str2, "parent");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.DEBUG;
-        ShadeViewDifferLogger$logSkippingDetach$2 shadeViewDifferLogger$logSkippingDetach$2 = ShadeViewDifferLogger$logSkippingDetach$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifViewManager", logLevel, shadeViewDifferLogger$logSkippingDetach$2);
-            obtain.setStr1(key);
-            obtain.setStr2(str);
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifViewManager", LogLevel.DEBUG, ShadeViewDifferLogger$logAttachingChild$2.INSTANCE);
+        obtain.setStr1(str);
+        obtain.setStr2(str2);
+        logBuffer.commit(obtain);
     }
 
-    public final void logAttachingChild(@NotNull String key, @NotNull String parent) {
-        Intrinsics.checkNotNullParameter(key, "key");
-        Intrinsics.checkNotNullParameter(parent, "parent");
+    public final void logMovingChild(String str, String str2, int i) {
+        Intrinsics.checkNotNullParameter(str, "key");
+        Intrinsics.checkNotNullParameter(str2, "parent");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.DEBUG;
-        ShadeViewDifferLogger$logAttachingChild$2 shadeViewDifferLogger$logAttachingChild$2 = ShadeViewDifferLogger$logAttachingChild$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifViewManager", logLevel, shadeViewDifferLogger$logAttachingChild$2);
-            obtain.setStr1(key);
-            obtain.setStr2(parent);
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifViewManager", LogLevel.DEBUG, ShadeViewDifferLogger$logMovingChild$2.INSTANCE);
+        obtain.setStr1(str);
+        obtain.setStr2(str2);
+        obtain.setInt1(i);
+        logBuffer.commit(obtain);
     }
 
-    public final void logMovingChild(@NotNull String key, @NotNull String parent, int i) {
-        Intrinsics.checkNotNullParameter(key, "key");
-        Intrinsics.checkNotNullParameter(parent, "parent");
+    public final void logDuplicateNodeInTree(NodeSpec nodeSpec, RuntimeException runtimeException) {
+        Intrinsics.checkNotNullParameter(nodeSpec, "node");
+        Intrinsics.checkNotNullParameter(runtimeException, "ex");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.DEBUG;
-        ShadeViewDifferLogger$logMovingChild$2 shadeViewDifferLogger$logMovingChild$2 = ShadeViewDifferLogger$logMovingChild$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifViewManager", logLevel, shadeViewDifferLogger$logMovingChild$2);
-            obtain.setStr1(key);
-            obtain.setStr2(parent);
-            obtain.setInt1(i);
-            logBuffer.push(obtain);
-        }
-    }
-
-    public final void logDuplicateNodeInTree(@NotNull NodeSpec node, @NotNull RuntimeException ex) {
-        Intrinsics.checkNotNullParameter(node, "node");
-        Intrinsics.checkNotNullParameter(ex, "ex");
-        LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.ERROR;
-        ShadeViewDifferLogger$logDuplicateNodeInTree$2 shadeViewDifferLogger$logDuplicateNodeInTree$2 = ShadeViewDifferLogger$logDuplicateNodeInTree$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifViewManager", logLevel, shadeViewDifferLogger$logDuplicateNodeInTree$2);
-            obtain.setStr1(ex.toString());
-            obtain.setStr2(NodeControllerKt.treeSpecToStr(node));
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifViewManager", LogLevel.ERROR, ShadeViewDifferLogger$logDuplicateNodeInTree$2.INSTANCE);
+        obtain.setStr1(runtimeException.toString());
+        obtain.setStr2(NodeControllerKt.treeSpecToStr(nodeSpec));
+        logBuffer.commit(obtain);
     }
 }

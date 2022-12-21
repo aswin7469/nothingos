@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -25,50 +24,48 @@ import android.widget.TimePicker;
 import androidx.core.content.ContextCompat;
 import androidx.slice.CornerDrawable;
 import androidx.slice.SliceItem;
-import androidx.slice.core.SliceActionImpl;
+import androidx.slice.core.SliceHints;
 import androidx.slice.core.SliceQuery;
-import androidx.slice.view.R$dimen;
-import androidx.slice.view.R$drawable;
-import androidx.slice.view.R$id;
-import androidx.slice.view.R$layout;
-import androidx.slice.view.R$string;
-import androidx.slice.view.R$style;
+import androidx.slice.view.C1349R;
 import androidx.slice.widget.GridContent;
 import androidx.slice.widget.SliceView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class GridRowView extends SliceChildView implements View.OnClickListener, View.OnTouchListener {
-    private static final int TEXT_LAYOUT = R$layout.abc_slice_secondary_text;
-    protected final View mForeground;
-    protected GridContent mGridContent;
+    private static final int MAX_CELL_IMAGES = 1;
+    private static final int MAX_CELL_TEXT = 2;
+    private static final int MAX_CELL_TEXT_SMALL = 1;
+    private static final String TAG = "GridRowView";
+    private static final int TEXT_LAYOUT = C1349R.layout.abc_slice_secondary_text;
+    private static final int TITLE_TEXT_LAYOUT = C1349R.layout.abc_slice_title;
+    private final View mForeground;
+    private GridContent mGridContent;
     private final int mGutter;
     private int mHiddenItemCount;
-    protected final int mIconSize;
-    protected final int mLargeImageHeight;
+    private final int mIconSize;
+    private final int mLargeImageHeight;
     private final int[] mLoc;
     boolean mMaxCellUpdateScheduled;
-    protected int mMaxCells;
+    int mMaxCells;
     private final ViewTreeObserver.OnPreDrawListener mMaxCellsUpdater;
-    protected int mRowCount;
-    protected int mRowIndex;
-    protected final int mSmallImageMinWidth;
-    protected final int mSmallImageSize;
+    private int mRowCount;
+    private int mRowIndex;
+    private final int mSmallImageMinWidth;
+    private final int mSmallImageSize;
     private final int mTextPadding;
-    protected final LinearLayout mViewContainer;
+    private final LinearLayout mViewContainer;
 
     public GridRowView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    public GridRowView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        this.mLoc = new int[2];
+    public GridRowView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
         this.mMaxCells = -1;
-        this.mMaxCellsUpdater = new ViewTreeObserver.OnPreDrawListener() { // from class: androidx.slice.widget.GridRowView.2
-            @Override // android.view.ViewTreeObserver.OnPreDrawListener
+        this.mLoc = new int[2];
+        this.mMaxCellsUpdater = new ViewTreeObserver.OnPreDrawListener() {
             public boolean onPreDraw() {
                 GridRowView gridRowView = GridRowView.this;
                 gridRowView.mMaxCells = gridRowView.getMaxCells();
@@ -84,79 +81,70 @@ public class GridRowView extends SliceChildView implements View.OnClickListener,
         linearLayout.setOrientation(0);
         addView(linearLayout, new FrameLayout.LayoutParams(-1, -1));
         linearLayout.setGravity(16);
-        this.mIconSize = resources.getDimensionPixelSize(R$dimen.abc_slice_icon_size);
-        this.mSmallImageSize = resources.getDimensionPixelSize(R$dimen.abc_slice_small_image_size);
-        this.mLargeImageHeight = resources.getDimensionPixelSize(R$dimen.abc_slice_grid_image_only_height);
-        this.mSmallImageMinWidth = resources.getDimensionPixelSize(R$dimen.abc_slice_grid_image_min_width);
-        this.mGutter = resources.getDimensionPixelSize(R$dimen.abc_slice_grid_gutter);
-        this.mTextPadding = resources.getDimensionPixelSize(R$dimen.abc_slice_grid_text_padding);
+        this.mIconSize = resources.getDimensionPixelSize(C1349R.dimen.abc_slice_icon_size);
+        this.mSmallImageSize = resources.getDimensionPixelSize(C1349R.dimen.abc_slice_small_image_size);
+        this.mLargeImageHeight = resources.getDimensionPixelSize(C1349R.dimen.abc_slice_grid_image_only_height);
+        this.mSmallImageMinWidth = resources.getDimensionPixelSize(C1349R.dimen.abc_slice_grid_image_min_width);
+        this.mGutter = resources.getDimensionPixelSize(C1349R.dimen.abc_slice_grid_gutter);
+        this.mTextPadding = resources.getDimensionPixelSize(C1349R.dimen.abc_slice_grid_text_padding);
         View view = new View(getContext());
         this.mForeground = view;
         addView(view, new FrameLayout.LayoutParams(-1, -1));
     }
 
-    @Override // androidx.slice.widget.SliceChildView
-    public void setInsets(int l, int t, int r, int b) {
-        super.setInsets(l, t, r, b);
-        this.mViewContainer.setPadding(l, t + getExtraTopPadding(), r, b + getExtraBottomPadding());
+    public void setInsets(int i, int i2, int i3, int i4) {
+        super.setInsets(i, i2, i3, i4);
+        this.mViewContainer.setPadding(i, i2 + getExtraTopPadding(), i3, i4 + getExtraBottomPadding());
     }
 
-    protected int getTitleTextLayout() {
-        return R$layout.abc_slice_title;
-    }
-
-    protected int getExtraTopPadding() {
-        SliceStyle sliceStyle;
+    private int getExtraTopPadding() {
         GridContent gridContent = this.mGridContent;
-        if (gridContent == null || !gridContent.isAllImages() || this.mRowIndex != 0 || (sliceStyle = this.mSliceStyle) == null) {
+        if (gridContent == null || !gridContent.isAllImages() || this.mRowIndex != 0 || this.mSliceStyle == null) {
             return 0;
         }
-        return sliceStyle.getGridTopPadding();
+        return this.mSliceStyle.getGridTopPadding();
     }
 
-    protected int getExtraBottomPadding() {
-        SliceStyle sliceStyle;
+    private int getExtraBottomPadding() {
         GridContent gridContent = this.mGridContent;
         if (gridContent == null || !gridContent.isAllImages()) {
             return 0;
         }
-        if ((this.mRowIndex != this.mRowCount - 1 && getMode() != 1) || (sliceStyle = this.mSliceStyle) == null) {
-            return 0;
+        if ((this.mRowIndex == this.mRowCount - 1 || getMode() == 1) && this.mSliceStyle != null) {
+            return this.mSliceStyle.getGridBottomPadding();
         }
-        return sliceStyle.getGridBottomPadding();
+        return 0;
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         int height = this.mGridContent.getHeight(this.mSliceStyle, this.mViewPolicy) + this.mInsetTop + this.mInsetBottom;
         int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(height, 1073741824);
         this.mViewContainer.getLayoutParams().height = height;
-        super.onMeasure(widthMeasureSpec, makeMeasureSpec);
+        super.onMeasure(i, makeMeasureSpec);
     }
 
-    @Override // androidx.slice.widget.SliceChildView
-    public void setTint(int tintColor) {
-        super.setTint(tintColor);
+    public void setTint(int i) {
+        super.setTint(i);
         if (this.mGridContent != null) {
             resetView();
             populateViews();
         }
     }
 
-    @Override // androidx.slice.widget.SliceChildView
-    public void setSliceItem(SliceContent slice, boolean isHeader, int rowIndex, int rowCount, SliceView.OnSliceActionListener observer) {
+    public void setSliceItem(SliceContent sliceContent, boolean z, int i, int i2, SliceView.OnSliceActionListener onSliceActionListener) {
         resetView();
-        setSliceActionListener(observer);
-        this.mRowIndex = rowIndex;
-        this.mRowCount = rowCount;
-        this.mGridContent = (GridContent) slice;
+        setSliceActionListener(onSliceActionListener);
+        this.mRowIndex = i;
+        this.mRowCount = i2;
+        this.mGridContent = (GridContent) sliceContent;
         if (!scheduleMaxCellsUpdate()) {
             populateViews();
         }
         this.mViewContainer.setPadding(this.mInsetStart, this.mInsetTop + getExtraTopPadding(), this.mInsetEnd, this.mInsetBottom + getExtraBottomPadding());
     }
 
-    protected boolean scheduleMaxCellsUpdate() {
+    private boolean scheduleMaxCellsUpdate() {
         GridContent gridContent = this.mGridContent;
         if (gridContent == null || !gridContent.isValid()) {
             return true;
@@ -170,7 +158,8 @@ public class GridRowView extends SliceChildView implements View.OnClickListener,
         return false;
     }
 
-    protected int getMaxCells() {
+    /* access modifiers changed from: package-private */
+    public int getMaxCells() {
         int i;
         GridContent gridContent = this.mGridContent;
         if (gridContent == null || !gridContent.isValid() || getWidth() == 0) {
@@ -182,15 +171,16 @@ public class GridRowView extends SliceChildView implements View.OnClickListener,
         int largestImageMode = this.mGridContent.getLargestImageMode();
         if (largestImageMode == 2) {
             i = this.mLargeImageHeight;
-        } else if (largestImageMode == 4) {
-            i = this.mGridContent.getFirstImageSize(getContext()).x;
-        } else {
+        } else if (largestImageMode != 4) {
             i = this.mSmallImageMinWidth;
+        } else {
+            i = this.mGridContent.getFirstImageSize(getContext()).x;
         }
         return getWidth() / (i + this.mGutter);
     }
 
-    protected void populateViews() {
+    /* access modifiers changed from: package-private */
+    public void populateViews() {
         GridContent gridContent = this.mGridContent;
         if (gridContent == null || !gridContent.isValid()) {
             resetView();
@@ -222,10 +212,10 @@ public class GridRowView extends SliceChildView implements View.OnClickListener,
                 if (this.mViewContainer.getChildCount() >= i) {
                     int size = gridContent2.size() - i;
                     this.mHiddenItemCount = size;
-                    if (!z) {
+                    if (z) {
+                        addSeeMoreCount(size);
                         return;
                     }
-                    addSeeMoreCount(size);
                     return;
                 }
                 addCell(gridContent2.get(i2), i2, Math.min(gridContent2.size(), i));
@@ -233,474 +223,614 @@ public class GridRowView extends SliceChildView implements View.OnClickListener,
         }
     }
 
-    private void addSeeMoreCount(int numExtra) {
-        ViewGroup viewGroup;
-        TextView textView;
-        LinearLayout linearLayout = this.mViewContainer;
-        View childAt = linearLayout.getChildAt(linearLayout.getChildCount() - 1);
-        this.mViewContainer.removeView(childAt);
-        SliceItem seeMoreItem = this.mGridContent.getSeeMoreItem();
-        int childCount = this.mViewContainer.getChildCount();
-        int i = this.mMaxCells;
-        if (("slice".equals(seeMoreItem.getFormat()) || "action".equals(seeMoreItem.getFormat())) && seeMoreItem.getSlice().getItems().size() > 0) {
-            addCell(new GridContent.CellContent(seeMoreItem), childCount, i);
-            return;
-        }
-        LayoutInflater from = LayoutInflater.from(getContext());
-        if (this.mGridContent.isAllImages()) {
-            viewGroup = (FrameLayout) from.inflate(R$layout.abc_slice_grid_see_more_overlay, (ViewGroup) this.mViewContainer, false);
-            viewGroup.addView(childAt, 0, new FrameLayout.LayoutParams(-1, -1));
-            textView = (TextView) viewGroup.findViewById(R$id.text_see_more_count);
-            viewGroup.findViewById(R$id.overlay_see_more).setBackground(new CornerDrawable(SliceViewUtil.getDrawable(getContext(), 16842800), this.mSliceStyle.getImageCornerRadius()));
-        } else {
-            viewGroup = (LinearLayout) from.inflate(R$layout.abc_slice_grid_see_more, (ViewGroup) this.mViewContainer, false);
-            textView = (TextView) viewGroup.findViewById(R$id.text_see_more_count);
-            TextView textView2 = (TextView) viewGroup.findViewById(R$id.text_see_more);
-            SliceStyle sliceStyle = this.mSliceStyle;
-            if (sliceStyle != null && this.mRowStyle != null) {
-                textView2.setTextSize(0, sliceStyle.getGridTitleSize());
-                textView2.setTextColor(this.mRowStyle.getTitleColor());
-            }
-        }
-        this.mViewContainer.addView(viewGroup, new LinearLayout.LayoutParams(0, -1, 1.0f));
-        textView.setText(getResources().getString(R$string.abc_slice_more_content, Integer.valueOf(numExtra)));
-        EventInfo eventInfo = new EventInfo(getMode(), 4, 1, this.mRowIndex);
-        eventInfo.setPosition(2, childCount, i);
-        viewGroup.setTag(new Pair(seeMoreItem, eventInfo));
-        makeClickable(viewGroup, true);
+    /* JADX WARNING: type inference failed for: r0v7, types: [android.view.View] */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void addSeeMoreCount(int r13) {
+        /*
+            r12 = this;
+            android.widget.LinearLayout r0 = r12.mViewContainer
+            int r1 = r0.getChildCount()
+            r2 = 1
+            int r1 = r1 - r2
+            android.view.View r0 = r0.getChildAt(r1)
+            android.widget.LinearLayout r1 = r12.mViewContainer
+            r1.removeView(r0)
+            androidx.slice.widget.GridContent r1 = r12.mGridContent
+            androidx.slice.SliceItem r1 = r1.getSeeMoreItem()
+            android.widget.LinearLayout r3 = r12.mViewContainer
+            int r3 = r3.getChildCount()
+            int r4 = r12.mMaxCells
+            java.lang.String r5 = "slice"
+            java.lang.String r6 = r1.getFormat()
+            boolean r5 = r5.equals(r6)
+            if (r5 != 0) goto L_0x0038
+            java.lang.String r5 = "action"
+            java.lang.String r6 = r1.getFormat()
+            boolean r5 = r5.equals(r6)
+            if (r5 == 0) goto L_0x004f
+        L_0x0038:
+            androidx.slice.Slice r5 = r1.getSlice()
+            java.util.List r5 = r5.getItems()
+            int r5 = r5.size()
+            if (r5 <= 0) goto L_0x004f
+            androidx.slice.widget.GridContent$CellContent r13 = new androidx.slice.widget.GridContent$CellContent
+            r13.<init>(r1)
+            r12.addCell(r13, r3, r4)
+            return
+        L_0x004f:
+            android.content.Context r5 = r12.getContext()
+            android.view.LayoutInflater r5 = android.view.LayoutInflater.from(r5)
+            androidx.slice.widget.GridContent r6 = r12.mGridContent
+            boolean r6 = r6.isAllImages()
+            r7 = -1
+            r8 = 0
+            if (r6 == 0) goto L_0x009b
+            int r6 = androidx.slice.view.C1349R.layout.abc_slice_grid_see_more_overlay
+            android.widget.LinearLayout r9 = r12.mViewContainer
+            android.view.View r5 = r5.inflate(r6, r9, r8)
+            android.widget.FrameLayout r5 = (android.widget.FrameLayout) r5
+            android.widget.FrameLayout$LayoutParams r6 = new android.widget.FrameLayout$LayoutParams
+            r6.<init>(r7, r7)
+            r5.addView(r0, r8, r6)
+            int r0 = androidx.slice.view.C1349R.C1352id.text_see_more_count
+            android.view.View r0 = r5.findViewById(r0)
+            android.widget.TextView r0 = (android.widget.TextView) r0
+            int r6 = androidx.slice.view.C1349R.C1352id.overlay_see_more
+            android.view.View r6 = r5.findViewById(r6)
+            androidx.slice.CornerDrawable r9 = new androidx.slice.CornerDrawable
+            android.content.Context r10 = r12.getContext()
+            r11 = 16842800(0x1010030, float:2.3693693E-38)
+            android.graphics.drawable.Drawable r10 = androidx.slice.widget.SliceViewUtil.getDrawable(r10, r11)
+            androidx.slice.widget.SliceStyle r11 = r12.mSliceStyle
+            float r11 = r11.getImageCornerRadius()
+            r9.<init>(r10, r11)
+            r6.setBackground(r9)
+            goto L_0x00d1
+        L_0x009b:
+            int r0 = androidx.slice.view.C1349R.layout.abc_slice_grid_see_more
+            android.widget.LinearLayout r6 = r12.mViewContainer
+            android.view.View r0 = r5.inflate(r0, r6, r8)
+            r5 = r0
+            android.widget.LinearLayout r5 = (android.widget.LinearLayout) r5
+            int r0 = androidx.slice.view.C1349R.C1352id.text_see_more_count
+            android.view.View r0 = r5.findViewById(r0)
+            android.widget.TextView r0 = (android.widget.TextView) r0
+            int r6 = androidx.slice.view.C1349R.C1352id.text_see_more
+            android.view.View r6 = r5.findViewById(r6)
+            android.widget.TextView r6 = (android.widget.TextView) r6
+            androidx.slice.widget.SliceStyle r9 = r12.mSliceStyle
+            if (r9 == 0) goto L_0x00d1
+            androidx.slice.widget.RowStyle r9 = r12.mRowStyle
+            if (r9 == 0) goto L_0x00d1
+            androidx.slice.widget.SliceStyle r9 = r12.mSliceStyle
+            int r9 = r9.getGridTitleSize()
+            float r9 = (float) r9
+            r6.setTextSize(r8, r9)
+            androidx.slice.widget.RowStyle r9 = r12.mRowStyle
+            int r9 = r9.getTitleColor()
+            r6.setTextColor(r9)
+        L_0x00d1:
+            android.widget.LinearLayout r6 = r12.mViewContainer
+            android.widget.LinearLayout$LayoutParams r9 = new android.widget.LinearLayout$LayoutParams
+            r10 = 1065353216(0x3f800000, float:1.0)
+            r9.<init>(r8, r7, r10)
+            r6.addView(r5, r9)
+            android.content.res.Resources r6 = r12.getResources()
+            int r7 = androidx.slice.view.C1349R.string.abc_slice_more_content
+            java.lang.Object[] r9 = new java.lang.Object[r2]
+            java.lang.Integer r13 = java.lang.Integer.valueOf((int) r13)
+            r9[r8] = r13
+            java.lang.String r13 = r6.getString(r7, r9)
+            r0.setText(r13)
+            androidx.slice.widget.EventInfo r13 = new androidx.slice.widget.EventInfo
+            int r0 = r12.getMode()
+            r6 = 4
+            int r7 = r12.mRowIndex
+            r13.<init>(r0, r6, r2, r7)
+            r0 = 2
+            r13.setPosition(r0, r3, r4)
+            android.util.Pair r0 = new android.util.Pair
+            r0.<init>(r1, r13)
+            r5.setTag(r0)
+            r12.makeClickable(r5, r2)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.slice.widget.GridRowView.addSeeMoreCount(int):void");
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:44:0x00c8, code lost:
-        if ("long".equals(r4) != false) goto L57;
+    /* JADX WARNING: Code restructure failed: missing block: B:36:0x00c8, code lost:
+        if ("long".equals(r4) != false) goto L_0x00cd;
      */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private void addCell(GridContent.CellContent cell, int index, int total) {
-        ArrayList arrayList;
-        SliceActionView sliceActionView;
-        boolean z;
-        SliceItem sliceItem;
-        int i;
-        int i2;
-        int i3;
-        SliceItem sliceItem2;
-        ArrayList arrayList2;
-        SliceItem sliceItem3;
-        String str;
-        int i4 = (getMode() != 1 || !this.mGridContent.hasImage()) ? 2 : 1;
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        linearLayout.setOrientation(1);
-        linearLayout.setGravity(1);
-        ArrayList<SliceItem> cellItems = cell.getCellItems();
-        SliceItem contentIntent = cell.getContentIntent();
-        SliceItem picker = cell.getPicker();
-        SliceItem toggleItem = cell.getToggleItem();
-        boolean z2 = cellItems.size() == 1;
-        String str2 = "text";
-        if (z2 || getMode() != 1) {
-            arrayList = null;
-        } else {
-            ArrayList arrayList3 = new ArrayList();
-            Iterator<SliceItem> it = cellItems.iterator();
-            while (it.hasNext()) {
-                SliceItem next = it.next();
-                if (str2.equals(next.getFormat())) {
-                    arrayList3.add(next);
-                }
-            }
-            Iterator it2 = arrayList3.iterator();
-            while (arrayList3.size() > i4) {
-                if (!((SliceItem) it2.next()).hasAnyHints("title", "large")) {
-                    it2.remove();
-                }
-            }
-            arrayList = arrayList3;
-        }
-        SliceItem sliceItem4 = null;
-        int i5 = 0;
-        int i6 = 0;
-        int i7 = 0;
-        boolean z3 = false;
-        while (i7 < cellItems.size()) {
-            SliceItem sliceItem5 = cellItems.get(i7);
-            int i8 = i7;
-            String format = sliceItem5.getFormat();
-            SliceItem sliceItem6 = toggleItem;
-            int determinePadding = determinePadding(sliceItem4);
-            if (i6 < i4) {
-                if (!str2.equals(format)) {
-                    sliceItem = sliceItem4;
-                } else {
-                    sliceItem = sliceItem4;
-                }
-                if ((arrayList == null || arrayList.contains(sliceItem5)) && addTextItem(sliceItem5, linearLayout, determinePadding)) {
-                    i6++;
-                    str = str2;
-                    sliceItem4 = sliceItem5;
-                    i3 = i8;
-                    sliceItem2 = sliceItem6;
-                    z3 = true;
-                    arrayList2 = arrayList;
-                    i7 = i3 + 1;
-                    arrayList = arrayList2;
-                    str2 = str;
-                    toggleItem = sliceItem2;
-                }
-                i = i5;
-                i2 = i6;
-                i3 = i8;
-                sliceItem2 = sliceItem6;
-                arrayList2 = arrayList;
-                sliceItem3 = sliceItem;
-                str = str2;
-                sliceItem4 = sliceItem3;
-                i5 = i;
-                i6 = i2;
-                i7 = i3 + 1;
-                arrayList = arrayList2;
-                str2 = str;
-                toggleItem = sliceItem2;
-            } else {
-                sliceItem = sliceItem4;
-            }
-            if (i5 < 1 && "image".equals(sliceItem5.getFormat())) {
-                i = i5;
-                i2 = i6;
-                SliceItem sliceItem7 = sliceItem;
-                str = str2;
-                i3 = i8;
-                arrayList2 = arrayList;
-                sliceItem3 = sliceItem7;
-                sliceItem2 = sliceItem6;
-                if (addImageItem(sliceItem5, cell.getOverlayItem(), this.mTintColor, linearLayout, z2)) {
-                    i5 = i + 1;
-                    sliceItem4 = sliceItem5;
-                    i6 = i2;
-                    z3 = true;
-                    i7 = i3 + 1;
-                    arrayList = arrayList2;
-                    str2 = str;
-                    toggleItem = sliceItem2;
-                }
-                sliceItem4 = sliceItem3;
-                i5 = i;
-                i6 = i2;
-                i7 = i3 + 1;
-                arrayList = arrayList2;
-                str2 = str;
-                toggleItem = sliceItem2;
-            }
-            i = i5;
-            i2 = i6;
-            i3 = i8;
-            sliceItem2 = sliceItem6;
-            arrayList2 = arrayList;
-            sliceItem3 = sliceItem;
-            str = str2;
-            sliceItem4 = sliceItem3;
-            i5 = i;
-            i6 = i2;
-            i7 = i3 + 1;
-            arrayList = arrayList2;
-            str2 = str;
-            toggleItem = sliceItem2;
-        }
-        SliceItem sliceItem8 = sliceItem4;
-        SliceItem sliceItem9 = toggleItem;
-        if (picker != null) {
-            if ("date_picker".equals(picker.getSubType())) {
-                z3 = addPickerItem(picker, linearLayout, determinePadding(sliceItem8), true);
-            } else if ("time_picker".equals(picker.getSubType())) {
-                z3 = addPickerItem(picker, linearLayout, determinePadding(sliceItem8), false);
-            }
-        }
-        if (sliceItem9 != null) {
-            SliceActionView sliceActionView2 = new SliceActionView(getContext(), this.mSliceStyle, this.mRowStyle);
-            linearLayout.addView(sliceActionView2);
-            sliceActionView = sliceActionView2;
-            z = true;
-        } else {
-            sliceActionView = null;
-            z = z3;
-        }
-        if (z) {
-            CharSequence contentDescription = cell.getContentDescription();
-            if (contentDescription != null) {
-                linearLayout.setContentDescription(contentDescription);
-            }
-            this.mViewContainer.addView(linearLayout, new LinearLayout.LayoutParams(0, -2, 1.0f));
-            if (index != total - 1) {
-                ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) linearLayout.getLayoutParams();
-                marginLayoutParams.setMarginEnd(this.mGutter);
-                linearLayout.setLayoutParams(marginLayoutParams);
-            }
-            if (contentIntent != null) {
-                EventInfo eventInfo = new EventInfo(getMode(), 1, 1, this.mRowIndex);
-                eventInfo.setPosition(2, index, total);
-                linearLayout.setTag(new Pair(contentIntent, eventInfo));
-                makeClickable(linearLayout, true);
-            }
-            if (sliceItem9 == null) {
-                return;
-            }
-            EventInfo eventInfo2 = new EventInfo(getMode(), 0, 3, this.mRowIndex);
-            sliceActionView.setAction(new SliceActionImpl(sliceItem9), eventInfo2, this.mObserver, this.mTintColor, this.mLoadingListener);
-            eventInfo2.setPosition(2, index, total);
-        }
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void addCell(androidx.slice.widget.GridContent.CellContent r29, int r30, int r31) {
+        /*
+            r28 = this;
+            r6 = r28
+            r7 = r30
+            r8 = r31
+            int r0 = r28.getMode()
+            r10 = 1
+            if (r0 != r10) goto L_0x0017
+            androidx.slice.widget.GridContent r0 = r6.mGridContent
+            boolean r0 = r0.hasImage()
+            if (r0 == 0) goto L_0x0017
+            r11 = r10
+            goto L_0x0018
+        L_0x0017:
+            r11 = 2
+        L_0x0018:
+            android.widget.LinearLayout r12 = new android.widget.LinearLayout
+            android.content.Context r0 = r28.getContext()
+            r12.<init>(r0)
+            r12.setOrientation(r10)
+            r12.setGravity(r10)
+            java.util.ArrayList r13 = r29.getCellItems()
+            androidx.slice.SliceItem r14 = r29.getContentIntent()
+            androidx.slice.SliceItem r15 = r29.getPicker()
+            androidx.slice.SliceItem r5 = r29.getToggleItem()
+            int r0 = r13.size()
+            if (r0 != r10) goto L_0x0040
+            r16 = r10
+            goto L_0x0042
+        L_0x0040:
+            r16 = 0
+        L_0x0042:
+            java.lang.String r3 = "text"
+            r17 = 0
+            if (r16 != 0) goto L_0x0097
+            int r0 = r28.getMode()
+            if (r0 != r10) goto L_0x0097
+            java.util.ArrayList r0 = new java.util.ArrayList
+            r0.<init>()
+            java.util.Iterator r1 = r13.iterator()
+        L_0x0058:
+            boolean r2 = r1.hasNext()
+            if (r2 == 0) goto L_0x0072
+            java.lang.Object r2 = r1.next()
+            androidx.slice.SliceItem r2 = (androidx.slice.SliceItem) r2
+            java.lang.String r4 = r2.getFormat()
+            boolean r4 = r3.equals(r4)
+            if (r4 == 0) goto L_0x0058
+            r0.add(r2)
+            goto L_0x0058
+        L_0x0072:
+            java.util.Iterator r1 = r0.iterator()
+        L_0x0076:
+            int r2 = r0.size()
+            if (r2 <= r11) goto L_0x0095
+            java.lang.Object r2 = r1.next()
+            androidx.slice.SliceItem r2 = (androidx.slice.SliceItem) r2
+            java.lang.String r4 = "title"
+            java.lang.String r9 = "large"
+            java.lang.String[] r4 = new java.lang.String[]{r4, r9}
+            boolean r2 = r2.hasAnyHints(r4)
+            if (r2 != 0) goto L_0x0076
+            r1.remove()
+            goto L_0x0076
+        L_0x0095:
+            r9 = r0
+            goto L_0x0099
+        L_0x0097:
+            r9 = r17
+        L_0x0099:
+            r2 = r17
+            r0 = 0
+            r1 = 0
+            r4 = 0
+            r19 = 0
+        L_0x00a0:
+            int r10 = r13.size()
+            if (r4 >= r10) goto L_0x0143
+            java.lang.Object r10 = r13.get(r4)
+            androidx.slice.SliceItem r10 = (androidx.slice.SliceItem) r10
+            r20 = r4
+            java.lang.String r4 = r10.getFormat()
+            r21 = r5
+            int r5 = r6.determinePadding(r2)
+            if (r1 >= r11) goto L_0x00ea
+            boolean r22 = r3.equals(r4)
+            if (r22 != 0) goto L_0x00cb
+            r22 = r2
+            java.lang.String r2 = "long"
+            boolean r2 = r2.equals(r4)
+            if (r2 == 0) goto L_0x00ec
+            goto L_0x00cd
+        L_0x00cb:
+            r22 = r2
+        L_0x00cd:
+            if (r9 == 0) goto L_0x00d6
+            boolean r2 = r9.contains(r10)
+            if (r2 != 0) goto L_0x00d6
+            goto L_0x0126
+        L_0x00d6:
+            boolean r2 = r6.addTextItem(r10, r12, r5)
+            if (r2 == 0) goto L_0x0126
+            int r1 = r1 + 1
+            r22 = r3
+            r2 = r10
+            r18 = r20
+            r25 = r21
+            r19 = 1
+            r20 = r9
+            goto L_0x0139
+        L_0x00ea:
+            r22 = r2
+        L_0x00ec:
+            r2 = 1
+            if (r0 >= r2) goto L_0x0126
+            java.lang.String r2 = "image"
+            java.lang.String r4 = r10.getFormat()
+            boolean r2 = r2.equals(r4)
+            if (r2 == 0) goto L_0x0126
+            androidx.slice.SliceItem r2 = r29.getOverlayItem()
+            int r4 = r6.mTintColor
+            r23 = r0
+            r0 = r28
+            r24 = r1
+            r1 = r10
+            r5 = r22
+            r22 = r3
+            r3 = r4
+            r18 = r20
+            r20 = r9
+            r9 = 0
+            r4 = r12
+            r9 = r5
+            r25 = r21
+            r5 = r16
+            boolean r0 = r0.addImageItem(r1, r2, r3, r4, r5)
+            if (r0 == 0) goto L_0x0134
+            int r0 = r23 + 1
+            r2 = r10
+            r1 = r24
+            r19 = 1
+            goto L_0x0139
+        L_0x0126:
+            r23 = r0
+            r24 = r1
+            r18 = r20
+            r25 = r21
+            r20 = r9
+            r9 = r22
+            r22 = r3
+        L_0x0134:
+            r2 = r9
+            r0 = r23
+            r1 = r24
+        L_0x0139:
+            int r4 = r18 + 1
+            r9 = r20
+            r3 = r22
+            r5 = r25
+            goto L_0x00a0
+        L_0x0143:
+            r9 = r2
+            r25 = r5
+            if (r15 == 0) goto L_0x0174
+            java.lang.String r0 = "date_picker"
+            java.lang.String r1 = r15.getSubType()
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x015e
+            int r0 = r6.determinePadding(r9)
+            r1 = 1
+            boolean r19 = r6.addPickerItem(r15, r12, r0, r1)
+            goto L_0x0174
+        L_0x015e:
+            java.lang.String r0 = "time_picker"
+            java.lang.String r1 = r15.getSubType()
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x0174
+            int r0 = r6.determinePadding(r9)
+            r1 = 0
+            boolean r19 = r6.addPickerItem(r15, r12, r0, r1)
+        L_0x0174:
+            r0 = r25
+            if (r0 == 0) goto L_0x018c
+            androidx.slice.widget.SliceActionView r1 = new androidx.slice.widget.SliceActionView
+            android.content.Context r2 = r28.getContext()
+            androidx.slice.widget.SliceStyle r3 = r6.mSliceStyle
+            androidx.slice.widget.RowStyle r4 = r6.mRowStyle
+            r1.<init>(r2, r3, r4)
+            r12.addView(r1)
+            r22 = r1
+            r2 = 1
+            goto L_0x0190
+        L_0x018c:
+            r22 = r17
+            r2 = r19
+        L_0x0190:
+            if (r2 == 0) goto L_0x0203
+            java.lang.CharSequence r1 = r29.getContentDescription()
+            if (r1 == 0) goto L_0x019b
+            r12.setContentDescription(r1)
+        L_0x019b:
+            android.widget.LinearLayout r1 = r6.mViewContainer
+            android.widget.LinearLayout$LayoutParams r2 = new android.widget.LinearLayout$LayoutParams
+            r3 = -2
+            r4 = 1065353216(0x3f800000, float:1.0)
+            r5 = 0
+            r2.<init>(r5, r3, r4)
+            r1.addView(r12, r2)
+            int r1 = r8 + -1
+            if (r7 == r1) goto L_0x01bb
+            android.view.ViewGroup$LayoutParams r1 = r12.getLayoutParams()
+            android.view.ViewGroup$MarginLayoutParams r1 = (android.view.ViewGroup.MarginLayoutParams) r1
+            int r2 = r6.mGutter
+            r1.setMarginEnd(r2)
+            r12.setLayoutParams(r1)
+        L_0x01bb:
+            if (r14 == 0) goto L_0x01d8
+            androidx.slice.widget.EventInfo r1 = new androidx.slice.widget.EventInfo
+            int r2 = r28.getMode()
+            int r3 = r6.mRowIndex
+            r4 = 1
+            r1.<init>(r2, r4, r4, r3)
+            r2 = 2
+            r1.setPosition(r2, r7, r8)
+            android.util.Pair r2 = new android.util.Pair
+            r2.<init>(r14, r1)
+            r12.setTag(r2)
+            r6.makeClickable(r12, r4)
+        L_0x01d8:
+            if (r0 == 0) goto L_0x0203
+            androidx.slice.widget.EventInfo r1 = new androidx.slice.widget.EventInfo
+            int r2 = r28.getMode()
+            r3 = 3
+            int r4 = r6.mRowIndex
+            r5 = 0
+            r1.<init>(r2, r5, r3, r4)
+            androidx.slice.core.SliceActionImpl r2 = new androidx.slice.core.SliceActionImpl
+            r2.<init>(r0)
+            androidx.slice.widget.SliceView$OnSliceActionListener r0 = r6.mObserver
+            int r3 = r6.mTintColor
+            androidx.slice.widget.SliceActionView$SliceActionLoadingListener r4 = r6.mLoadingListener
+            r23 = r2
+            r24 = r1
+            r25 = r0
+            r26 = r3
+            r27 = r4
+            r22.setAction(r23, r24, r25, r26, r27)
+            r0 = 2
+            r1.setPosition(r0, r7, r8)
+        L_0x0203:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.slice.widget.GridRowView.addCell(androidx.slice.widget.GridContent$CellContent, int, int):void");
     }
 
-    private boolean addTextItem(SliceItem item, ViewGroup container, int padding) {
-        CharSequence sanitizedText;
-        String format = item.getFormat();
-        if ("text".equals(format) || "long".equals(format)) {
-            boolean hasAnyHints = SliceQuery.hasAnyHints(item, "large", "title");
-            TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(hasAnyHints ? getTitleTextLayout() : TEXT_LAYOUT, (ViewGroup) null);
-            SliceStyle sliceStyle = this.mSliceStyle;
-            if (sliceStyle != null && this.mRowStyle != null) {
-                textView.setTextSize(0, hasAnyHints ? sliceStyle.getGridTitleSize() : sliceStyle.getGridSubtitleSize());
-                textView.setTextColor(hasAnyHints ? this.mRowStyle.getTitleColor() : this.mRowStyle.getSubtitleColor());
-            }
-            if ("long".equals(format)) {
-                sanitizedText = SliceViewUtil.getTimestampString(getContext(), item.getLong());
-            } else {
-                sanitizedText = item.getSanitizedText();
-            }
-            textView.setText(sanitizedText);
-            container.addView(textView);
-            textView.setPadding(0, padding, 0, 0);
-            return true;
+    private boolean addTextItem(SliceItem sliceItem, ViewGroup viewGroup, int i) {
+        CharSequence charSequence;
+        String format = sliceItem.getFormat();
+        if (!"text".equals(format) && !"long".equals(format)) {
+            return false;
         }
-        return false;
+        boolean hasAnyHints = SliceQuery.hasAnyHints(sliceItem, "large", "title");
+        TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(hasAnyHints ? TITLE_TEXT_LAYOUT : TEXT_LAYOUT, (ViewGroup) null);
+        if (!(this.mSliceStyle == null || this.mRowStyle == null)) {
+            textView.setTextSize(0, (float) (hasAnyHints ? this.mSliceStyle.getGridTitleSize() : this.mSliceStyle.getGridSubtitleSize()));
+            textView.setTextColor(hasAnyHints ? this.mRowStyle.getTitleColor() : this.mRowStyle.getSubtitleColor());
+        }
+        if ("long".equals(format)) {
+            charSequence = SliceViewUtil.getTimestampString(getContext(), sliceItem.getLong());
+        } else {
+            charSequence = sliceItem.getSanitizedText();
+        }
+        textView.setText(charSequence);
+        viewGroup.addView(textView);
+        textView.setPadding(0, i, 0, 0);
+        return true;
     }
 
-    protected boolean addImageItem(SliceItem item, SliceItem overlayItem, int color, ViewGroup container, boolean isSingle) {
+    private boolean addImageItem(SliceItem sliceItem, SliceItem sliceItem2, int i, ViewGroup viewGroup, boolean z) {
         Drawable loadDrawable;
-        ViewGroup.LayoutParams layoutParams;
-        String format = item.getFormat();
-        SliceStyle sliceStyle = this.mSliceStyle;
-        boolean z = sliceStyle != null && sliceStyle.getApplyCornerRadiusToLargeImages();
-        if (!"image".equals(format) || item.getIcon() == null || (loadDrawable = item.getIcon().loadDrawable(getContext())) == null) {
+        LinearLayout.LayoutParams layoutParams;
+        int i2;
+        String format = sliceItem.getFormat();
+        boolean z2 = this.mSliceStyle != null && this.mSliceStyle.getApplyCornerRadiusToLargeImages();
+        if (!"image".equals(format) || sliceItem.getIcon() == null || (loadDrawable = sliceItem.getIcon().loadDrawable(getContext())) == null) {
             return false;
         }
         ImageView imageView = new ImageView(getContext());
-        if (z) {
+        if (z2) {
             imageView.setImageDrawable(new CornerDrawable(loadDrawable, this.mSliceStyle.getImageCornerRadius()));
         } else {
             imageView.setImageDrawable(loadDrawable);
         }
-        if (item.hasHint("raw")) {
+        if (sliceItem.hasHint(SliceHints.HINT_RAW)) {
             imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             layoutParams = new LinearLayout.LayoutParams(this.mGridContent.getFirstImageSize(getContext()).x, this.mGridContent.getFirstImageSize(getContext()).y);
-        } else if (item.hasHint("large")) {
-            imageView.setScaleType(z ? ImageView.ScaleType.FIT_XY : ImageView.ScaleType.CENTER_CROP);
-            layoutParams = new LinearLayout.LayoutParams(-1, isSingle ? -1 : this.mLargeImageHeight);
+        } else if (sliceItem.hasHint("large")) {
+            imageView.setScaleType(z2 ? ImageView.ScaleType.FIT_XY : ImageView.ScaleType.CENTER_CROP);
+            if (z) {
+                i2 = -1;
+            } else {
+                i2 = this.mLargeImageHeight;
+            }
+            layoutParams = new LinearLayout.LayoutParams(-1, i2);
         } else {
-            boolean z2 = !item.hasHint("no_tint");
-            int i = !z2 ? this.mSmallImageSize : this.mIconSize;
-            imageView.setScaleType(z2 ? ImageView.ScaleType.CENTER_INSIDE : ImageView.ScaleType.CENTER_CROP);
-            layoutParams = new LinearLayout.LayoutParams(i, i);
+            boolean z3 = !sliceItem.hasHint("no_tint");
+            int i3 = !z3 ? this.mSmallImageSize : this.mIconSize;
+            imageView.setScaleType(z3 ? ImageView.ScaleType.CENTER_INSIDE : ImageView.ScaleType.CENTER_CROP);
+            layoutParams = new LinearLayout.LayoutParams(i3, i3);
         }
-        if (color != -1 && !item.hasHint("no_tint")) {
-            imageView.setColorFilter(color);
+        if (i != -1 && !sliceItem.hasHint("no_tint")) {
+            imageView.setColorFilter(i);
         }
-        if (overlayItem == null || this.mViewContainer.getChildCount() == this.mMaxCells - 1) {
-            container.addView(imageView, layoutParams);
+        if (sliceItem2 == null || this.mViewContainer.getChildCount() == this.mMaxCells - 1) {
+            viewGroup.addView(imageView, layoutParams);
             return true;
         }
-        FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(getContext()).inflate(R$layout.abc_slice_grid_text_overlay_image, container, false);
+        FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(getContext()).inflate(C1349R.layout.abc_slice_grid_text_overlay_image, viewGroup, false);
         frameLayout.addView(imageView, 0, new FrameLayout.LayoutParams(-2, -2));
-        ((TextView) frameLayout.findViewById(R$id.text_overlay)).setText(overlayItem.getText());
-        frameLayout.findViewById(R$id.tint_overlay).setBackground(new CornerDrawable(ContextCompat.getDrawable(getContext(), R$drawable.abc_slice_gradient), this.mSliceStyle.getImageCornerRadius()));
-        container.addView(frameLayout, layoutParams);
+        ((TextView) frameLayout.findViewById(C1349R.C1352id.text_overlay)).setText(sliceItem2.getText());
+        frameLayout.findViewById(C1349R.C1352id.tint_overlay).setBackground(new CornerDrawable(ContextCompat.getDrawable(getContext(), C1349R.C1351drawable.abc_slice_gradient), this.mSliceStyle.getImageCornerRadius()));
+        viewGroup.addView(frameLayout, layoutParams);
         return true;
     }
 
-    private boolean addPickerItem(final SliceItem pickerItem, ViewGroup container, int padding, final boolean isDatePicker) {
-        SliceItem findSubtype = SliceQuery.findSubtype(pickerItem, "long", "millis");
+    private boolean addPickerItem(SliceItem sliceItem, ViewGroup viewGroup, int i, boolean z) {
+        SliceItem findSubtype = SliceQuery.findSubtype(sliceItem, "long", SliceHints.SUBTYPE_MILLIS);
         if (findSubtype == null) {
             return false;
         }
         long j = findSubtype.getLong();
-        TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(getTitleTextLayout(), (ViewGroup) null);
-        SliceStyle sliceStyle = this.mSliceStyle;
-        if (sliceStyle != null) {
-            textView.setTextSize(0, sliceStyle.getGridTitleSize());
+        TextView textView = (TextView) LayoutInflater.from(getContext()).inflate(TITLE_TEXT_LAYOUT, (ViewGroup) null);
+        if (this.mSliceStyle != null) {
+            textView.setTextSize(0, (float) this.mSliceStyle.getGridTitleSize());
             textView.setTextColor(this.mSliceStyle.getTitleColor());
         }
         final Date date = new Date(j);
-        SliceItem find = SliceQuery.find(pickerItem, "text", "title", (String) null);
+        SliceItem find = SliceQuery.find(sliceItem, "text", "title", (String) null);
         if (find != null) {
             textView.setText(find.getText());
         }
-        final int i = this.mRowIndex;
-        container.setOnClickListener(new View.OnClickListener() { // from class: androidx.slice.widget.GridRowView.1
-            @Override // android.view.View.OnClickListener
+        final int i2 = this.mRowIndex;
+        final boolean z2 = z;
+        final SliceItem sliceItem2 = sliceItem;
+        viewGroup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                if (isDatePicker) {
-                    new DatePickerDialog(GridRowView.this.getContext(), R$style.DialogTheme, new DateSetListener(pickerItem, i), calendar.get(1), calendar.get(2), calendar.get(5)).show();
+                Calendar instance = Calendar.getInstance();
+                instance.setTime(date);
+                if (z2) {
+                    new DatePickerDialog(GridRowView.this.getContext(), C1349R.style.DialogTheme, new DateSetListener(sliceItem2, i2), instance.get(1), instance.get(2), instance.get(5)).show();
                 } else {
-                    new TimePickerDialog(GridRowView.this.getContext(), R$style.DialogTheme, new TimeSetListener(pickerItem, i), calendar.get(11), calendar.get(12), false).show();
+                    new TimePickerDialog(GridRowView.this.getContext(), C1349R.style.DialogTheme, new TimeSetListener(sliceItem2, i2), instance.get(11), instance.get(12), false).show();
                 }
             }
         });
-        container.setClickable(true);
-        int i2 = 16843534;
-        if (Build.VERSION.SDK_INT >= 21) {
-            i2 = 16843868;
-        }
-        container.setBackground(SliceViewUtil.getDrawable(getContext(), i2));
-        container.addView(textView);
-        textView.setPadding(0, padding, 0, 0);
+        viewGroup.setClickable(true);
+        viewGroup.setBackground(SliceViewUtil.getDrawable(getContext(), 16843868));
+        viewGroup.addView(textView);
+        textView.setPadding(0, i, 0, 0);
         return true;
     }
 
-    /* loaded from: classes.dex */
     private class DateSetListener implements DatePickerDialog.OnDateSetListener {
         private final SliceItem mActionItem;
         private final int mRowIndex;
 
-        DateSetListener(SliceItem datePickerItem, int mRowIndex) {
-            this.mActionItem = datePickerItem;
-            this.mRowIndex = mRowIndex;
+        DateSetListener(SliceItem sliceItem, int i) {
+            this.mActionItem = sliceItem;
+            this.mRowIndex = i;
         }
 
-        @Override // android.app.DatePickerDialog.OnDateSetListener
-        public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(year, month, day);
-            Date time = calendar.getTime();
+        public void onDateSet(DatePicker datePicker, int i, int i2, int i3) {
+            Calendar instance = Calendar.getInstance();
+            instance.set(i, i2, i3);
+            Date time = instance.getTime();
             SliceItem sliceItem = this.mActionItem;
             if (sliceItem != null) {
                 try {
                     sliceItem.fireAction(GridRowView.this.getContext(), new Intent().addFlags(268435456).putExtra("android.app.slice.extra.RANGE_VALUE", time.getTime()));
-                    GridRowView gridRowView = GridRowView.this;
-                    if (gridRowView.mObserver == null) {
-                        return;
+                    if (GridRowView.this.mObserver != null) {
+                        GridRowView.this.mObserver.onSliceAction(new EventInfo(GridRowView.this.getMode(), 6, 7, this.mRowIndex), this.mActionItem);
                     }
-                    GridRowView.this.mObserver.onSliceAction(new EventInfo(gridRowView.getMode(), 6, 7, this.mRowIndex), this.mActionItem);
                 } catch (PendingIntent.CanceledException e) {
-                    Log.e("GridRowView", "PendingIntent for slice cannot be sent", e);
+                    Log.e(GridRowView.TAG, "PendingIntent for slice cannot be sent", e);
                 }
             }
         }
     }
 
-    /* loaded from: classes.dex */
     private class TimeSetListener implements TimePickerDialog.OnTimeSetListener {
         private final SliceItem mActionItem;
         private final int mRowIndex;
 
-        TimeSetListener(SliceItem timePickerItem, int mRowIndex) {
-            this.mActionItem = timePickerItem;
-            this.mRowIndex = mRowIndex;
+        TimeSetListener(SliceItem sliceItem, int i) {
+            this.mActionItem = sliceItem;
+            this.mRowIndex = i;
         }
 
-        @Override // android.app.TimePickerDialog.OnTimeSetListener
-        public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+        public void onTimeSet(TimePicker timePicker, int i, int i2) {
             Date time = Calendar.getInstance().getTime();
-            time.setHours(hour);
-            time.setMinutes(minute);
+            time.setHours(i);
+            time.setMinutes(i2);
             SliceItem sliceItem = this.mActionItem;
             if (sliceItem != null) {
                 try {
                     sliceItem.fireAction(GridRowView.this.getContext(), new Intent().addFlags(268435456).putExtra("android.app.slice.extra.RANGE_VALUE", time.getTime()));
-                    GridRowView gridRowView = GridRowView.this;
-                    if (gridRowView.mObserver == null) {
-                        return;
+                    if (GridRowView.this.mObserver != null) {
+                        GridRowView.this.mObserver.onSliceAction(new EventInfo(GridRowView.this.getMode(), 7, 8, this.mRowIndex), this.mActionItem);
                     }
-                    GridRowView.this.mObserver.onSliceAction(new EventInfo(gridRowView.getMode(), 7, 8, this.mRowIndex), this.mActionItem);
                 } catch (PendingIntent.CanceledException e) {
-                    Log.e("GridRowView", "PendingIntent for slice cannot be sent", e);
+                    Log.e(GridRowView.TAG, "PendingIntent for slice cannot be sent", e);
                 }
             }
         }
     }
 
-    private int determinePadding(SliceItem prevItem) {
-        SliceStyle sliceStyle;
-        if (prevItem == null) {
+    private int determinePadding(SliceItem sliceItem) {
+        if (sliceItem == null) {
             return 0;
         }
-        if ("image".equals(prevItem.getFormat())) {
+        if ("image".equals(sliceItem.getFormat())) {
             return this.mTextPadding;
         }
-        if ((!"text".equals(prevItem.getFormat()) && !"long".equals(prevItem.getFormat())) || (sliceStyle = this.mSliceStyle) == null) {
-            return 0;
+        if (("text".equals(sliceItem.getFormat()) || "long".equals(sliceItem.getFormat())) && this.mSliceStyle != null) {
+            return this.mSliceStyle.getVerticalGridTextPadding();
         }
-        return sliceStyle.getVerticalGridTextPadding();
+        return 0;
     }
 
-    private void makeEntireGridClickable(boolean isClickable) {
+    private void makeEntireGridClickable(boolean z) {
         Drawable drawable = null;
-        this.mViewContainer.setOnTouchListener(isClickable ? this : null);
-        this.mViewContainer.setOnClickListener(isClickable ? this : null);
+        this.mViewContainer.setOnTouchListener(z ? this : null);
+        this.mViewContainer.setOnClickListener(z ? this : null);
         View view = this.mForeground;
-        if (isClickable) {
+        if (z) {
             drawable = SliceViewUtil.getDrawable(getContext(), 16843534);
         }
         view.setBackground(drawable);
-        this.mViewContainer.setClickable(isClickable);
+        this.mViewContainer.setClickable(z);
     }
 
-    private void makeClickable(View layout, boolean isClickable) {
+    private void makeClickable(View view, boolean z) {
         Drawable drawable = null;
-        layout.setOnClickListener(isClickable ? this : null);
-        int i = 16843534;
-        if (Build.VERSION.SDK_INT >= 21) {
-            i = 16843868;
+        view.setOnClickListener(z ? this : null);
+        if (z) {
+            drawable = SliceViewUtil.getDrawable(getContext(), 16843868);
         }
-        if (isClickable) {
-            drawable = SliceViewUtil.getDrawable(getContext(), i);
-        }
-        layout.setBackground(drawable);
-        layout.setClickable(isClickable);
+        view.setBackground(drawable);
+        view.setClickable(z);
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
-        SliceItem find;
         Pair pair = (Pair) view.getTag();
         SliceItem sliceItem = (SliceItem) pair.first;
         EventInfo eventInfo = (EventInfo) pair.second;
-        if (sliceItem == null || (find = SliceQuery.find(sliceItem, "action", (String) null, (String) null)) == null) {
-            return;
-        }
-        try {
-            find.fireAction(null, null);
-            SliceView.OnSliceActionListener onSliceActionListener = this.mObserver;
-            if (onSliceActionListener == null) {
-                return;
+        if (sliceItem != null) {
+            String str = null;
+            SliceItem find = SliceQuery.find(sliceItem, "action", (String) null, (String) null);
+            if (find != null) {
+                try {
+                    find.fireAction((Context) null, (Intent) null);
+                    if (this.mObserver != null) {
+                        this.mObserver.onSliceAction(eventInfo, find);
+                    }
+                } catch (PendingIntent.CanceledException e) {
+                    Log.e(TAG, "PendingIntent for slice cannot be sent", e);
+                }
             }
-            onSliceActionListener.onSliceAction(eventInfo, find);
-        } catch (PendingIntent.CanceledException e) {
-            Log.e("GridRowView", "PendingIntent for slice cannot be sent", e);
         }
     }
 
-    @Override // android.view.View.OnTouchListener
-    public boolean onTouch(View view, MotionEvent event) {
-        onForegroundActivated(event);
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        onForegroundActivated(motionEvent);
         return false;
     }
 
-    private void onForegroundActivated(MotionEvent event) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            this.mForeground.getLocationOnScreen(this.mLoc);
-            this.mForeground.getBackground().setHotspot((int) (event.getRawX() - this.mLoc[0]), (int) (event.getRawY() - this.mLoc[1]));
-        }
-        int actionMasked = event.getActionMasked();
+    private void onForegroundActivated(MotionEvent motionEvent) {
+        this.mForeground.getLocationOnScreen(this.mLoc);
+        this.mForeground.getBackground().setHotspot((float) ((int) (motionEvent.getRawX() - ((float) this.mLoc[0]))), (float) ((int) (motionEvent.getRawY() - ((float) this.mLoc[1]))));
+        int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
             this.mForeground.setPressed(true);
-        } else if (actionMasked != 3 && actionMasked != 1 && actionMasked != 2) {
-        } else {
+        } else if (actionMasked == 3 || actionMasked == 1 || actionMasked == 2) {
             this.mForeground.setPressed(false);
         }
     }
 
-    @Override // androidx.slice.widget.SliceChildView
     public void resetView() {
         if (this.mMaxCellUpdateScheduled) {
             this.mMaxCellUpdateScheduled = false;
@@ -709,5 +839,9 @@ public class GridRowView extends SliceChildView implements View.OnClickListener,
         this.mViewContainer.removeAllViews();
         setLayoutDirection(2);
         makeEntireGridClickable(false);
+    }
+
+    public int getHiddenItemCount() {
+        return this.mHiddenItemCount;
     }
 }

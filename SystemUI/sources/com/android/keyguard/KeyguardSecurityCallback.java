@@ -1,11 +1,15 @@
 package com.android.keyguard;
-/* loaded from: classes.dex */
+
+import com.android.keyguard.KeyguardSecurityModel;
+
 public interface KeyguardSecurityCallback {
-    void dismiss(boolean z, int i);
+    void dismiss(boolean z, int i, KeyguardSecurityModel.SecurityMode securityMode);
 
-    void dismiss(boolean z, int i, boolean z2);
+    void dismiss(boolean z, int i, boolean z2, KeyguardSecurityModel.SecurityMode securityMode);
 
-    default void onCancelClicked() {
+    boolean isVerifyUnlockOnly();
+
+    void onCancelClicked() {
     }
 
     void onUserInput();

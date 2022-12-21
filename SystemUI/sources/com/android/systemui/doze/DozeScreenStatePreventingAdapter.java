@@ -2,13 +2,12 @@ package com.android.systemui.doze;
 
 import com.android.systemui.doze.DozeMachine;
 import com.android.systemui.statusbar.phone.DozeParameters;
-/* loaded from: classes.dex */
+
 public class DozeScreenStatePreventingAdapter extends DozeMachine.Service.Delegate {
     DozeScreenStatePreventingAdapter(DozeMachine.Service service) {
         super(service);
     }
 
-    @Override // com.android.systemui.doze.DozeMachine.Service.Delegate, com.android.systemui.doze.DozeMachine.Service
     public void setDozeScreenState(int i) {
         if (i == 3) {
             i = 2;

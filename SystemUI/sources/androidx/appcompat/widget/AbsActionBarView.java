@@ -9,14 +9,13 @@ import android.view.ContextThemeWrapper;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.appcompat.R$attr;
-import androidx.appcompat.R$styleable;
+import androidx.appcompat.C0329R;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewPropertyAnimatorCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public abstract class AbsActionBarView extends ViewGroup {
+
+abstract class AbsActionBarView extends ViewGroup {
+    private static final int FADE_DURATION = 200;
     protected ActionMenuPresenter mActionMenuPresenter;
     protected int mContentHeight;
     private boolean mEatingHover;
@@ -26,38 +25,34 @@ public abstract class AbsActionBarView extends ViewGroup {
     protected final VisibilityAnimListener mVisAnimListener;
     protected ViewPropertyAnimatorCompat mVisibilityAnim;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public static int next(int i, int i2, boolean z) {
+    protected static int next(int i, int i2, boolean z) {
         return z ? i - i2 : i + i2;
     }
 
-    public abstract void setContentHeight(int i);
-
     AbsActionBarView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     AbsActionBarView(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AbsActionBarView(Context context, AttributeSet attributeSet, int i) {
+    AbsActionBarView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mVisAnimListener = new VisibilityAnimListener();
         TypedValue typedValue = new TypedValue();
-        if (context.getTheme().resolveAttribute(R$attr.actionBarPopupTheme, typedValue, true) && typedValue.resourceId != 0) {
-            this.mPopupContext = new ContextThemeWrapper(context, typedValue.resourceId);
-        } else {
+        if (!context.getTheme().resolveAttribute(C0329R.attr.actionBarPopupTheme, typedValue, true) || typedValue.resourceId == 0) {
             this.mPopupContext = context;
+        } else {
+            this.mPopupContext = new ContextThemeWrapper(context, typedValue.resourceId);
         }
     }
 
-    @Override // android.view.View
-    protected void onConfigurationChanged(Configuration configuration) {
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(null, R$styleable.ActionBar, R$attr.actionBarStyle, 0);
-        setContentHeight(obtainStyledAttributes.getLayoutDimension(R$styleable.ActionBar_height, 0));
+        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes((AttributeSet) null, C0329R.styleable.ActionBar, C0329R.attr.actionBarStyle, 0);
+        setContentHeight(obtainStyledAttributes.getLayoutDimension(C0329R.styleable.ActionBar_height, 0));
         obtainStyledAttributes.recycle();
         ActionMenuPresenter actionMenuPresenter = this.mActionMenuPresenter;
         if (actionMenuPresenter != null) {
@@ -65,7 +60,6 @@ public abstract class AbsActionBarView extends ViewGroup {
         }
     }
 
-    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
@@ -83,7 +77,6 @@ public abstract class AbsActionBarView extends ViewGroup {
         return true;
     }
 
-    @Override // android.view.View
     public boolean onHoverEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 9) {
@@ -99,6 +92,22 @@ public abstract class AbsActionBarView extends ViewGroup {
             this.mEatingHover = false;
         }
         return true;
+    }
+
+    public void setContentHeight(int i) {
+        this.mContentHeight = i;
+        requestLayout();
+    }
+
+    public int getContentHeight() {
+        return this.mContentHeight;
+    }
+
+    public int getAnimatedVisibility() {
+        if (this.mVisibilityAnim != null) {
+            return this.mVisAnimListener.mFinalVisibility;
+        }
+        return getVisibility();
     }
 
     public ViewPropertyAnimatorCompat setupAnimatorToVisibility(int i, long j) {
@@ -121,7 +130,10 @@ public abstract class AbsActionBarView extends ViewGroup {
         return alpha2;
     }
 
-    @Override // android.view.View
+    public void animateToVisibility(int i) {
+        setupAnimatorToVisibility(i, 200).start();
+    }
+
     public void setVisibility(int i) {
         if (i != getVisibility()) {
             ViewPropertyAnimatorCompat viewPropertyAnimatorCompat = this.mVisibilityAnim;
@@ -132,13 +144,69 @@ public abstract class AbsActionBarView extends ViewGroup {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    public boolean showOverflowMenu() {
+        ActionMenuPresenter actionMenuPresenter = this.mActionMenuPresenter;
+        if (actionMenuPresenter != null) {
+            return actionMenuPresenter.showOverflowMenu();
+        }
+        return false;
+    }
+
+    public void postShowOverflowMenu() {
+        post(new Runnable() {
+            public void run() {
+                AbsActionBarView.this.showOverflowMenu();
+            }
+        });
+    }
+
+    public boolean hideOverflowMenu() {
+        ActionMenuPresenter actionMenuPresenter = this.mActionMenuPresenter;
+        if (actionMenuPresenter != null) {
+            return actionMenuPresenter.hideOverflowMenu();
+        }
+        return false;
+    }
+
+    public boolean isOverflowMenuShowing() {
+        ActionMenuPresenter actionMenuPresenter = this.mActionMenuPresenter;
+        if (actionMenuPresenter != null) {
+            return actionMenuPresenter.isOverflowMenuShowing();
+        }
+        return false;
+    }
+
+    public boolean isOverflowMenuShowPending() {
+        ActionMenuPresenter actionMenuPresenter = this.mActionMenuPresenter;
+        if (actionMenuPresenter != null) {
+            return actionMenuPresenter.isOverflowMenuShowPending();
+        }
+        return false;
+    }
+
+    public boolean isOverflowReserved() {
+        ActionMenuPresenter actionMenuPresenter = this.mActionMenuPresenter;
+        return actionMenuPresenter != null && actionMenuPresenter.isOverflowReserved();
+    }
+
+    public boolean canShowOverflowMenu() {
+        return isOverflowReserved() && getVisibility() == 0;
+    }
+
+    public void dismissPopupMenus() {
+        ActionMenuPresenter actionMenuPresenter = this.mActionMenuPresenter;
+        if (actionMenuPresenter != null) {
+            actionMenuPresenter.dismissPopupMenus();
+        }
+    }
+
+    /* access modifiers changed from: protected */
     public int measureChildView(View view, int i, int i2, int i3) {
         view.measure(View.MeasureSpec.makeMeasureSpec(i, Integer.MIN_VALUE), i2);
         return Math.max(0, (i - view.getMeasuredWidth()) - i3);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int positionChild(View view, int i, int i2, int i3, boolean z) {
         int measuredWidth = view.getMeasuredWidth();
         int measuredHeight = view.getMeasuredHeight();
@@ -151,9 +219,7 @@ public abstract class AbsActionBarView extends ViewGroup {
         return z ? -measuredWidth : measuredWidth;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public class VisibilityAnimListener implements ViewPropertyAnimatorListener {
+    protected class VisibilityAnimListener implements ViewPropertyAnimatorListener {
         private boolean mCanceled = false;
         int mFinalVisibility;
 
@@ -166,23 +232,18 @@ public abstract class AbsActionBarView extends ViewGroup {
             return this;
         }
 
-        @Override // androidx.core.view.ViewPropertyAnimatorListener
         public void onAnimationStart(View view) {
             AbsActionBarView.super.setVisibility(0);
             this.mCanceled = false;
         }
 
-        @Override // androidx.core.view.ViewPropertyAnimatorListener
         public void onAnimationEnd(View view) {
-            if (this.mCanceled) {
-                return;
+            if (!this.mCanceled) {
+                AbsActionBarView.this.mVisibilityAnim = null;
+                AbsActionBarView.super.setVisibility(this.mFinalVisibility);
             }
-            AbsActionBarView absActionBarView = AbsActionBarView.this;
-            absActionBarView.mVisibilityAnim = null;
-            AbsActionBarView.super.setVisibility(this.mFinalVisibility);
         }
 
-        @Override // androidx.core.view.ViewPropertyAnimatorListener
         public void onAnimationCancel(View view) {
             this.mCanceled = true;
         }

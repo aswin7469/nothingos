@@ -16,6 +16,7 @@ import android.app.usage.UsageStatsManager;
 import android.appwidget.AppWidgetManager;
 import android.bluetooth.BluetoothManager;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.RestrictionsManager;
@@ -40,10 +41,8 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.nfc.NfcManager;
 import android.os.BatteryManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.DropBoxManager;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Process;
 import android.os.UserManager;
@@ -60,152 +59,178 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.CaptioningManager;
 import android.view.inputmethod.InputMethodManager;
 import android.view.textservice.TextServicesManager;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.res.ResourcesCompat;
-import androidx.core.os.ExecutorCompat;
-import java.io.File;
+import androidx.core.util.ObjectsCompat;
+import androidx.slice.core.SliceHints;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
+import com.nothing.systemui.p024qs.tiles.settings.panel.SettingContentRegistry;
+import java.p026io.File;
 import java.util.HashMap;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+
 public class ContextCompat {
+    private static final String TAG = "ContextCompat";
     private static final Object sLock = new Object();
     private static final Object sSync = new Object();
     private static TypedValue sTempValue;
 
-    public static boolean startActivities(Context context, Intent[] intents, Bundle options) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            Api16Impl.startActivities(context, intents, options);
-            return true;
-        }
-        context.startActivities(intents);
+    protected ContextCompat() {
+    }
+
+    public static String getAttributionTag(Context context) {
+        return Api30Impl.getAttributionTag(context);
+    }
+
+    public static boolean startActivities(Context context, Intent[] intentArr) {
+        return startActivities(context, intentArr, (Bundle) null);
+    }
+
+    public static boolean startActivities(Context context, Intent[] intentArr, Bundle bundle) {
+        Api16Impl.startActivities(context, intentArr, bundle);
         return true;
     }
 
-    public static File[] getExternalFilesDirs(Context context, String type) {
-        return Build.VERSION.SDK_INT >= 19 ? Api19Impl.getExternalFilesDirs(context, type) : new File[]{context.getExternalFilesDir(type)};
+    public static void startActivity(Context context, Intent intent, Bundle bundle) {
+        Api16Impl.startActivity(context, intent, bundle);
+    }
+
+    public static File getDataDir(Context context) {
+        return Api24Impl.getDataDir(context);
+    }
+
+    public static File[] getObbDirs(Context context) {
+        return Api19Impl.getObbDirs(context);
+    }
+
+    public static File[] getExternalFilesDirs(Context context, String str) {
+        return Api19Impl.getExternalFilesDirs(context, str);
     }
 
     public static File[] getExternalCacheDirs(Context context) {
-        return Build.VERSION.SDK_INT >= 19 ? Api19Impl.getExternalCacheDirs(context) : new File[]{context.getExternalCacheDir()};
+        return Api19Impl.getExternalCacheDirs(context);
     }
 
-    public static Drawable getDrawable(Context context, int id) {
-        int i;
-        int i2 = Build.VERSION.SDK_INT;
-        if (i2 >= 21) {
-            return Api21Impl.getDrawable(context, id);
-        }
-        if (i2 >= 16) {
-            return context.getResources().getDrawable(id);
-        }
-        synchronized (sLock) {
-            if (sTempValue == null) {
-                sTempValue = new TypedValue();
-            }
-            context.getResources().getValue(id, sTempValue, true);
-            i = sTempValue.resourceId;
-        }
-        return context.getResources().getDrawable(i);
+    public static Drawable getDrawable(Context context, int i) {
+        return Api21Impl.getDrawable(context, i);
     }
 
-    public static ColorStateList getColorStateList(Context context, int id) {
-        return ResourcesCompat.getColorStateList(context.getResources(), id, context.getTheme());
+    public static ColorStateList getColorStateList(Context context, int i) {
+        return ResourcesCompat.getColorStateList(context.getResources(), i, context.getTheme());
     }
 
-    public static int getColor(Context context, int id) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            return Api23Impl.getColor(context, id);
-        }
-        return context.getResources().getColor(id);
+    public static int getColor(Context context, int i) {
+        return Api23Impl.getColor(context, i);
     }
 
-    public static int checkSelfPermission(Context context, String permission) {
-        if (permission == null) {
-            throw new IllegalArgumentException("permission is null");
-        }
-        return context.checkPermission(permission, Process.myPid(), Process.myUid());
+    public static int checkSelfPermission(Context context, String str) {
+        ObjectsCompat.requireNonNull(str, "permission must be non-null");
+        return context.checkPermission(str, Process.myPid(), Process.myUid());
+    }
+
+    public static File getNoBackupFilesDir(Context context) {
+        return Api21Impl.getNoBackupFilesDir(context);
+    }
+
+    public static File getCodeCacheDir(Context context) {
+        return Api21Impl.getCodeCacheDir(context);
+    }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:11:0x002a, code lost:
+        return r4;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private static java.p026io.File createFilesDir(java.p026io.File r4) {
+        /*
+            java.lang.String r0 = "Unable to create files subdir "
+            java.lang.Object r1 = sSync
+            monitor-enter(r1)
+            boolean r2 = r4.exists()     // Catch:{ all -> 0x002b }
+            if (r2 != 0) goto L_0x0029
+            boolean r2 = r4.mkdirs()     // Catch:{ all -> 0x002b }
+            if (r2 == 0) goto L_0x0013
+            monitor-exit(r1)     // Catch:{ all -> 0x002b }
+            return r4
+        L_0x0013:
+            java.lang.String r2 = "ContextCompat"
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ all -> 0x002b }
+            r3.<init>((java.lang.String) r0)     // Catch:{ all -> 0x002b }
+            java.lang.String r0 = r4.getPath()     // Catch:{ all -> 0x002b }
+            java.lang.StringBuilder r0 = r3.append((java.lang.String) r0)     // Catch:{ all -> 0x002b }
+            java.lang.String r0 = r0.toString()     // Catch:{ all -> 0x002b }
+            android.util.Log.w(r2, r0)     // Catch:{ all -> 0x002b }
+        L_0x0029:
+            monitor-exit(r1)     // Catch:{ all -> 0x002b }
+            return r4
+        L_0x002b:
+            r4 = move-exception
+            monitor-exit(r1)     // Catch:{ all -> 0x002b }
+            throw r4
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.core.content.ContextCompat.createFilesDir(java.io.File):java.io.File");
     }
 
     public static Context createDeviceProtectedStorageContext(Context context) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            return Api24Impl.createDeviceProtectedStorageContext(context);
-        }
-        return null;
+        return Api24Impl.createDeviceProtectedStorageContext(context);
+    }
+
+    public static boolean isDeviceProtectedStorage(Context context) {
+        return Api24Impl.isDeviceProtectedStorage(context);
     }
 
     public static Executor getMainExecutor(Context context) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return Api28Impl.getMainExecutor(context);
-        }
-        return ExecutorCompat.create(new Handler(context.getMainLooper()));
+        return Api28Impl.getMainExecutor(context);
     }
 
-    public static <T> T getSystemService(Context context, Class<T> serviceClass) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            return (T) Api23Impl.getSystemService(context, serviceClass);
-        }
-        String systemServiceName = getSystemServiceName(context, serviceClass);
-        if (systemServiceName == null) {
-            return null;
-        }
-        return (T) context.getSystemService(systemServiceName);
+    public static void startForegroundService(Context context, Intent intent) {
+        Api26Impl.startForegroundService(context, intent);
     }
 
-    public static String getSystemServiceName(Context context, Class<?> serviceClass) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            return Api23Impl.getSystemServiceName(context, serviceClass);
-        }
-        return LegacyServiceMapHolder.SERVICES.get(serviceClass);
+    public static <T> T getSystemService(Context context, Class<T> cls) {
+        return Api23Impl.getSystemService(context, cls);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class LegacyServiceMapHolder {
+    public static String getSystemServiceName(Context context, Class<?> cls) {
+        return Api23Impl.getSystemServiceName(context, cls);
+    }
+
+    private static final class LegacyServiceMapHolder {
         static final HashMap<Class<?>, String> SERVICES;
+
+        private LegacyServiceMapHolder() {
+        }
 
         static {
             HashMap<Class<?>, String> hashMap = new HashMap<>();
             SERVICES = hashMap;
-            int i = Build.VERSION.SDK_INT;
-            if (i >= 22) {
-                hashMap.put(SubscriptionManager.class, "telephony_subscription_service");
-                hashMap.put(UsageStatsManager.class, "usagestats");
-            }
-            if (i >= 21) {
-                hashMap.put(AppWidgetManager.class, "appwidget");
-                hashMap.put(BatteryManager.class, "batterymanager");
-                hashMap.put(CameraManager.class, "camera");
-                hashMap.put(JobScheduler.class, "jobscheduler");
-                hashMap.put(LauncherApps.class, "launcherapps");
-                hashMap.put(MediaProjectionManager.class, "media_projection");
-                hashMap.put(MediaSessionManager.class, "media_session");
-                hashMap.put(RestrictionsManager.class, "restrictions");
-                hashMap.put(TelecomManager.class, "telecom");
-                hashMap.put(TvInputManager.class, "tv_input");
-            }
-            if (i >= 19) {
-                hashMap.put(AppOpsManager.class, "appops");
-                hashMap.put(CaptioningManager.class, "captioning");
-                hashMap.put(ConsumerIrManager.class, "consumer_ir");
-                hashMap.put(PrintManager.class, "print");
-            }
-            if (i >= 18) {
-                hashMap.put(BluetoothManager.class, "bluetooth");
-            }
-            if (i >= 17) {
-                hashMap.put(DisplayManager.class, "display");
-                hashMap.put(UserManager.class, "user");
-            }
-            if (i >= 16) {
-                hashMap.put(InputManager.class, "input");
-                hashMap.put(MediaRouter.class, "media_router");
-                hashMap.put(NsdManager.class, "servicediscovery");
-            }
+            hashMap.put(SubscriptionManager.class, "telephony_subscription_service");
+            hashMap.put(UsageStatsManager.class, "usagestats");
+            hashMap.put(AppWidgetManager.class, "appwidget");
+            hashMap.put(BatteryManager.class, "batterymanager");
+            hashMap.put(CameraManager.class, "camera");
+            hashMap.put(JobScheduler.class, "jobscheduler");
+            hashMap.put(LauncherApps.class, "launcherapps");
+            hashMap.put(MediaProjectionManager.class, "media_projection");
+            hashMap.put(MediaSessionManager.class, "media_session");
+            hashMap.put(RestrictionsManager.class, "restrictions");
+            hashMap.put(TelecomManager.class, "telecom");
+            hashMap.put(TvInputManager.class, "tv_input");
+            hashMap.put(AppOpsManager.class, "appops");
+            hashMap.put(CaptioningManager.class, "captioning");
+            hashMap.put(ConsumerIrManager.class, "consumer_ir");
+            hashMap.put(PrintManager.class, "print");
+            hashMap.put(BluetoothManager.class, SettingContentRegistry.BLUETOOTH_ITEM);
+            hashMap.put(DisplayManager.class, "display");
+            hashMap.put(UserManager.class, "user");
+            hashMap.put(InputManager.class, "input");
+            hashMap.put(MediaRouter.class, "media_router");
+            hashMap.put(NsdManager.class, "servicediscovery");
             hashMap.put(AccessibilityManager.class, "accessibility");
             hashMap.put(AccountManager.class, "account");
-            hashMap.put(ActivityManager.class, "activity");
-            hashMap.put(AlarmManager.class, "alarm");
+            hashMap.put(ActivityManager.class, SliceHints.HINT_ACTIVITY);
+            hashMap.put(AlarmManager.class, NotificationCompat.CATEGORY_ALARM);
             hashMap.put(AudioManager.class, "audio");
-            hashMap.put(ClipboardManager.class, "clipboard");
+            hashMap.put(ClipboardManager.class, NavigationBarInflaterView.CLIPBOARD);
             hashMap.put(ConnectivityManager.class, "connectivity");
             hashMap.put(DevicePolicyManager.class, "device_policy");
             hashMap.put(DownloadManager.class, "download");
@@ -232,59 +257,111 @@ public class ContextCompat {
         }
     }
 
-    /* loaded from: classes.dex */
     static class Api16Impl {
-        static void startActivities(Context obj, Intent[] intents, Bundle options) {
-            obj.startActivities(intents, options);
+        private Api16Impl() {
+        }
+
+        static void startActivities(Context context, Intent[] intentArr, Bundle bundle) {
+            context.startActivities(intentArr, bundle);
+        }
+
+        static void startActivity(Context context, Intent intent, Bundle bundle) {
+            context.startActivity(intent, bundle);
         }
     }
 
-    /* loaded from: classes.dex */
     static class Api19Impl {
-        static File[] getExternalCacheDirs(Context obj) {
-            return obj.getExternalCacheDirs();
+        private Api19Impl() {
         }
 
-        static File[] getExternalFilesDirs(Context obj, String type) {
-            return obj.getExternalFilesDirs(type);
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class Api21Impl {
-        static Drawable getDrawable(Context obj, int id) {
-            return obj.getDrawable(id);
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class Api23Impl {
-        static int getColor(Context obj, int id) {
-            return obj.getColor(id);
+        static File[] getExternalCacheDirs(Context context) {
+            return context.getExternalCacheDirs();
         }
 
-        static <T> T getSystemService(Context obj, Class<T> serviceClass) {
-            return (T) obj.getSystemService(serviceClass);
+        static File[] getExternalFilesDirs(Context context, String str) {
+            return context.getExternalFilesDirs(str);
         }
 
-        static String getSystemServiceName(Context obj, Class<?> serviceClass) {
-            return obj.getSystemServiceName(serviceClass);
+        static File[] getObbDirs(Context context) {
+            return context.getObbDirs();
         }
     }
 
-    /* loaded from: classes.dex */
+    static class Api21Impl {
+        private Api21Impl() {
+        }
+
+        static Drawable getDrawable(Context context, int i) {
+            return context.getDrawable(i);
+        }
+
+        static File getNoBackupFilesDir(Context context) {
+            return context.getNoBackupFilesDir();
+        }
+
+        static File getCodeCacheDir(Context context) {
+            return context.getCodeCacheDir();
+        }
+    }
+
+    static class Api23Impl {
+        private Api23Impl() {
+        }
+
+        static int getColor(Context context, int i) {
+            return context.getColor(i);
+        }
+
+        static <T> T getSystemService(Context context, Class<T> cls) {
+            return context.getSystemService(cls);
+        }
+
+        static String getSystemServiceName(Context context, Class<?> cls) {
+            return context.getSystemServiceName(cls);
+        }
+    }
+
     static class Api24Impl {
-        static Context createDeviceProtectedStorageContext(Context obj) {
-            return obj.createDeviceProtectedStorageContext();
+        private Api24Impl() {
+        }
+
+        static File getDataDir(Context context) {
+            return context.getDataDir();
+        }
+
+        static Context createDeviceProtectedStorageContext(Context context) {
+            return context.createDeviceProtectedStorageContext();
+        }
+
+        static boolean isDeviceProtectedStorage(Context context) {
+            return context.isDeviceProtectedStorage();
         }
     }
 
-    /* loaded from: classes.dex */
+    static class Api26Impl {
+        private Api26Impl() {
+        }
+
+        static ComponentName startForegroundService(Context context, Intent intent) {
+            return context.startForegroundService(intent);
+        }
+    }
+
     static class Api28Impl {
-        static Executor getMainExecutor(Context obj) {
-            return obj.getMainExecutor();
+        private Api28Impl() {
+        }
+
+        static Executor getMainExecutor(Context context) {
+            return context.getMainExecutor();
+        }
+    }
+
+    static class Api30Impl {
+        private Api30Impl() {
+        }
+
+        static String getAttributionTag(Context context) {
+            return context.getAttributionTag();
         }
     }
 }

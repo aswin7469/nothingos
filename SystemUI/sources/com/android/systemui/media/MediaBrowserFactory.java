@@ -4,10 +4,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.media.browse.MediaBrowser;
 import android.os.Bundle;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class MediaBrowserFactory {
     private final Context mContext;
 
+    @Inject
     public MediaBrowserFactory(Context context) {
         this.mContext = context;
     }

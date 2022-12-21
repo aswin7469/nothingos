@@ -3,26 +3,37 @@ package com.android.systemui.statusbar;
 import android.content.pm.UserInfo;
 import android.util.SparseArray;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-/* loaded from: classes.dex */
-public interface NotificationLockscreenUserManager {
 
-    /* loaded from: classes.dex */
+public interface NotificationLockscreenUserManager {
+    public static final String NOTIFICATION_UNLOCKED_BY_WORK_CHALLENGE_ACTION = "com.android.systemui.statusbar.work_challenge_unlocked_notification_action";
+    public static final String PERMISSION_SELF = "com.android.systemui.permission.SELF";
+
     public interface KeyguardNotificationSuppressor {
         boolean shouldSuppressOnKeyguard(NotificationEntry notificationEntry);
     }
 
-    /* loaded from: classes.dex */
+    public interface NotificationStateChangedListener {
+        void onNotificationStateChanged();
+    }
+
     public interface UserChangedListener {
-        default void onCurrentProfilesChanged(SparseArray<UserInfo> sparseArray) {
+        void onCurrentProfilesChanged(SparseArray<UserInfo> sparseArray) {
         }
 
-        default void onUserChanged(int i) {
+        void onUserChanged(int i) {
+        }
+
+        void onUserRemoved(int i) {
         }
     }
 
     void addKeyguardNotificationSuppressor(KeyguardNotificationSuppressor keyguardNotificationSuppressor);
 
+    void addNotificationStateChangedListener(NotificationStateChangedListener notificationStateChangedListener);
+
     void addUserChangedListener(UserChangedListener userChangedListener);
+
+    SparseArray<UserInfo> getCurrentProfiles();
 
     int getCurrentUserId();
 
@@ -34,9 +45,15 @@ public interface NotificationLockscreenUserManager {
 
     boolean needsRedaction(NotificationEntry notificationEntry);
 
-    default boolean needsSeparateWorkChallenge(int i) {
+    boolean needsSeparateWorkChallenge(int i) {
         return false;
     }
+
+    void removeNotificationStateChangedListener(NotificationStateChangedListener notificationStateChangedListener);
+
+    void removeUserChangedListener(UserChangedListener userChangedListener);
+
+    void setLockscreenPublicMode(boolean z, int i);
 
     void setUpWithPresenter(NotificationPresenter notificationPresenter);
 
@@ -51,6 +68,8 @@ public interface NotificationLockscreenUserManager {
     boolean shouldShowOnKeyguard(NotificationEntry notificationEntry);
 
     void updatePublicMode();
+
+    boolean userAllowsNotificationsAndContents(int i);
 
     boolean userAllowsNotificationsInPublic(int i);
 

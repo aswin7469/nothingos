@@ -3,8 +3,9 @@ package com.android.systemui.keyguard;
 import android.os.RemoteException;
 import android.util.Log;
 import com.android.internal.policy.IKeyguardDismissCallback;
-/* loaded from: classes.dex */
+
 public class DismissCallbackWrapper {
+    private static final String TAG = "DismissCallbackWrapper";
     private IKeyguardDismissCallback mCallback;
 
     public DismissCallbackWrapper(IKeyguardDismissCallback iKeyguardDismissCallback) {
@@ -15,7 +16,7 @@ public class DismissCallbackWrapper {
         try {
             this.mCallback.onDismissError();
         } catch (RemoteException e) {
-            Log.i("DismissCallbackWrapper", "Failed to call callback", e);
+            Log.i(TAG, "Failed to call callback", e);
         }
     }
 
@@ -23,7 +24,7 @@ public class DismissCallbackWrapper {
         try {
             this.mCallback.onDismissCancelled();
         } catch (RemoteException e) {
-            Log.i("DismissCallbackWrapper", "Failed to call callback", e);
+            Log.i(TAG, "Failed to call callback", e);
         }
     }
 
@@ -31,7 +32,7 @@ public class DismissCallbackWrapper {
         try {
             this.mCallback.onDismissSucceeded();
         } catch (RemoteException e) {
-            Log.i("DismissCallbackWrapper", "Failed to call callback", e);
+            Log.i(TAG, "Failed to call callback", e);
         }
     }
 }

@@ -1,31 +1,36 @@
 package com.android.systemui.dump;
 
 import android.content.Context;
+import com.android.systemui.CoreStartable;
+import com.android.systemui.shared.system.UncaughtExceptionPreHandlerManager;
 import dagger.internal.Factory;
+import java.util.Map;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DumpHandler_Factory implements Factory<DumpHandler> {
     private final Provider<Context> contextProvider;
     private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<LogBufferEulogizer> logBufferEulogizerProvider;
+    private final Provider<Map<Class<?>, Provider<CoreStartable>>> startablesProvider;
+    private final Provider<UncaughtExceptionPreHandlerManager> uncaughtExceptionPreHandlerManagerProvider;
 
-    public DumpHandler_Factory(Provider<Context> provider, Provider<DumpManager> provider2, Provider<LogBufferEulogizer> provider3) {
+    public DumpHandler_Factory(Provider<Context> provider, Provider<DumpManager> provider2, Provider<LogBufferEulogizer> provider3, Provider<Map<Class<?>, Provider<CoreStartable>>> provider4, Provider<UncaughtExceptionPreHandlerManager> provider5) {
         this.contextProvider = provider;
         this.dumpManagerProvider = provider2;
         this.logBufferEulogizerProvider = provider3;
+        this.startablesProvider = provider4;
+        this.uncaughtExceptionPreHandlerManagerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DumpHandler mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.logBufferEulogizerProvider.mo1933get());
+    public DumpHandler get() {
+        return newInstance(this.contextProvider.get(), this.dumpManagerProvider.get(), this.logBufferEulogizerProvider.get(), this.startablesProvider.get(), this.uncaughtExceptionPreHandlerManagerProvider.get());
     }
 
-    public static DumpHandler_Factory create(Provider<Context> provider, Provider<DumpManager> provider2, Provider<LogBufferEulogizer> provider3) {
-        return new DumpHandler_Factory(provider, provider2, provider3);
+    public static DumpHandler_Factory create(Provider<Context> provider, Provider<DumpManager> provider2, Provider<LogBufferEulogizer> provider3, Provider<Map<Class<?>, Provider<CoreStartable>>> provider4, Provider<UncaughtExceptionPreHandlerManager> provider5) {
+        return new DumpHandler_Factory(provider, provider2, provider3, provider4, provider5);
     }
 
-    public static DumpHandler newInstance(Context context, DumpManager dumpManager, LogBufferEulogizer logBufferEulogizer) {
-        return new DumpHandler(context, dumpManager, logBufferEulogizer);
+    public static DumpHandler newInstance(Context context, DumpManager dumpManager, LogBufferEulogizer logBufferEulogizer, Map<Class<?>, Provider<CoreStartable>> map, UncaughtExceptionPreHandlerManager uncaughtExceptionPreHandlerManager) {
+        return new DumpHandler(context, dumpManager, logBufferEulogizer, map, uncaughtExceptionPreHandlerManager);
     }
 }

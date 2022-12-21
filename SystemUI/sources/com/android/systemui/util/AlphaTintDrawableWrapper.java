@@ -7,11 +7,11 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
 import android.graphics.drawable.InsetDrawable;
 import android.util.AttributeSet;
-import com.android.systemui.R$styleable;
-import java.io.IOException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes2.dex */
+import com.android.systemui.C1893R;
+import java.p026io.IOException;
+import org.xmlpull.p032v1.XmlPullParser;
+import org.xmlpull.p032v1.XmlPullParserException;
+
 public class AlphaTintDrawableWrapper extends InsetDrawable {
     private int[] mThemeAttrs;
     private ColorStateList mTint;
@@ -25,9 +25,8 @@ public class AlphaTintDrawableWrapper extends InsetDrawable {
         this.mThemeAttrs = iArr;
     }
 
-    @Override // android.graphics.drawable.InsetDrawable, android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) throws XmlPullParserException, IOException {
-        TypedArray obtainAttributes = InsetDrawable.obtainAttributes(resources, theme, attributeSet, R$styleable.AlphaTintDrawableWrapper);
+        TypedArray obtainAttributes = obtainAttributes(resources, theme, attributeSet, C1893R.styleable.AlphaTintDrawableWrapper);
         super.inflate(resources, xmlPullParser, attributeSet, theme);
         this.mThemeAttrs = obtainAttributes.extractThemeAttrs();
         updateStateFromTypedArray(obtainAttributes);
@@ -35,55 +34,52 @@ public class AlphaTintDrawableWrapper extends InsetDrawable {
         applyTint();
     }
 
-    @Override // android.graphics.drawable.InsetDrawable, android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void applyTheme(Resources.Theme theme) {
         super.applyTheme(theme);
         int[] iArr = this.mThemeAttrs;
-        if (iArr != null && theme != null) {
-            TypedArray resolveAttributes = theme.resolveAttributes(iArr, R$styleable.AlphaTintDrawableWrapper);
+        if (!(iArr == null || theme == null)) {
+            TypedArray resolveAttributes = theme.resolveAttributes(iArr, C1893R.styleable.AlphaTintDrawableWrapper);
             updateStateFromTypedArray(resolveAttributes);
             resolveAttributes.recycle();
         }
         applyTint();
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public boolean canApplyTheme() {
         int[] iArr = this.mThemeAttrs;
         return (iArr != null && iArr.length > 0) || super.canApplyTheme();
     }
 
     private void updateStateFromTypedArray(TypedArray typedArray) {
-        int i = R$styleable.AlphaTintDrawableWrapper_android_tint;
-        if (typedArray.hasValue(i)) {
-            this.mTint = typedArray.getColorStateList(i);
+        if (typedArray.hasValue(0)) {
+            this.mTint = typedArray.getColorStateList(0);
         }
-        int i2 = R$styleable.AlphaTintDrawableWrapper_android_alpha;
-        if (typedArray.hasValue(i2)) {
-            setAlpha(Math.round(typedArray.getFloat(i2, 1.0f) * 255.0f));
+        if (typedArray.hasValue(1)) {
+            setAlpha(Math.round(typedArray.getFloat(1, 1.0f) * 255.0f));
         }
+    }
+
+    public void setTintList(ColorStateList colorStateList) {
+        super.setTintList(colorStateList);
+        this.mTint = colorStateList;
     }
 
     private void applyTint() {
-        if (getDrawable() == null || this.mTint == null) {
-            return;
+        if (getDrawable() != null && this.mTint != null) {
+            getDrawable().mutate().setTintList(this.mTint);
         }
-        getDrawable().mutate().setTintList(this.mTint);
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public Drawable.ConstantState getConstantState() {
         return new AlphaTintState(super.getConstantState(), this.mThemeAttrs, getAlpha(), this.mTint);
     }
 
-    /* loaded from: classes2.dex */
     static class AlphaTintState extends Drawable.ConstantState {
         private int mAlpha;
         private ColorStateList mColorStateList;
         private int[] mThemeAttrs;
         private Drawable.ConstantState mWrappedState;
 
-        @Override // android.graphics.drawable.Drawable.ConstantState
         public boolean canApplyTheme() {
             return true;
         }
@@ -95,12 +91,10 @@ public class AlphaTintDrawableWrapper extends InsetDrawable {
             this.mColorStateList = colorStateList;
         }
 
-        @Override // android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable() {
-            return newDrawable(null, null);
+            return newDrawable((Resources) null, (Resources.Theme) null);
         }
 
-        @Override // android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable(Resources resources, Resources.Theme theme) {
             AlphaTintDrawableWrapper alphaTintDrawableWrapper = new AlphaTintDrawableWrapper(((DrawableWrapper) this.mWrappedState.newDrawable(resources, theme)).getDrawable(), this.mThemeAttrs);
             alphaTintDrawableWrapper.setTintList(this.mColorStateList);
@@ -108,7 +102,6 @@ public class AlphaTintDrawableWrapper extends InsetDrawable {
             return alphaTintDrawableWrapper;
         }
 
-        @Override // android.graphics.drawable.Drawable.ConstantState
         public int getChangingConfigurations() {
             return this.mWrappedState.getChangingConfigurations();
         }

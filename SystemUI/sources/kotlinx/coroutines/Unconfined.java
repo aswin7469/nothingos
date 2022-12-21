@@ -1,32 +1,30 @@
 package kotlinx.coroutines;
 
+import kotlin.Metadata;
 import kotlin.coroutines.CoroutineContext;
-import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000.\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u000e\n\u0000\bÀ\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u001c\u0010\u0003\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u00062\n\u0010\u0007\u001a\u00060\bj\u0002`\tH\u0016J\u0010\u0010\n\u001a\u00020\u000b2\u0006\u0010\u0005\u001a\u00020\u0006H\u0016J\b\u0010\f\u001a\u00020\rH\u0016¨\u0006\u000e"}, mo64987d2 = {"Lkotlinx/coroutines/Unconfined;", "Lkotlinx/coroutines/CoroutineDispatcher;", "()V", "dispatch", "", "context", "Lkotlin/coroutines/CoroutineContext;", "block", "Ljava/lang/Runnable;", "Lkotlinx/coroutines/Runnable;", "isDispatchNeeded", "", "toString", "", "kotlinx-coroutines-core"}, mo64988k = 1, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: Unconfined.kt */
-/* loaded from: classes2.dex */
 public final class Unconfined extends CoroutineDispatcher {
     public static final Unconfined INSTANCE = new Unconfined();
 
-    @Override // kotlinx.coroutines.CoroutineDispatcher
-    public boolean isDispatchNeeded(@NotNull CoroutineContext context) {
-        Intrinsics.checkParameterIsNotNull(context, "context");
+    public boolean isDispatchNeeded(CoroutineContext coroutineContext) {
         return false;
     }
 
-    @Override // kotlinx.coroutines.CoroutineDispatcher
-    @NotNull
     public String toString() {
-        return "Unconfined";
+        return "Dispatchers.Unconfined";
     }
 
     private Unconfined() {
     }
 
-    @Override // kotlinx.coroutines.CoroutineDispatcher
-    public void dispatch(@NotNull CoroutineContext context, @NotNull Runnable block) {
-        Intrinsics.checkParameterIsNotNull(context, "context");
-        Intrinsics.checkParameterIsNotNull(block, "block");
-        throw new UnsupportedOperationException();
+    public void dispatch(CoroutineContext coroutineContext, Runnable runnable) {
+        YieldContext yieldContext = (YieldContext) coroutineContext.get(YieldContext.Key);
+        if (yieldContext != null) {
+            yieldContext.dispatcherWasUnconfined = true;
+            return;
+        }
+        throw new UnsupportedOperationException("Dispatchers.Unconfined.dispatch function can only be used by the yield function. If you wrap Unconfined dispatcher in your code, make sure you properly delegate isDispatchNeeded and dispatch calls.");
     }
 }

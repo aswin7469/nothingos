@@ -5,13 +5,12 @@ import com.airbnb.lottie.animation.content.Content;
 import com.airbnb.lottie.animation.content.MergePathsContent;
 import com.airbnb.lottie.model.layer.BaseLayer;
 import com.airbnb.lottie.utils.Logger;
-/* loaded from: classes.dex */
+
 public class MergePaths implements ContentModel {
     private final boolean hidden;
     private final MergePathsMode mode;
     private final String name;
 
-    /* loaded from: classes.dex */
     public enum MergePathsMode {
         MERGE,
         ADD,
@@ -20,22 +19,22 @@ public class MergePaths implements ContentModel {
         EXCLUDE_INTERSECTIONS;
 
         public static MergePathsMode forId(int i) {
-            if (i != 1) {
-                if (i == 2) {
-                    return ADD;
-                }
-                if (i == 3) {
-                    return SUBTRACT;
-                }
-                if (i == 4) {
-                    return INTERSECT;
-                }
-                if (i == 5) {
-                    return EXCLUDE_INTERSECTIONS;
-                }
+            if (i == 1) {
                 return MERGE;
             }
-            return MERGE;
+            if (i == 2) {
+                return ADD;
+            }
+            if (i == 3) {
+                return SUBTRACT;
+            }
+            if (i == 4) {
+                return INTERSECT;
+            }
+            if (i != 5) {
+                return MERGE;
+            }
+            return EXCLUDE_INTERSECTIONS;
         }
     }
 
@@ -57,13 +56,12 @@ public class MergePaths implements ContentModel {
         return this.hidden;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
-        if (!lottieDrawable.enableMergePathsForKitKatAndAbove()) {
-            Logger.warning("Animation contains merge paths but they are disabled.");
-            return null;
+        if (lottieDrawable.enableMergePathsForKitKatAndAbove()) {
+            return new MergePathsContent(this);
         }
-        return new MergePathsContent(this);
+        Logger.warning("Animation contains merge paths but they are disabled.");
+        return null;
     }
 
     public String toString() {

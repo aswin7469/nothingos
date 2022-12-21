@@ -4,122 +4,118 @@ import android.view.MotionEvent;
 import com.android.systemui.classifier.FalsingDataProvider;
 import com.android.systemui.plugins.FalsingManager;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class FalsingClassifier {
     private final FalsingDataProvider mDataProvider;
     private final FalsingDataProvider.MotionEventListener mMotionEventListener;
 
-    abstract Result calculateFalsingResult(int i, double d, double d2);
+    /* access modifiers changed from: package-private */
+    public abstract Result calculateFalsingResult(int i, double d, double d2);
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onProximityEvent(FalsingManager.ProximityEvent proximityEvent) {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onSessionEnded() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onSessionStarted() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onTouchEvent(MotionEvent motionEvent) {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public FalsingClassifier(FalsingDataProvider falsingDataProvider) {
-        FalsingDataProvider.MotionEventListener motionEventListener = new FalsingDataProvider.MotionEventListener() { // from class: com.android.systemui.classifier.FalsingClassifier$$ExternalSyntheticLambda0
-            @Override // com.android.systemui.classifier.FalsingDataProvider.MotionEventListener
-            public final void onMotionEvent(MotionEvent motionEvent) {
-                FalsingClassifier.this.onTouchEvent(motionEvent);
-            }
-        };
-        this.mMotionEventListener = motionEventListener;
+    FalsingClassifier(FalsingDataProvider falsingDataProvider) {
+        FalsingClassifier$$ExternalSyntheticLambda0 falsingClassifier$$ExternalSyntheticLambda0 = new FalsingClassifier$$ExternalSyntheticLambda0(this);
+        this.mMotionEventListener = falsingClassifier$$ExternalSyntheticLambda0;
         this.mDataProvider = falsingDataProvider;
-        falsingDataProvider.addMotionEventListener(motionEventListener);
+        falsingDataProvider.addMotionEventListener(falsingClassifier$$ExternalSyntheticLambda0);
     }
 
-    protected String getFalsingContext() {
+    /* access modifiers changed from: protected */
+    public String getFalsingContext() {
         return getClass().getSimpleName();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Result falsed(double d, String str) {
         return Result.falsed(d, getFalsingContext(), str);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public List<MotionEvent> getRecentMotionEvents() {
         return this.mDataProvider.getRecentMotionEvents();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public List<MotionEvent> getPriorMotionEvents() {
         return this.mDataProvider.getPriorMotionEvents();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public MotionEvent getFirstMotionEvent() {
         return this.mDataProvider.getFirstRecentMotionEvent();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public MotionEvent getLastMotionEvent() {
         return this.mDataProvider.getLastMotionEvent();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isHorizontal() {
         return this.mDataProvider.isHorizontal();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isRight() {
         return this.mDataProvider.isRight();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isVertical() {
         return this.mDataProvider.isVertical();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isUp() {
         return this.mDataProvider.isUp();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getAngle() {
         return this.mDataProvider.getAngle();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getWidthPixels() {
         return this.mDataProvider.getWidthPixels();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getHeightPixels() {
         return this.mDataProvider.getHeightPixels();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getXdpi() {
         return this.mDataProvider.getXdpi();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getYdpi() {
         return this.mDataProvider.getYdpi();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void cleanup() {
         this.mDataProvider.removeMotionEventListener(this.mMotionEventListener);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Result classifyGesture(int i, double d, double d2) {
         return calculateFalsingResult(i, d, d2);
     }
@@ -132,7 +128,10 @@ public abstract class FalsingClassifier {
         BrightLineFalsingManager.logInfo(str);
     }
 
-    /* loaded from: classes.dex */
+    public static void logError(String str) {
+        BrightLineFalsingManager.logError(str);
+    }
+
     public static class Result {
         private final double mConfidence;
         private final String mContext;
@@ -163,7 +162,7 @@ public abstract class FalsingClassifier {
         }
 
         public static Result passed(double d) {
-            return new Result(false, d, null, null);
+            return new Result(false, d, (String) null, (String) null);
         }
     }
 }

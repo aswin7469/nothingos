@@ -4,44 +4,37 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
-import com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener;
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+
+@SysUISingleton
+@Metadata(mo64986d1 = {"\u00000\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\b\u0007\u0018\u00002\u00020\u0001B\u000f\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u000e\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nJ\u0010\u0010\u000b\u001a\u00020\f2\u0006\u0010\r\u001a\u00020\u000eH\u0002R\u000e\u0010\u0005\u001a\u00020\u0006XD¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000¨\u0006\u000f"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/collection/TargetSdkResolver;", "", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "TAG", "", "initialize", "", "collection", "Lcom/android/systemui/statusbar/notification/collection/notifcollection/CommonNotifCollection;", "resolveNotificationSdk", "", "sbn", "Landroid/service/notification/StatusBarNotification;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: TargetSdkResolver.kt */
-/* loaded from: classes.dex */
 public final class TargetSdkResolver {
-    @NotNull
     private final String TAG = "TargetSdkResolver";
-    @NotNull
     private final Context context;
 
-    public TargetSdkResolver(@NotNull Context context) {
-        Intrinsics.checkNotNullParameter(context, "context");
-        this.context = context;
+    @Inject
+    public TargetSdkResolver(Context context2) {
+        Intrinsics.checkNotNullParameter(context2, "context");
+        this.context = context2;
     }
 
-    public final void initialize(@NotNull CommonNotifCollection collection) {
-        Intrinsics.checkNotNullParameter(collection, "collection");
-        collection.addCollectionListener(new NotifCollectionListener() { // from class: com.android.systemui.statusbar.notification.collection.TargetSdkResolver$initialize$1
-            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
-            public void onEntryBind(@NotNull NotificationEntry entry, @NotNull StatusBarNotification sbn) {
-                int resolveNotificationSdk;
-                Intrinsics.checkNotNullParameter(entry, "entry");
-                Intrinsics.checkNotNullParameter(sbn, "sbn");
-                resolveNotificationSdk = TargetSdkResolver.this.resolveNotificationSdk(sbn);
-                entry.targetSdk = resolveNotificationSdk;
-            }
-        });
+    public final void initialize(CommonNotifCollection commonNotifCollection) {
+        Intrinsics.checkNotNullParameter(commonNotifCollection, "collection");
+        commonNotifCollection.addCollectionListener(new TargetSdkResolver$initialize$1(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public final int resolveNotificationSdk(StatusBarNotification statusBarNotification) {
         try {
-            return StatusBar.getPackageManagerForUser(this.context, statusBarNotification.getUser().getIdentifier()).getApplicationInfo(statusBarNotification.getPackageName(), 0).targetSdkVersion;
+            return CentralSurfaces.getPackageManagerForUser(this.context, statusBarNotification.getUser().getIdentifier()).getApplicationInfo(statusBarNotification.getPackageName(), 0).targetSdkVersion;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(this.TAG, Intrinsics.stringPlus("Failed looking up ApplicationInfo for ", statusBarNotification.getPackageName()), e);
+            Log.e(this.TAG, "Failed looking up ApplicationInfo for " + statusBarNotification.getPackageName(), e);
             return 0;
         }
     }

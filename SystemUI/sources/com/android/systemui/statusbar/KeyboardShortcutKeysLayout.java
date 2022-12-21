@@ -5,10 +5,15 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
-/* loaded from: classes.dex */
+import android.view.ViewOverlay;
+
 public final class KeyboardShortcutKeysLayout extends ViewGroup {
     private final Context mContext;
     private int mLineHeight;
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
 
     public KeyboardShortcutKeysLayout(Context context) {
         super(context);
@@ -20,108 +25,106 @@ public final class KeyboardShortcutKeysLayout extends ViewGroup {
         this.mContext = context;
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
-        int makeMeasureSpec;
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         int i3;
+        int i4;
         int size = (View.MeasureSpec.getSize(i) - getPaddingLeft()) - getPaddingRight();
         int childCount = getChildCount();
         int size2 = (View.MeasureSpec.getSize(i2) - getPaddingTop()) - getPaddingBottom();
         int paddingLeft = getPaddingLeft();
         int paddingTop = getPaddingTop();
         if (View.MeasureSpec.getMode(i2) == Integer.MIN_VALUE) {
-            makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(size2, Integer.MIN_VALUE);
+            i3 = View.MeasureSpec.makeMeasureSpec(size2, Integer.MIN_VALUE);
         } else {
-            makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, 0);
+            i3 = View.MeasureSpec.makeMeasureSpec(0, 0);
         }
-        int i4 = 0;
-        for (int i5 = 0; i5 < childCount; i5++) {
-            View childAt = getChildAt(i5);
+        int i5 = 0;
+        for (int i6 = 0; i6 < childCount; i6++) {
+            View childAt = getChildAt(i6);
             if (childAt.getVisibility() != 8) {
                 LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
-                childAt.measure(View.MeasureSpec.makeMeasureSpec(size, Integer.MIN_VALUE), makeMeasureSpec);
+                childAt.measure(View.MeasureSpec.makeMeasureSpec(size, Integer.MIN_VALUE), i3);
                 int measuredWidth = childAt.getMeasuredWidth();
-                i4 = Math.max(i4, childAt.getMeasuredHeight() + layoutParams.mVerticalSpacing);
+                i5 = Math.max(i5, childAt.getMeasuredHeight() + layoutParams.mVerticalSpacing);
                 if (paddingLeft + measuredWidth > size) {
                     paddingLeft = getPaddingLeft();
-                    paddingTop += i4;
+                    paddingTop += i5;
                 }
                 paddingLeft += measuredWidth + layoutParams.mHorizontalSpacing;
             }
         }
-        this.mLineHeight = i4;
+        this.mLineHeight = i5;
         if (View.MeasureSpec.getMode(i2) == 0) {
-            size2 = paddingTop + i4;
-        } else if (View.MeasureSpec.getMode(i2) == Integer.MIN_VALUE && (i3 = paddingTop + i4) < size2) {
-            size2 = i3;
+            size2 = paddingTop + i5;
+        } else if (View.MeasureSpec.getMode(i2) == Integer.MIN_VALUE && (i4 = paddingTop + i5) < size2) {
+            size2 = i4;
         }
         setMeasuredDimension(size, size2);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup
+    /* access modifiers changed from: protected */
     public LayoutParams generateDefaultLayoutParams() {
         int horizontalVerticalSpacing = getHorizontalVerticalSpacing();
         return new LayoutParams(horizontalVerticalSpacing, horizontalVerticalSpacing);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup
+    /* access modifiers changed from: protected */
     public LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
         int horizontalVerticalSpacing = getHorizontalVerticalSpacing();
         return new LayoutParams(horizontalVerticalSpacing, horizontalVerticalSpacing, layoutParams);
     }
 
-    @Override // android.view.ViewGroup
-    protected boolean checkLayoutParams(ViewGroup.LayoutParams layoutParams) {
+    /* access modifiers changed from: protected */
+    public boolean checkLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return layoutParams instanceof LayoutParams;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
-        int paddingLeft;
-        int paddingLeft2;
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
+        int i5;
+        int i6;
         int childCount = getChildCount();
-        int i5 = i3 - i;
+        int i7 = i3 - i;
         if (isRTL()) {
-            paddingLeft = i5 - getPaddingRight();
+            i5 = i7 - getPaddingRight();
         } else {
-            paddingLeft = getPaddingLeft();
+            i5 = getPaddingLeft();
         }
         int paddingTop = getPaddingTop();
-        int i6 = paddingLeft;
-        int i7 = 0;
-        int i8 = 0;
-        for (int i9 = 0; i9 < childCount; i9++) {
-            View childAt = getChildAt(i9);
+        int i8 = i5;
+        int i9 = 0;
+        int i10 = 0;
+        for (int i11 = 0; i11 < childCount; i11++) {
+            View childAt = getChildAt(i11);
             if (childAt.getVisibility() != 8) {
                 int measuredWidth = childAt.getMeasuredWidth();
                 LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
                 boolean z2 = true;
-                if (!isRTL() ? i6 + measuredWidth <= i5 : (i6 - getPaddingLeft()) - measuredWidth >= 0) {
+                if (!isRTL() ? i8 + measuredWidth <= i7 : (i8 - getPaddingLeft()) - measuredWidth >= 0) {
                     z2 = false;
                 }
                 if (z2) {
-                    layoutChildrenOnRow(i7, i9, i5, i6, paddingTop, i8);
+                    layoutChildrenOnRow(i9, i11, i7, i8, paddingTop, i10);
                     if (isRTL()) {
-                        paddingLeft2 = i5 - getPaddingRight();
+                        i6 = i7 - getPaddingRight();
                     } else {
-                        paddingLeft2 = getPaddingLeft();
+                        i6 = getPaddingLeft();
                     }
-                    i6 = paddingLeft2;
+                    i8 = i6;
                     paddingTop += this.mLineHeight;
-                    i7 = i9;
+                    i9 = i11;
                 }
                 if (isRTL()) {
-                    i6 = (i6 - measuredWidth) - layoutParams.mHorizontalSpacing;
+                    i8 = (i8 - measuredWidth) - layoutParams.mHorizontalSpacing;
                 } else {
-                    i6 = i6 + measuredWidth + layoutParams.mHorizontalSpacing;
+                    i8 = i8 + measuredWidth + layoutParams.mHorizontalSpacing;
                 }
-                i8 = layoutParams.mHorizontalSpacing;
+                i10 = layoutParams.mHorizontalSpacing;
             }
         }
-        if (i7 < childCount) {
-            layoutChildrenOnRow(i7, childCount, i5, i6, paddingTop, i8);
+        if (i9 < childCount) {
+            layoutChildrenOnRow(i9, childCount, i7, i8, paddingTop, i10);
         }
     }
 
@@ -139,13 +142,13 @@ public final class KeyboardShortcutKeysLayout extends ViewGroup {
             int measuredWidth = childAt.getMeasuredWidth();
             LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
             if (isRTL() && i7 == i) {
-                i4 = (((i3 - i4) - getPaddingRight()) - measuredWidth) - layoutParams.mHorizontalSpacing;
+                r9 = (((i3 - r9) - getPaddingRight()) - measuredWidth) - layoutParams.mHorizontalSpacing;
             }
-            childAt.layout(i4, i5, i4 + measuredWidth, childAt.getMeasuredHeight() + i5);
+            childAt.layout(r9, i5, r9 + measuredWidth, childAt.getMeasuredHeight() + i5);
             if (isRTL()) {
-                i4 -= (i7 < i2 + (-1) ? getChildAt(i7 + 1).getMeasuredWidth() : 0) + layoutParams.mHorizontalSpacing;
+                r9 -= (i7 < i2 + -1 ? getChildAt(i7 + 1).getMeasuredWidth() : 0) + layoutParams.mHorizontalSpacing;
             } else {
-                i4 += measuredWidth + layoutParams.mHorizontalSpacing;
+                r9 += measuredWidth + layoutParams.mHorizontalSpacing;
             }
             i7++;
         }
@@ -155,7 +158,6 @@ public final class KeyboardShortcutKeysLayout extends ViewGroup {
         return this.mContext.getResources().getConfiguration().getLayoutDirection() == 1;
     }
 
-    /* loaded from: classes.dex */
     public static class LayoutParams extends ViewGroup.LayoutParams {
         public final int mHorizontalSpacing;
         public final int mVerticalSpacing;

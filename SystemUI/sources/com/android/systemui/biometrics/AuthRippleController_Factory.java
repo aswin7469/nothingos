@@ -7,31 +7,31 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationShadeWindowController;
 import com.android.systemui.statusbar.commandline.CommandRegistry;
 import com.android.systemui.statusbar.phone.BiometricUnlockController;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
-import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class AuthRippleController_Factory implements Factory<AuthRippleController> {
     private final Provider<AuthController> authControllerProvider;
     private final Provider<BiometricUnlockController> biometricUnlockControllerProvider;
     private final Provider<KeyguardBypassController> bypassControllerProvider;
+    private final Provider<CentralSurfaces> centralSurfacesProvider;
     private final Provider<CommandRegistry> commandRegistryProvider;
     private final Provider<ConfigurationController> configurationControllerProvider;
     private final Provider<KeyguardStateController> keyguardStateControllerProvider;
     private final Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
     private final Provider<NotificationShadeWindowController> notificationShadeWindowControllerProvider;
     private final Provider<AuthRippleView> rippleViewProvider;
-    private final Provider<StatusBar> statusBarProvider;
     private final Provider<StatusBarStateController> statusBarStateControllerProvider;
     private final Provider<Context> sysuiContextProvider;
     private final Provider<UdfpsController> udfpsControllerProvider;
     private final Provider<WakefulnessLifecycle> wakefulnessLifecycleProvider;
 
-    public AuthRippleController_Factory(Provider<StatusBar> provider, Provider<Context> provider2, Provider<AuthController> provider3, Provider<ConfigurationController> provider4, Provider<KeyguardUpdateMonitor> provider5, Provider<KeyguardStateController> provider6, Provider<WakefulnessLifecycle> provider7, Provider<CommandRegistry> provider8, Provider<NotificationShadeWindowController> provider9, Provider<KeyguardBypassController> provider10, Provider<BiometricUnlockController> provider11, Provider<UdfpsController> provider12, Provider<StatusBarStateController> provider13, Provider<AuthRippleView> provider14) {
-        this.statusBarProvider = provider;
+    public AuthRippleController_Factory(Provider<CentralSurfaces> provider, Provider<Context> provider2, Provider<AuthController> provider3, Provider<ConfigurationController> provider4, Provider<KeyguardUpdateMonitor> provider5, Provider<KeyguardStateController> provider6, Provider<WakefulnessLifecycle> provider7, Provider<CommandRegistry> provider8, Provider<NotificationShadeWindowController> provider9, Provider<KeyguardBypassController> provider10, Provider<BiometricUnlockController> provider11, Provider<UdfpsController> provider12, Provider<StatusBarStateController> provider13, Provider<AuthRippleView> provider14) {
+        this.centralSurfacesProvider = provider;
         this.sysuiContextProvider = provider2;
         this.authControllerProvider = provider3;
         this.configurationControllerProvider = provider4;
@@ -47,17 +47,15 @@ public final class AuthRippleController_Factory implements Factory<AuthRippleCon
         this.rippleViewProvider = provider14;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AuthRippleController mo1933get() {
-        return newInstance(this.statusBarProvider.mo1933get(), this.sysuiContextProvider.mo1933get(), this.authControllerProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.keyguardUpdateMonitorProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.wakefulnessLifecycleProvider.mo1933get(), this.commandRegistryProvider.mo1933get(), this.notificationShadeWindowControllerProvider.mo1933get(), this.bypassControllerProvider.mo1933get(), this.biometricUnlockControllerProvider.mo1933get(), this.udfpsControllerProvider, this.statusBarStateControllerProvider.mo1933get(), this.rippleViewProvider.mo1933get());
+    public AuthRippleController get() {
+        return newInstance(this.centralSurfacesProvider.get(), this.sysuiContextProvider.get(), this.authControllerProvider.get(), this.configurationControllerProvider.get(), this.keyguardUpdateMonitorProvider.get(), this.keyguardStateControllerProvider.get(), this.wakefulnessLifecycleProvider.get(), this.commandRegistryProvider.get(), this.notificationShadeWindowControllerProvider.get(), this.bypassControllerProvider.get(), this.biometricUnlockControllerProvider.get(), this.udfpsControllerProvider, this.statusBarStateControllerProvider.get(), this.rippleViewProvider.get());
     }
 
-    public static AuthRippleController_Factory create(Provider<StatusBar> provider, Provider<Context> provider2, Provider<AuthController> provider3, Provider<ConfigurationController> provider4, Provider<KeyguardUpdateMonitor> provider5, Provider<KeyguardStateController> provider6, Provider<WakefulnessLifecycle> provider7, Provider<CommandRegistry> provider8, Provider<NotificationShadeWindowController> provider9, Provider<KeyguardBypassController> provider10, Provider<BiometricUnlockController> provider11, Provider<UdfpsController> provider12, Provider<StatusBarStateController> provider13, Provider<AuthRippleView> provider14) {
+    public static AuthRippleController_Factory create(Provider<CentralSurfaces> provider, Provider<Context> provider2, Provider<AuthController> provider3, Provider<ConfigurationController> provider4, Provider<KeyguardUpdateMonitor> provider5, Provider<KeyguardStateController> provider6, Provider<WakefulnessLifecycle> provider7, Provider<CommandRegistry> provider8, Provider<NotificationShadeWindowController> provider9, Provider<KeyguardBypassController> provider10, Provider<BiometricUnlockController> provider11, Provider<UdfpsController> provider12, Provider<StatusBarStateController> provider13, Provider<AuthRippleView> provider14) {
         return new AuthRippleController_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14);
     }
 
-    public static AuthRippleController newInstance(StatusBar statusBar, Context context, AuthController authController, ConfigurationController configurationController, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardStateController keyguardStateController, WakefulnessLifecycle wakefulnessLifecycle, CommandRegistry commandRegistry, NotificationShadeWindowController notificationShadeWindowController, KeyguardBypassController keyguardBypassController, BiometricUnlockController biometricUnlockController, Provider<UdfpsController> provider, StatusBarStateController statusBarStateController, AuthRippleView authRippleView) {
-        return new AuthRippleController(statusBar, context, authController, configurationController, keyguardUpdateMonitor, keyguardStateController, wakefulnessLifecycle, commandRegistry, notificationShadeWindowController, keyguardBypassController, biometricUnlockController, provider, statusBarStateController, authRippleView);
+    public static AuthRippleController newInstance(CentralSurfaces centralSurfaces, Context context, AuthController authController, ConfigurationController configurationController, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardStateController keyguardStateController, WakefulnessLifecycle wakefulnessLifecycle, CommandRegistry commandRegistry, NotificationShadeWindowController notificationShadeWindowController, KeyguardBypassController keyguardBypassController, BiometricUnlockController biometricUnlockController, Provider<UdfpsController> provider, StatusBarStateController statusBarStateController, AuthRippleView authRippleView) {
+        return new AuthRippleController(centralSurfaces, context, authController, configurationController, keyguardUpdateMonitor, keyguardStateController, wakefulnessLifecycle, commandRegistry, notificationShadeWindowController, keyguardBypassController, biometricUnlockController, provider, statusBarStateController, authRippleView);
     }
 }

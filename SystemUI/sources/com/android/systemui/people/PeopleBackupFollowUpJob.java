@@ -19,28 +19,30 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class PeopleBackupFollowUpJob extends JobService {
+    private static final long CLEAN_UP_STORAGE_AFTER_DURATION = Duration.ofHours(48).toMillis();
+    public static final int JOB_ID = 74823873;
+    private static final long JOB_PERIODIC_DURATION = Duration.ofHours(6).toMillis();
+    public static final String SHARED_FOLLOW_UP = "shared_follow_up";
+    private static final String START_DATE = "start_date";
+    private static final String TAG = "PeopleBackupFollowUpJob";
     private Context mContext;
     private IPeopleManager mIPeopleManager;
     private JobScheduler mJobScheduler;
     private final Object mLock = new Object();
     private PackageManager mPackageManager;
-    private static final long JOB_PERIODIC_DURATION = Duration.ofHours(6).toMillis();
-    private static final long CLEAN_UP_STORAGE_AFTER_DURATION = Duration.ofHours(48).toMillis();
 
-    @Override // android.app.job.JobService
     public boolean onStopJob(JobParameters jobParameters) {
         return false;
     }
 
     public static void scheduleJob(Context context) {
         PersistableBundle persistableBundle = new PersistableBundle();
-        persistableBundle.putLong("start_date", System.currentTimeMillis());
-        ((JobScheduler) context.getSystemService(JobScheduler.class)).schedule(new JobInfo.Builder(74823873, new ComponentName(context, PeopleBackupFollowUpJob.class)).setPeriodic(JOB_PERIODIC_DURATION).setExtras(persistableBundle).build());
+        persistableBundle.putLong(START_DATE, System.currentTimeMillis());
+        ((JobScheduler) context.getSystemService(JobScheduler.class)).schedule(new JobInfo.Builder(JOB_ID, new ComponentName(context, PeopleBackupFollowUpJob.class)).setPeriodic(JOB_PERIODIC_DURATION).setExtras(persistableBundle).build());
     }
 
-    @Override // android.app.Service
     public void onCreate() {
         super.onCreate();
         this.mContext = getApplicationContext();
@@ -56,15 +58,14 @@ public class PeopleBackupFollowUpJob extends JobService {
         this.mJobScheduler = jobScheduler;
     }
 
-    @Override // android.app.job.JobService
     public boolean onStartJob(JobParameters jobParameters) {
         synchronized (this.mLock) {
             SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor edit = defaultSharedPreferences.edit();
-            SharedPreferences sharedPreferences = getSharedPreferences("shared_follow_up", 0);
+            SharedPreferences sharedPreferences = getSharedPreferences(SHARED_FOLLOW_UP, 0);
             SharedPreferences.Editor edit2 = sharedPreferences.edit();
             Map<String, Set<String>> processFollowUpFile = processFollowUpFile(sharedPreferences, edit2);
-            if (shouldCancelJob(processFollowUpFile, jobParameters.getExtras().getLong("start_date"), System.currentTimeMillis())) {
+            if (shouldCancelJob(processFollowUpFile, jobParameters.getExtras().getLong(START_DATE), System.currentTimeMillis())) {
                 cancelJobAndClearRemainingWidgets(processFollowUpFile, edit2, defaultSharedPreferences);
             }
             edit.apply();
@@ -76,15 +77,15 @@ public class PeopleBackupFollowUpJob extends JobService {
 
     public Map<String, Set<String>> processFollowUpFile(SharedPreferences sharedPreferences, SharedPreferences.Editor editor) {
         HashMap hashMap = new HashMap();
-        for (Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
-            String key = entry.getKey();
-            if (PeopleBackupHelper.isReadyForRestore(this.mIPeopleManager, this.mPackageManager, PeopleTileKey.fromString(key))) {
-                editor.remove(key);
+        for (Map.Entry next : sharedPreferences.getAll().entrySet()) {
+            String str = (String) next.getKey();
+            if (PeopleBackupHelper.isReadyForRestore(this.mIPeopleManager, this.mPackageManager, PeopleTileKey.fromString(str))) {
+                editor.remove(str);
             } else {
                 try {
-                    hashMap.put(entry.getKey(), (Set) entry.getValue());
+                    hashMap.put((String) next.getKey(), (Set) next.getValue());
                 } catch (Exception unused) {
-                    Log.e("PeopleBackupFollowUpJob", "Malformed entry value: " + entry.getValue());
+                    Log.e(TAG, "Malformed entry value: " + next.getValue());
                 }
             }
         }
@@ -95,32 +96,35 @@ public class PeopleBackupFollowUpJob extends JobService {
         if (map.isEmpty()) {
             return true;
         }
-        return ((j2 - j) > CLEAN_UP_STORAGE_AFTER_DURATION ? 1 : ((j2 - j) == CLEAN_UP_STORAGE_AFTER_DURATION ? 0 : -1)) > 0;
+        if (j2 - j > CLEAN_UP_STORAGE_AFTER_DURATION) {
+            return true;
+        }
+        return false;
     }
 
     public void cancelJobAndClearRemainingWidgets(Map<String, Set<String>> map, SharedPreferences.Editor editor, SharedPreferences sharedPreferences) {
         removeUnavailableShortcutsFromSharedStorage(map, sharedPreferences);
         editor.clear();
-        this.mJobScheduler.cancel(74823873);
+        this.mJobScheduler.cancel(JOB_ID);
     }
 
     private void removeUnavailableShortcutsFromSharedStorage(Map<String, Set<String>> map, SharedPreferences sharedPreferences) {
-        for (Map.Entry<String, Set<String>> entry : map.entrySet()) {
-            PeopleTileKey fromString = PeopleTileKey.fromString(entry.getKey());
+        for (Map.Entry next : map.entrySet()) {
+            PeopleTileKey fromString = PeopleTileKey.fromString((String) next.getKey());
             if (!PeopleTileKey.isValid(fromString)) {
-                Log.e("PeopleBackupFollowUpJob", "Malformed peopleTileKey in follow-up file: " + entry.getKey());
+                Log.e(TAG, "Malformed peopleTileKey in follow-up file: " + ((String) next.getKey()));
             } else {
                 try {
-                    for (String str : entry.getValue()) {
+                    for (String parseInt : (Set) next.getValue()) {
                         try {
-                            int parseInt = Integer.parseInt(str);
-                            PeopleSpaceUtils.removeSharedPreferencesStorageForTile(this.mContext, fromString, parseInt, sharedPreferences.getString(String.valueOf(parseInt), ""));
+                            int parseInt2 = Integer.parseInt(parseInt);
+                            PeopleSpaceUtils.removeSharedPreferencesStorageForTile(this.mContext, fromString, parseInt2, sharedPreferences.getString(String.valueOf(parseInt2), ""));
                         } catch (NumberFormatException e) {
-                            Log.e("PeopleBackupFollowUpJob", "Malformed widget id in follow-up file: " + e);
+                            Log.e(TAG, "Malformed widget id in follow-up file: " + e);
                         }
                     }
                 } catch (Exception e2) {
-                    Log.e("PeopleBackupFollowUpJob", "Malformed widget ids in follow-up file: " + e2);
+                    Log.e(TAG, "Malformed widget ids in follow-up file: " + e2);
                 }
             }
         }

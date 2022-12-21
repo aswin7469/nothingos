@@ -1,10 +1,9 @@
 package com.android.systemui.appops;
 
 import java.util.List;
-/* loaded from: classes.dex */
+
 public interface AppOpsController {
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onActiveStateChanged(int i, int i2, String str, boolean z);
     }
@@ -14,6 +13,8 @@ public interface AppOpsController {
     List<AppOpItem> getActiveAppOps();
 
     List<AppOpItem> getActiveAppOps(boolean z);
+
+    List<AppOpItem> getActiveAppOpsForUser(int i, boolean z);
 
     boolean isMicMuted();
 

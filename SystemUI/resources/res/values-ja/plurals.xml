@@ -16,6 +16,10 @@
         <item quantity="one">%s 件のコントロールを追加しました。</item>
         <item quantity="other">%s 件のコントロールを追加しました。</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s 個のアプリが実行中です</item>
+        <item quantity="other">%s 個のアプリが実行中です</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">SIM PIN を入力してください。入力できるのはあと %d 回です。この回数を超えた場合は、携帯通信会社にお問い合わせください。</item>
         <item quantity="other">SIM PIN を入力してください。入力できるのはあと %d 回です。</item>
@@ -28,25 +32,13 @@
         <item quantity="one">SIM PIN コードが無効です。入力できるのはあと %d 回です。この回数を超えると、お使いのデバイスをロック解除するのに携帯通信会社にお問い合わせいただく必要があります。</item>
         <item quantity="other">SIM PIN コードが無効です。入力できるのはあと %d 回です。</item>
     </plurals>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">不正確なSIM%d PINコード、残りの試行回数は%dです。それ以上間違えると、ご契約のキャリアに連絡してデバイスのロックを解除する必要があります。</item>
+        <item quantity="other">不正確なSIM%d PINコード、残りの試行回数は%dです。</item>
+    </plurals>
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">SIM PUK コードが無効です。入力できるのはあと %d 回です。この回数を超えると SIM は完全に使用できなくなります。</item>
         <item quantity="other">SIM PUK コードが無効です。入力できるのはあと %d 回です。この回数を超えると SIM は完全に使用できなくなります。</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">デバイスのロックが %d 時間、解除されていません。パスワードを確認してください。</item>
-        <item quantity="other">デバイスのロックが %d 時間、解除されていません。パスワードを確認してください。</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">デバイスのロックが %d 時間、解除されていません。パターンを確認してください。</item>
-        <item quantity="other">デバイスのロックが %d 時間、解除されていません。パターンを確認してください。</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">デバイスのロックが %d 時間、解除されていません。PIN を確認してください。</item>
-        <item quantity="other">デバイスのロックが %d 時間、解除されていません。PIN を確認してください。</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">1 秒後にもう一度お試しください。</item>
-        <item quantity="other">%d 秒後にもう一度お試しください。</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d 件の新しい通知</item>
@@ -71,9 +63,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">作成できるユーザーは 1 人のみです。</item>
         <item quantity="other">最大 %d 人のユーザーを追加できます。</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d 台のデバイスが接続されています</item>
-        <item quantity="other">%1$d 台のデバイスが接続されています</item>
     </plurals>
 </resources>

@@ -1,5 +1,5 @@
 package com.airbnb.lottie.model.animatable;
-/* loaded from: classes.dex */
+
 public class AnimatableTextProperties {
     public final AnimatableColorValue color;
     public final AnimatableColorValue stroke;

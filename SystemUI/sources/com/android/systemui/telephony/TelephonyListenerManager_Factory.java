@@ -4,7 +4,7 @@ import android.telephony.TelephonyManager;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class TelephonyListenerManager_Factory implements Factory<TelephonyListenerManager> {
     private final Provider<Executor> executorProvider;
     private final Provider<TelephonyCallback> telephonyCallbackProvider;
@@ -16,10 +16,8 @@ public final class TelephonyListenerManager_Factory implements Factory<Telephony
         this.telephonyCallbackProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public TelephonyListenerManager mo1933get() {
-        return newInstance(this.telephonyManagerProvider.mo1933get(), this.executorProvider.mo1933get(), this.telephonyCallbackProvider.mo1933get());
+    public TelephonyListenerManager get() {
+        return newInstance(this.telephonyManagerProvider.get(), this.executorProvider.get(), this.telephonyCallbackProvider.get());
     }
 
     public static TelephonyListenerManager_Factory create(Provider<TelephonyManager> provider, Provider<Executor> provider2, Provider<TelephonyCallback> provider3) {

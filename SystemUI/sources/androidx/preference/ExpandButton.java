@@ -4,12 +4,11 @@ import android.content.Context;
 import android.text.TextUtils;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 final class ExpandButton extends Preference {
     private long mId;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ExpandButton(Context context, List<Preference> list, long j) {
+    ExpandButton(Context context, List<Preference> list, long j) {
         super(context);
         initLayout();
         setSummary(list);
@@ -17,40 +16,42 @@ final class ExpandButton extends Preference {
     }
 
     private void initLayout() {
-        setLayoutResource(R$layout.expand_button);
-        setIcon(R$drawable.ic_arrow_down_24dp);
-        setTitle(R$string.expand_button_title);
+        setLayoutResource(C1246R.layout.expand_button);
+        setIcon(C1246R.C1248drawable.ic_arrow_down_24dp);
+        setTitle(C1246R.string.expand_button_title);
         setOrder(999);
     }
 
     private void setSummary(List<Preference> list) {
         ArrayList arrayList = new ArrayList();
         CharSequence charSequence = null;
-        for (Preference preference : list) {
-            CharSequence title = preference.getTitle();
-            boolean z = preference instanceof PreferenceGroup;
+        for (Preference next : list) {
+            CharSequence title = next.getTitle();
+            boolean z = next instanceof PreferenceGroup;
             if (z && !TextUtils.isEmpty(title)) {
-                arrayList.add((PreferenceGroup) preference);
+                arrayList.add((PreferenceGroup) next);
             }
-            if (arrayList.contains(preference.getParent())) {
+            if (arrayList.contains(next.getParent())) {
                 if (z) {
-                    arrayList.add((PreferenceGroup) preference);
+                    arrayList.add((PreferenceGroup) next);
                 }
             } else if (!TextUtils.isEmpty(title)) {
-                charSequence = charSequence == null ? title : getContext().getString(R$string.summary_collapsed_preference_list, charSequence, title);
+                if (charSequence == null) {
+                    charSequence = title;
+                } else {
+                    charSequence = getContext().getString(C1246R.string.summary_collapsed_preference_list, new Object[]{charSequence, title});
+                }
             }
         }
         setSummary(charSequence);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         preferenceViewHolder.setDividerAllowedAbove(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: package-private */
     public long getId() {
         return this.mId;
     }

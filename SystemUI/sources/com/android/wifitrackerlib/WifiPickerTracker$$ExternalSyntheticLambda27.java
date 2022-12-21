@@ -1,17 +1,10 @@
 package com.android.wifitrackerlib;
 
-import java.util.function.Predicate;
-/* loaded from: classes2.dex */
-public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda27 implements Predicate {
-    public static final /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda27 INSTANCE = new WifiPickerTracker$$ExternalSyntheticLambda27();
+import java.util.function.Function;
 
-    private /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda27() {
-    }
-
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$updateStandardWifiEntryScans$11;
-        lambda$updateStandardWifiEntryScans$11 = WifiPickerTracker.lambda$updateStandardWifiEntryScans$11((StandardWifiEntry) obj);
-        return lambda$updateStandardWifiEntryScans$11;
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda27 implements Function {
+    public final Object apply(Object obj) {
+        return ((StandardWifiEntry) obj).getStandardWifiEntryKey().getScanResultKey();
     }
 }

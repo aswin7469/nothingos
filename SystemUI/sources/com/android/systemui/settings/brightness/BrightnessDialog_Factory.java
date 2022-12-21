@@ -1,30 +1,31 @@
 package com.android.systemui.settings.brightness;
 
+import android.os.Handler;
 import com.android.systemui.broadcast.BroadcastDispatcher;
-import com.android.systemui.settings.brightness.BrightnessSlider;
+import com.android.systemui.settings.brightness.BrightnessSliderController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
-public final class BrightnessDialog_Factory implements Factory<BrightnessDialog> {
-    private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
-    private final Provider<BrightnessSlider.Factory> factoryProvider;
 
-    public BrightnessDialog_Factory(Provider<BroadcastDispatcher> provider, Provider<BrightnessSlider.Factory> provider2) {
+public final class BrightnessDialog_Factory implements Factory<BrightnessDialog> {
+    private final Provider<Handler> bgHandlerProvider;
+    private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
+    private final Provider<BrightnessSliderController.Factory> factoryProvider;
+
+    public BrightnessDialog_Factory(Provider<BroadcastDispatcher> provider, Provider<BrightnessSliderController.Factory> provider2, Provider<Handler> provider3) {
         this.broadcastDispatcherProvider = provider;
         this.factoryProvider = provider2;
+        this.bgHandlerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public BrightnessDialog mo1933get() {
-        return newInstance(this.broadcastDispatcherProvider.mo1933get(), this.factoryProvider.mo1933get());
+    public BrightnessDialog get() {
+        return newInstance(this.broadcastDispatcherProvider.get(), this.factoryProvider.get(), this.bgHandlerProvider.get());
     }
 
-    public static BrightnessDialog_Factory create(Provider<BroadcastDispatcher> provider, Provider<BrightnessSlider.Factory> provider2) {
-        return new BrightnessDialog_Factory(provider, provider2);
+    public static BrightnessDialog_Factory create(Provider<BroadcastDispatcher> provider, Provider<BrightnessSliderController.Factory> provider2, Provider<Handler> provider3) {
+        return new BrightnessDialog_Factory(provider, provider2, provider3);
     }
 
-    public static BrightnessDialog newInstance(BroadcastDispatcher broadcastDispatcher, BrightnessSlider.Factory factory) {
-        return new BrightnessDialog(broadcastDispatcher, factory);
+    public static BrightnessDialog newInstance(BroadcastDispatcher broadcastDispatcher, BrightnessSliderController.Factory factory, Handler handler) {
+        return new BrightnessDialog(broadcastDispatcher, factory, handler);
     }
 }

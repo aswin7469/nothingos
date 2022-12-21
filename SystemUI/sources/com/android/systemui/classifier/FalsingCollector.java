@@ -2,9 +2,11 @@ package com.android.systemui.classifier;
 
 import android.view.MotionEvent;
 import com.android.systemui.classifier.FalsingClassifier;
-/* loaded from: classes.dex */
+
 public interface FalsingCollector {
     void avoidGesture();
+
+    void cleanup();
 
     boolean isReportingEnabled();
 
@@ -31,6 +33,8 @@ public interface FalsingCollector {
     void onNotificationActive();
 
     void onNotificationDismissed();
+
+    void onNotificationDoubleTap(boolean z, float f, float f2);
 
     void onNotificationStartDismissing();
 

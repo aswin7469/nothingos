@@ -5,31 +5,38 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import androidx.leanback.widget.Util;
-/* loaded from: classes.dex */
+
 class GuidedStepRootLayout extends LinearLayout {
-    private boolean mFocusOutStart = false;
     private boolean mFocusOutEnd = false;
+    private boolean mFocusOutStart = false;
 
-    public GuidedStepRootLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public GuidedStepRootLayout(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
     }
 
-    public GuidedStepRootLayout(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public GuidedStepRootLayout(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewParent
-    public View focusSearch(View focused, int direction) {
-        View focusSearch = super.focusSearch(focused, direction);
-        if ((direction == 17 || direction == 66) && !Util.isDescendant(this, focusSearch)) {
-            if (getLayoutDirection() != 0 ? direction == 66 : direction == 17) {
-                if (!this.mFocusOutStart) {
-                    return focused;
-                }
-            } else if (!this.mFocusOutEnd) {
-                return focused;
-            }
+    public void setFocusOutStart(boolean z) {
+        this.mFocusOutStart = z;
+    }
+
+    public void setFocusOutEnd(boolean z) {
+        this.mFocusOutEnd = z;
+    }
+
+    public View focusSearch(View view, int i) {
+        View focusSearch = super.focusSearch(view, i);
+        if ((i != 17 && i != 66) || Util.isDescendant(this, focusSearch)) {
             return focusSearch;
+        }
+        if (getLayoutDirection() != 0 ? i != 66 : i != 17) {
+            if (!this.mFocusOutEnd) {
+                return view;
+            }
+        } else if (!this.mFocusOutStart) {
+            return view;
         }
         return focusSearch;
     }

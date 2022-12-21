@@ -1,31 +1,40 @@
 package com.android.systemui.statusbar.notification.collection.notifcollection;
 
+import android.app.NotificationChannel;
+import android.os.UserHandle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-/* loaded from: classes.dex */
+
 public interface NotifCollectionListener {
-    default void onEntryAdded(NotificationEntry notificationEntry) {
+    void onEntryAdded(NotificationEntry notificationEntry) {
     }
 
-    default void onEntryBind(NotificationEntry notificationEntry, StatusBarNotification statusBarNotification) {
+    void onEntryBind(NotificationEntry notificationEntry, StatusBarNotification statusBarNotification) {
     }
 
-    default void onEntryCleanUp(NotificationEntry notificationEntry) {
+    void onEntryCleanUp(NotificationEntry notificationEntry) {
     }
 
-    default void onEntryInit(NotificationEntry notificationEntry) {
+    void onEntryInit(NotificationEntry notificationEntry) {
     }
 
-    default void onEntryRemoved(NotificationEntry notificationEntry, int i) {
+    void onEntryRemoved(NotificationEntry notificationEntry, int i) {
     }
 
-    default void onEntryUpdated(NotificationEntry notificationEntry) {
+    void onEntryUpdated(NotificationEntry notificationEntry) {
     }
 
-    default void onRankingApplied() {
+    void onNotificationChannelModified(String str, UserHandle userHandle, NotificationChannel notificationChannel, int i) {
     }
 
-    default void onRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
+    void onRankingApplied() {
+    }
+
+    void onRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
+    }
+
+    void onEntryUpdated(NotificationEntry notificationEntry, boolean z) {
+        onEntryUpdated(notificationEntry);
     }
 }

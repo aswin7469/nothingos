@@ -1,17 +1,10 @@
 package com.android.systemui.statusbar.notification.collection;
 
 import java.util.function.Predicate;
-/* loaded from: classes.dex */
+
+/* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class ShadeListBuilder$$ExternalSyntheticLambda8 implements Predicate {
-    public static final /* synthetic */ ShadeListBuilder$$ExternalSyntheticLambda8 INSTANCE = new ShadeListBuilder$$ExternalSyntheticLambda8();
-
-    private /* synthetic */ ShadeListBuilder$$ExternalSyntheticLambda8() {
-    }
-
-    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
-        boolean lambda$freeEmptyGroups$1;
-        lambda$freeEmptyGroups$1 = ShadeListBuilder.lambda$freeEmptyGroups$1((GroupEntry) obj);
-        return lambda$freeEmptyGroups$1;
+        return ShadeListBuilder.lambda$freeEmptyGroups$1((GroupEntry) obj);
     }
 }

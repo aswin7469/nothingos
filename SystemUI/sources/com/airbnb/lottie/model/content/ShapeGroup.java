@@ -6,7 +6,7 @@ import com.airbnb.lottie.animation.content.ContentGroup;
 import com.airbnb.lottie.model.layer.BaseLayer;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ShapeGroup implements ContentModel {
     private final boolean hidden;
     private final List<ContentModel> items;
@@ -30,7 +30,6 @@ public class ShapeGroup implements ContentModel {
         return this.hidden;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new ContentGroup(lottieDrawable, baseLayer, this);
     }

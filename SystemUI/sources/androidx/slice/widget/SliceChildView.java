@@ -9,7 +9,7 @@ import androidx.slice.widget.SliceActionView;
 import androidx.slice.widget.SliceView;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public abstract class SliceChildView extends FrameLayout {
     protected int mInsetBottom;
     protected int mInsetEnd;
@@ -17,6 +17,7 @@ public abstract class SliceChildView extends FrameLayout {
     protected int mInsetTop;
     protected long mLastUpdated;
     protected SliceActionView.SliceActionLoadingListener mLoadingListener;
+    protected int mMode;
     protected SliceView.OnSliceActionListener mObserver;
     protected RowStyle mRowStyle;
     protected boolean mShowLastUpdated;
@@ -24,41 +25,49 @@ public abstract class SliceChildView extends FrameLayout {
     protected int mTintColor;
     protected SliceViewPolicy mViewPolicy;
 
+    public int getHiddenItemCount() {
+        return 0;
+    }
+
+    public Set<SliceItem> getLoadingActions() {
+        return null;
+    }
+
     public abstract void resetView();
 
-    public void setActionLoading(SliceItem item) {
+    public void setActionLoading(SliceItem sliceItem) {
     }
 
-    public void setAllowTwoLines(boolean allowTwoLines) {
+    public void setAllowTwoLines(boolean z) {
     }
 
-    public void setLoadingActions(Set<SliceItem> loadingActions) {
+    public void setLoadingActions(Set<SliceItem> set) {
     }
 
-    public void setSliceActions(List<SliceAction> actions) {
+    public void setSliceActions(List<SliceAction> list) {
     }
 
-    public void setSliceContent(ListContent content) {
+    public void setSliceContent(ListContent listContent) {
     }
 
-    public void setSliceItem(SliceContent slice, boolean isHeader, int rowIndex, int rowCount, SliceView.OnSliceActionListener observer) {
+    public void setSliceItem(SliceContent sliceContent, boolean z, int i, int i2, SliceView.OnSliceActionListener onSliceActionListener) {
     }
 
     public SliceChildView(Context context) {
         super(context);
         this.mTintColor = -1;
-        this.mLastUpdated = -1L;
+        this.mLastUpdated = -1;
     }
 
     public SliceChildView(Context context, AttributeSet attributeSet) {
         this(context);
     }
 
-    public void setInsets(int l, int t, int r, int b) {
-        this.mInsetStart = l;
-        this.mInsetTop = t;
-        this.mInsetEnd = r;
-        this.mInsetBottom = b;
+    public void setInsets(int i, int i2, int i3, int i4) {
+        this.mInsetStart = i;
+        this.mInsetTop = i2;
+        this.mInsetEnd = i3;
+        this.mInsetBottom = i4;
     }
 
     public int getMode() {
@@ -69,32 +78,32 @@ public abstract class SliceChildView extends FrameLayout {
         return 2;
     }
 
-    public void setTint(int tintColor) {
-        this.mTintColor = tintColor;
+    public void setTint(int i) {
+        this.mTintColor = i;
     }
 
-    public void setShowLastUpdated(boolean showLastUpdated) {
-        this.mShowLastUpdated = showLastUpdated;
+    public void setShowLastUpdated(boolean z) {
+        this.mShowLastUpdated = z;
     }
 
-    public void setLastUpdated(long lastUpdated) {
-        this.mLastUpdated = lastUpdated;
+    public void setLastUpdated(long j) {
+        this.mLastUpdated = j;
     }
 
-    public void setSliceActionListener(SliceView.OnSliceActionListener observer) {
-        this.mObserver = observer;
+    public void setSliceActionListener(SliceView.OnSliceActionListener onSliceActionListener) {
+        this.mObserver = onSliceActionListener;
     }
 
-    public void setSliceActionLoadingListener(SliceActionView.SliceActionLoadingListener listener) {
-        this.mLoadingListener = listener;
+    public void setSliceActionLoadingListener(SliceActionView.SliceActionLoadingListener sliceActionLoadingListener) {
+        this.mLoadingListener = sliceActionLoadingListener;
     }
 
-    public void setStyle(SliceStyle styles, RowStyle rowStyle) {
-        this.mSliceStyle = styles;
+    public void setStyle(SliceStyle sliceStyle, RowStyle rowStyle) {
+        this.mSliceStyle = sliceStyle;
         this.mRowStyle = rowStyle;
     }
 
-    public void setPolicy(SliceViewPolicy policy) {
-        this.mViewPolicy = policy;
+    public void setPolicy(SliceViewPolicy sliceViewPolicy) {
+        this.mViewPolicy = sliceViewPolicy;
     }
 }

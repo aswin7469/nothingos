@@ -5,7 +5,7 @@ import android.view.accessibility.AccessibilityManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideAccessibilityManagerFactory implements Factory<AccessibilityManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideAccessibilityManagerFactory im
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AccessibilityManager mo1933get() {
-        return provideAccessibilityManager(this.contextProvider.mo1933get());
+    public AccessibilityManager get() {
+        return provideAccessibilityManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideAccessibilityManagerFactory create(Provider<Context> provider) {

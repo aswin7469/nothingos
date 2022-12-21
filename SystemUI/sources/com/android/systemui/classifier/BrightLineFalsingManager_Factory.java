@@ -6,7 +6,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import dagger.internal.Factory;
 import java.util.Set;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class BrightLineFalsingManager_Factory implements Factory<BrightLineFalsingManager> {
     private final Provider<AccessibilityManager> accessibilityManagerProvider;
     private final Provider<Set<FalsingClassifier>> classifiersProvider;
@@ -30,17 +30,15 @@ public final class BrightLineFalsingManager_Factory implements Factory<BrightLin
         this.testHarnessProvider = provider9;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public BrightLineFalsingManager mo1933get() {
-        return newInstance(this.falsingDataProvider.mo1933get(), this.metricsLoggerProvider.mo1933get(), this.classifiersProvider.mo1933get(), this.singleTapClassifierProvider.mo1933get(), this.doubleTapClassifierProvider.mo1933get(), this.historyTrackerProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.accessibilityManagerProvider.mo1933get(), this.testHarnessProvider.mo1933get().booleanValue());
+    public BrightLineFalsingManager get() {
+        return newInstance(this.falsingDataProvider.get(), this.metricsLoggerProvider.get(), this.classifiersProvider.get(), this.singleTapClassifierProvider.get(), this.doubleTapClassifierProvider.get(), this.historyTrackerProvider.get(), this.keyguardStateControllerProvider.get(), this.accessibilityManagerProvider.get(), this.testHarnessProvider.get().booleanValue());
     }
 
     public static BrightLineFalsingManager_Factory create(Provider<FalsingDataProvider> provider, Provider<MetricsLogger> provider2, Provider<Set<FalsingClassifier>> provider3, Provider<SingleTapClassifier> provider4, Provider<DoubleTapClassifier> provider5, Provider<HistoryTracker> provider6, Provider<KeyguardStateController> provider7, Provider<AccessibilityManager> provider8, Provider<Boolean> provider9) {
         return new BrightLineFalsingManager_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9);
     }
 
-    public static BrightLineFalsingManager newInstance(FalsingDataProvider falsingDataProvider, MetricsLogger metricsLogger, Set<FalsingClassifier> set, SingleTapClassifier singleTapClassifier, DoubleTapClassifier doubleTapClassifier, HistoryTracker historyTracker, KeyguardStateController keyguardStateController, AccessibilityManager accessibilityManager, boolean z) {
-        return new BrightLineFalsingManager(falsingDataProvider, metricsLogger, set, singleTapClassifier, doubleTapClassifier, historyTracker, keyguardStateController, accessibilityManager, z);
+    public static BrightLineFalsingManager newInstance(FalsingDataProvider falsingDataProvider2, MetricsLogger metricsLogger, Set<FalsingClassifier> set, SingleTapClassifier singleTapClassifier, DoubleTapClassifier doubleTapClassifier, HistoryTracker historyTracker, KeyguardStateController keyguardStateController, AccessibilityManager accessibilityManager, boolean z) {
+        return new BrightLineFalsingManager(falsingDataProvider2, metricsLogger, set, singleTapClassifier, doubleTapClassifier, historyTracker, keyguardStateController, accessibilityManager, z);
     }
 }

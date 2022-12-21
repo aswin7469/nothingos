@@ -1,0 +1,34 @@
+package com.android.systemui.media.taptotransfer.sender;
+
+import com.android.internal.logging.UiEventLogger;
+import kotlin.Metadata;
+
+@Metadata(mo64986d1 = {"\u0000\u0016\n\u0002\u0018\u0002\n\u0002\u0010\u0010\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0010\b\u0001\u0018\u00002\b\u0012\u0004\u0012\u00020\u00000\u00012\u00020\u0002B\u000f\b\u0002\u0012\u0006\u0010\u0003\u001a\u00020\u0004¢\u0006\u0002\u0010\u0005J\b\u0010\b\u001a\u00020\u0004H\u0016R\u0011\u0010\u0003\u001a\u00020\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0006\u0010\u0007j\u0002\b\tj\u0002\b\nj\u0002\b\u000bj\u0002\b\fj\u0002\b\rj\u0002\b\u000ej\u0002\b\u000fj\u0002\b\u0010j\u0002\b\u0011j\u0002\b\u0012j\u0002\b\u0013¨\u0006\u0014"}, mo64987d2 = {"Lcom/android/systemui/media/taptotransfer/sender/MediaTttSenderUiEvents;", "", "Lcom/android/internal/logging/UiEventLogger$UiEventEnum;", "metricId", "", "(Ljava/lang/String;II)V", "getMetricId", "()I", "getId", "MEDIA_TTT_SENDER_UNDO_TRANSFER_TO_RECEIVER_CLICKED", "MEDIA_TTT_SENDER_UNDO_TRANSFER_TO_THIS_DEVICE_CLICKED", "MEDIA_TTT_SENDER_ALMOST_CLOSE_TO_START_CAST", "MEDIA_TTT_SENDER_ALMOST_CLOSE_TO_END_CAST", "MEDIA_TTT_SENDER_TRANSFER_TO_RECEIVER_TRIGGERED", "MEDIA_TTT_SENDER_TRANSFER_TO_THIS_DEVICE_TRIGGERED", "MEDIA_TTT_SENDER_TRANSFER_TO_RECEIVER_SUCCEEDED", "MEDIA_TTT_SENDER_TRANSFER_TO_THIS_DEVICE_SUCCEEDED", "MEDIA_TTT_SENDER_TRANSFER_TO_RECEIVER_FAILED", "MEDIA_TTT_SENDER_TRANSFER_TO_THIS_DEVICE_FAILED", "MEDIA_TTT_SENDER_FAR_FROM_RECEIVER", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+/* compiled from: MediaTttSenderUiEventLogger.kt */
+public enum MediaTttSenderUiEvents implements UiEventLogger.UiEventEnum {
+    MEDIA_TTT_SENDER_UNDO_TRANSFER_TO_RECEIVER_CLICKED(971),
+    MEDIA_TTT_SENDER_UNDO_TRANSFER_TO_THIS_DEVICE_CLICKED(972),
+    MEDIA_TTT_SENDER_ALMOST_CLOSE_TO_START_CAST(973),
+    MEDIA_TTT_SENDER_ALMOST_CLOSE_TO_END_CAST(974),
+    MEDIA_TTT_SENDER_TRANSFER_TO_RECEIVER_TRIGGERED(975),
+    MEDIA_TTT_SENDER_TRANSFER_TO_THIS_DEVICE_TRIGGERED(976),
+    MEDIA_TTT_SENDER_TRANSFER_TO_RECEIVER_SUCCEEDED(977),
+    MEDIA_TTT_SENDER_TRANSFER_TO_THIS_DEVICE_SUCCEEDED(978),
+    MEDIA_TTT_SENDER_TRANSFER_TO_RECEIVER_FAILED(979),
+    MEDIA_TTT_SENDER_TRANSFER_TO_THIS_DEVICE_FAILED(980),
+    MEDIA_TTT_SENDER_FAR_FROM_RECEIVER(981);
+    
+    private final int metricId;
+
+    private MediaTttSenderUiEvents(int i) {
+        this.metricId = i;
+    }
+
+    public final int getMetricId() {
+        return this.metricId;
+    }
+
+    public int getId() {
+        return this.metricId;
+    }
+}

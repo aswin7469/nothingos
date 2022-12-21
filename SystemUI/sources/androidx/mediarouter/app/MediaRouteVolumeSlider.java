@@ -7,11 +7,11 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import androidx.appcompat.R$attr;
+import androidx.appcompat.C0329R;
 import androidx.appcompat.widget.AppCompatSeekBar;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class MediaRouteVolumeSlider extends AppCompatSeekBar {
+
+class MediaRouteVolumeSlider extends AppCompatSeekBar {
+    private static final String TAG = "MediaRouteVolumeSlider";
     private int mBackgroundColor;
     private final float mDisabledAlpha;
     private boolean mHideThumb;
@@ -19,20 +19,19 @@ public class MediaRouteVolumeSlider extends AppCompatSeekBar {
     private Drawable mThumb;
 
     public MediaRouteVolumeSlider(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    public MediaRouteVolumeSlider(Context context, AttributeSet attrs) {
-        this(context, attrs, R$attr.seekBarStyle);
+    public MediaRouteVolumeSlider(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, C0329R.attr.seekBarStyle);
     }
 
-    public MediaRouteVolumeSlider(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public MediaRouteVolumeSlider(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         this.mDisabledAlpha = MediaRouterThemeHelper.getDisabledAlpha(context);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.appcompat.widget.AppCompatSeekBar, android.widget.AbsSeekBar, android.widget.ProgressBar, android.view.View
+    /* access modifiers changed from: protected */
     public void drawableStateChanged() {
         super.drawableStateChanged();
         int i = isEnabled() ? 255 : (int) (this.mDisabledAlpha * 255.0f);
@@ -49,39 +48,43 @@ public class MediaRouteVolumeSlider extends AppCompatSeekBar {
         progressDrawable.setAlpha(i);
     }
 
-    @Override // android.widget.AbsSeekBar
-    public void setThumb(Drawable thumb) {
-        this.mThumb = thumb;
+    public void setThumb(Drawable drawable) {
+        this.mThumb = drawable;
         if (this.mHideThumb) {
-            thumb = null;
+            drawable = null;
         }
-        super.setThumb(thumb);
+        super.setThumb(drawable);
     }
 
-    public void setHideThumb(boolean hideThumb) {
-        if (this.mHideThumb == hideThumb) {
-            return;
-        }
-        this.mHideThumb = hideThumb;
-        super.setThumb(hideThumb ? null : this.mThumb);
-    }
-
-    public void setColor(int color) {
-        setColor(color, color);
-    }
-
-    public void setColor(int progressAndThumbColor, int backgroundColor) {
-        if (this.mProgressAndThumbColor != progressAndThumbColor) {
-            if (Color.alpha(progressAndThumbColor) != 255) {
-                Log.e("MediaRouteVolumeSlider", "Volume slider progress and thumb color cannot be translucent: #" + Integer.toHexString(progressAndThumbColor));
+    public void setHideThumb(boolean z) {
+        Drawable drawable;
+        if (this.mHideThumb != z) {
+            this.mHideThumb = z;
+            if (z) {
+                drawable = null;
+            } else {
+                drawable = this.mThumb;
             }
-            this.mProgressAndThumbColor = progressAndThumbColor;
+            super.setThumb(drawable);
         }
-        if (this.mBackgroundColor != backgroundColor) {
-            if (Color.alpha(backgroundColor) != 255) {
-                Log.e("MediaRouteVolumeSlider", "Volume slider background color cannot be translucent: #" + Integer.toHexString(backgroundColor));
+    }
+
+    public void setColor(int i) {
+        setColor(i, i);
+    }
+
+    public void setColor(int i, int i2) {
+        if (this.mProgressAndThumbColor != i) {
+            if (Color.alpha(i) != 255) {
+                Log.e(TAG, "Volume slider progress and thumb color cannot be translucent: #" + Integer.toHexString(i));
             }
-            this.mBackgroundColor = backgroundColor;
+            this.mProgressAndThumbColor = i;
+        }
+        if (this.mBackgroundColor != i2) {
+            if (Color.alpha(i2) != 255) {
+                Log.e(TAG, "Volume slider background color cannot be translucent: #" + Integer.toHexString(i2));
+            }
+            this.mBackgroundColor = i2;
         }
     }
 }

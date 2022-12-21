@@ -5,7 +5,7 @@ import android.content.Context;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideKeyguardManagerFactory implements Factory<KeyguardManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideKeyguardManagerFactory impleme
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardManager mo1933get() {
-        return provideKeyguardManager(this.contextProvider.mo1933get());
+    public KeyguardManager get() {
+        return provideKeyguardManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideKeyguardManagerFactory create(Provider<Context> provider) {

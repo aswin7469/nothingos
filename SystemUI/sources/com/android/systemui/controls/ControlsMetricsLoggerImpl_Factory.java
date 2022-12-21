@@ -1,11 +1,9 @@
 package com.android.systemui.controls;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class ControlsMetricsLoggerImpl_Factory implements Factory<ControlsMetricsLoggerImpl> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ControlsMetricsLoggerImpl mo1933get() {
+    public ControlsMetricsLoggerImpl get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class ControlsMetricsLoggerImpl_Factory implements Factory<Controls
         return new ControlsMetricsLoggerImpl();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final ControlsMetricsLoggerImpl_Factory INSTANCE = new ControlsMetricsLoggerImpl_Factory();
+        /* access modifiers changed from: private */
+        public static final ControlsMetricsLoggerImpl_Factory INSTANCE = new ControlsMetricsLoggerImpl_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

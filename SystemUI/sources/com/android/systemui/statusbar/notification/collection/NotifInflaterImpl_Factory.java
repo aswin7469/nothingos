@@ -1,34 +1,25 @@
 package com.android.systemui.statusbar.notification.collection;
 
-import com.android.internal.statusbar.IStatusBarService;
 import com.android.systemui.statusbar.notification.row.NotifInflationErrorManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotifInflaterImpl_Factory implements Factory<NotifInflaterImpl> {
     private final Provider<NotifInflationErrorManager> errorManagerProvider;
-    private final Provider<NotifCollection> notifCollectionProvider;
-    private final Provider<NotifPipeline> notifPipelineProvider;
-    private final Provider<IStatusBarService> statusBarServiceProvider;
 
-    public NotifInflaterImpl_Factory(Provider<IStatusBarService> provider, Provider<NotifCollection> provider2, Provider<NotifInflationErrorManager> provider3, Provider<NotifPipeline> provider4) {
-        this.statusBarServiceProvider = provider;
-        this.notifCollectionProvider = provider2;
-        this.errorManagerProvider = provider3;
-        this.notifPipelineProvider = provider4;
+    public NotifInflaterImpl_Factory(Provider<NotifInflationErrorManager> provider) {
+        this.errorManagerProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotifInflaterImpl mo1933get() {
-        return newInstance(this.statusBarServiceProvider.mo1933get(), this.notifCollectionProvider.mo1933get(), this.errorManagerProvider.mo1933get(), this.notifPipelineProvider.mo1933get());
+    public NotifInflaterImpl get() {
+        return newInstance(this.errorManagerProvider.get());
     }
 
-    public static NotifInflaterImpl_Factory create(Provider<IStatusBarService> provider, Provider<NotifCollection> provider2, Provider<NotifInflationErrorManager> provider3, Provider<NotifPipeline> provider4) {
-        return new NotifInflaterImpl_Factory(provider, provider2, provider3, provider4);
+    public static NotifInflaterImpl_Factory create(Provider<NotifInflationErrorManager> provider) {
+        return new NotifInflaterImpl_Factory(provider);
     }
 
-    public static NotifInflaterImpl newInstance(IStatusBarService iStatusBarService, NotifCollection notifCollection, NotifInflationErrorManager notifInflationErrorManager, NotifPipeline notifPipeline) {
-        return new NotifInflaterImpl(iStatusBarService, notifCollection, notifInflationErrorManager, notifPipeline);
+    public static NotifInflaterImpl newInstance(NotifInflationErrorManager notifInflationErrorManager) {
+        return new NotifInflaterImpl(notifInflationErrorManager);
     }
 }

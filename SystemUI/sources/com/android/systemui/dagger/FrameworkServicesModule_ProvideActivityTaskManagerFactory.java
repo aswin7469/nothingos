@@ -3,11 +3,9 @@ package com.android.systemui.dagger;
 import android.app.ActivityTaskManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideActivityTaskManagerFactory implements Factory<ActivityTaskManager> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ActivityTaskManager mo1933get() {
+    public ActivityTaskManager get() {
         return provideActivityTaskManager();
     }
 
@@ -19,8 +17,11 @@ public final class FrameworkServicesModule_ProvideActivityTaskManagerFactory imp
         return (ActivityTaskManager) Preconditions.checkNotNullFromProvides(FrameworkServicesModule.provideActivityTaskManager());
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final FrameworkServicesModule_ProvideActivityTaskManagerFactory INSTANCE = new FrameworkServicesModule_ProvideActivityTaskManagerFactory();
+        /* access modifiers changed from: private */
+        public static final FrameworkServicesModule_ProvideActivityTaskManagerFactory INSTANCE = new FrameworkServicesModule_ProvideActivityTaskManagerFactory();
+
+        private InstanceHolder() {
+        }
     }
 }

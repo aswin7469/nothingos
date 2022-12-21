@@ -1,27 +1,28 @@
 package com.android.systemui.statusbar;
 
-import android.content.Context;
+import android.os.Vibrator;
 import dagger.internal.Factory;
+import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class VibratorHelper_Factory implements Factory<VibratorHelper> {
-    private final Provider<Context> contextProvider;
+    private final Provider<Executor> executorProvider;
+    private final Provider<Vibrator> vibratorProvider;
 
-    public VibratorHelper_Factory(Provider<Context> provider) {
-        this.contextProvider = provider;
+    public VibratorHelper_Factory(Provider<Vibrator> provider, Provider<Executor> provider2) {
+        this.vibratorProvider = provider;
+        this.executorProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public VibratorHelper mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public VibratorHelper get() {
+        return newInstance(this.vibratorProvider.get(), this.executorProvider.get());
     }
 
-    public static VibratorHelper_Factory create(Provider<Context> provider) {
-        return new VibratorHelper_Factory(provider);
+    public static VibratorHelper_Factory create(Provider<Vibrator> provider, Provider<Executor> provider2) {
+        return new VibratorHelper_Factory(provider, provider2);
     }
 
-    public static VibratorHelper newInstance(Context context) {
-        return new VibratorHelper(context);
+    public static VibratorHelper newInstance(Vibrator vibrator, Executor executor) {
+        return new VibratorHelper(vibrator, executor);
     }
 }

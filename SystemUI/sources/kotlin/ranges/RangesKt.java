@@ -1,26 +1,9 @@
 package kotlin.ranges;
 
-import org.jetbrains.annotations.NotNull;
-/* loaded from: classes2.dex */
+import kotlin.Metadata;
+
+@Metadata(mo64986d1 = {"kotlin/ranges/RangesKt__RangesKt", "kotlin/ranges/RangesKt___RangesKt"}, mo64988k = 4, mo64989mv = {1, 7, 1}, mo64991xi = 49)
 public final class RangesKt extends RangesKt___RangesKt {
-    public static /* bridge */ /* synthetic */ float coerceAtLeast(float f, float f2) {
-        return RangesKt___RangesKt.coerceAtLeast(f, f2);
-    }
-
-    public static /* bridge */ /* synthetic */ int coerceAtLeast(int i, int i2) {
-        return RangesKt___RangesKt.coerceAtLeast(i, i2);
-    }
-
-    public static /* bridge */ /* synthetic */ long coerceAtLeast(long j, long j2) {
-        return RangesKt___RangesKt.coerceAtLeast(j, j2);
-    }
-
-    public static /* bridge */ /* synthetic */ int coerceAtMost(int i, int i2) {
-        return RangesKt___RangesKt.coerceAtMost(i, i2);
-    }
-
-    @NotNull
-    public static /* bridge */ /* synthetic */ IntProgression downTo(int i, int i2) {
-        return RangesKt___RangesKt.downTo(i, i2);
+    private RangesKt() {
     }
 }

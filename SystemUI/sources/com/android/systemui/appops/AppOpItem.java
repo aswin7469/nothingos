@@ -1,5 +1,7 @@
 package com.android.systemui.appops;
-/* loaded from: classes.dex */
+
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
+
 public class AppOpItem {
     private int mCode;
     private boolean mIsDisabled;
@@ -13,19 +15,7 @@ public class AppOpItem {
         this.mUid = i2;
         this.mPackageName = str;
         this.mTimeStartedElapsed = j;
-        StringBuilder sb = new StringBuilder();
-        sb.append("AppOpItem(");
-        sb.append("Op code=");
-        sb.append(i);
-        sb.append(", ");
-        sb.append("UID=");
-        sb.append(i2);
-        sb.append(", ");
-        sb.append("Package name=");
-        sb.append(str);
-        sb.append(", ");
-        sb.append("Paused=");
-        this.mState = sb;
+        this.mState = new StringBuilder().append("AppOpItem(Op code=").append(i).append(", UID=").append(i2).append(", Package name=").append(str).append(", Paused=");
     }
 
     public int getCode() {
@@ -53,9 +43,6 @@ public class AppOpItem {
     }
 
     public String toString() {
-        StringBuilder sb = this.mState;
-        sb.append(this.mIsDisabled);
-        sb.append(")");
-        return sb.toString();
+        return this.mState.append(this.mIsDisabled).append(NavigationBarInflaterView.KEY_CODE_END).toString();
     }
 }

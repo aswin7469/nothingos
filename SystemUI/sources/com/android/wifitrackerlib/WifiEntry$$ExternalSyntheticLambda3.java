@@ -1,16 +1,14 @@
 package com.android.wifitrackerlib;
 
-import java.net.InetAddress;
-import java.util.function.Function;
-/* loaded from: classes2.dex */
-public final /* synthetic */ class WifiEntry$$ExternalSyntheticLambda3 implements Function {
-    public static final /* synthetic */ WifiEntry$$ExternalSyntheticLambda3 INSTANCE = new WifiEntry$$ExternalSyntheticLambda3();
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class WifiEntry$$ExternalSyntheticLambda3 implements Runnable {
+    public final /* synthetic */ WifiEntry f$0;
 
-    private /* synthetic */ WifiEntry$$ExternalSyntheticLambda3() {
+    public /* synthetic */ WifiEntry$$ExternalSyntheticLambda3(WifiEntry wifiEntry) {
+        this.f$0 = wifiEntry;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        return ((InetAddress) obj).getHostAddress();
+    public final void run() {
+        this.f$0.mo47876x4cd5470f();
     }
 }

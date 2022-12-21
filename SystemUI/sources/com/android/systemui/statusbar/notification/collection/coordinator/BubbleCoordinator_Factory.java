@@ -1,12 +1,12 @@
 package com.android.systemui.statusbar.notification.collection.coordinator;
 
+import com.android.p019wm.shell.bubbles.Bubbles;
 import com.android.systemui.statusbar.notification.collection.NotifCollection;
 import com.android.systemui.wmshell.BubblesManager;
-import com.android.wm.shell.bubbles.Bubbles;
 import dagger.internal.Factory;
 import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class BubbleCoordinator_Factory implements Factory<BubbleCoordinator> {
     private final Provider<Optional<BubblesManager>> bubblesManagerOptionalProvider;
     private final Provider<Optional<Bubbles>> bubblesOptionalProvider;
@@ -18,10 +18,8 @@ public final class BubbleCoordinator_Factory implements Factory<BubbleCoordinato
         this.notifCollectionProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public BubbleCoordinator mo1933get() {
-        return newInstance(this.bubblesManagerOptionalProvider.mo1933get(), this.bubblesOptionalProvider.mo1933get(), this.notifCollectionProvider.mo1933get());
+    public BubbleCoordinator get() {
+        return newInstance(this.bubblesManagerOptionalProvider.get(), this.bubblesOptionalProvider.get(), this.notifCollectionProvider.get());
     }
 
     public static BubbleCoordinator_Factory create(Provider<Optional<BubblesManager>> provider, Provider<Optional<Bubbles>> provider2, Provider<NotifCollection> provider3) {

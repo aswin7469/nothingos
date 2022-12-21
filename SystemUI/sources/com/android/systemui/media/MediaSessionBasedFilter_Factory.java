@@ -5,7 +5,7 @@ import android.media.session.MediaSessionManager;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class MediaSessionBasedFilter_Factory implements Factory<MediaSessionBasedFilter> {
     private final Provider<Executor> backgroundExecutorProvider;
     private final Provider<Context> contextProvider;
@@ -19,10 +19,8 @@ public final class MediaSessionBasedFilter_Factory implements Factory<MediaSessi
         this.backgroundExecutorProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaSessionBasedFilter mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.sessionManagerProvider.mo1933get(), this.foregroundExecutorProvider.mo1933get(), this.backgroundExecutorProvider.mo1933get());
+    public MediaSessionBasedFilter get() {
+        return newInstance(this.contextProvider.get(), this.sessionManagerProvider.get(), this.foregroundExecutorProvider.get(), this.backgroundExecutorProvider.get());
     }
 
     public static MediaSessionBasedFilter_Factory create(Provider<Context> provider, Provider<MediaSessionManager> provider2, Provider<Executor> provider3, Provider<Executor> provider4) {

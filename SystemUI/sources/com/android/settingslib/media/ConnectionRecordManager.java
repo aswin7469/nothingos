@@ -2,8 +2,11 @@ package com.android.settingslib.media;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-/* loaded from: classes.dex */
+
 public class ConnectionRecordManager {
+    private static final String KEY_LAST_SELECTED_DEVICE = "last_selected_device";
+    private static final String SHARED_PREFERENCES_NAME = "seamless_transfer_record";
+    private static final String TAG = "ConnectionRecordManager";
     private static ConnectionRecordManager sInstance;
     private static final Object sInstanceSync = new Object();
     private String mLastSelectedDevice;
@@ -18,7 +21,7 @@ public class ConnectionRecordManager {
     }
 
     private SharedPreferences getSharedPreferences(Context context) {
-        return context.getSharedPreferences("seamless_transfer_record", 0);
+        return context.getSharedPreferences(SHARED_PREFERENCES_NAME, 0);
     }
 
     public synchronized int fetchConnectionRecord(Context context, String str) {
@@ -26,14 +29,14 @@ public class ConnectionRecordManager {
     }
 
     public synchronized void fetchLastSelectedDevice(Context context) {
-        this.mLastSelectedDevice = getSharedPreferences(context).getString("last_selected_device", null);
+        this.mLastSelectedDevice = getSharedPreferences(context).getString(KEY_LAST_SELECTED_DEVICE, (String) null);
     }
 
     public synchronized void setConnectionRecord(Context context, String str, int i) {
         SharedPreferences.Editor edit = getSharedPreferences(context).edit();
         this.mLastSelectedDevice = str;
         edit.putInt(str, i);
-        edit.putString("last_selected_device", this.mLastSelectedDevice);
+        edit.putString(KEY_LAST_SELECTED_DEVICE, this.mLastSelectedDevice);
         edit.apply();
     }
 

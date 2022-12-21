@@ -1,32 +1,36 @@
 package com.android.systemui.statusbar.policy;
 
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.net.Uri;
+import android.service.notification.Condition;
 import android.service.notification.ZenModeConfig;
-/* loaded from: classes2.dex */
+
 public interface ZenModeController extends CallbackController<Callback> {
 
-    /* loaded from: classes2.dex */
     public interface Callback {
-        default void onConfigChanged(ZenModeConfig zenModeConfig) {
+        void onConditionsChanged(Condition[] conditionArr) {
         }
 
-        default void onConsolidatedPolicyChanged(NotificationManager.Policy policy) {
+        void onConfigChanged(ZenModeConfig zenModeConfig) {
         }
 
-        default void onEffectsSupressorChanged() {
+        void onConsolidatedPolicyChanged(NotificationManager.Policy policy) {
         }
 
-        default void onManualRuleChanged(ZenModeConfig.ZenRule zenRule) {
+        void onEffectsSupressorChanged() {
         }
 
-        default void onNextAlarmChanged() {
+        void onManualRuleChanged(ZenModeConfig.ZenRule zenRule) {
         }
 
-        default void onZenAvailableChanged(boolean z) {
+        void onNextAlarmChanged() {
         }
 
-        default void onZenChanged(int i) {
+        void onZenAvailableChanged(boolean z) {
+        }
+
+        void onZenChanged(int i) {
         }
     }
 
@@ -36,13 +40,21 @@ public interface ZenModeController extends CallbackController<Callback> {
 
     NotificationManager.Policy getConsolidatedPolicy();
 
+    int getCurrentUser();
+
+    ComponentName getEffectsSuppressor();
+
     ZenModeConfig.ZenRule getManualRule();
 
     long getNextAlarm();
 
     int getZen();
 
+    boolean isCountdownConditionSupported();
+
     boolean isVolumeRestricted();
+
+    boolean isZenAvailable();
 
     void setZen(int i, Uri uri, String str);
 }

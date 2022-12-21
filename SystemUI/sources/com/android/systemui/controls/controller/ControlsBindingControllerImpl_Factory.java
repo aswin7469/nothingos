@@ -7,7 +7,7 @@ import dagger.Lazy;
 import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ControlsBindingControllerImpl_Factory implements Factory<ControlsBindingControllerImpl> {
     private final Provider<DelayableExecutor> backgroundExecutorProvider;
     private final Provider<Context> contextProvider;
@@ -21,10 +21,8 @@ public final class ControlsBindingControllerImpl_Factory implements Factory<Cont
         this.userTrackerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ControlsBindingControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.backgroundExecutorProvider.mo1933get(), DoubleCheck.lazy(this.controllerProvider), this.userTrackerProvider.mo1933get());
+    public ControlsBindingControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.backgroundExecutorProvider.get(), DoubleCheck.lazy(this.controllerProvider), this.userTrackerProvider.get());
     }
 
     public static ControlsBindingControllerImpl_Factory create(Provider<Context> provider, Provider<DelayableExecutor> provider2, Provider<ControlsController> provider3, Provider<UserTracker> provider4) {

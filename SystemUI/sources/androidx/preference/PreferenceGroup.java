@@ -15,8 +15,9 @@ import androidx.preference.Preference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class PreferenceGroup extends Preference {
+    private static final String TAG = "PreferenceGroup";
     private boolean mAttachedToHierarchy;
     private final Runnable mClearRecycleCacheRunnable;
     private int mCurrentPreferenceOrder;
@@ -27,12 +28,17 @@ public abstract class PreferenceGroup extends Preference {
     private boolean mOrderingAsAdded;
     private List<Preference> mPreferences;
 
-    /* loaded from: classes.dex */
     public interface OnExpandButtonClickListener {
         void onExpandButtonClick();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    public interface PreferencePositionCallback {
+        int getPreferenceAdapterPosition(Preference preference);
+
+        int getPreferenceAdapterPosition(String str);
+    }
+
+    /* access modifiers changed from: protected */
     public boolean isOnSameScreenAsChildren() {
         return true;
     }
@@ -46,8 +52,7 @@ public abstract class PreferenceGroup extends Preference {
         this.mAttachedToHierarchy = false;
         this.mInitialExpandedChildrenCount = Integer.MAX_VALUE;
         this.mOnExpandButtonClickListener = null;
-        this.mClearRecycleCacheRunnable = new Runnable() { // from class: androidx.preference.PreferenceGroup.1
-            @Override // java.lang.Runnable
+        this.mClearRecycleCacheRunnable = new Runnable() {
             public void run() {
                 synchronized (this) {
                     PreferenceGroup.this.mIdRecycleCache.clear();
@@ -55,12 +60,10 @@ public abstract class PreferenceGroup extends Preference {
             }
         };
         this.mPreferences = new ArrayList();
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.PreferenceGroup, i, i2);
-        int i3 = R$styleable.PreferenceGroup_orderingFromXml;
-        this.mOrderingAsAdded = TypedArrayUtils.getBoolean(obtainStyledAttributes, i3, i3, true);
-        int i4 = R$styleable.PreferenceGroup_initialExpandedChildrenCount;
-        if (obtainStyledAttributes.hasValue(i4)) {
-            setInitialExpandedChildrenCount(TypedArrayUtils.getInt(obtainStyledAttributes, i4, i4, Integer.MAX_VALUE));
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1246R.styleable.PreferenceGroup, i, i2);
+        this.mOrderingAsAdded = TypedArrayUtils.getBoolean(obtainStyledAttributes, C1246R.styleable.PreferenceGroup_orderingFromXml, C1246R.styleable.PreferenceGroup_orderingFromXml, true);
+        if (obtainStyledAttributes.hasValue(C1246R.styleable.PreferenceGroup_initialExpandedChildrenCount)) {
+            setInitialExpandedChildrenCount(TypedArrayUtils.getInt(obtainStyledAttributes, C1246R.styleable.PreferenceGroup_initialExpandedChildrenCount, C1246R.styleable.PreferenceGroup_initialExpandedChildrenCount, Integer.MAX_VALUE));
         }
         obtainStyledAttributes.recycle();
     }
@@ -77,9 +80,13 @@ public abstract class PreferenceGroup extends Preference {
         this.mOrderingAsAdded = z;
     }
 
+    public boolean isOrderingAsAdded() {
+        return this.mOrderingAsAdded;
+    }
+
     public void setInitialExpandedChildrenCount(int i) {
         if (i != Integer.MAX_VALUE && !hasKey()) {
-            Log.e("PreferenceGroup", getClass().getSimpleName() + " should have a key defined if it contains an expandable preference");
+            Log.e(TAG, getClass().getSimpleName() + " should have a key defined if it contains an expandable preference");
         }
         this.mInitialExpandedChildrenCount = i;
     }
@@ -101,7 +108,7 @@ public abstract class PreferenceGroup extends Preference {
     }
 
     public boolean addPreference(Preference preference) {
-        long nextId;
+        long j;
         if (this.mPreferences.contains(preference)) {
             return true;
         }
@@ -112,7 +119,7 @@ public abstract class PreferenceGroup extends Preference {
             }
             String key = preference.getKey();
             if (preferenceGroup.findPreference(key) != null) {
-                Log.e("PreferenceGroup", "Found duplicated key: \"" + key + "\". This can cause unintended behaviour, please use unique keys for every preference.");
+                Log.e(TAG, "Found duplicated key: \"" + key + "\". This can cause unintended behaviour, please use unique keys for every preference.");
             }
         }
         if (preference.getOrder() == Integer.MAX_VALUE) {
@@ -127,7 +134,7 @@ public abstract class PreferenceGroup extends Preference {
         }
         int binarySearch = Collections.binarySearch(this.mPreferences, preference);
         if (binarySearch < 0) {
-            binarySearch = (binarySearch * (-1)) - 1;
+            binarySearch = (binarySearch * -1) - 1;
         }
         if (!onPrepareAddPreference(preference)) {
             return false;
@@ -137,13 +144,13 @@ public abstract class PreferenceGroup extends Preference {
         }
         PreferenceManager preferenceManager = getPreferenceManager();
         String key2 = preference.getKey();
-        if (key2 != null && this.mIdRecycleCache.containsKey(key2)) {
-            nextId = this.mIdRecycleCache.get(key2).longValue();
-            this.mIdRecycleCache.remove(key2);
+        if (key2 == null || !this.mIdRecycleCache.containsKey(key2)) {
+            j = preferenceManager.getNextId();
         } else {
-            nextId = preferenceManager.getNextId();
+            j = this.mIdRecycleCache.get(key2).longValue();
+            this.mIdRecycleCache.remove(key2);
         }
-        preference.onAttachedToHierarchy(preferenceManager, nextId);
+        preference.onAttachedToHierarchy(preferenceManager, j);
         preference.assignParent(this);
         if (this.mAttachedToHierarchy) {
             preference.onAttached();
@@ -158,14 +165,22 @@ public abstract class PreferenceGroup extends Preference {
         return removePreferenceInt;
     }
 
+    public boolean removePreferenceRecursively(CharSequence charSequence) {
+        Preference findPreference = findPreference(charSequence);
+        if (findPreference == null) {
+            return false;
+        }
+        return findPreference.getParent().removePreference(findPreference);
+    }
+
     private boolean removePreferenceInt(Preference preference) {
         boolean remove;
         synchronized (this) {
             preference.onPrepareForRemoval();
             if (preference.getParent() == this) {
-                preference.assignParent(null);
+                preference.assignParent((PreferenceGroup) null);
             }
-            remove = this.mPreferences.remove(preference);
+            remove = this.mPreferences.remove((Object) preference);
             if (remove) {
                 String key = preference.getKey();
                 if (key != null) {
@@ -181,37 +196,55 @@ public abstract class PreferenceGroup extends Preference {
         return remove;
     }
 
-    protected boolean onPrepareAddPreference(Preference preference) {
+    public void removeAll() {
+        synchronized (this) {
+            List<Preference> list = this.mPreferences;
+            for (int size = list.size() - 1; size >= 0; size--) {
+                removePreferenceInt(list.get(0));
+            }
+        }
+        notifyHierarchyChanged();
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean onPrepareAddPreference(Preference preference) {
         preference.onParentChanged(this, shouldDisableDependents());
         return true;
     }
 
     public <T extends Preference> T findPreference(CharSequence charSequence) {
-        T t;
+        T findPreference;
         if (charSequence == null) {
             throw new IllegalArgumentException("Key cannot be null");
-        }
-        if (TextUtils.equals(getKey(), charSequence)) {
+        } else if (TextUtils.equals(getKey(), charSequence)) {
             return this;
-        }
-        int preferenceCount = getPreferenceCount();
-        for (int i = 0; i < preferenceCount; i++) {
-            T t2 = (T) getPreference(i);
-            if (TextUtils.equals(t2.getKey(), charSequence)) {
-                return t2;
+        } else {
+            int preferenceCount = getPreferenceCount();
+            for (int i = 0; i < preferenceCount; i++) {
+                T preference = getPreference(i);
+                if (TextUtils.equals(preference.getKey(), charSequence)) {
+                    return preference;
+                }
+                if ((preference instanceof PreferenceGroup) && (findPreference = ((PreferenceGroup) preference).findPreference(charSequence)) != null) {
+                    return findPreference;
+                }
             }
-            if ((t2 instanceof PreferenceGroup) && (t = (T) ((PreferenceGroup) t2).findPreference(charSequence)) != null) {
-                return t;
-            }
+            return null;
         }
-        return null;
+    }
+
+    public boolean isAttached() {
+        return this.mAttachedToHierarchy;
+    }
+
+    public void setOnExpandButtonClickListener(OnExpandButtonClickListener onExpandButtonClickListener) {
+        this.mOnExpandButtonClickListener = onExpandButtonClickListener;
     }
 
     public OnExpandButtonClickListener getOnExpandButtonClickListener() {
         return this.mOnExpandButtonClickListener;
     }
 
-    @Override // androidx.preference.Preference
     public void onAttached() {
         super.onAttached();
         this.mAttachedToHierarchy = true;
@@ -221,7 +254,6 @@ public abstract class PreferenceGroup extends Preference {
         }
     }
 
-    @Override // androidx.preference.Preference
     public void onDetached() {
         super.onDetached();
         this.mAttachedToHierarchy = false;
@@ -231,7 +263,6 @@ public abstract class PreferenceGroup extends Preference {
         }
     }
 
-    @Override // androidx.preference.Preference
     public void notifyDependencyChange(boolean z) {
         super.notifyDependencyChange(z);
         int preferenceCount = getPreferenceCount();
@@ -240,15 +271,14 @@ public abstract class PreferenceGroup extends Preference {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void sortPreferences() {
         synchronized (this) {
             Collections.sort(this.mPreferences);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void dispatchSaveInstanceState(Bundle bundle) {
         super.dispatchSaveInstanceState(bundle);
         int preferenceCount = getPreferenceCount();
@@ -257,8 +287,7 @@ public abstract class PreferenceGroup extends Preference {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void dispatchRestoreInstanceState(Bundle bundle) {
         super.dispatchRestoreInstanceState(bundle);
         int preferenceCount = getPreferenceCount();
@@ -267,14 +296,12 @@ public abstract class PreferenceGroup extends Preference {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public Parcelable onSaveInstanceState() {
         return new SavedState(super.onSaveInstanceState(), this.mInitialExpandedChildrenCount);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onRestoreInstanceState(Parcelable parcelable) {
         if (parcelable == null || !parcelable.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(parcelable);
@@ -285,21 +312,13 @@ public abstract class PreferenceGroup extends Preference {
         super.onRestoreInstanceState(savedState.getSuperState());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: androidx.preference.PreferenceGroup.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo133createFromParcel(Parcel parcel) {
+    static class SavedState extends Preference.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo134newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -315,7 +334,6 @@ public abstract class PreferenceGroup extends Preference {
             this.mInitialExpandedChildrenCount = i;
         }
 
-        @Override // android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeInt(this.mInitialExpandedChildrenCount);

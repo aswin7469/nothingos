@@ -4,27 +4,27 @@ import com.android.internal.util.NotificationMessagingUtil;
 import com.android.systemui.statusbar.notification.row.RowContentBindStage;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class HeadsUpViewBinder_Factory implements Factory<HeadsUpViewBinder> {
     private final Provider<RowContentBindStage> bindStageProvider;
+    private final Provider<HeadsUpViewBinderLogger> loggerProvider;
     private final Provider<NotificationMessagingUtil> notificationMessagingUtilProvider;
 
-    public HeadsUpViewBinder_Factory(Provider<NotificationMessagingUtil> provider, Provider<RowContentBindStage> provider2) {
+    public HeadsUpViewBinder_Factory(Provider<NotificationMessagingUtil> provider, Provider<RowContentBindStage> provider2, Provider<HeadsUpViewBinderLogger> provider3) {
         this.notificationMessagingUtilProvider = provider;
         this.bindStageProvider = provider2;
+        this.loggerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public HeadsUpViewBinder mo1933get() {
-        return newInstance(this.notificationMessagingUtilProvider.mo1933get(), this.bindStageProvider.mo1933get());
+    public HeadsUpViewBinder get() {
+        return newInstance(this.notificationMessagingUtilProvider.get(), this.bindStageProvider.get(), this.loggerProvider.get());
     }
 
-    public static HeadsUpViewBinder_Factory create(Provider<NotificationMessagingUtil> provider, Provider<RowContentBindStage> provider2) {
-        return new HeadsUpViewBinder_Factory(provider, provider2);
+    public static HeadsUpViewBinder_Factory create(Provider<NotificationMessagingUtil> provider, Provider<RowContentBindStage> provider2, Provider<HeadsUpViewBinderLogger> provider3) {
+        return new HeadsUpViewBinder_Factory(provider, provider2, provider3);
     }
 
-    public static HeadsUpViewBinder newInstance(NotificationMessagingUtil notificationMessagingUtil, RowContentBindStage rowContentBindStage) {
-        return new HeadsUpViewBinder(notificationMessagingUtil, rowContentBindStage);
+    public static HeadsUpViewBinder newInstance(NotificationMessagingUtil notificationMessagingUtil, RowContentBindStage rowContentBindStage, HeadsUpViewBinderLogger headsUpViewBinderLogger) {
+        return new HeadsUpViewBinder(notificationMessagingUtil, rowContentBindStage, headsUpViewBinderLogger);
     }
 }

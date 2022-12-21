@@ -1,18 +1,19 @@
 package com.android.wifitrackerlib;
 
-import android.net.wifi.ScanResult;
-import java.util.function.Predicate;
-/* loaded from: classes2.dex */
-public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda19 implements Predicate {
-    public static final /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda19 INSTANCE = new WifiPickerTracker$$ExternalSyntheticLambda19();
+import java.util.Map;
+import java.util.function.Consumer;
 
-    private /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda19() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda19 implements Consumer {
+    public final /* synthetic */ WifiPickerTracker f$0;
+    public final /* synthetic */ Map f$1;
+
+    public /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda19(WifiPickerTracker wifiPickerTracker, Map map) {
+        this.f$0 = wifiPickerTracker;
+        this.f$1 = map;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$updateSuggestedWifiEntryScans$12;
-        lambda$updateSuggestedWifiEntryScans$12 = WifiPickerTracker.lambda$updateSuggestedWifiEntryScans$12((ScanResult) obj);
-        return lambda$updateSuggestedWifiEntryScans$12;
+    public final void accept(Object obj) {
+        this.f$0.mo47903x190d5293(this.f$1, (OsuWifiEntry) obj);
     }
 }

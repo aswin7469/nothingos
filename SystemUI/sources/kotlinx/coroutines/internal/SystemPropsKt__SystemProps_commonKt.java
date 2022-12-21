@@ -1,15 +1,14 @@
 package kotlinx.coroutines.internal;
 
-import kotlin.jvm.internal.Intrinsics;
-import kotlin.text.StringsKt__StringNumberConversionsKt;
-import org.jetbrains.annotations.NotNull;
+import kotlin.Metadata;
+import kotlin.text.StringsKt;
+
+@Metadata(mo64986d1 = {"\u0000\u001c\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\u001a\u0018\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u0001H\u0000\u001a,\u0010\u0000\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u00052\b\b\u0002\u0010\u0006\u001a\u00020\u00052\b\b\u0002\u0010\u0007\u001a\u00020\u0005H\u0000\u001a,\u0010\u0000\u001a\u00020\b2\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\b2\b\b\u0002\u0010\u0006\u001a\u00020\b2\b\b\u0002\u0010\u0007\u001a\u00020\bH\u0000¨\u0006\t"}, mo64987d2 = {"systemProp", "", "propertyName", "", "defaultValue", "", "minValue", "maxValue", "", "kotlinx-coroutines-core"}, mo64988k = 5, mo64989mv = {1, 5, 1}, mo64991xi = 48, mo64992xs = "kotlinx/coroutines/internal/SystemPropsKt")
 /* compiled from: SystemProps.common.kt */
-/* loaded from: classes2.dex */
-public final /* synthetic */ class SystemPropsKt__SystemProps_commonKt {
-    public static final boolean systemProp(@NotNull String propertyName, boolean z) {
-        Intrinsics.checkParameterIsNotNull(propertyName, "propertyName");
-        String systemProp = SystemPropsKt.systemProp(propertyName);
-        return systemProp != null ? Boolean.parseBoolean(systemProp) : z;
+final /* synthetic */ class SystemPropsKt__SystemProps_commonKt {
+    public static final boolean systemProp(String str, boolean z) {
+        String systemProp = SystemPropsKt.systemProp(str);
+        return systemProp == null ? z : Boolean.parseBoolean(systemProp);
     }
 
     public static /* synthetic */ int systemProp$default(String str, int i, int i2, int i3, int i4, Object obj) {
@@ -22,9 +21,8 @@ public final /* synthetic */ class SystemPropsKt__SystemProps_commonKt {
         return SystemPropsKt.systemProp(str, i, i2, i3);
     }
 
-    public static final int systemProp(@NotNull String propertyName, int i, int i2, int i3) {
-        Intrinsics.checkParameterIsNotNull(propertyName, "propertyName");
-        return (int) SystemPropsKt.systemProp(propertyName, i, i2, i3);
+    public static final int systemProp(String str, int i, int i2, int i3) {
+        return (int) SystemPropsKt.systemProp(str, (long) i, (long) i2, (long) i3);
     }
 
     public static /* synthetic */ long systemProp$default(String str, long j, long j2, long j3, int i, Object obj) {
@@ -38,21 +36,23 @@ public final /* synthetic */ class SystemPropsKt__SystemProps_commonKt {
         return SystemPropsKt.systemProp(str, j, j4, j3);
     }
 
-    public static final long systemProp(@NotNull String propertyName, long j, long j2, long j3) {
-        Long longOrNull;
-        Intrinsics.checkParameterIsNotNull(propertyName, "propertyName");
-        String systemProp = SystemPropsKt.systemProp(propertyName);
-        if (systemProp != null) {
-            longOrNull = StringsKt__StringNumberConversionsKt.toLongOrNull(systemProp);
-            if (longOrNull == null) {
-                throw new IllegalStateException(("System property '" + propertyName + "' has unrecognized value '" + systemProp + '\'').toString());
-            }
+    public static final long systemProp(String str, long j, long j2, long j3) {
+        String systemProp = SystemPropsKt.systemProp(str);
+        if (systemProp == null) {
+            return j;
+        }
+        Long longOrNull = StringsKt.toLongOrNull(systemProp);
+        if (longOrNull != null) {
             long longValue = longOrNull.longValue();
-            if (j2 <= longValue && j3 >= longValue) {
+            boolean z = false;
+            if (j2 <= longValue && longValue <= j3) {
+                z = true;
+            }
+            if (z) {
                 return longValue;
             }
-            throw new IllegalStateException(("System property '" + propertyName + "' should be in range " + j2 + ".." + j3 + ", but is '" + longValue + '\'').toString());
+            throw new IllegalStateException(("System property '" + str + "' should be in range " + j2 + ".." + j3 + ", but is '" + longValue + '\'').toString());
         }
-        return j;
+        throw new IllegalStateException(("System property '" + str + "' has unrecognized value '" + systemProp + '\'').toString());
     }
 }

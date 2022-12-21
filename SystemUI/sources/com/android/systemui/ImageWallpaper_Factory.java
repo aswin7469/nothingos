@@ -1,11 +1,9 @@
 package com.android.systemui;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class ImageWallpaper_Factory implements Factory<ImageWallpaper> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ImageWallpaper mo1933get() {
+    public ImageWallpaper get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class ImageWallpaper_Factory implements Factory<ImageWallpaper> {
         return new ImageWallpaper();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final ImageWallpaper_Factory INSTANCE = new ImageWallpaper_Factory();
+        /* access modifiers changed from: private */
+        public static final ImageWallpaper_Factory INSTANCE = new ImageWallpaper_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

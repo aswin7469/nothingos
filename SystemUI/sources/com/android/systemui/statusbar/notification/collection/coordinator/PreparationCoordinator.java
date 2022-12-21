@@ -4,128 +4,121 @@ import android.os.RemoteException;
 import android.service.notification.StatusBarNotification;
 import android.util.ArrayMap;
 import android.util.ArraySet;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.systemui.statusbar.notification.collection.GroupEntry;
 import com.android.systemui.statusbar.notification.collection.ListEntry;
 import com.android.systemui.statusbar.notification.collection.NotifPipeline;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.collection.coordinator.dagger.CoordinatorScope;
+import com.android.systemui.statusbar.notification.collection.inflation.BindEventManagerImpl;
 import com.android.systemui.statusbar.notification.collection.inflation.NotifInflater;
-import com.android.systemui.statusbar.notification.collection.listbuilder.OnBeforeFinalizeFilterListener;
+import com.android.systemui.statusbar.notification.collection.inflation.NotifUiAdjustment;
+import com.android.systemui.statusbar.notification.collection.inflation.NotifUiAdjustmentProvider;
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter;
 import com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener;
 import com.android.systemui.statusbar.notification.collection.render.NotifViewBarn;
+import com.android.systemui.statusbar.notification.collection.render.NotifViewController;
 import com.android.systemui.statusbar.notification.row.NotifInflationErrorManager;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@CoordinatorScope
 public class PreparationCoordinator implements Coordinator {
+    private static final int CHILD_BIND_CUTOFF = 9;
+    private static final int EXTRA_VIEW_BUFFER_COUNT = 1;
+    private static final long MAX_GROUP_INFLATION_DELAY = 500;
+    private static final int STATE_ERROR = -1;
+    private static final int STATE_INFLATED = 1;
+    private static final int STATE_INFLATED_INVALID = 2;
+    private static final int STATE_UNINFLATED = 0;
+    private static final String TAG = "PreparationCoordinator";
+    private final NotifUiAdjustmentProvider mAdjustmentProvider;
+    private final BindEventManagerImpl mBindEventManager;
     private final int mChildBindCutoff;
-    private final Set<NotificationEntry> mInflatingNotifs;
+    private final ArraySet<NotificationEntry> mInflatingNotifs;
+    /* access modifiers changed from: private */
+    public final ArrayMap<NotificationEntry, NotifUiAdjustment> mInflationAdjustments;
     private final NotifInflationErrorManager.NotifInflationErrorListener mInflationErrorListener;
-    private final Map<NotificationEntry, Integer> mInflationStates;
+    /* access modifiers changed from: private */
+    public final ArrayMap<NotificationEntry, Integer> mInflationStates;
     private final PreparationCoordinatorLogger mLogger;
     private final long mMaxGroupInflationDelay;
     private final NotifCollectionListener mNotifCollectionListener;
     private final NotifInflationErrorManager mNotifErrorManager;
     private final NotifInflater mNotifInflater;
     private final NotifFilter mNotifInflatingFilter;
-    private final NotifFilter mNotifInflationErrorFilter;
-    private final OnBeforeFinalizeFilterListener mOnBeforeFinalizeFilterListener;
-    private final IStatusBarService mStatusBarService;
-    private final NotifViewBarn mViewBarn;
+    /* access modifiers changed from: private */
+    public final NotifFilter mNotifInflationErrorFilter;
+    /* access modifiers changed from: private */
+    public final IStatusBarService mStatusBarService;
+    /* access modifiers changed from: private */
+    public final NotifViewBarn mViewBarn;
 
-    public PreparationCoordinator(PreparationCoordinatorLogger preparationCoordinatorLogger, NotifInflater notifInflater, NotifInflationErrorManager notifInflationErrorManager, NotifViewBarn notifViewBarn, IStatusBarService iStatusBarService) {
-        this(preparationCoordinatorLogger, notifInflater, notifInflationErrorManager, notifViewBarn, iStatusBarService, 9, 500L);
+    @Retention(RetentionPolicy.SOURCE)
+    @interface InflationState {
     }
 
-    @VisibleForTesting
-    PreparationCoordinator(PreparationCoordinatorLogger preparationCoordinatorLogger, NotifInflater notifInflater, NotifInflationErrorManager notifInflationErrorManager, NotifViewBarn notifViewBarn, IStatusBarService iStatusBarService, int i, long j) {
-        this.mInflationStates = new ArrayMap();
-        this.mInflatingNotifs = new ArraySet();
-        this.mNotifCollectionListener = new NotifCollectionListener() { // from class: com.android.systemui.statusbar.notification.collection.coordinator.PreparationCoordinator.1
-            {
-                PreparationCoordinator.this = this;
-            }
+    @Inject
+    public PreparationCoordinator(PreparationCoordinatorLogger preparationCoordinatorLogger, NotifInflater notifInflater, NotifInflationErrorManager notifInflationErrorManager, NotifViewBarn notifViewBarn, NotifUiAdjustmentProvider notifUiAdjustmentProvider, IStatusBarService iStatusBarService, BindEventManagerImpl bindEventManagerImpl) {
+        this(preparationCoordinatorLogger, notifInflater, notifInflationErrorManager, notifViewBarn, notifUiAdjustmentProvider, iStatusBarService, bindEventManagerImpl, 9, 500);
+    }
 
-            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
+    PreparationCoordinator(PreparationCoordinatorLogger preparationCoordinatorLogger, NotifInflater notifInflater, NotifInflationErrorManager notifInflationErrorManager, NotifViewBarn notifViewBarn, NotifUiAdjustmentProvider notifUiAdjustmentProvider, IStatusBarService iStatusBarService, BindEventManagerImpl bindEventManagerImpl, int i, long j) {
+        this.mInflationStates = new ArrayMap<>();
+        this.mInflationAdjustments = new ArrayMap<>();
+        this.mInflatingNotifs = new ArraySet<>();
+        this.mNotifCollectionListener = new NotifCollectionListener() {
             public void onEntryInit(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.mInflationStates.put(notificationEntry, 0);
             }
 
-            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryUpdated(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.abortInflation(notificationEntry, "entryUpdated");
-                int inflationState = PreparationCoordinator.this.getInflationState(notificationEntry);
-                if (inflationState == 1) {
+                int access$200 = PreparationCoordinator.this.getInflationState(notificationEntry);
+                if (access$200 == 1) {
                     PreparationCoordinator.this.mInflationStates.put(notificationEntry, 2);
-                } else if (inflationState != -1) {
-                } else {
+                } else if (access$200 == -1) {
                     PreparationCoordinator.this.mInflationStates.put(notificationEntry, 0);
                 }
             }
 
-            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
-            public void onEntryRemoved(NotificationEntry notificationEntry, int i2) {
-                PreparationCoordinator preparationCoordinator = PreparationCoordinator.this;
-                preparationCoordinator.abortInflation(notificationEntry, "entryRemoved reason=" + i2);
+            public void onEntryRemoved(NotificationEntry notificationEntry, int i) {
+                PreparationCoordinator.this.abortInflation(notificationEntry, "entryRemoved reason=" + i);
             }
 
-            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryCleanUp(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.mInflationStates.remove(notificationEntry);
                 PreparationCoordinator.this.mViewBarn.removeViewForEntry(notificationEntry);
+                PreparationCoordinator.this.mInflationAdjustments.remove(notificationEntry);
             }
         };
-        this.mOnBeforeFinalizeFilterListener = new OnBeforeFinalizeFilterListener() { // from class: com.android.systemui.statusbar.notification.collection.coordinator.PreparationCoordinator$$ExternalSyntheticLambda1
-            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.OnBeforeFinalizeFilterListener
-            public final void onBeforeFinalizeFilter(List list) {
-                PreparationCoordinator.this.lambda$new$0(list);
-            }
-        };
-        this.mNotifInflationErrorFilter = new NotifFilter("PreparationCoordinatorInflationError") { // from class: com.android.systemui.statusbar.notification.collection.coordinator.PreparationCoordinator.2
-            {
-                PreparationCoordinator.this = this;
-            }
-
-            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
-            public boolean shouldFilterOut(NotificationEntry notificationEntry, long j2) {
+        this.mNotifInflationErrorFilter = new NotifFilter("PreparationCoordinatorInflationError") {
+            public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
                 return PreparationCoordinator.this.getInflationState(notificationEntry) == -1;
             }
         };
-        this.mNotifInflatingFilter = new NotifFilter("PreparationCoordinatorInflating") { // from class: com.android.systemui.statusbar.notification.collection.coordinator.PreparationCoordinator.3
+        this.mNotifInflatingFilter = new NotifFilter("PreparationCoordinatorInflating") {
             private final Map<GroupEntry, Boolean> mIsDelayedGroupCache = new ArrayMap();
 
-            {
-                PreparationCoordinator.this = this;
-            }
-
-            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
-            public boolean shouldFilterOut(NotificationEntry notificationEntry, long j2) {
-                GroupEntry parent = notificationEntry.getParent();
-                Objects.requireNonNull(parent);
-                GroupEntry groupEntry = parent;
+            public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
+                GroupEntry groupEntry = (GroupEntry) Objects.requireNonNull(notificationEntry.getParent());
                 Boolean bool = this.mIsDelayedGroupCache.get(groupEntry);
                 if (bool == null) {
-                    bool = Boolean.valueOf(PreparationCoordinator.this.shouldWaitForGroupToInflate(groupEntry, j2));
+                    bool = Boolean.valueOf(PreparationCoordinator.this.shouldWaitForGroupToInflate(groupEntry, j));
                     this.mIsDelayedGroupCache.put(groupEntry, bool);
                 }
                 return !PreparationCoordinator.this.isInflated(notificationEntry) || bool.booleanValue();
             }
 
-            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.Pluggable
             public void onCleanup() {
                 this.mIsDelayedGroupCache.clear();
             }
         };
-        this.mInflationErrorListener = new NotifInflationErrorManager.NotifInflationErrorListener() { // from class: com.android.systemui.statusbar.notification.collection.coordinator.PreparationCoordinator.4
-            {
-                PreparationCoordinator.this = this;
-            }
-
-            @Override // com.android.systemui.statusbar.notification.row.NotifInflationErrorManager.NotifInflationErrorListener
+        this.mInflationErrorListener = new NotifInflationErrorManager.NotifInflationErrorListener() {
             public void onNotifInflationError(NotificationEntry notificationEntry, Exception exc) {
                 PreparationCoordinator.this.mViewBarn.removeViewForEntry(notificationEntry);
                 PreparationCoordinator.this.mInflationStates.put(notificationEntry, -1);
@@ -137,7 +130,6 @@ public class PreparationCoordinator implements Coordinator {
                 PreparationCoordinator.this.mNotifInflationErrorFilter.invalidateList();
             }
 
-            @Override // com.android.systemui.statusbar.notification.row.NotifInflationErrorManager.NotifInflationErrorListener
             public void onNotifInflationErrorCleared(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.mNotifInflationErrorFilter.invalidateList();
             }
@@ -146,29 +138,32 @@ public class PreparationCoordinator implements Coordinator {
         this.mNotifInflater = notifInflater;
         this.mNotifErrorManager = notifInflationErrorManager;
         this.mViewBarn = notifViewBarn;
+        this.mAdjustmentProvider = notifUiAdjustmentProvider;
         this.mStatusBarService = iStatusBarService;
         this.mChildBindCutoff = i;
         this.mMaxGroupInflationDelay = j;
+        this.mBindEventManager = bindEventManagerImpl;
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         this.mNotifErrorManager.addInflationErrorListener(this.mInflationErrorListener);
+        NotifUiAdjustmentProvider notifUiAdjustmentProvider = this.mAdjustmentProvider;
+        NotifFilter notifFilter = this.mNotifInflatingFilter;
+        Objects.requireNonNull(notifFilter);
+        notifUiAdjustmentProvider.addDirtyListener(new PreparationCoordinator$$ExternalSyntheticLambda0(notifFilter));
         notifPipeline.addCollectionListener(this.mNotifCollectionListener);
-        notifPipeline.addOnBeforeFinalizeFilterListener(this.mOnBeforeFinalizeFilterListener);
+        notifPipeline.addOnBeforeFinalizeFilterListener(new PreparationCoordinator$$ExternalSyntheticLambda1(this));
         notifPipeline.addFinalizeFilter(this.mNotifInflationErrorFilter);
         notifPipeline.addFinalizeFilter(this.mNotifInflatingFilter);
     }
 
-    /* renamed from: inflateAllRequiredViews */
-    public void lambda$new$0(List<ListEntry> list) {
+    /* access modifiers changed from: private */
+    public void inflateAllRequiredViews(List<ListEntry> list) {
         int size = list.size();
         for (int i = 0; i < size; i++) {
             ListEntry listEntry = list.get(i);
             if (listEntry instanceof GroupEntry) {
-                GroupEntry groupEntry = (GroupEntry) listEntry;
-                groupEntry.setUntruncatedChildCount(groupEntry.getChildren().size());
-                inflateRequiredGroupViews(groupEntry);
+                inflateRequiredGroupViews((GroupEntry) listEntry);
             } else {
                 inflateRequiredNotifViews((NotificationEntry) listEntry);
             }
@@ -197,62 +192,94 @@ public class PreparationCoordinator implements Coordinator {
     }
 
     private void inflateRequiredNotifViews(NotificationEntry notificationEntry) {
-        if (this.mInflatingNotifs.contains(notificationEntry)) {
-            return;
-        }
-        int intValue = this.mInflationStates.get(notificationEntry).intValue();
-        if (intValue == 0) {
-            inflateEntry(notificationEntry, "entryAdded");
-        } else if (intValue != 2) {
-        } else {
-            rebind(notificationEntry, "entryUpdated");
+        NotifUiAdjustment calculateAdjustment = this.mAdjustmentProvider.calculateAdjustment(notificationEntry);
+        if (!this.mInflatingNotifs.contains(notificationEntry)) {
+            int intValue = this.mInflationStates.get(notificationEntry).intValue();
+            if (intValue != -1) {
+                if (intValue == 0) {
+                    inflateEntry(notificationEntry, calculateAdjustment, "entryAdded");
+                } else if (intValue != 1) {
+                    if (intValue == 2) {
+                        rebind(notificationEntry, calculateAdjustment, "entryUpdated");
+                    }
+                } else if (needToReinflate(notificationEntry, calculateAdjustment, "Fully inflated notification has no adjustments")) {
+                    rebind(notificationEntry, calculateAdjustment, "adjustment changed after inflated");
+                }
+            } else if (needToReinflate(notificationEntry, calculateAdjustment, (String) null)) {
+                inflateEntry(notificationEntry, calculateAdjustment, "adjustment changed after error");
+            }
+        } else if (needToReinflate(notificationEntry, calculateAdjustment, "Inflating notification has no adjustments")) {
+            inflateEntry(notificationEntry, calculateAdjustment, "adjustment changed while inflating");
         }
     }
 
-    private void inflateEntry(NotificationEntry notificationEntry, String str) {
+    private boolean needToReinflate(NotificationEntry notificationEntry, NotifUiAdjustment notifUiAdjustment, String str) {
+        NotifUiAdjustment notifUiAdjustment2 = this.mInflationAdjustments.get(notificationEntry);
+        if (notifUiAdjustment2 != null) {
+            return NotifUiAdjustment.needReinflate(notifUiAdjustment2, notifUiAdjustment);
+        }
+        if (str == null) {
+            return true;
+        }
+        throw new IllegalStateException(str);
+    }
+
+    private void inflateEntry(NotificationEntry notificationEntry, NotifUiAdjustment notifUiAdjustment, String str) {
         abortInflation(notificationEntry, str);
+        this.mInflationAdjustments.put(notificationEntry, notifUiAdjustment);
         this.mInflatingNotifs.add(notificationEntry);
-        this.mNotifInflater.inflateViews(notificationEntry, new PreparationCoordinator$$ExternalSyntheticLambda0(this));
+        this.mNotifInflater.inflateViews(notificationEntry, getInflaterParams(notifUiAdjustment, str), new PreparationCoordinator$$ExternalSyntheticLambda2(this));
     }
 
-    private void rebind(NotificationEntry notificationEntry, String str) {
+    private void rebind(NotificationEntry notificationEntry, NotifUiAdjustment notifUiAdjustment, String str) {
+        this.mInflationAdjustments.put(notificationEntry, notifUiAdjustment);
         this.mInflatingNotifs.add(notificationEntry);
-        this.mNotifInflater.rebindViews(notificationEntry, new PreparationCoordinator$$ExternalSyntheticLambda0(this));
+        this.mNotifInflater.rebindViews(notificationEntry, getInflaterParams(notifUiAdjustment, str), new PreparationCoordinator$$ExternalSyntheticLambda2(this));
     }
 
+    /* access modifiers changed from: package-private */
+    public NotifInflater.Params getInflaterParams(NotifUiAdjustment notifUiAdjustment, String str) {
+        return new NotifInflater.Params(notifUiAdjustment.isMinimized(), str);
+    }
+
+    /* access modifiers changed from: private */
     public void abortInflation(NotificationEntry notificationEntry, String str) {
         this.mLogger.logInflationAborted(notificationEntry.getKey(), str);
-        notificationEntry.abortTask();
+        this.mNotifInflater.abortInflation(notificationEntry);
         this.mInflatingNotifs.remove(notificationEntry);
     }
 
-    public void onInflationFinished(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: private */
+    public void onInflationFinished(NotificationEntry notificationEntry, NotifViewController notifViewController) {
         this.mLogger.logNotifInflated(notificationEntry.getKey());
         this.mInflatingNotifs.remove(notificationEntry);
-        this.mViewBarn.registerViewForEntry(notificationEntry, notificationEntry.getRowController());
+        this.mViewBarn.registerViewForEntry(notificationEntry, notifViewController);
         this.mInflationStates.put(notificationEntry, 1);
+        this.mBindEventManager.notifyViewBound(notificationEntry);
         this.mNotifInflatingFilter.invalidateList();
     }
 
     private void freeNotifViews(NotificationEntry notificationEntry) {
         this.mViewBarn.removeViewForEntry(notificationEntry);
-        notificationEntry.setRow(null);
         this.mInflationStates.put(notificationEntry, 0);
     }
 
+    /* access modifiers changed from: private */
     public boolean isInflated(NotificationEntry notificationEntry) {
         int inflationState = getInflationState(notificationEntry);
         return inflationState == 1 || inflationState == 2;
     }
 
+    /* access modifiers changed from: private */
     public int getInflationState(NotificationEntry notificationEntry) {
         Integer num = this.mInflationStates.get(notificationEntry);
         Objects.requireNonNull(num, "Asking state of a notification preparation coordinator doesn't know about");
         return num.intValue();
     }
 
+    /* access modifiers changed from: private */
     public boolean shouldWaitForGroupToInflate(GroupEntry groupEntry, long j) {
-        if (groupEntry != GroupEntry.ROOT_ENTRY && !groupEntry.hasBeenAttachedBefore()) {
+        if (groupEntry != GroupEntry.ROOT_ENTRY && !groupEntry.wasAttachedInPreviousPass()) {
             if (isBeyondGroupInitializationWindow(groupEntry, j)) {
                 this.mLogger.logGroupInflationTookTooLong(groupEntry.getKey());
                 return false;
@@ -260,12 +287,13 @@ public class PreparationCoordinator implements Coordinator {
                 this.mLogger.logDelayingGroupRelease(groupEntry.getKey(), groupEntry.getSummary().getKey());
                 return true;
             } else {
-                for (NotificationEntry notificationEntry : groupEntry.getChildren()) {
-                    if (this.mInflatingNotifs.contains(notificationEntry) && !notificationEntry.hasBeenAttachedBefore()) {
-                        this.mLogger.logDelayingGroupRelease(groupEntry.getKey(), notificationEntry.getKey());
+                for (NotificationEntry next : groupEntry.getChildren()) {
+                    if (this.mInflatingNotifs.contains(next) && !next.wasAttachedInPreviousPass()) {
+                        this.mLogger.logDelayingGroupRelease(groupEntry.getKey(), next.getKey());
                         return true;
                     }
                 }
+                this.mLogger.logDoneWaitingForGroupInflation(groupEntry.getKey());
             }
         }
         return false;

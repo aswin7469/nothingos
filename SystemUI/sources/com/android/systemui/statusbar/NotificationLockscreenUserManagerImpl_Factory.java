@@ -6,48 +6,60 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.UserManager;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
+import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
+import com.android.systemui.statusbar.notification.collection.render.NotificationVisibilityProvider;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
+import com.android.systemui.util.settings.SecureSettings;
+import dagger.Lazy;
+import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationLockscreenUserManagerImpl_Factory implements Factory<NotificationLockscreenUserManagerImpl> {
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
     private final Provider<NotificationClickNotifier> clickNotifierProvider;
+    private final Provider<CommonNotifCollection> commonNotifCollectionLazyProvider;
     private final Provider<Context> contextProvider;
     private final Provider<DevicePolicyManager> devicePolicyManagerProvider;
     private final Provider<DeviceProvisionedController> deviceProvisionedControllerProvider;
+    private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<KeyguardManager> keyguardManagerProvider;
     private final Provider<KeyguardStateController> keyguardStateControllerProvider;
     private final Provider<Handler> mainHandlerProvider;
+    private final Provider<SecureSettings> secureSettingsProvider;
     private final Provider<StatusBarStateController> statusBarStateControllerProvider;
     private final Provider<UserManager> userManagerProvider;
+    private final Provider<NotificationVisibilityProvider> visibilityProviderLazyProvider;
 
-    public NotificationLockscreenUserManagerImpl_Factory(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<DevicePolicyManager> provider3, Provider<UserManager> provider4, Provider<NotificationClickNotifier> provider5, Provider<KeyguardManager> provider6, Provider<StatusBarStateController> provider7, Provider<Handler> provider8, Provider<DeviceProvisionedController> provider9, Provider<KeyguardStateController> provider10) {
+    public NotificationLockscreenUserManagerImpl_Factory(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<DevicePolicyManager> provider3, Provider<UserManager> provider4, Provider<NotificationVisibilityProvider> provider5, Provider<CommonNotifCollection> provider6, Provider<NotificationClickNotifier> provider7, Provider<KeyguardManager> provider8, Provider<StatusBarStateController> provider9, Provider<Handler> provider10, Provider<DeviceProvisionedController> provider11, Provider<KeyguardStateController> provider12, Provider<SecureSettings> provider13, Provider<DumpManager> provider14) {
         this.contextProvider = provider;
         this.broadcastDispatcherProvider = provider2;
         this.devicePolicyManagerProvider = provider3;
         this.userManagerProvider = provider4;
-        this.clickNotifierProvider = provider5;
-        this.keyguardManagerProvider = provider6;
-        this.statusBarStateControllerProvider = provider7;
-        this.mainHandlerProvider = provider8;
-        this.deviceProvisionedControllerProvider = provider9;
-        this.keyguardStateControllerProvider = provider10;
+        this.visibilityProviderLazyProvider = provider5;
+        this.commonNotifCollectionLazyProvider = provider6;
+        this.clickNotifierProvider = provider7;
+        this.keyguardManagerProvider = provider8;
+        this.statusBarStateControllerProvider = provider9;
+        this.mainHandlerProvider = provider10;
+        this.deviceProvisionedControllerProvider = provider11;
+        this.keyguardStateControllerProvider = provider12;
+        this.secureSettingsProvider = provider13;
+        this.dumpManagerProvider = provider14;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationLockscreenUserManagerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.devicePolicyManagerProvider.mo1933get(), this.userManagerProvider.mo1933get(), this.clickNotifierProvider.mo1933get(), this.keyguardManagerProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.mainHandlerProvider.mo1933get(), this.deviceProvisionedControllerProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get());
+    public NotificationLockscreenUserManagerImpl get() {
+        return newInstance(this.contextProvider.get(), this.broadcastDispatcherProvider.get(), this.devicePolicyManagerProvider.get(), this.userManagerProvider.get(), DoubleCheck.lazy(this.visibilityProviderLazyProvider), DoubleCheck.lazy(this.commonNotifCollectionLazyProvider), this.clickNotifierProvider.get(), this.keyguardManagerProvider.get(), this.statusBarStateControllerProvider.get(), this.mainHandlerProvider.get(), this.deviceProvisionedControllerProvider.get(), this.keyguardStateControllerProvider.get(), this.secureSettingsProvider.get(), this.dumpManagerProvider.get());
     }
 
-    public static NotificationLockscreenUserManagerImpl_Factory create(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<DevicePolicyManager> provider3, Provider<UserManager> provider4, Provider<NotificationClickNotifier> provider5, Provider<KeyguardManager> provider6, Provider<StatusBarStateController> provider7, Provider<Handler> provider8, Provider<DeviceProvisionedController> provider9, Provider<KeyguardStateController> provider10) {
-        return new NotificationLockscreenUserManagerImpl_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10);
+    public static NotificationLockscreenUserManagerImpl_Factory create(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<DevicePolicyManager> provider3, Provider<UserManager> provider4, Provider<NotificationVisibilityProvider> provider5, Provider<CommonNotifCollection> provider6, Provider<NotificationClickNotifier> provider7, Provider<KeyguardManager> provider8, Provider<StatusBarStateController> provider9, Provider<Handler> provider10, Provider<DeviceProvisionedController> provider11, Provider<KeyguardStateController> provider12, Provider<SecureSettings> provider13, Provider<DumpManager> provider14) {
+        return new NotificationLockscreenUserManagerImpl_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14);
     }
 
-    public static NotificationLockscreenUserManagerImpl newInstance(Context context, BroadcastDispatcher broadcastDispatcher, DevicePolicyManager devicePolicyManager, UserManager userManager, NotificationClickNotifier notificationClickNotifier, KeyguardManager keyguardManager, StatusBarStateController statusBarStateController, Handler handler, DeviceProvisionedController deviceProvisionedController, KeyguardStateController keyguardStateController) {
-        return new NotificationLockscreenUserManagerImpl(context, broadcastDispatcher, devicePolicyManager, userManager, notificationClickNotifier, keyguardManager, statusBarStateController, handler, deviceProvisionedController, keyguardStateController);
+    public static NotificationLockscreenUserManagerImpl newInstance(Context context, BroadcastDispatcher broadcastDispatcher, DevicePolicyManager devicePolicyManager, UserManager userManager, Lazy<NotificationVisibilityProvider> lazy, Lazy<CommonNotifCollection> lazy2, NotificationClickNotifier notificationClickNotifier, KeyguardManager keyguardManager, StatusBarStateController statusBarStateController, Handler handler, DeviceProvisionedController deviceProvisionedController, KeyguardStateController keyguardStateController, SecureSettings secureSettings, DumpManager dumpManager) {
+        return new NotificationLockscreenUserManagerImpl(context, broadcastDispatcher, devicePolicyManager, userManager, lazy, lazy2, notificationClickNotifier, keyguardManager, statusBarStateController, handler, deviceProvisionedController, keyguardStateController, secureSettings, dumpManager);
     }
 }

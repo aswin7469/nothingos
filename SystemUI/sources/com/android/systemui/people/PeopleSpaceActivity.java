@@ -12,31 +12,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import android.widget.LinearLayout;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
+import com.android.systemui.C1893R;
 import com.android.systemui.people.widget.PeopleSpaceWidgetManager;
 import com.android.systemui.people.widget.PeopleTileKey;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class PeopleSpaceActivity extends Activity {
+    private static final boolean DEBUG = false;
+    private static final String TAG = "PeopleSpaceActivity";
     private int mAppWidgetId;
-    private Context mContext;
+    /* access modifiers changed from: private */
+    public Context mContext;
     private PeopleSpaceWidgetManager mPeopleSpaceWidgetManager;
-    private ViewOutlineProvider mViewOutlineProvider = new ViewOutlineProvider() { // from class: com.android.systemui.people.PeopleSpaceActivity.1
-        @Override // android.view.ViewOutlineProvider
+    private ViewOutlineProvider mViewOutlineProvider = new ViewOutlineProvider() {
         public void getOutline(View view, Outline outline) {
-            outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), PeopleSpaceActivity.this.mContext.getResources().getDimension(R$dimen.people_space_widget_radius));
+            outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), PeopleSpaceActivity.this.mContext.getResources().getDimension(C1893R.dimen.people_space_widget_radius));
         }
     };
 
+    @Inject
     public PeopleSpaceActivity(PeopleSpaceWidgetManager peopleSpaceWidgetManager) {
         this.mPeopleSpaceWidgetManager = peopleSpaceWidgetManager;
     }
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         this.mContext = getApplicationContext();
         this.mAppWidgetId = getIntent().getIntExtra("appWidgetId", 0);
@@ -44,22 +46,22 @@ public class PeopleSpaceActivity extends Activity {
     }
 
     private void buildActivity() {
-        List<PeopleSpaceTile> arrayList = new ArrayList<>();
-        List<PeopleSpaceTile> arrayList2 = new ArrayList<>();
+        List arrayList = new ArrayList();
+        List arrayList2 = new ArrayList();
         try {
             arrayList = this.mPeopleSpaceWidgetManager.getPriorityTiles();
             arrayList2 = this.mPeopleSpaceWidgetManager.getRecentTiles();
         } catch (Exception e) {
-            Log.e("PeopleSpaceActivity", "Couldn't retrieve conversations", e);
+            Log.e(TAG, "Couldn't retrieve conversations", e);
         }
-        if (arrayList2.isEmpty() && arrayList.isEmpty()) {
-            setContentView(R$layout.people_space_activity_no_conversations);
-            ((GradientDrawable) ((LinearLayout) findViewById(16908288)).getBackground()).setColor(this.mContext.getTheme().obtainStyledAttributes(new int[]{17956909}).getColor(0, -1));
+        if (!arrayList2.isEmpty() || !arrayList.isEmpty()) {
+            setContentView(C1893R.layout.people_space_activity);
+            setTileViews(C1893R.C1897id.priority, C1893R.C1897id.priority_tiles, arrayList);
+            setTileViews(C1893R.C1897id.recent, C1893R.C1897id.recent_tiles, arrayList2);
             return;
         }
-        setContentView(R$layout.people_space_activity);
-        setTileViews(R$id.priority, R$id.priority_tiles, arrayList);
-        setTileViews(R$id.recent, R$id.recent_tiles, arrayList2);
+        setContentView(C1893R.layout.people_space_activity_no_conversations);
+        ((GradientDrawable) ((LinearLayout) findViewById(16908288)).getBackground()).setColor(this.mContext.getTheme().obtainStyledAttributes(new int[]{17956909}).getColor(0, -1));
     }
 
     private void setTileViews(int i, int i2, List<PeopleSpaceTile> list) {
@@ -78,27 +80,22 @@ public class PeopleSpaceActivity extends Activity {
         }
     }
 
-    private void setTileView(PeopleSpaceTileView peopleSpaceTileView, final PeopleSpaceTile peopleSpaceTile) {
+    private void setTileView(PeopleSpaceTileView peopleSpaceTileView, PeopleSpaceTile peopleSpaceTile) {
         try {
             if (peopleSpaceTile.getUserName() != null) {
                 peopleSpaceTileView.setName(peopleSpaceTile.getUserName().toString());
             }
             Context context = this.mContext;
-            peopleSpaceTileView.setPersonIcon(PeopleTileViewHelper.getPersonIconBitmap(context, peopleSpaceTile, PeopleTileViewHelper.getSizeInDp(context, R$dimen.avatar_size_for_medium, context.getResources().getDisplayMetrics().density)));
-            final PeopleTileKey peopleTileKey = new PeopleTileKey(peopleSpaceTile);
-            peopleSpaceTileView.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.people.PeopleSpaceActivity$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    PeopleSpaceActivity.this.lambda$setTileView$0(peopleSpaceTile, peopleTileKey, view);
-                }
-            });
+            peopleSpaceTileView.setPersonIcon(PeopleTileViewHelper.getPersonIconBitmap(context, peopleSpaceTile, PeopleTileViewHelper.getSizeInDp(context, C1893R.dimen.avatar_size_for_medium, context.getResources().getDisplayMetrics().density)));
+            peopleSpaceTileView.setOnClickListener(new PeopleSpaceActivity$$ExternalSyntheticLambda0(this, peopleSpaceTile, new PeopleTileKey(peopleSpaceTile)));
         } catch (Exception e) {
-            Log.e("PeopleSpaceActivity", "Couldn't retrieve shortcut information", e);
+            Log.e(TAG, "Couldn't retrieve shortcut information", e);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setTileView$0(PeopleSpaceTile peopleSpaceTile, PeopleTileKey peopleTileKey, View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setTileView$0$com-android-systemui-people-PeopleSpaceActivity */
+    public /* synthetic */ void mo35123xf6054568(PeopleSpaceTile peopleSpaceTile, PeopleTileKey peopleTileKey, View view) {
         storeWidgetConfiguration(peopleSpaceTile, peopleTileKey);
     }
 
@@ -122,8 +119,8 @@ public class PeopleSpaceActivity extends Activity {
         setResult(i, intent);
     }
 
-    @Override // android.app.Activity
-    protected void onResume() {
+    /* access modifiers changed from: protected */
+    public void onResume() {
         super.onResume();
         buildActivity();
     }

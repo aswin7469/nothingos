@@ -8,13 +8,31 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.LinearLayout;
 import androidx.core.content.ContextCompat;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.recents.TriangleShape;
-/* loaded from: classes2.dex */
+
 public class VolumeToolTipView extends LinearLayout {
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        return super.generateLayoutParams(layoutParams);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
+
     public VolumeToolTipView(Context context) {
         super(context);
     }
@@ -31,21 +49,25 @@ public class VolumeToolTipView extends LinearLayout {
         super(context, attributeSet, i, i2);
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         super.onFinishInflate();
         drawArrow();
     }
 
     private void drawArrow() {
-        View findViewById = findViewById(R$id.arrow);
+        View findViewById = findViewById(C1893R.C1897id.arrow);
         ViewGroup.LayoutParams layoutParams = findViewById.getLayoutParams();
-        ShapeDrawable shapeDrawable = new ShapeDrawable(TriangleShape.createHorizontal(layoutParams.width, layoutParams.height, false));
+        ShapeDrawable shapeDrawable = new ShapeDrawable(TriangleShape.createHorizontal((float) layoutParams.width, (float) layoutParams.height, !isLandscape()));
         Paint paint = shapeDrawable.getPaint();
         TypedValue typedValue = new TypedValue();
         getContext().getTheme().resolveAttribute(16843829, typedValue, true);
         paint.setColor(ContextCompat.getColor(getContext(), typedValue.resourceId));
-        paint.setPathEffect(new CornerPathEffect(getResources().getDimension(R$dimen.volume_tool_tip_arrow_corner_radius)));
+        paint.setPathEffect(new CornerPathEffect(getResources().getDimension(C1893R.dimen.volume_tool_tip_arrow_corner_radius)));
         findViewById.setBackground(shapeDrawable);
+    }
+
+    private boolean isLandscape() {
+        return getContext().getResources().getConfiguration().orientation == 2;
     }
 }

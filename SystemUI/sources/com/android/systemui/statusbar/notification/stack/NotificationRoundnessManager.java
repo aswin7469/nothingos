@@ -2,37 +2,38 @@ package com.android.systemui.statusbar.notification.stack;
 
 import android.content.res.Resources;
 import android.util.MathUtils;
-import com.android.systemui.R$dimen;
+import com.android.systemui.C1893R;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.NotificationSectionsFeatureManager;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
-import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import java.util.HashSet;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class NotificationRoundnessManager {
     private HashSet<ExpandableView> mAnimatedChildren;
     private float mAppearFraction;
-    private final KeyguardBypassController mBypassController;
     private boolean mExpanded;
     private final ExpandableView[] mFirstInSectionViews;
-    private boolean mIsDismissAllInProgress;
+    private boolean mIsClearAllInProgress;
     private final ExpandableView[] mLastInSectionViews;
+    private boolean mRoundForPulsingViews;
     private Runnable mRoundingChangedCallback;
+    private ExpandableView mSwipedView = null;
     private final ExpandableView[] mTmpFirstInSectionViews;
     private final ExpandableView[] mTmpLastInSectionViews;
     private ExpandableNotificationRow mTrackedHeadsUp;
-    private ExpandableView mSwipedView = null;
-    private ExpandableView mViewBeforeSwipedView = null;
     private ExpandableView mViewAfterSwipedView = null;
+    private ExpandableView mViewBeforeSwipedView = null;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public NotificationRoundnessManager(KeyguardBypassController keyguardBypassController, NotificationSectionsFeatureManager notificationSectionsFeatureManager) {
+    @Inject
+    NotificationRoundnessManager(NotificationSectionsFeatureManager notificationSectionsFeatureManager) {
         int numberOfBuckets = notificationSectionsFeatureManager.getNumberOfBuckets();
         this.mFirstInSectionViews = new ExpandableView[numberOfBuckets];
         this.mLastInSectionViews = new ExpandableView[numberOfBuckets];
         this.mTmpFirstInSectionViews = new ExpandableView[numberOfBuckets];
         this.mTmpLastInSectionViews = new ExpandableView[numberOfBuckets];
-        this.mBypassController = keyguardBypassController;
     }
 
     public void updateView(ExpandableView expandableView, boolean z) {
@@ -45,14 +46,15 @@ public class NotificationRoundnessManager {
         return expandableView != null && (expandableView == this.mSwipedView || expandableView == this.mViewBeforeSwipedView || expandableView == this.mViewAfterSwipedView);
     }
 
-    boolean updateViewWithoutCallback(ExpandableView expandableView, boolean z) {
+    /* access modifiers changed from: package-private */
+    public boolean updateViewWithoutCallback(ExpandableView expandableView, boolean z) {
         if (expandableView == null || expandableView == this.mViewBeforeSwipedView || expandableView == this.mViewAfterSwipedView) {
             return false;
         }
-        float roundness = getRoundness(expandableView, true);
-        float roundness2 = getRoundness(expandableView, false);
-        boolean topRoundness = expandableView.setTopRoundness(roundness, z);
-        boolean bottomRoundness = expandableView.setBottomRoundness(roundness2, z);
+        float roundnessFraction = getRoundnessFraction(expandableView, true);
+        float roundnessFraction2 = getRoundnessFraction(expandableView, false);
+        boolean topRoundness = expandableView.setTopRoundness(roundnessFraction, z);
+        boolean bottomRoundness = expandableView.setBottomRoundness(roundnessFraction2, z);
         boolean isFirstInSection = isFirstInSection(expandableView);
         boolean isLastInSection = isLastInSection(expandableView);
         expandableView.setFirstInSection(isFirstInSection);
@@ -60,21 +62,23 @@ public class NotificationRoundnessManager {
         if (!isFirstInSection && !isLastInSection) {
             return false;
         }
-        return topRoundness || bottomRoundness;
+        if (topRoundness || bottomRoundness) {
+            return true;
+        }
+        return false;
     }
 
     private boolean isFirstInSection(ExpandableView expandableView) {
         int i = 0;
         while (true) {
             ExpandableView[] expandableViewArr = this.mFirstInSectionViews;
-            if (i < expandableViewArr.length) {
-                if (expandableView == expandableViewArr[i]) {
-                    return true;
-                }
-                i++;
-            } else {
+            if (i >= expandableViewArr.length) {
                 return false;
             }
+            if (expandableView == expandableViewArr[i]) {
+                return true;
+            }
+            i++;
         }
     }
 
@@ -87,15 +91,12 @@ public class NotificationRoundnessManager {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setViewsAffectedBySwipe(ExpandableView expandableView, ExpandableView expandableView2, ExpandableView expandableView3, boolean z) {
-        if (!z) {
-            return;
-        }
+    /* access modifiers changed from: package-private */
+    public void setViewsAffectedBySwipe(ExpandableView expandableView, ExpandableView expandableView2, ExpandableView expandableView3) {
         ExpandableView expandableView4 = this.mViewBeforeSwipedView;
         this.mViewBeforeSwipedView = expandableView;
         if (expandableView4 != null) {
-            expandableView4.setBottomRoundness(getRoundness(expandableView4, false), true);
+            expandableView4.setBottomRoundness(getRoundnessFraction(expandableView4, false), true);
         }
         if (expandableView != null) {
             expandableView.setBottomRoundness(1.0f, true);
@@ -103,9 +104,9 @@ public class NotificationRoundnessManager {
         ExpandableView expandableView5 = this.mSwipedView;
         this.mSwipedView = expandableView2;
         if (expandableView5 != null) {
-            float roundness = getRoundness(expandableView5, false);
-            expandableView5.setTopRoundness(getRoundness(expandableView5, true), true);
-            expandableView5.setBottomRoundness(roundness, true);
+            float roundnessFraction = getRoundnessFraction(expandableView5, false);
+            expandableView5.setTopRoundness(getRoundnessFraction(expandableView5, true), true);
+            expandableView5.setBottomRoundness(roundnessFraction, true);
         }
         if (expandableView2 != null) {
             expandableView2.setTopRoundness(1.0f, true);
@@ -114,24 +115,23 @@ public class NotificationRoundnessManager {
         ExpandableView expandableView6 = this.mViewAfterSwipedView;
         this.mViewAfterSwipedView = expandableView3;
         if (expandableView6 != null) {
-            expandableView6.setTopRoundness(getRoundness(expandableView6, true), true);
+            expandableView6.setTopRoundness(getRoundnessFraction(expandableView6, true), true);
         }
-        if (expandableView3 == null) {
-            return;
+        if (expandableView3 != null) {
+            expandableView3.setTopRoundness(1.0f, true);
         }
-        expandableView3.setTopRoundness(1.0f, true);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setDismissAllInProgress(boolean z) {
-        this.mIsDismissAllInProgress = z;
+    /* access modifiers changed from: package-private */
+    public void setClearAllInProgress(boolean z) {
+        this.mIsClearAllInProgress = z;
     }
 
-    private float getRoundness(ExpandableView expandableView, boolean z) {
+    private float getRoundnessFraction(ExpandableView expandableView, boolean z) {
         if (expandableView == null) {
             return 0.0f;
         }
-        if (expandableView == this.mViewBeforeSwipedView || expandableView == this.mSwipedView || expandableView == this.mViewAfterSwipedView || (((expandableView instanceof ExpandableNotificationRow) && ((ExpandableNotificationRow) expandableView).canViewBeDismissed() && this.mIsDismissAllInProgress) || expandableView.isPinned() || (expandableView.isHeadsUpAnimatingAway() && !this.mExpanded))) {
+        if (expandableView == this.mViewBeforeSwipedView || expandableView == this.mSwipedView || expandableView == this.mViewAfterSwipedView || (((expandableView instanceof ExpandableNotificationRow) && ((ExpandableNotificationRow) expandableView).canViewBeCleared() && this.mIsClearAllInProgress) || expandableView.isPinned() || (expandableView.isHeadsUpAnimatingAway() && !this.mExpanded))) {
             return 1.0f;
         }
         if (isFirstInSection(expandableView) && z) {
@@ -143,11 +143,11 @@ public class NotificationRoundnessManager {
         if (expandableView == this.mTrackedHeadsUp) {
             return MathUtils.saturate(1.0f - this.mAppearFraction);
         }
-        if (expandableView.showingPulsing() && !this.mBypassController.getBypassEnabled()) {
+        if (expandableView.showingPulsing() && this.mRoundForPulsingViews) {
             return 1.0f;
         }
         Resources resources = expandableView.getResources();
-        return resources.getDimension(R$dimen.notification_corner_radius_small) / resources.getDimension(R$dimen.notification_corner_radius);
+        return resources.getDimension(C1893R.dimen.notification_corner_radius_small) / resources.getDimension(C1893R.dimen.notification_corner_radius);
     }
 
     public void setExpanded(float f, float f2) {
@@ -176,10 +176,10 @@ public class NotificationRoundnessManager {
     private boolean handleRemovedOldViews(NotificationSection[] notificationSectionArr, ExpandableView[] expandableViewArr, boolean z) {
         boolean z2;
         boolean z3;
-        ExpandableView lastVisibleChild;
+        ExpandableView expandableView;
         boolean z4 = false;
-        for (ExpandableView expandableView : expandableViewArr) {
-            if (expandableView != null) {
+        for (ExpandableView expandableView2 : expandableViewArr) {
+            if (expandableView2 != null) {
                 int length = notificationSectionArr.length;
                 int i = 0;
                 while (true) {
@@ -189,13 +189,13 @@ public class NotificationRoundnessManager {
                     }
                     NotificationSection notificationSection = notificationSectionArr[i];
                     if (z) {
-                        lastVisibleChild = notificationSection.getFirstVisibleChild();
+                        expandableView = notificationSection.getFirstVisibleChild();
                     } else {
-                        lastVisibleChild = notificationSection.getLastVisibleChild();
+                        expandableView = notificationSection.getLastVisibleChild();
                     }
-                    if (lastVisibleChild != expandableView) {
+                    if (expandableView != expandableView2) {
                         i++;
-                    } else if (expandableView.isFirstInSection() == isFirstInSection(expandableView) && expandableView.isLastInSection() == isLastInSection(expandableView)) {
+                    } else if (expandableView2.isFirstInSection() == isFirstInSection(expandableView2) && expandableView2.isLastInSection() == isLastInSection(expandableView2)) {
                         z3 = false;
                         z2 = true;
                     } else {
@@ -204,8 +204,8 @@ public class NotificationRoundnessManager {
                 }
                 z3 = z2;
                 if (!z2 || z3) {
-                    if (!expandableView.isRemoved()) {
-                        updateViewWithoutCallback(expandableView, expandableView.isShown());
+                    if (!expandableView2.isRemoved()) {
+                        updateViewWithoutCallback(expandableView2, expandableView2.isShown());
                     }
                     z4 = true;
                 }
@@ -256,5 +256,9 @@ public class NotificationRoundnessManager {
         if (expandableNotificationRow2 != null) {
             updateView(expandableNotificationRow2, true);
         }
+    }
+
+    public void setShouldRoundPulsingViews(boolean z) {
+        this.mRoundForPulsingViews = z;
     }
 }

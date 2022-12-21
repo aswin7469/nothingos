@@ -17,6 +17,8 @@
         <item>No máximo, 3 processos</item>
         <item>No máximo, 4 processos</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -67,6 +69,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Utilizar seleção do sistema (predefinido)</item>
@@ -74,6 +78,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Utilizar seleção do sistema (predefinido)</item>
@@ -84,6 +90,10 @@
         <item>LDAC</item>
         <item>Áudio Qualcomm® aptX™ Adaptive</item>
         <item>Áudio Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Utilizar seleção do sistema (predefinido)</item>
@@ -94,6 +104,10 @@
         <item>LDAC</item>
         <item>Áudio Qualcomm® aptX™ Adaptive</item>
         <item>Áudio Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -157,7 +171,7 @@
     <array name="hdcp_checking_summaries">
         <item>Nunca utilizar a verificação HDCP</item>
         <item>Utilizar a verificação HDCP para conteúdo DRM apenas</item>
-        <item>Utilizar sempre a verificação HDCP</item>
+        <item>Usar sempre a verificação HDCP</item>
     </array>
     <array name="hdcp_checking_titles">
         <item>Nunca verificar</item>
@@ -264,6 +278,11 @@
         <item>Desligado</item>
         <item>Ligado</item>
     </array>
+    <array name="tile_states_color_correction">
+        <item>Indisponível</item>
+        <item>Desativada</item>
+        <item>Ativada</item>
+    </array>
     <array name="tile_states_controls">
         <item>Indisponível</item>
         <item>Desligado</item>
@@ -281,7 +300,7 @@
     </array>
     <array name="tile_states_flashlight">
         <item>Indisponível</item>
-        <item>Desligado</item>
+        <item>Desligada</item>
         <item>Ligado</item>
     </array>
     <array name="tile_states_hotspot">
@@ -310,6 +329,16 @@
         <item>Ligado</item>
     </array>
     <array name="tile_states_night">
+        <item>Indisponível</item>
+        <item>Desligado</item>
+        <item>Ligado</item>
+    </array>
+    <array name="tile_states_onehanded">
+        <item>Indisponível</item>
+        <item>Desativado</item>
+        <item>Ativado</item>
+    </array>
+    <array name="tile_states_qr_code_scanner">
         <item>Indisponível</item>
         <item>Desligado</item>
         <item>Ligado</item>
@@ -378,6 +407,12 @@
         <item>Acelerada</item>
         <item>Muito acelerada</item>
         <item>A mais rápida</item>
+    </array>
+    <array name="udfps_accessibility_touch_hints">
+        <item>Mover para a esquerda</item>
+        <item>Mover para baixo</item>
+        <item>Mover para a direita</item>
+        <item>Mover para cima</item>
     </array>
     <array name="usb_configuration_titles">
         <item>Carregamento</item>

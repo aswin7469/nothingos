@@ -9,71 +9,90 @@ import android.bluetooth.BluetoothUuid;
 import android.content.Context;
 import android.os.ParcelUuid;
 import android.util.Log;
+import com.android.settingslib.C1757R;
+import java.util.ArrayList;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class HfpClientProfile implements LocalBluetoothProfile {
-    static final ParcelUuid[] SRC_UUIDS = {BluetoothUuid.HSP_AG, BluetoothUuid.HFP_AG};
-    private final CachedBluetoothDeviceManager mDeviceManager;
-    private boolean mIsProfileReady;
-    private final LocalBluetoothProfileManager mProfileManager;
-    private BluetoothHeadsetClient mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+final class HfpClientProfile implements LocalBluetoothProfile {
+    static final String NAME = "HEADSET_CLIENT";
+    private static final int ORDINAL = 0;
+    static final ParcelUuid[] SRC_UUIDS = {BluetoothUuid.HSP_AG, BluetoothUuid.HFP_AG};
+    private static final String TAG = "HfpClientProfile";
+    /* access modifiers changed from: private */
+    public final CachedBluetoothDeviceManager mDeviceManager;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    private final LocalBluetoothProfileManager mProfileManager;
+    /* access modifiers changed from: private */
+    public BluetoothHeadsetClient mService;
+
     public boolean accessProfileEnabled() {
         return true;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
-        return 17302329;
+        return 17302337;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public int getOrdinal() {
+        return 0;
+    }
+
     public int getProfileId() {
         return 16;
     }
 
-    public String toString() {
-        return "HEADSET_CLIENT";
+    public boolean isAutoConnectable() {
+        return true;
     }
 
-    /* loaded from: classes.dex */
+    public String toString() {
+        return NAME;
+    }
+
     private final class HfpClientServiceListener implements BluetoothProfile.ServiceListener {
         private HfpClientServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
-            HfpClientProfile.this.mService = (BluetoothHeadsetClient) bluetoothProfile;
+            BluetoothHeadsetClient unused = HfpClientProfile.this.mService = (BluetoothHeadsetClient) bluetoothProfile;
             List connectedDevices = HfpClientProfile.this.mService.getConnectedDevices();
             while (!connectedDevices.isEmpty()) {
                 BluetoothDevice bluetoothDevice = (BluetoothDevice) connectedDevices.remove(0);
                 CachedBluetoothDevice findDevice = HfpClientProfile.this.mDeviceManager.findDevice(bluetoothDevice);
                 if (findDevice == null) {
-                    Log.w("HfpClientProfile", "HfpClient profile found new device: " + bluetoothDevice);
+                    Log.w(HfpClientProfile.TAG, "HfpClient profile found new device: " + bluetoothDevice);
                     findDevice = HfpClientProfile.this.mDeviceManager.addDevice(bluetoothDevice);
                 }
                 findDevice.onProfileStateChanged(HfpClientProfile.this, 2);
                 findDevice.refresh();
             }
-            HfpClientProfile.this.mIsProfileReady = true;
+            boolean unused2 = HfpClientProfile.this.mIsProfileReady = true;
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
-            HfpClientProfile.this.mIsProfileReady = false;
+            boolean unused = HfpClientProfile.this.mIsProfileReady = false;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public HfpClientProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
+    public boolean isProfileReady() {
+        return this.mIsProfileReady;
+    }
+
+    HfpClientProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
         this.mDeviceManager = cachedBluetoothDeviceManager;
         this.mProfileManager = localBluetoothProfileManager;
         BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new HfpClientServiceListener(), 16);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public List<BluetoothDevice> getConnectedDevices() {
+        BluetoothHeadsetClient bluetoothHeadsetClient = this.mService;
+        if (bluetoothHeadsetClient == null) {
+            return new ArrayList(0);
+        }
+        return bluetoothHeadsetClient.getDevicesMatchingConnectionStates(new int[]{2, 1, 3});
+    }
+
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothHeadsetClient bluetoothHeadsetClient = this.mService;
         if (bluetoothHeadsetClient == null) {
@@ -82,29 +101,60 @@ public final class HfpClientProfile implements LocalBluetoothProfile {
         return bluetoothHeadsetClient.getConnectionState(bluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public boolean isEnabled(BluetoothDevice bluetoothDevice) {
+        BluetoothHeadsetClient bluetoothHeadsetClient = this.mService;
+        if (bluetoothHeadsetClient != null && bluetoothHeadsetClient.getConnectionPolicy(bluetoothDevice) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getConnectionPolicy(BluetoothDevice bluetoothDevice) {
+        BluetoothHeadsetClient bluetoothHeadsetClient = this.mService;
+        if (bluetoothHeadsetClient == null) {
+            return 0;
+        }
+        return bluetoothHeadsetClient.getConnectionPolicy(bluetoothDevice);
+    }
+
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothHeadsetClient bluetoothHeadsetClient = this.mService;
         if (bluetoothHeadsetClient == null) {
             return false;
         }
-        if (z) {
-            if (bluetoothHeadsetClient.getConnectionPolicy(bluetoothDevice) >= 100) {
-                return false;
-            }
+        if (!z) {
+            return bluetoothHeadsetClient.setConnectionPolicy(bluetoothDevice, 0);
+        }
+        if (bluetoothHeadsetClient.getConnectionPolicy(bluetoothDevice) < 100) {
             return this.mService.setConnectionPolicy(bluetoothDevice, 100);
         }
-        return bluetoothHeadsetClient.setConnectionPolicy(bluetoothDevice, 0);
+        return false;
     }
 
-    protected void finalize() {
-        Log.d("HfpClientProfile", "finalize()");
+    public int getNameResource(BluetoothDevice bluetoothDevice) {
+        return C1757R.string.bluetooth_profile_headset;
+    }
+
+    public int getSummaryResourceForDevice(BluetoothDevice bluetoothDevice) {
+        int connectionStatus = getConnectionStatus(bluetoothDevice);
+        if (connectionStatus == 0) {
+            return C1757R.string.bluetooth_headset_profile_summary_use_for;
+        }
+        if (connectionStatus != 2) {
+            return BluetoothUtils.getConnectionStateSummary(connectionStatus);
+        }
+        return C1757R.string.bluetooth_headset_profile_summary_connected;
+    }
+
+    /* access modifiers changed from: protected */
+    public void finalize() {
+        Log.d(TAG, "finalize()");
         if (this.mService != null) {
             try {
                 BluetoothAdapter.getDefaultAdapter().closeProfileProxy(16, this.mService);
                 this.mService = null;
             } catch (Throwable th) {
-                Log.w("HfpClientProfile", "Error cleaning up HfpClient proxy", th);
+                Log.w(TAG, "Error cleaning up HfpClient proxy", th);
             }
         }
     }

@@ -2,12 +2,16 @@ package com.android.keyguard.dagger;
 
 import android.widget.FrameLayout;
 import com.android.systemui.statusbar.policy.KeyguardQsUserSwitchController;
-/* loaded from: classes.dex */
+import dagger.BindsInstance;
+import dagger.Subcomponent;
+
+@Subcomponent(modules = {KeyguardUserSwitcherModule.class})
+@KeyguardUserSwitcherScope
 public interface KeyguardQsUserSwitchComponent {
 
-    /* loaded from: classes.dex */
+    @Subcomponent.Factory
     public interface Factory {
-        KeyguardQsUserSwitchComponent build(FrameLayout frameLayout);
+        KeyguardQsUserSwitchComponent build(@BindsInstance FrameLayout frameLayout);
     }
 
     KeyguardQsUserSwitchController getKeyguardQsUserSwitchController();

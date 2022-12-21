@@ -3,13 +3,15 @@ package com.google.gson.internal.reflect;
 import com.google.gson.JsonIOException;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Field;
-/* loaded from: classes2.dex */
+
 final class UnsafeReflectionAccessor extends ReflectionAccessor {
     private static Class unsafeClass;
-    private final Object theUnsafe = getUnsafeInstance();
     private final Field overrideField = getOverrideField();
+    private final Object theUnsafe = getUnsafeInstance();
 
-    @Override // com.google.gson.internal.reflect.ReflectionAccessor
+    UnsafeReflectionAccessor() {
+    }
+
     public void makeAccessible(AccessibleObject accessibleObject) {
         if (!makeAccessibleWithUnsafe(accessibleObject)) {
             try {
@@ -20,10 +22,12 @@ final class UnsafeReflectionAccessor extends ReflectionAccessor {
         }
     }
 
-    boolean makeAccessibleWithUnsafe(AccessibleObject accessibleObject) {
-        if (this.theUnsafe != null && this.overrideField != null) {
+    /* access modifiers changed from: package-private */
+    public boolean makeAccessibleWithUnsafe(AccessibleObject accessibleObject) {
+        if (!(this.theUnsafe == null || this.overrideField == null)) {
             try {
-                unsafeClass.getMethod("putBoolean", Object.class, Long.TYPE, Boolean.TYPE).invoke(this.theUnsafe, accessibleObject, Long.valueOf(((Long) unsafeClass.getMethod("objectFieldOffset", Field.class).invoke(this.theUnsafe, this.overrideField)).longValue()), Boolean.TRUE);
+                long longValue = ((Long) unsafeClass.getMethod("objectFieldOffset", Field.class).invoke(this.theUnsafe, this.overrideField)).longValue();
+                unsafeClass.getMethod("putBoolean", Object.class, Long.TYPE, Boolean.TYPE).invoke(this.theUnsafe, accessibleObject, Long.valueOf(longValue), true);
                 return true;
             } catch (Exception unused) {
             }
@@ -37,7 +41,7 @@ final class UnsafeReflectionAccessor extends ReflectionAccessor {
             unsafeClass = cls;
             Field declaredField = cls.getDeclaredField("theUnsafe");
             declaredField.setAccessible(true);
-            return declaredField.get(null);
+            return declaredField.get((Object) null);
         } catch (Exception unused) {
             return null;
         }

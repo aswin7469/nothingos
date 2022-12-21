@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<com.nothingos.keyguard.NothingKeyguardClockView xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/keyguard_clock_container" android:layout_width="match_parent" android:layout_height="wrap_content">
-    <TextView android:textSize="@dimen/nothing_clock_text_size" android:textColor="@color/nothingDefaultTextColor" android:gravity="bottom|right" android:id="@+id/nothing_clock_view_clock" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="1" android:includeFontPadding="false" android:fontFamily="NDot57" android:paddingEnd="10dp"/>
-</com.nothingos.keyguard.NothingKeyguardClockView>

@@ -1,9 +1,11 @@
 package com.android.systemui.util.wrapper;
 
 import android.os.Build;
-/* loaded from: classes2.dex */
+import javax.inject.Singleton;
+
+@Singleton
 public class BuildInfo {
     public boolean isDebuggable() {
-        return Build.IS_DEBUGGABLE;
+        return Build.isDebuggable();
     }
 }

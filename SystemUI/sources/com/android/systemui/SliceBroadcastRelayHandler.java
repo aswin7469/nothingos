@@ -10,60 +10,61 @@ import android.net.Uri;
 import android.os.UserHandle;
 import android.util.ArrayMap;
 import android.util.ArraySet;
-import com.android.internal.annotations.VisibleForTesting;
+import com.android.settingslib.SliceBroadcastRelay;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dagger.SysUISingleton;
 import java.util.Iterator;
-/* loaded from: classes.dex */
-public class SliceBroadcastRelayHandler extends SystemUI {
+import javax.inject.Inject;
+
+@SysUISingleton
+public class SliceBroadcastRelayHandler extends CoreStartable {
+    private static final boolean DEBUG = false;
+    private static final String TAG = "SliceBroadcastRelay";
     private final BroadcastDispatcher mBroadcastDispatcher;
-    private final ArrayMap<Uri, BroadcastRelay> mRelays = new ArrayMap<>();
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.systemui.SliceBroadcastRelayHandler.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             SliceBroadcastRelayHandler.this.handleIntent(intent);
         }
     };
+    private final ArrayMap<Uri, BroadcastRelay> mRelays = new ArrayMap<>();
 
+    @Inject
     public SliceBroadcastRelayHandler(Context context, BroadcastDispatcher broadcastDispatcher) {
         super(context);
         this.mBroadcastDispatcher = broadcastDispatcher;
     }
 
-    @Override // com.android.systemui.SystemUI
     public void start() {
-        IntentFilter intentFilter = new IntentFilter("com.android.settingslib.action.REGISTER_SLICE_RECEIVER");
-        intentFilter.addAction("com.android.settingslib.action.UNREGISTER_SLICE_RECEIVER");
+        IntentFilter intentFilter = new IntentFilter(SliceBroadcastRelay.ACTION_REGISTER);
+        intentFilter.addAction(SliceBroadcastRelay.ACTION_UNREGISTER);
         this.mBroadcastDispatcher.registerReceiver(this.mReceiver, intentFilter);
     }
 
-    @VisibleForTesting
-    void handleIntent(Intent intent) {
+    /* access modifiers changed from: package-private */
+    public void handleIntent(Intent intent) {
         BroadcastRelay andRemoveRelay;
-        if ("com.android.settingslib.action.REGISTER_SLICE_RECEIVER".equals(intent.getAction())) {
-            getOrCreateRelay((Uri) intent.getParcelableExtra("uri")).register(this.mContext, (ComponentName) intent.getParcelableExtra("receiver"), (IntentFilter) intent.getParcelableExtra("filter"));
-        } else if (!"com.android.settingslib.action.UNREGISTER_SLICE_RECEIVER".equals(intent.getAction()) || (andRemoveRelay = getAndRemoveRelay((Uri) intent.getParcelableExtra("uri"))) == null) {
-        } else {
+        if (SliceBroadcastRelay.ACTION_REGISTER.equals(intent.getAction())) {
+            getOrCreateRelay((Uri) intent.getParcelableExtra(SliceBroadcastRelay.EXTRA_URI)).register(this.mContext, (ComponentName) intent.getParcelableExtra(SliceBroadcastRelay.EXTRA_RECEIVER), (IntentFilter) intent.getParcelableExtra(SliceBroadcastRelay.EXTRA_FILTER));
+        } else if (SliceBroadcastRelay.ACTION_UNREGISTER.equals(intent.getAction()) && (andRemoveRelay = getAndRemoveRelay((Uri) intent.getParcelableExtra(SliceBroadcastRelay.EXTRA_URI))) != null) {
             andRemoveRelay.unregister(this.mContext);
         }
     }
 
     private BroadcastRelay getOrCreateRelay(Uri uri) {
         BroadcastRelay broadcastRelay = this.mRelays.get(uri);
-        if (broadcastRelay == null) {
-            BroadcastRelay broadcastRelay2 = new BroadcastRelay(uri);
-            this.mRelays.put(uri, broadcastRelay2);
-            return broadcastRelay2;
+        if (broadcastRelay != null) {
+            return broadcastRelay;
         }
-        return broadcastRelay;
+        BroadcastRelay broadcastRelay2 = new BroadcastRelay(uri);
+        this.mRelays.put(uri, broadcastRelay2);
+        return broadcastRelay2;
     }
 
     private BroadcastRelay getAndRemoveRelay(Uri uri) {
         return this.mRelays.remove(uri);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class BroadcastRelay extends BroadcastReceiver {
+    private static class BroadcastRelay extends BroadcastReceiver {
         private final ArraySet<ComponentName> mReceivers = new ArraySet<>();
         private final Uri mUri;
         private final UserHandle mUserId;
@@ -75,20 +76,19 @@ public class SliceBroadcastRelayHandler extends SystemUI {
 
         public void register(Context context, ComponentName componentName, IntentFilter intentFilter) {
             this.mReceivers.add(componentName);
-            context.registerReceiver(this, intentFilter);
+            context.registerReceiver(this, intentFilter, 2);
         }
 
         public void unregister(Context context) {
             context.unregisterReceiver(this);
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
             intent.addFlags(268435456);
             Iterator<ComponentName> it = this.mReceivers.iterator();
             while (it.hasNext()) {
                 intent.setComponent(it.next());
-                intent.putExtra("uri", this.mUri.toString());
+                intent.putExtra(SliceBroadcastRelay.EXTRA_URI, this.mUri.toString());
                 context.sendBroadcastAsUser(intent, this.mUserId);
             }
         }

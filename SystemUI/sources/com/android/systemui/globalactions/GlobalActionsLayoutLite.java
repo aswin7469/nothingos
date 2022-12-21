@@ -5,75 +5,68 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.constraintlayout.helper.widget.Flow;
-import com.android.internal.annotations.VisibleForTesting;
+import com.android.systemui.C1893R;
 import com.android.systemui.HardwareBgDrawable;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.R$integer;
-/* loaded from: classes.dex */
-public class GlobalActionsLayoutLite extends GlobalActionsLayout {
-    private final int mMaxColumns = getResources().getInteger(R$integer.power_menu_lite_max_columns);
-    private final int mMaxRows = getResources().getInteger(R$integer.power_menu_lite_max_rows);
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$new$0(View view) {
+public class GlobalActionsLayoutLite extends GlobalActionsLayout {
+    static /* synthetic */ void lambda$new$0(View view) {
     }
 
-    @Override // com.android.systemui.globalactions.GlobalActionsLayout
-    protected HardwareBgDrawable getBackgroundDrawable(int i) {
+    public float getAnimationOffsetY() {
+        return 0.0f;
+    }
+
+    /* access modifiers changed from: protected */
+    public HardwareBgDrawable getBackgroundDrawable(int i) {
         return null;
     }
 
-    @Override // com.android.systemui.globalactions.GlobalActionsLayout
-    @VisibleForTesting
-    protected boolean shouldReverseListItems() {
+    /* access modifiers changed from: protected */
+    public boolean shouldReverseListItems() {
         return false;
     }
 
     public GlobalActionsLayoutLite(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        setOnClickListener(GlobalActionsLayoutLite$$ExternalSyntheticLambda0.INSTANCE);
+        setOnClickListener(new GlobalActionsLayoutLite$$ExternalSyntheticLambda0());
     }
 
-    @Override // com.android.systemui.globalactions.GlobalActionsLayout, com.android.systemui.MultiListLayout
     public void onUpdateList() {
         super.onUpdateList();
-        int i = getCurrentRotation() == 0 ? this.mMaxColumns : this.mMaxRows;
-        int childCount = mo610getListView().getChildCount() - 1;
-        if (getCurrentRotation() != 0 && childCount > this.mMaxRows) {
-            i--;
+        int integer = getResources().getInteger(C1893R.integer.power_menu_lite_max_columns);
+        if (getListView().getChildCount() - 1 == integer + 1 && integer > 2) {
+            integer--;
         }
-        ((Flow) findViewById(R$id.list_flow)).setMaxElementsWrap(i);
+        ((Flow) findViewById(C1893R.C1897id.list_flow)).setMaxElementsWrap(integer);
     }
 
-    @Override // com.android.systemui.globalactions.GlobalActionsLayout
-    protected void addToListView(View view, boolean z) {
+    /* access modifiers changed from: protected */
+    public void addToListView(View view, boolean z) {
         super.addToListView(view, z);
-        ((Flow) findViewById(R$id.list_flow)).addView(view);
+        ((Flow) findViewById(C1893R.C1897id.list_flow)).addView(view);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.MultiListLayout
+    /* access modifiers changed from: protected */
     public void removeAllListViews() {
-        View findViewById = findViewById(R$id.list_flow);
+        View findViewById = findViewById(C1893R.C1897id.list_flow);
         super.removeAllListViews();
         super.addToListView(findViewById, false);
     }
 
-    @Override // android.widget.LinearLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
-        ViewGroup mo610getListView = mo610getListView();
+        ViewGroup listView = getListView();
         boolean z2 = false;
-        for (int i5 = 0; i5 < mo610getListView.getChildCount(); i5++) {
-            View childAt = mo610getListView.getChildAt(i5);
+        for (int i5 = 0; i5 < listView.getChildCount(); i5++) {
+            View childAt = listView.getChildAt(i5);
             if (childAt instanceof GlobalActionsItem) {
                 z2 = z2 || ((GlobalActionsItem) childAt).isTruncated();
             }
         }
         if (z2) {
-            for (int i6 = 0; i6 < mo610getListView.getChildCount(); i6++) {
-                View childAt2 = mo610getListView.getChildAt(i6);
+            for (int i6 = 0; i6 < listView.getChildCount(); i6++) {
+                View childAt2 = listView.getChildAt(i6);
                 if (childAt2 instanceof GlobalActionsItem) {
                     ((GlobalActionsItem) childAt2).setMarquee(true);
                 }
@@ -81,17 +74,16 @@ public class GlobalActionsLayoutLite extends GlobalActionsLayout {
         }
     }
 
-    @VisibleForTesting
-    protected float getGridItemSize() {
-        return getContext().getResources().getDimension(R$dimen.global_actions_grid_item_height);
+    /* access modifiers changed from: protected */
+    public float getGridItemSize() {
+        return getContext().getResources().getDimension(C1893R.dimen.global_actions_grid_item_height);
     }
 
-    @VisibleForTesting
-    protected float getAnimationDistance() {
+    /* access modifiers changed from: protected */
+    public float getAnimationDistance() {
         return getGridItemSize() / 2.0f;
     }
 
-    @Override // com.android.systemui.MultiListLayout
     public float getAnimationOffsetX() {
         return getAnimationDistance();
     }

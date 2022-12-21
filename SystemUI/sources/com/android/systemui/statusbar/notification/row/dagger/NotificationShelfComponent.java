@@ -2,16 +2,31 @@ package com.android.systemui.statusbar.notification.row.dagger;
 
 import com.android.systemui.statusbar.NotificationShelf;
 import com.android.systemui.statusbar.NotificationShelfController;
-/* loaded from: classes.dex */
+import com.android.systemui.statusbar.notification.row.ActivatableNotificationView;
+import dagger.Binds;
+import dagger.BindsInstance;
+import dagger.Module;
+import dagger.Subcomponent;
+
+@NotificationRowScope
+@Subcomponent(modules = {ActivatableNotificationViewModule.class, NotificationShelfModule.class})
 public interface NotificationShelfComponent {
 
-    /* loaded from: classes.dex */
+    @Subcomponent.Builder
     public interface Builder {
         NotificationShelfComponent build();
 
-        /* renamed from: notificationShelf */
-        Builder mo1413notificationShelf(NotificationShelf notificationShelf);
+        @BindsInstance
+        Builder notificationShelf(NotificationShelf notificationShelf);
     }
 
+    @Module
+    public static abstract class NotificationShelfModule {
+        /* access modifiers changed from: package-private */
+        @Binds
+        public abstract ActivatableNotificationView bindNotificationShelf(NotificationShelf notificationShelf);
+    }
+
+    @NotificationRowScope
     NotificationShelfController getNotificationShelfController();
 }

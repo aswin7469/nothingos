@@ -1,18 +1,16 @@
 package com.android.wifitrackerlib;
 
-import android.net.wifi.ScanResult;
-import java.util.function.Predicate;
-/* loaded from: classes2.dex */
-public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda18 implements Predicate {
-    public static final /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda18 INSTANCE = new WifiPickerTracker$$ExternalSyntheticLambda18();
+import com.android.wifitrackerlib.WifiPickerTracker;
 
-    private /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda18() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda18 implements Runnable {
+    public final /* synthetic */ WifiPickerTracker.WifiPickerTrackerCallback f$0;
+
+    public /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda18(WifiPickerTracker.WifiPickerTrackerCallback wifiPickerTrackerCallback) {
+        this.f$0 = wifiPickerTrackerCallback;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$updateStandardWifiEntryScans$9;
-        lambda$updateStandardWifiEntryScans$9 = WifiPickerTracker.lambda$updateStandardWifiEntryScans$9((ScanResult) obj);
-        return lambda$updateStandardWifiEntryScans$9;
+    public final void run() {
+        this.f$0.onNumSavedSubscriptionsChanged();
     }
 }

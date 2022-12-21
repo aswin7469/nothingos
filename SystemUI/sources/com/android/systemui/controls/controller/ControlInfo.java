@@ -1,20 +1,18 @@
 package com.android.systemui.controls.controller;
 
 import android.service.controls.Control;
+import com.android.settingslib.accessibility.AccessibilityUtils;
+import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u0000(\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\r\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u000e\n\u0002\u0010\u000b\n\u0002\b\u0005\b\b\u0018\u0000 \u001b2\u00020\u0001:\u0001\u001bB%\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0005\u0012\u0006\u0010\u0007\u001a\u00020\b¢\u0006\u0002\u0010\tJ\t\u0010\u0011\u001a\u00020\u0003HÆ\u0003J\t\u0010\u0012\u001a\u00020\u0005HÆ\u0003J\t\u0010\u0013\u001a\u00020\u0005HÆ\u0003J\t\u0010\u0014\u001a\u00020\bHÆ\u0003J1\u0010\u0015\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00052\b\b\u0002\u0010\u0006\u001a\u00020\u00052\b\b\u0002\u0010\u0007\u001a\u00020\bHÆ\u0001J\u0013\u0010\u0016\u001a\u00020\u00172\b\u0010\u0018\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u0019\u001a\u00020\bHÖ\u0001J\b\u0010\u001a\u001a\u00020\u0003H\u0016R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\n\u0010\u000bR\u0011\u0010\u0006\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\f\u0010\rR\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\u000e\u0010\rR\u0011\u0010\u0007\u001a\u00020\b¢\u0006\b\n\u0000\u001a\u0004\b\u000f\u0010\u0010¨\u0006\u001c"}, mo64987d2 = {"Lcom/android/systemui/controls/controller/ControlInfo;", "", "controlId", "", "controlTitle", "", "controlSubtitle", "deviceType", "", "(Ljava/lang/String;Ljava/lang/CharSequence;Ljava/lang/CharSequence;I)V", "getControlId", "()Ljava/lang/String;", "getControlSubtitle", "()Ljava/lang/CharSequence;", "getControlTitle", "getDeviceType", "()I", "component1", "component2", "component3", "component4", "copy", "equals", "", "other", "hashCode", "toString", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ControlInfo.kt */
-/* loaded from: classes.dex */
 public final class ControlInfo {
-    @NotNull
-    public static final Companion Companion = new Companion(null);
-    @NotNull
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    private static final String SEPARATOR = ":";
     private final String controlId;
-    @NotNull
     private final CharSequence controlSubtitle;
-    @NotNull
     private final CharSequence controlTitle;
     private final int deviceType;
 
@@ -34,15 +32,30 @@ public final class ControlInfo {
         return controlInfo.copy(str, charSequence, charSequence2, i);
     }
 
-    @NotNull
-    public final ControlInfo copy(@NotNull String controlId, @NotNull CharSequence controlTitle, @NotNull CharSequence controlSubtitle, int i) {
-        Intrinsics.checkNotNullParameter(controlId, "controlId");
-        Intrinsics.checkNotNullParameter(controlTitle, "controlTitle");
-        Intrinsics.checkNotNullParameter(controlSubtitle, "controlSubtitle");
-        return new ControlInfo(controlId, controlTitle, controlSubtitle, i);
+    public final String component1() {
+        return this.controlId;
     }
 
-    public boolean equals(@Nullable Object obj) {
+    public final CharSequence component2() {
+        return this.controlTitle;
+    }
+
+    public final CharSequence component3() {
+        return this.controlSubtitle;
+    }
+
+    public final int component4() {
+        return this.deviceType;
+    }
+
+    public final ControlInfo copy(String str, CharSequence charSequence, CharSequence charSequence2, int i) {
+        Intrinsics.checkNotNullParameter(str, "controlId");
+        Intrinsics.checkNotNullParameter(charSequence, "controlTitle");
+        Intrinsics.checkNotNullParameter(charSequence2, "controlSubtitle");
+        return new ControlInfo(str, charSequence, charSequence2, i);
+    }
+
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -50,34 +63,31 @@ public final class ControlInfo {
             return false;
         }
         ControlInfo controlInfo = (ControlInfo) obj;
-        return Intrinsics.areEqual(this.controlId, controlInfo.controlId) && Intrinsics.areEqual(this.controlTitle, controlInfo.controlTitle) && Intrinsics.areEqual(this.controlSubtitle, controlInfo.controlSubtitle) && this.deviceType == controlInfo.deviceType;
+        return Intrinsics.areEqual((Object) this.controlId, (Object) controlInfo.controlId) && Intrinsics.areEqual((Object) this.controlTitle, (Object) controlInfo.controlTitle) && Intrinsics.areEqual((Object) this.controlSubtitle, (Object) controlInfo.controlSubtitle) && this.deviceType == controlInfo.deviceType;
     }
 
     public int hashCode() {
         return (((((this.controlId.hashCode() * 31) + this.controlTitle.hashCode()) * 31) + this.controlSubtitle.hashCode()) * 31) + Integer.hashCode(this.deviceType);
     }
 
-    public ControlInfo(@NotNull String controlId, @NotNull CharSequence controlTitle, @NotNull CharSequence controlSubtitle, int i) {
-        Intrinsics.checkNotNullParameter(controlId, "controlId");
-        Intrinsics.checkNotNullParameter(controlTitle, "controlTitle");
-        Intrinsics.checkNotNullParameter(controlSubtitle, "controlSubtitle");
-        this.controlId = controlId;
-        this.controlTitle = controlTitle;
-        this.controlSubtitle = controlSubtitle;
+    public ControlInfo(String str, CharSequence charSequence, CharSequence charSequence2, int i) {
+        Intrinsics.checkNotNullParameter(str, "controlId");
+        Intrinsics.checkNotNullParameter(charSequence, "controlTitle");
+        Intrinsics.checkNotNullParameter(charSequence2, "controlSubtitle");
+        this.controlId = str;
+        this.controlTitle = charSequence;
+        this.controlSubtitle = charSequence2;
         this.deviceType = i;
     }
 
-    @NotNull
     public final String getControlId() {
         return this.controlId;
     }
 
-    @NotNull
     public final CharSequence getControlTitle() {
         return this.controlTitle;
     }
 
-    @NotNull
     public final CharSequence getControlSubtitle() {
         return this.controlSubtitle;
     }
@@ -86,8 +96,8 @@ public final class ControlInfo {
         return this.deviceType;
     }
 
+    @Metadata(mo64986d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u000e\u0010\u0005\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\bR\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\t"}, mo64987d2 = {"Lcom/android/systemui/controls/controller/ControlInfo$Companion;", "", "()V", "SEPARATOR", "", "fromControl", "Lcom/android/systemui/controls/controller/ControlInfo;", "control", "Landroid/service/controls/Control;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: ControlInfo.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -96,8 +106,7 @@ public final class ControlInfo {
         private Companion() {
         }
 
-        @NotNull
-        public final ControlInfo fromControl(@NotNull Control control) {
+        public final ControlInfo fromControl(Control control) {
             Intrinsics.checkNotNullParameter(control, "control");
             String controlId = control.getControlId();
             Intrinsics.checkNotNullExpressionValue(controlId, "control.controlId");
@@ -109,8 +118,7 @@ public final class ControlInfo {
         }
     }
 
-    @NotNull
     public String toString() {
-        return ':' + this.controlId + ':' + ((Object) this.controlTitle) + ':' + this.deviceType;
+        return ":" + this.controlId + AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR + this.controlTitle + AccessibilityUtils.ENABLED_ACCESSIBILITY_SERVICES_SEPARATOR + this.deviceType;
     }
 }

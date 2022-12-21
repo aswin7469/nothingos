@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:height="165dp" android:width="165dp" android:viewportWidth="165" android:viewportHeight="165">
+    <group android:name="_R_G">
+        <group android:name="_R_G_L_0_G" android:pivotX="-1" android:pivotY="936" android:scaleX="0.96" android:scaleY="0.96" android:translateX="83.5" android:translateY="-853.5">
+            <path android:name="_R_G_L_0_G_D_0_P_0" android:pathData=" M-1 863 C39.29,863 72,895.71 72,936 C72,976.29 39.29,1009 -1,1009 C-41.29,1009 -74,976.29 -74,936 C-74,895.71 -41.29,863 -1,863c " android:strokeColor="@color/nt_biometric_title_color" android:strokeWidth="8" android:strokeLineCap="round" android:strokeLineJoin="round" android:strokeAlpha="1"/>
+        </group>
+    </group>
+    <group android:name="time_group"/>
+</vector>

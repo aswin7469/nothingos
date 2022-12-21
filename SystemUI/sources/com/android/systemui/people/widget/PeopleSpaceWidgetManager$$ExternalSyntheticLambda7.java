@@ -1,19 +1,16 @@
 package com.android.systemui.people.widget;
 
-import android.content.pm.ShortcutInfo;
-import android.service.notification.ConversationChannelWrapper;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLambda7 implements Function {
-    public static final /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda7 INSTANCE = new PeopleSpaceWidgetManager$$ExternalSyntheticLambda7();
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLambda7 implements Runnable {
+    public final /* synthetic */ PeopleSpaceWidgetManager f$0;
+    public final /* synthetic */ int[] f$1;
 
-    private /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda7() {
+    public /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda7(PeopleSpaceWidgetManager peopleSpaceWidgetManager, int[] iArr) {
+        this.f$0 = peopleSpaceWidgetManager;
+        this.f$1 = iArr;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        ShortcutInfo shortcutInfo;
-        shortcutInfo = ((ConversationChannelWrapper) obj).getShortcutInfo();
-        return shortcutInfo;
+    public final void run() {
+        this.f$0.mo35180x4693b0ae(this.f$1);
     }
 }

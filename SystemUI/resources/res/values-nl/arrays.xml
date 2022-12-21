@@ -17,6 +17,8 @@
         <item>Maximaal 3 processen</item>
         <item>Maximaal 4 processen</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -67,6 +69,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Systeemselectie gebruiken (standaard)</item>
@@ -74,6 +78,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Gebruik systeemselectie (standaard)</item>
@@ -84,6 +90,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive audio</item>
         <item>Qualcomm® aptX™ TWS+ audio</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Systeemselectie gebruiken (standaard)</item>
@@ -94,6 +104,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive audio</item>
         <item>Qualcomm® aptX™ TWS+ audio</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -264,6 +278,11 @@
         <item>Uit</item>
         <item>Aan</item>
     </array>
+    <array name="tile_states_color_correction">
+        <item>Niet beschikbaar</item>
+        <item>Uit</item>
+        <item>Aan</item>
+    </array>
     <array name="tile_states_controls">
         <item>Niet beschikbaar</item>
         <item>Uit</item>
@@ -310,6 +329,16 @@
         <item>Aan</item>
     </array>
     <array name="tile_states_night">
+        <item>Niet beschikbaar</item>
+        <item>Uit</item>
+        <item>Aan</item>
+    </array>
+    <array name="tile_states_onehanded">
+        <item>Niet beschikbaar</item>
+        <item>Uit</item>
+        <item>Aan</item>
+    </array>
+    <array name="tile_states_qr_code_scanner">
         <item>Niet beschikbaar</item>
         <item>Uit</item>
         <item>Aan</item>
@@ -377,7 +406,13 @@
         <item>Nog sneller</item>
         <item>Heel erg snel</item>
         <item>Snelst</item>
-        <item>Allerallersnelst</item>
+        <item>Allersnelst</item>
+    </array>
+    <array name="udfps_accessibility_touch_hints">
+        <item>Naar links verplaatsen</item>
+        <item>Omlaag verplaatsen</item>
+        <item>Naar rechts verplaatsen</item>
+        <item>Omhoog verplaatsen</item>
     </array>
     <array name="usb_configuration_titles">
         <item>Opladen</item>

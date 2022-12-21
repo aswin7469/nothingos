@@ -5,45 +5,35 @@ import android.os.Looper;
 import android.os.Message;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
-/* loaded from: classes2.dex */
+
 public class ExecutorImpl implements DelayableExecutor {
-    private final Handler mHandler;
+    private static final int MSG_EXECUTE_RUNNABLE = 0;
+    /* access modifiers changed from: private */
+    public final Handler mHandler;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ExecutorImpl(Looper looper) {
-        this.mHandler = new Handler(looper, new Handler.Callback() { // from class: com.android.systemui.util.concurrency.ExecutorImpl$$ExternalSyntheticLambda0
-            @Override // android.os.Handler.Callback
-            public final boolean handleMessage(Message message) {
-                boolean onHandleMessage;
-                onHandleMessage = ExecutorImpl.this.onHandleMessage(message);
-                return onHandleMessage;
-            }
-        });
+    ExecutorImpl(Looper looper) {
+        this.mHandler = new Handler(looper, new ExecutorImpl$$ExternalSyntheticLambda0(this));
     }
 
-    @Override // java.util.concurrent.Executor
     public void execute(Runnable runnable) {
-        if (this.mHandler.post(runnable)) {
-            return;
+        if (!this.mHandler.post(runnable)) {
+            throw new RejectedExecutionException(this.mHandler + " is shutting down");
         }
-        throw new RejectedExecutionException(this.mHandler + " is shutting down");
     }
 
-    @Override // com.android.systemui.util.concurrency.DelayableExecutor
     public Runnable executeDelayed(Runnable runnable, long j, TimeUnit timeUnit) {
         ExecutionToken executionToken = new ExecutionToken(runnable);
         this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(0, executionToken), timeUnit.toMillis(j));
         return executionToken;
     }
 
-    @Override // com.android.systemui.util.concurrency.DelayableExecutor
     public Runnable executeAtTime(Runnable runnable, long j, TimeUnit timeUnit) {
         ExecutionToken executionToken = new ExecutionToken(runnable);
         this.mHandler.sendMessageAtTime(this.mHandler.obtainMessage(0, executionToken), timeUnit.toMillis(j));
         return executionToken;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean onHandleMessage(Message message) {
         if (message.what == 0) {
             ((ExecutionToken) message.obj).runnable.run();
@@ -52,16 +42,13 @@ public class ExecutorImpl implements DelayableExecutor {
         throw new IllegalStateException("Unrecognized message: " + message.what);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public class ExecutionToken implements Runnable {
+    private class ExecutionToken implements Runnable {
         public final Runnable runnable;
 
-        private ExecutionToken(Runnable runnable) {
-            this.runnable = runnable;
+        private ExecutionToken(Runnable runnable2) {
+            this.runnable = runnable2;
         }
 
-        @Override // java.lang.Runnable
         public void run() {
             ExecutorImpl.this.mHandler.removeCallbacksAndMessages(this);
         }

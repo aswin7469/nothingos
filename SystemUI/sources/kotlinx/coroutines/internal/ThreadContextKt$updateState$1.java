@@ -1,13 +1,13 @@
 package kotlinx.coroutines.internal;
 
+import kotlin.Metadata;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.jvm.functions.Function2;
-import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import kotlinx.coroutines.ThreadContextElement;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u00012\u0006\u0010\u0003\u001a\u00020\u0004H\n"}, mo64987d2 = {"<no name provided>", "Lkotlinx/coroutines/internal/ThreadState;", "state", "element", "Lkotlin/coroutines/CoroutineContext$Element;"}, mo64988k = 3, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: ThreadContext.kt */
-/* loaded from: classes2.dex */
 final class ThreadContextKt$updateState$1 extends Lambda implements Function2<ThreadState, CoroutineContext.Element, ThreadState> {
     public static final ThreadContextKt$updateState$1 INSTANCE = new ThreadContextKt$updateState$1();
 
@@ -15,15 +15,11 @@ final class ThreadContextKt$updateState$1 extends Lambda implements Function2<Th
         super(2);
     }
 
-    @Override // kotlin.jvm.functions.Function2
-    @NotNull
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final ThreadState mo1950invoke(@NotNull ThreadState state, @NotNull CoroutineContext.Element element) {
-        Intrinsics.checkParameterIsNotNull(state, "state");
-        Intrinsics.checkParameterIsNotNull(element, "element");
+    public final ThreadState invoke(ThreadState threadState, CoroutineContext.Element element) {
         if (element instanceof ThreadContextElement) {
-            state.append(((ThreadContextElement) element).updateThreadContext(state.getContext()));
+            ThreadContextElement threadContextElement = (ThreadContextElement) element;
+            threadState.append(threadContextElement, threadContextElement.updateThreadContext(threadState.context));
         }
-        return state;
+        return threadState;
     }
 }

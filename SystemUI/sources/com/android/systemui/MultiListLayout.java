@@ -5,26 +5,50 @@ import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import com.android.systemui.util.leak.RotationUtils;
-/* loaded from: classes.dex */
+
 public abstract class MultiListLayout extends LinearLayout {
     protected MultiListAdapter mAdapter;
+    protected boolean mHasOutsideTouch;
     protected int mRotation;
     protected RotationListener mRotationListener;
 
-    /* loaded from: classes.dex */
     public interface RotationListener {
         void onRotate(int i, int i2);
     }
 
     public abstract float getAnimationOffsetX();
 
-    /* renamed from: getListView */
-    protected abstract ViewGroup mo610getListView();
+    public abstract float getAnimationOffsetY();
 
-    protected abstract ViewGroup getSeparatedView();
+    /* access modifiers changed from: protected */
+    public abstract ViewGroup getListView();
+
+    /* access modifiers changed from: protected */
+    public abstract ViewGroup getSeparatedView();
+
+    public abstract void setDivisionView(View view);
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        return super.generateLayoutParams(layoutParams);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
 
     public MultiListLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -32,10 +56,11 @@ public abstract class MultiListLayout extends LinearLayout {
     }
 
     public void setListViewAccessibilityDelegate(View.AccessibilityDelegate accessibilityDelegate) {
-        mo610getListView().setAccessibilityDelegate(accessibilityDelegate);
+        getListView().setAccessibilityDelegate(accessibilityDelegate);
     }
 
-    protected void setSeparatedViewVisibility(boolean z) {
+    /* access modifiers changed from: protected */
+    public void setSeparatedViewVisibility(boolean z) {
         ViewGroup separatedView = getSeparatedView();
         if (separatedView != null) {
             separatedView.setVisibility(z ? 0 : 8);
@@ -46,10 +71,18 @@ public abstract class MultiListLayout extends LinearLayout {
         this.mAdapter = multiListAdapter;
     }
 
-    @Override // android.view.View
-    protected void onConfigurationChanged(Configuration configuration) {
+    public void setOutsideTouchListener(View.OnClickListener onClickListener) {
+        this.mHasOutsideTouch = true;
+        requestLayout();
+        setOnClickListener(onClickListener);
+        setClickable(true);
+        setFocusable(true);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        int rotation = RotationUtils.getRotation(((LinearLayout) this).mContext);
+        int rotation = RotationUtils.getRotation(this.mContext);
         int i = this.mRotation;
         if (rotation != i) {
             rotate(i, rotation);
@@ -57,7 +90,8 @@ public abstract class MultiListLayout extends LinearLayout {
         }
     }
 
-    protected void rotate(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void rotate(int i, int i2) {
         RotationListener rotationListener = this.mRotationListener;
         if (rotationListener != null) {
             rotationListener.onRotate(i, i2);
@@ -65,33 +99,36 @@ public abstract class MultiListLayout extends LinearLayout {
     }
 
     public void updateList() {
-        if (this.mAdapter == null) {
-            throw new IllegalStateException("mAdapter must be set before calling updateList");
+        if (this.mAdapter != null) {
+            onUpdateList();
+            return;
         }
-        onUpdateList();
+        throw new IllegalStateException("mAdapter must be set before calling updateList");
     }
 
-    protected void removeAllSeparatedViews() {
+    /* access modifiers changed from: protected */
+    public void removeAllSeparatedViews() {
         ViewGroup separatedView = getSeparatedView();
         if (separatedView != null) {
             separatedView.removeAllViews();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void removeAllListViews() {
-        ViewGroup mo610getListView = mo610getListView();
-        if (mo610getListView != null) {
-            mo610getListView.removeAllViews();
+        ViewGroup listView = getListView();
+        if (listView != null) {
+            listView.removeAllViews();
         }
     }
 
-    protected void removeAllItems() {
+    /* access modifiers changed from: protected */
+    public void removeAllItems() {
         removeAllListViews();
         removeAllSeparatedViews();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onUpdateList() {
         removeAllItems();
         setSeparatedViewVisibility(this.mAdapter.hasSeparatedItems());
@@ -101,11 +138,24 @@ public abstract class MultiListLayout extends LinearLayout {
         this.mRotationListener = rotationListener;
     }
 
-    /* loaded from: classes.dex */
+    public static MultiListLayout get(View view) {
+        if (view instanceof MultiListLayout) {
+            return (MultiListLayout) view;
+        }
+        if (view.getParent() instanceof View) {
+            return get((View) view.getParent());
+        }
+        return null;
+    }
+
     public static abstract class MultiListAdapter extends BaseAdapter {
         public abstract int countListItems();
 
         public abstract int countSeparatedItems();
+
+        public abstract void onClickItem(int i);
+
+        public abstract boolean onLongClickItem(int i);
 
         public abstract boolean shouldBeSeparated(int i);
 

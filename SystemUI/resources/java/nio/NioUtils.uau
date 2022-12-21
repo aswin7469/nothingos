@@ -1,0 +1,4 @@
+signature,file,startline,startcol,endline,endcol,properties
+Ljava/nio/NioUtils;->freeDirectBuffer(Ljava/nio/ByteBuffer;)V,libcore/luni/src/main/java/java/nio/NioUtils.java,50,5,50,25,
+Ljava/nio/NioUtils;->unsafeArray(Ljava/nio/ByteBuffer;)[B,libcore/luni/src/main/java/java/nio/NioUtils.java,97,5,97,25,
+Ljava/nio/NioUtils;->unsafeArrayOffset(Ljava/nio/ByteBuffer;)I,libcore/luni/src/main/java/java/nio/NioUtils.java,112,5,112,25,

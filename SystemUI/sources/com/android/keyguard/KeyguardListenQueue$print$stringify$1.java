@@ -2,27 +2,24 @@ package com.android.keyguard;
 
 import java.text.DateFormat;
 import java.util.Date;
+import kotlin.Metadata;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003H\n¢\u0006\u0002\b\u0004"}, mo64987d2 = {"<anonymous>", "", "model", "Lcom/android/keyguard/KeyguardListenModel;", "invoke"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: KeyguardListenQueue.kt */
-/* loaded from: classes.dex */
 final class KeyguardListenQueue$print$stringify$1 extends Lambda implements Function1<KeyguardListenModel, String> {
     final /* synthetic */ DateFormat $dateFormat;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public KeyguardListenQueue$print$stringify$1(DateFormat dateFormat) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    KeyguardListenQueue$print$stringify$1(DateFormat dateFormat) {
         super(1);
         this.$dateFormat = dateFormat;
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    @NotNull
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final String mo1949invoke(@NotNull KeyguardListenModel model) {
-        Intrinsics.checkNotNullParameter(model, "model");
-        return "    " + ((Object) this.$dateFormat.format(new Date(model.getTimeMillis()))) + ' ' + model;
+    public final String invoke(KeyguardListenModel keyguardListenModel) {
+        Intrinsics.checkNotNullParameter(keyguardListenModel, "model");
+        return "    " + this.$dateFormat.format(new Date(keyguardListenModel.getTimeMillis())) + ' ' + keyguardListenModel;
     }
 }

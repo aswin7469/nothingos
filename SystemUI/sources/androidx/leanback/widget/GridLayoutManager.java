@@ -1,10 +1,8 @@
 package androidx.leanback.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,12 +10,13 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseIntArray;
-import android.view.FocusFinder;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import androidx.collection.CircularIntArray;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.leanback.widget.BaseGridView;
@@ -30,198 +29,304 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class GridLayoutManager extends RecyclerView.LayoutManager {
+
+final class GridLayoutManager extends RecyclerView.LayoutManager {
+    static final boolean DEBUG = false;
+    static final int DEFAULT_MAX_PENDING_MOVES = 10;
+    static final int MIN_MS_SMOOTH_SCROLL_MAIN_SCREEN = 30;
+    private static final int NEXT_ITEM = 1;
+    private static final int NEXT_ROW = 3;
+    static final int PF_FAST_RELAYOUT = 4;
+    static final int PF_FAST_RELAYOUT_UPDATED_SELECTED_POSITION = 8;
+    static final int PF_FOCUS_OUT_END = 4096;
+    static final int PF_FOCUS_OUT_FRONT = 2048;
+    static final int PF_FOCUS_OUT_MASKS = 6144;
+    static final int PF_FOCUS_OUT_SIDE_END = 16384;
+    static final int PF_FOCUS_OUT_SIDE_MASKS = 24576;
+    static final int PF_FOCUS_OUT_SIDE_START = 8192;
+    static final int PF_FOCUS_SEARCH_DISABLED = 32768;
+    static final int PF_FORCE_FULL_LAYOUT = 256;
+    static final int PF_IN_LAYOUT_SEARCH_FOCUS = 16;
+    static final int PF_IN_SELECTION = 32;
+    static final int PF_LAYOUT_EATEN_IN_SLIDING = 128;
+    static final int PF_LAYOUT_ENABLED = 512;
+    static final int PF_PRUNE_CHILD = 65536;
+    static final int PF_REVERSE_FLOW_MASK = 786432;
+    static final int PF_REVERSE_FLOW_PRIMARY = 262144;
+    static final int PF_REVERSE_FLOW_SECONDARY = 524288;
+    static final int PF_ROW_SECONDARY_SIZE_REFRESH = 1024;
+    static final int PF_SCROLL_ENABLED = 131072;
+    static final int PF_SLIDING = 64;
+    static final int PF_STAGE_LAYOUT = 1;
+    static final int PF_STAGE_MASK = 3;
+    static final int PF_STAGE_SCROLL = 2;
+    private static final int PREV_ITEM = 0;
+    private static final int PREV_ROW = 2;
+    private static final String TAG = "GridLayoutManager";
+    static final boolean TRACE = false;
     private static final Rect sTempRect = new Rect();
     static int[] sTwoInts = new int[2];
     final BaseGridView mBaseGridView;
+    OnChildLaidOutListener mChildLaidOutListener = null;
+    private OnChildSelectedListener mChildSelectedListener = null;
+    private ArrayList<OnChildViewHolderSelectedListener> mChildViewHolderSelectedListeners = null;
+    int mChildVisibility;
+    final ViewsStateBundle mChildrenStates = new ViewsStateBundle();
     GridLinearSmoothScroller mCurrentSmoothScroller;
     int[] mDisappearingPositions;
     private int mExtraLayoutSpace;
     int mExtraLayoutSpaceInPreLayout;
     private FacetProviderAdapter mFacetProviderAdapter;
     private int mFixedRowSizeSecondary;
+    int mFlag = 221696;
+    int mFocusPosition = -1;
+    private int mFocusPositionOffset = 0;
+    private int mFocusScrollStrategy = 0;
+    private int mGravity = 8388659;
     Grid mGrid;
+    private Grid.Provider mGridProvider = new Grid.Provider() {
+        public int getMinIndex() {
+            return GridLayoutManager.this.mPositionDeltaInPreLayout;
+        }
+
+        public int getCount() {
+            return GridLayoutManager.this.mState.getItemCount() + GridLayoutManager.this.mPositionDeltaInPreLayout;
+        }
+
+        /* JADX WARNING: type inference failed for: r6v0, types: [java.lang.Object[]] */
+        /* JADX WARNING: Unknown variable types count: 1 */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public int createItem(int r4, boolean r5, java.lang.Object[] r6, boolean r7) {
+            /*
+                r3 = this;
+                androidx.leanback.widget.GridLayoutManager r0 = androidx.leanback.widget.GridLayoutManager.this
+                int r1 = r0.mPositionDeltaInPreLayout
+                int r1 = r4 - r1
+                android.view.View r0 = r0.getViewForPosition(r1)
+                android.view.ViewGroup$LayoutParams r1 = r0.getLayoutParams()
+                androidx.leanback.widget.GridLayoutManager$LayoutParams r1 = (androidx.leanback.widget.GridLayoutManager.LayoutParams) r1
+                boolean r1 = r1.isItemRemoved()
+                r2 = 0
+                if (r1 != 0) goto L_0x00ca
+                if (r7 == 0) goto L_0x0027
+                if (r5 == 0) goto L_0x0021
+                androidx.leanback.widget.GridLayoutManager r5 = androidx.leanback.widget.GridLayoutManager.this
+                r5.addDisappearingView(r0)
+                goto L_0x0034
+            L_0x0021:
+                androidx.leanback.widget.GridLayoutManager r5 = androidx.leanback.widget.GridLayoutManager.this
+                r5.addDisappearingView(r0, r2)
+                goto L_0x0034
+            L_0x0027:
+                if (r5 == 0) goto L_0x002f
+                androidx.leanback.widget.GridLayoutManager r5 = androidx.leanback.widget.GridLayoutManager.this
+                r5.addView(r0)
+                goto L_0x0034
+            L_0x002f:
+                androidx.leanback.widget.GridLayoutManager r5 = androidx.leanback.widget.GridLayoutManager.this
+                r5.addView(r0, r2)
+            L_0x0034:
+                androidx.leanback.widget.GridLayoutManager r5 = androidx.leanback.widget.GridLayoutManager.this
+                int r5 = r5.mChildVisibility
+                r7 = -1
+                if (r5 == r7) goto L_0x0042
+                androidx.leanback.widget.GridLayoutManager r5 = androidx.leanback.widget.GridLayoutManager.this
+                int r5 = r5.mChildVisibility
+                r0.setVisibility(r5)
+            L_0x0042:
+                androidx.leanback.widget.GridLayoutManager r5 = androidx.leanback.widget.GridLayoutManager.this
+                androidx.leanback.widget.GridLayoutManager$PendingMoveSmoothScroller r5 = r5.mPendingMoveSmoothScroller
+                if (r5 == 0) goto L_0x004f
+                androidx.leanback.widget.GridLayoutManager r5 = androidx.leanback.widget.GridLayoutManager.this
+                androidx.leanback.widget.GridLayoutManager$PendingMoveSmoothScroller r5 = r5.mPendingMoveSmoothScroller
+                r5.consumePendingMovesBeforeLayout()
+            L_0x004f:
+                androidx.leanback.widget.GridLayoutManager r5 = androidx.leanback.widget.GridLayoutManager.this
+                android.view.View r7 = r0.findFocus()
+                int r5 = r5.getSubPositionByView(r0, r7)
+                androidx.leanback.widget.GridLayoutManager r7 = androidx.leanback.widget.GridLayoutManager.this
+                int r7 = r7.mFlag
+                r7 = r7 & 3
+                r1 = 1
+                if (r7 == r1) goto L_0x007a
+                androidx.leanback.widget.GridLayoutManager r7 = androidx.leanback.widget.GridLayoutManager.this
+                int r7 = r7.mFocusPosition
+                if (r4 != r7) goto L_0x00c5
+                androidx.leanback.widget.GridLayoutManager r4 = androidx.leanback.widget.GridLayoutManager.this
+                int r4 = r4.mSubFocusPosition
+                if (r5 != r4) goto L_0x00c5
+                androidx.leanback.widget.GridLayoutManager r4 = androidx.leanback.widget.GridLayoutManager.this
+                androidx.leanback.widget.GridLayoutManager$PendingMoveSmoothScroller r4 = r4.mPendingMoveSmoothScroller
+                if (r4 != 0) goto L_0x00c5
+                androidx.leanback.widget.GridLayoutManager r4 = androidx.leanback.widget.GridLayoutManager.this
+                r4.dispatchChildSelected()
+                goto L_0x00c5
+            L_0x007a:
+                androidx.leanback.widget.GridLayoutManager r7 = androidx.leanback.widget.GridLayoutManager.this
+                int r7 = r7.mFlag
+                r7 = r7 & 4
+                if (r7 != 0) goto L_0x00c5
+                androidx.leanback.widget.GridLayoutManager r7 = androidx.leanback.widget.GridLayoutManager.this
+                int r7 = r7.mFlag
+                r7 = r7 & 16
+                if (r7 != 0) goto L_0x009c
+                androidx.leanback.widget.GridLayoutManager r7 = androidx.leanback.widget.GridLayoutManager.this
+                int r7 = r7.mFocusPosition
+                if (r4 != r7) goto L_0x009c
+                androidx.leanback.widget.GridLayoutManager r7 = androidx.leanback.widget.GridLayoutManager.this
+                int r7 = r7.mSubFocusPosition
+                if (r5 != r7) goto L_0x009c
+                androidx.leanback.widget.GridLayoutManager r4 = androidx.leanback.widget.GridLayoutManager.this
+                r4.dispatchChildSelected()
+                goto L_0x00c5
+            L_0x009c:
+                androidx.leanback.widget.GridLayoutManager r7 = androidx.leanback.widget.GridLayoutManager.this
+                int r7 = r7.mFlag
+                r7 = r7 & 16
+                if (r7 == 0) goto L_0x00c5
+                androidx.leanback.widget.GridLayoutManager r7 = androidx.leanback.widget.GridLayoutManager.this
+                int r7 = r7.mFocusPosition
+                if (r4 < r7) goto L_0x00c5
+                boolean r7 = r0.hasFocusable()
+                if (r7 == 0) goto L_0x00c5
+                androidx.leanback.widget.GridLayoutManager r7 = androidx.leanback.widget.GridLayoutManager.this
+                r7.mFocusPosition = r4
+                androidx.leanback.widget.GridLayoutManager r4 = androidx.leanback.widget.GridLayoutManager.this
+                r4.mSubFocusPosition = r5
+                androidx.leanback.widget.GridLayoutManager r4 = androidx.leanback.widget.GridLayoutManager.this
+                int r5 = r4.mFlag
+                r5 = r5 & -17
+                r4.mFlag = r5
+                androidx.leanback.widget.GridLayoutManager r4 = androidx.leanback.widget.GridLayoutManager.this
+                r4.dispatchChildSelected()
+            L_0x00c5:
+                androidx.leanback.widget.GridLayoutManager r4 = androidx.leanback.widget.GridLayoutManager.this
+                r4.measureChild(r0)
+            L_0x00ca:
+                r6[r2] = r0
+                androidx.leanback.widget.GridLayoutManager r4 = androidx.leanback.widget.GridLayoutManager.this
+                int r4 = r4.mOrientation
+                if (r4 != 0) goto L_0x00d9
+                androidx.leanback.widget.GridLayoutManager r3 = androidx.leanback.widget.GridLayoutManager.this
+                int r3 = r3.getDecoratedMeasuredWidthWithMargin(r0)
+                goto L_0x00df
+            L_0x00d9:
+                androidx.leanback.widget.GridLayoutManager r3 = androidx.leanback.widget.GridLayoutManager.this
+                int r3 = r3.getDecoratedMeasuredHeightWithMargin(r0)
+            L_0x00df:
+                return r3
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.C10012.createItem(int, boolean, java.lang.Object[], boolean):int");
+        }
+
+        public void addItem(Object obj, int i, int i2, int i3, int i4) {
+            int i5;
+            int i6;
+            long j;
+            View view = (View) obj;
+            if (i4 == Integer.MIN_VALUE || i4 == Integer.MAX_VALUE) {
+                if (!GridLayoutManager.this.mGrid.isReversedFlow()) {
+                    i4 = GridLayoutManager.this.mWindowAlignment.mainAxis().getPaddingMin();
+                } else {
+                    i4 = GridLayoutManager.this.mWindowAlignment.mainAxis().getSize() - GridLayoutManager.this.mWindowAlignment.mainAxis().getPaddingMax();
+                }
+            }
+            if (!GridLayoutManager.this.mGrid.isReversedFlow()) {
+                i5 = i2 + i4;
+                i6 = i4;
+            } else {
+                i6 = i4 - i2;
+                i5 = i4;
+            }
+            int rowStartSecondary = (GridLayoutManager.this.getRowStartSecondary(i3) + GridLayoutManager.this.mWindowAlignment.secondAxis().getPaddingMin()) - GridLayoutManager.this.mScrollOffsetSecondary;
+            GridLayoutManager.this.mChildrenStates.loadView(view, i);
+            GridLayoutManager.this.layoutChild(i3, view, i6, i5, rowStartSecondary);
+            if (!GridLayoutManager.this.mState.isPreLayout()) {
+                GridLayoutManager.this.updateScrollLimits();
+            }
+            if (!((GridLayoutManager.this.mFlag & 3) == 1 || GridLayoutManager.this.mPendingMoveSmoothScroller == null)) {
+                GridLayoutManager.this.mPendingMoveSmoothScroller.consumePendingMovesAfterLayout();
+            }
+            if (GridLayoutManager.this.mChildLaidOutListener != null) {
+                RecyclerView.ViewHolder childViewHolder = GridLayoutManager.this.mBaseGridView.getChildViewHolder(view);
+                OnChildLaidOutListener onChildLaidOutListener = GridLayoutManager.this.mChildLaidOutListener;
+                BaseGridView baseGridView = GridLayoutManager.this.mBaseGridView;
+                if (childViewHolder == null) {
+                    j = -1;
+                } else {
+                    j = childViewHolder.getItemId();
+                }
+                onChildLaidOutListener.onChildLaidOut(baseGridView, view, i, j);
+            }
+        }
+
+        public void removeItem(int i) {
+            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
+            View findViewByPosition = gridLayoutManager.findViewByPosition(i - gridLayoutManager.mPositionDeltaInPreLayout);
+            if ((GridLayoutManager.this.mFlag & 3) == 1) {
+                GridLayoutManager gridLayoutManager2 = GridLayoutManager.this;
+                gridLayoutManager2.detachAndScrapView(findViewByPosition, gridLayoutManager2.mRecycler);
+                return;
+            }
+            GridLayoutManager gridLayoutManager3 = GridLayoutManager.this;
+            gridLayoutManager3.removeAndRecycleView(findViewByPosition, gridLayoutManager3.mRecycler);
+        }
+
+        public int getEdge(int i) {
+            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
+            View findViewByPosition = gridLayoutManager.findViewByPosition(i - gridLayoutManager.mPositionDeltaInPreLayout);
+            int i2 = GridLayoutManager.this.mFlag & 262144;
+            GridLayoutManager gridLayoutManager2 = GridLayoutManager.this;
+            return i2 != 0 ? gridLayoutManager2.getViewMax(findViewByPosition) : gridLayoutManager2.getViewMin(findViewByPosition);
+        }
+
+        public int getSize(int i) {
+            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
+            return gridLayoutManager.getViewPrimarySize(gridLayoutManager.findViewByPosition(i - gridLayoutManager.mPositionDeltaInPreLayout));
+        }
+    };
     private int mHorizontalSpacing;
+    private final ItemAlignment mItemAlignment = new ItemAlignment();
+    int mMaxPendingMoves = 10;
     private int mMaxSizeSecondary;
+    private int[] mMeasuredDimension = new int[2];
     int mNumRows;
+    private int mNumRowsRequested = 1;
+    ArrayList<BaseGridView.OnLayoutCompletedListener> mOnLayoutCompletedListeners = null;
+    int mOrientation = 0;
+    private OrientationHelper mOrientationHelper = OrientationHelper.createHorizontalHelper(this);
     PendingMoveSmoothScroller mPendingMoveSmoothScroller;
     int mPositionDeltaInPreLayout;
+    final SparseIntArray mPositionToRowInPostLayout = new SparseIntArray();
     private int mPrimaryScrollExtra;
     RecyclerView.Recycler mRecycler;
+    private final Runnable mRequestLayoutRunnable = new Runnable() {
+        public void run() {
+            GridLayoutManager.this.requestLayout();
+        }
+    };
     private int[] mRowSizeSecondary;
     private int mRowSizeSecondaryRequested;
     private int mSaveContextLevel;
     int mScrollOffsetSecondary;
     private int mSizePrimary;
+    float mSmoothScrollSpeedFactor = 1.0f;
     private int mSpacingPrimary;
     private int mSpacingSecondary;
     RecyclerView.State mState;
-    private int mVerticalSpacing;
-    float mSmoothScrollSpeedFactor = 1.0f;
-    int mMaxPendingMoves = 10;
-    int mOrientation = 0;
-    private OrientationHelper mOrientationHelper = OrientationHelper.createHorizontalHelper(this);
-    final SparseIntArray mPositionToRowInPostLayout = new SparseIntArray();
-    int mFlag = 221696;
-    private OnChildSelectedListener mChildSelectedListener = null;
-    private ArrayList<OnChildViewHolderSelectedListener> mChildViewHolderSelectedListeners = null;
-    ArrayList<BaseGridView.OnLayoutCompletedListener> mOnLayoutCompletedListeners = null;
-    OnChildLaidOutListener mChildLaidOutListener = null;
-    int mFocusPosition = -1;
     int mSubFocusPosition = 0;
-    private int mFocusPositionOffset = 0;
-    private int mGravity = 8388659;
-    private int mNumRowsRequested = 1;
-    private int mFocusScrollStrategy = 0;
+    private int mVerticalSpacing;
     final WindowAlignment mWindowAlignment = new WindowAlignment();
-    private final ItemAlignment mItemAlignment = new ItemAlignment();
-    private int[] mMeasuredDimension = new int[2];
-    final ViewsStateBundle mChildrenStates = new ViewsStateBundle();
-    private final Runnable mRequestLayoutRunnable = new Runnable() { // from class: androidx.leanback.widget.GridLayoutManager.1
-        @Override // java.lang.Runnable
-        public void run() {
-            GridLayoutManager.this.requestLayout();
-        }
-    };
-    private Grid.Provider mGridProvider = new Grid.Provider() { // from class: androidx.leanback.widget.GridLayoutManager.2
-        @Override // androidx.leanback.widget.Grid.Provider
-        public int getMinIndex() {
-            return GridLayoutManager.this.mPositionDeltaInPreLayout;
-        }
 
-        @Override // androidx.leanback.widget.Grid.Provider
-        public int getCount() {
-            return GridLayoutManager.this.mState.getItemCount() + GridLayoutManager.this.mPositionDeltaInPreLayout;
-        }
-
-        @Override // androidx.leanback.widget.Grid.Provider
-        public int createItem(int index, boolean append, Object[] item, boolean disappearingItem) {
-            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
-            View viewForPosition = gridLayoutManager.getViewForPosition(index - gridLayoutManager.mPositionDeltaInPreLayout);
-            if (!((LayoutParams) viewForPosition.getLayoutParams()).isItemRemoved()) {
-                if (disappearingItem) {
-                    if (append) {
-                        GridLayoutManager.this.addDisappearingView(viewForPosition);
-                    } else {
-                        GridLayoutManager.this.addDisappearingView(viewForPosition, 0);
-                    }
-                } else if (append) {
-                    GridLayoutManager.this.addView(viewForPosition);
-                } else {
-                    GridLayoutManager.this.addView(viewForPosition, 0);
-                }
-                int i = GridLayoutManager.this.mChildVisibility;
-                if (i != -1) {
-                    viewForPosition.setVisibility(i);
-                }
-                PendingMoveSmoothScroller pendingMoveSmoothScroller = GridLayoutManager.this.mPendingMoveSmoothScroller;
-                if (pendingMoveSmoothScroller != null) {
-                    pendingMoveSmoothScroller.consumePendingMovesBeforeLayout();
-                }
-                int subPositionByView = GridLayoutManager.this.getSubPositionByView(viewForPosition, viewForPosition.findFocus());
-                GridLayoutManager gridLayoutManager2 = GridLayoutManager.this;
-                int i2 = gridLayoutManager2.mFlag;
-                if ((i2 & 3) != 1) {
-                    if (index == gridLayoutManager2.mFocusPosition && subPositionByView == gridLayoutManager2.mSubFocusPosition && gridLayoutManager2.mPendingMoveSmoothScroller == null) {
-                        gridLayoutManager2.dispatchChildSelected();
-                    }
-                } else if ((i2 & 4) == 0) {
-                    if ((i2 & 16) == 0 && index == gridLayoutManager2.mFocusPosition && subPositionByView == gridLayoutManager2.mSubFocusPosition) {
-                        gridLayoutManager2.dispatchChildSelected();
-                    } else if ((i2 & 16) != 0 && index >= gridLayoutManager2.mFocusPosition && viewForPosition.hasFocusable()) {
-                        GridLayoutManager gridLayoutManager3 = GridLayoutManager.this;
-                        gridLayoutManager3.mFocusPosition = index;
-                        gridLayoutManager3.mSubFocusPosition = subPositionByView;
-                        gridLayoutManager3.mFlag &= -17;
-                        gridLayoutManager3.dispatchChildSelected();
-                    }
-                }
-                GridLayoutManager.this.measureChild(viewForPosition);
-            }
-            item[0] = viewForPosition;
-            GridLayoutManager gridLayoutManager4 = GridLayoutManager.this;
-            return gridLayoutManager4.mOrientation == 0 ? gridLayoutManager4.getDecoratedMeasuredWidthWithMargin(viewForPosition) : gridLayoutManager4.getDecoratedMeasuredHeightWithMargin(viewForPosition);
-        }
-
-        @Override // androidx.leanback.widget.Grid.Provider
-        public void addItem(Object item, int index, int length, int rowIndex, int edge) {
-            int i;
-            int i2;
-            PendingMoveSmoothScroller pendingMoveSmoothScroller;
-            View view = (View) item;
-            if (edge == Integer.MIN_VALUE || edge == Integer.MAX_VALUE) {
-                edge = !GridLayoutManager.this.mGrid.isReversedFlow() ? GridLayoutManager.this.mWindowAlignment.mainAxis().getPaddingMin() : GridLayoutManager.this.mWindowAlignment.mainAxis().getSize() - GridLayoutManager.this.mWindowAlignment.mainAxis().getPaddingMax();
-            }
-            if (!GridLayoutManager.this.mGrid.isReversedFlow()) {
-                i2 = length + edge;
-                i = edge;
-            } else {
-                i = edge - length;
-                i2 = edge;
-            }
-            int rowStartSecondary = GridLayoutManager.this.getRowStartSecondary(rowIndex) + GridLayoutManager.this.mWindowAlignment.secondAxis().getPaddingMin();
-            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
-            int i3 = rowStartSecondary - gridLayoutManager.mScrollOffsetSecondary;
-            gridLayoutManager.mChildrenStates.loadView(view, index);
-            GridLayoutManager.this.layoutChild(rowIndex, view, i, i2, i3);
-            if (!GridLayoutManager.this.mState.isPreLayout()) {
-                GridLayoutManager.this.updateScrollLimits();
-            }
-            GridLayoutManager gridLayoutManager2 = GridLayoutManager.this;
-            if ((gridLayoutManager2.mFlag & 3) != 1 && (pendingMoveSmoothScroller = gridLayoutManager2.mPendingMoveSmoothScroller) != null) {
-                pendingMoveSmoothScroller.consumePendingMovesAfterLayout();
-            }
-            GridLayoutManager gridLayoutManager3 = GridLayoutManager.this;
-            if (gridLayoutManager3.mChildLaidOutListener != null) {
-                RecyclerView.ViewHolder childViewHolder = gridLayoutManager3.mBaseGridView.getChildViewHolder(view);
-                GridLayoutManager gridLayoutManager4 = GridLayoutManager.this;
-                gridLayoutManager4.mChildLaidOutListener.onChildLaidOut(gridLayoutManager4.mBaseGridView, view, index, childViewHolder == null ? -1L : childViewHolder.getItemId());
-            }
-        }
-
-        @Override // androidx.leanback.widget.Grid.Provider
-        public void removeItem(int index) {
-            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
-            View findViewByPosition = gridLayoutManager.findViewByPosition(index - gridLayoutManager.mPositionDeltaInPreLayout);
-            GridLayoutManager gridLayoutManager2 = GridLayoutManager.this;
-            if ((gridLayoutManager2.mFlag & 3) == 1) {
-                gridLayoutManager2.detachAndScrapView(findViewByPosition, gridLayoutManager2.mRecycler);
-            } else {
-                gridLayoutManager2.removeAndRecycleView(findViewByPosition, gridLayoutManager2.mRecycler);
-            }
-        }
-
-        @Override // androidx.leanback.widget.Grid.Provider
-        public int getEdge(int index) {
-            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
-            View findViewByPosition = gridLayoutManager.findViewByPosition(index - gridLayoutManager.mPositionDeltaInPreLayout);
-            GridLayoutManager gridLayoutManager2 = GridLayoutManager.this;
-            return (gridLayoutManager2.mFlag & 262144) != 0 ? gridLayoutManager2.getViewMax(findViewByPosition) : gridLayoutManager2.getViewMin(findViewByPosition);
-        }
-
-        @Override // androidx.leanback.widget.Grid.Provider
-        public int getSize(int index) {
-            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
-            return gridLayoutManager.getViewPrimarySize(gridLayoutManager.findViewByPosition(index - gridLayoutManager.mPositionDeltaInPreLayout));
-        }
-    };
-    int mChildVisibility = -1;
-
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public boolean requestChildRectangleOnScreen(RecyclerView parent, View view, Rect rect, boolean immediate) {
+    public boolean requestChildRectangleOnScreen(RecyclerView recyclerView, View view, Rect rect, boolean z) {
         return false;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public boolean supportsPredictiveItemAnimations() {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static final class LayoutParams extends RecyclerView.LayoutParams {
+    static final class LayoutParams extends RecyclerView.LayoutParams {
         private int[] mAlignMultiple;
         private int mAlignX;
         private int mAlignY;
@@ -231,298 +336,275 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         int mRightInset;
         int mTopInset;
 
-        public LayoutParams(Context c, AttributeSet attrs) {
-            super(c, attrs);
+        public LayoutParams(Context context, AttributeSet attributeSet) {
+            super(context, attributeSet);
         }
 
-        public LayoutParams(int width, int height) {
-            super(width, height);
+        public LayoutParams(int i, int i2) {
+            super(i, i2);
         }
 
-        public LayoutParams(ViewGroup.MarginLayoutParams source) {
-            super(source);
+        public LayoutParams(ViewGroup.MarginLayoutParams marginLayoutParams) {
+            super(marginLayoutParams);
         }
 
-        public LayoutParams(ViewGroup.LayoutParams source) {
-            super(source);
+        public LayoutParams(ViewGroup.LayoutParams layoutParams) {
+            super(layoutParams);
         }
 
-        public LayoutParams(RecyclerView.LayoutParams source) {
-            super(source);
+        public LayoutParams(RecyclerView.LayoutParams layoutParams) {
+            super(layoutParams);
         }
 
-        public LayoutParams(LayoutParams source) {
-            super((RecyclerView.LayoutParams) source);
+        public LayoutParams(LayoutParams layoutParams) {
+            super((RecyclerView.LayoutParams) layoutParams);
         }
 
-        int getAlignX() {
+        /* access modifiers changed from: package-private */
+        public int getAlignX() {
             return this.mAlignX;
         }
 
-        int getAlignY() {
+        /* access modifiers changed from: package-private */
+        public int getAlignY() {
             return this.mAlignY;
         }
 
-        int getOpticalLeft(View view) {
+        /* access modifiers changed from: package-private */
+        public int getOpticalLeft(View view) {
             return view.getLeft() + this.mLeftInset;
         }
 
-        int getOpticalTop(View view) {
+        /* access modifiers changed from: package-private */
+        public int getOpticalTop(View view) {
             return view.getTop() + this.mTopInset;
         }
 
-        int getOpticalRight(View view) {
+        /* access modifiers changed from: package-private */
+        public int getOpticalRight(View view) {
             return view.getRight() - this.mRightInset;
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
+        public int getOpticalBottom(View view) {
+            return view.getBottom() - this.mBottomInset;
+        }
+
+        /* access modifiers changed from: package-private */
         public int getOpticalWidth(View view) {
             return (view.getWidth() - this.mLeftInset) - this.mRightInset;
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
         public int getOpticalHeight(View view) {
             return (view.getHeight() - this.mTopInset) - this.mBottomInset;
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
         public int getOpticalLeftInset() {
             return this.mLeftInset;
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
         public int getOpticalRightInset() {
             return this.mRightInset;
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
+        /* access modifiers changed from: package-private */
         public int getOpticalTopInset() {
             return this.mTopInset;
         }
 
-        void setAlignX(int alignX) {
-            this.mAlignX = alignX;
+        /* access modifiers changed from: package-private */
+        public int getOpticalBottomInset() {
+            return this.mBottomInset;
         }
 
-        void setAlignY(int alignY) {
-            this.mAlignY = alignY;
+        /* access modifiers changed from: package-private */
+        public void setAlignX(int i) {
+            this.mAlignX = i;
         }
 
-        void setItemAlignmentFacet(ItemAlignmentFacet facet) {
-            this.mAlignmentFacet = facet;
+        /* access modifiers changed from: package-private */
+        public void setAlignY(int i) {
+            this.mAlignY = i;
         }
 
-        ItemAlignmentFacet getItemAlignmentFacet() {
+        /* access modifiers changed from: package-private */
+        public void setItemAlignmentFacet(ItemAlignmentFacet itemAlignmentFacet) {
+            this.mAlignmentFacet = itemAlignmentFacet;
+        }
+
+        /* access modifiers changed from: package-private */
+        public ItemAlignmentFacet getItemAlignmentFacet() {
             return this.mAlignmentFacet;
         }
 
-        void calculateItemAlignments(int orientation, View view) {
+        /* access modifiers changed from: package-private */
+        public void calculateItemAlignments(int i, View view) {
             ItemAlignmentFacet.ItemAlignmentDef[] alignmentDefs = this.mAlignmentFacet.getAlignmentDefs();
             int[] iArr = this.mAlignMultiple;
             if (iArr == null || iArr.length != alignmentDefs.length) {
                 this.mAlignMultiple = new int[alignmentDefs.length];
             }
-            for (int i = 0; i < alignmentDefs.length; i++) {
-                this.mAlignMultiple[i] = ItemAlignmentFacetHelper.getAlignmentPosition(view, alignmentDefs[i], orientation);
+            for (int i2 = 0; i2 < alignmentDefs.length; i2++) {
+                this.mAlignMultiple[i2] = ItemAlignmentFacetHelper.getAlignmentPosition(view, alignmentDefs[i2], i);
             }
-            if (orientation == 0) {
+            if (i == 0) {
                 this.mAlignX = this.mAlignMultiple[0];
             } else {
                 this.mAlignY = this.mAlignMultiple[0];
             }
         }
 
-        int[] getAlignMultiple() {
+        /* access modifiers changed from: package-private */
+        public int[] getAlignMultiple() {
             return this.mAlignMultiple;
         }
 
-        void setOpticalInsets(int leftInset, int topInset, int rightInset, int bottomInset) {
-            this.mLeftInset = leftInset;
-            this.mTopInset = topInset;
-            this.mRightInset = rightInset;
-            this.mBottomInset = bottomInset;
+        /* access modifiers changed from: package-private */
+        public void setOpticalInsets(int i, int i2, int i3, int i4) {
+            this.mLeftInset = i;
+            this.mTopInset = i2;
+            this.mRightInset = i3;
+            this.mBottomInset = i4;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public abstract class GridLinearSmoothScroller extends LinearSmoothScroller {
+    abstract class GridLinearSmoothScroller extends LinearSmoothScroller {
         boolean mSkipOnStopInternal;
 
         GridLinearSmoothScroller() {
             super(GridLayoutManager.this.mBaseGridView.getContext());
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.recyclerview.widget.LinearSmoothScroller, androidx.recyclerview.widget.RecyclerView.SmoothScroller
+        /* access modifiers changed from: protected */
         public void onStop() {
             super.onStop();
             if (!this.mSkipOnStopInternal) {
                 onStopInternal();
             }
-            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
-            if (gridLayoutManager.mCurrentSmoothScroller == this) {
-                gridLayoutManager.mCurrentSmoothScroller = null;
+            if (GridLayoutManager.this.mCurrentSmoothScroller == this) {
+                GridLayoutManager.this.mCurrentSmoothScroller = null;
             }
-            if (gridLayoutManager.mPendingMoveSmoothScroller == this) {
-                gridLayoutManager.mPendingMoveSmoothScroller = null;
+            if (GridLayoutManager.this.mPendingMoveSmoothScroller == this) {
+                GridLayoutManager.this.mPendingMoveSmoothScroller = null;
             }
         }
 
-        protected void onStopInternal() {
+        /* access modifiers changed from: protected */
+        public void onStopInternal() {
             View findViewByPosition = findViewByPosition(getTargetPosition());
-            if (findViewByPosition == null) {
-                if (getTargetPosition() < 0) {
-                    return;
+            if (findViewByPosition != null) {
+                if (GridLayoutManager.this.mFocusPosition != getTargetPosition()) {
+                    GridLayoutManager.this.mFocusPosition = getTargetPosition();
                 }
+                if (GridLayoutManager.this.hasFocus()) {
+                    GridLayoutManager.this.mFlag |= 32;
+                    findViewByPosition.requestFocus();
+                    GridLayoutManager.this.mFlag &= -33;
+                }
+                GridLayoutManager.this.dispatchChildSelected();
+                GridLayoutManager.this.dispatchChildSelectedAndPositioned();
+            } else if (getTargetPosition() >= 0) {
                 GridLayoutManager.this.scrollToSelection(getTargetPosition(), 0, false, 0);
-                return;
             }
-            if (GridLayoutManager.this.mFocusPosition != getTargetPosition()) {
-                GridLayoutManager.this.mFocusPosition = getTargetPosition();
-            }
-            if (GridLayoutManager.this.hasFocus()) {
-                GridLayoutManager.this.mFlag |= 32;
-                findViewByPosition.requestFocus();
-                GridLayoutManager.this.mFlag &= -33;
-            }
-            GridLayoutManager.this.dispatchChildSelected();
-            GridLayoutManager.this.dispatchChildSelectedAndPositioned();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.recyclerview.widget.LinearSmoothScroller
+        /* access modifiers changed from: protected */
         public float calculateSpeedPerPixel(DisplayMetrics displayMetrics) {
             return super.calculateSpeedPerPixel(displayMetrics) * GridLayoutManager.this.mSmoothScrollSpeedFactor;
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.recyclerview.widget.LinearSmoothScroller
-        public int calculateTimeForScrolling(int dx) {
-            int calculateTimeForScrolling = super.calculateTimeForScrolling(dx);
-            if (GridLayoutManager.this.mWindowAlignment.mainAxis().getSize() > 0) {
-                float size = (30.0f / GridLayoutManager.this.mWindowAlignment.mainAxis().getSize()) * dx;
-                return ((float) calculateTimeForScrolling) < size ? (int) size : calculateTimeForScrolling;
+        /* access modifiers changed from: protected */
+        public int calculateTimeForScrolling(int i) {
+            int calculateTimeForScrolling = super.calculateTimeForScrolling(i);
+            if (GridLayoutManager.this.mWindowAlignment.mainAxis().getSize() <= 0) {
+                return calculateTimeForScrolling;
             }
-            return calculateTimeForScrolling;
+            float size = (30.0f / ((float) GridLayoutManager.this.mWindowAlignment.mainAxis().getSize())) * ((float) i);
+            return ((float) calculateTimeForScrolling) < size ? (int) size : calculateTimeForScrolling;
         }
 
-        @Override // androidx.recyclerview.widget.LinearSmoothScroller, androidx.recyclerview.widget.RecyclerView.SmoothScroller
-        protected void onTargetFound(View targetView, RecyclerView.State state, RecyclerView.SmoothScroller.Action action) {
+        /* access modifiers changed from: protected */
+        public void onTargetFound(View view, RecyclerView.State state, RecyclerView.SmoothScroller.Action action) {
             int i;
             int i2;
-            if (GridLayoutManager.this.getScrollPosition(targetView, null, GridLayoutManager.sTwoInts)) {
+            if (GridLayoutManager.this.getScrollPosition(view, (View) null, GridLayoutManager.sTwoInts)) {
                 if (GridLayoutManager.this.mOrientation == 0) {
-                    int[] iArr = GridLayoutManager.sTwoInts;
-                    i2 = iArr[0];
-                    i = iArr[1];
+                    i2 = GridLayoutManager.sTwoInts[0];
+                    i = GridLayoutManager.sTwoInts[1];
                 } else {
-                    int[] iArr2 = GridLayoutManager.sTwoInts;
-                    int i3 = iArr2[1];
-                    i = iArr2[0];
-                    i2 = i3;
+                    i2 = GridLayoutManager.sTwoInts[1];
+                    i = GridLayoutManager.sTwoInts[0];
                 }
-                action.update(i2, i, calculateTimeForDeceleration((int) Math.sqrt((i2 * i2) + (i * i))), this.mDecelerateInterpolator);
+                action.update(i2, i, calculateTimeForDeceleration((int) Math.sqrt((double) ((i2 * i2) + (i * i)))), this.mDecelerateInterpolator);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public final class PendingMoveSmoothScroller extends GridLinearSmoothScroller {
+    final class PendingMoveSmoothScroller extends GridLinearSmoothScroller {
+        static final int TARGET_UNDEFINED = -2;
         private int mPendingMoves;
         private final boolean mStaggeredGrid;
 
-        PendingMoveSmoothScroller(int initialPendingMoves, boolean staggeredGrid) {
+        PendingMoveSmoothScroller(int i, boolean z) {
             super();
-            this.mPendingMoves = initialPendingMoves;
-            this.mStaggeredGrid = staggeredGrid;
+            this.mPendingMoves = i;
+            this.mStaggeredGrid = z;
             setTargetPosition(-2);
         }
 
-        void increasePendingMoves() {
-            int i = this.mPendingMoves;
-            if (i < GridLayoutManager.this.mMaxPendingMoves) {
-                this.mPendingMoves = i + 1;
+        /* access modifiers changed from: package-private */
+        public void increasePendingMoves() {
+            if (this.mPendingMoves < GridLayoutManager.this.mMaxPendingMoves) {
+                this.mPendingMoves++;
             }
         }
 
-        void decreasePendingMoves() {
-            int i = this.mPendingMoves;
-            if (i > (-GridLayoutManager.this.mMaxPendingMoves)) {
-                this.mPendingMoves = i - 1;
+        /* access modifiers changed from: package-private */
+        public void decreasePendingMoves() {
+            if (this.mPendingMoves > (-GridLayoutManager.this.mMaxPendingMoves)) {
+                this.mPendingMoves--;
             }
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:11:0x001f  */
-        /* JADX WARN: Removed duplicated region for block: B:26:0x0054  */
-        /* JADX WARN: Removed duplicated region for block: B:32:? A[ADDED_TO_REGION, RETURN, SYNTHETIC] */
-        /* JADX WARN: Unsupported multi-entry loop pattern (BACK_EDGE: B:22:0x0048 -> B:8:0x0012). Please submit an issue!!! */
-        /* JADX WARN: Unsupported multi-entry loop pattern (BACK_EDGE: B:24:0x001a -> B:9:0x001b). Please submit an issue!!! */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        void consumePendingMovesBeforeLayout() {
+        /* access modifiers changed from: package-private */
+        public void consumePendingMovesBeforeLayout() {
             int i;
             int i2;
-            int i3;
             View findViewByPosition;
-            if (this.mStaggeredGrid || (i = this.mPendingMoves) == 0) {
-                return;
-            }
-            View view = null;
-            if (i > 0) {
-                GridLayoutManager gridLayoutManager = GridLayoutManager.this;
-                i2 = gridLayoutManager.mFocusPosition;
-                int i4 = gridLayoutManager.mNumRows;
-                i2 += i4;
-                if (this.mPendingMoves == 0 && (findViewByPosition = findViewByPosition(i2)) != null) {
+            if (!this.mStaggeredGrid && (i = this.mPendingMoves) != 0) {
+                if (i > 0) {
+                    i2 = GridLayoutManager.this.mFocusPosition + GridLayoutManager.this.mNumRows;
+                } else {
+                    i2 = GridLayoutManager.this.mFocusPosition - GridLayoutManager.this.mNumRows;
+                }
+                View view = null;
+                while (this.mPendingMoves != 0 && (findViewByPosition = findViewByPosition(i2)) != null) {
                     if (GridLayoutManager.this.canScrollTo(findViewByPosition)) {
-                        GridLayoutManager gridLayoutManager2 = GridLayoutManager.this;
-                        gridLayoutManager2.mFocusPosition = i2;
-                        gridLayoutManager2.mSubFocusPosition = 0;
-                        int i5 = this.mPendingMoves;
-                        if (i5 > 0) {
-                            this.mPendingMoves = i5 - 1;
+                        GridLayoutManager.this.mFocusPosition = i2;
+                        GridLayoutManager.this.mSubFocusPosition = 0;
+                        int i3 = this.mPendingMoves;
+                        if (i3 > 0) {
+                            this.mPendingMoves = i3 - 1;
                         } else {
-                            this.mPendingMoves = i5 + 1;
+                            this.mPendingMoves = i3 + 1;
                         }
                         view = findViewByPosition;
                     }
-                    if (this.mPendingMoves > 0) {
-                        i4 = GridLayoutManager.this.mNumRows;
-                        i2 += i4;
-                        if (this.mPendingMoves == 0) {
-                        }
-                        if (view == null) {
-                            return;
-                        }
-                    }
-                    i3 = GridLayoutManager.this.mNumRows;
-                    i2 -= i3;
-                    if (this.mPendingMoves == 0) {
-                    }
-                    if (view == null) {
-                    }
-                } else if (view == null || !GridLayoutManager.this.hasFocus()) {
-                } else {
+                    i2 = this.mPendingMoves > 0 ? i2 + GridLayoutManager.this.mNumRows : i2 - GridLayoutManager.this.mNumRows;
+                }
+                if (view != null && GridLayoutManager.this.hasFocus()) {
                     GridLayoutManager.this.mFlag |= 32;
                     view.requestFocus();
                     GridLayoutManager.this.mFlag &= -33;
                 }
-            } else {
-                GridLayoutManager gridLayoutManager3 = GridLayoutManager.this;
-                i2 = gridLayoutManager3.mFocusPosition;
-                i3 = gridLayoutManager3.mNumRows;
-                i2 -= i3;
-                if (this.mPendingMoves == 0) {
-                }
-                if (view == null) {
-                }
             }
         }
 
-        void consumePendingMovesAfterLayout() {
+        /* access modifiers changed from: package-private */
+        public void consumePendingMovesAfterLayout() {
             int i;
             if (this.mStaggeredGrid && (i = this.mPendingMoves) != 0) {
                 this.mPendingMoves = GridLayoutManager.this.processSelectionMoves(true, i);
@@ -534,22 +616,19 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
             }
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.SmoothScroller
-        public PointF computeScrollVectorForPosition(int targetPosition) {
-            int i = this.mPendingMoves;
-            if (i == 0) {
+        public PointF computeScrollVectorForPosition(int i) {
+            if (this.mPendingMoves == 0) {
                 return null;
             }
-            GridLayoutManager gridLayoutManager = GridLayoutManager.this;
-            int i2 = ((gridLayoutManager.mFlag & 262144) == 0 ? i >= 0 : i <= 0) ? 1 : -1;
-            if (gridLayoutManager.mOrientation == 0) {
-                return new PointF(i2, 0.0f);
+            int i2 = ((GridLayoutManager.this.mFlag & 262144) == 0 ? this.mPendingMoves >= 0 : this.mPendingMoves <= 0) ? 1 : -1;
+            if (GridLayoutManager.this.mOrientation == 0) {
+                return new PointF((float) i2, 0.0f);
             }
-            return new PointF(0.0f, i2);
+            return new PointF(0.0f, (float) i2);
         }
 
-        @Override // androidx.leanback.widget.GridLayoutManager.GridLinearSmoothScroller
-        protected void onStopInternal() {
+        /* access modifiers changed from: protected */
+        public void onStopInternal() {
             super.onStopInternal();
             this.mPendingMoves = 0;
             View findViewByPosition = findViewByPosition(getTargetPosition());
@@ -559,124 +638,221 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         }
     }
 
-    String getTag() {
+    /* access modifiers changed from: package-private */
+    public String getTag() {
         return "GridLayoutManager:" + this.mBaseGridView.getId();
     }
 
     public GridLayoutManager(BaseGridView baseGridView) {
         this.mBaseGridView = baseGridView;
+        this.mChildVisibility = -1;
         setItemPrefetchEnabled(false);
     }
 
-    public void setOrientation(int orientation) {
-        if (orientation == 0 || orientation == 1) {
-            this.mOrientation = orientation;
-            this.mOrientationHelper = OrientationHelper.createOrientationHelper(this, orientation);
-            this.mWindowAlignment.setOrientation(orientation);
-            this.mItemAlignment.setOrientation(orientation);
+    public void setOrientation(int i) {
+        if (i == 0 || i == 1) {
+            this.mOrientation = i;
+            this.mOrientationHelper = OrientationHelper.createOrientationHelper(this, i);
+            this.mWindowAlignment.setOrientation(i);
+            this.mItemAlignment.setOrientation(i);
             this.mFlag |= 256;
         }
     }
 
-    public void onRtlPropertiesChanged(int layoutDirection) {
-        int i;
-        boolean z = false;
-        if (this.mOrientation == 0) {
-            if (layoutDirection == 1) {
-                i = 262144;
-            }
-            i = 0;
-        } else {
-            if (layoutDirection == 1) {
-                i = 524288;
-            }
-            i = 0;
-        }
-        int i2 = this.mFlag;
-        if ((786432 & i2) == i) {
-            return;
-        }
-        int i3 = i | (i2 & (-786433));
-        this.mFlag = i3;
-        this.mFlag = i3 | 256;
-        WindowAlignment.Axis axis = this.mWindowAlignment.horizontal;
-        if (layoutDirection == 1) {
-            z = true;
-        }
-        axis.setReversedFlow(z);
+    /* JADX WARNING: Removed duplicated region for block: B:10:0x0019  */
+    /* JADX WARNING: Removed duplicated region for block: B:9:0x0018 A[RETURN] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onRtlPropertiesChanged(int r6) {
+        /*
+            r5 = this;
+            int r0 = r5.mOrientation
+            r1 = 0
+            r2 = 1
+            if (r0 != 0) goto L_0x000d
+            if (r6 != r2) goto L_0x000b
+            r0 = 262144(0x40000, float:3.67342E-40)
+            goto L_0x0011
+        L_0x000b:
+            r0 = r1
+            goto L_0x0011
+        L_0x000d:
+            if (r6 != r2) goto L_0x000b
+            r0 = 524288(0x80000, float:7.34684E-40)
+        L_0x0011:
+            int r3 = r5.mFlag
+            r4 = 786432(0xc0000, float:1.102026E-39)
+            r4 = r4 & r3
+            if (r4 != r0) goto L_0x0019
+            return
+        L_0x0019:
+            r4 = -786433(0xfffffffffff3ffff, float:NaN)
+            r3 = r3 & r4
+            r0 = r0 | r3
+            r0 = r0 | 256(0x100, float:3.59E-43)
+            r5.mFlag = r0
+            androidx.leanback.widget.WindowAlignment r5 = r5.mWindowAlignment
+            androidx.leanback.widget.WindowAlignment$Axis r5 = r5.horizontal
+            if (r6 != r2) goto L_0x0029
+            r1 = r2
+        L_0x0029:
+            r5.setReversedFlow(r1)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.onRtlPropertiesChanged(int):void");
     }
 
-    public void setWindowAlignment(int windowAlignment) {
-        this.mWindowAlignment.mainAxis().setWindowAlignment(windowAlignment);
+    public int getFocusScrollStrategy() {
+        return this.mFocusScrollStrategy;
     }
 
-    public void setFocusOutAllowed(boolean throughFront, boolean throughEnd) {
+    public void setFocusScrollStrategy(int i) {
+        this.mFocusScrollStrategy = i;
+    }
+
+    public void setWindowAlignment(int i) {
+        this.mWindowAlignment.mainAxis().setWindowAlignment(i);
+    }
+
+    public int getWindowAlignment() {
+        return this.mWindowAlignment.mainAxis().getWindowAlignment();
+    }
+
+    public void setWindowAlignmentOffset(int i) {
+        this.mWindowAlignment.mainAxis().setWindowAlignmentOffset(i);
+    }
+
+    public int getWindowAlignmentOffset() {
+        return this.mWindowAlignment.mainAxis().getWindowAlignmentOffset();
+    }
+
+    public void setWindowAlignmentOffsetPercent(float f) {
+        this.mWindowAlignment.mainAxis().setWindowAlignmentOffsetPercent(f);
+    }
+
+    public float getWindowAlignmentOffsetPercent() {
+        return this.mWindowAlignment.mainAxis().getWindowAlignmentOffsetPercent();
+    }
+
+    public void setItemAlignmentOffset(int i) {
+        this.mItemAlignment.mainAxis().setItemAlignmentOffset(i);
+        updateChildAlignments();
+    }
+
+    public int getItemAlignmentOffset() {
+        return this.mItemAlignment.mainAxis().getItemAlignmentOffset();
+    }
+
+    public void setItemAlignmentOffsetWithPadding(boolean z) {
+        this.mItemAlignment.mainAxis().setItemAlignmentOffsetWithPadding(z);
+        updateChildAlignments();
+    }
+
+    public boolean isItemAlignmentOffsetWithPadding() {
+        return this.mItemAlignment.mainAxis().isItemAlignmentOffsetWithPadding();
+    }
+
+    public void setItemAlignmentOffsetPercent(float f) {
+        this.mItemAlignment.mainAxis().setItemAlignmentOffsetPercent(f);
+        updateChildAlignments();
+    }
+
+    public float getItemAlignmentOffsetPercent() {
+        return this.mItemAlignment.mainAxis().getItemAlignmentOffsetPercent();
+    }
+
+    public void setItemAlignmentViewId(int i) {
+        this.mItemAlignment.mainAxis().setItemAlignmentViewId(i);
+        updateChildAlignments();
+    }
+
+    public int getItemAlignmentViewId() {
+        return this.mItemAlignment.mainAxis().getItemAlignmentViewId();
+    }
+
+    public void setFocusOutAllowed(boolean z, boolean z2) {
         int i = 0;
-        int i2 = (throughFront ? 2048 : 0) | (this.mFlag & (-6145));
-        if (throughEnd) {
+        int i2 = (z ? 2048 : 0) | (this.mFlag & -6145);
+        if (z2) {
             i = 4096;
         }
         this.mFlag = i2 | i;
     }
 
-    public void setFocusOutSideAllowed(boolean throughStart, boolean throughEnd) {
+    public void setFocusOutSideAllowed(boolean z, boolean z2) {
         int i = 0;
-        int i2 = (throughStart ? 8192 : 0) | (this.mFlag & (-24577));
-        if (throughEnd) {
+        int i2 = (z ? 8192 : 0) | (this.mFlag & -24577);
+        if (z2) {
             i = 16384;
         }
         this.mFlag = i2 | i;
     }
 
-    public void setNumRows(int numRows) {
-        if (numRows < 0) {
-            throw new IllegalArgumentException();
-        }
-        this.mNumRowsRequested = numRows;
-    }
-
-    public void setRowHeight(int height) {
-        if (height >= 0 || height == -2) {
-            this.mRowSizeSecondaryRequested = height;
+    public void setNumRows(int i) {
+        if (i >= 0) {
+            this.mNumRowsRequested = i;
             return;
         }
-        throw new IllegalArgumentException("Invalid row height: " + height);
+        throw new IllegalArgumentException();
     }
 
-    public void setVerticalSpacing(int space) {
+    public void setRowHeight(int i) {
+        if (i >= 0 || i == -2) {
+            this.mRowSizeSecondaryRequested = i;
+            return;
+        }
+        throw new IllegalArgumentException("Invalid row height: " + i);
+    }
+
+    public void setItemSpacing(int i) {
+        this.mHorizontalSpacing = i;
+        this.mVerticalSpacing = i;
+        this.mSpacingSecondary = i;
+        this.mSpacingPrimary = i;
+    }
+
+    public void setVerticalSpacing(int i) {
         if (this.mOrientation == 1) {
-            this.mVerticalSpacing = space;
-            this.mSpacingPrimary = space;
+            this.mVerticalSpacing = i;
+            this.mSpacingPrimary = i;
             return;
         }
-        this.mVerticalSpacing = space;
-        this.mSpacingSecondary = space;
+        this.mVerticalSpacing = i;
+        this.mSpacingSecondary = i;
     }
 
-    public void setHorizontalSpacing(int space) {
+    public void setHorizontalSpacing(int i) {
         if (this.mOrientation == 0) {
-            this.mHorizontalSpacing = space;
-            this.mSpacingPrimary = space;
+            this.mHorizontalSpacing = i;
+            this.mSpacingPrimary = i;
             return;
         }
-        this.mHorizontalSpacing = space;
-        this.mSpacingSecondary = space;
+        this.mHorizontalSpacing = i;
+        this.mSpacingSecondary = i;
     }
 
     public int getVerticalSpacing() {
         return this.mVerticalSpacing;
     }
 
-    public void setGravity(int gravity) {
-        this.mGravity = gravity;
+    public int getHorizontalSpacing() {
+        return this.mHorizontalSpacing;
     }
 
-    protected boolean hasDoneFirstLayout() {
+    public void setGravity(int i) {
+        this.mGravity = i;
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean hasDoneFirstLayout() {
         return this.mGrid != null;
     }
 
-    public void setOnChildViewHolderSelectedListener(OnChildViewHolderSelectedListener listener) {
-        if (listener == null) {
+    public void setOnChildSelectedListener(OnChildSelectedListener onChildSelectedListener) {
+        this.mChildSelectedListener = onChildSelectedListener;
+    }
+
+    public void setOnChildViewHolderSelectedListener(OnChildViewHolderSelectedListener onChildViewHolderSelectedListener) {
+        if (onChildViewHolderSelectedListener == null) {
             this.mChildViewHolderSelectedListeners = null;
             return;
         }
@@ -686,32 +862,66 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         } else {
             arrayList.clear();
         }
-        this.mChildViewHolderSelectedListeners.add(listener);
+        this.mChildViewHolderSelectedListeners.add(onChildViewHolderSelectedListener);
     }
 
-    boolean hasOnChildViewHolderSelectedListener() {
+    public void addOnChildViewHolderSelectedListener(OnChildViewHolderSelectedListener onChildViewHolderSelectedListener) {
+        if (this.mChildViewHolderSelectedListeners == null) {
+            this.mChildViewHolderSelectedListeners = new ArrayList<>();
+        }
+        this.mChildViewHolderSelectedListeners.add(onChildViewHolderSelectedListener);
+    }
+
+    public void removeOnChildViewHolderSelectedListener(OnChildViewHolderSelectedListener onChildViewHolderSelectedListener) {
+        ArrayList<OnChildViewHolderSelectedListener> arrayList = this.mChildViewHolderSelectedListeners;
+        if (arrayList != null) {
+            arrayList.remove((Object) onChildViewHolderSelectedListener);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean hasOnChildViewHolderSelectedListener() {
         ArrayList<OnChildViewHolderSelectedListener> arrayList = this.mChildViewHolderSelectedListeners;
         return arrayList != null && arrayList.size() > 0;
     }
 
-    void fireOnChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+    /* access modifiers changed from: package-private */
+    public void fireOnChildViewHolderSelected(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int i, int i2) {
         ArrayList<OnChildViewHolderSelectedListener> arrayList = this.mChildViewHolderSelectedListeners;
-        if (arrayList == null) {
-            return;
-        }
-        for (int size = arrayList.size() - 1; size >= 0; size--) {
-            this.mChildViewHolderSelectedListeners.get(size).onChildViewHolderSelected(parent, child, position, subposition);
+        if (arrayList != null) {
+            for (int size = arrayList.size() - 1; size >= 0; size--) {
+                this.mChildViewHolderSelectedListeners.get(size).onChildViewHolderSelected(recyclerView, viewHolder, i, i2);
+            }
         }
     }
 
-    void fireOnChildViewHolderSelectedAndPositioned(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+    /* access modifiers changed from: package-private */
+    public void fireOnChildViewHolderSelectedAndPositioned(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int i, int i2) {
         ArrayList<OnChildViewHolderSelectedListener> arrayList = this.mChildViewHolderSelectedListeners;
-        if (arrayList == null) {
-            return;
+        if (arrayList != null) {
+            for (int size = arrayList.size() - 1; size >= 0; size--) {
+                this.mChildViewHolderSelectedListeners.get(size).onChildViewHolderSelectedAndPositioned(recyclerView, viewHolder, i, i2);
+            }
         }
-        for (int size = arrayList.size() - 1; size >= 0; size--) {
-            this.mChildViewHolderSelectedListeners.get(size).onChildViewHolderSelectedAndPositioned(parent, child, position, subposition);
+    }
+
+    public void addOnLayoutCompletedListener(BaseGridView.OnLayoutCompletedListener onLayoutCompletedListener) {
+        if (this.mOnLayoutCompletedListeners == null) {
+            this.mOnLayoutCompletedListeners = new ArrayList<>();
         }
+        this.mOnLayoutCompletedListeners.add(onLayoutCompletedListener);
+    }
+
+    public void removeOnLayoutCompletedListener(BaseGridView.OnLayoutCompletedListener onLayoutCompletedListener) {
+        ArrayList<BaseGridView.OnLayoutCompletedListener> arrayList = this.mOnLayoutCompletedListeners;
+        if (arrayList != null) {
+            arrayList.remove((Object) onLayoutCompletedListener);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setOnChildLaidOutListener(OnChildLaidOutListener onChildLaidOutListener) {
+        this.mChildLaidOutListener = onChildLaidOutListener;
     }
 
     private int getAdapterPositionByView(View view) {
@@ -722,13 +932,14 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         return layoutParams.getAbsoluteAdapterPosition();
     }
 
-    int getSubPositionByView(View view, View childView) {
+    /* access modifiers changed from: package-private */
+    public int getSubPositionByView(View view, View view2) {
         ItemAlignmentFacet itemAlignmentFacet;
-        if (view != null && childView != null && (itemAlignmentFacet = ((LayoutParams) view.getLayoutParams()).getItemAlignmentFacet()) != null) {
+        if (!(view == null || view2 == null || (itemAlignmentFacet = ((LayoutParams) view.getLayoutParams()).getItemAlignmentFacet()) == null)) {
             ItemAlignmentFacet.ItemAlignmentDef[] alignmentDefs = itemAlignmentFacet.getAlignmentDefs();
             if (alignmentDefs.length > 1) {
-                while (childView != view) {
-                    int id = childView.getId();
+                while (view2 != view) {
+                    int id = view2.getId();
                     if (id != -1) {
                         for (int i = 1; i < alignmentDefs.length; i++) {
                             if (alignmentDefs[i].getItemAlignmentFocusViewId() == id) {
@@ -737,18 +948,20 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
                         }
                         continue;
                     }
-                    childView = (View) childView.getParent();
+                    view2 = (View) view2.getParent();
                 }
             }
         }
         return 0;
     }
 
-    private int getAdapterPositionByIndex(int index) {
-        return getAdapterPositionByView(getChildAt(index));
+    private int getAdapterPositionByIndex(int i) {
+        return getAdapterPositionByView(getChildAt(i));
     }
 
-    void dispatchChildSelected() {
+    /* access modifiers changed from: package-private */
+    public void dispatchChildSelected() {
+        long j;
         if (this.mChildSelectedListener != null || hasOnChildViewHolderSelectedListener()) {
             int i = this.mFocusPosition;
             View findViewByPosition = i == -1 ? null : findViewByPosition(i);
@@ -756,135 +969,145 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
                 RecyclerView.ViewHolder childViewHolder = this.mBaseGridView.getChildViewHolder(findViewByPosition);
                 OnChildSelectedListener onChildSelectedListener = this.mChildSelectedListener;
                 if (onChildSelectedListener != null) {
-                    onChildSelectedListener.onChildSelected(this.mBaseGridView, findViewByPosition, this.mFocusPosition, childViewHolder == null ? -1L : childViewHolder.getItemId());
+                    BaseGridView baseGridView = this.mBaseGridView;
+                    int i2 = this.mFocusPosition;
+                    if (childViewHolder == null) {
+                        j = -1;
+                    } else {
+                        j = childViewHolder.getItemId();
+                    }
+                    onChildSelectedListener.onChildSelected(baseGridView, findViewByPosition, i2, j);
                 }
                 fireOnChildViewHolderSelected(this.mBaseGridView, childViewHolder, this.mFocusPosition, this.mSubFocusPosition);
             } else {
                 OnChildSelectedListener onChildSelectedListener2 = this.mChildSelectedListener;
                 if (onChildSelectedListener2 != null) {
-                    onChildSelectedListener2.onChildSelected(this.mBaseGridView, null, -1, -1L);
+                    onChildSelectedListener2.onChildSelected(this.mBaseGridView, (View) null, -1, -1);
                 }
-                fireOnChildViewHolderSelected(this.mBaseGridView, null, -1, 0);
+                fireOnChildViewHolderSelected(this.mBaseGridView, (RecyclerView.ViewHolder) null, -1, 0);
             }
-            if ((this.mFlag & 3) == 1 || this.mBaseGridView.isLayoutRequested()) {
+            if ((this.mFlag & 3) != 1 && !this.mBaseGridView.isLayoutRequested()) {
+                int childCount = getChildCount();
+                for (int i3 = 0; i3 < childCount; i3++) {
+                    if (getChildAt(i3).isLayoutRequested()) {
+                        forceRequestLayout();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void dispatchChildSelectedAndPositioned() {
+        if (hasOnChildViewHolderSelectedListener()) {
+            int i = this.mFocusPosition;
+            View findViewByPosition = i == -1 ? null : findViewByPosition(i);
+            if (findViewByPosition != null) {
+                fireOnChildViewHolderSelectedAndPositioned(this.mBaseGridView, this.mBaseGridView.getChildViewHolder(findViewByPosition), this.mFocusPosition, this.mSubFocusPosition);
                 return;
             }
-            int childCount = getChildCount();
-            for (int i2 = 0; i2 < childCount; i2++) {
-                if (getChildAt(i2).isLayoutRequested()) {
-                    forceRequestLayout();
-                    return;
-                }
+            OnChildSelectedListener onChildSelectedListener = this.mChildSelectedListener;
+            if (onChildSelectedListener != null) {
+                onChildSelectedListener.onChildSelected(this.mBaseGridView, (View) null, -1, -1);
             }
+            fireOnChildViewHolderSelectedAndPositioned(this.mBaseGridView, (RecyclerView.ViewHolder) null, -1, 0);
         }
     }
 
-    void dispatchChildSelectedAndPositioned() {
-        if (!hasOnChildViewHolderSelectedListener()) {
-            return;
-        }
-        int i = this.mFocusPosition;
-        View findViewByPosition = i == -1 ? null : findViewByPosition(i);
-        if (findViewByPosition != null) {
-            fireOnChildViewHolderSelectedAndPositioned(this.mBaseGridView, this.mBaseGridView.getChildViewHolder(findViewByPosition), this.mFocusPosition, this.mSubFocusPosition);
-            return;
-        }
-        OnChildSelectedListener onChildSelectedListener = this.mChildSelectedListener;
-        if (onChildSelectedListener != null) {
-            onChildSelectedListener.onChildSelected(this.mBaseGridView, null, -1, -1L);
-        }
-        fireOnChildViewHolderSelectedAndPositioned(this.mBaseGridView, null, -1, 0);
-    }
-
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public boolean canScrollHorizontally() {
         return this.mOrientation == 0 || this.mNumRows > 1;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public boolean canScrollVertically() {
         return this.mOrientation == 1 || this.mNumRows > 1;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(-2, -2);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public RecyclerView.LayoutParams generateLayoutParams(Context context, AttributeSet attrs) {
-        return new LayoutParams(context, attrs);
+    public RecyclerView.LayoutParams generateLayoutParams(Context context, AttributeSet attributeSet) {
+        return new LayoutParams(context, attributeSet);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public RecyclerView.LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
-        if (lp instanceof LayoutParams) {
-            return new LayoutParams((LayoutParams) lp);
+    public RecyclerView.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        if (layoutParams instanceof LayoutParams) {
+            return new LayoutParams((LayoutParams) layoutParams);
         }
-        if (lp instanceof RecyclerView.LayoutParams) {
-            return new LayoutParams((RecyclerView.LayoutParams) lp);
+        if (layoutParams instanceof RecyclerView.LayoutParams) {
+            return new LayoutParams((RecyclerView.LayoutParams) layoutParams);
         }
-        if (lp instanceof ViewGroup.MarginLayoutParams) {
-            return new LayoutParams((ViewGroup.MarginLayoutParams) lp);
+        if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+            return new LayoutParams((ViewGroup.MarginLayoutParams) layoutParams);
         }
-        return new LayoutParams(lp);
+        return new LayoutParams(layoutParams);
     }
 
-    protected View getViewForPosition(int position) {
-        View viewForPosition = this.mRecycler.getViewForPosition(position);
+    /* access modifiers changed from: protected */
+    public View getViewForPosition(int i) {
+        View viewForPosition = this.mRecycler.getViewForPosition(i);
         ((LayoutParams) viewForPosition.getLayoutParams()).setItemAlignmentFacet((ItemAlignmentFacet) getFacet(this.mBaseGridView.getChildViewHolder(viewForPosition), ItemAlignmentFacet.class));
         return viewForPosition;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public final int getOpticalLeft(View v) {
-        return ((LayoutParams) v.getLayoutParams()).getOpticalLeft(v);
+    /* access modifiers changed from: package-private */
+    public final int getOpticalLeft(View view) {
+        return ((LayoutParams) view.getLayoutParams()).getOpticalLeft(view);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public final int getOpticalRight(View v) {
-        return ((LayoutParams) v.getLayoutParams()).getOpticalRight(v);
+    /* access modifiers changed from: package-private */
+    public final int getOpticalRight(View view) {
+        return ((LayoutParams) view.getLayoutParams()).getOpticalRight(view);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public int getDecoratedLeft(View child) {
-        return super.getDecoratedLeft(child) + ((LayoutParams) child.getLayoutParams()).mLeftInset;
+    /* access modifiers changed from: package-private */
+    public final int getOpticalTop(View view) {
+        return ((LayoutParams) view.getLayoutParams()).getOpticalTop(view);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public int getDecoratedTop(View child) {
-        return super.getDecoratedTop(child) + ((LayoutParams) child.getLayoutParams()).mTopInset;
+    /* access modifiers changed from: package-private */
+    public final int getOpticalBottom(View view) {
+        return ((LayoutParams) view.getLayoutParams()).getOpticalBottom(view);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public int getDecoratedRight(View child) {
-        return super.getDecoratedRight(child) - ((LayoutParams) child.getLayoutParams()).mRightInset;
+    public int getDecoratedLeft(View view) {
+        return super.getDecoratedLeft(view) + ((LayoutParams) view.getLayoutParams()).mLeftInset;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public int getDecoratedBottom(View child) {
-        return super.getDecoratedBottom(child) - ((LayoutParams) child.getLayoutParams()).mBottomInset;
+    public int getDecoratedTop(View view) {
+        return super.getDecoratedTop(view) + ((LayoutParams) view.getLayoutParams()).mTopInset;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void getDecoratedBoundsWithMargins(View view, Rect outBounds) {
-        super.getDecoratedBoundsWithMargins(view, outBounds);
+    public int getDecoratedRight(View view) {
+        return super.getDecoratedRight(view) - ((LayoutParams) view.getLayoutParams()).mRightInset;
+    }
+
+    public int getDecoratedBottom(View view) {
+        return super.getDecoratedBottom(view) - ((LayoutParams) view.getLayoutParams()).mBottomInset;
+    }
+
+    public void getDecoratedBoundsWithMargins(View view, Rect rect) {
+        super.getDecoratedBoundsWithMargins(view, rect);
         LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-        outBounds.left += layoutParams.mLeftInset;
-        outBounds.top += layoutParams.mTopInset;
-        outBounds.right -= layoutParams.mRightInset;
-        outBounds.bottom -= layoutParams.mBottomInset;
+        rect.left += layoutParams.mLeftInset;
+        rect.top += layoutParams.mTopInset;
+        rect.right -= layoutParams.mRightInset;
+        rect.bottom -= layoutParams.mBottomInset;
     }
 
-    int getViewMin(View v) {
-        return this.mOrientationHelper.getDecoratedStart(v);
+    /* access modifiers changed from: package-private */
+    public int getViewMin(View view) {
+        return this.mOrientationHelper.getDecoratedStart(view);
     }
 
-    int getViewMax(View v) {
-        return this.mOrientationHelper.getDecoratedEnd(v);
+    /* access modifiers changed from: package-private */
+    public int getViewMax(View view) {
+        return this.mOrientationHelper.getDecoratedEnd(view);
     }
 
-    int getViewPrimarySize(View view) {
+    /* access modifiers changed from: package-private */
+    public int getViewPrimarySize(View view) {
         Rect rect = sTempRect;
         getDecoratedBoundsWithMargins(view, rect);
         return this.mOrientation == 0 ? rect.width() : rect.height();
@@ -898,14 +1121,14 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         return this.mOrientation == 0 ? getViewCenterY(view) : getViewCenterX(view);
     }
 
-    private int getViewCenterX(View v) {
-        LayoutParams layoutParams = (LayoutParams) v.getLayoutParams();
-        return layoutParams.getOpticalLeft(v) + layoutParams.getAlignX();
+    private int getViewCenterX(View view) {
+        LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
+        return layoutParams.getOpticalLeft(view) + layoutParams.getAlignX();
     }
 
-    private int getViewCenterY(View v) {
-        LayoutParams layoutParams = (LayoutParams) v.getLayoutParams();
-        return layoutParams.getOpticalTop(v) + layoutParams.getAlignY();
+    private int getViewCenterY(View view) {
+        LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
+        return layoutParams.getOpticalTop(view) + layoutParams.getAlignY();
     }
 
     private void saveContext(RecyclerView.Recycler recycler, RecyclerView.State state) {
@@ -930,83 +1153,139 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:25:0x0074, code lost:
-        if (((r5.mFlag & 262144) != 0) != r5.mGrid.isReversedFlow()) goto L29;
+    /* JADX WARNING: Code restructure failed: missing block: B:30:0x0074, code lost:
+        if (((r5.mFlag & 262144) != 0) != r5.mGrid.isReversedFlow()) goto L_0x0076;
      */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     private boolean layoutInit() {
-        Grid grid;
-        int itemCount = this.mState.getItemCount();
-        boolean z = true;
-        if (itemCount == 0) {
-            this.mFocusPosition = -1;
-            this.mSubFocusPosition = 0;
-        } else {
-            int i = this.mFocusPosition;
-            if (i >= itemCount) {
-                this.mFocusPosition = itemCount - 1;
-                this.mSubFocusPosition = 0;
-            } else if (i == -1 && itemCount > 0) {
-                this.mFocusPosition = 0;
-                this.mSubFocusPosition = 0;
-            }
-        }
-        if (!this.mState.didStructureChange() && (grid = this.mGrid) != null && grid.getFirstVisibleIndex() >= 0 && (this.mFlag & 256) == 0 && this.mGrid.getNumRows() == this.mNumRows) {
-            updateScrollController();
-            updateSecondaryScrollLimits();
-            this.mGrid.setSpacing(this.mSpacingPrimary);
-            return true;
-        }
-        this.mFlag &= -257;
-        Grid grid2 = this.mGrid;
-        if (grid2 != null && this.mNumRows == grid2.getNumRows()) {
-        }
-        Grid createGrid = Grid.createGrid(this.mNumRows);
-        this.mGrid = createGrid;
-        createGrid.setProvider(this.mGridProvider);
-        Grid grid3 = this.mGrid;
-        if ((262144 & this.mFlag) == 0) {
-            z = false;
-        }
-        grid3.setReversedFlow(z);
-        initScrollController();
-        updateSecondaryScrollLimits();
-        this.mGrid.setSpacing(this.mSpacingPrimary);
-        detachAndScrapAttachedViews(this.mRecycler);
-        this.mGrid.resetVisibleIndex();
-        this.mWindowAlignment.mainAxis().invalidateScrollMin();
-        this.mWindowAlignment.mainAxis().invalidateScrollMax();
-        return false;
+        /*
+            r5 = this;
+            androidx.recyclerview.widget.RecyclerView$State r0 = r5.mState
+            int r0 = r0.getItemCount()
+            r1 = -1
+            r2 = 1
+            r3 = 0
+            if (r0 != 0) goto L_0x0010
+            r5.mFocusPosition = r1
+            r5.mSubFocusPosition = r3
+            goto L_0x0022
+        L_0x0010:
+            int r4 = r5.mFocusPosition
+            if (r4 < r0) goto L_0x001a
+            int r0 = r0 - r2
+            r5.mFocusPosition = r0
+            r5.mSubFocusPosition = r3
+            goto L_0x0022
+        L_0x001a:
+            if (r4 != r1) goto L_0x0022
+            if (r0 <= 0) goto L_0x0022
+            r5.mFocusPosition = r3
+            r5.mSubFocusPosition = r3
+        L_0x0022:
+            androidx.recyclerview.widget.RecyclerView$State r0 = r5.mState
+            boolean r0 = r0.didStructureChange()
+            if (r0 != 0) goto L_0x0052
+            androidx.leanback.widget.Grid r0 = r5.mGrid
+            if (r0 == 0) goto L_0x0052
+            int r0 = r0.getFirstVisibleIndex()
+            if (r0 < 0) goto L_0x0052
+            int r0 = r5.mFlag
+            r0 = r0 & 256(0x100, float:3.59E-43)
+            if (r0 != 0) goto L_0x0052
+            androidx.leanback.widget.Grid r0 = r5.mGrid
+            int r0 = r0.getNumRows()
+            int r1 = r5.mNumRows
+            if (r0 != r1) goto L_0x0052
+            r5.updateScrollController()
+            r5.updateSecondaryScrollLimits()
+            androidx.leanback.widget.Grid r0 = r5.mGrid
+            int r5 = r5.mSpacingPrimary
+            r0.setSpacing(r5)
+            return r2
+        L_0x0052:
+            int r0 = r5.mFlag
+            r0 = r0 & -257(0xfffffffffffffeff, float:NaN)
+            r5.mFlag = r0
+            androidx.leanback.widget.Grid r0 = r5.mGrid
+            r1 = 262144(0x40000, float:3.67342E-40)
+            if (r0 == 0) goto L_0x0076
+            int r4 = r5.mNumRows
+            int r0 = r0.getNumRows()
+            if (r4 != r0) goto L_0x0076
+            int r0 = r5.mFlag
+            r0 = r0 & r1
+            if (r0 == 0) goto L_0x006d
+            r0 = r2
+            goto L_0x006e
+        L_0x006d:
+            r0 = r3
+        L_0x006e:
+            androidx.leanback.widget.Grid r4 = r5.mGrid
+            boolean r4 = r4.isReversedFlow()
+            if (r0 == r4) goto L_0x008f
+        L_0x0076:
+            int r0 = r5.mNumRows
+            androidx.leanback.widget.Grid r0 = androidx.leanback.widget.Grid.createGrid(r0)
+            r5.mGrid = r0
+            androidx.leanback.widget.Grid$Provider r4 = r5.mGridProvider
+            r0.setProvider(r4)
+            androidx.leanback.widget.Grid r0 = r5.mGrid
+            int r4 = r5.mFlag
+            r1 = r1 & r4
+            if (r1 == 0) goto L_0x008b
+            goto L_0x008c
+        L_0x008b:
+            r2 = r3
+        L_0x008c:
+            r0.setReversedFlow(r2)
+        L_0x008f:
+            r5.initScrollController()
+            r5.updateSecondaryScrollLimits()
+            androidx.leanback.widget.Grid r0 = r5.mGrid
+            int r1 = r5.mSpacingPrimary
+            r0.setSpacing(r1)
+            androidx.recyclerview.widget.RecyclerView$Recycler r0 = r5.mRecycler
+            r5.detachAndScrapAttachedViews(r0)
+            androidx.leanback.widget.Grid r0 = r5.mGrid
+            r0.resetVisibleIndex()
+            androidx.leanback.widget.WindowAlignment r0 = r5.mWindowAlignment
+            androidx.leanback.widget.WindowAlignment$Axis r0 = r0.mainAxis()
+            r0.invalidateScrollMin()
+            androidx.leanback.widget.WindowAlignment r5 = r5.mWindowAlignment
+            androidx.leanback.widget.WindowAlignment$Axis r5 = r5.mainAxis()
+            r5.invalidateScrollMax()
+            return r3
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.layoutInit():boolean");
     }
 
-    private int getRowSizeSecondary(int rowIndex) {
-        int i = this.mFixedRowSizeSecondary;
-        if (i != 0) {
-            return i;
+    private int getRowSizeSecondary(int i) {
+        int i2 = this.mFixedRowSizeSecondary;
+        if (i2 != 0) {
+            return i2;
         }
         int[] iArr = this.mRowSizeSecondary;
-        if (iArr != null) {
-            return iArr[rowIndex];
+        if (iArr == null) {
+            return 0;
         }
-        return 0;
+        return iArr[i];
     }
 
-    int getRowStartSecondary(int rowIndex) {
-        int i = 0;
+    /* access modifiers changed from: package-private */
+    public int getRowStartSecondary(int i) {
+        int i2 = 0;
         if ((this.mFlag & 524288) != 0) {
-            for (int i2 = this.mNumRows - 1; i2 > rowIndex; i2--) {
-                i += getRowSizeSecondary(i2) + this.mSpacingSecondary;
+            for (int i3 = this.mNumRows - 1; i3 > i; i3--) {
+                i2 += getRowSizeSecondary(i3) + this.mSpacingSecondary;
             }
-            return i;
+            return i2;
         }
-        int i3 = 0;
-        while (i < rowIndex) {
-            i3 += getRowSizeSecondary(i) + this.mSpacingSecondary;
-            i++;
+        int i4 = 0;
+        while (i2 < i) {
+            i4 += getRowSizeSecondary(i2) + this.mSpacingSecondary;
+            i2++;
         }
-        return i3;
+        return i4;
     }
 
     private int getSizeSecondary() {
@@ -1014,105 +1293,122 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         return getRowStartSecondary(i) + getRowSizeSecondary(i);
     }
 
-    int getDecoratedMeasuredWidthWithMargin(View v) {
-        LayoutParams layoutParams = (LayoutParams) v.getLayoutParams();
-        return getDecoratedMeasuredWidth(v) + ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin + ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin;
+    /* access modifiers changed from: package-private */
+    public int getDecoratedMeasuredWidthWithMargin(View view) {
+        LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
+        return getDecoratedMeasuredWidth(view) + layoutParams.leftMargin + layoutParams.rightMargin;
     }
 
-    int getDecoratedMeasuredHeightWithMargin(View v) {
-        LayoutParams layoutParams = (LayoutParams) v.getLayoutParams();
-        return getDecoratedMeasuredHeight(v) + ((ViewGroup.MarginLayoutParams) layoutParams).topMargin + ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;
+    /* access modifiers changed from: package-private */
+    public int getDecoratedMeasuredHeightWithMargin(View view) {
+        LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
+        return getDecoratedMeasuredHeight(view) + layoutParams.topMargin + layoutParams.bottomMargin;
     }
 
-    private void measureScrapChild(int position, int widthSpec, int heightSpec, int[] measuredDimension) {
-        View viewForPosition = this.mRecycler.getViewForPosition(position);
+    private void measureScrapChild(int i, int i2, int i3, int[] iArr) {
+        View viewForPosition = this.mRecycler.getViewForPosition(i);
         if (viewForPosition != null) {
             LayoutParams layoutParams = (LayoutParams) viewForPosition.getLayoutParams();
             Rect rect = sTempRect;
             calculateItemDecorationsForChild(viewForPosition, rect);
-            viewForPosition.measure(ViewGroup.getChildMeasureSpec(widthSpec, getPaddingLeft() + getPaddingRight() + ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin + ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin + rect.left + rect.right, ((ViewGroup.MarginLayoutParams) layoutParams).width), ViewGroup.getChildMeasureSpec(heightSpec, getPaddingTop() + getPaddingBottom() + ((ViewGroup.MarginLayoutParams) layoutParams).topMargin + ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin + rect.top + rect.bottom, ((ViewGroup.MarginLayoutParams) layoutParams).height));
-            measuredDimension[0] = getDecoratedMeasuredWidthWithMargin(viewForPosition);
-            measuredDimension[1] = getDecoratedMeasuredHeightWithMargin(viewForPosition);
+            viewForPosition.measure(ViewGroup.getChildMeasureSpec(i2, getPaddingLeft() + getPaddingRight() + layoutParams.leftMargin + layoutParams.rightMargin + rect.left + rect.right, layoutParams.width), ViewGroup.getChildMeasureSpec(i3, getPaddingTop() + getPaddingBottom() + layoutParams.topMargin + layoutParams.bottomMargin + rect.top + rect.bottom, layoutParams.height));
+            iArr[0] = getDecoratedMeasuredWidthWithMargin(viewForPosition);
+            iArr[1] = getDecoratedMeasuredHeightWithMargin(viewForPosition);
             this.mRecycler.recycleView(viewForPosition);
         }
     }
 
-    private boolean processRowSizeSecondary(boolean measure) {
-        int decoratedMeasuredWidthWithMargin;
+    private boolean processRowSizeSecondary(boolean z) {
+        CircularIntArray circularIntArray;
+        int i;
+        int i2;
+        int i3;
         if (this.mFixedRowSizeSecondary != 0 || this.mRowSizeSecondary == null) {
             return false;
         }
         Grid grid = this.mGrid;
         CircularIntArray[] itemPositionsInRows = grid == null ? null : grid.getItemPositionsInRows();
-        boolean z = false;
-        int i = -1;
-        for (int i2 = 0; i2 < this.mNumRows; i2++) {
-            CircularIntArray circularIntArray = itemPositionsInRows == null ? null : itemPositionsInRows[i2];
-            int size = circularIntArray == null ? 0 : circularIntArray.size();
-            int i3 = -1;
-            for (int i4 = 0; i4 < size; i4 += 2) {
-                int i5 = circularIntArray.get(i4 + 1);
-                for (int i6 = circularIntArray.get(i4); i6 <= i5; i6++) {
-                    View findViewByPosition = findViewByPosition(i6 - this.mPositionDeltaInPreLayout);
+        boolean z2 = false;
+        int i4 = -1;
+        for (int i5 = 0; i5 < this.mNumRows; i5++) {
+            if (itemPositionsInRows == null) {
+                circularIntArray = null;
+            } else {
+                circularIntArray = itemPositionsInRows[i5];
+            }
+            if (circularIntArray == null) {
+                i = 0;
+            } else {
+                i = circularIntArray.size();
+            }
+            int i6 = -1;
+            for (int i7 = 0; i7 < i; i7 += 2) {
+                int i8 = circularIntArray.get(i7 + 1);
+                for (int i9 = circularIntArray.get(i7); i9 <= i8; i9++) {
+                    View findViewByPosition = findViewByPosition(i9 - this.mPositionDeltaInPreLayout);
                     if (findViewByPosition != null) {
-                        if (measure) {
+                        if (z) {
                             measureChild(findViewByPosition);
                         }
                         if (this.mOrientation == 0) {
-                            decoratedMeasuredWidthWithMargin = getDecoratedMeasuredHeightWithMargin(findViewByPosition);
+                            i3 = getDecoratedMeasuredHeightWithMargin(findViewByPosition);
                         } else {
-                            decoratedMeasuredWidthWithMargin = getDecoratedMeasuredWidthWithMargin(findViewByPosition);
+                            i3 = getDecoratedMeasuredWidthWithMargin(findViewByPosition);
                         }
-                        if (decoratedMeasuredWidthWithMargin > i3) {
-                            i3 = decoratedMeasuredWidthWithMargin;
+                        if (i3 > i6) {
+                            i6 = i3;
                         }
                     }
                 }
             }
             int itemCount = this.mState.getItemCount();
-            if (!this.mBaseGridView.hasFixedSize() && measure && i3 < 0 && itemCount > 0) {
-                if (i < 0) {
-                    int i7 = this.mFocusPosition;
-                    if (i7 < 0) {
-                        i7 = 0;
-                    } else if (i7 >= itemCount) {
-                        i7 = itemCount - 1;
+            if (!this.mBaseGridView.hasFixedSize() && z && i6 < 0 && itemCount > 0) {
+                if (i4 < 0) {
+                    int i10 = this.mFocusPosition;
+                    if (i10 < 0) {
+                        i10 = 0;
+                    } else if (i10 >= itemCount) {
+                        i10 = itemCount - 1;
                     }
                     if (getChildCount() > 0) {
                         int layoutPosition = this.mBaseGridView.getChildViewHolder(getChildAt(0)).getLayoutPosition();
                         int layoutPosition2 = this.mBaseGridView.getChildViewHolder(getChildAt(getChildCount() - 1)).getLayoutPosition();
-                        if (i7 >= layoutPosition && i7 <= layoutPosition2) {
-                            i7 = i7 - layoutPosition <= layoutPosition2 - i7 ? layoutPosition - 1 : layoutPosition2 + 1;
-                            if (i7 < 0 && layoutPosition2 < itemCount - 1) {
-                                i7 = layoutPosition2 + 1;
-                            } else if (i7 >= itemCount && layoutPosition > 0) {
-                                i7 = layoutPosition - 1;
+                        if (i2 >= layoutPosition && i2 <= layoutPosition2) {
+                            i2 = i2 - layoutPosition <= layoutPosition2 - i2 ? layoutPosition - 1 : layoutPosition2 + 1;
+                            if (i2 < 0 && layoutPosition2 < itemCount - 1) {
+                                i2 = layoutPosition2 + 1;
+                            } else if (i2 >= itemCount && layoutPosition > 0) {
+                                i2 = layoutPosition - 1;
                             }
                         }
                     }
-                    if (i7 >= 0 && i7 < itemCount) {
-                        measureScrapChild(i7, View.MeasureSpec.makeMeasureSpec(0, 0), View.MeasureSpec.makeMeasureSpec(0, 0), this.mMeasuredDimension);
-                        i = this.mOrientation == 0 ? this.mMeasuredDimension[1] : this.mMeasuredDimension[0];
+                    if (i2 >= 0 && i2 < itemCount) {
+                        measureScrapChild(i2, View.MeasureSpec.makeMeasureSpec(0, 0), View.MeasureSpec.makeMeasureSpec(0, 0), this.mMeasuredDimension);
+                        if (this.mOrientation == 0) {
+                            i4 = this.mMeasuredDimension[1];
+                        } else {
+                            i4 = this.mMeasuredDimension[0];
+                        }
                     }
                 }
-                if (i >= 0) {
-                    i3 = i;
+                if (i4 >= 0) {
+                    i6 = i4;
                 }
             }
-            if (i3 < 0) {
-                i3 = 0;
+            if (i6 < 0) {
+                i6 = 0;
             }
             int[] iArr = this.mRowSizeSecondary;
-            if (iArr[i2] != i3) {
-                iArr[i2] = i3;
-                z = true;
+            if (iArr[i5] != i6) {
+                iArr[i5] = i6;
+                z2 = true;
             }
         }
-        return z;
+        return z2;
     }
 
     private void updateRowSecondarySizeRefresh() {
-        int i = this.mFlag & (-1025);
+        int i = this.mFlag & -1025;
         int i2 = 0;
         if (processRowSizeSecondary(false)) {
             i2 = 1024;
@@ -1128,186 +1424,219 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         ViewCompat.postOnAnimation(this.mBaseGridView, this.mRequestLayoutRunnable);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int widthSpec, int heightSpec) {
-        int size;
-        int size2;
-        int mode;
-        int paddingLeft;
-        int paddingRight;
+    public void onMeasure(RecyclerView.Recycler recycler, RecyclerView.State state, int i, int i2) {
+        int i3;
+        int i4;
+        int i5;
+        int i6;
+        int i7;
         saveContext(recycler, state);
         if (this.mOrientation == 0) {
-            size2 = View.MeasureSpec.getSize(widthSpec);
-            size = View.MeasureSpec.getSize(heightSpec);
-            mode = View.MeasureSpec.getMode(heightSpec);
-            paddingLeft = getPaddingTop();
-            paddingRight = getPaddingBottom();
+            i6 = View.MeasureSpec.getSize(i);
+            i5 = View.MeasureSpec.getSize(i2);
+            i4 = View.MeasureSpec.getMode(i2);
+            i3 = getPaddingTop();
+            i7 = getPaddingBottom();
         } else {
-            size = View.MeasureSpec.getSize(widthSpec);
-            size2 = View.MeasureSpec.getSize(heightSpec);
-            mode = View.MeasureSpec.getMode(widthSpec);
-            paddingLeft = getPaddingLeft();
-            paddingRight = getPaddingRight();
+            i5 = View.MeasureSpec.getSize(i);
+            i6 = View.MeasureSpec.getSize(i2);
+            i4 = View.MeasureSpec.getMode(i);
+            i3 = getPaddingLeft();
+            i7 = getPaddingRight();
         }
-        int i = paddingLeft + paddingRight;
-        this.mMaxSizeSecondary = size;
-        int i2 = this.mRowSizeSecondaryRequested;
-        if (i2 == -2) {
-            int i3 = this.mNumRowsRequested;
-            if (i3 == 0) {
-                i3 = 1;
+        int i8 = i3 + i7;
+        this.mMaxSizeSecondary = i5;
+        int i9 = this.mRowSizeSecondaryRequested;
+        if (i9 == -2) {
+            int i10 = this.mNumRowsRequested;
+            if (i10 == 0) {
+                i10 = 1;
             }
-            this.mNumRows = i3;
+            this.mNumRows = i10;
             this.mFixedRowSizeSecondary = 0;
             int[] iArr = this.mRowSizeSecondary;
-            if (iArr == null || iArr.length != i3) {
-                this.mRowSizeSecondary = new int[i3];
+            if (iArr == null || iArr.length != i10) {
+                this.mRowSizeSecondary = new int[i10];
             }
             if (this.mState.isPreLayout()) {
                 updatePositionDeltaInPreLayout();
             }
             processRowSizeSecondary(true);
-            if (mode == Integer.MIN_VALUE) {
-                size = Math.min(getSizeSecondary() + i, this.mMaxSizeSecondary);
-            } else if (mode == 0) {
-                size = getSizeSecondary() + i;
-            } else if (mode == 1073741824) {
-                size = this.mMaxSizeSecondary;
+            if (i4 == Integer.MIN_VALUE) {
+                i5 = Math.min(getSizeSecondary() + i8, this.mMaxSizeSecondary);
+            } else if (i4 == 0) {
+                i5 = getSizeSecondary() + i8;
+            } else if (i4 == 1073741824) {
+                i5 = this.mMaxSizeSecondary;
             } else {
                 throw new IllegalStateException("wrong spec");
             }
         } else {
-            if (mode != Integer.MIN_VALUE) {
-                if (mode == 0) {
-                    if (i2 == 0) {
-                        i2 = size - i;
+            if (i4 != Integer.MIN_VALUE) {
+                if (i4 == 0) {
+                    if (i9 == 0) {
+                        i9 = i5 - i8;
                     }
-                    this.mFixedRowSizeSecondary = i2;
-                    int i4 = this.mNumRowsRequested;
-                    if (i4 == 0) {
-                        i4 = 1;
+                    this.mFixedRowSizeSecondary = i9;
+                    int i11 = this.mNumRowsRequested;
+                    if (i11 == 0) {
+                        i11 = 1;
                     }
-                    this.mNumRows = i4;
-                    size = (i2 * i4) + (this.mSpacingSecondary * (i4 - 1)) + i;
-                } else if (mode != 1073741824) {
+                    this.mNumRows = i11;
+                    i5 = (i9 * i11) + (this.mSpacingSecondary * (i11 - 1)) + i8;
+                } else if (i4 != 1073741824) {
                     throw new IllegalStateException("wrong spec");
                 }
             }
-            int i5 = this.mNumRowsRequested;
-            if (i5 == 0 && i2 == 0) {
+            int i12 = this.mNumRowsRequested;
+            if (i12 == 0 && i9 == 0) {
                 this.mNumRows = 1;
-                this.mFixedRowSizeSecondary = size - i;
-            } else if (i5 == 0) {
-                this.mFixedRowSizeSecondary = i2;
-                int i6 = this.mSpacingSecondary;
-                this.mNumRows = (size + i6) / (i2 + i6);
-            } else if (i2 == 0) {
-                this.mNumRows = i5;
-                this.mFixedRowSizeSecondary = ((size - i) - (this.mSpacingSecondary * (i5 - 1))) / i5;
+                this.mFixedRowSizeSecondary = i5 - i8;
+            } else if (i12 == 0) {
+                this.mFixedRowSizeSecondary = i9;
+                int i13 = this.mSpacingSecondary;
+                this.mNumRows = (i5 + i13) / (i9 + i13);
+            } else if (i9 == 0) {
+                this.mNumRows = i12;
+                this.mFixedRowSizeSecondary = ((i5 - i8) - (this.mSpacingSecondary * (i12 - 1))) / i12;
             } else {
-                this.mNumRows = i5;
-                this.mFixedRowSizeSecondary = i2;
+                this.mNumRows = i12;
+                this.mFixedRowSizeSecondary = i9;
             }
-            if (mode == Integer.MIN_VALUE) {
-                int i7 = this.mFixedRowSizeSecondary;
-                int i8 = this.mNumRows;
-                int i9 = (i7 * i8) + (this.mSpacingSecondary * (i8 - 1)) + i;
-                if (i9 < size) {
-                    size = i9;
+            if (i4 == Integer.MIN_VALUE) {
+                int i14 = this.mFixedRowSizeSecondary;
+                int i15 = this.mNumRows;
+                int i16 = (i14 * i15) + (this.mSpacingSecondary * (i15 - 1)) + i8;
+                if (i16 < i5) {
+                    i5 = i16;
                 }
             }
         }
         if (this.mOrientation == 0) {
-            setMeasuredDimension(size2, size);
+            setMeasuredDimension(i6, i5);
         } else {
-            setMeasuredDimension(size, size2);
+            setMeasuredDimension(i5, i6);
         }
         leaveContext();
     }
 
-    void measureChild(View child) {
-        int makeMeasureSpec;
+    /* access modifiers changed from: package-private */
+    public void measureChild(View view) {
         int i;
         int i2;
-        LayoutParams layoutParams = (LayoutParams) child.getLayoutParams();
+        int i3;
+        LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
         Rect rect = sTempRect;
-        calculateItemDecorationsForChild(child, rect);
-        int i3 = ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin + ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin + rect.left + rect.right;
-        int i4 = ((ViewGroup.MarginLayoutParams) layoutParams).topMargin + ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin + rect.top + rect.bottom;
+        calculateItemDecorationsForChild(view, rect);
+        int i4 = layoutParams.leftMargin + layoutParams.rightMargin + rect.left + rect.right;
+        int i5 = layoutParams.topMargin + layoutParams.bottomMargin + rect.top + rect.bottom;
         if (this.mRowSizeSecondaryRequested == -2) {
-            makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, 0);
+            i = View.MeasureSpec.makeMeasureSpec(0, 0);
         } else {
-            makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(this.mFixedRowSizeSecondary, 1073741824);
+            i = View.MeasureSpec.makeMeasureSpec(this.mFixedRowSizeSecondary, 1073741824);
         }
         if (this.mOrientation == 0) {
-            i2 = ViewGroup.getChildMeasureSpec(View.MeasureSpec.makeMeasureSpec(0, 0), i3, ((ViewGroup.MarginLayoutParams) layoutParams).width);
-            i = ViewGroup.getChildMeasureSpec(makeMeasureSpec, i4, ((ViewGroup.MarginLayoutParams) layoutParams).height);
+            i2 = ViewGroup.getChildMeasureSpec(View.MeasureSpec.makeMeasureSpec(0, 0), i4, layoutParams.width);
+            i3 = ViewGroup.getChildMeasureSpec(i, i5, layoutParams.height);
         } else {
-            int childMeasureSpec = ViewGroup.getChildMeasureSpec(View.MeasureSpec.makeMeasureSpec(0, 0), i4, ((ViewGroup.MarginLayoutParams) layoutParams).height);
-            int childMeasureSpec2 = ViewGroup.getChildMeasureSpec(makeMeasureSpec, i3, ((ViewGroup.MarginLayoutParams) layoutParams).width);
-            i = childMeasureSpec;
+            int childMeasureSpec = ViewGroup.getChildMeasureSpec(View.MeasureSpec.makeMeasureSpec(0, 0), i5, layoutParams.height);
+            int childMeasureSpec2 = ViewGroup.getChildMeasureSpec(i, i4, layoutParams.width);
+            i3 = childMeasureSpec;
             i2 = childMeasureSpec2;
         }
-        child.measure(i2, i);
+        view.measure(i2, i3);
     }
 
-    <E> E getFacet(RecyclerView.ViewHolder vh, Class<? extends E> facetClass) {
+    /* access modifiers changed from: package-private */
+    public <E> E getFacet(RecyclerView.ViewHolder viewHolder, Class<? extends E> cls) {
         FacetProviderAdapter facetProviderAdapter;
         FacetProvider facetProvider;
-        E e = vh instanceof FacetProvider ? (E) ((FacetProvider) vh).getFacet(facetClass) : null;
-        return (e != null || (facetProviderAdapter = this.mFacetProviderAdapter) == null || (facetProvider = facetProviderAdapter.getFacetProvider(vh.getItemViewType())) == null) ? e : (E) facetProvider.getFacet(facetClass);
+        E facet = viewHolder instanceof FacetProvider ? ((FacetProvider) viewHolder).getFacet(cls) : null;
+        return (facet != null || (facetProviderAdapter = this.mFacetProviderAdapter) == null || (facetProvider = facetProviderAdapter.getFacetProvider(viewHolder.getItemViewType())) == null) ? facet : facetProvider.getFacet(cls);
     }
 
-    void layoutChild(int rowIndex, View v, int start, int end, int startSecondary) {
-        int rowSizeSecondary;
-        int i;
-        int decoratedMeasuredHeightWithMargin = this.mOrientation == 0 ? getDecoratedMeasuredHeightWithMargin(v) : getDecoratedMeasuredWidthWithMargin(v);
-        int i2 = this.mFixedRowSizeSecondary;
-        if (i2 > 0) {
-            decoratedMeasuredHeightWithMargin = Math.min(decoratedMeasuredHeightWithMargin, i2);
+    /* access modifiers changed from: package-private */
+    public void layoutChild(int i, View view, int i2, int i3, int i4) {
+        int i5;
+        int i6;
+        int i7;
+        if (this.mOrientation == 0) {
+            i5 = getDecoratedMeasuredHeightWithMargin(view);
+        } else {
+            i5 = getDecoratedMeasuredWidthWithMargin(view);
         }
-        int i3 = this.mGravity;
-        int i4 = i3 & 112;
-        int absoluteGravity = (this.mFlag & 786432) != 0 ? Gravity.getAbsoluteGravity(i3 & 8388615, 1) : i3 & 7;
-        int i5 = this.mOrientation;
-        if ((i5 != 0 || i4 != 48) && (i5 != 1 || absoluteGravity != 3)) {
-            if ((i5 == 0 && i4 == 80) || (i5 == 1 && absoluteGravity == 5)) {
-                rowSizeSecondary = getRowSizeSecondary(rowIndex) - decoratedMeasuredHeightWithMargin;
-            } else if ((i5 == 0 && i4 == 16) || (i5 == 1 && absoluteGravity == 1)) {
-                rowSizeSecondary = (getRowSizeSecondary(rowIndex) - decoratedMeasuredHeightWithMargin) / 2;
+        int i8 = this.mFixedRowSizeSecondary;
+        if (i8 > 0) {
+            i5 = Math.min(i5, i8);
+        }
+        int i9 = this.mGravity;
+        int i10 = i9 & 112;
+        int absoluteGravity = (this.mFlag & PF_REVERSE_FLOW_MASK) != 0 ? Gravity.getAbsoluteGravity(i9 & GravityCompat.RELATIVE_HORIZONTAL_GRAVITY_MASK, 1) : i9 & 7;
+        int i11 = this.mOrientation;
+        if (!((i11 == 0 && i10 == 48) || (i11 == 1 && absoluteGravity == 3))) {
+            if ((i11 == 0 && i10 == 80) || (i11 == 1 && absoluteGravity == 5)) {
+                i7 = getRowSizeSecondary(i) - i5;
+            } else if ((i11 == 0 && i10 == 16) || (i11 == 1 && absoluteGravity == 1)) {
+                i7 = (getRowSizeSecondary(i) - i5) / 2;
             }
-            startSecondary += rowSizeSecondary;
+            i4 += i7;
         }
         if (this.mOrientation == 0) {
-            i = decoratedMeasuredHeightWithMargin + startSecondary;
+            i6 = i5 + i4;
         } else {
-            int i6 = decoratedMeasuredHeightWithMargin + startSecondary;
-            int i7 = startSecondary;
-            startSecondary = start;
-            start = i7;
-            i = end;
-            end = i6;
+            int i12 = i5 + i4;
+            int i13 = i4;
+            i4 = i2;
+            i2 = i13;
+            int i14 = i12;
+            i6 = i3;
+            i3 = i14;
         }
-        layoutDecoratedWithMargins(v, start, startSecondary, end, i);
+        layoutDecoratedWithMargins(view, i2, i4, i3, i6);
         Rect rect = sTempRect;
-        super.getDecoratedBoundsWithMargins(v, rect);
-        ((LayoutParams) v.getLayoutParams()).setOpticalInsets(start - rect.left, startSecondary - rect.top, rect.right - end, rect.bottom - i);
-        updateChildAlignments(v);
+        super.getDecoratedBoundsWithMargins(view, rect);
+        ((LayoutParams) view.getLayoutParams()).setOpticalInsets(i2 - rect.left, i4 - rect.top, rect.right - i3, rect.bottom - i6);
+        updateChildAlignments(view);
     }
 
-    private void updateChildAlignments(View v) {
-        LayoutParams layoutParams = (LayoutParams) v.getLayoutParams();
+    private void updateChildAlignments(View view) {
+        LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
         if (layoutParams.getItemAlignmentFacet() == null) {
-            layoutParams.setAlignX(this.mItemAlignment.horizontal.getAlignmentPosition(v));
-            layoutParams.setAlignY(this.mItemAlignment.vertical.getAlignmentPosition(v));
+            layoutParams.setAlignX(this.mItemAlignment.horizontal.getAlignmentPosition(view));
+            layoutParams.setAlignY(this.mItemAlignment.vertical.getAlignmentPosition(view));
             return;
         }
-        layoutParams.calculateItemAlignments(this.mOrientation, v);
+        layoutParams.calculateItemAlignments(this.mOrientation, view);
         if (this.mOrientation == 0) {
-            layoutParams.setAlignY(this.mItemAlignment.vertical.getAlignmentPosition(v));
+            layoutParams.setAlignY(this.mItemAlignment.vertical.getAlignmentPosition(view));
         } else {
-            layoutParams.setAlignX(this.mItemAlignment.horizontal.getAlignmentPosition(v));
+            layoutParams.setAlignX(this.mItemAlignment.horizontal.getAlignmentPosition(view));
         }
+    }
+
+    private void updateChildAlignments() {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            updateChildAlignments(getChildAt(i));
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setExtraLayoutSpace(int i) {
+        int i2 = this.mExtraLayoutSpace;
+        if (i2 != i) {
+            if (i2 >= 0) {
+                this.mExtraLayoutSpace = i;
+                requestLayout();
+                return;
+            }
+            throw new IllegalArgumentException("ExtraLayoutSpace must >= 0");
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getExtraLayoutSpace() {
+        return this.mExtraLayoutSpace;
     }
 
     private void removeInvisibleViewsAtEnd() {
@@ -1336,30 +1665,81 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         return this.mGrid.appendOneColumnVisibleItems();
     }
 
-    int getSlideOutDistance() {
+    /* access modifiers changed from: package-private */
+    public void slideIn() {
+        int i = this.mFlag;
+        if ((i & 64) != 0) {
+            int i2 = i & -65;
+            this.mFlag = i2;
+            int i3 = this.mFocusPosition;
+            if (i3 >= 0) {
+                scrollToSelection(i3, this.mSubFocusPosition, true, this.mPrimaryScrollExtra);
+            } else {
+                this.mFlag = i2 & -129;
+                requestLayout();
+            }
+            int i4 = this.mFlag;
+            if ((i4 & 128) != 0) {
+                this.mFlag = i4 & -129;
+                if (this.mBaseGridView.getScrollState() != 0 || isSmoothScrolling()) {
+                    this.mBaseGridView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        public void onScrollStateChanged(RecyclerView recyclerView, int i) {
+                            if (i == 0) {
+                                GridLayoutManager.this.mBaseGridView.removeOnScrollListener(this);
+                                GridLayoutManager.this.requestLayout();
+                            }
+                        }
+                    });
+                } else {
+                    requestLayout();
+                }
+            }
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getSlideOutDistance() {
         int i;
-        int left;
+        int i2;
         int right;
         if (this.mOrientation == 1) {
-            i = -getHeight();
-            if (getChildCount() <= 0 || (left = getChildAt(0).getTop()) >= 0) {
-                return i;
+            i2 = -getHeight();
+            if (getChildCount() <= 0 || (i = getChildAt(0).getTop()) >= 0) {
+                return i2;
             }
         } else if ((this.mFlag & 262144) != 0) {
             int width = getWidth();
-            return (getChildCount() <= 0 || (right = getChildAt(0).getRight()) <= width) ? width : right;
+            if (getChildCount() <= 0 || (right = getChildAt(0).getRight()) <= width) {
+                return width;
+            }
+            return right;
         } else {
-            i = -getWidth();
-            if (getChildCount() <= 0 || (left = getChildAt(0).getLeft()) >= 0) {
-                return i;
+            i2 = -getWidth();
+            if (getChildCount() <= 0 || (i = getChildAt(0).getLeft()) >= 0) {
+                return i2;
             }
         }
-        return i + left;
+        return i2 + i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isSlidingChildViews() {
         return (this.mFlag & 64) != 0;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void slideOut() {
+        int i = this.mFlag;
+        if ((i & 64) == 0) {
+            this.mFlag = i | 64;
+            if (getChildCount() != 0) {
+                if (this.mOrientation == 1) {
+                    this.mBaseGridView.smoothScrollBy(0, getSlideOutDistance(), new AccelerateDecelerateInterpolator());
+                } else {
+                    this.mBaseGridView.smoothScrollBy(getSlideOutDistance(), 0, new AccelerateDecelerateInterpolator());
+                }
+            }
+        }
     }
 
     private boolean prependOneColumnVisibleItems() {
@@ -1388,106 +1768,161 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         grid.prependVisibleItems(i);
     }
 
+    /* JADX WARNING: Removed duplicated region for block: B:30:0x00c3 A[LOOP:3: B:30:0x00c3->B:33:0x00d1, LOOP_START] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     private void fastRelayout() {
-        Grid.Location mo120getLocation;
-        int decoratedMeasuredHeightWithMargin;
-        int childCount = getChildCount();
-        int firstVisibleIndex = this.mGrid.getFirstVisibleIndex();
-        this.mFlag &= -9;
-        boolean z = false;
-        int i = 0;
-        while (i < childCount) {
-            View childAt = getChildAt(i);
-            if (firstVisibleIndex == getAdapterPositionByView(childAt) && (mo120getLocation = this.mGrid.mo120getLocation(firstVisibleIndex)) != null) {
-                int rowStartSecondary = (getRowStartSecondary(mo120getLocation.row) + this.mWindowAlignment.secondAxis().getPaddingMin()) - this.mScrollOffsetSecondary;
-                int viewMin = getViewMin(childAt);
-                int viewPrimarySize = getViewPrimarySize(childAt);
-                if (((LayoutParams) childAt.getLayoutParams()).viewNeedsUpdate()) {
-                    this.mFlag |= 8;
-                    detachAndScrapView(childAt, this.mRecycler);
-                    childAt = getViewForPosition(firstVisibleIndex);
-                    addView(childAt, i);
-                }
-                View view = childAt;
-                measureChild(view);
-                if (this.mOrientation == 0) {
-                    decoratedMeasuredHeightWithMargin = getDecoratedMeasuredWidthWithMargin(view);
-                } else {
-                    decoratedMeasuredHeightWithMargin = getDecoratedMeasuredHeightWithMargin(view);
-                }
-                layoutChild(mo120getLocation.row, view, viewMin, viewMin + decoratedMeasuredHeightWithMargin, rowStartSecondary);
-                if (viewPrimarySize == decoratedMeasuredHeightWithMargin) {
-                    i++;
-                    firstVisibleIndex++;
-                }
-            }
-            z = true;
-        }
-        if (z) {
-            int lastVisibleIndex = this.mGrid.getLastVisibleIndex();
-            for (int i2 = childCount - 1; i2 >= i; i2--) {
-                detachAndScrapView(getChildAt(i2), this.mRecycler);
-            }
-            this.mGrid.invalidateItemsAfter(firstVisibleIndex);
-            if ((this.mFlag & 65536) != 0) {
-                appendVisibleItems();
-                int i3 = this.mFocusPosition;
-                if (i3 >= 0 && i3 <= lastVisibleIndex) {
-                    while (this.mGrid.getLastVisibleIndex() < this.mFocusPosition) {
-                        this.mGrid.appendOneColumnVisibleItems();
-                    }
-                }
-            } else {
-                while (this.mGrid.appendOneColumnVisibleItems() && this.mGrid.getLastVisibleIndex() < lastVisibleIndex) {
-                }
-            }
-        }
-        updateScrollLimits();
-        updateSecondaryScrollLimits();
+        /*
+            r15 = this;
+            int r0 = r15.getChildCount()
+            androidx.leanback.widget.Grid r1 = r15.mGrid
+            int r1 = r1.getFirstVisibleIndex()
+            int r2 = r15.mFlag
+            r2 = r2 & -9
+            r15.mFlag = r2
+            r2 = 0
+            r3 = r2
+        L_0x0012:
+            r4 = 1
+            if (r3 >= r0) goto L_0x0087
+            android.view.View r5 = r15.getChildAt(r3)
+            int r6 = r15.getAdapterPositionByView(r5)
+            if (r1 == r6) goto L_0x0021
+        L_0x001f:
+            r2 = r4
+            goto L_0x0087
+        L_0x0021:
+            androidx.leanback.widget.Grid r6 = r15.mGrid
+            androidx.leanback.widget.Grid$Location r6 = r6.getLocation(r1)
+            if (r6 != 0) goto L_0x002a
+            goto L_0x001f
+        L_0x002a:
+            int r7 = r6.row
+            int r7 = r15.getRowStartSecondary(r7)
+            androidx.leanback.widget.WindowAlignment r8 = r15.mWindowAlignment
+            androidx.leanback.widget.WindowAlignment$Axis r8 = r8.secondAxis()
+            int r8 = r8.getPaddingMin()
+            int r7 = r7 + r8
+            int r8 = r15.mScrollOffsetSecondary
+            int r14 = r7 - r8
+            int r12 = r15.getViewMin(r5)
+            int r7 = r15.getViewPrimarySize(r5)
+            android.view.ViewGroup$LayoutParams r8 = r5.getLayoutParams()
+            androidx.leanback.widget.GridLayoutManager$LayoutParams r8 = (androidx.leanback.widget.GridLayoutManager.LayoutParams) r8
+            boolean r8 = r8.viewNeedsUpdate()
+            if (r8 == 0) goto L_0x0065
+            int r8 = r15.mFlag
+            r8 = r8 | 8
+            r15.mFlag = r8
+            androidx.recyclerview.widget.RecyclerView$Recycler r8 = r15.mRecycler
+            r15.detachAndScrapView(r5, r8)
+            android.view.View r5 = r15.getViewForPosition(r1)
+            r15.addView(r5, r3)
+        L_0x0065:
+            r11 = r5
+            r15.measureChild(r11)
+            int r5 = r15.mOrientation
+            if (r5 != 0) goto L_0x0072
+            int r5 = r15.getDecoratedMeasuredWidthWithMargin(r11)
+            goto L_0x0076
+        L_0x0072:
+            int r5 = r15.getDecoratedMeasuredHeightWithMargin(r11)
+        L_0x0076:
+            int r8 = r12 + r5
+            r13 = r8
+            int r10 = r6.row
+            r9 = r15
+            r9.layoutChild(r10, r11, r12, r13, r14)
+            if (r7 == r5) goto L_0x0082
+            goto L_0x001f
+        L_0x0082:
+            int r3 = r3 + 1
+            int r1 = r1 + 1
+            goto L_0x0012
+        L_0x0087:
+            if (r2 == 0) goto L_0x00d4
+            androidx.leanback.widget.Grid r2 = r15.mGrid
+            int r2 = r2.getLastVisibleIndex()
+            int r0 = r0 - r4
+        L_0x0090:
+            if (r0 < r3) goto L_0x009e
+            android.view.View r4 = r15.getChildAt(r0)
+            androidx.recyclerview.widget.RecyclerView$Recycler r5 = r15.mRecycler
+            r15.detachAndScrapView(r4, r5)
+            int r0 = r0 + -1
+            goto L_0x0090
+        L_0x009e:
+            androidx.leanback.widget.Grid r0 = r15.mGrid
+            r0.invalidateItemsAfter(r1)
+            int r0 = r15.mFlag
+            r1 = 65536(0x10000, float:9.18355E-41)
+            r0 = r0 & r1
+            if (r0 == 0) goto L_0x00c3
+            r15.appendVisibleItems()
+            int r0 = r15.mFocusPosition
+            if (r0 < 0) goto L_0x00d4
+            if (r0 > r2) goto L_0x00d4
+        L_0x00b3:
+            androidx.leanback.widget.Grid r0 = r15.mGrid
+            int r0 = r0.getLastVisibleIndex()
+            int r1 = r15.mFocusPosition
+            if (r0 >= r1) goto L_0x00d4
+            androidx.leanback.widget.Grid r0 = r15.mGrid
+            r0.appendOneColumnVisibleItems()
+            goto L_0x00b3
+        L_0x00c3:
+            androidx.leanback.widget.Grid r0 = r15.mGrid
+            boolean r0 = r0.appendOneColumnVisibleItems()
+            if (r0 == 0) goto L_0x00d4
+            androidx.leanback.widget.Grid r0 = r15.mGrid
+            int r0 = r0.getLastVisibleIndex()
+            if (r0 >= r2) goto L_0x00d4
+            goto L_0x00c3
+        L_0x00d4:
+            r15.updateScrollLimits()
+            r15.updateSecondaryScrollLimits()
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.fastRelayout():void");
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public void removeAndRecycleAllViews(RecyclerView.Recycler recycler) {
         for (int childCount = getChildCount() - 1; childCount >= 0; childCount--) {
             removeAndRecycleViewAt(childCount, recycler);
         }
     }
 
-    private void focusToViewInLayout(boolean hadFocus, boolean alignToView, int extraDelta, int extraDeltaSecondary) {
+    private void focusToViewInLayout(boolean z, boolean z2, int i, int i2) {
         View findViewByPosition = findViewByPosition(this.mFocusPosition);
-        if (findViewByPosition != null && alignToView) {
-            scrollToView(findViewByPosition, false, extraDelta, extraDeltaSecondary);
+        if (findViewByPosition != null && z2) {
+            scrollToView(findViewByPosition, false, i, i2);
         }
-        if (findViewByPosition != null && hadFocus && !findViewByPosition.hasFocus()) {
+        if (findViewByPosition != null && z && !findViewByPosition.hasFocus()) {
             findViewByPosition.requestFocus();
-        } else if (hadFocus || this.mBaseGridView.hasFocus()) {
-        } else {
-            if (findViewByPosition != null && findViewByPosition.hasFocusable()) {
-                this.mBaseGridView.focusableViewAvailable(findViewByPosition);
-            } else {
+        } else if (!z && !this.mBaseGridView.hasFocus()) {
+            if (findViewByPosition == null || !findViewByPosition.hasFocusable()) {
                 int childCount = getChildCount();
-                int i = 0;
+                int i3 = 0;
                 while (true) {
-                    if (i < childCount) {
-                        findViewByPosition = getChildAt(i);
+                    if (i3 < childCount) {
+                        findViewByPosition = getChildAt(i3);
                         if (findViewByPosition != null && findViewByPosition.hasFocusable()) {
                             this.mBaseGridView.focusableViewAvailable(findViewByPosition);
                             break;
                         }
-                        i++;
+                        i3++;
                     } else {
                         break;
                     }
                 }
+            } else {
+                this.mBaseGridView.focusableViewAvailable(findViewByPosition);
             }
-            if (!alignToView || findViewByPosition == null || !findViewByPosition.hasFocus()) {
-                return;
+            if (z2 && findViewByPosition != null && findViewByPosition.hasFocus()) {
+                scrollToView(findViewByPosition, false, i, i2);
             }
-            scrollToView(findViewByPosition, false, extraDelta, extraDeltaSecondary);
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public void onLayoutCompleted(RecyclerView.State state) {
         ArrayList<BaseGridView.OnLayoutCompletedListener> arrayList = this.mOnLayoutCompletedListeners;
         if (arrayList != null) {
@@ -1497,48 +1932,55 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         }
     }
 
-    void updatePositionToRowMapInPostLayout() {
-        Grid.Location mo120getLocation;
+    /* access modifiers changed from: package-private */
+    public void updatePositionToRowMapInPostLayout() {
+        Grid.Location location;
         this.mPositionToRowInPostLayout.clear();
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             int oldPosition = this.mBaseGridView.getChildViewHolder(getChildAt(i)).getOldPosition();
-            if (oldPosition >= 0 && (mo120getLocation = this.mGrid.mo120getLocation(oldPosition)) != null) {
-                this.mPositionToRowInPostLayout.put(oldPosition, mo120getLocation.row);
+            if (oldPosition >= 0 && (location = this.mGrid.getLocation(oldPosition)) != null) {
+                this.mPositionToRowInPostLayout.put(oldPosition, location.row);
             }
         }
     }
 
-    void fillScrapViewsInPostLayout() {
+    /* access modifiers changed from: package-private */
+    public void fillScrapViewsInPostLayout() {
+        int i;
         List<RecyclerView.ViewHolder> scrapList = this.mRecycler.getScrapList();
         int size = scrapList.size();
-        if (size == 0) {
-            return;
-        }
-        int[] iArr = this.mDisappearingPositions;
-        if (iArr == null || size > iArr.length) {
-            int length = iArr == null ? 16 : iArr.length;
-            while (length < size) {
-                length <<= 1;
+        if (size != 0) {
+            int[] iArr = this.mDisappearingPositions;
+            if (iArr == null || size > iArr.length) {
+                if (iArr == null) {
+                    i = 16;
+                } else {
+                    i = iArr.length;
+                }
+                while (i < size) {
+                    i <<= 1;
+                }
+                this.mDisappearingPositions = new int[i];
             }
-            this.mDisappearingPositions = new int[length];
-        }
-        int i = 0;
-        for (int i2 = 0; i2 < size; i2++) {
-            int absoluteAdapterPosition = scrapList.get(i2).getAbsoluteAdapterPosition();
-            if (absoluteAdapterPosition >= 0) {
-                this.mDisappearingPositions[i] = absoluteAdapterPosition;
-                i++;
+            int i2 = 0;
+            for (int i3 = 0; i3 < size; i3++) {
+                int absoluteAdapterPosition = scrapList.get(i3).getAbsoluteAdapterPosition();
+                if (absoluteAdapterPosition >= 0) {
+                    this.mDisappearingPositions[i2] = absoluteAdapterPosition;
+                    i2++;
+                }
             }
+            if (i2 > 0) {
+                Arrays.sort(this.mDisappearingPositions, 0, i2);
+                this.mGrid.fillDisappearingItems(this.mDisappearingPositions, i2, this.mPositionToRowInPostLayout);
+            }
+            this.mPositionToRowInPostLayout.clear();
         }
-        if (i > 0) {
-            Arrays.sort(this.mDisappearingPositions, 0, i);
-            this.mGrid.fillDisappearingItems(this.mDisappearingPositions, i, this.mPositionToRowInPostLayout);
-        }
-        this.mPositionToRowInPostLayout.clear();
     }
 
-    void updatePositionDeltaInPreLayout() {
+    /* access modifiers changed from: package-private */
+    public void updatePositionDeltaInPreLayout() {
         if (getChildCount() > 0) {
             this.mPositionDeltaInPreLayout = this.mGrid.getFirstVisibleIndex() - ((LayoutParams) getChildAt(0).getLayoutParams()).getViewLayoutPosition();
         } else {
@@ -1546,220 +1988,468 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         }
     }
 
-    /*  JADX ERROR: JadxRuntimeException in pass: BlockProcessor
-        jadx.core.utils.exceptions.JadxRuntimeException: CFG modification limit reached, blocks count: 226
-        	at jadx.core.dex.visitors.blocks.BlockProcessor.processBlocksTree(BlockProcessor.java:60)
-        	at jadx.core.dex.visitors.blocks.BlockProcessor.visit(BlockProcessor.java:40)
-        */
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
+    /* JADX WARNING: Removed duplicated region for block: B:86:0x0171 A[LOOP:1: B:86:0x0171->B:89:0x017b, LOOP_START] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onLayoutChildren(androidx.recyclerview.widget.RecyclerView.Recycler r13, androidx.recyclerview.widget.RecyclerView.State r14) {
         /*
-            Method dump skipped, instructions count: 518
-            To view this dump add '--comments-level debug' option
+            r12 = this;
+            int r0 = r12.mNumRows
+            if (r0 != 0) goto L_0x0005
+            return
+        L_0x0005:
+            int r0 = r14.getItemCount()
+            if (r0 >= 0) goto L_0x000c
+            return
+        L_0x000c:
+            int r0 = r12.mFlag
+            r0 = r0 & 64
+            if (r0 == 0) goto L_0x001f
+            int r0 = r12.getChildCount()
+            if (r0 <= 0) goto L_0x001f
+            int r13 = r12.mFlag
+            r13 = r13 | 128(0x80, float:1.794E-43)
+            r12.mFlag = r13
+            return
+        L_0x001f:
+            int r0 = r12.mFlag
+            r1 = r0 & 512(0x200, float:7.175E-43)
+            if (r1 != 0) goto L_0x002c
+            r12.discardLayoutInfo()
+            r12.removeAndRecycleAllViews(r13)
+            return
+        L_0x002c:
+            r0 = r0 & -4
+            r1 = 1
+            r0 = r0 | r1
+            r12.mFlag = r0
+            r12.saveContext(r13, r14)
+            boolean r13 = r14.isPreLayout()
+            r0 = -2147483648(0xffffffff80000000, float:-0.0)
+            r2 = 0
+            if (r13 == 0) goto L_0x00d8
+            r12.updatePositionDeltaInPreLayout()
+            int r13 = r12.getChildCount()
+            androidx.leanback.widget.Grid r14 = r12.mGrid
+            if (r14 == 0) goto L_0x00ce
+            if (r13 <= 0) goto L_0x00ce
+            androidx.leanback.widget.BaseGridView r14 = r12.mBaseGridView
+            android.view.View r1 = r12.getChildAt(r2)
+            androidx.recyclerview.widget.RecyclerView$ViewHolder r14 = r14.getChildViewHolder(r1)
+            int r14 = r14.getOldPosition()
+            androidx.leanback.widget.BaseGridView r1 = r12.mBaseGridView
+            int r3 = r13 + -1
+            android.view.View r3 = r12.getChildAt(r3)
+            androidx.recyclerview.widget.RecyclerView$ViewHolder r1 = r1.getChildViewHolder(r3)
+            int r1 = r1.getOldPosition()
+            r3 = 2147483647(0x7fffffff, float:NaN)
+        L_0x006c:
+            if (r2 >= r13) goto L_0x00c3
+            android.view.View r4 = r12.getChildAt(r2)
+            android.view.ViewGroup$LayoutParams r5 = r4.getLayoutParams()
+            androidx.leanback.widget.GridLayoutManager$LayoutParams r5 = (androidx.leanback.widget.GridLayoutManager.LayoutParams) r5
+            androidx.leanback.widget.BaseGridView r6 = r12.mBaseGridView
+            int r6 = r6.getChildAdapterPosition(r4)
+            boolean r7 = r5.isItemChanged()
+            if (r7 != 0) goto L_0x00b0
+            boolean r7 = r5.isItemRemoved()
+            if (r7 != 0) goto L_0x00b0
+            boolean r7 = r4.isLayoutRequested()
+            if (r7 != 0) goto L_0x00b0
+            boolean r7 = r4.hasFocus()
+            if (r7 != 0) goto L_0x009e
+            int r7 = r12.mFocusPosition
+            int r8 = r5.getAbsoluteAdapterPosition()
+            if (r7 == r8) goto L_0x00b0
+        L_0x009e:
+            boolean r7 = r4.hasFocus()
+            if (r7 == 0) goto L_0x00ac
+            int r7 = r12.mFocusPosition
+            int r5 = r5.getAbsoluteAdapterPosition()
+            if (r7 != r5) goto L_0x00b0
+        L_0x00ac:
+            if (r6 < r14) goto L_0x00b0
+            if (r6 <= r1) goto L_0x00c0
+        L_0x00b0:
+            int r5 = r12.getViewMin(r4)
+            int r3 = java.lang.Math.min((int) r3, (int) r5)
+            int r4 = r12.getViewMax(r4)
+            int r0 = java.lang.Math.max((int) r0, (int) r4)
+        L_0x00c0:
+            int r2 = r2 + 1
+            goto L_0x006c
+        L_0x00c3:
+            if (r0 <= r3) goto L_0x00c8
+            int r0 = r0 - r3
+            r12.mExtraLayoutSpaceInPreLayout = r0
+        L_0x00c8:
+            r12.appendVisibleItems()
+            r12.prependVisibleItems()
+        L_0x00ce:
+            int r13 = r12.mFlag
+            r13 = r13 & -4
+            r12.mFlag = r13
+            r12.leaveContext()
+            return
+        L_0x00d8:
+            boolean r13 = r14.willRunPredictiveAnimations()
+            if (r13 == 0) goto L_0x00e1
+            r12.updatePositionToRowMapInPostLayout()
+        L_0x00e1:
+            boolean r13 = r12.isSmoothScrolling()
+            if (r13 != 0) goto L_0x00ec
+            int r13 = r12.mFocusScrollStrategy
+            if (r13 != 0) goto L_0x00ec
+            goto L_0x00ed
+        L_0x00ec:
+            r1 = r2
+        L_0x00ed:
+            int r13 = r12.mFocusPosition
+            r3 = -1
+            if (r13 == r3) goto L_0x00fb
+            int r4 = r12.mFocusPositionOffset
+            if (r4 == r0) goto L_0x00fb
+            int r13 = r13 + r4
+            r12.mFocusPosition = r13
+            r12.mSubFocusPosition = r2
+        L_0x00fb:
+            r12.mFocusPositionOffset = r2
+            int r13 = r12.mFocusPosition
+            android.view.View r13 = r12.findViewByPosition(r13)
+            int r0 = r12.mFocusPosition
+            int r4 = r12.mSubFocusPosition
+            androidx.leanback.widget.BaseGridView r5 = r12.mBaseGridView
+            boolean r5 = r5.hasFocus()
+            androidx.leanback.widget.Grid r6 = r12.mGrid
+            if (r6 == 0) goto L_0x0116
+            int r6 = r6.getFirstVisibleIndex()
+            goto L_0x0117
+        L_0x0116:
+            r6 = r3
+        L_0x0117:
+            androidx.leanback.widget.Grid r7 = r12.mGrid
+            if (r7 == 0) goto L_0x0120
+            int r7 = r7.getLastVisibleIndex()
+            goto L_0x0121
+        L_0x0120:
+            r7 = r3
+        L_0x0121:
+            int r8 = r12.mOrientation
+            if (r8 != 0) goto L_0x012e
+            int r8 = r14.getRemainingScrollHorizontal()
+            int r9 = r14.getRemainingScrollVertical()
+            goto L_0x0136
+        L_0x012e:
+            int r9 = r14.getRemainingScrollHorizontal()
+            int r8 = r14.getRemainingScrollVertical()
+        L_0x0136:
+            boolean r10 = r12.layoutInit()
+            r11 = 16
+            if (r10 == 0) goto L_0x014f
+            int r2 = r12.mFlag
+            r2 = r2 | 4
+            r12.mFlag = r2
+            androidx.leanback.widget.Grid r2 = r12.mGrid
+            int r3 = r12.mFocusPosition
+            r2.setStart(r3)
+            r12.fastRelayout()
+            goto L_0x017e
+        L_0x014f:
+            int r10 = r12.mFlag
+            r10 = r10 & -5
+            r12.mFlag = r10
+            r10 = r10 & -17
+            if (r1 == 0) goto L_0x015a
+            r2 = r11
+        L_0x015a:
+            r2 = r2 | r10
+            r12.mFlag = r2
+            if (r1 == 0) goto L_0x016a
+            if (r6 < 0) goto L_0x0167
+            int r2 = r12.mFocusPosition
+            if (r2 > r7) goto L_0x0167
+            if (r2 >= r6) goto L_0x016a
+        L_0x0167:
+            int r6 = r12.mFocusPosition
+            r7 = r6
+        L_0x016a:
+            androidx.leanback.widget.Grid r2 = r12.mGrid
+            r2.setStart(r6)
+            if (r7 == r3) goto L_0x017e
+        L_0x0171:
+            boolean r2 = r12.appendOneColumnVisibleItems()
+            if (r2 == 0) goto L_0x017e
+            android.view.View r2 = r12.findViewByPosition(r7)
+            if (r2 != 0) goto L_0x017e
+            goto L_0x0171
+        L_0x017e:
+            r12.updateScrollLimits()
+            androidx.leanback.widget.Grid r2 = r12.mGrid
+            int r2 = r2.getFirstVisibleIndex()
+            androidx.leanback.widget.Grid r3 = r12.mGrid
+            int r3 = r3.getLastVisibleIndex()
+            int r6 = -r8
+            int r7 = -r9
+            r12.focusToViewInLayout(r5, r1, r6, r7)
+            r12.appendVisibleItems()
+            r12.prependVisibleItems()
+            androidx.leanback.widget.Grid r6 = r12.mGrid
+            int r6 = r6.getFirstVisibleIndex()
+            if (r6 != r2) goto L_0x017e
+            androidx.leanback.widget.Grid r2 = r12.mGrid
+            int r2 = r2.getLastVisibleIndex()
+            if (r2 != r3) goto L_0x017e
+            r12.removeInvisibleViewsAtFront()
+            r12.removeInvisibleViewsAtEnd()
+            boolean r14 = r14.willRunPredictiveAnimations()
+            if (r14 == 0) goto L_0x01b7
+            r12.fillScrapViewsInPostLayout()
+        L_0x01b7:
+            int r14 = r12.mFlag
+            r1 = r14 & 1024(0x400, float:1.435E-42)
+            if (r1 == 0) goto L_0x01c2
+            r14 = r14 & -1025(0xfffffffffffffbff, float:NaN)
+            r12.mFlag = r14
+            goto L_0x01c5
+        L_0x01c2:
+            r12.updateRowSecondarySizeRefresh()
+        L_0x01c5:
+            int r14 = r12.mFlag
+            r14 = r14 & 4
+            if (r14 == 0) goto L_0x01e3
+            int r14 = r12.mFocusPosition
+            if (r14 != r0) goto L_0x01df
+            int r0 = r12.mSubFocusPosition
+            if (r0 != r4) goto L_0x01df
+            android.view.View r14 = r12.findViewByPosition(r14)
+            if (r14 != r13) goto L_0x01df
+            int r13 = r12.mFlag
+            r13 = r13 & 8
+            if (r13 == 0) goto L_0x01e3
+        L_0x01df:
+            r12.dispatchChildSelected()
+            goto L_0x01ec
+        L_0x01e3:
+            int r13 = r12.mFlag
+            r13 = r13 & 20
+            if (r13 != r11) goto L_0x01ec
+            r12.dispatchChildSelected()
+        L_0x01ec:
+            r12.dispatchChildSelectedAndPositioned()
+            int r13 = r12.mFlag
+            r13 = r13 & 64
+            if (r13 == 0) goto L_0x01fc
+            int r13 = r12.getSlideOutDistance()
+            r12.scrollDirectionPrimary(r13)
+        L_0x01fc:
+            int r13 = r12.mFlag
+            r13 = r13 & -4
+            r12.mFlag = r13
+            r12.leaveContext()
+            return
         */
         throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.onLayoutChildren(androidx.recyclerview.widget.RecyclerView$Recycler, androidx.recyclerview.widget.RecyclerView$State):void");
     }
 
-    private void offsetChildrenSecondary(int increment) {
+    private void offsetChildrenSecondary(int i) {
         int childCount = getChildCount();
-        int i = 0;
+        int i2 = 0;
         if (this.mOrientation == 0) {
-            while (i < childCount) {
-                getChildAt(i).offsetTopAndBottom(increment);
-                i++;
+            while (i2 < childCount) {
+                getChildAt(i2).offsetTopAndBottom(i);
+                i2++;
             }
             return;
         }
-        while (i < childCount) {
-            getChildAt(i).offsetLeftAndRight(increment);
-            i++;
+        while (i2 < childCount) {
+            getChildAt(i2).offsetLeftAndRight(i);
+            i2++;
         }
     }
 
-    private void offsetChildrenPrimary(int increment) {
+    private void offsetChildrenPrimary(int i) {
         int childCount = getChildCount();
-        int i = 0;
+        int i2 = 0;
         if (this.mOrientation == 1) {
-            while (i < childCount) {
-                getChildAt(i).offsetTopAndBottom(increment);
-                i++;
+            while (i2 < childCount) {
+                getChildAt(i2).offsetTopAndBottom(i);
+                i2++;
             }
             return;
         }
-        while (i < childCount) {
-            getChildAt(i).offsetLeftAndRight(increment);
-            i++;
+        while (i2 < childCount) {
+            getChildAt(i2).offsetLeftAndRight(i);
+            i2++;
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public int scrollHorizontallyBy(int dx, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        int scrollDirectionSecondary;
+    public int scrollHorizontallyBy(int i, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        int i2;
         if ((this.mFlag & 512) == 0 || !hasDoneFirstLayout()) {
             return 0;
         }
         saveContext(recycler, state);
-        this.mFlag = (this.mFlag & (-4)) | 2;
+        this.mFlag = (this.mFlag & -4) | 2;
         if (this.mOrientation == 0) {
-            scrollDirectionSecondary = scrollDirectionPrimary(dx);
+            i2 = scrollDirectionPrimary(i);
         } else {
-            scrollDirectionSecondary = scrollDirectionSecondary(dx);
+            i2 = scrollDirectionSecondary(i);
         }
         leaveContext();
         this.mFlag &= -4;
-        return scrollDirectionSecondary;
+        return i2;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public int scrollVerticallyBy(int dy, RecyclerView.Recycler recycler, RecyclerView.State state) {
-        int scrollDirectionSecondary;
+    public int scrollVerticallyBy(int i, RecyclerView.Recycler recycler, RecyclerView.State state) {
+        int i2;
         if ((this.mFlag & 512) == 0 || !hasDoneFirstLayout()) {
             return 0;
         }
-        this.mFlag = (this.mFlag & (-4)) | 2;
+        this.mFlag = (this.mFlag & -4) | 2;
         saveContext(recycler, state);
         if (this.mOrientation == 1) {
-            scrollDirectionSecondary = scrollDirectionPrimary(dy);
+            i2 = scrollDirectionPrimary(i);
         } else {
-            scrollDirectionSecondary = scrollDirectionSecondary(dy);
+            i2 = scrollDirectionSecondary(i);
         }
         leaveContext();
         this.mFlag &= -4;
-        return scrollDirectionSecondary;
+        return i2;
     }
 
-    private int scrollDirectionPrimary(int da) {
-        int minScroll;
-        int i = this.mFlag;
+    private int scrollDirectionPrimary(int i) {
+        int i2;
+        int i3 = this.mFlag;
         boolean z = true;
-        if ((i & 64) == 0 && (i & 3) != 1 && (da <= 0 ? !(da >= 0 || this.mWindowAlignment.mainAxis().isMinUnknown() || da >= (minScroll = this.mWindowAlignment.mainAxis().getMinScroll())) : !(this.mWindowAlignment.mainAxis().isMaxUnknown() || da <= (minScroll = this.mWindowAlignment.mainAxis().getMaxScroll())))) {
-            da = minScroll;
+        if ((i3 & 64) == 0 && (i3 & 3) != 1 && (i <= 0 ? !(i >= 0 || this.mWindowAlignment.mainAxis().isMinUnknown() || i >= (i2 = this.mWindowAlignment.mainAxis().getMinScroll())) : !(this.mWindowAlignment.mainAxis().isMaxUnknown() || i <= (i2 = this.mWindowAlignment.mainAxis().getMaxScroll())))) {
+            i = i2;
         }
-        if (da == 0) {
+        if (i == 0) {
             return 0;
         }
-        offsetChildrenPrimary(-da);
+        offsetChildrenPrimary(-i);
         if ((this.mFlag & 3) == 1) {
             updateScrollLimits();
-            return da;
+            return i;
         }
         int childCount = getChildCount();
-        if ((this.mFlag & 262144) == 0 ? da < 0 : da > 0) {
-            prependVisibleItems();
-        } else {
+        if ((this.mFlag & 262144) == 0 ? i >= 0 : i <= 0) {
             appendVisibleItems();
+        } else {
+            prependVisibleItems();
         }
         boolean z2 = getChildCount() > childCount;
         int childCount2 = getChildCount();
-        if ((262144 & this.mFlag) == 0 ? da < 0 : da > 0) {
-            removeInvisibleViewsAtEnd();
-        } else {
+        if ((262144 & this.mFlag) == 0 ? i >= 0 : i <= 0) {
             removeInvisibleViewsAtFront();
+        } else {
+            removeInvisibleViewsAtEnd();
         }
         if (getChildCount() >= childCount2) {
             z = false;
         }
-        if (z2 | z) {
+        if (z2 || z) {
             updateRowSecondarySizeRefresh();
         }
         this.mBaseGridView.invalidate();
         updateScrollLimits();
-        return da;
+        return i;
     }
 
-    private int scrollDirectionSecondary(int dy) {
-        if (dy == 0) {
+    private int scrollDirectionSecondary(int i) {
+        if (i == 0) {
             return 0;
         }
-        offsetChildrenSecondary(-dy);
-        this.mScrollOffsetSecondary += dy;
+        offsetChildrenSecondary(-i);
+        this.mScrollOffsetSecondary += i;
         updateSecondaryScrollLimits();
         this.mBaseGridView.invalidate();
-        return dy;
+        return i;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void collectAdjacentPrefetchPositions(int dx, int dy, RecyclerView.State state, RecyclerView.LayoutManager.LayoutPrefetchRegistry layoutPrefetchRegistry) {
-        int i;
+    public void collectAdjacentPrefetchPositions(int i, int i2, RecyclerView.State state, RecyclerView.LayoutManager.LayoutPrefetchRegistry layoutPrefetchRegistry) {
+        int i3;
         try {
-            saveContext(null, state);
+            saveContext((RecyclerView.Recycler) null, state);
             if (this.mOrientation != 0) {
-                dx = dy;
+                i = i2;
             }
-            if (getChildCount() != 0 && dx != 0) {
-                if (dx < 0) {
-                    i = -this.mExtraLayoutSpace;
-                } else {
-                    i = this.mSizePrimary + this.mExtraLayoutSpace;
+            if (getChildCount() != 0) {
+                if (i != 0) {
+                    if (i < 0) {
+                        i3 = -this.mExtraLayoutSpace;
+                    } else {
+                        i3 = this.mSizePrimary + this.mExtraLayoutSpace;
+                    }
+                    this.mGrid.collectAdjacentPrefetchPositions(i3, i, layoutPrefetchRegistry);
+                    leaveContext();
                 }
-                this.mGrid.collectAdjacentPrefetchPositions(i, dx, layoutPrefetchRegistry);
             }
         } finally {
             leaveContext();
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void collectInitialPrefetchPositions(int adapterItemCount, RecyclerView.LayoutManager.LayoutPrefetchRegistry layoutPrefetchRegistry) {
-        int i = this.mBaseGridView.mInitialPrefetchItemCount;
-        if (adapterItemCount == 0 || i == 0) {
-            return;
-        }
-        int max = Math.max(0, Math.min(this.mFocusPosition - ((i - 1) / 2), adapterItemCount - i));
-        for (int i2 = max; i2 < adapterItemCount && i2 < max + i; i2++) {
-            layoutPrefetchRegistry.addPosition(i2, 0);
+    public void collectInitialPrefetchPositions(int i, RecyclerView.LayoutManager.LayoutPrefetchRegistry layoutPrefetchRegistry) {
+        int i2 = this.mBaseGridView.mInitialPrefetchItemCount;
+        if (i != 0 && i2 != 0) {
+            int max = Math.max(0, Math.min(this.mFocusPosition - ((i2 - 1) / 2), i - i2));
+            int i3 = max;
+            while (i3 < i && i3 < max + i2) {
+                layoutPrefetchRegistry.addPosition(i3, 0);
+                i3++;
+            }
         }
     }
 
-    void updateScrollLimits() {
-        int firstVisibleIndex;
-        int lastVisibleIndex;
-        int itemCount;
+    /* access modifiers changed from: package-private */
+    public void updateScrollLimits() {
         int i;
         int i2;
         int i3;
-        if (this.mState.getItemCount() == 0) {
-            return;
-        }
-        if ((this.mFlag & 262144) == 0) {
-            firstVisibleIndex = this.mGrid.getLastVisibleIndex();
-            i = this.mState.getItemCount() - 1;
-            lastVisibleIndex = this.mGrid.getFirstVisibleIndex();
-            itemCount = 0;
-        } else {
-            firstVisibleIndex = this.mGrid.getFirstVisibleIndex();
-            lastVisibleIndex = this.mGrid.getLastVisibleIndex();
-            itemCount = this.mState.getItemCount() - 1;
-            i = 0;
-        }
-        if (firstVisibleIndex < 0 || lastVisibleIndex < 0) {
-            return;
-        }
-        boolean z = firstVisibleIndex == i;
-        boolean z2 = lastVisibleIndex == itemCount;
-        if (!z && this.mWindowAlignment.mainAxis().isMaxUnknown() && !z2 && this.mWindowAlignment.mainAxis().isMinUnknown()) {
-            return;
-        }
-        int i4 = Integer.MAX_VALUE;
-        if (z) {
-            i4 = this.mGrid.findRowMax(true, sTwoInts);
-            View findViewByPosition = findViewByPosition(sTwoInts[1]);
-            i2 = getViewCenter(findViewByPosition);
-            int[] alignMultiple = ((LayoutParams) findViewByPosition.getLayoutParams()).getAlignMultiple();
-            if (alignMultiple != null && alignMultiple.length > 0) {
-                i2 += alignMultiple[alignMultiple.length - 1] - alignMultiple[0];
+        int i4;
+        int i5;
+        int i6;
+        int i7;
+        int i8;
+        if (this.mState.getItemCount() != 0) {
+            if ((this.mFlag & 262144) == 0) {
+                i4 = this.mGrid.getLastVisibleIndex();
+                i3 = this.mState.getItemCount() - 1;
+                i = this.mGrid.getFirstVisibleIndex();
+                i2 = 0;
+            } else {
+                i4 = this.mGrid.getFirstVisibleIndex();
+                i = this.mGrid.getLastVisibleIndex();
+                i2 = this.mState.getItemCount() - 1;
+                i3 = 0;
             }
-        } else {
-            i2 = Integer.MAX_VALUE;
+            if (i4 >= 0 && i >= 0) {
+                boolean z = i4 == i3;
+                boolean z2 = i == i2;
+                if (z || !this.mWindowAlignment.mainAxis().isMaxUnknown() || z2 || !this.mWindowAlignment.mainAxis().isMinUnknown()) {
+                    if (z) {
+                        i6 = this.mGrid.findRowMax(true, sTwoInts);
+                        View findViewByPosition = findViewByPosition(sTwoInts[1]);
+                        i5 = getViewCenter(findViewByPosition);
+                        int[] alignMultiple = ((LayoutParams) findViewByPosition.getLayoutParams()).getAlignMultiple();
+                        if (alignMultiple != null && alignMultiple.length > 0) {
+                            i5 += alignMultiple[alignMultiple.length - 1] - alignMultiple[0];
+                        }
+                    } else {
+                        i6 = Integer.MAX_VALUE;
+                        i5 = Integer.MAX_VALUE;
+                    }
+                    if (z2) {
+                        i8 = this.mGrid.findRowMin(false, sTwoInts);
+                        i7 = getViewCenter(findViewByPosition(sTwoInts[1]));
+                    } else {
+                        i8 = Integer.MIN_VALUE;
+                        i7 = Integer.MIN_VALUE;
+                    }
+                    this.mWindowAlignment.mainAxis().updateMinMax(i8, i6, i7, i5);
+                }
+            }
         }
-        int i5 = Integer.MIN_VALUE;
-        if (z2) {
-            i5 = this.mGrid.findRowMin(false, sTwoInts);
-            i3 = getViewCenter(findViewByPosition(sTwoInts[1]));
-        } else {
-            i3 = Integer.MIN_VALUE;
-        }
-        this.mWindowAlignment.mainAxis().updateMinMax(i5, i4, i3, i2);
     }
 
     private void updateSecondaryScrollLimits() {
@@ -1787,144 +2477,148 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         this.mSizePrimary = this.mWindowAlignment.mainAxis().getSize();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void scrollToPosition(int position) {
-        setSelection(position, 0, false, 0);
+    public void scrollToPosition(int i) {
+        setSelection(i, 0, false, 0);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int position) {
-        setSelection(position, 0, true, 0);
+    public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state, int i) {
+        setSelection(i, 0, true, 0);
     }
 
-    public void setSelection(int position, int primaryScrollExtra) {
-        setSelection(position, 0, false, primaryScrollExtra);
+    public void setSelection(int i, int i2) {
+        setSelection(i, 0, false, i2);
     }
 
-    public void setSelectionSmooth(int position) {
-        setSelection(position, 0, true, 0);
+    public void setSelectionSmooth(int i) {
+        setSelection(i, 0, true, 0);
     }
 
-    public void setSelectionWithSub(int position, int subposition, int primaryScrollExtra) {
-        setSelection(position, subposition, false, primaryScrollExtra);
+    public void setSelectionWithSub(int i, int i2, int i3) {
+        setSelection(i, i2, false, i3);
+    }
+
+    public void setSelectionSmoothWithSub(int i, int i2) {
+        setSelection(i, i2, true, 0);
     }
 
     public int getSelection() {
         return this.mFocusPosition;
     }
 
-    public void setSelection(int position, int subposition, boolean smooth, int primaryScrollExtra) {
-        if ((this.mFocusPosition == position || position == -1) && subposition == this.mSubFocusPosition && primaryScrollExtra == this.mPrimaryScrollExtra) {
-            return;
-        }
-        scrollToSelection(position, subposition, smooth, primaryScrollExtra);
+    public int getSubSelection() {
+        return this.mSubFocusPosition;
     }
 
-    void scrollToSelection(int position, int subposition, boolean smooth, int primaryScrollExtra) {
-        this.mPrimaryScrollExtra = primaryScrollExtra;
-        View findViewByPosition = findViewByPosition(position);
-        boolean z = !isSmoothScrolling();
-        if (z && !this.mBaseGridView.isLayoutRequested() && findViewByPosition != null && getAdapterPositionByView(findViewByPosition) == position) {
-            this.mFlag |= 32;
-            scrollToView(findViewByPosition, smooth);
-            this.mFlag &= -33;
-            return;
+    public void setSelection(int i, int i2, boolean z, int i3) {
+        if ((this.mFocusPosition != i && i != -1) || i2 != this.mSubFocusPosition || i3 != this.mPrimaryScrollExtra) {
+            scrollToSelection(i, i2, z, i3);
         }
-        int i = this.mFlag;
-        if ((i & 512) == 0 || (i & 64) != 0) {
-            this.mFocusPosition = position;
-            this.mSubFocusPosition = subposition;
-            this.mFocusPositionOffset = Integer.MIN_VALUE;
-        } else if (smooth && !this.mBaseGridView.isLayoutRequested()) {
-            this.mFocusPosition = position;
-            this.mSubFocusPosition = subposition;
-            this.mFocusPositionOffset = Integer.MIN_VALUE;
-            if (!hasDoneFirstLayout()) {
-                Log.w(getTag(), "setSelectionSmooth should not be called before first layout pass");
-                return;
-            }
-            int startPositionSmoothScroller = startPositionSmoothScroller(position);
-            if (startPositionSmoothScroller == this.mFocusPosition) {
-                return;
-            }
-            this.mFocusPosition = startPositionSmoothScroller;
-            this.mSubFocusPosition = 0;
-        } else {
-            if (!z) {
-                skipSmoothScrollerOnStopInternal();
-                this.mBaseGridView.stopScroll();
-            }
-            if (!this.mBaseGridView.isLayoutRequested() && findViewByPosition != null && getAdapterPositionByView(findViewByPosition) == position) {
+    }
+
+    /* access modifiers changed from: package-private */
+    public void scrollToSelection(int i, int i2, boolean z, int i3) {
+        this.mPrimaryScrollExtra = i3;
+        View findViewByPosition = findViewByPosition(i);
+        boolean z2 = !isSmoothScrolling();
+        if (!z2 || this.mBaseGridView.isLayoutRequested() || findViewByPosition == null || getAdapterPositionByView(findViewByPosition) != i) {
+            int i4 = this.mFlag;
+            if ((i4 & 512) == 0 || (i4 & 64) != 0) {
+                this.mFocusPosition = i;
+                this.mSubFocusPosition = i2;
+                this.mFocusPositionOffset = Integer.MIN_VALUE;
+            } else if (!z || this.mBaseGridView.isLayoutRequested()) {
+                if (!z2) {
+                    skipSmoothScrollerOnStopInternal();
+                    this.mBaseGridView.stopScroll();
+                }
+                if (this.mBaseGridView.isLayoutRequested() || findViewByPosition == null || getAdapterPositionByView(findViewByPosition) != i) {
+                    this.mFocusPosition = i;
+                    this.mSubFocusPosition = i2;
+                    this.mFocusPositionOffset = Integer.MIN_VALUE;
+                    this.mFlag |= 256;
+                    requestLayout();
+                    return;
+                }
                 this.mFlag |= 32;
-                scrollToView(findViewByPosition, smooth);
+                scrollToView(findViewByPosition, z);
                 this.mFlag &= -33;
-                return;
+            } else {
+                this.mFocusPosition = i;
+                this.mSubFocusPosition = i2;
+                this.mFocusPositionOffset = Integer.MIN_VALUE;
+                if (!hasDoneFirstLayout()) {
+                    Log.w(getTag(), "setSelectionSmooth should not be called before first layout pass");
+                    return;
+                }
+                int startPositionSmoothScroller = startPositionSmoothScroller(i);
+                if (startPositionSmoothScroller != this.mFocusPosition) {
+                    this.mFocusPosition = startPositionSmoothScroller;
+                    this.mSubFocusPosition = 0;
+                }
             }
-            this.mFocusPosition = position;
-            this.mSubFocusPosition = subposition;
-            this.mFocusPositionOffset = Integer.MIN_VALUE;
-            this.mFlag |= 256;
-            requestLayout();
+        } else {
+            this.mFlag |= 32;
+            scrollToView(findViewByPosition, z);
+            this.mFlag &= -33;
         }
     }
 
-    int startPositionSmoothScroller(int position) {
-        GridLinearSmoothScroller gridLinearSmoothScroller = new GridLinearSmoothScroller() { // from class: androidx.leanback.widget.GridLayoutManager.4
-            @Override // androidx.recyclerview.widget.RecyclerView.SmoothScroller
-            public PointF computeScrollVectorForPosition(int targetPosition) {
+    /* access modifiers changed from: package-private */
+    public int startPositionSmoothScroller(int i) {
+        C10034 r0 = new GridLinearSmoothScroller() {
+            public PointF computeScrollVectorForPosition(int i) {
                 if (getChildCount() == 0) {
                     return null;
                 }
                 GridLayoutManager gridLayoutManager = GridLayoutManager.this;
                 boolean z = false;
-                int position2 = gridLayoutManager.getPosition(gridLayoutManager.getChildAt(0));
-                GridLayoutManager gridLayoutManager2 = GridLayoutManager.this;
-                int i = 1;
-                if ((gridLayoutManager2.mFlag & 262144) == 0 ? targetPosition < position2 : targetPosition > position2) {
+                int position = gridLayoutManager.getPosition(gridLayoutManager.getChildAt(0));
+                int i2 = 1;
+                if ((GridLayoutManager.this.mFlag & 262144) == 0 ? i < position : i > position) {
                     z = true;
                 }
                 if (z) {
-                    i = -1;
+                    i2 = -1;
                 }
-                if (gridLayoutManager2.mOrientation == 0) {
-                    return new PointF(i, 0.0f);
+                if (GridLayoutManager.this.mOrientation == 0) {
+                    return new PointF((float) i2, 0.0f);
                 }
-                return new PointF(0.0f, i);
+                return new PointF(0.0f, (float) i2);
             }
         };
-        gridLinearSmoothScroller.setTargetPosition(position);
-        startSmoothScroll(gridLinearSmoothScroller);
-        return gridLinearSmoothScroller.getTargetPosition();
+        r0.setTargetPosition(i);
+        startSmoothScroll(r0);
+        return r0.getTargetPosition();
     }
 
-    void skipSmoothScrollerOnStopInternal() {
+    /* access modifiers changed from: package-private */
+    public void skipSmoothScrollerOnStopInternal() {
         GridLinearSmoothScroller gridLinearSmoothScroller = this.mCurrentSmoothScroller;
         if (gridLinearSmoothScroller != null) {
             gridLinearSmoothScroller.mSkipOnStopInternal = true;
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public void startSmoothScroll(RecyclerView.SmoothScroller smoothScroller) {
         skipSmoothScrollerOnStopInternal();
         super.startSmoothScroll(smoothScroller);
-        if (smoothScroller.isRunning() && (smoothScroller instanceof GridLinearSmoothScroller)) {
-            GridLinearSmoothScroller gridLinearSmoothScroller = (GridLinearSmoothScroller) smoothScroller;
-            this.mCurrentSmoothScroller = gridLinearSmoothScroller;
-            if (gridLinearSmoothScroller instanceof PendingMoveSmoothScroller) {
-                this.mPendingMoveSmoothScroller = (PendingMoveSmoothScroller) gridLinearSmoothScroller;
-                return;
-            } else {
-                this.mPendingMoveSmoothScroller = null;
-                return;
-            }
+        if (!smoothScroller.isRunning() || !(smoothScroller instanceof GridLinearSmoothScroller)) {
+            this.mCurrentSmoothScroller = null;
+            this.mPendingMoveSmoothScroller = null;
+            return;
         }
-        this.mCurrentSmoothScroller = null;
-        this.mPendingMoveSmoothScroller = null;
+        GridLinearSmoothScroller gridLinearSmoothScroller = (GridLinearSmoothScroller) smoothScroller;
+        this.mCurrentSmoothScroller = gridLinearSmoothScroller;
+        if (gridLinearSmoothScroller instanceof PendingMoveSmoothScroller) {
+            this.mPendingMoveSmoothScroller = (PendingMoveSmoothScroller) gridLinearSmoothScroller;
+        } else {
+            this.mPendingMoveSmoothScroller = null;
+        }
     }
 
-    void processPendingMovement(boolean forward) {
-        if (forward) {
+    /* access modifiers changed from: package-private */
+    public void processPendingMovement(boolean z) {
+        if (z) {
             if (hasCreatedLastItem()) {
                 return;
             }
@@ -1932,293 +2626,387 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
             return;
         }
         PendingMoveSmoothScroller pendingMoveSmoothScroller = this.mPendingMoveSmoothScroller;
-        if (pendingMoveSmoothScroller != null) {
-            if (forward) {
-                pendingMoveSmoothScroller.increasePendingMoves();
-                return;
-            } else {
-                pendingMoveSmoothScroller.decreasePendingMoves();
-                return;
+        if (pendingMoveSmoothScroller == null) {
+            boolean z2 = true;
+            int i = z ? 1 : -1;
+            if (this.mNumRows <= 1) {
+                z2 = false;
             }
+            PendingMoveSmoothScroller pendingMoveSmoothScroller2 = new PendingMoveSmoothScroller(i, z2);
+            this.mFocusPositionOffset = 0;
+            startSmoothScroll(pendingMoveSmoothScroller2);
+        } else if (z) {
+            pendingMoveSmoothScroller.increasePendingMoves();
+        } else {
+            pendingMoveSmoothScroller.decreasePendingMoves();
         }
-        boolean z = true;
-        int i = forward ? 1 : -1;
-        if (this.mNumRows <= 1) {
-            z = false;
-        }
-        PendingMoveSmoothScroller pendingMoveSmoothScroller2 = new PendingMoveSmoothScroller(i, z);
-        this.mFocusPositionOffset = 0;
-        startSmoothScroll(pendingMoveSmoothScroller2);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void onItemsAdded(RecyclerView recyclerView, int positionStart, int itemCount) {
+    public void onItemsAdded(RecyclerView recyclerView, int i, int i2) {
         Grid grid;
-        int i;
-        if (this.mFocusPosition != -1 && (grid = this.mGrid) != null && grid.getFirstVisibleIndex() >= 0 && (i = this.mFocusPositionOffset) != Integer.MIN_VALUE && positionStart <= this.mFocusPosition + i) {
-            this.mFocusPositionOffset = i + itemCount;
+        int i3;
+        if (!(this.mFocusPosition == -1 || (grid = this.mGrid) == null || grid.getFirstVisibleIndex() < 0 || (i3 = this.mFocusPositionOffset) == Integer.MIN_VALUE || i > this.mFocusPosition + i3)) {
+            this.mFocusPositionOffset = i3 + i2;
         }
         this.mChildrenStates.clear();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public void onItemsChanged(RecyclerView recyclerView) {
         this.mFocusPositionOffset = 0;
         this.mChildrenStates.clear();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void onItemsRemoved(RecyclerView recyclerView, int positionStart, int itemCount) {
-        Grid grid;
-        int i;
-        int i2;
-        int i3;
-        if (this.mFocusPosition != -1 && (grid = this.mGrid) != null && grid.getFirstVisibleIndex() >= 0 && (i = this.mFocusPositionOffset) != Integer.MIN_VALUE && positionStart <= (i3 = (i2 = this.mFocusPosition) + i)) {
-            if (positionStart + itemCount > i3) {
-                int i4 = i + (positionStart - i3);
-                this.mFocusPositionOffset = i4;
-                this.mFocusPosition = i2 + i4;
-                this.mFocusPositionOffset = Integer.MIN_VALUE;
-            } else {
-                this.mFocusPositionOffset = i - itemCount;
+    /* JADX WARNING: Code restructure failed: missing block: B:8:0x0015, code lost:
+        r1 = r4.mFocusPosition;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onItemsRemoved(androidx.recyclerview.widget.RecyclerView r5, int r6, int r7) {
+        /*
+            r4 = this;
+            int r5 = r4.mFocusPosition
+            r0 = -1
+            if (r5 == r0) goto L_0x002a
+            androidx.leanback.widget.Grid r5 = r4.mGrid
+            if (r5 == 0) goto L_0x002a
+            int r5 = r5.getFirstVisibleIndex()
+            if (r5 < 0) goto L_0x002a
+            int r5 = r4.mFocusPositionOffset
+            r0 = -2147483648(0xffffffff80000000, float:-0.0)
+            if (r5 == r0) goto L_0x002a
+            int r1 = r4.mFocusPosition
+            int r2 = r1 + r5
+            if (r6 > r2) goto L_0x002a
+            int r3 = r6 + r7
+            if (r3 <= r2) goto L_0x0027
+            int r6 = r6 - r2
+            int r5 = r5 + r6
+            int r1 = r1 + r5
+            r4.mFocusPosition = r1
+            r4.mFocusPositionOffset = r0
+            goto L_0x002a
+        L_0x0027:
+            int r5 = r5 - r7
+            r4.mFocusPositionOffset = r5
+        L_0x002a:
+            androidx.leanback.widget.ViewsStateBundle r4 = r4.mChildrenStates
+            r4.clear()
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.onItemsRemoved(androidx.recyclerview.widget.RecyclerView, int, int):void");
+    }
+
+    public void onItemsMoved(RecyclerView recyclerView, int i, int i2, int i3) {
+        int i4;
+        int i5 = this.mFocusPosition;
+        if (!(i5 == -1 || (i4 = this.mFocusPositionOffset) == Integer.MIN_VALUE)) {
+            int i6 = i5 + i4;
+            if (i <= i6 && i6 < i + i3) {
+                this.mFocusPositionOffset = i4 + (i2 - i);
+            } else if (i < i6 && i2 > i6 - i3) {
+                this.mFocusPositionOffset = i4 - i3;
+            } else if (i > i6 && i2 < i6) {
+                this.mFocusPositionOffset = i4 + i3;
             }
         }
         this.mChildrenStates.clear();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void onItemsMoved(RecyclerView recyclerView, int fromPosition, int toPosition, int itemCount) {
-        int i;
-        int i2 = this.mFocusPosition;
-        if (i2 != -1 && (i = this.mFocusPositionOffset) != Integer.MIN_VALUE) {
-            int i3 = i2 + i;
-            if (fromPosition <= i3 && i3 < fromPosition + itemCount) {
-                this.mFocusPositionOffset = i + (toPosition - fromPosition);
-            } else if (fromPosition < i3 && toPosition > i3 - itemCount) {
-                this.mFocusPositionOffset = i - itemCount;
-            } else if (fromPosition > i3 && toPosition < i3) {
-                this.mFocusPositionOffset = i + itemCount;
-            }
-        }
-        this.mChildrenStates.clear();
-    }
-
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void onItemsUpdated(RecyclerView recyclerView, int positionStart, int itemCount) {
-        int i = itemCount + positionStart;
-        while (positionStart < i) {
-            this.mChildrenStates.remove(positionStart);
-            positionStart++;
+    public void onItemsUpdated(RecyclerView recyclerView, int i, int i2) {
+        int i3 = i2 + i;
+        while (i < i3) {
+            this.mChildrenStates.remove(i);
+            i++;
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public boolean onRequestChildFocus(RecyclerView parent, View child, View focused) {
-        if ((this.mFlag & 32768) == 0 && getAdapterPositionByView(child) != -1 && (this.mFlag & 35) == 0) {
-            scrollToView(child, focused, true);
+    public boolean onRequestChildFocus(RecyclerView recyclerView, View view, View view2) {
+        if ((this.mFlag & 32768) == 0 && getAdapterPositionByView(view) != -1 && (this.mFlag & 35) == 0) {
+            scrollToView(view, view2, true);
         }
         return true;
+    }
+
+    public void getViewSelectedOffsets(View view, int[] iArr) {
+        if (this.mOrientation == 0) {
+            iArr[0] = getPrimaryAlignedScrollDistance(view);
+            iArr[1] = getSecondaryScrollDistance(view);
+            return;
+        }
+        iArr[1] = getPrimaryAlignedScrollDistance(view);
+        iArr[0] = getSecondaryScrollDistance(view);
     }
 
     private int getPrimaryAlignedScrollDistance(View view) {
         return this.mWindowAlignment.mainAxis().getScroll(getViewCenter(view));
     }
 
-    private int getAdjustedPrimaryAlignedScrollDistance(int scrollPrimary, View view, View childView) {
-        int subPositionByView = getSubPositionByView(view, childView);
-        if (subPositionByView != 0) {
-            LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-            return scrollPrimary + (layoutParams.getAlignMultiple()[subPositionByView] - layoutParams.getAlignMultiple()[0]);
+    private int getAdjustedPrimaryAlignedScrollDistance(int i, View view, View view2) {
+        int subPositionByView = getSubPositionByView(view, view2);
+        if (subPositionByView == 0) {
+            return i;
         }
-        return scrollPrimary;
+        LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
+        return i + (layoutParams.getAlignMultiple()[subPositionByView] - layoutParams.getAlignMultiple()[0]);
     }
 
     private int getSecondaryScrollDistance(View view) {
         return this.mWindowAlignment.secondAxis().getScroll(getViewCenterSecondary(view));
     }
 
-    void scrollToView(View view, boolean smooth) {
-        scrollToView(view, view == null ? null : view.findFocus(), smooth);
+    /* access modifiers changed from: package-private */
+    public void scrollToView(View view, boolean z) {
+        scrollToView(view, view == null ? null : view.findFocus(), z);
     }
 
-    void scrollToView(View view, boolean smooth, int extraDelta, int extraDeltaSecondary) {
-        scrollToView(view, view == null ? null : view.findFocus(), smooth, extraDelta, extraDeltaSecondary);
+    /* access modifiers changed from: package-private */
+    public void scrollToView(View view, boolean z, int i, int i2) {
+        scrollToView(view, view == null ? null : view.findFocus(), z, i, i2);
     }
 
-    private void scrollToView(View view, View childView, boolean smooth) {
-        scrollToView(view, childView, smooth, 0, 0);
+    private void scrollToView(View view, View view2, boolean z) {
+        scrollToView(view, view2, z, 0, 0);
     }
 
-    private void scrollToView(View view, View childView, boolean smooth, int extraDelta, int extraDeltaSecondary) {
-        if ((this.mFlag & 64) != 0) {
-            return;
-        }
-        int adapterPositionByView = getAdapterPositionByView(view);
-        int subPositionByView = getSubPositionByView(view, childView);
-        if (adapterPositionByView != this.mFocusPosition || subPositionByView != this.mSubFocusPosition) {
-            this.mFocusPosition = adapterPositionByView;
-            this.mSubFocusPosition = subPositionByView;
-            this.mFocusPositionOffset = 0;
-            if ((this.mFlag & 3) != 1) {
-                dispatchChildSelected();
+    private void scrollToView(View view, View view2, boolean z, int i, int i2) {
+        if ((this.mFlag & 64) == 0) {
+            int adapterPositionByView = getAdapterPositionByView(view);
+            int subPositionByView = getSubPositionByView(view, view2);
+            if (!(adapterPositionByView == this.mFocusPosition && subPositionByView == this.mSubFocusPosition)) {
+                this.mFocusPosition = adapterPositionByView;
+                this.mSubFocusPosition = subPositionByView;
+                this.mFocusPositionOffset = 0;
+                if ((this.mFlag & 3) != 1) {
+                    dispatchChildSelected();
+                }
+                if (this.mBaseGridView.isChildrenDrawingOrderEnabledInternal()) {
+                    this.mBaseGridView.invalidate();
+                }
             }
-            if (this.mBaseGridView.isChildrenDrawingOrderEnabledInternal()) {
-                this.mBaseGridView.invalidate();
+            if (view != null) {
+                if (!view.hasFocus() && this.mBaseGridView.hasFocus()) {
+                    view.requestFocus();
+                }
+                if ((this.mFlag & 131072) == 0 && z) {
+                    return;
+                }
+                if (getScrollPosition(view, view2, sTwoInts) || i != 0 || i2 != 0) {
+                    int[] iArr = sTwoInts;
+                    scrollGrid(iArr[0] + i, iArr[1] + i2, z);
+                }
             }
         }
-        if (view == null) {
-            return;
-        }
-        if (!view.hasFocus() && this.mBaseGridView.hasFocus()) {
-            view.requestFocus();
-        }
-        if ((this.mFlag & 131072) == 0 && smooth) {
-            return;
-        }
-        if (!getScrollPosition(view, childView, sTwoInts) && extraDelta == 0 && extraDeltaSecondary == 0) {
-            return;
-        }
-        int[] iArr = sTwoInts;
-        scrollGrid(iArr[0] + extraDelta, iArr[1] + extraDeltaSecondary, smooth);
     }
 
-    boolean getScrollPosition(View view, View childView, int[] deltas) {
+    /* access modifiers changed from: package-private */
+    public boolean getScrollPosition(View view, View view2, int[] iArr) {
         int i = this.mFocusScrollStrategy;
-        if (i != 1 && i != 2) {
-            return getAlignedPosition(view, childView, deltas);
+        if (i == 1 || i == 2) {
+            return getNoneAlignedPosition(view, iArr);
         }
-        return getNoneAlignedPosition(view, deltas);
+        return getAlignedPosition(view, view2, iArr);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:46:0x009f, code lost:
-        if (r2 != null) goto L15;
+    /* JADX WARNING: Code restructure failed: missing block: B:26:0x009f, code lost:
+        if (r2 != null) goto L_0x00a5;
      */
-    /* JADX WARN: Removed duplicated region for block: B:19:0x00b8  */
-    /* JADX WARN: Removed duplicated region for block: B:27:0x00ba  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private boolean getNoneAlignedPosition(View view, int[] deltas) {
-        View view2;
-        int i;
-        int viewMax;
-        int secondaryScrollDistance;
-        int adapterPositionByView = getAdapterPositionByView(view);
-        int viewMin = getViewMin(view);
-        int viewMax2 = getViewMax(view);
-        int paddingMin = this.mWindowAlignment.mainAxis().getPaddingMin();
-        int clientSize = this.mWindowAlignment.mainAxis().getClientSize();
-        int rowIndex = this.mGrid.getRowIndex(adapterPositionByView);
-        View view3 = null;
-        if (viewMin < paddingMin) {
-            if (this.mFocusScrollStrategy == 2) {
-                View view4 = view;
-                while (true) {
-                    if (!prependOneColumnVisibleItems()) {
-                        view2 = null;
-                        view3 = view4;
-                        break;
-                    }
-                    Grid grid = this.mGrid;
-                    CircularIntArray circularIntArray = grid.getItemPositionsInRows(grid.getFirstVisibleIndex(), adapterPositionByView)[rowIndex];
-                    View findViewByPosition = findViewByPosition(circularIntArray.get(0));
-                    if (viewMax2 - getViewMin(findViewByPosition) <= clientSize) {
-                        view4 = findViewByPosition;
-                    } else if (circularIntArray.size() > 2) {
-                        view2 = null;
-                        view3 = findViewByPosition(circularIntArray.get(2));
-                    } else {
-                        view2 = null;
-                        view3 = findViewByPosition;
-                    }
-                }
-            } else {
-                view2 = null;
-                view3 = view;
-            }
-        } else if (viewMax2 <= clientSize + paddingMin) {
-            view2 = null;
-        } else if (this.mFocusScrollStrategy == 2) {
-            while (true) {
-                Grid grid2 = this.mGrid;
-                CircularIntArray circularIntArray2 = grid2.getItemPositionsInRows(adapterPositionByView, grid2.getLastVisibleIndex())[rowIndex];
-                view2 = findViewByPosition(circularIntArray2.get(circularIntArray2.size() - 1));
-                if (getViewMax(view2) - viewMin <= clientSize) {
-                    if (!appendOneColumnVisibleItems()) {
-                        break;
-                    }
-                } else {
-                    view2 = null;
-                    break;
-                }
-            }
-        } else {
-            view2 = view;
-        }
-        if (view3 != null) {
-            viewMax = getViewMin(view3);
-        } else if (view2 != null) {
-            viewMax = getViewMax(view2);
-            paddingMin += clientSize;
-        } else {
-            i = 0;
-            if (view3 == null) {
-                view = view3;
-            } else if (view2 != null) {
-                view = view2;
-            }
-            secondaryScrollDistance = getSecondaryScrollDistance(view);
-            if (i != 0 && secondaryScrollDistance == 0) {
-                return false;
-            }
-            deltas[0] = i;
-            deltas[1] = secondaryScrollDistance;
-            return true;
-        }
-        i = viewMax - paddingMin;
-        if (view3 == null) {
-        }
-        secondaryScrollDistance = getSecondaryScrollDistance(view);
-        if (i != 0) {
-        }
-        deltas[0] = i;
-        deltas[1] = secondaryScrollDistance;
-        return true;
+    /* JADX WARNING: Removed duplicated region for block: B:30:0x00a7  */
+    /* JADX WARNING: Removed duplicated region for block: B:32:0x00ad  */
+    /* JADX WARNING: Removed duplicated region for block: B:36:0x00b8  */
+    /* JADX WARNING: Removed duplicated region for block: B:37:0x00ba  */
+    /* JADX WARNING: Removed duplicated region for block: B:41:0x00c3 A[ADDED_TO_REGION] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private boolean getNoneAlignedPosition(android.view.View r13, int[] r14) {
+        /*
+            r12 = this;
+            int r0 = r12.getAdapterPositionByView(r13)
+            int r1 = r12.getViewMin(r13)
+            int r2 = r12.getViewMax(r13)
+            androidx.leanback.widget.WindowAlignment r3 = r12.mWindowAlignment
+            androidx.leanback.widget.WindowAlignment$Axis r3 = r3.mainAxis()
+            int r3 = r3.getPaddingMin()
+            androidx.leanback.widget.WindowAlignment r4 = r12.mWindowAlignment
+            androidx.leanback.widget.WindowAlignment$Axis r4 = r4.mainAxis()
+            int r4 = r4.getClientSize()
+            androidx.leanback.widget.Grid r5 = r12.mGrid
+            int r5 = r5.getRowIndex(r0)
+            r6 = 1
+            r7 = 0
+            r8 = 2
+            r9 = 0
+            if (r1 >= r3) goto L_0x006f
+            int r1 = r12.mFocusScrollStrategy
+            if (r1 != r8) goto L_0x006c
+            r1 = r13
+        L_0x0031:
+            boolean r10 = r12.prependOneColumnVisibleItems()
+            if (r10 == 0) goto L_0x0069
+            androidx.leanback.widget.Grid r1 = r12.mGrid
+            int r10 = r1.getFirstVisibleIndex()
+            androidx.collection.CircularIntArray[] r1 = r1.getItemPositionsInRows(r10, r0)
+            r1 = r1[r5]
+            int r10 = r1.get(r7)
+            android.view.View r10 = r12.findViewByPosition(r10)
+            int r11 = r12.getViewMin(r10)
+            int r11 = r2 - r11
+            if (r11 <= r4) goto L_0x0067
+            int r0 = r1.size()
+            if (r0 <= r8) goto L_0x0064
+            int r0 = r1.get(r8)
+            android.view.View r0 = r12.findViewByPosition(r0)
+            r2 = r9
+            r9 = r0
+            goto L_0x00a5
+        L_0x0064:
+            r2 = r9
+            r9 = r10
+            goto L_0x00a5
+        L_0x0067:
+            r1 = r10
+            goto L_0x0031
+        L_0x0069:
+            r2 = r9
+            r9 = r1
+            goto L_0x00a5
+        L_0x006c:
+            r2 = r9
+        L_0x006d:
+            r9 = r13
+            goto L_0x00a5
+        L_0x006f:
+            int r10 = r4 + r3
+            if (r2 <= r10) goto L_0x00a4
+            int r2 = r12.mFocusScrollStrategy
+            if (r2 != r8) goto L_0x00a2
+        L_0x0077:
+            androidx.leanback.widget.Grid r2 = r12.mGrid
+            int r8 = r2.getLastVisibleIndex()
+            androidx.collection.CircularIntArray[] r2 = r2.getItemPositionsInRows(r0, r8)
+            r2 = r2[r5]
+            int r8 = r2.size()
+            int r8 = r8 - r6
+            int r2 = r2.get(r8)
+            android.view.View r2 = r12.findViewByPosition(r2)
+            int r8 = r12.getViewMax(r2)
+            int r8 = r8 - r1
+            if (r8 <= r4) goto L_0x0099
+            r2 = r9
+            goto L_0x009f
+        L_0x0099:
+            boolean r8 = r12.appendOneColumnVisibleItems()
+            if (r8 != 0) goto L_0x0077
+        L_0x009f:
+            if (r2 == 0) goto L_0x006d
+            goto L_0x00a5
+        L_0x00a2:
+            r2 = r13
+            goto L_0x00a5
+        L_0x00a4:
+            r2 = r9
+        L_0x00a5:
+            if (r9 == 0) goto L_0x00ad
+            int r0 = r12.getViewMin(r9)
+        L_0x00ab:
+            int r0 = r0 - r3
+            goto L_0x00b6
+        L_0x00ad:
+            if (r2 == 0) goto L_0x00b5
+            int r0 = r12.getViewMax(r2)
+            int r3 = r3 + r4
+            goto L_0x00ab
+        L_0x00b5:
+            r0 = r7
+        L_0x00b6:
+            if (r9 == 0) goto L_0x00ba
+            r13 = r9
+            goto L_0x00bd
+        L_0x00ba:
+            if (r2 == 0) goto L_0x00bd
+            r13 = r2
+        L_0x00bd:
+            int r12 = r12.getSecondaryScrollDistance(r13)
+            if (r0 != 0) goto L_0x00c7
+            if (r12 == 0) goto L_0x00c6
+            goto L_0x00c7
+        L_0x00c6:
+            return r7
+        L_0x00c7:
+            r14[r7] = r0
+            r14[r6] = r12
+            return r6
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.getNoneAlignedPosition(android.view.View, int[]):boolean");
     }
 
-    private boolean getAlignedPosition(View view, View childView, int[] deltas) {
+    private boolean getAlignedPosition(View view, View view2, int[] iArr) {
         int primaryAlignedScrollDistance = getPrimaryAlignedScrollDistance(view);
-        if (childView != null) {
-            primaryAlignedScrollDistance = getAdjustedPrimaryAlignedScrollDistance(primaryAlignedScrollDistance, view, childView);
+        if (view2 != null) {
+            primaryAlignedScrollDistance = getAdjustedPrimaryAlignedScrollDistance(primaryAlignedScrollDistance, view, view2);
         }
         int secondaryScrollDistance = getSecondaryScrollDistance(view);
         int i = primaryAlignedScrollDistance + this.mPrimaryScrollExtra;
-        if (i != 0 || secondaryScrollDistance != 0) {
-            deltas[0] = i;
-            deltas[1] = secondaryScrollDistance;
-            return true;
+        if (i == 0 && secondaryScrollDistance == 0) {
+            iArr[0] = 0;
+            iArr[1] = 0;
+            return false;
         }
-        deltas[0] = 0;
-        deltas[1] = 0;
-        return false;
+        iArr[0] = i;
+        iArr[1] = secondaryScrollDistance;
+        return true;
     }
 
-    private void scrollGrid(int scrollPrimary, int scrollSecondary, boolean smooth) {
+    private void scrollGrid(int i, int i2, boolean z) {
         if ((this.mFlag & 3) == 1) {
-            scrollDirectionPrimary(scrollPrimary);
-            scrollDirectionSecondary(scrollSecondary);
+            scrollDirectionPrimary(i);
+            scrollDirectionSecondary(i2);
             return;
         }
         if (this.mOrientation != 0) {
-            scrollSecondary = scrollPrimary;
-            scrollPrimary = scrollSecondary;
+            int i3 = i2;
+            i2 = i;
+            i = i3;
         }
-        if (smooth) {
-            this.mBaseGridView.smoothScrollBy(scrollPrimary, scrollSecondary);
+        if (z) {
+            this.mBaseGridView.smoothScrollBy(i, i2);
             return;
         }
-        this.mBaseGridView.scrollBy(scrollPrimary, scrollSecondary);
+        this.mBaseGridView.scrollBy(i, i2);
         dispatchChildSelectedAndPositioned();
+    }
+
+    public void setPruneChild(boolean z) {
+        int i = this.mFlag;
+        int i2 = 65536;
+        if (((i & 65536) != 0) != z) {
+            int i3 = i & -65537;
+            if (!z) {
+                i2 = 0;
+            }
+            this.mFlag = i3 | i2;
+            if (z) {
+                requestLayout();
+            }
+        }
+    }
+
+    public boolean getPruneChild() {
+        return (this.mFlag & 65536) != 0;
+    }
+
+    public void setScrollEnabled(boolean z) {
+        int i;
+        int i2 = this.mFlag;
+        int i3 = 0;
+        if (((i2 & 131072) != 0) != z) {
+            int i4 = i2 & -131073;
+            if (z) {
+                i3 = 131072;
+            }
+            int i5 = i4 | i3;
+            this.mFlag = i5;
+            if ((i5 & 131072) != 0 && this.mFocusScrollStrategy == 0 && (i = this.mFocusPosition) != -1) {
+                scrollToSelection(i, this.mSubFocusPosition, true, this.mPrimaryScrollExtra);
+            }
+        }
     }
 
     public boolean isScrollEnabled() {
@@ -2240,110 +3028,262 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         return -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
-        if (gainFocus) {
-            int i = this.mFocusPosition;
+    /* access modifiers changed from: package-private */
+    public void onFocusChanged(boolean z, int i, Rect rect) {
+        if (z) {
+            int i2 = this.mFocusPosition;
             while (true) {
-                View findViewByPosition = findViewByPosition(i);
-                if (findViewByPosition == null) {
+                View findViewByPosition = findViewByPosition(i2);
+                if (findViewByPosition != null) {
+                    if (findViewByPosition.getVisibility() != 0 || !findViewByPosition.hasFocusable()) {
+                        i2++;
+                    } else {
+                        findViewByPosition.requestFocus();
+                        return;
+                    }
+                } else {
                     return;
                 }
-                if (findViewByPosition.getVisibility() == 0 && findViewByPosition.hasFocusable()) {
-                    findViewByPosition.requestFocus();
-                    return;
-                }
-                i++;
             }
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:30:0x00ca A[RETURN] */
-    /* JADX WARN: Removed duplicated region for block: B:31:0x00cb  */
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public View onInterceptFocusSearch(View focused, int direction) {
+    /* access modifiers changed from: package-private */
+    public void setFocusSearchDisabled(boolean z) {
+        this.mFlag = (z ? 32768 : 0) | (this.mFlag & -32769);
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean isFocusSearchDisabled() {
+        return (this.mFlag & 32768) != 0;
+    }
+
+    /* JADX WARNING: Removed duplicated region for block: B:71:0x00cb A[RETURN] */
+    /* JADX WARNING: Removed duplicated region for block: B:72:0x00cc  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public android.view.View onInterceptFocusSearch(android.view.View r8, int r9) {
+        /*
+            r7 = this;
+            int r0 = r7.mFlag
+            r1 = 32768(0x8000, float:4.5918E-41)
+            r0 = r0 & r1
+            if (r0 == 0) goto L_0x0009
+            return r8
+        L_0x0009:
+            android.view.FocusFinder r0 = android.view.FocusFinder.getInstance()
+            r1 = 0
+            r2 = 2
+            r3 = 1
+            if (r9 == r2) goto L_0x001c
+            if (r9 != r3) goto L_0x0015
+            goto L_0x001c
+        L_0x0015:
+            androidx.leanback.widget.BaseGridView r4 = r7.mBaseGridView
+            android.view.View r0 = r0.findNextFocus(r4, r8, r9)
+            goto L_0x0055
+        L_0x001c:
+            boolean r4 = r7.canScrollVertically()
+            if (r4 == 0) goto L_0x0030
+            if (r9 != r2) goto L_0x0027
+            r4 = 130(0x82, float:1.82E-43)
+            goto L_0x0029
+        L_0x0027:
+            r4 = 33
+        L_0x0029:
+            androidx.leanback.widget.BaseGridView r5 = r7.mBaseGridView
+            android.view.View r4 = r0.findNextFocus(r5, r8, r4)
+            goto L_0x0031
+        L_0x0030:
+            r4 = 0
+        L_0x0031:
+            boolean r5 = r7.canScrollHorizontally()
+            if (r5 == 0) goto L_0x0054
+            int r4 = r7.getLayoutDirection()
+            if (r4 != r3) goto L_0x003f
+            r4 = r3
+            goto L_0x0040
+        L_0x003f:
+            r4 = r1
+        L_0x0040:
+            if (r9 != r2) goto L_0x0044
+            r5 = r3
+            goto L_0x0045
+        L_0x0044:
+            r5 = r1
+        L_0x0045:
+            r4 = r4 ^ r5
+            if (r4 == 0) goto L_0x004b
+            r4 = 66
+            goto L_0x004d
+        L_0x004b:
+            r4 = 17
+        L_0x004d:
+            androidx.leanback.widget.BaseGridView r5 = r7.mBaseGridView
+            android.view.View r0 = r0.findNextFocus(r5, r8, r4)
+            goto L_0x0055
+        L_0x0054:
+            r0 = r4
+        L_0x0055:
+            if (r0 == 0) goto L_0x0058
+            return r0
+        L_0x0058:
+            androidx.leanback.widget.BaseGridView r4 = r7.mBaseGridView
+            int r4 = r4.getDescendantFocusability()
+            r5 = 393216(0x60000, float:5.51013E-40)
+            if (r4 != r5) goto L_0x006d
+            androidx.leanback.widget.BaseGridView r7 = r7.mBaseGridView
+            android.view.ViewParent r7 = r7.getParent()
+            android.view.View r7 = r7.focusSearch(r8, r9)
+            return r7
+        L_0x006d:
+            int r4 = r7.getMovement(r9)
+            androidx.leanback.widget.BaseGridView r5 = r7.mBaseGridView
+            int r5 = r5.getScrollState()
+            if (r5 == 0) goto L_0x007b
+            r5 = r3
+            goto L_0x007c
+        L_0x007b:
+            r5 = r1
+        L_0x007c:
+            r6 = 131072(0x20000, float:1.83671E-40)
+            if (r4 != r3) goto L_0x0098
+            if (r5 != 0) goto L_0x0088
+            int r1 = r7.mFlag
+            r1 = r1 & 4096(0x1000, float:5.74E-42)
+            if (r1 != 0) goto L_0x0089
+        L_0x0088:
+            r0 = r8
+        L_0x0089:
+            int r1 = r7.mFlag
+            r1 = r1 & r6
+            if (r1 == 0) goto L_0x00c9
+            boolean r1 = r7.hasCreatedLastItem()
+            if (r1 != 0) goto L_0x00c9
+            r7.processPendingMovement(r3)
+            goto L_0x00c8
+        L_0x0098:
+            if (r4 != 0) goto L_0x00b2
+            if (r5 != 0) goto L_0x00a2
+            int r2 = r7.mFlag
+            r2 = r2 & 2048(0x800, float:2.87E-42)
+            if (r2 != 0) goto L_0x00a3
+        L_0x00a2:
+            r0 = r8
+        L_0x00a3:
+            int r2 = r7.mFlag
+            r2 = r2 & r6
+            if (r2 == 0) goto L_0x00c9
+            boolean r2 = r7.hasCreatedFirstItem()
+            if (r2 != 0) goto L_0x00c9
+            r7.processPendingMovement(r1)
+            goto L_0x00c8
+        L_0x00b2:
+            r1 = 3
+            if (r4 != r1) goto L_0x00be
+            if (r5 != 0) goto L_0x00c8
+            int r1 = r7.mFlag
+            r1 = r1 & 16384(0x4000, float:2.2959E-41)
+            if (r1 != 0) goto L_0x00c9
+            goto L_0x00c8
+        L_0x00be:
+            if (r4 != r2) goto L_0x00c9
+            if (r5 != 0) goto L_0x00c8
+            int r1 = r7.mFlag
+            r1 = r1 & 8192(0x2000, float:1.14794E-41)
+            if (r1 != 0) goto L_0x00c9
+        L_0x00c8:
+            r0 = r8
+        L_0x00c9:
+            if (r0 == 0) goto L_0x00cc
+            return r0
+        L_0x00cc:
+            androidx.leanback.widget.BaseGridView r0 = r7.mBaseGridView
+            android.view.ViewParent r0 = r0.getParent()
+            android.view.View r9 = r0.focusSearch(r8, r9)
+            if (r9 == 0) goto L_0x00d9
+            return r9
+        L_0x00d9:
+            if (r8 == 0) goto L_0x00dc
+            goto L_0x00de
+        L_0x00dc:
+            androidx.leanback.widget.BaseGridView r8 = r7.mBaseGridView
+        L_0x00de:
+            return r8
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.onInterceptFocusSearch(android.view.View, int):android.view.View");
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean hasPreviousViewInSameRow(int i) {
+        Grid grid = this.mGrid;
+        if (!(grid == null || i == -1 || grid.getFirstVisibleIndex() < 0)) {
+            if (this.mGrid.getFirstVisibleIndex() > 0) {
+                return true;
+            }
+            int i2 = this.mGrid.getLocation(i).row;
+            for (int childCount = getChildCount() - 1; childCount >= 0; childCount--) {
+                int adapterPositionByIndex = getAdapterPositionByIndex(childCount);
+                Grid.Location location = this.mGrid.getLocation(adapterPositionByIndex);
+                if (location != null && location.row == i2 && adapterPositionByIndex < i) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean onAddFocusables(RecyclerView recyclerView, ArrayList<View> arrayList, int i, int i2) {
         View view;
-        if ((this.mFlag & 32768) != 0) {
-            return focused;
-        }
-        FocusFinder focusFinder = FocusFinder.getInstance();
-        View view2 = null;
-        if (direction == 2 || direction == 1) {
-            if (canScrollVertically()) {
-                view2 = focusFinder.findNextFocus(this.mBaseGridView, focused, direction == 2 ? 130 : 33);
-            }
-            if (canScrollHorizontally()) {
-                view = focusFinder.findNextFocus(this.mBaseGridView, focused, (getLayoutDirection() == 1) ^ (direction == 2) ? 66 : 17);
-            } else {
-                view = view2;
-            }
-        } else {
-            view = focusFinder.findNextFocus(this.mBaseGridView, focused, direction);
-        }
-        if (view != null) {
-            return view;
-        }
-        if (this.mBaseGridView.getDescendantFocusability() == 393216) {
-            return this.mBaseGridView.getParent().focusSearch(focused, direction);
-        }
-        int movement = getMovement(direction);
-        boolean z = this.mBaseGridView.getScrollState() != 0;
-        if (movement == 1) {
-            if (z || (this.mFlag & 4096) == 0) {
-                view = focused;
-            }
-            if ((this.mFlag & 131072) != 0 && !hasCreatedLastItem()) {
-                processPendingMovement(true);
-                view = focused;
-            }
-            if (view == null) {
-                return view;
-            }
-            View focusSearch = this.mBaseGridView.getParent().focusSearch(focused, direction);
-            return focusSearch != null ? focusSearch : focused != null ? focused : this.mBaseGridView;
-        } else if (movement == 0) {
-            if (z || (this.mFlag & 2048) == 0) {
-                view = focused;
-            }
-            if ((this.mFlag & 131072) != 0 && !hasCreatedFirstItem()) {
-                processPendingMovement(false);
-                view = focused;
-            }
-            if (view == null) {
-            }
-        } else if (movement == 3) {
-            if (view == null) {
-            }
-        } else if (view == null) {
-        }
-    }
-
-    /* JADX WARN: Removed duplicated region for block: B:43:0x00aa  */
-    /* JADX WARN: Removed duplicated region for block: B:49:0x00b5  */
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public boolean onAddFocusables(RecyclerView recyclerView, ArrayList<View> views, int direction, int focusableMode) {
-        int i;
-        View childAt;
-        int i2;
+        int i3;
+        ArrayList<View> arrayList2 = arrayList;
+        int i4 = i;
+        int i5 = i2;
         if ((this.mFlag & 32768) != 0) {
             return true;
         }
-        if (recyclerView.hasFocus()) {
-            if (this.mPendingMoveSmoothScroller != null) {
-                return true;
+        if (!recyclerView.hasFocus()) {
+            int size = arrayList.size();
+            if (this.mFocusScrollStrategy != 0) {
+                int paddingMin = this.mWindowAlignment.mainAxis().getPaddingMin();
+                int clientSize = this.mWindowAlignment.mainAxis().getClientSize() + paddingMin;
+                int childCount = getChildCount();
+                for (int i6 = 0; i6 < childCount; i6++) {
+                    View childAt = getChildAt(i6);
+                    if (childAt.getVisibility() == 0 && getViewMin(childAt) >= paddingMin && getViewMax(childAt) <= clientSize) {
+                        childAt.addFocusables(arrayList2, i4, i5);
+                    }
+                }
+                if (arrayList.size() == size) {
+                    int childCount2 = getChildCount();
+                    for (int i7 = 0; i7 < childCount2; i7++) {
+                        View childAt2 = getChildAt(i7);
+                        if (childAt2.getVisibility() == 0) {
+                            childAt2.addFocusables(arrayList2, i4, i5);
+                        }
+                    }
+                }
+            } else {
+                View findViewByPosition = findViewByPosition(this.mFocusPosition);
+                if (findViewByPosition != null) {
+                    findViewByPosition.addFocusables(arrayList2, i4, i5);
+                }
             }
-            int movement = getMovement(direction);
+            if (arrayList.size() == size && recyclerView.isFocusable()) {
+                arrayList2.add(recyclerView);
+            }
+        } else if (this.mPendingMoveSmoothScroller != null) {
+            return true;
+        } else {
+            int movement = getMovement(i4);
             int findImmediateChildIndex = findImmediateChildIndex(recyclerView.findFocus());
             int adapterPositionByIndex = getAdapterPositionByIndex(findImmediateChildIndex);
-            View findViewByPosition = adapterPositionByIndex == -1 ? null : findViewByPosition(adapterPositionByIndex);
-            if (findViewByPosition != null) {
-                findViewByPosition.addFocusables(views, direction, focusableMode);
+            if (adapterPositionByIndex == -1) {
+                view = null;
+            } else {
+                view = findViewByPosition(adapterPositionByIndex);
+            }
+            if (view != null) {
+                view.addFocusables(arrayList2, i4, i5);
             }
             if (this.mGrid == null || getChildCount() == 0) {
                 return true;
@@ -2352,238 +3292,243 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
                 return true;
             }
             Grid grid = this.mGrid;
-            int i3 = (grid == null || findViewByPosition == null) ? -1 : grid.mo120getLocation(adapterPositionByIndex).row;
-            int size = views.size();
-            int i4 = (movement == 1 || movement == 3) ? 1 : -1;
-            int childCount = i4 > 0 ? getChildCount() - 1 : 0;
+            int i8 = (grid == null || view == null) ? -1 : grid.getLocation(adapterPositionByIndex).row;
+            int size2 = arrayList.size();
+            int i9 = (movement == 1 || movement == 3) ? 1 : -1;
+            int childCount3 = i9 > 0 ? getChildCount() - 1 : 0;
             if (findImmediateChildIndex == -1) {
-                i = i4 > 0 ? 0 : getChildCount() - 1;
+                i3 = i9 > 0 ? 0 : getChildCount() - 1;
             } else {
-                i = findImmediateChildIndex + i4;
+                i3 = findImmediateChildIndex + i9;
             }
-            int i5 = i;
+            int i10 = i3;
             while (true) {
-                if (i4 > 0) {
-                    if (i5 > childCount) {
+                if (i9 <= 0) {
+                    if (i10 < childCount3) {
                         break;
                     }
-                    childAt = getChildAt(i5);
-                    if (childAt.getVisibility() == 0 && childAt.hasFocusable()) {
-                        if (findViewByPosition != null) {
-                            childAt.addFocusables(views, direction, focusableMode);
-                            if (views.size() > size) {
-                                break;
-                            }
-                        } else {
-                            int adapterPositionByIndex2 = getAdapterPositionByIndex(i5);
-                            Grid.Location mo120getLocation = this.mGrid.mo120getLocation(adapterPositionByIndex2);
-                            if (mo120getLocation != null) {
-                                if (movement == 1) {
-                                    if (mo120getLocation.row == i3 && adapterPositionByIndex2 > adapterPositionByIndex) {
-                                        childAt.addFocusables(views, direction, focusableMode);
-                                        if (views.size() > size) {
-                                            break;
-                                        }
-                                    }
-                                } else if (movement == 0) {
-                                    if (mo120getLocation.row == i3 && adapterPositionByIndex2 < adapterPositionByIndex) {
-                                        childAt.addFocusables(views, direction, focusableMode);
-                                        if (views.size() > size) {
-                                            break;
-                                        }
-                                    }
-                                } else if (movement == 3) {
-                                    int i6 = mo120getLocation.row;
-                                    if (i6 != i3) {
-                                        if (i6 < i3) {
-                                            break;
-                                        }
-                                        childAt.addFocusables(views, direction, focusableMode);
-                                    }
-                                } else if (movement == 2 && (i2 = mo120getLocation.row) != i3) {
-                                    if (i2 > i3) {
-                                        break;
-                                    }
-                                    childAt.addFocusables(views, direction, focusableMode);
+                } else if (i10 > childCount3) {
+                    break;
+                }
+                View childAt3 = getChildAt(i10);
+                if (childAt3.getVisibility() == 0 && childAt3.hasFocusable()) {
+                    if (view == null) {
+                        childAt3.addFocusables(arrayList2, i4, i5);
+                        if (arrayList.size() > size2) {
+                            break;
+                        }
+                    } else {
+                        int adapterPositionByIndex2 = getAdapterPositionByIndex(i10);
+                        Grid.Location location = this.mGrid.getLocation(adapterPositionByIndex2);
+                        if (location == null) {
+                            continue;
+                        } else if (movement == 1) {
+                            if (location.row == i8 && adapterPositionByIndex2 > adapterPositionByIndex) {
+                                childAt3.addFocusables(arrayList2, i4, i5);
+                                if (arrayList.size() > size2) {
+                                    break;
                                 }
                             }
-                        }
-                    }
-                    i5 += i4;
-                } else {
-                    if (i5 < childCount) {
-                        break;
-                    }
-                    childAt = getChildAt(i5);
-                    if (childAt.getVisibility() == 0) {
-                        if (findViewByPosition != null) {
-                        }
-                    }
-                    i5 += i4;
-                }
-            }
-        } else {
-            int size2 = views.size();
-            if (this.mFocusScrollStrategy != 0) {
-                int paddingMin = this.mWindowAlignment.mainAxis().getPaddingMin();
-                int clientSize = this.mWindowAlignment.mainAxis().getClientSize() + paddingMin;
-                int childCount2 = getChildCount();
-                for (int i7 = 0; i7 < childCount2; i7++) {
-                    View childAt2 = getChildAt(i7);
-                    if (childAt2.getVisibility() == 0 && getViewMin(childAt2) >= paddingMin && getViewMax(childAt2) <= clientSize) {
-                        childAt2.addFocusables(views, direction, focusableMode);
-                    }
-                }
-                if (views.size() == size2) {
-                    int childCount3 = getChildCount();
-                    for (int i8 = 0; i8 < childCount3; i8++) {
-                        View childAt3 = getChildAt(i8);
-                        if (childAt3.getVisibility() == 0) {
-                            childAt3.addFocusables(views, direction, focusableMode);
+                        } else if (movement == 0) {
+                            if (location.row == i8 && adapterPositionByIndex2 < adapterPositionByIndex) {
+                                childAt3.addFocusables(arrayList2, i4, i5);
+                                if (arrayList.size() > size2) {
+                                    break;
+                                }
+                            }
+                        } else if (movement == 3) {
+                            if (location.row == i8) {
+                                continue;
+                            } else if (location.row < i8) {
+                                break;
+                            } else {
+                                childAt3.addFocusables(arrayList2, i4, i5);
+                            }
+                        } else if (movement == 2 && location.row != i8) {
+                            if (location.row > i8) {
+                                break;
+                            }
+                            childAt3.addFocusables(arrayList2, i4, i5);
                         }
                     }
                 }
-            } else {
-                View findViewByPosition2 = findViewByPosition(this.mFocusPosition);
-                if (findViewByPosition2 != null) {
-                    findViewByPosition2.addFocusables(views, direction, focusableMode);
-                }
-            }
-            if (views.size() == size2 && recyclerView.isFocusable()) {
-                views.add(recyclerView);
+                i10 += i9;
             }
         }
         return true;
     }
 
-    boolean hasCreatedLastItem() {
+    /* access modifiers changed from: package-private */
+    public boolean hasCreatedLastItem() {
         int itemCount = getItemCount();
-        return itemCount == 0 || this.mBaseGridView.findViewHolderForAdapterPosition(itemCount - 1) != null;
-    }
-
-    boolean hasCreatedFirstItem() {
-        return getItemCount() == 0 || this.mBaseGridView.findViewHolderForAdapterPosition(0) != null;
-    }
-
-    boolean isItemFullyVisible(int pos) {
-        RecyclerView.ViewHolder findViewHolderForAdapterPosition = this.mBaseGridView.findViewHolderForAdapterPosition(pos);
-        return findViewHolderForAdapterPosition != null && findViewHolderForAdapterPosition.itemView.getLeft() >= 0 && findViewHolderForAdapterPosition.itemView.getRight() <= this.mBaseGridView.getWidth() && findViewHolderForAdapterPosition.itemView.getTop() >= 0 && findViewHolderForAdapterPosition.itemView.getBottom() <= this.mBaseGridView.getHeight();
-    }
-
-    boolean canScrollTo(View view) {
-        return view.getVisibility() == 0 && (!hasFocus() || view.hasFocusable());
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public boolean gridOnRequestFocusInDescendants(RecyclerView recyclerView, int direction, Rect previouslyFocusedRect) {
-        int i = this.mFocusScrollStrategy;
-        if (i != 1 && i != 2) {
-            return gridOnRequestFocusInDescendantsAligned(direction, previouslyFocusedRect);
-        }
-        return gridOnRequestFocusInDescendantsUnaligned(direction, previouslyFocusedRect);
-    }
-
-    private boolean gridOnRequestFocusInDescendantsAligned(int direction, Rect previouslyFocusedRect) {
-        View findViewByPosition = findViewByPosition(this.mFocusPosition);
-        if (findViewByPosition != null) {
-            return findViewByPosition.requestFocus(direction, previouslyFocusedRect);
+        if (itemCount == 0 || this.mBaseGridView.findViewHolderForAdapterPosition(itemCount - 1) != null) {
+            return true;
         }
         return false;
     }
 
-    private boolean gridOnRequestFocusInDescendantsUnaligned(int direction, Rect previouslyFocusedRect) {
-        int i;
+    /* access modifiers changed from: package-private */
+    public boolean hasCreatedFirstItem() {
+        return getItemCount() == 0 || this.mBaseGridView.findViewHolderForAdapterPosition(0) != null;
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean isItemFullyVisible(int i) {
+        RecyclerView.ViewHolder findViewHolderForAdapterPosition = this.mBaseGridView.findViewHolderForAdapterPosition(i);
+        if (findViewHolderForAdapterPosition != null && findViewHolderForAdapterPosition.itemView.getLeft() >= 0 && findViewHolderForAdapterPosition.itemView.getRight() <= this.mBaseGridView.getWidth() && findViewHolderForAdapterPosition.itemView.getTop() >= 0 && findViewHolderForAdapterPosition.itemView.getBottom() <= this.mBaseGridView.getHeight()) {
+            return true;
+        }
+        return false;
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean canScrollTo(View view) {
+        return view.getVisibility() == 0 && (!hasFocus() || view.hasFocusable());
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean gridOnRequestFocusInDescendants(RecyclerView recyclerView, int i, Rect rect) {
+        int i2 = this.mFocusScrollStrategy;
+        if (i2 == 1 || i2 == 2) {
+            return gridOnRequestFocusInDescendantsUnaligned(i, rect);
+        }
+        return gridOnRequestFocusInDescendantsAligned(i, rect);
+    }
+
+    private boolean gridOnRequestFocusInDescendantsAligned(int i, Rect rect) {
+        View findViewByPosition = findViewByPosition(this.mFocusPosition);
+        if (findViewByPosition != null) {
+            return findViewByPosition.requestFocus(i, rect);
+        }
+        return false;
+    }
+
+    private boolean gridOnRequestFocusInDescendantsUnaligned(int i, Rect rect) {
         int i2;
+        int i3;
+        int i4;
         int childCount = getChildCount();
-        int i3 = -1;
-        if ((direction & 2) != 0) {
+        if ((i & 2) != 0) {
             i3 = childCount;
-            i = 0;
+            i4 = 0;
             i2 = 1;
         } else {
-            i = childCount - 1;
+            i4 = childCount - 1;
+            i3 = -1;
             i2 = -1;
         }
         int paddingMin = this.mWindowAlignment.mainAxis().getPaddingMin();
         int clientSize = this.mWindowAlignment.mainAxis().getClientSize() + paddingMin;
-        while (i != i3) {
-            View childAt = getChildAt(i);
-            if (childAt.getVisibility() == 0 && getViewMin(childAt) >= paddingMin && getViewMax(childAt) <= clientSize && childAt.requestFocus(direction, previouslyFocusedRect)) {
+        while (i4 != i3) {
+            View childAt = getChildAt(i4);
+            if (childAt.getVisibility() == 0 && getViewMin(childAt) >= paddingMin && getViewMax(childAt) <= clientSize && childAt.requestFocus(i, rect)) {
                 return true;
             }
-            i += i2;
+            i4 += i2;
         }
         return false;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:28:0x0035, code lost:
-        if (r10 != 130) goto L11;
+    /* JADX WARNING: Code restructure failed: missing block: B:18:0x0035, code lost:
+        if (r10 != 130) goto L_0x0046;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x003d, code lost:
-        if ((r9.mFlag & 524288) == 0) goto L8;
+    /* JADX WARNING: Code restructure failed: missing block: B:21:0x003d, code lost:
+        if ((r9.mFlag & 524288) == 0) goto L_0x001b;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:33:0x0043, code lost:
-        if ((r9.mFlag & 524288) == 0) goto L18;
+    /* JADX WARNING: Code restructure failed: missing block: B:23:0x0043, code lost:
+        if ((r9.mFlag & 524288) == 0) goto L_0x0023;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:7:0x0018, code lost:
-        if (r10 != 130) goto L11;
+    /* JADX WARNING: Code restructure failed: missing block: B:6:0x0018, code lost:
+        if (r10 != 130) goto L_0x0046;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:9:?, code lost:
-        return 3;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private int getMovement(int direction) {
-        int i = this.mOrientation;
-        if (i != 0) {
-            if (i == 1) {
-                if (direction != 17) {
-                    if (direction == 33) {
-                        return 0;
-                    }
-                    if (direction != 66) {
-                    }
-                }
-            }
-            return 17;
-        }
-        if (direction != 17) {
-            if (direction != 33) {
-                if (direction == 66) {
-                    if ((this.mFlag & 262144) != 0) {
-                        return 0;
-                    }
-                }
-            }
-            return 2;
-        } else if ((this.mFlag & 262144) == 0) {
-            return 0;
-        }
-        return 1;
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private int getMovement(int r10) {
+        /*
+            r9 = this;
+            int r0 = r9.mOrientation
+            r1 = 130(0x82, float:1.82E-43)
+            r2 = 66
+            r3 = 33
+            r4 = 0
+            r5 = 3
+            r6 = 2
+            r7 = 1
+            r8 = 17
+            if (r0 != 0) goto L_0x002b
+            r0 = 262144(0x40000, float:3.67342E-40)
+            if (r10 == r8) goto L_0x0025
+            if (r10 == r3) goto L_0x0023
+            if (r10 == r2) goto L_0x001d
+            if (r10 == r1) goto L_0x001b
+            goto L_0x0046
+        L_0x001b:
+            r4 = r5
+            goto L_0x0047
+        L_0x001d:
+            int r9 = r9.mFlag
+            r9 = r9 & r0
+            if (r9 != 0) goto L_0x0047
+            goto L_0x0038
+        L_0x0023:
+            r4 = r6
+            goto L_0x0047
+        L_0x0025:
+            int r9 = r9.mFlag
+            r9 = r9 & r0
+            if (r9 != 0) goto L_0x0038
+            goto L_0x0047
+        L_0x002b:
+            if (r0 != r7) goto L_0x0046
+            r0 = 524288(0x80000, float:7.34684E-40)
+            if (r10 == r8) goto L_0x0040
+            if (r10 == r3) goto L_0x0047
+            if (r10 == r2) goto L_0x003a
+            if (r10 == r1) goto L_0x0038
+            goto L_0x0046
+        L_0x0038:
+            r4 = r7
+            goto L_0x0047
+        L_0x003a:
+            int r9 = r9.mFlag
+            r9 = r9 & r0
+            if (r9 != 0) goto L_0x0023
+            goto L_0x001b
+        L_0x0040:
+            int r9 = r9.mFlag
+            r9 = r9 & r0
+            if (r9 != 0) goto L_0x001b
+            goto L_0x0023
+        L_0x0046:
+            r4 = r8
+        L_0x0047:
+            return r4
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.getMovement(int):int");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public int getChildDrawingOrder(RecyclerView recyclerView, int childCount, int i) {
+    /* access modifiers changed from: package-private */
+    public int getChildDrawingOrder(RecyclerView recyclerView, int i, int i2) {
         int indexOfChild;
         View findViewByPosition = findViewByPosition(this.mFocusPosition);
-        return (findViewByPosition != null && i >= (indexOfChild = recyclerView.indexOfChild(findViewByPosition))) ? i < childCount + (-1) ? ((indexOfChild + childCount) - 1) - i : indexOfChild : i;
+        if (findViewByPosition != null && i2 >= (indexOfChild = recyclerView.indexOfChild(findViewByPosition))) {
+            return i2 < i + -1 ? ((indexOfChild + i) - 1) - i2 : indexOfChild;
+        }
+        return i2;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void onAdapterChanged(RecyclerView.Adapter oldAdapter, RecyclerView.Adapter newAdapter) {
-        if (oldAdapter != null) {
+    public void onAdapterChanged(RecyclerView.Adapter adapter, RecyclerView.Adapter adapter2) {
+        if (adapter != null) {
             discardLayoutInfo();
             this.mFocusPosition = -1;
             this.mFocusPositionOffset = 0;
             this.mChildrenStates.clear();
         }
-        if (newAdapter instanceof FacetProviderAdapter) {
-            this.mFacetProviderAdapter = (FacetProviderAdapter) newAdapter;
+        if (adapter2 instanceof FacetProviderAdapter) {
+            this.mFacetProviderAdapter = (FacetProviderAdapter) adapter2;
         } else {
             this.mFacetProviderAdapter = null;
         }
-        super.onAdapterChanged(oldAdapter, newAdapter);
+        super.onAdapterChanged(adapter, adapter2);
     }
 
     private void discardLayoutInfo() {
@@ -2592,51 +3537,61 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         this.mFlag &= -1025;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @SuppressLint({"BanParcelableUsage"})
-    /* loaded from: classes.dex */
-    public static final class SavedState implements Parcelable {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: androidx.leanback.widget.GridLayoutManager.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo116createFromParcel(Parcel in) {
-                return new SavedState(in);
+    public void setLayoutEnabled(boolean z) {
+        int i = this.mFlag;
+        int i2 = 0;
+        if (((i & 512) != 0) != z) {
+            int i3 = i & -513;
+            if (z) {
+                i2 = 512;
+            }
+            this.mFlag = i3 | i2;
+            requestLayout();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setChildrenVisibility(int i) {
+        this.mChildVisibility = i;
+        if (i != -1) {
+            int childCount = getChildCount();
+            for (int i2 = 0; i2 < childCount; i2++) {
+                getChildAt(i2).setVisibility(this.mChildVisibility);
+            }
+        }
+    }
+
+    static final class SavedState implements Parcelable {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
+                return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo117newArray(int size) {
-                return new SavedState[size];
+            public SavedState[] newArray(int i) {
+                return new SavedState[i];
             }
         };
-        Bundle childStates;
+        Bundle childStates = Bundle.EMPTY;
         int index;
 
-        @Override // android.os.Parcelable
         public int describeContents() {
             return 0;
         }
 
-        @Override // android.os.Parcelable
-        public void writeToParcel(Parcel out, int flags) {
-            out.writeInt(this.index);
-            out.writeBundle(this.childStates);
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeInt(this.index);
+            parcel.writeBundle(this.childStates);
         }
 
-        SavedState(Parcel in) {
-            this.childStates = Bundle.EMPTY;
-            this.index = in.readInt();
-            this.childStates = in.readBundle(GridLayoutManager.class.getClassLoader());
+        SavedState(Parcel parcel) {
+            this.index = parcel.readInt();
+            this.childStates = parcel.readBundle(GridLayoutManager.class.getClassLoader());
         }
 
         SavedState() {
-            this.childStates = Bundle.EMPTY;
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState();
         savedState.index = getSelection();
@@ -2653,112 +3608,158 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         return savedState;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void onChildRecycled(RecyclerView.ViewHolder holder) {
-        int absoluteAdapterPosition = holder.getAbsoluteAdapterPosition();
+    /* access modifiers changed from: package-private */
+    public void onChildRecycled(RecyclerView.ViewHolder viewHolder) {
+        int absoluteAdapterPosition = viewHolder.getAbsoluteAdapterPosition();
         if (absoluteAdapterPosition != -1) {
-            this.mChildrenStates.saveOffscreenView(holder.itemView, absoluteAdapterPosition);
+            this.mChildrenStates.saveOffscreenView(viewHolder.itemView, absoluteAdapterPosition);
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof SavedState)) {
-            return;
+    public void onRestoreInstanceState(Parcelable parcelable) {
+        if (parcelable instanceof SavedState) {
+            SavedState savedState = (SavedState) parcelable;
+            this.mFocusPosition = savedState.index;
+            this.mFocusPositionOffset = 0;
+            this.mChildrenStates.loadFromBundle(savedState.childStates);
+            this.mFlag |= 256;
+            requestLayout();
         }
-        SavedState savedState = (SavedState) state;
-        this.mFocusPosition = savedState.index;
-        this.mFocusPositionOffset = 0;
-        this.mChildrenStates.loadFromBundle(savedState.childStates);
-        this.mFlag |= 256;
-        requestLayout();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public int getRowCountForAccessibility(RecyclerView.Recycler recycler, RecyclerView.State state) {
         Grid grid;
-        if (this.mOrientation == 0 && (grid = this.mGrid) != null) {
-            return grid.getNumRows();
+        if (this.mOrientation != 0 || (grid = this.mGrid) == null) {
+            return super.getRowCountForAccessibility(recycler, state);
         }
-        return super.getRowCountForAccessibility(recycler, state);
+        return grid.getNumRows();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
     public int getColumnCountForAccessibility(RecyclerView.Recycler recycler, RecyclerView.State state) {
         Grid grid;
-        if (this.mOrientation == 1 && (grid = this.mGrid) != null) {
-            return grid.getNumRows();
+        if (this.mOrientation != 1 || (grid = this.mGrid) == null) {
+            return super.getColumnCountForAccessibility(recycler, state);
         }
-        return super.getColumnCountForAccessibility(recycler, state);
+        return grid.getNumRows();
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void onInitializeAccessibilityNodeInfoForItem(RecyclerView.Recycler recycler, RecyclerView.State state, View host, AccessibilityNodeInfoCompat info) {
-        ViewGroup.LayoutParams layoutParams = host.getLayoutParams();
-        if (this.mGrid == null || !(layoutParams instanceof LayoutParams)) {
-            return;
-        }
-        int absoluteAdapterPosition = ((LayoutParams) layoutParams).getAbsoluteAdapterPosition();
-        int rowIndex = absoluteAdapterPosition >= 0 ? this.mGrid.getRowIndex(absoluteAdapterPosition) : -1;
-        if (rowIndex < 0) {
-            return;
-        }
-        int numRows = absoluteAdapterPosition / this.mGrid.getNumRows();
-        if (this.mOrientation == 0) {
-            info.setCollectionItemInfo(AccessibilityNodeInfoCompat.CollectionItemInfoCompat.obtain(rowIndex, 1, numRows, 1, false, false));
-        } else {
-            info.setCollectionItemInfo(AccessibilityNodeInfoCompat.CollectionItemInfoCompat.obtain(numRows, 1, rowIndex, 1, false, false));
-        }
-    }
-
-    /* JADX WARN: Code restructure failed: missing block: B:14:0x002c, code lost:
-        if (r6 != false) goto L16;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x004c, code lost:
-        r8 = 4096;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:19:0x0037, code lost:
-        if (r6 != false) goto L15;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:23:0x004a, code lost:
-        if (r8 == androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_DOWN.getId()) goto L16;
-     */
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public boolean performAccessibilityAction(RecyclerView.Recycler recycler, RecyclerView.State state, int action, Bundle args) {
-        if (!isScrollEnabled()) {
-            return true;
-        }
-        saveContext(recycler, state);
-        boolean z = (this.mFlag & 262144) != 0;
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (this.mOrientation == 0) {
-                if (action != AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_LEFT.getId()) {
-                    if (action == AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_RIGHT.getId()) {
-                    }
+    public void onInitializeAccessibilityNodeInfoForItem(RecyclerView.Recycler recycler, RecyclerView.State state, View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (this.mGrid != null && (layoutParams instanceof LayoutParams)) {
+            int absoluteAdapterPosition = ((LayoutParams) layoutParams).getAbsoluteAdapterPosition();
+            int rowIndex = absoluteAdapterPosition >= 0 ? this.mGrid.getRowIndex(absoluteAdapterPosition) : -1;
+            if (rowIndex >= 0) {
+                int numRows = absoluteAdapterPosition / this.mGrid.getNumRows();
+                if (this.mOrientation == 0) {
+                    accessibilityNodeInfoCompat.setCollectionItemInfo(AccessibilityNodeInfoCompat.CollectionItemInfoCompat.obtain(rowIndex, 1, numRows, 1, false, false));
+                } else {
+                    accessibilityNodeInfoCompat.setCollectionItemInfo(AccessibilityNodeInfoCompat.CollectionItemInfoCompat.obtain(numRows, 1, rowIndex, 1, false, false));
                 }
-            } else {
-                if (action != AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_UP.getId()) {
-                }
-                action = 8192;
             }
         }
-        int i = this.mFocusPosition;
-        boolean z2 = i == 0 && action == 8192;
-        boolean z3 = i == state.getItemCount() - 1 && action == 4096;
-        if (z2 || z3) {
-            sendTypeViewScrolledAccessibilityEvent();
-        } else if (action == 4096) {
-            processPendingMovement(true);
-            processSelectionMoves(false, 1);
-        } else if (action == 8192) {
-            processPendingMovement(false);
-            processSelectionMoves(false, -1);
-        }
-        leaveContext();
-        return true;
+    }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:11:0x0026, code lost:
+        if (r5 != false) goto L_0x0046;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:14:0x0031, code lost:
+        if (r5 != false) goto L_0x003c;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:19:0x0044, code lost:
+        if (r7 == androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_DOWN.getId()) goto L_0x0046;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0046, code lost:
+        r7 = 4096;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean performAccessibilityAction(androidx.recyclerview.widget.RecyclerView.Recycler r5, androidx.recyclerview.widget.RecyclerView.State r6, int r7, android.os.Bundle r8) {
+        /*
+            r4 = this;
+            boolean r8 = r4.isScrollEnabled()
+            r0 = 1
+            if (r8 != 0) goto L_0x0008
+            return r0
+        L_0x0008:
+            r4.saveContext(r5, r6)
+            int r5 = r4.mFlag
+            r8 = 262144(0x40000, float:3.67342E-40)
+            r5 = r5 & r8
+            r8 = 0
+            if (r5 == 0) goto L_0x0015
+            r5 = r0
+            goto L_0x0016
+        L_0x0015:
+            r5 = r8
+        L_0x0016:
+            int r1 = r4.mOrientation
+            r2 = 4096(0x1000, float:5.74E-42)
+            r3 = 8192(0x2000, float:1.14794E-41)
+            if (r1 != 0) goto L_0x0034
+            androidx.core.view.accessibility.AccessibilityNodeInfoCompat$AccessibilityActionCompat r1 = androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_LEFT
+            int r1 = r1.getId()
+            if (r7 != r1) goto L_0x0029
+            if (r5 == 0) goto L_0x003c
+            goto L_0x0046
+        L_0x0029:
+            androidx.core.view.accessibility.AccessibilityNodeInfoCompat$AccessibilityActionCompat r1 = androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_RIGHT
+            int r1 = r1.getId()
+            if (r7 != r1) goto L_0x0047
+            if (r5 == 0) goto L_0x0046
+            goto L_0x003c
+        L_0x0034:
+            androidx.core.view.accessibility.AccessibilityNodeInfoCompat$AccessibilityActionCompat r5 = androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_UP
+            int r5 = r5.getId()
+            if (r7 != r5) goto L_0x003e
+        L_0x003c:
+            r7 = r3
+            goto L_0x0047
+        L_0x003e:
+            androidx.core.view.accessibility.AccessibilityNodeInfoCompat$AccessibilityActionCompat r5 = androidx.core.view.accessibility.AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_DOWN
+            int r5 = r5.getId()
+            if (r7 != r5) goto L_0x0047
+        L_0x0046:
+            r7 = r2
+        L_0x0047:
+            int r5 = r4.mFocusPosition
+            if (r5 != 0) goto L_0x004f
+            if (r7 != r3) goto L_0x004f
+            r1 = r0
+            goto L_0x0050
+        L_0x004f:
+            r1 = r8
+        L_0x0050:
+            int r6 = r6.getItemCount()
+            int r6 = r6 - r0
+            if (r5 != r6) goto L_0x005b
+            if (r7 != r2) goto L_0x005b
+            r5 = r0
+            goto L_0x005c
+        L_0x005b:
+            r5 = r8
+        L_0x005c:
+            if (r1 != 0) goto L_0x0075
+            if (r5 == 0) goto L_0x0061
+            goto L_0x0075
+        L_0x0061:
+            if (r7 == r2) goto L_0x006e
+            if (r7 == r3) goto L_0x0066
+            goto L_0x0078
+        L_0x0066:
+            r4.processPendingMovement(r8)
+            r5 = -1
+            r4.processSelectionMoves(r8, r5)
+            goto L_0x0078
+        L_0x006e:
+            r4.processPendingMovement(r0)
+            r4.processSelectionMoves(r8, r0)
+            goto L_0x0078
+        L_0x0075:
+            r4.sendTypeViewScrolledAccessibilityEvent()
+        L_0x0078:
+            r4.leaveContext()
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.GridLayoutManager.performAccessibilityAction(androidx.recyclerview.widget.RecyclerView$Recycler, androidx.recyclerview.widget.RecyclerView$State, int, android.os.Bundle):boolean");
     }
 
     private void sendTypeViewScrolledAccessibilityEvent() {
@@ -2768,99 +3769,91 @@ public final class GridLayoutManager extends RecyclerView.LayoutManager {
         baseGridView.requestSendAccessibilityEvent(baseGridView, obtain);
     }
 
-    int processSelectionMoves(boolean preventScroll, int moves) {
+    /* access modifiers changed from: package-private */
+    public int processSelectionMoves(boolean z, int i) {
         Grid grid = this.mGrid;
         if (grid == null) {
-            return moves;
+            return i;
         }
-        int i = this.mFocusPosition;
-        int rowIndex = i != -1 ? grid.getRowIndex(i) : -1;
-        View view = null;
+        int i2 = this.mFocusPosition;
+        int rowIndex = i2 != -1 ? grid.getRowIndex(i2) : -1;
         int childCount = getChildCount();
-        for (int i2 = 0; i2 < childCount && moves != 0; i2++) {
-            int i3 = moves > 0 ? i2 : (childCount - 1) - i2;
-            View childAt = getChildAt(i3);
+        View view = null;
+        for (int i3 = 0; i3 < childCount && i != 0; i3++) {
+            int i4 = i > 0 ? i3 : (childCount - 1) - i3;
+            View childAt = getChildAt(i4);
             if (canScrollTo(childAt)) {
-                int adapterPositionByIndex = getAdapterPositionByIndex(i3);
+                int adapterPositionByIndex = getAdapterPositionByIndex(i4);
                 int rowIndex2 = this.mGrid.getRowIndex(adapterPositionByIndex);
                 if (rowIndex == -1) {
-                    i = adapterPositionByIndex;
+                    i2 = adapterPositionByIndex;
                     view = childAt;
                     rowIndex = rowIndex2;
-                } else if (rowIndex2 == rowIndex && ((moves > 0 && adapterPositionByIndex > i) || (moves < 0 && adapterPositionByIndex < i))) {
-                    moves = moves > 0 ? moves - 1 : moves + 1;
-                    i = adapterPositionByIndex;
+                } else if (rowIndex2 == rowIndex && ((i > 0 && adapterPositionByIndex > i2) || (i < 0 && adapterPositionByIndex < i2))) {
+                    i = i > 0 ? i - 1 : i + 1;
+                    i2 = adapterPositionByIndex;
                     view = childAt;
                 }
             }
         }
         if (view != null) {
-            if (preventScroll) {
+            if (z) {
                 if (hasFocus()) {
                     this.mFlag |= 32;
                     view.requestFocus();
                     this.mFlag &= -33;
                 }
-                this.mFocusPosition = i;
+                this.mFocusPosition = i2;
                 this.mSubFocusPosition = 0;
             } else {
                 scrollToView(view, true);
             }
         }
-        return moves;
+        return i;
     }
 
-    private void addA11yActionMovingBackward(AccessibilityNodeInfoCompat info, boolean reverseFlowPrimary) {
+    private void addA11yActionMovingBackward(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat, boolean z) {
         AccessibilityNodeInfoCompat.AccessibilityActionCompat accessibilityActionCompat;
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (this.mOrientation == 0) {
-                if (reverseFlowPrimary) {
-                    accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_RIGHT;
-                } else {
-                    accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_LEFT;
-                }
-                info.addAction(accessibilityActionCompat);
+        if (this.mOrientation == 0) {
+            if (z) {
+                accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_RIGHT;
             } else {
-                info.addAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_UP);
+                accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_LEFT;
             }
+            accessibilityNodeInfoCompat.addAction(accessibilityActionCompat);
         } else {
-            info.addAction(8192);
+            accessibilityNodeInfoCompat.addAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_UP);
         }
-        info.setScrollable(true);
+        accessibilityNodeInfoCompat.setScrollable(true);
     }
 
-    private void addA11yActionMovingForward(AccessibilityNodeInfoCompat info, boolean reverseFlowPrimary) {
+    private void addA11yActionMovingForward(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat, boolean z) {
         AccessibilityNodeInfoCompat.AccessibilityActionCompat accessibilityActionCompat;
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (this.mOrientation == 0) {
-                if (reverseFlowPrimary) {
-                    accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_LEFT;
-                } else {
-                    accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_RIGHT;
-                }
-                info.addAction(accessibilityActionCompat);
+        if (this.mOrientation == 0) {
+            if (z) {
+                accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_LEFT;
             } else {
-                info.addAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_DOWN);
+                accessibilityActionCompat = AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_RIGHT;
             }
+            accessibilityNodeInfoCompat.addAction(accessibilityActionCompat);
         } else {
-            info.addAction(4096);
+            accessibilityNodeInfoCompat.addAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_DOWN);
         }
-        info.setScrollable(true);
+        accessibilityNodeInfoCompat.setScrollable(true);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
-    public void onInitializeAccessibilityNodeInfo(RecyclerView.Recycler recycler, RecyclerView.State state, AccessibilityNodeInfoCompat info) {
+    public void onInitializeAccessibilityNodeInfo(RecyclerView.Recycler recycler, RecyclerView.State state, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         saveContext(recycler, state);
         int itemCount = state.getItemCount();
         int i = this.mFlag;
         boolean z = (262144 & i) != 0;
         if ((i & 2048) == 0 || (itemCount > 1 && !isItemFullyVisible(0))) {
-            addA11yActionMovingBackward(info, z);
+            addA11yActionMovingBackward(accessibilityNodeInfoCompat, z);
         }
         if ((this.mFlag & 4096) == 0 || (itemCount > 1 && !isItemFullyVisible(itemCount - 1))) {
-            addA11yActionMovingForward(info, z);
+            addA11yActionMovingForward(accessibilityNodeInfoCompat, z);
         }
-        info.setCollectionInfo(AccessibilityNodeInfoCompat.CollectionInfoCompat.obtain(getRowCountForAccessibility(recycler, state), getColumnCountForAccessibility(recycler, state), isLayoutHierarchical(recycler, state), getSelectionModeForAccessibility(recycler, state)));
+        accessibilityNodeInfoCompat.setCollectionInfo(AccessibilityNodeInfoCompat.CollectionInfoCompat.obtain(getRowCountForAccessibility(recycler, state), getColumnCountForAccessibility(recycler, state), isLayoutHierarchical(recycler, state), getSelectionModeForAccessibility(recycler, state)));
         leaveContext();
     }
 }

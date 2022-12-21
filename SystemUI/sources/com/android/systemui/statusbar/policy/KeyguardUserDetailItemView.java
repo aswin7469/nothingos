@@ -5,16 +5,25 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
 import androidx.core.graphics.ColorUtils;
-import com.android.systemui.R$dimen;
+import com.android.keyguard.KeyguardConstants;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
-import com.android.systemui.qs.tiles.UserDetailItemView;
-/* loaded from: classes2.dex */
+import com.android.systemui.p012qs.tiles.UserDetailItemView;
+
 public class KeyguardUserDetailItemView extends UserDetailItemView {
+    private static final int ANIMATION_DURATION_FADE_NAME = 240;
+    private static final boolean DEBUG = KeyguardConstants.DEBUG;
+    private static final String TAG = "KeyguardUserDetailItemView";
     private float mDarkAmount;
     private int mTextColor;
 
+    /* access modifiers changed from: protected */
+    public int getFontSizeDimen() {
+        return C1893R.dimen.kg_user_switcher_text_size;
+    }
+
     public KeyguardUserDetailItemView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public KeyguardUserDetailItemView(Context context, AttributeSet attributeSet) {
@@ -29,42 +38,33 @@ public class KeyguardUserDetailItemView extends UserDetailItemView {
         super(context, attributeSet, i, i2);
     }
 
-    @Override // com.android.systemui.qs.tiles.UserDetailItemView
-    protected int getFontSizeDimen() {
-        return R$dimen.kg_user_switcher_text_size;
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.qs.tiles.UserDetailItemView, android.view.View
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mTextColor = this.mName.getCurrentTextColor();
         updateDark();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateVisibilities(boolean z, boolean z2, boolean z3) {
         int i = 0;
-        Log.d("KeyguardUserDetailItemView", String.format("updateVisibilities itemIsShown=%b nameIsShown=%b animate=%b", Boolean.valueOf(z), Boolean.valueOf(z2), Boolean.valueOf(z3)));
+        if (DEBUG) {
+            Log.d(TAG, String.format("updateVisibilities itemIsShown=%b nameIsShown=%b animate=%b", Boolean.valueOf(z), Boolean.valueOf(z2), Boolean.valueOf(z3)));
+        }
         getBackground().setAlpha((!z || !z2) ? 0 : 255);
         if (z) {
             if (z2) {
                 this.mName.setVisibility(0);
                 if (z3) {
                     this.mName.setAlpha(0.0f);
-                    this.mName.animate().alpha(1.0f).setDuration(240L).setInterpolator(Interpolators.ALPHA_IN);
+                    this.mName.animate().alpha(1.0f).setDuration(240).setInterpolator(Interpolators.ALPHA_IN);
                 } else {
                     this.mName.setAlpha(1.0f);
                 }
             } else if (z3) {
                 this.mName.setVisibility(0);
                 this.mName.setAlpha(1.0f);
-                this.mName.animate().alpha(0.0f).setDuration(240L).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable() { // from class: com.android.systemui.statusbar.policy.KeyguardUserDetailItemView$$ExternalSyntheticLambda0
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        KeyguardUserDetailItemView.this.lambda$updateVisibilities$0();
-                    }
-                });
+                this.mName.animate().alpha(0.0f).setDuration(240).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new KeyguardUserDetailItemView$$ExternalSyntheticLambda0(this));
             } else {
                 this.mName.setVisibility(8);
                 this.mName.setAlpha(1.0f);
@@ -83,18 +83,18 @@ public class KeyguardUserDetailItemView extends UserDetailItemView {
         this.mName.setAlpha(1.0f);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateVisibilities$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateVisibilities$0$com-android-systemui-statusbar-policy-KeyguardUserDetailItemView */
+    public /* synthetic */ void mo45877x89f85ecb() {
         this.mName.setVisibility(8);
         this.mName.setAlpha(1.0f);
     }
 
     public void setDarkAmount(float f) {
-        if (this.mDarkAmount == f) {
-            return;
+        if (this.mDarkAmount != f) {
+            this.mDarkAmount = f;
+            updateDark();
         }
-        this.mDarkAmount = f;
-        updateDark();
     }
 
     private void updateDark() {

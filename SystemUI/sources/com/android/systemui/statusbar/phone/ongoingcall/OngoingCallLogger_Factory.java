@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.phone.ongoingcall;
 import com.android.internal.logging.UiEventLogger;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class OngoingCallLogger_Factory implements Factory<OngoingCallLogger> {
     private final Provider<UiEventLogger> loggerProvider;
 
@@ -11,10 +11,8 @@ public final class OngoingCallLogger_Factory implements Factory<OngoingCallLogge
         this.loggerProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public OngoingCallLogger mo1933get() {
-        return newInstance(this.loggerProvider.mo1933get());
+    public OngoingCallLogger get() {
+        return newInstance(this.loggerProvider.get());
     }
 
     public static OngoingCallLogger_Factory create(Provider<UiEventLogger> provider) {

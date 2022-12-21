@@ -6,7 +6,7 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-/* loaded from: classes.dex */
+
 public class PeopleTileKey {
     private static final Pattern KEY_PATTERN = Pattern.compile("(.+)/(-?\\d+)/(\\p{L}.*)");
     private String mPackageName;
@@ -77,10 +77,10 @@ public class PeopleTileKey {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof PeopleTileKey) {
-            return Objects.equals(((PeopleTileKey) obj).toString(), toString());
+        if (!(obj instanceof PeopleTileKey)) {
+            return false;
         }
-        return false;
+        return Objects.equals(((PeopleTileKey) obj).toString(), toString());
     }
 
     public int hashCode() {

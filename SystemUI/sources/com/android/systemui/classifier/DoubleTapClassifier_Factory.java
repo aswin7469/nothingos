@@ -2,7 +2,7 @@ package com.android.systemui.classifier;
 
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DoubleTapClassifier_Factory implements Factory<DoubleTapClassifier> {
     private final Provider<FalsingDataProvider> dataProvider;
     private final Provider<Float> doubleTapSlopProvider;
@@ -16,10 +16,8 @@ public final class DoubleTapClassifier_Factory implements Factory<DoubleTapClass
         this.doubleTapTimeMsProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DoubleTapClassifier mo1933get() {
-        return newInstance(this.dataProvider.mo1933get(), this.singleTapClassifierProvider.mo1933get(), this.doubleTapSlopProvider.mo1933get().floatValue(), this.doubleTapTimeMsProvider.mo1933get().longValue());
+    public DoubleTapClassifier get() {
+        return newInstance(this.dataProvider.get(), this.singleTapClassifierProvider.get(), this.doubleTapSlopProvider.get().floatValue(), this.doubleTapTimeMsProvider.get().longValue());
     }
 
     public static DoubleTapClassifier_Factory create(Provider<FalsingDataProvider> provider, Provider<SingleTapClassifier> provider2, Provider<Float> provider3, Provider<Long> provider4) {

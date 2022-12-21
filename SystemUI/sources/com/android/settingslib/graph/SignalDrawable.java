@@ -11,52 +11,56 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.DrawableWrapper;
 import android.os.Handler;
 import android.telephony.CellSignalStrength;
 import android.util.PathParser;
-import com.android.settingslib.R$color;
-import com.android.settingslib.R$dimen;
+import com.android.settingslib.C1757R;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public class SignalDrawable extends DrawableWrapper {
+    private static final long DOT_DELAY = 1000;
+    private static final float DOT_PADDING = 0.0625f;
+    private static final float DOT_SIZE = 0.125f;
+    private static final int LEVEL_MASK = 255;
+    private static final int NUM_DOTS = 3;
+    private static final int NUM_LEVEL_MASK = 65280;
+    private static final int NUM_LEVEL_SHIFT = 8;
+    private static final float PAD = 0.083333336f;
+    private static final int STATE_CARRIER_CHANGE = 3;
+    private static final int STATE_CUT = 2;
+    private static final int STATE_MASK = 16711680;
+    private static final int STATE_SHIFT = 16;
+    private static final String TAG = "SignalDrawable";
+    private static final float VIEWPORT = 24.0f;
     private boolean mAnimating;
     private final Path mAttributionPath;
-    private int mCurrentDot;
+    private final Matrix mAttributionScaleMatrix;
+    /* access modifiers changed from: private */
+    public final Runnable mChangeDot;
+    /* access modifiers changed from: private */
+    public int mCurrentDot;
     private final float mCutoutHeightFraction;
+    private final Path mCutoutPath;
     private final float mCutoutWidthFraction;
+    private float mDarkIntensity;
     private final int mDarkModeFillColor;
+    private final Paint mForegroundPaint = new Paint(1);
+    private final Path mForegroundPath;
+    /* access modifiers changed from: private */
+    public final Handler mHandler;
     private final int mIntrinsicSize;
     private final int mLightModeFillColor;
-    private int mTotalWidthForClipOutRect;
+    private final Path mScaledAttributionPath;
     private final Paint mTransparentPaint;
-    private final Paint mForegroundPaint = new Paint(1);
-    private final Path mCutoutPath = new Path();
-    private final Path mForegroundPath = new Path();
-    private final Matrix mAttributionScaleMatrix = new Matrix();
-    private final Path mScaledAttributionPath = new Path();
-    private float mDarkIntensity = -1.0f;
-    private final Runnable mChangeDot = new Runnable() { // from class: com.android.settingslib.graph.SignalDrawable.1
-        @Override // java.lang.Runnable
-        public void run() {
-            if (SignalDrawable.access$004(SignalDrawable.this) == 3) {
-                SignalDrawable.this.mCurrentDot = 0;
-            }
-            SignalDrawable.this.invalidateSelf();
-            SignalDrawable.this.mHandler.postDelayed(SignalDrawable.this.mChangeDot, 1000L);
-        }
-    };
-    private final Rect mTmpClipOutRect = new Rect();
-    private final Rect mClipOutRectLeftTop = new Rect();
-    private final Rect mClipOutRectRightBottom = new Rect();
-    private final Handler mHandler = new Handler();
 
     public static int getCarrierChangeState(int i) {
         return (i << 8) | 196608;
     }
 
     public static int getState(int i) {
-        return (i & 16711680) >> 16;
+        return (i & STATE_MASK) >> 16;
     }
 
     public static int getState(int i, int i2, boolean z) {
@@ -70,20 +74,35 @@ public class SignalDrawable extends DrawableWrapper {
     }
 
     public SignalDrawable(Context context) {
-        super(context.getDrawable(17302841));
+        super(context.getDrawable(17302851));
         Paint paint = new Paint(1);
         this.mTransparentPaint = paint;
+        this.mCutoutPath = new Path();
+        this.mForegroundPath = new Path();
         Path path = new Path();
         this.mAttributionPath = path;
-        path.set(PathParser.createPathFromPathData(context.getString(17040000)));
+        this.mAttributionScaleMatrix = new Matrix();
+        this.mScaledAttributionPath = new Path();
+        this.mDarkIntensity = -1.0f;
+        this.mChangeDot = new Runnable() {
+            public void run() {
+                if (SignalDrawable.access$004(SignalDrawable.this) == 3) {
+                    int unused = SignalDrawable.this.mCurrentDot = 0;
+                }
+                SignalDrawable.this.invalidateSelf();
+                SignalDrawable.this.mHandler.postDelayed(SignalDrawable.this.mChangeDot, 1000);
+            }
+        };
+        path.set(PathParser.createPathFromPathData(context.getString(17040040)));
         updateScaledAttributionPath();
-        this.mCutoutWidthFraction = context.getResources().getFloat(17105109);
-        this.mCutoutHeightFraction = context.getResources().getFloat(17105108);
-        this.mDarkModeFillColor = Utils.getColorStateListDefaultColor(context, R$color.dark_mode_icon_color_single_tone);
-        this.mLightModeFillColor = Utils.getColorStateListDefaultColor(context, R$color.light_mode_icon_color_single_tone);
-        this.mIntrinsicSize = context.getResources().getDimensionPixelSize(R$dimen.signal_icon_size);
+        this.mCutoutWidthFraction = context.getResources().getFloat(17105112);
+        this.mCutoutHeightFraction = context.getResources().getFloat(17105111);
+        this.mDarkModeFillColor = Utils.getColorStateListDefaultColor(context, C1757R.C1758color.dark_mode_icon_color_single_tone);
+        this.mLightModeFillColor = Utils.getColorStateListDefaultColor(context, C1757R.C1758color.light_mode_icon_color_single_tone);
+        this.mIntrinsicSize = context.getResources().getDimensionPixelSize(C1757R.dimen.signal_icon_size);
         paint.setColor(context.getColor(17170445));
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        this.mHandler = new Handler();
         setDarkIntensity(0.0f);
     }
 
@@ -91,36 +110,33 @@ public class SignalDrawable extends DrawableWrapper {
         if (getBounds().isEmpty()) {
             this.mAttributionScaleMatrix.setScale(1.0f, 1.0f);
         } else {
-            this.mAttributionScaleMatrix.setScale(getBounds().width() / 24.0f, getBounds().height() / 24.0f);
+            this.mAttributionScaleMatrix.setScale(((float) getBounds().width()) / VIEWPORT, ((float) getBounds().height()) / VIEWPORT);
         }
         this.mAttributionPath.transform(this.mAttributionScaleMatrix, this.mScaledAttributionPath);
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public int getIntrinsicWidth() {
         return this.mIntrinsicSize;
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public int getIntrinsicHeight() {
         return this.mIntrinsicSize;
     }
 
     private void updateAnimation() {
         boolean z = isInState(3) && isVisible();
-        if (z == this.mAnimating) {
-            return;
-        }
-        this.mAnimating = z;
-        if (z) {
-            this.mChangeDot.run();
-        } else {
-            this.mHandler.removeCallbacks(this.mChangeDot);
+        if (z != this.mAnimating) {
+            this.mAnimating = z;
+            if (z) {
+                this.mChangeDot.run();
+            } else {
+                this.mHandler.removeCallbacks(this.mChangeDot);
+            }
         }
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
-    protected boolean onLevelChange(int i) {
+    /* access modifiers changed from: protected */
+    public boolean onLevelChange(int i) {
         super.onLevelChange(unpackLevel(i));
         updateAnimation();
         setTintList(ColorStateList.valueOf(this.mForegroundPaint.getColor()));
@@ -133,13 +149,11 @@ public class SignalDrawable extends DrawableWrapper {
     }
 
     public void setDarkIntensity(float f) {
-        if (f == this.mDarkIntensity) {
-            return;
+        if (f != this.mDarkIntensity) {
+            setTintList(ColorStateList.valueOf(getFillColor(f)));
         }
-        setTintList(ColorStateList.valueOf(getFillColor(f)));
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void setTintList(ColorStateList colorStateList) {
         super.setTintList(colorStateList);
         int color = this.mForegroundPaint.getColor();
@@ -157,23 +171,21 @@ public class SignalDrawable extends DrawableWrapper {
         return ((Integer) ArgbEvaluator.getInstance().evaluate(f, Integer.valueOf(i), Integer.valueOf(i2))).intValue();
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
-    protected void onBoundsChange(Rect rect) {
+    /* access modifiers changed from: protected */
+    public void onBoundsChange(Rect rect) {
         super.onBoundsChange(rect);
         updateScaledAttributionPath();
         invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
-        canvas.saveLayer(null, null);
-        float width = getBounds().width();
-        float height = getBounds().height();
+        canvas.saveLayer((RectF) null, (Paint) null);
+        float width = (float) getBounds().width();
+        float height = (float) getBounds().height();
         boolean z = true;
         if (getLayoutDirection() != 1) {
             z = false;
         }
-        clipCanvasIfNeed(canvas, z);
         if (z) {
             canvas.save();
             canvas.translate(width, 0.0f);
@@ -182,31 +194,31 @@ public class SignalDrawable extends DrawableWrapper {
         super.draw(canvas);
         this.mCutoutPath.reset();
         this.mCutoutPath.setFillType(Path.FillType.WINDING);
-        float round = Math.round(0.083333336f * width);
+        float round = (float) Math.round(PAD * width);
         if (isInState(3)) {
-            float f = 0.125f * height;
-            float f2 = height * 0.0625f;
+            float f = DOT_SIZE * height;
+            float f2 = height * DOT_PADDING;
             float f3 = f2 + f;
             float f4 = (width - round) - f;
-            float f5 = (height - round) - f;
             this.mForegroundPath.reset();
-            drawDotAndPadding(f4, f5, f2, f, 2);
-            drawDotAndPadding(f4 - f3, f5, f2, f, 1);
-            drawDotAndPadding(f4 - (f3 * 2.0f), f5, f2, f, 0);
+            float f5 = (height - round) - f;
+            float f6 = f2;
+            float f7 = f;
+            drawDotAndPadding(f4, f5, f6, f7, 2);
+            drawDotAndPadding(f4 - f3, f5, f6, f7, 1);
+            drawDotAndPadding(f4 - (f3 * 2.0f), f5, f6, f7, 0);
             canvas.drawPath(this.mCutoutPath, this.mTransparentPaint);
             canvas.drawPath(this.mForegroundPath, this.mForegroundPaint);
         } else if (isInState(2)) {
-            float f6 = (this.mCutoutWidthFraction * width) / 24.0f;
-            float f7 = (this.mCutoutHeightFraction * height) / 24.0f;
+            float f8 = (this.mCutoutWidthFraction * width) / VIEWPORT;
+            float f9 = (this.mCutoutHeightFraction * height) / VIEWPORT;
             this.mCutoutPath.moveTo(width, height);
-            this.mCutoutPath.rLineTo(-f6, 0.0f);
-            this.mCutoutPath.rLineTo(0.0f, -f7);
-            this.mCutoutPath.rLineTo(f6, 0.0f);
-            this.mCutoutPath.rLineTo(0.0f, f7);
-            if (canDrawCutoutPath()) {
-                canvas.drawPath(this.mCutoutPath, this.mTransparentPaint);
-                canvas.drawPath(this.mScaledAttributionPath, this.mForegroundPaint);
-            }
+            this.mCutoutPath.rLineTo(-f8, 0.0f);
+            this.mCutoutPath.rLineTo(0.0f, -f9);
+            this.mCutoutPath.rLineTo(f8, 0.0f);
+            this.mCutoutPath.rLineTo(0.0f, f9);
+            canvas.drawPath(this.mCutoutPath, this.mTransparentPaint);
+            canvas.drawPath(this.mScaledAttributionPath, this.mForegroundPaint);
         }
         if (z) {
             canvas.restore();
@@ -223,19 +235,16 @@ public class SignalDrawable extends DrawableWrapper {
         }
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void setAlpha(int i) {
         super.setAlpha(i);
         this.mForegroundPaint.setAlpha(i);
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
         super.setColorFilter(colorFilter);
         this.mForegroundPaint.setColorFilter(colorFilter);
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public boolean setVisible(boolean z, boolean z2) {
         boolean visible = super.setVisible(z, z2);
         updateAnimation();
@@ -248,38 +257,5 @@ public class SignalDrawable extends DrawableWrapper {
 
     public static int getEmptyState(int i) {
         return getState(0, i, true);
-    }
-
-    public void setClipOutRect(Rect rect, Rect rect2, int i) {
-        this.mTotalWidthForClipOutRect = i;
-        boolean z = !this.mClipOutRectLeftTop.equals(rect) || !this.mClipOutRectRightBottom.equals(rect2);
-        this.mClipOutRectLeftTop.set(rect);
-        this.mClipOutRectRightBottom.set(rect2);
-        if (z) {
-            invalidateSelf();
-        }
-    }
-
-    private void clipCanvasIfNeed(Canvas canvas, boolean z) {
-        if (!this.mClipOutRectLeftTop.isEmpty()) {
-            canvas.clipOutRect(buildTmpClipOutRect(this.mClipOutRectLeftTop, z));
-        }
-        if (!this.mClipOutRectRightBottom.isEmpty()) {
-            canvas.clipOutRect(buildTmpClipOutRect(this.mClipOutRectRightBottom, z));
-        }
-    }
-
-    private Rect buildTmpClipOutRect(Rect rect, boolean z) {
-        this.mTmpClipOutRect.set(rect);
-        if (z) {
-            Rect rect2 = this.mTmpClipOutRect;
-            int i = this.mTotalWidthForClipOutRect;
-            rect2.set(i - rect2.left, rect2.top, i - rect2.right, rect2.bottom);
-        }
-        return this.mTmpClipOutRect;
-    }
-
-    private boolean canDrawCutoutPath() {
-        return this.mClipOutRectRightBottom.isEmpty();
     }
 }

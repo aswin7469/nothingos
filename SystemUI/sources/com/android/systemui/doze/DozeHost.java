@@ -1,38 +1,20 @@
 package com.android.systemui.doze;
-/* loaded from: classes.dex */
+
+import com.nothing.systemui.doze.DozeHostEx;
+
 public interface DozeHost {
 
-    /* loaded from: classes.dex */
-    public interface Callback {
-        default void onDozeFingerprintDown() {
+    public interface Callback extends DozeHostEx.CallbackEx {
+        void onAlwaysOnSuppressedChanged(boolean z) {
         }
 
-        default void onDozeFingerprintRunningStateChanged() {
+        void onNotificationAlerted(Runnable runnable) {
         }
 
-        default void onDozeFingerprintUp() {
-        }
-
-        default void onDozeSuppressedChanged(boolean z) {
-        }
-
-        default void onLiftWake() {
-        }
-
-        default void onMotion() {
-        }
-
-        default void onNotificationAlerted(Runnable runnable) {
-        }
-
-        default void onPowerSaveChanged(boolean z) {
-        }
-
-        default void onTapWake() {
+        void onPowerSaveChanged(boolean z) {
         }
     }
 
-    /* loaded from: classes.dex */
     public interface PulseCallback {
         void onPulseFinished();
 
@@ -47,9 +29,7 @@ public interface DozeHost {
 
     void extendPulse(int i);
 
-    boolean isBlockingDoze();
-
-    boolean isDozeSuppressed();
+    boolean isAlwaysOnSuppressed();
 
     boolean isPowerSaveActive();
 
@@ -67,11 +47,9 @@ public interface DozeHost {
 
     void removeCallback(Callback callback);
 
-    void setAnimateScreenOff(boolean z);
-
     void setAnimateWakeup(boolean z);
 
-    default void setAodDimmingScrim(float f) {
+    void setAodDimmingScrim(float f) {
     }
 
     void setDozeScreenBrightness(int i);
@@ -79,4 +57,6 @@ public interface DozeHost {
     void startDozing();
 
     void stopDozing();
+
+    void stopPulsing();
 }

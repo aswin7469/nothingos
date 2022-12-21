@@ -1,19 +1,11 @@
 package com.android.systemui.people.widget;
 
-import android.content.pm.ShortcutInfo;
 import android.service.notification.ConversationChannelWrapper;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLambda8 implements Function {
-    public static final /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda8 INSTANCE = new PeopleSpaceWidgetManager$$ExternalSyntheticLambda8();
+import java.util.function.Predicate;
 
-    private /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda8() {
-    }
-
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        ShortcutInfo shortcutInfo;
-        shortcutInfo = ((ConversationChannelWrapper) obj).getShortcutInfo();
-        return shortcutInfo;
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLambda8 implements Predicate {
+    public final boolean test(Object obj) {
+        return PeopleSpaceWidgetManager.lambda$getRecentTiles$8((ConversationChannelWrapper) obj);
     }
 }

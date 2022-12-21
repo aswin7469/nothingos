@@ -8,28 +8,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
-/* loaded from: classes.dex */
+
 public class SectionHeaderView extends StackScrollerDecorView {
     private ImageView mClearAllButton;
     private ViewGroup mContents;
+    private View.OnClickListener mLabelClickListener = null;
     private Integer mLabelTextId;
     private TextView mLabelView;
-    private View.OnClickListener mLabelClickListener = null;
     private View.OnClickListener mOnClearClickListener = null;
 
-    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
-    protected View findSecondaryView() {
+    /* access modifiers changed from: protected */
+    public View findSecondaryView() {
         return null;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView, com.android.systemui.statusbar.notification.row.ExpandableView
     public boolean isTransparent() {
         return true;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView, com.android.systemui.statusbar.notification.row.ExpandableView
     public boolean needsClippingToShelf() {
         return true;
     }
@@ -38,17 +36,17 @@ public class SectionHeaderView extends StackScrollerDecorView {
         super(context, attributeSet);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView, android.view.View
-    protected void onFinishInflate() {
-        this.mContents = (ViewGroup) requireViewById(R$id.content);
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
+        this.mContents = (ViewGroup) requireViewById(C1893R.C1897id.content);
         bindContents();
         super.onFinishInflate();
         setVisible(true, false);
     }
 
     private void bindContents() {
-        this.mLabelView = (TextView) requireViewById(R$id.header_label);
-        ImageView imageView = (ImageView) requireViewById(R$id.btn_clear_all);
+        this.mLabelView = (TextView) requireViewById(C1893R.C1897id.header_label);
+        ImageView imageView = (ImageView) requireViewById(C1893R.C1897id.btn_clear_all);
         this.mClearAllButton = imageView;
         View.OnClickListener onClickListener = this.mOnClearClickListener;
         if (onClickListener != null) {
@@ -64,17 +62,15 @@ public class SectionHeaderView extends StackScrollerDecorView {
         }
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
-    protected View findContentView() {
+    /* access modifiers changed from: protected */
+    public View findContentView() {
         return this.mContents;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setAreThereDismissableGentleNotifs(boolean z) {
+    public void setClearSectionButtonEnabled(boolean z) {
         this.mClearAllButton.setVisibility(z ? 0 : 8);
     }
 
-    @Override // android.view.ViewGroup
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         return super.onInterceptTouchEvent(motionEvent);
     }
@@ -84,8 +80,8 @@ public class SectionHeaderView extends StackScrollerDecorView {
         this.mLabelView.setOnClickListener(onClickListener);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
-    protected void applyContentTransformation(float f, float f2) {
+    /* access modifiers changed from: protected */
+    public void applyContentTransformation(float f, float f2) {
         super.applyContentTransformation(f, f2);
         this.mLabelView.setAlpha(f);
         this.mLabelView.setTranslationY(f2);
@@ -103,7 +99,7 @@ public class SectionHeaderView extends StackScrollerDecorView {
         this.mLabelView.setText(i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setForegroundColor(int i) {
         this.mLabelView.setTextColor(i);
         this.mClearAllButton.setImageTintList(ColorStateList.valueOf(i));

@@ -9,9 +9,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.internal.widget.ConversationLayout;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+import com.android.systemui.statusbar.notification.NotificationFadeAware;
+
 public class HybridConversationNotificationView extends HybridNotificationView {
     private View mConversationFacePile;
     private ImageView mConversationIconView;
@@ -22,7 +22,7 @@ public class HybridConversationNotificationView extends HybridNotificationView {
     private int mSingleAvatarSize;
 
     public HybridConversationNotificationView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public HybridConversationNotificationView(Context context, AttributeSet attributeSet) {
@@ -37,22 +37,20 @@ public class HybridConversationNotificationView extends HybridNotificationView {
         super(context, attributeSet, i, i2);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.row.HybridNotificationView, android.view.View
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mConversationIconView = (ImageView) requireViewById(16908895);
-        this.mConversationFacePile = requireViewById(16908890);
-        this.mConversationSenderName = (TextView) requireViewById(R$id.conversation_notification_sender);
-        this.mFacePileSize = getResources().getDimensionPixelSize(R$dimen.conversation_single_line_face_pile_size);
-        this.mFacePileAvatarSize = getResources().getDimensionPixelSize(R$dimen.conversation_single_line_face_pile_avatar_size);
-        this.mSingleAvatarSize = getResources().getDimensionPixelSize(R$dimen.conversation_single_line_avatar_size);
-        this.mFacePileProtectionWidth = getResources().getDimensionPixelSize(R$dimen.conversation_single_line_face_pile_protection_width);
+        this.mConversationIconView = (ImageView) requireViewById(16908923);
+        this.mConversationFacePile = requireViewById(16908918);
+        this.mConversationSenderName = (TextView) requireViewById(C1893R.C1897id.conversation_notification_sender);
+        this.mFacePileSize = getResources().getDimensionPixelSize(C1893R.dimen.conversation_single_line_face_pile_size);
+        this.mFacePileAvatarSize = getResources().getDimensionPixelSize(C1893R.dimen.conversation_single_line_face_pile_avatar_size);
+        this.mSingleAvatarSize = getResources().getDimensionPixelSize(C1893R.dimen.conversation_single_line_avatar_size);
+        this.mFacePileProtectionWidth = getResources().getDimensionPixelSize(C1893R.dimen.conversation_single_line_face_pile_protection_width);
         this.mTransformationHelper.addViewTransformingToSimilar(this.mConversationIconView);
         this.mTransformationHelper.addTransformedView(this.mConversationSenderName);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.HybridNotificationView
     public void bind(CharSequence charSequence, CharSequence charSequence2, View view) {
         if (!(view instanceof ConversationLayout)) {
             super.bind(charSequence, charSequence2, view);
@@ -68,11 +66,11 @@ public class HybridConversationNotificationView extends HybridNotificationView {
         } else {
             this.mConversationIconView.setVisibility(8);
             this.mConversationFacePile.setVisibility(0);
-            View requireViewById = requireViewById(16908890);
+            View requireViewById = requireViewById(16908918);
             this.mConversationFacePile = requireViewById;
-            ImageView imageView = (ImageView) requireViewById.requireViewById(16908892);
-            ImageView imageView2 = (ImageView) this.mConversationFacePile.requireViewById(16908891);
-            ImageView imageView3 = (ImageView) this.mConversationFacePile.requireViewById(16908893);
+            ImageView imageView = (ImageView) requireViewById.requireViewById(16908920);
+            ImageView imageView2 = (ImageView) this.mConversationFacePile.requireViewById(16908919);
+            ImageView imageView3 = (ImageView) this.mConversationFacePile.requireViewById(16908921);
             conversationLayout.bindFacePile(imageView, imageView2, imageView3);
             setSize(this.mConversationFacePile, this.mFacePileSize);
             setSize(imageView2, this.mFacePileAvatarSize);
@@ -104,5 +102,10 @@ public class HybridConversationNotificationView extends HybridNotificationView {
         layoutParams.width = i;
         layoutParams.height = i;
         view.setLayoutParams(layoutParams);
+    }
+
+    public void setNotificationFaded(boolean z) {
+        super.setNotificationFaded(z);
+        NotificationFadeAware.setLayerTypeForFaded(this.mConversationFacePile, z);
     }
 }

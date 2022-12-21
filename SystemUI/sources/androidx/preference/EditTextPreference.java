@@ -6,17 +6,22 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.widget.EditText;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.Preference;
-/* loaded from: classes.dex */
+
 public class EditTextPreference extends DialogPreference {
+    private OnBindEditTextListener mOnBindEditTextListener;
     private String mText;
+
+    public interface OnBindEditTextListener {
+        void onBindEditText(EditText editText);
+    }
 
     public EditTextPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.EditTextPreference, i, i2);
-        int i3 = R$styleable.EditTextPreference_useSimpleSummaryProvider;
-        if (TypedArrayUtils.getBoolean(obtainStyledAttributes, i3, i3, false)) {
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1246R.styleable.EditTextPreference, i, i2);
+        if (TypedArrayUtils.getBoolean(obtainStyledAttributes, C1246R.styleable.EditTextPreference_useSimpleSummaryProvider, C1246R.styleable.EditTextPreference_useSimpleSummaryProvider, false)) {
             setSummaryProvider(SimpleSummaryProvider.getInstance());
         }
         obtainStyledAttributes.recycle();
@@ -27,7 +32,11 @@ public class EditTextPreference extends DialogPreference {
     }
 
     public EditTextPreference(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, TypedArrayUtils.getAttr(context, R$attr.editTextPreferenceStyle, 16842898));
+        this(context, attributeSet, TypedArrayUtils.getAttr(context, C1246R.attr.editTextPreferenceStyle, 16842898));
+    }
+
+    public EditTextPreference(Context context) {
+        this(context, (AttributeSet) null);
     }
 
     public void setText(String str) {
@@ -45,23 +54,22 @@ public class EditTextPreference extends DialogPreference {
         return this.mText;
     }
 
-    @Override // androidx.preference.Preference
-    protected Object onGetDefaultValue(TypedArray typedArray, int i) {
+    /* access modifiers changed from: protected */
+    public Object onGetDefaultValue(TypedArray typedArray, int i) {
         return typedArray.getString(i);
     }
 
-    @Override // androidx.preference.Preference
-    protected void onSetInitialValue(Object obj) {
+    /* access modifiers changed from: protected */
+    public void onSetInitialValue(Object obj) {
         setText(getPersistedString((String) obj));
     }
 
-    @Override // androidx.preference.Preference
     public boolean shouldDisableDependents() {
         return TextUtils.isEmpty(this.mText) || super.shouldDisableDependents();
     }
 
-    @Override // androidx.preference.Preference
-    protected Parcelable onSaveInstanceState() {
+    /* access modifiers changed from: protected */
+    public Parcelable onSaveInstanceState() {
         Parcelable onSaveInstanceState = super.onSaveInstanceState();
         if (isPersistent()) {
             return onSaveInstanceState;
@@ -71,8 +79,8 @@ public class EditTextPreference extends DialogPreference {
         return savedState;
     }
 
-    @Override // androidx.preference.Preference
-    protected void onRestoreInstanceState(Parcelable parcelable) {
+    /* access modifiers changed from: protected */
+    public void onRestoreInstanceState(Parcelable parcelable) {
         if (parcelable == null || !parcelable.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(parcelable);
             return;
@@ -82,21 +90,22 @@ public class EditTextPreference extends DialogPreference {
         setText(savedState.mText);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: androidx.preference.EditTextPreference.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo125createFromParcel(Parcel parcel) {
+    public void setOnBindEditTextListener(OnBindEditTextListener onBindEditTextListener) {
+        this.mOnBindEditTextListener = onBindEditTextListener;
+    }
+
+    /* access modifiers changed from: package-private */
+    public OnBindEditTextListener getOnBindEditTextListener() {
+        return this.mOnBindEditTextListener;
+    }
+
+    private static class SavedState extends Preference.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo126newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -111,14 +120,12 @@ public class EditTextPreference extends DialogPreference {
             super(parcelable);
         }
 
-        @Override // android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeString(this.mText);
         }
     }
 
-    /* loaded from: classes.dex */
     public static final class SimpleSummaryProvider implements Preference.SummaryProvider<EditTextPreference> {
         private static SimpleSummaryProvider sSimpleSummaryProvider;
 
@@ -132,10 +139,9 @@ public class EditTextPreference extends DialogPreference {
             return sSimpleSummaryProvider;
         }
 
-        @Override // androidx.preference.Preference.SummaryProvider
         public CharSequence provideSummary(EditTextPreference editTextPreference) {
             if (TextUtils.isEmpty(editTextPreference.getText())) {
-                return editTextPreference.getContext().getString(R$string.not_set);
+                return editTextPreference.getContext().getString(C1246R.string.not_set);
             }
             return editTextPreference.getText();
         }

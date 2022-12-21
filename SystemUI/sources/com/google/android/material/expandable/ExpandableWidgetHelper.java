@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewParent;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-/* loaded from: classes2.dex */
+
 public final class ExpandableWidgetHelper {
     private boolean expanded = false;
     private int expandedComponentIdHint = 0;
@@ -12,6 +12,15 @@ public final class ExpandableWidgetHelper {
 
     public ExpandableWidgetHelper(ExpandableWidget expandableWidget) {
         this.widget = (View) expandableWidget;
+    }
+
+    public boolean setExpanded(boolean z) {
+        if (this.expanded == z) {
+            return false;
+        }
+        this.expanded = z;
+        dispatchExpandedStateChanged();
+        return true;
     }
 
     public boolean isExpanded() {
@@ -31,6 +40,10 @@ public final class ExpandableWidgetHelper {
         if (this.expanded) {
             dispatchExpandedStateChanged();
         }
+    }
+
+    public void setExpandedComponentIdHint(int i) {
+        this.expandedComponentIdHint = i;
     }
 
     public int getExpandedComponentIdHint() {

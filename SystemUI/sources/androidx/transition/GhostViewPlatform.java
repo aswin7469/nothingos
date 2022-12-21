@@ -6,8 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-/* loaded from: classes.dex */
+
 class GhostViewPlatform implements GhostView {
+    private static final String TAG = "GhostViewApi21";
     private static Method sAddGhostMethod;
     private static boolean sAddGhostMethodFetched;
     private static Class<?> sGhostViewClass;
@@ -16,17 +17,15 @@ class GhostViewPlatform implements GhostView {
     private static boolean sRemoveGhostMethodFetched;
     private final View mGhostView;
 
-    @Override // androidx.transition.GhostView
     public void reserveEndViewTransition(ViewGroup viewGroup, View view) {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static GhostView addGhost(View view, ViewGroup viewGroup, Matrix matrix) {
+    static GhostView addGhost(View view, ViewGroup viewGroup, Matrix matrix) {
         fetchAddGhostMethod();
         Method method = sAddGhostMethod;
         if (method != null) {
             try {
-                return new GhostViewPlatform((View) method.invoke(null, view, viewGroup, matrix));
+                return new GhostViewPlatform((View) method.invoke((Object) null, view, viewGroup, matrix));
             } catch (IllegalAccessException unused) {
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e.getCause());
@@ -35,13 +34,12 @@ class GhostViewPlatform implements GhostView {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void removeGhost(View view) {
+    static void removeGhost(View view) {
         fetchRemoveGhostMethod();
         Method method = sRemoveGhostMethod;
         if (method != null) {
             try {
-                method.invoke(null, view);
+                method.invoke((Object) null, view);
             } catch (IllegalAccessException unused) {
             } catch (InvocationTargetException e) {
                 throw new RuntimeException(e.getCause());
@@ -53,7 +51,6 @@ class GhostViewPlatform implements GhostView {
         this.mGhostView = view;
     }
 
-    @Override // androidx.transition.GhostView
     public void setVisibility(int i) {
         this.mGhostView.setVisibility(i);
     }
@@ -63,7 +60,7 @@ class GhostViewPlatform implements GhostView {
             try {
                 sGhostViewClass = Class.forName("android.view.GhostView");
             } catch (ClassNotFoundException e) {
-                Log.i("GhostViewApi21", "Failed to retrieve GhostView class", e);
+                Log.i(TAG, "Failed to retrieve GhostView class", e);
             }
             sGhostViewClassFetched = true;
         }
@@ -77,7 +74,7 @@ class GhostViewPlatform implements GhostView {
                 sAddGhostMethod = declaredMethod;
                 declaredMethod.setAccessible(true);
             } catch (NoSuchMethodException e) {
-                Log.i("GhostViewApi21", "Failed to retrieve addGhost method", e);
+                Log.i(TAG, "Failed to retrieve addGhost method", e);
             }
             sAddGhostMethodFetched = true;
         }
@@ -91,7 +88,7 @@ class GhostViewPlatform implements GhostView {
                 sRemoveGhostMethod = declaredMethod;
                 declaredMethod.setAccessible(true);
             } catch (NoSuchMethodException e) {
-                Log.i("GhostViewApi21", "Failed to retrieve removeGhost method", e);
+                Log.i(TAG, "Failed to retrieve removeGhost method", e);
             }
             sRemoveGhostMethodFetched = true;
         }

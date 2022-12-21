@@ -3,7 +3,7 @@ package com.android.systemui.media;
 import com.android.systemui.util.concurrency.RepeatableExecutor;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class SeekBarViewModel_Factory implements Factory<SeekBarViewModel> {
     private final Provider<RepeatableExecutor> bgExecutorProvider;
 
@@ -11,10 +11,8 @@ public final class SeekBarViewModel_Factory implements Factory<SeekBarViewModel>
         this.bgExecutorProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SeekBarViewModel mo1933get() {
-        return newInstance(this.bgExecutorProvider.mo1933get());
+    public SeekBarViewModel get() {
+        return newInstance(this.bgExecutorProvider.get());
     }
 
     public static SeekBarViewModel_Factory create(Provider<RepeatableExecutor> provider) {

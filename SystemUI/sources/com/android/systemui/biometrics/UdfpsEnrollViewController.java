@@ -4,55 +4,38 @@ import android.graphics.PointF;
 import com.android.systemui.biometrics.UdfpsEnrollHelper;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
-import com.android.systemui.statusbar.phone.StatusBar;
-import com.android.systemui.util.ViewController;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-/* loaded from: classes.dex */
+import com.android.systemui.statusbar.phone.SystemUIDialogManager;
+import com.android.systemui.statusbar.phone.panelstate.PanelExpansionStateManager;
+
 public class UdfpsEnrollViewController extends UdfpsAnimationViewController<UdfpsEnrollView> {
     private final UdfpsEnrollHelper mEnrollHelper;
-    private final UdfpsEnrollHelper.Listener mEnrollHelperListener = new UdfpsEnrollHelper.Listener() { // from class: com.android.systemui.biometrics.UdfpsEnrollViewController.1
-        @Override // com.android.systemui.biometrics.UdfpsEnrollHelper.Listener
+    private final UdfpsEnrollHelper.Listener mEnrollHelperListener = new UdfpsEnrollHelper.Listener() {
         public void onEnrollmentProgress(int i, int i2) {
-            ((UdfpsEnrollView) ((ViewController) UdfpsEnrollViewController.this).mView).onEnrollmentProgress(i, i2);
+            ((UdfpsEnrollView) UdfpsEnrollViewController.this.mView).onEnrollmentProgress(i, i2);
         }
 
-        @Override // com.android.systemui.biometrics.UdfpsEnrollHelper.Listener
         public void onEnrollmentHelp(int i, int i2) {
-            ((UdfpsEnrollView) ((ViewController) UdfpsEnrollViewController.this).mView).onEnrollmentHelp(i, i2);
+            ((UdfpsEnrollView) UdfpsEnrollViewController.this.mView).onEnrollmentHelp(i, i2);
         }
 
-        @Override // com.android.systemui.biometrics.UdfpsEnrollHelper.Listener
         public void onLastStepAcquired() {
-            ((UdfpsEnrollView) ((ViewController) UdfpsEnrollViewController.this).mView).onLastStepAcquired();
+            ((UdfpsEnrollView) UdfpsEnrollViewController.this.mView).onLastStepAcquired();
         }
     };
     private final int mEnrollProgressBarRadius = 0;
 
-    @Override // com.android.systemui.biometrics.UdfpsAnimationViewController
-    String getTag() {
+    /* access modifiers changed from: protected */
+    public String getTag() {
         return "UdfpsEnrollViewController";
     }
 
-    @Override // com.android.systemui.biometrics.UdfpsAnimationViewController, com.android.systemui.Dumpable
-    public /* bridge */ /* synthetic */ void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        super.dump(fileDescriptor, printWriter, strArr);
-    }
-
-    @Override // com.android.systemui.biometrics.UdfpsAnimationViewController
-    public /* bridge */ /* synthetic */ void updateAlpha(float f) {
-        super.updateAlpha(f);
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    public UdfpsEnrollViewController(UdfpsEnrollView udfpsEnrollView, UdfpsEnrollHelper udfpsEnrollHelper, StatusBarStateController statusBarStateController, StatusBar statusBar, DumpManager dumpManager) {
-        super(udfpsEnrollView, statusBarStateController, statusBar, dumpManager);
+    protected UdfpsEnrollViewController(UdfpsEnrollView udfpsEnrollView, UdfpsEnrollHelper udfpsEnrollHelper, StatusBarStateController statusBarStateController, PanelExpansionStateManager panelExpansionStateManager, SystemUIDialogManager systemUIDialogManager, DumpManager dumpManager, float f) {
+        super(udfpsEnrollView, statusBarStateController, panelExpansionStateManager, systemUIDialogManager, dumpManager);
         this.mEnrollHelper = udfpsEnrollHelper;
         ((UdfpsEnrollView) this.mView).setEnrollHelper(udfpsEnrollHelper);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.biometrics.UdfpsAnimationViewController, com.android.systemui.util.ViewController
+    /* access modifiers changed from: protected */
     public void onViewAttached() {
         super.onViewAttached();
         if (this.mEnrollHelper.shouldShowProgressBar()) {
@@ -60,7 +43,6 @@ public class UdfpsEnrollViewController extends UdfpsAnimationViewController<Udfp
         }
     }
 
-    @Override // com.android.systemui.biometrics.UdfpsAnimationViewController
     public PointF getTouchTranslation() {
         if (!this.mEnrollHelper.isGuidedEnrollmentStage()) {
             return new PointF(0.0f, 0.0f);
@@ -68,13 +50,15 @@ public class UdfpsEnrollViewController extends UdfpsAnimationViewController<Udfp
         return this.mEnrollHelper.getNextGuidedEnrollmentPoint();
     }
 
-    @Override // com.android.systemui.biometrics.UdfpsAnimationViewController
     public int getPaddingX() {
         return this.mEnrollProgressBarRadius;
     }
 
-    @Override // com.android.systemui.biometrics.UdfpsAnimationViewController
     public int getPaddingY() {
         return this.mEnrollProgressBarRadius;
+    }
+
+    public void doAnnounceForAccessibility(String str) {
+        ((UdfpsEnrollView) this.mView).announceForAccessibility(str);
     }
 }

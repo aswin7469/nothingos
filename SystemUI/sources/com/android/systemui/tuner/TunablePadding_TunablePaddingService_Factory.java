@@ -3,7 +3,7 @@ package com.android.systemui.tuner;
 import com.android.systemui.tuner.TunablePadding;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class TunablePadding_TunablePaddingService_Factory implements Factory<TunablePadding.TunablePaddingService> {
     private final Provider<TunerService> tunerServiceProvider;
 
@@ -11,10 +11,8 @@ public final class TunablePadding_TunablePaddingService_Factory implements Facto
         this.tunerServiceProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public TunablePadding.TunablePaddingService mo1933get() {
-        return newInstance(this.tunerServiceProvider.mo1933get());
+    public TunablePadding.TunablePaddingService get() {
+        return newInstance(this.tunerServiceProvider.get());
     }
 
     public static TunablePadding_TunablePaddingService_Factory create(Provider<TunerService> provider) {

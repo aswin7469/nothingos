@@ -12,26 +12,26 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.R$string;
-/* loaded from: classes2.dex */
+import com.android.systemui.C1893R;
+
 public class WifiDebuggingSecondaryUserActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private WifiChangeReceiver mWifiChangeReceiver;
-    private WifiManager mWifiManager;
+    /* access modifiers changed from: private */
+    public WifiManager mWifiManager;
 
-    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARNING: type inference failed for: r1v0, types: [android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, android.app.Activity, com.android.systemui.wifi.WifiDebuggingSecondaryUserActivity] */
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+        WifiDebuggingSecondaryUserActivity.super.onCreate(bundle);
         this.mWifiManager = (WifiManager) getSystemService("wifi");
         this.mWifiChangeReceiver = new WifiChangeReceiver(this);
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mTitle = getString(R$string.wifi_debugging_secondary_user_title);
-        alertParams.mMessage = getString(R$string.wifi_debugging_secondary_user_message);
+        AlertController.AlertParams alertParams = this.mAlertParams;
+        alertParams.mTitle = getString(C1893R.string.wifi_debugging_secondary_user_title);
+        alertParams.mMessage = getString(C1893R.string.wifi_debugging_secondary_user_message);
         alertParams.mPositiveButtonText = getString(17039370);
         alertParams.mPositiveButtonListener = this;
         setupAlert();
     }
 
-    /* loaded from: classes2.dex */
     private class WifiChangeReceiver extends BroadcastReceiver {
         private final Activity mActivity;
 
@@ -39,50 +39,46 @@ public class WifiDebuggingSecondaryUserActivity extends AlertActivity implements
             this.mActivity = activity;
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if ("android.net.wifi.WIFI_STATE_CHANGED".equals(action)) {
-                if (intent.getIntExtra("wifi_state", 1) != 1) {
-                    return;
+            if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(action)) {
+                if (intent.getIntExtra("wifi_state", 1) == 1) {
+                    this.mActivity.finish();
                 }
-                this.mActivity.finish();
-            } else if (!"android.net.wifi.STATE_CHANGE".equals(action)) {
-            } else {
+            } else if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(action)) {
                 NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra("networkInfo");
                 if (networkInfo.getType() != 1) {
                     return;
                 }
-                if (networkInfo.isConnected()) {
-                    WifiInfo connectionInfo = WifiDebuggingSecondaryUserActivity.this.mWifiManager.getConnectionInfo();
-                    if (connectionInfo != null && connectionInfo.getNetworkId() != -1) {
-                        return;
-                    }
+                if (!networkInfo.isConnected()) {
                     this.mActivity.finish();
                     return;
                 }
-                this.mActivity.finish();
+                WifiInfo connectionInfo = WifiDebuggingSecondaryUserActivity.this.mWifiManager.getConnectionInfo();
+                if (connectionInfo == null || connectionInfo.getNetworkId() == -1) {
+                    this.mActivity.finish();
+                }
             }
         }
     }
 
     public void onStart() {
-        super.onStart();
-        IntentFilter intentFilter = new IntentFilter("android.net.wifi.WIFI_STATE_CHANGED");
-        intentFilter.addAction("android.net.wifi.STATE_CHANGE");
+        WifiDebuggingSecondaryUserActivity.super.onStart();
+        IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         registerReceiver(this.mWifiChangeReceiver, intentFilter);
         sendBroadcast(new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
     }
 
-    protected void onStop() {
+    /* access modifiers changed from: protected */
+    public void onStop() {
         WifiChangeReceiver wifiChangeReceiver = this.mWifiChangeReceiver;
         if (wifiChangeReceiver != null) {
             unregisterReceiver(wifiChangeReceiver);
         }
-        super.onStop();
+        WifiDebuggingSecondaryUserActivity.super.onStop();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         finish();
     }

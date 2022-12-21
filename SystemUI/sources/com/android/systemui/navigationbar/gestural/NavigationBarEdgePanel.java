@@ -24,30 +24,82 @@ import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
+import com.android.internal.util.LatencyTracker;
+import com.android.p019wm.shell.back.BackAnimation;
 import com.android.settingslib.Utils;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$attr;
-import com.android.systemui.R$dimen;
 import com.android.systemui.animation.Interpolators;
-import com.android.systemui.navigationbar.gestural.RegionSamplingHelper;
 import com.android.systemui.plugins.NavigationEdgeBackPlugin;
+import com.android.systemui.shared.navigationbar.RegionSamplingHelper;
 import com.android.systemui.statusbar.VibratorHelper;
-import java.io.PrintWriter;
-/* loaded from: classes.dex */
+import java.p026io.PrintWriter;
+import java.util.concurrent.Executor;
+
 public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPlugin {
+    private static final int ARROW_ANGLE_ADDED_PER_1000_SPEED = 4;
+    private static final int ARROW_ANGLE_WHEN_EXTENDED_DEGREES = 56;
+    private static final int ARROW_LENGTH_DP = 18;
+    private static final int ARROW_MAX_ANGLE_SPEED_OFFSET_DEGREES = 4;
+    private static final float ARROW_THICKNESS_DP = 2.5f;
+    private static final int BASE_TRANSLATION_DP = 32;
+    private static final long COLOR_ANIMATION_DURATION_MS = 120;
+    private static final FloatPropertyCompat<NavigationBarEdgePanel> CURRENT_ANGLE = new FloatPropertyCompat<NavigationBarEdgePanel>("currentAngle") {
+        public void setValue(NavigationBarEdgePanel navigationBarEdgePanel, float f) {
+            navigationBarEdgePanel.setCurrentAngle(f);
+        }
+
+        public float getValue(NavigationBarEdgePanel navigationBarEdgePanel) {
+            return navigationBarEdgePanel.getCurrentAngle();
+        }
+    };
+    private static final FloatPropertyCompat<NavigationBarEdgePanel> CURRENT_TRANSLATION = new FloatPropertyCompat<NavigationBarEdgePanel>("currentTranslation") {
+        public void setValue(NavigationBarEdgePanel navigationBarEdgePanel, float f) {
+            navigationBarEdgePanel.setCurrentTranslation(f);
+        }
+
+        public float getValue(NavigationBarEdgePanel navigationBarEdgePanel) {
+            return navigationBarEdgePanel.getCurrentTranslation();
+        }
+    };
+    private static final FloatPropertyCompat<NavigationBarEdgePanel> CURRENT_VERTICAL_TRANSLATION = new FloatPropertyCompat<NavigationBarEdgePanel>("verticalTranslation") {
+        public void setValue(NavigationBarEdgePanel navigationBarEdgePanel, float f) {
+            navigationBarEdgePanel.setVerticalTranslation(f);
+        }
+
+        public float getValue(NavigationBarEdgePanel navigationBarEdgePanel) {
+            return navigationBarEdgePanel.getVerticalTranslation();
+        }
+    };
+    private static final long DISAPPEAR_ARROW_ANIMATION_DURATION_MS = 100;
+    private static final long DISAPPEAR_FADE_ANIMATION_DURATION_MS = 80;
+    private static final boolean ENABLE_FAILSAFE = true;
+    private static final long FAILSAFE_DELAY_MS = 200;
+    private static final int GESTURE_DURATION_FOR_CLICK_MS = 400;
+    private static final int PROTECTION_WIDTH_PX = 2;
+    private static final int RUBBER_BAND_AMOUNT = 15;
+    private static final int RUBBER_BAND_AMOUNT_APPEAR = 4;
+    private static final Interpolator RUBBER_BAND_INTERPOLATOR = new PathInterpolator(0.2f, 1.0f, 1.0f, 1.0f);
+    private static final Interpolator RUBBER_BAND_INTERPOLATOR_APPEAR = new PathInterpolator(0.25f, 1.0f, 1.0f, 1.0f);
+    private static final String TAG = "NavigationBarEdgePanel";
     private final SpringAnimation mAngleAnimation;
     private final SpringForce mAngleAppearForce;
+    private final SpringForce mAngleDisappearForce;
     private float mAngleOffset;
     private int mArrowColor;
     private final ValueAnimator mArrowColorAnimator;
     private int mArrowColorDark;
     private int mArrowColorLight;
     private final ValueAnimator mArrowDisappearAnimation;
+    private final float mArrowLength;
     private int mArrowPaddingEnd;
+    private final Path mArrowPath = new Path();
     private int mArrowStartColor;
     private final float mArrowThickness;
     private boolean mArrowsPointLeft;
+    private BackAnimation mBackAnimation;
     private NavigationEdgeBackPlugin.BackCallback mBackCallback;
+    private final float mBaseTranslation;
     private float mCurrentAngle;
     private int mCurrentArrowColor;
     private float mCurrentTranslation;
@@ -56,13 +108,19 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     private float mDesiredTranslation;
     private float mDesiredVerticalTranslation;
     private float mDisappearAmount;
+    private final Point mDisplaySize = new Point();
     private boolean mDragSlopPassed;
+    private final Runnable mFailsafeRunnable;
     private int mFingerOffset;
+    private final Handler mHandler;
+    private boolean mIsDark;
     private boolean mIsLeftPanel;
+    private final LatencyTracker mLatencyTracker;
     private WindowManager.LayoutParams mLayoutParams;
     private int mLeftInset;
     private float mMaxTranslation;
     private int mMinArrowPosition;
+    private final float mMinDeltaForSwitch;
     private final Paint mPaint;
     private float mPreviousTouchTranslation;
     private int mProtectionColor;
@@ -72,130 +130,85 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     private RegionSamplingHelper mRegionSamplingHelper;
     private final SpringForce mRegularTranslationSpring;
     private int mRightInset;
+    /* access modifiers changed from: private */
+    public final Rect mSamplingRect;
     private int mScreenSize;
+    private DynamicAnimation.OnAnimationEndListener mSetGoneEndListener;
     private boolean mShowProtection;
     private float mStartX;
     private float mStartY;
-    private final float mSwipeThreshold;
+    private final float mSwipeProgressThreshold;
+    private final float mSwipeTriggerThreshold;
     private float mTotalTouchDelta;
+    private boolean mTrackingBackArrowLatency;
     private final SpringAnimation mTranslationAnimation;
     private boolean mTriggerBack;
     private boolean mTriggerBackSilently;
+    private final SpringForce mTriggerBackSpring;
     private VelocityTracker mVelocityTracker;
     private float mVerticalTranslation;
     private final SpringAnimation mVerticalTranslationAnimation;
     private long mVibrationTime;
+    private final VibratorHelper mVibratorHelper;
     private final WindowManager mWindowManager;
-    private static final Interpolator RUBBER_BAND_INTERPOLATOR = new PathInterpolator(0.2f, 1.0f, 1.0f, 1.0f);
-    private static final Interpolator RUBBER_BAND_INTERPOLATOR_APPEAR = new PathInterpolator(0.25f, 1.0f, 1.0f, 1.0f);
-    private static final FloatPropertyCompat<NavigationBarEdgePanel> CURRENT_ANGLE = new FloatPropertyCompat<NavigationBarEdgePanel>("currentAngle") { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel.2
-        @Override // androidx.dynamicanimation.animation.FloatPropertyCompat
-        public void setValue(NavigationBarEdgePanel navigationBarEdgePanel, float f) {
-            navigationBarEdgePanel.setCurrentAngle(f);
-        }
 
-        @Override // androidx.dynamicanimation.animation.FloatPropertyCompat
-        public float getValue(NavigationBarEdgePanel navigationBarEdgePanel) {
-            return navigationBarEdgePanel.getCurrentAngle();
-        }
-    };
-    private static final FloatPropertyCompat<NavigationBarEdgePanel> CURRENT_TRANSLATION = new FloatPropertyCompat<NavigationBarEdgePanel>("currentTranslation") { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel.3
-        @Override // androidx.dynamicanimation.animation.FloatPropertyCompat
-        public void setValue(NavigationBarEdgePanel navigationBarEdgePanel, float f) {
-            navigationBarEdgePanel.setCurrentTranslation(f);
-        }
-
-        @Override // androidx.dynamicanimation.animation.FloatPropertyCompat
-        public float getValue(NavigationBarEdgePanel navigationBarEdgePanel) {
-            return navigationBarEdgePanel.getCurrentTranslation();
-        }
-    };
-    private static final FloatPropertyCompat<NavigationBarEdgePanel> CURRENT_VERTICAL_TRANSLATION = new FloatPropertyCompat<NavigationBarEdgePanel>("verticalTranslation") { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel.4
-        @Override // androidx.dynamicanimation.animation.FloatPropertyCompat
-        public void setValue(NavigationBarEdgePanel navigationBarEdgePanel, float f) {
-            navigationBarEdgePanel.setVerticalTranslation(f);
-        }
-
-        @Override // androidx.dynamicanimation.animation.FloatPropertyCompat
-        public float getValue(NavigationBarEdgePanel navigationBarEdgePanel) {
-            return navigationBarEdgePanel.getVerticalTranslation();
-        }
-    };
-    private final Path mArrowPath = new Path();
-    private final Point mDisplaySize = new Point();
-    private boolean mIsDark = false;
-    private final Rect mSamplingRect = new Rect();
-    private final Handler mHandler = new Handler();
-    private final Runnable mFailsafeRunnable = new Runnable() { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel$$ExternalSyntheticLambda2
-        @Override // java.lang.Runnable
-        public final void run() {
-            NavigationBarEdgePanel.this.onFailsafe();
-        }
-    };
-    private DynamicAnimation.OnAnimationEndListener mSetGoneEndListener = new DynamicAnimation.OnAnimationEndListener() { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel.1
-        @Override // androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationEndListener
-        public void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
-            dynamicAnimation.removeEndListener(this);
-            if (!z) {
-                NavigationBarEdgePanel.this.setVisibility(8);
-            }
-        }
-    };
-    private final VibratorHelper mVibratorHelper = (VibratorHelper) Dependency.get(VibratorHelper.class);
-    private final float mBaseTranslation = dp(32.0f);
-    private final float mArrowLength = dp(18.0f);
-    private final float mMinDeltaForSwitch = dp(32.0f);
-    private final SpringForce mAngleDisappearForce = new SpringForce().setStiffness(1500.0f).setDampingRatio(0.5f).setFinalPosition(90.0f);
-    private final SpringForce mTriggerBackSpring = new SpringForce().setStiffness(450.0f).setDampingRatio(0.75f);
-
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
     }
 
-    public NavigationBarEdgePanel(Context context) {
+    public NavigationBarEdgePanel(Context context, BackAnimation backAnimation, LatencyTracker latencyTracker) {
         super(context);
         Paint paint = new Paint();
         this.mPaint = paint;
         final boolean z = false;
+        this.mIsDark = false;
         this.mShowProtection = false;
+        this.mSamplingRect = new Rect();
+        this.mTrackingBackArrowLatency = false;
+        this.mHandler = new Handler();
+        this.mFailsafeRunnable = new NavigationBarEdgePanel$$ExternalSyntheticLambda2(this);
+        this.mSetGoneEndListener = new DynamicAnimation.OnAnimationEndListener() {
+            public void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
+                dynamicAnimation.removeEndListener(this);
+                if (!z) {
+                    NavigationBarEdgePanel.this.setVisibility(8);
+                }
+            }
+        };
         this.mWindowManager = (WindowManager) context.getSystemService(WindowManager.class);
+        this.mBackAnimation = backAnimation;
+        this.mVibratorHelper = (VibratorHelper) Dependency.get(VibratorHelper.class);
         this.mDensity = context.getResources().getDisplayMetrics().density;
-        float dp = dp(2.5f);
+        this.mBaseTranslation = m526dp(32.0f);
+        this.mArrowLength = m526dp(18.0f);
+        float dp = m526dp(ARROW_THICKNESS_DP);
         this.mArrowThickness = dp;
+        this.mMinDeltaForSwitch = m526dp(32.0f);
         paint.setStrokeWidth(dp);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setAntiAlias(true);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
         this.mArrowColorAnimator = ofFloat;
-        ofFloat.setDuration(120L);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel$$ExternalSyntheticLambda0
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                NavigationBarEdgePanel.this.lambda$new$0(valueAnimator);
-            }
-        });
-        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
+        ofFloat.setDuration(COLOR_ANIMATION_DURATION_MS);
+        ofFloat.addUpdateListener(new NavigationBarEdgePanel$$ExternalSyntheticLambda3(this));
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
         this.mArrowDisappearAnimation = ofFloat2;
-        ofFloat2.setDuration(100L);
+        ofFloat2.setDuration(100);
         ofFloat2.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-        ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel$$ExternalSyntheticLambda1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                NavigationBarEdgePanel.this.lambda$new$1(valueAnimator);
-            }
-        });
+        ofFloat2.addUpdateListener(new NavigationBarEdgePanel$$ExternalSyntheticLambda4(this));
         SpringAnimation springAnimation = new SpringAnimation(this, CURRENT_ANGLE);
         this.mAngleAnimation = springAnimation;
         SpringForce dampingRatio = new SpringForce().setStiffness(500.0f).setDampingRatio(0.5f);
         this.mAngleAppearForce = dampingRatio;
+        this.mAngleDisappearForce = new SpringForce().setStiffness(1500.0f).setDampingRatio(0.5f).setFinalPosition(90.0f);
         springAnimation.setSpring(dampingRatio).setMaxValue(90.0f);
         SpringAnimation springAnimation2 = new SpringAnimation(this, CURRENT_TRANSLATION);
         this.mTranslationAnimation = springAnimation2;
         SpringForce dampingRatio2 = new SpringForce().setStiffness(1500.0f).setDampingRatio(0.75f);
         this.mRegularTranslationSpring = dampingRatio2;
+        this.mTriggerBackSpring = new SpringForce().setStiffness(450.0f).setDampingRatio(0.75f);
         springAnimation2.setSpring(dampingRatio2);
         SpringAnimation springAnimation3 = new SpringAnimation(this, CURRENT_VERTICAL_TRANSLATION);
         this.mVerticalTranslationAnimation = springAnimation3;
@@ -206,42 +219,56 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         loadDimens();
         loadColors(context);
         updateArrowDirection();
-        this.mSwipeThreshold = context.getResources().getDimension(R$dimen.navigation_edge_action_drag_threshold);
+        this.mSwipeTriggerThreshold = context.getResources().getDimension(C1893R.dimen.navigation_edge_action_drag_threshold);
+        this.mSwipeProgressThreshold = context.getResources().getDimension(C1893R.dimen.navigation_edge_action_progress_threshold);
+        initializeBackAnimation();
         setVisibility(8);
-        z = ((View) this).mContext.getDisplayId() == 0 ? true : z;
-        RegionSamplingHelper regionSamplingHelper = new RegionSamplingHelper(this, new RegionSamplingHelper.SamplingCallback() { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel.5
-            @Override // com.android.systemui.navigationbar.gestural.RegionSamplingHelper.SamplingCallback
-            public void onRegionDarknessChanged(boolean z2) {
-                NavigationBarEdgePanel.this.setIsDark(!z2, true);
+        Executor executor = (Executor) Dependency.get(Dependency.BACKGROUND_EXECUTOR);
+        z = this.mContext.getDisplayId() == 0 ? true : z;
+        RegionSamplingHelper regionSamplingHelper = new RegionSamplingHelper(this, new RegionSamplingHelper.SamplingCallback() {
+            public void onRegionDarknessChanged(boolean z) {
+                NavigationBarEdgePanel.this.setIsDark(!z, true);
             }
 
-            @Override // com.android.systemui.navigationbar.gestural.RegionSamplingHelper.SamplingCallback
             public Rect getSampledRegion(View view) {
                 return NavigationBarEdgePanel.this.mSamplingRect;
             }
 
-            @Override // com.android.systemui.navigationbar.gestural.RegionSamplingHelper.SamplingCallback
             public boolean isSamplingEnabled() {
                 return z;
             }
-        });
+        }, executor);
         this.mRegionSamplingHelper = regionSamplingHelper;
         regionSamplingHelper.setWindowVisible(true);
         this.mShowProtection = !z;
+        this.mLatencyTracker = latencyTracker;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-navigationbar-gestural-NavigationBarEdgePanel */
+    public /* synthetic */ void mo35074x6e8f2d95(ValueAnimator valueAnimator) {
         setCurrentArrowColor(ColorUtils.blendARGB(this.mArrowStartColor, this.mArrowColor, valueAnimator.getAnimatedFraction()));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$1(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$1$com-android-systemui-navigationbar-gestural-NavigationBarEdgePanel */
+    public /* synthetic */ void mo35075xafd29f4(ValueAnimator valueAnimator) {
         this.mDisappearAmount = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         invalidate();
     }
 
-    @Override // com.android.systemui.plugins.Plugin
+    public void setBackAnimation(BackAnimation backAnimation) {
+        this.mBackAnimation = backAnimation;
+        initializeBackAnimation();
+    }
+
+    private void initializeBackAnimation() {
+        BackAnimation backAnimation = this.mBackAnimation;
+        if (backAnimation != null) {
+            backAnimation.setSwipeThresholds(this.mSwipeTriggerThreshold, this.mSwipeProgressThreshold);
+        }
+    }
+
     public void onDestroy() {
         cancelFailsafe();
         this.mWindowManager.removeView(this);
@@ -249,37 +276,31 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         this.mRegionSamplingHelper = null;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setIsDark(boolean z, boolean z2) {
         this.mIsDark = z;
         updateIsDark(z2);
     }
 
-    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setIsLeftPanel(boolean z) {
         this.mIsLeftPanel = z;
         this.mLayoutParams.gravity = z ? 51 : 53;
     }
 
-    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setInsets(int i, int i2) {
         this.mLeftInset = i;
         this.mRightInset = i2;
     }
 
-    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setDisplaySize(Point point) {
         this.mDisplaySize.set(point.x, point.y);
-        Point point2 = this.mDisplaySize;
-        this.mScreenSize = Math.min(point2.x, point2.y);
+        this.mScreenSize = Math.min(this.mDisplaySize.x, this.mDisplaySize.y);
     }
 
-    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setBackCallback(NavigationEdgeBackPlugin.BackCallback backCallback) {
         this.mBackCallback = backCallback;
     }
 
-    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setLayoutParams(WindowManager.LayoutParams layoutParams) {
         this.mLayoutParams = layoutParams;
         this.mWindowManager.addView(this, layoutParams);
@@ -296,23 +317,24 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         }
         float f2 = f - (this.mArrowThickness / 2.0f);
         if (!this.mIsLeftPanel) {
-            f2 = this.mSamplingRect.width() - f2;
+            f2 = ((float) this.mSamplingRect.width()) - f2;
         }
         float staticArrowWidth = getStaticArrowWidth();
         float polarToCartY = polarToCartY(56.0f) * this.mArrowLength * 2.0f;
         if (!this.mArrowsPointLeft) {
             f2 -= staticArrowWidth;
         }
-        this.mSamplingRect.offset((int) f2, (int) (((getHeight() * 0.5f) + this.mDesiredVerticalTranslation) - (polarToCartY / 2.0f)));
+        this.mSamplingRect.offset((int) f2, (int) (((((float) getHeight()) * 0.5f) + this.mDesiredVerticalTranslation) - (polarToCartY / 2.0f)));
         Rect rect = this.mSamplingRect;
-        int i = rect.left;
-        int i2 = rect.top;
-        rect.set(i, i2, (int) (i + staticArrowWidth), (int) (i2 + polarToCartY));
+        rect.set(rect.left, this.mSamplingRect.top, (int) (((float) this.mSamplingRect.left) + staticArrowWidth), (int) (((float) this.mSamplingRect.top) + polarToCartY));
         this.mRegionSamplingHelper.updateSamplingRect();
     }
 
-    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void onMotionEvent(MotionEvent motionEvent) {
+        BackAnimation backAnimation = this.mBackAnimation;
+        if (backAnimation != null && !this.mTriggerBackSilently) {
+            backAnimation.onBackMotion(motionEvent.getX(), motionEvent.getY(), motionEvent.getActionMasked(), this.mIsLeftPanel ^ true ? 1 : 0);
+        }
         if (this.mVelocityTracker == null) {
             this.mVelocityTracker = VelocityTracker.obtain();
         }
@@ -331,6 +353,8 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
             updatePosition(motionEvent.getY());
             this.mRegionSamplingHelper.start(this.mSamplingRect);
             this.mWindowManager.updateViewLayout(this, this.mLayoutParams);
+            this.mLatencyTracker.onActionStart(15);
+            this.mTrackingBackArrowLatency = true;
         } else if (actionMasked == 1) {
             if (this.mTriggerBack) {
                 triggerBack();
@@ -342,8 +366,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
             this.mVelocityTracker = null;
         } else if (actionMasked == 2) {
             handleMoveEvent(motionEvent);
-        } else if (actionMasked != 3) {
-        } else {
+        } else if (actionMasked == 3) {
             cancelBack();
             this.mRegionSamplingHelper.stop();
             this.mVelocityTracker.recycle();
@@ -351,40 +374,44 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         }
     }
 
-    @Override // android.view.View
-    protected void onConfigurationChanged(Configuration configuration) {
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         updateArrowDirection();
         loadDimens();
     }
 
-    @Override // android.view.View
-    protected void onDraw(Canvas canvas) {
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
         float f = this.mCurrentTranslation - (this.mArrowThickness / 2.0f);
         canvas.save();
         if (!this.mIsLeftPanel) {
-            f = getWidth() - f;
+            f = ((float) getWidth()) - f;
         }
-        canvas.translate(f, (getHeight() * 0.5f) + this.mVerticalTranslation);
+        canvas.translate(f, (((float) getHeight()) * 0.5f) + this.mVerticalTranslation);
         Path calculatePath = calculatePath(polarToCartX(this.mCurrentAngle) * this.mArrowLength, polarToCartY(this.mCurrentAngle) * this.mArrowLength);
         if (this.mShowProtection) {
             canvas.drawPath(calculatePath, this.mProtectionPaint);
         }
         canvas.drawPath(calculatePath, this.mPaint);
         canvas.restore();
+        if (this.mTrackingBackArrowLatency) {
+            this.mLatencyTracker.onActionEnd(15);
+            this.mTrackingBackArrowLatency = false;
+        }
     }
 
-    @Override // android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
-        this.mMaxTranslation = getWidth() - this.mArrowPaddingEnd;
+        this.mMaxTranslation = (float) (getWidth() - this.mArrowPaddingEnd);
     }
 
     private void loadDimens() {
         Resources resources = getResources();
-        this.mArrowPaddingEnd = resources.getDimensionPixelSize(R$dimen.navigation_edge_panel_padding);
-        this.mMinArrowPosition = resources.getDimensionPixelSize(R$dimen.navigation_edge_arrow_min_y);
-        this.mFingerOffset = resources.getDimensionPixelSize(R$dimen.navigation_edge_finger_offset);
+        this.mArrowPaddingEnd = resources.getDimensionPixelSize(C1893R.dimen.navigation_edge_panel_padding);
+        this.mMinArrowPosition = resources.getDimensionPixelSize(C1893R.dimen.navigation_edge_arrow_min_y);
+        this.mFingerOffset = resources.getDimensionPixelSize(C1893R.dimen.navigation_edge_finger_offset);
     }
 
     private void updateArrowDirection() {
@@ -393,12 +420,11 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     }
 
     private void loadColors(Context context) {
-        int themeAttr = Utils.getThemeAttr(context, R$attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, R$attr.lightIconTheme));
+        int themeAttr = Utils.getThemeAttr(context, C1893R.attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C1893R.attr.lightIconTheme));
         ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(context, themeAttr);
-        int i = R$attr.singleToneColor;
-        this.mArrowColorLight = Utils.getColorAttrDefaultColor(contextThemeWrapper, i);
-        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, i);
+        this.mArrowColorLight = Utils.getColorAttrDefaultColor(contextThemeWrapper, C1893R.attr.singleToneColor);
+        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C1893R.attr.singleToneColor);
         this.mArrowColorDark = colorAttrDefaultColor;
         this.mProtectionColorDark = this.mArrowColorLight;
         this.mProtectionColorLight = colorAttrDefaultColor;
@@ -430,11 +456,11 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     }
 
     private float polarToCartX(float f) {
-        return (float) Math.cos(Math.toRadians(f));
+        return (float) Math.cos(Math.toRadians((double) f));
     }
 
     private float polarToCartY(float f) {
-        return (float) Math.sin(Math.toRadians(f));
+        return (float) Math.sin(Math.toRadians((double) f));
     }
 
     private Path calculatePath(float f, float f2) {
@@ -451,12 +477,12 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         return this.mArrowPath;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public float getCurrentAngle() {
         return this.mCurrentAngle;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public float getCurrentTranslation() {
         return this.mCurrentTranslation;
     }
@@ -473,46 +499,37 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
             this.mAngleOffset = Math.max(-8.0f, f - 8.0f);
             updateAngle(true);
         }
-        final Runnable runnable = new Runnable() { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel$$ExternalSyntheticLambda3
-            @Override // java.lang.Runnable
-            public final void run() {
-                NavigationBarEdgePanel.this.lambda$triggerBack$3();
-            }
-        };
+        final NavigationBarEdgePanel$$ExternalSyntheticLambda1 navigationBarEdgePanel$$ExternalSyntheticLambda1 = new NavigationBarEdgePanel$$ExternalSyntheticLambda1(this);
         if (this.mTranslationAnimation.isRunning()) {
-            this.mTranslationAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener() { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel.6
-                @Override // androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationEndListener
-                public void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f2, float f3) {
+            this.mTranslationAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener() {
+                public void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
                     dynamicAnimation.removeEndListener(this);
                     if (!z) {
-                        runnable.run();
+                        navigationBarEdgePanel$$ExternalSyntheticLambda1.run();
                     }
                 }
             });
             scheduleFailsafe();
             return;
         }
-        runnable.run();
+        navigationBarEdgePanel$$ExternalSyntheticLambda1.run();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$triggerBack$3() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$triggerBack$3$com-android-systemui-navigationbar-gestural-NavigationBarEdgePanel */
+    public /* synthetic */ void mo35077xd9d95ff3() {
         this.mAngleOffset = Math.max(0.0f, this.mAngleOffset + 8.0f);
         updateAngle(true);
         this.mTranslationAnimation.setSpring(this.mTriggerBackSpring);
-        setDesiredTranslation(this.mDesiredTranslation - dp(32.0f), true);
-        animate().alpha(0.0f).setDuration(80L).withEndAction(new Runnable() { // from class: com.android.systemui.navigationbar.gestural.NavigationBarEdgePanel$$ExternalSyntheticLambda4
-            @Override // java.lang.Runnable
-            public final void run() {
-                NavigationBarEdgePanel.this.lambda$triggerBack$2();
-            }
-        });
+        setDesiredTranslation(this.mDesiredTranslation - m526dp(32.0f), true);
+        animate().alpha(0.0f).setDuration(DISAPPEAR_FADE_ANIMATION_DURATION_MS).withEndAction(new NavigationBarEdgePanel$$ExternalSyntheticLambda0(this));
         this.mArrowDisappearAnimation.start();
         scheduleFailsafe();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$triggerBack$2() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$triggerBack$2$com-android-systemui-navigationbar-gestural-NavigationBarEdgePanel */
+    public /* synthetic */ void mo35076x3d6b6394() {
         setVisibility(8);
     }
 
@@ -540,7 +557,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         updateAngle(false);
         this.mPreviousTouchTranslation = 0.0f;
         this.mTotalTouchDelta = 0.0f;
-        this.mVibrationTime = 0L;
+        this.mVibrationTime = 0;
         setDesiredVerticalTransition(0.0f, false);
         cancelFailsafe();
     }
@@ -560,7 +577,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
             }
         }
         this.mPreviousTouchTranslation = abs;
-        if (!this.mDragSlopPassed && abs > this.mSwipeThreshold) {
+        if (!this.mDragSlopPassed && abs > this.mSwipeTriggerThreshold) {
             this.mDragSlopPassed = true;
             this.mVibratorHelper.vibrate(2);
             this.mVibrationTime = SystemClock.uptimeMillis();
@@ -570,7 +587,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         }
         float f4 = this.mBaseTranslation;
         if (abs > f4) {
-            float interpolation = RUBBER_BAND_INTERPOLATOR.getInterpolation(MathUtils.saturate((abs - f4) / (this.mScreenSize - f4)));
+            float interpolation = RUBBER_BAND_INTERPOLATOR.getInterpolation(MathUtils.saturate((abs - f4) / (((float) this.mScreenSize) - f4)));
             float f5 = this.mMaxTranslation;
             float f6 = this.mBaseTranslation;
             f = f6 + (interpolation * (f5 - f6));
@@ -590,7 +607,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         this.mAngleOffset = min;
         boolean z3 = this.mIsLeftPanel;
         if ((z3 && this.mArrowsPointLeft) || (!z3 && !this.mArrowsPointLeft)) {
-            this.mAngleOffset = min * (-1.0f);
+            this.mAngleOffset = min * -1.0f;
         }
         if (Math.abs(f2) <= Math.abs(x - this.mStartX) * 2.0f) {
             z2 = z;
@@ -606,23 +623,21 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         }
         setDesiredTranslation(f, true);
         updateAngle(true);
-        float height = (getHeight() / 2.0f) - this.mArrowLength;
+        float height = (((float) getHeight()) / 2.0f) - this.mArrowLength;
         setDesiredVerticalTransition(RUBBER_BAND_INTERPOLATOR.getInterpolation(MathUtils.constrain(Math.abs(f2) / (15.0f * height), 0.0f, 1.0f)) * height * Math.signum(f2), true);
         updateSamplingRect();
     }
 
     private void updatePosition(float f) {
-        float max = Math.max(f - this.mFingerOffset, this.mMinArrowPosition);
-        WindowManager.LayoutParams layoutParams = this.mLayoutParams;
-        layoutParams.y = MathUtils.constrain((int) (max - (layoutParams.height / 2.0f)), 0, this.mDisplaySize.y);
+        float max = Math.max(f - ((float) this.mFingerOffset), (float) this.mMinArrowPosition) - (((float) this.mLayoutParams.height) / 2.0f);
+        this.mLayoutParams.y = MathUtils.constrain((int) max, 0, this.mDisplaySize.y);
         updateSamplingRect();
     }
 
     private void updateSamplingRect() {
-        WindowManager.LayoutParams layoutParams = this.mLayoutParams;
-        int i = layoutParams.y;
-        int i2 = this.mIsLeftPanel ? this.mLeftInset : (this.mDisplaySize.x - this.mRightInset) - layoutParams.width;
-        this.mSamplingRect.set(i2, i, layoutParams.width + i2, layoutParams.height + i);
+        int i = this.mLayoutParams.y;
+        int i2 = this.mIsLeftPanel ? this.mLeftInset : (this.mDisplaySize.x - this.mRightInset) - this.mLayoutParams.width;
+        this.mSamplingRect.set(i2, i, this.mLayoutParams.width + i2, this.mLayoutParams.height + i);
         adjustSamplingRectToBoundingBox();
     }
 
@@ -638,13 +653,13 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setVerticalTranslation(float f) {
         this.mVerticalTranslation = f;
         invalidate();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public float getVerticalTranslation() {
         return this.mVerticalTranslation;
     }
@@ -660,7 +675,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setCurrentTranslation(float f) {
         this.mCurrentTranslation = f;
         invalidate();
@@ -672,6 +687,10 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
             this.mAngleAnimation.cancel();
             updateAngle(z2);
             this.mTranslationAnimation.cancel();
+            BackAnimation backAnimation = this.mBackAnimation;
+            if (backAnimation != null) {
+                backAnimation.setTriggerBack(z);
+            }
         }
     }
 
@@ -689,7 +708,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setCurrentAngle(float f) {
         this.mCurrentAngle = f;
         invalidate();
@@ -697,23 +716,23 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
 
     private void scheduleFailsafe() {
         cancelFailsafe();
-        this.mHandler.postDelayed(this.mFailsafeRunnable, 200L);
+        this.mHandler.postDelayed(this.mFailsafeRunnable, 200);
     }
 
     private void cancelFailsafe() {
         this.mHandler.removeCallbacks(this.mFailsafeRunnable);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onFailsafe() {
         setVisibility(8);
     }
 
-    private float dp(float f) {
+    /* renamed from: dp */
+    private float m526dp(float f) {
         return this.mDensity * f;
     }
 
-    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void dump(PrintWriter printWriter) {
         printWriter.println("NavigationBarEdgePanel:");
         printWriter.println("  mIsLeftPanel=" + this.mIsLeftPanel);
@@ -727,7 +746,6 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         this.mRegionSamplingHelper.dump(printWriter);
     }
 
-    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setTriggerBackSilently(boolean z) {
         this.mTriggerBackSilently = z;
     }

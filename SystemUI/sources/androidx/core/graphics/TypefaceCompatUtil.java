@@ -1,5 +1,6 @@
 package androidx.core.graphics;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -9,136 +10,165 @@ import android.os.Process;
 import android.os.StrictMode;
 import android.util.Log;
 import androidx.core.provider.FontsContractCompat;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.p026io.Closeable;
+import java.p026io.File;
+import java.p026io.FileInputStream;
+import java.p026io.FileNotFoundException;
+import java.p026io.FileOutputStream;
+import java.p026io.IOException;
+import java.p026io.InputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
+import sun.util.locale.LanguageTag;
+
 public class TypefaceCompatUtil {
+    private static final String CACHE_FILE_PREFIX = ".font";
+    private static final String TAG = "TypefaceCompatUtil";
+
+    private TypefaceCompatUtil() {
+    }
+
     public static File getTempFile(Context context) {
         File cacheDir = context.getCacheDir();
         if (cacheDir == null) {
             return null;
         }
-        String str = ".font" + Process.myPid() + "-" + Process.myTid() + "-";
-        for (int i = 0; i < 100; i++) {
+        String str = CACHE_FILE_PREFIX + Process.myPid() + LanguageTag.SEP + Process.myTid() + LanguageTag.SEP;
+        int i = 0;
+        while (i < 100) {
             File file = new File(cacheDir, str + i);
-            if (file.createNewFile()) {
-                return file;
+            try {
+                if (file.createNewFile()) {
+                    return file;
+                }
+                i++;
+            } catch (IOException unused) {
             }
         }
         return null;
     }
 
     private static ByteBuffer mmap(File file) {
+        FileInputStream fileInputStream;
         try {
-            FileInputStream fileInputStream = new FileInputStream(file);
+            fileInputStream = new FileInputStream(file);
             FileChannel channel = fileInputStream.getChannel();
-            MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_ONLY, 0L, channel.size());
+            MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
             fileInputStream.close();
             return map;
         } catch (IOException unused) {
             return null;
+        } catch (Throwable th) {
+            th.addSuppressed(th);
         }
+        throw th;
     }
 
     public static ByteBuffer mmap(Context context, CancellationSignal cancellationSignal, Uri uri) {
+        FileInputStream fileInputStream;
         try {
-            ParcelFileDescriptor openFileDescriptor = context.getContentResolver().openFileDescriptor(uri, "r", cancellationSignal);
+            ParcelFileDescriptor openFileDescriptor = Api19Impl.openFileDescriptor(context.getContentResolver(), uri, "r", cancellationSignal);
             if (openFileDescriptor == null) {
                 if (openFileDescriptor != null) {
                     openFileDescriptor.close();
                 }
                 return null;
             }
-            FileInputStream fileInputStream = new FileInputStream(openFileDescriptor.getFileDescriptor());
             try {
+                fileInputStream = new FileInputStream(openFileDescriptor.getFileDescriptor());
                 FileChannel channel = fileInputStream.getChannel();
-                MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_ONLY, 0L, channel.size());
+                MappedByteBuffer map = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
                 fileInputStream.close();
-                openFileDescriptor.close();
+                if (openFileDescriptor != null) {
+                    openFileDescriptor.close();
+                }
                 return map;
             } catch (Throwable th) {
-                try {
-                    fileInputStream.close();
-                } catch (Throwable th2) {
-                    th.addSuppressed(th2);
+                if (openFileDescriptor != null) {
+                    openFileDescriptor.close();
                 }
                 throw th;
             }
+            throw th;
         } catch (IOException unused) {
             return null;
+        } catch (Throwable th2) {
+            th.addSuppressed(th2);
         }
     }
 
-    public static ByteBuffer copyToDirectBuffer(Context context, Resources res, int id) {
+    public static ByteBuffer copyToDirectBuffer(Context context, Resources resources, int i) {
         File tempFile = getTempFile(context);
         if (tempFile == null) {
             return null;
         }
         try {
-            if (copyToFile(tempFile, res, id)) {
-                return mmap(tempFile);
+            if (!copyToFile(tempFile, resources, i)) {
+                return null;
             }
-            return null;
+            ByteBuffer mmap = mmap(tempFile);
+            tempFile.delete();
+            return mmap;
         } finally {
             tempFile.delete();
         }
     }
 
-    public static boolean copyToFile(File file, InputStream is) {
-        FileOutputStream fileOutputStream;
+    public static boolean copyToFile(File file, InputStream inputStream) {
         StrictMode.ThreadPolicy allowThreadDiskWrites = StrictMode.allowThreadDiskWrites();
-        FileOutputStream fileOutputStream2 = null;
+        FileOutputStream fileOutputStream = null;
         try {
+            FileOutputStream fileOutputStream2 = new FileOutputStream(file, false);
             try {
-                fileOutputStream = new FileOutputStream(file, false);
+                byte[] bArr = new byte[1024];
+                while (true) {
+                    int read = inputStream.read(bArr);
+                    if (read != -1) {
+                        fileOutputStream2.write(bArr, 0, read);
+                    } else {
+                        closeQuietly(fileOutputStream2);
+                        StrictMode.setThreadPolicy(allowThreadDiskWrites);
+                        return true;
+                    }
+                }
             } catch (IOException e) {
                 e = e;
-            }
-        } catch (Throwable th) {
-            th = th;
-        }
-        try {
-            byte[] bArr = new byte[1024];
-            while (true) {
-                int read = is.read(bArr);
-                if (read != -1) {
-                    fileOutputStream.write(bArr, 0, read);
-                } else {
+                fileOutputStream = fileOutputStream2;
+                try {
+                    Log.e(TAG, "Error copying resource contents to temp file: " + e.getMessage());
                     closeQuietly(fileOutputStream);
                     StrictMode.setThreadPolicy(allowThreadDiskWrites);
-                    return true;
+                    return false;
+                } catch (Throwable th) {
+                    th = th;
+                    closeQuietly(fileOutputStream);
+                    StrictMode.setThreadPolicy(allowThreadDiskWrites);
+                    throw th;
                 }
+            } catch (Throwable th2) {
+                th = th2;
+                fileOutputStream = fileOutputStream2;
+                closeQuietly(fileOutputStream);
+                StrictMode.setThreadPolicy(allowThreadDiskWrites);
+                throw th;
             }
         } catch (IOException e2) {
             e = e2;
-            fileOutputStream2 = fileOutputStream;
-            Log.e("TypefaceCompatUtil", "Error copying resource contents to temp file: " + e.getMessage());
-            closeQuietly(fileOutputStream2);
+            Log.e(TAG, "Error copying resource contents to temp file: " + e.getMessage());
+            closeQuietly(fileOutputStream);
             StrictMode.setThreadPolicy(allowThreadDiskWrites);
             return false;
-        } catch (Throwable th2) {
-            th = th2;
-            fileOutputStream2 = fileOutputStream;
-            closeQuietly(fileOutputStream2);
-            StrictMode.setThreadPolicy(allowThreadDiskWrites);
-            throw th;
         }
     }
 
-    public static boolean copyToFile(File file, Resources res, int id) {
+    public static boolean copyToFile(File file, Resources resources, int i) {
         InputStream inputStream;
         try {
-            inputStream = res.openRawResource(id);
+            inputStream = resources.openRawResource(i);
             try {
                 boolean copyToFile = copyToFile(file, inputStream);
                 closeQuietly(inputStream);
@@ -151,21 +181,23 @@ public class TypefaceCompatUtil {
         } catch (Throwable th2) {
             th = th2;
             inputStream = null;
+            closeQuietly(inputStream);
+            throw th;
         }
     }
 
-    public static void closeQuietly(Closeable c) {
-        if (c != null) {
+    public static void closeQuietly(Closeable closeable) {
+        if (closeable != null) {
             try {
-                c.close();
+                closeable.close();
             } catch (IOException unused) {
             }
         }
     }
 
-    public static Map<Uri, ByteBuffer> readFontInfoIntoByteBuffer(Context context, FontsContractCompat.FontInfo[] fonts, CancellationSignal cancellationSignal) {
+    public static Map<Uri, ByteBuffer> readFontInfoIntoByteBuffer(Context context, FontsContractCompat.FontInfo[] fontInfoArr, CancellationSignal cancellationSignal) {
         HashMap hashMap = new HashMap();
-        for (FontsContractCompat.FontInfo fontInfo : fonts) {
+        for (FontsContractCompat.FontInfo fontInfo : fontInfoArr) {
             if (fontInfo.getResultCode() == 0) {
                 Uri uri = fontInfo.getUri();
                 if (!hashMap.containsKey(uri)) {
@@ -174,5 +206,14 @@ public class TypefaceCompatUtil {
             }
         }
         return Collections.unmodifiableMap(hashMap);
+    }
+
+    static class Api19Impl {
+        private Api19Impl() {
+        }
+
+        static ParcelFileDescriptor openFileDescriptor(ContentResolver contentResolver, Uri uri, String str, CancellationSignal cancellationSignal) throws FileNotFoundException {
+            return contentResolver.openFileDescriptor(uri, str, cancellationSignal);
+        }
     }
 }

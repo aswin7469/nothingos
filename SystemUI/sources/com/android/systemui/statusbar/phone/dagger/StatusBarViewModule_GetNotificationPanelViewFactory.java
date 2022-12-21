@@ -5,7 +5,7 @@ import com.android.systemui.statusbar.phone.NotificationShadeWindowView;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class StatusBarViewModule_GetNotificationPanelViewFactory implements Factory<NotificationPanelView> {
     private final Provider<NotificationShadeWindowView> notificationShadeWindowViewProvider;
 
@@ -13,10 +13,8 @@ public final class StatusBarViewModule_GetNotificationPanelViewFactory implement
         this.notificationShadeWindowViewProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationPanelView mo1933get() {
-        return getNotificationPanelView(this.notificationShadeWindowViewProvider.mo1933get());
+    public NotificationPanelView get() {
+        return getNotificationPanelView(this.notificationShadeWindowViewProvider.get());
     }
 
     public static StatusBarViewModule_GetNotificationPanelViewFactory create(Provider<NotificationShadeWindowView> provider) {

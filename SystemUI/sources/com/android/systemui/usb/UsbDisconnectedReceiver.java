@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbDevice;
-/* loaded from: classes2.dex */
+
 class UsbDisconnectedReceiver extends BroadcastReceiver {
     private UsbAccessory mAccessory;
     private final Activity mActivity;
@@ -25,18 +25,15 @@ class UsbDisconnectedReceiver extends BroadcastReceiver {
         activity.registerReceiver(this, new IntentFilter("android.hardware.usb.action.USB_ACCESSORY_DETACHED"));
     }
 
-    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         UsbAccessory usbAccessory;
         String action = intent.getAction();
         if ("android.hardware.usb.action.USB_DEVICE_DETACHED".equals(action)) {
             UsbDevice usbDevice = (UsbDevice) intent.getParcelableExtra("device");
-            if (usbDevice == null || !usbDevice.equals(this.mDevice)) {
-                return;
+            if (usbDevice != null && usbDevice.equals(this.mDevice)) {
+                this.mActivity.finish();
             }
-            this.mActivity.finish();
-        } else if (!"android.hardware.usb.action.USB_ACCESSORY_DETACHED".equals(action) || (usbAccessory = (UsbAccessory) intent.getParcelableExtra("accessory")) == null || !usbAccessory.equals(this.mAccessory)) {
-        } else {
+        } else if ("android.hardware.usb.action.USB_ACCESSORY_DETACHED".equals(action) && (usbAccessory = (UsbAccessory) intent.getParcelableExtra("accessory")) != null && usbAccessory.equals(this.mAccessory)) {
             this.mActivity.finish();
         }
     }

@@ -10,7 +10,7 @@ import com.airbnb.lottie.model.content.Mask;
 import com.airbnb.lottie.value.Keyframe;
 import java.util.List;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class Layer {
     private final LottieComposition composition;
     private final boolean hidden;
@@ -35,7 +35,6 @@ public class Layer {
     private final float timeStretch;
     private final AnimatableTransform transform;
 
-    /* loaded from: classes.dex */
     public enum LayerType {
         PRE_COMP,
         SOLID,
@@ -46,20 +45,21 @@ public class Layer {
         UNKNOWN
     }
 
-    /* loaded from: classes.dex */
     public enum MatteType {
         NONE,
         ADD,
         INVERT,
+        LUMA,
+        LUMA_INVERTED,
         UNKNOWN
     }
 
-    public Layer(List<ContentModel> list, LottieComposition lottieComposition, String str, long j, LayerType layerType, long j2, String str2, List<Mask> list2, AnimatableTransform animatableTransform, int i, int i2, int i3, float f, float f2, int i4, int i5, AnimatableTextFrame animatableTextFrame, AnimatableTextProperties animatableTextProperties, List<Keyframe<Float>> list3, MatteType matteType, AnimatableFloatValue animatableFloatValue, boolean z) {
+    public Layer(List<ContentModel> list, LottieComposition lottieComposition, String str, long j, LayerType layerType2, long j2, String str2, List<Mask> list2, AnimatableTransform animatableTransform, int i, int i2, int i3, float f, float f2, int i4, int i5, AnimatableTextFrame animatableTextFrame, AnimatableTextProperties animatableTextProperties, List<Keyframe<Float>> list3, MatteType matteType2, AnimatableFloatValue animatableFloatValue, boolean z) {
         this.shapes = list;
         this.composition = lottieComposition;
         this.layerName = str;
         this.layerId = j;
-        this.layerType = layerType;
+        this.layerType = layerType2;
         this.parentId = j2;
         this.refId = str2;
         this.masks = list2;
@@ -74,27 +74,27 @@ public class Layer {
         this.text = animatableTextFrame;
         this.textProperties = animatableTextProperties;
         this.inOutKeyframes = list3;
-        this.matteType = matteType;
+        this.matteType = matteType2;
         this.timeRemapping = animatableFloatValue;
         this.hidden = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public LottieComposition getComposition() {
         return this.composition;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getTimeStretch() {
         return this.timeStretch;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getStartProgress() {
         return this.startFrame / this.composition.getDurationFrames();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public List<Keyframe<Float>> getInOutKeyframes() {
         return this.inOutKeyframes;
     }
@@ -103,27 +103,27 @@ public class Layer {
         return this.layerId;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getName() {
         return this.layerName;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getRefId() {
         return this.refId;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getPreCompWidth() {
         return this.preCompWidth;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getPreCompHeight() {
         return this.preCompHeight;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public List<Mask> getMasks() {
         return this.masks;
     }
@@ -132,52 +132,52 @@ public class Layer {
         return this.layerType;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public MatteType getMatteType() {
         return this.matteType;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public long getParentId() {
         return this.parentId;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public List<ContentModel> getShapes() {
         return this.shapes;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public AnimatableTransform getTransform() {
         return this.transform;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getSolidColor() {
         return this.solidColor;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getSolidHeight() {
         return this.solidHeight;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getSolidWidth() {
         return this.solidWidth;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public AnimatableTextFrame getText() {
         return this.text;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public AnimatableTextProperties getTextProperties() {
         return this.textProperties;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public AnimatableFloatValue getTimeRemapping() {
         return this.timeRemapping;
     }
@@ -192,41 +192,27 @@ public class Layer {
 
     public String toString(String str) {
         StringBuilder sb = new StringBuilder();
-        sb.append(str);
-        sb.append(getName());
-        sb.append("\n");
+        sb.append(str).append(getName()).append("\n");
         Layer layerModelForId = this.composition.layerModelForId(getParentId());
         if (layerModelForId != null) {
-            sb.append("\t\tParents: ");
-            sb.append(layerModelForId.getName());
+            sb.append("\t\tParents: ").append(layerModelForId.getName());
             Layer layerModelForId2 = this.composition.layerModelForId(layerModelForId.getParentId());
             while (layerModelForId2 != null) {
-                sb.append("->");
-                sb.append(layerModelForId2.getName());
+                sb.append("->").append(layerModelForId2.getName());
                 layerModelForId2 = this.composition.layerModelForId(layerModelForId2.getParentId());
             }
-            sb.append(str);
-            sb.append("\n");
+            sb.append(str).append("\n");
         }
         if (!getMasks().isEmpty()) {
-            sb.append(str);
-            sb.append("\tMasks: ");
-            sb.append(getMasks().size());
-            sb.append("\n");
+            sb.append(str).append("\tMasks: ").append(getMasks().size()).append("\n");
         }
-        if (getSolidWidth() != 0 && getSolidHeight() != 0) {
-            sb.append(str);
-            sb.append("\tBackground: ");
-            sb.append(String.format(Locale.US, "%dx%d %X\n", Integer.valueOf(getSolidWidth()), Integer.valueOf(getSolidHeight()), Integer.valueOf(getSolidColor())));
+        if (!(getSolidWidth() == 0 || getSolidHeight() == 0)) {
+            sb.append(str).append("\tBackground: ").append(String.format(Locale.f700US, "%dx%d %X\n", Integer.valueOf(getSolidWidth()), Integer.valueOf(getSolidHeight()), Integer.valueOf(getSolidColor())));
         }
         if (!this.shapes.isEmpty()) {
-            sb.append(str);
-            sb.append("\tShapes:\n");
-            for (ContentModel contentModel : this.shapes) {
-                sb.append(str);
-                sb.append("\t\t");
-                sb.append(contentModel);
-                sb.append("\n");
+            sb.append(str).append("\tShapes:\n");
+            for (ContentModel append : this.shapes) {
+                sb.append(str).append("\t\t").append((Object) append).append("\n");
             }
         }
         return sb.toString();

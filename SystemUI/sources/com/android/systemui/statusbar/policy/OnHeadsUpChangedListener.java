@@ -1,17 +1,17 @@
 package com.android.systemui.statusbar.policy;
 
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-/* loaded from: classes2.dex */
+
 public interface OnHeadsUpChangedListener {
-    default void onHeadsUpPinned(NotificationEntry notificationEntry) {
+    void onHeadsUpPinned(NotificationEntry notificationEntry) {
     }
 
-    default void onHeadsUpPinnedModeChanged(boolean z) {
+    void onHeadsUpPinnedModeChanged(boolean z) {
     }
 
-    default void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
+    void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
     }
 
-    default void onHeadsUpUnPinned(NotificationEntry notificationEntry) {
+    void onHeadsUpUnPinned(NotificationEntry notificationEntry) {
     }
 }

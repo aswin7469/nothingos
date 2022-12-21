@@ -16,6 +16,10 @@
         <item quantity="one">Umeweka kidhibiti %s.</item>
         <item quantity="other">Umeweka vidhibiti %s.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">Programu %s inatumika</item>
+        <item quantity="other">Programu %s zinatumika</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">Weka PIN ya SIM. Ukijaribu tena mara %d bila kufaulu, kifaa chako kitafungwa na utalazimika uwasiliane na mtoa huduma wako ili akifungue.</item>
         <item quantity="other">Weka PIN ya SIM. Zimesalia mara %d za kujaribu.</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">Nambari ya PUK ya SIM si sahihi, bado unaweza kujaribu mara %d kabla ya SIM kuacha kutumika kabisa.</item>
         <item quantity="other">Nambari ya PUK ya SIM si sahihi, bado unaweza kujaribu mara %d kabla ya SIM kuacha kutumika kabisa.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Hujafungua kifaa kwa saa %d. Thibitisha nenosiri.</item>
-        <item quantity="other">Hujafungua kifaa kwa saa %d. Thibitisha nenosiri.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Hujafungua kifaa kwa saa %d. Thibitisha mchoro.</item>
-        <item quantity="other">Hujafungua kifaa kwa saa %d. Thibitisha mchoro.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Hujafungua kifaa kwa saa %d. Thibitisha PIN.</item>
-        <item quantity="other">Hujafungua kifaa kwa saa %d. Thibitisha PIN.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">Jaribu tena baada ya sekunde 1.</item>
-        <item quantity="other">Jaribu tena baada ya sekunde %d.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">Arifa %d mpya</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">Unaruhusiwa kuongeza mtumiaji mmoja pekee.</item>
         <item quantity="other">Unaruhusiwa kuongeza hadi watumiaji %d.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">Kifaa %1$d kimeunganishwa</item>
-        <item quantity="other">Vifaa %1$d vimeunganishwa</item>
     </plurals>
 </resources>

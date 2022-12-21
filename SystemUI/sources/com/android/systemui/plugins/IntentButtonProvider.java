@@ -3,19 +3,17 @@ package com.android.systemui.plugins;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
+
 @ProvidesInterface(version = 1)
-/* loaded from: classes.dex */
 public interface IntentButtonProvider extends Plugin {
     public static final int VERSION = 1;
 
-    /* loaded from: classes.dex */
     public interface IntentButton {
 
-        /* loaded from: classes.dex */
         public static class IconState {
+            public CharSequence contentDescription = null;
             public Drawable drawable;
             public boolean isVisible = true;
-            public CharSequence contentDescription = null;
             public boolean tint = true;
         }
 

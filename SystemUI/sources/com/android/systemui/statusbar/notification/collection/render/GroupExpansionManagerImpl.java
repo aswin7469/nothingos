@@ -7,32 +7,27 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.coordinator.Coordinator;
 import com.android.systemui.statusbar.notification.collection.listbuilder.OnBeforeRenderListListener;
 import com.android.systemui.statusbar.notification.collection.render.GroupExpansionManager;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
+
 public class GroupExpansionManagerImpl implements GroupExpansionManager, Coordinator {
-    private final GroupMembershipManager mGroupMembershipManager;
-    private final Set<GroupExpansionManager.OnGroupExpansionChangeListener> mOnGroupChangeListeners = new HashSet();
     private final Set<NotificationEntry> mExpandedGroups = new HashSet();
-    private final OnBeforeRenderListListener mNotifTracker = new OnBeforeRenderListListener() { // from class: com.android.systemui.statusbar.notification.collection.render.GroupExpansionManagerImpl$$ExternalSyntheticLambda0
-        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.OnBeforeRenderListListener
-        public final void onBeforeRenderList(List list) {
-            GroupExpansionManagerImpl.this.lambda$new$1(list);
-        }
-    };
+    private final GroupMembershipManager mGroupMembershipManager;
+    private final OnBeforeRenderListListener mNotifTracker = new GroupExpansionManagerImpl$$ExternalSyntheticLambda0(this);
+    private final Set<GroupExpansionManager.OnGroupExpansionChangeListener> mOnGroupChangeListeners = new HashSet();
 
     public GroupExpansionManagerImpl(GroupMembershipManager groupMembershipManager) {
         this.mGroupMembershipManager = groupMembershipManager;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$1(List list) {
-        final HashSet hashSet = new HashSet();
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$1$com-android-systemui-statusbar-notification-collection-render-GroupExpansionManagerImpl */
+    public /* synthetic */ void mo40590x9a4c005b(List list) {
+        HashSet hashSet = new HashSet();
         Iterator it = list.iterator();
         while (it.hasNext()) {
             ListEntry listEntry = (ListEntry) it.next();
@@ -40,37 +35,25 @@ public class GroupExpansionManagerImpl implements GroupExpansionManager, Coordin
                 hashSet.add(listEntry.getRepresentativeEntry());
             }
         }
-        this.mExpandedGroups.removeIf(new Predicate() { // from class: com.android.systemui.statusbar.notification.collection.render.GroupExpansionManagerImpl$$ExternalSyntheticLambda1
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$new$0;
-                lambda$new$0 = GroupExpansionManagerImpl.lambda$new$0(hashSet, (NotificationEntry) obj);
-                return lambda$new$0;
-            }
-        });
+        this.mExpandedGroups.removeIf(new GroupExpansionManagerImpl$$ExternalSyntheticLambda1(hashSet));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$new$0(Set set, NotificationEntry notificationEntry) {
+    static /* synthetic */ boolean lambda$new$0(Set set, NotificationEntry notificationEntry) {
         return !set.contains(notificationEntry);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         notifPipeline.addOnBeforeRenderListListener(this.mNotifTracker);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.GroupExpansionManager
     public void registerGroupExpansionChangeListener(GroupExpansionManager.OnGroupExpansionChangeListener onGroupExpansionChangeListener) {
         this.mOnGroupChangeListeners.add(onGroupExpansionChangeListener);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.GroupExpansionManager
     public boolean isGroupExpanded(NotificationEntry notificationEntry) {
         return this.mExpandedGroups.contains(this.mGroupMembershipManager.getGroupSummary(notificationEntry));
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.GroupExpansionManager
     public void setGroupExpanded(NotificationEntry notificationEntry, boolean z) {
         NotificationEntry groupSummary = this.mGroupMembershipManager.getGroupSummary(notificationEntry);
         if (z) {
@@ -81,32 +64,29 @@ public class GroupExpansionManagerImpl implements GroupExpansionManager, Coordin
         sendOnGroupExpandedChange(notificationEntry, z);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.GroupExpansionManager
     public boolean toggleGroupExpansion(NotificationEntry notificationEntry) {
         setGroupExpanded(notificationEntry, !isGroupExpanded(notificationEntry));
         return isGroupExpanded(notificationEntry);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.GroupExpansionManager
     public void collapseGroups() {
-        for (NotificationEntry notificationEntry : this.mExpandedGroups) {
-            setGroupExpanded(notificationEntry, false);
+        Iterator it = new ArrayList(this.mExpandedGroups).iterator();
+        while (it.hasNext()) {
+            setGroupExpanded((NotificationEntry) it.next(), false);
         }
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("NotificationEntryExpansion state:");
         printWriter.println("  # expanded groups: " + this.mExpandedGroups.size());
-        Iterator<NotificationEntry> it = this.mExpandedGroups.iterator();
-        while (it.hasNext()) {
-            printWriter.println("    summary key of expanded group: " + it.next().getKey());
+        for (NotificationEntry key : this.mExpandedGroups) {
+            printWriter.println("    summary key of expanded group: " + key.getKey());
         }
     }
 
     private void sendOnGroupExpandedChange(NotificationEntry notificationEntry, boolean z) {
-        for (GroupExpansionManager.OnGroupExpansionChangeListener onGroupExpansionChangeListener : this.mOnGroupChangeListeners) {
-            onGroupExpansionChangeListener.onGroupExpansionChange(notificationEntry.getRow(), z);
+        for (GroupExpansionManager.OnGroupExpansionChangeListener onGroupExpansionChange : this.mOnGroupChangeListeners) {
+            onGroupExpansionChange.onGroupExpansionChange(notificationEntry.getRow(), z);
         }
     }
 }

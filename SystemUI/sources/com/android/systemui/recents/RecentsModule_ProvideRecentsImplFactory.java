@@ -5,7 +5,7 @@ import com.android.systemui.dagger.ContextComponentHelper;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class RecentsModule_ProvideRecentsImplFactory implements Factory<RecentsImplementation> {
     private final Provider<ContextComponentHelper> componentHelperProvider;
     private final Provider<Context> contextProvider;
@@ -15,10 +15,8 @@ public final class RecentsModule_ProvideRecentsImplFactory implements Factory<Re
         this.componentHelperProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public RecentsImplementation mo1933get() {
-        return provideRecentsImpl(this.contextProvider.mo1933get(), this.componentHelperProvider.mo1933get());
+    public RecentsImplementation get() {
+        return provideRecentsImpl(this.contextProvider.get(), this.componentHelperProvider.get());
     }
 
     public static RecentsModule_ProvideRecentsImplFactory create(Provider<Context> provider, Provider<ContextComponentHelper> provider2) {

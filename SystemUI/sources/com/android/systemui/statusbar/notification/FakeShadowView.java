@@ -6,16 +6,19 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.LinearLayout;
-import com.android.systemui.R$dimen;
+import com.android.systemui.C1893R;
 import com.android.systemui.statusbar.AlphaOptimizedFrameLayout;
-/* loaded from: classes.dex */
+
 public class FakeShadowView extends AlphaOptimizedFrameLayout {
-    private View mFakeShadow;
-    private float mOutlineAlpha;
+    public static final float SHADOW_SIBLING_TRESHOLD = 0.1f;
+    /* access modifiers changed from: private */
+    public View mFakeShadow;
+    /* access modifiers changed from: private */
+    public float mOutlineAlpha;
     private final int mShadowMinHeight;
 
     public FakeShadowView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public FakeShadowView(Context context, AttributeSet attributeSet) {
@@ -32,15 +35,14 @@ public class FakeShadowView extends AlphaOptimizedFrameLayout {
         this.mFakeShadow = view;
         view.setVisibility(4);
         this.mFakeShadow.setLayoutParams(new LinearLayout.LayoutParams(-1, (int) (getResources().getDisplayMetrics().density * 48.0f)));
-        this.mFakeShadow.setOutlineProvider(new ViewOutlineProvider() { // from class: com.android.systemui.statusbar.notification.FakeShadowView.1
-            @Override // android.view.ViewOutlineProvider
-            public void getOutline(View view2, Outline outline) {
+        this.mFakeShadow.setOutlineProvider(new ViewOutlineProvider() {
+            public void getOutline(View view, Outline outline) {
                 outline.setRect(0, 0, FakeShadowView.this.getWidth(), FakeShadowView.this.mFakeShadow.getHeight());
                 outline.setAlpha(FakeShadowView.this.mOutlineAlpha);
             }
         });
         addView(this.mFakeShadow);
-        this.mShadowMinHeight = Math.max(1, context.getResources().getDimensionPixelSize(R$dimen.notification_divider_height));
+        this.mShadowMinHeight = Math.max(1, context.getResources().getDimensionPixelSize(C1893R.dimen.notification_divider_height));
     }
 
     public void setFakeShadowTranslationZ(float f, float f2, int i, int i2) {
@@ -49,14 +51,13 @@ public class FakeShadowView extends AlphaOptimizedFrameLayout {
             return;
         }
         this.mFakeShadow.setVisibility(0);
-        this.mFakeShadow.setTranslationZ(Math.max(this.mShadowMinHeight, f));
-        this.mFakeShadow.setTranslationX(i2);
+        this.mFakeShadow.setTranslationZ(Math.max((float) this.mShadowMinHeight, f));
+        this.mFakeShadow.setTranslationX((float) i2);
         View view = this.mFakeShadow;
-        view.setTranslationY(i - view.getHeight());
-        if (f2 == this.mOutlineAlpha) {
-            return;
+        view.setTranslationY((float) (i - view.getHeight()));
+        if (f2 != this.mOutlineAlpha) {
+            this.mOutlineAlpha = f2;
+            this.mFakeShadow.invalidateOutline();
         }
-        this.mOutlineAlpha = f2;
-        this.mFakeShadow.invalidateOutline();
     }
 }

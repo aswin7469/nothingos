@@ -1,154 +1,175 @@
 package com.android.systemui.doze;
 
 import android.os.Handler;
+import android.os.SystemProperties;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.biometrics.AuthController;
 import com.android.systemui.biometrics.UdfpsController;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.doze.DozeMachine;
+import com.android.systemui.doze.dagger.DozeScope;
+import com.android.systemui.doze.dagger.WrappedService;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.statusbar.phone.DozeParameters;
+import com.android.systemui.statusbar.phone.NotificationPanelViewController;
+import com.android.systemui.statusbar.phone.NotificationTapHelper;
 import com.android.systemui.util.wakelock.SettableWakeLock;
 import com.android.systemui.util.wakelock.WakeLock;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx;
+import javax.inject.Inject;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
+@DozeScope
 public class DozeScreenState implements DozeMachine.Part {
     private static final boolean DEBUG = DozeService.DEBUG;
+    private static final int ENTER_DOZE_DELAY = 4000;
+    private static final int ENTER_DOZE_DELAY_BY_LANDSCAPE_SCREEN_OFF = SystemProperties.getInt("debug.system.landscape_doze_delay", 500);
+    public static final int ENTER_DOZE_HIDE_WALLPAPER_DELAY = 2500;
+    private static final int ENTER_SCREEN_OFF_WITH_ANIMATION_DELAY = 500;
+    private static final String TAG = "DozeScreenState";
+    public static final int UDFPS_DISPLAY_STATE_DELAY = 1200;
+    private final Runnable mApplyPendingScreenState = new DozeScreenState$$ExternalSyntheticLambda0(this);
     private final AuthController mAuthController;
+    private final AuthController.Callback mAuthControllerCallback;
     private final DozeHost mDozeHost;
     private final DozeLog mDozeLog;
     private final DozeScreenBrightness mDozeScreenBrightness;
     private final DozeMachine.Service mDozeService;
     private final Handler mHandler;
+    private boolean mIsLandscapeScreenOff = false;
+    private NotificationPanelViewController mNotificationPanelViewController;
     private final DozeParameters mParameters;
+    private int mPendingScreenState = 0;
     private UdfpsController mUdfpsController;
     private final Provider<UdfpsController> mUdfpsControllerProvider;
     private SettableWakeLock mWakeLock;
-    private final Runnable mApplyPendingScreenState = new Runnable() { // from class: com.android.systemui.doze.DozeScreenState$$ExternalSyntheticLambda0
-        @Override // java.lang.Runnable
-        public final void run() {
-            DozeScreenState.this.applyPendingScreenState();
-        }
-    };
-    private int mPendingScreenState = 0;
 
-    public DozeScreenState(DozeMachine.Service service, Handler handler, DozeHost dozeHost, DozeParameters dozeParameters, WakeLock wakeLock, AuthController authController, Provider<UdfpsController> provider, DozeLog dozeLog, DozeScreenBrightness dozeScreenBrightness) {
+    @Inject
+    public DozeScreenState(@WrappedService DozeMachine.Service service, @Main Handler handler, DozeHost dozeHost, DozeParameters dozeParameters, WakeLock wakeLock, AuthController authController, Provider<UdfpsController> provider, DozeLog dozeLog, DozeScreenBrightness dozeScreenBrightness) {
+        C20621 r0 = new AuthController.Callback() {
+            public void onAllAuthenticatorsRegistered() {
+                DozeScreenState.this.updateUdfpsController();
+            }
+
+            public void onEnrollmentsChanged() {
+                DozeScreenState.this.updateUdfpsController();
+            }
+        };
+        this.mAuthControllerCallback = r0;
         this.mDozeService = service;
         this.mHandler = handler;
         this.mParameters = dozeParameters;
         this.mDozeHost = dozeHost;
-        this.mWakeLock = new SettableWakeLock(wakeLock, "DozeScreenState");
+        this.mWakeLock = new SettableWakeLock(wakeLock, TAG);
         this.mAuthController = authController;
         this.mUdfpsControllerProvider = provider;
         this.mDozeLog = dozeLog;
         this.mDozeScreenBrightness = dozeScreenBrightness;
         updateUdfpsController();
         if (this.mUdfpsController == null) {
-            authController.addCallback(new AuthController.Callback() { // from class: com.android.systemui.doze.DozeScreenState.1
-                @Override // com.android.systemui.biometrics.AuthController.Callback
-                public void onAllAuthenticatorsRegistered() {
-                    DozeScreenState.this.updateUdfpsController();
-                }
-            });
+            authController.addCallback(r0);
         }
+        this.mNotificationPanelViewController = ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).getNotificationPanelViewController();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateUdfpsController() {
         if (this.mAuthController.isUdfpsEnrolled(KeyguardUpdateMonitor.getCurrentUser())) {
-            this.mUdfpsController = this.mUdfpsControllerProvider.mo1933get();
+            this.mUdfpsController = this.mUdfpsControllerProvider.get();
         } else {
             this.mUdfpsController = null;
         }
     }
 
-    @Override // com.android.systemui.doze.DozeMachine.Part
+    public void destroy() {
+        this.mAuthController.removeCallback(this.mAuthControllerCallback);
+    }
+
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
         UdfpsController udfpsController;
-        final int screenState = state2.screenState(this.mParameters);
+        int screenState = state2.screenState(this.mParameters);
         this.mDozeHost.cancelGentleSleep();
-        boolean z = false;
         if (state2 == DozeMachine.State.FINISH) {
             this.mPendingScreenState = 0;
             this.mHandler.removeCallbacks(this.mApplyPendingScreenState);
-            lambda$transitionTo$0(screenState);
+            m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(screenState);
             this.mWakeLock.setAcquired(false);
-        } else if (screenState == 0) {
-        } else {
+        } else if (screenState != 0) {
             boolean hasCallbacks = this.mHandler.hasCallbacks(this.mApplyPendingScreenState);
-            int i = 1;
-            boolean z2 = state == DozeMachine.State.DOZE_PULSE_DONE && state2.isAlwaysOn();
-            DozeMachine.State state3 = DozeMachine.State.DOZE_AOD_PAUSED;
-            boolean z3 = (state == state3 || state == DozeMachine.State.DOZE) && state2.isAlwaysOn();
-            boolean z4 = (state.isAlwaysOn() && state2 == DozeMachine.State.DOZE) || (state == DozeMachine.State.DOZE_AOD_PAUSING && state2 == state3);
-            boolean z5 = state == DozeMachine.State.INITIALIZED;
-            if (!hasCallbacks && !z5 && !z2 && !z3) {
-                if (z4) {
-                    this.mDozeHost.prepareForGentleSleep(new Runnable() { // from class: com.android.systemui.doze.DozeScreenState$$ExternalSyntheticLambda1
-                        @Override // java.lang.Runnable
-                        public final void run() {
-                            DozeScreenState.this.lambda$transitionTo$0(screenState);
-                        }
-                    });
-                    return;
-                } else {
-                    lambda$transitionTo$0(screenState);
-                    return;
-                }
+            boolean z = state == DozeMachine.State.DOZE_PULSE_DONE && state2.isAlwaysOn();
+            boolean z2 = (state == DozeMachine.State.DOZE_AOD_PAUSED || state == DozeMachine.State.DOZE) && state2.isAlwaysOn();
+            boolean z3 = (state.isAlwaysOn() && state2 == DozeMachine.State.DOZE) || (state == DozeMachine.State.DOZE_AOD_PAUSING && state2 == DozeMachine.State.DOZE_AOD_PAUSED);
+            boolean z4 = state == DozeMachine.State.INITIALIZED;
+            if (z4) {
+                this.mIsLandscapeScreenOff = false;
             }
-            this.mPendingScreenState = screenState;
-            DozeMachine.State state4 = DozeMachine.State.DOZE_AOD;
-            boolean z6 = state2 == state4 && this.mParameters.shouldControlScreenOff() && !z3;
-            if (state2 == state4 && (udfpsController = this.mUdfpsController) != null && udfpsController.isFingerDown()) {
-                z = true;
-            }
-            if (z6 || z) {
-                this.mWakeLock.setAcquired(true);
-            }
-            if (!hasCallbacks) {
-                if (DEBUG) {
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("Display state changed to ");
-                    sb.append(screenState);
-                    sb.append(" delayed by ");
-                    if (z6) {
-                        i = 4000;
+            if (hasCallbacks || z4 || z || z2) {
+                this.mPendingScreenState = screenState;
+                boolean z5 = state2 == DozeMachine.State.DOZE_AOD && this.mParameters.shouldDelayDisplayDozeTransition() && !z2;
+                boolean z6 = state2 == DozeMachine.State.DOZE_AOD && (udfpsController = this.mUdfpsController) != null && udfpsController.isFingerDown();
+                boolean z7 = state2 == DozeMachine.State.DOZE && ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).shouldPlayOnOffAnimation();
+                this.mIsLandscapeScreenOff = this.mNotificationPanelViewController.isLandscapeScreenOff();
+                this.mNotificationPanelViewController.setIsLandscapeOff(false);
+                if (!hasCallbacks) {
+                    if (DEBUG) {
+                        Log.d(TAG, "Display state changed to " + screenState + " delayed by " + (z5 ? ENTER_DOZE_DELAY : 1));
                     }
-                    sb.append(i);
-                    Log.d("DozeScreenState", sb.toString());
+                    if (z5) {
+                        if (z4) {
+                            m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(2);
+                            this.mPendingScreenState = screenState;
+                        }
+                        this.mHandler.postDelayed(this.mApplyPendingScreenState, 4000);
+                    } else if (z6) {
+                        this.mDozeLog.traceDisplayStateDelayedByUdfps(this.mPendingScreenState);
+                        this.mHandler.postDelayed(this.mApplyPendingScreenState, NotificationTapHelper.DOUBLE_TAP_TIMEOUT_MS);
+                    } else if (z7 && !this.mIsLandscapeScreenOff) {
+                        if (z4) {
+                            m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(2);
+                            this.mPendingScreenState = screenState;
+                        }
+                        this.mHandler.postDelayed(this.mApplyPendingScreenState, 500);
+                    } else if (this.mIsLandscapeScreenOff) {
+                        this.mDozeService.setDozeScreenState(1);
+                        this.mHandler.postDelayed(this.mApplyPendingScreenState, (long) ENTER_DOZE_DELAY_BY_LANDSCAPE_SCREEN_OFF);
+                        this.mIsLandscapeScreenOff = false;
+                    } else {
+                        this.mHandler.post(this.mApplyPendingScreenState);
+                    }
+                } else if (DEBUG) {
+                    Log.d(TAG, "Pending display state change to " + screenState);
                 }
-                if (z6) {
-                    this.mHandler.postDelayed(this.mApplyPendingScreenState, 4000L);
-                } else if (z) {
-                    this.mDozeLog.traceDisplayStateDelayedByUdfps(this.mPendingScreenState);
-                    this.mHandler.postDelayed(this.mApplyPendingScreenState, 1200L);
-                } else {
-                    this.mHandler.post(this.mApplyPendingScreenState);
+                if (z5 || z6 || this.mIsLandscapeScreenOff || z7) {
+                    this.mWakeLock.setAcquired(true);
                 }
-            } else if (!DEBUG) {
+            } else if (z3) {
+                this.mDozeHost.prepareForGentleSleep(new DozeScreenState$$ExternalSyntheticLambda1(this, screenState));
             } else {
-                Log.d("DozeScreenState", "Pending display state change to " + screenState);
+                m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(screenState);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void applyPendingScreenState() {
         UdfpsController udfpsController = this.mUdfpsController;
-        if (udfpsController != null && udfpsController.isFingerDown()) {
-            this.mDozeLog.traceDisplayStateDelayedByUdfps(this.mPendingScreenState);
-            this.mHandler.postDelayed(this.mApplyPendingScreenState, 1200L);
+        if (udfpsController == null || !udfpsController.isFingerDown()) {
+            m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(this.mPendingScreenState);
+            this.mPendingScreenState = 0;
             return;
         }
-        lambda$transitionTo$0(this.mPendingScreenState);
-        this.mPendingScreenState = 0;
+        this.mDozeLog.traceDisplayStateDelayedByUdfps(this.mPendingScreenState);
+        this.mHandler.postDelayed(this.mApplyPendingScreenState, NotificationTapHelper.DOUBLE_TAP_TIMEOUT_MS);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: applyScreenState */
-    public void lambda$transitionTo$0(int i) {
+    public void m2735lambda$transitionTo$0$comandroidsystemuidozeDozeScreenState(int i) {
         if (i != 0) {
             if (DEBUG) {
-                Log.d("DozeScreenState", "setDozeScreenState(" + i + ")");
+                Log.d(TAG, "setDozeScreenState(" + i + NavigationBarInflaterView.KEY_CODE_END);
             }
             this.mDozeService.setDozeScreenState(i);
             if (i == 3) {

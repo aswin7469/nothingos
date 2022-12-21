@@ -1,9 +1,8 @@
 package com.android.keyguard;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.net.wifi.WifiEnterpriseConfig;
 import android.net.wifi.WifiManager;
 import android.telephony.ServiceState;
 import android.telephony.SubscriptionInfo;
@@ -11,57 +10,62 @@ import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.keyguard.CarrierTextManager;
-import com.android.settingslib.WirelessUtils;
-import com.android.systemui.R$array;
-import com.android.systemui.R$bool;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
+import com.android.systemui.dagger.qualifiers.Background;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.policy.FiveGServiceClient;
 import com.android.systemui.telephony.TelephonyListenerManager;
+import com.android.systemui.util.CarrierNameCustomization;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class CarrierTextManager {
+    /* access modifiers changed from: private */
+    public static final boolean DEBUG = KeyguardConstants.DEBUG;
+    private static final String TAG = "CarrierTextController";
     private final Executor mBgExecutor;
     protected final KeyguardUpdateMonitorCallback mCallback;
-    private CarrierTextCallback mCarrierTextCallback;
+    private CarrierNameCustomization mCarrierNameCustomization;
+    /* access modifiers changed from: private */
+    public CarrierTextCallback mCarrierTextCallback;
     private final Context mContext;
     private FiveGServiceClient mFiveGServiceClient;
     private final boolean mIsEmergencyCallCapable;
     protected KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final Executor mMainExecutor;
-    private final AtomicBoolean mNetworkSupported;
+    /* access modifiers changed from: private */
+    public final AtomicBoolean mNetworkSupported;
     private final TelephonyCallback.ActiveDataSubscriptionIdListener mPhoneStateListener;
     private final CharSequence mSeparator;
     private final boolean mShowAirplaneMode;
     private final boolean mShowMissingSim;
-    private final boolean[] mSimErrorState;
-    private final int mSimSlotsNumber;
-    private boolean mTelephonyCapable;
+    /* access modifiers changed from: private */
+    public final boolean[] mSimErrorState;
+    /* access modifiers changed from: private */
+    public final int mSimSlotsNumber;
+    /* access modifiers changed from: private */
+    public boolean mTelephonyCapable;
     private final TelephonyListenerManager mTelephonyListenerManager;
     private final TelephonyManager mTelephonyManager;
     private final WakefulnessLifecycle mWakefulnessLifecycle;
     private final WakefulnessLifecycle.Observer mWakefulnessObserver;
     private final WifiManager mWifiManager;
 
-    /* loaded from: classes.dex */
     public interface CarrierTextCallback {
-        default void finishedWakingUp() {
+        void finishedWakingUp() {
         }
 
-        default void startedGoingToSleep() {
+        void startedGoingToSleep() {
         }
 
-        default void updateCarrierInfo(CarrierTextCallbackInfo carrierTextCallbackInfo) {
+        void updateCarrierInfo(CarrierTextCallbackInfo carrierTextCallbackInfo) {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public enum StatusMode {
+    private enum StatusMode {
         Normal,
         NetworkLocked,
         SimMissing,
@@ -74,63 +78,61 @@ public class CarrierTextManager {
         SimUnknown
     }
 
-    private CarrierTextManager(Context context, CharSequence charSequence, boolean z, boolean z2, WifiManager wifiManager, TelephonyManager telephonyManager, TelephonyListenerManager telephonyListenerManager, WakefulnessLifecycle wakefulnessLifecycle, Executor executor, Executor executor2, KeyguardUpdateMonitor keyguardUpdateMonitor) {
+    private CarrierTextManager(Context context, CharSequence charSequence, boolean z, boolean z2, WifiManager wifiManager, TelephonyManager telephonyManager, TelephonyListenerManager telephonyListenerManager, WakefulnessLifecycle wakefulnessLifecycle, @Main Executor executor, @Background Executor executor2, KeyguardUpdateMonitor keyguardUpdateMonitor, CarrierNameCustomization carrierNameCustomization) {
         this.mNetworkSupported = new AtomicBoolean();
-        this.mWakefulnessObserver = new WakefulnessLifecycle.Observer() { // from class: com.android.keyguard.CarrierTextManager.1
-            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
+        this.mWakefulnessObserver = new WakefulnessLifecycle.Observer() {
             public void onFinishedWakingUp() {
-                CarrierTextCallback carrierTextCallback = CarrierTextManager.this.mCarrierTextCallback;
-                if (carrierTextCallback != null) {
-                    carrierTextCallback.finishedWakingUp();
+                CarrierTextCallback access$000 = CarrierTextManager.this.mCarrierTextCallback;
+                if (access$000 != null) {
+                    access$000.finishedWakingUp();
                 }
             }
 
-            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
             public void onStartedGoingToSleep() {
-                CarrierTextCallback carrierTextCallback = CarrierTextManager.this.mCarrierTextCallback;
-                if (carrierTextCallback != null) {
-                    carrierTextCallback.startedGoingToSleep();
+                CarrierTextCallback access$000 = CarrierTextManager.this.mCarrierTextCallback;
+                if (access$000 != null) {
+                    access$000.startedGoingToSleep();
                 }
             }
         };
-        this.mCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.keyguard.CarrierTextManager.2
-            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+        this.mCallback = new KeyguardUpdateMonitorCallback() {
             public void onRefreshCarrierInfo() {
-                Log.d("CarrierTextController", "onRefreshCarrierInfo(), mTelephonyCapable: " + Boolean.toString(CarrierTextManager.this.mTelephonyCapable));
+                if (CarrierTextManager.DEBUG) {
+                    Log.d(CarrierTextManager.TAG, "onRefreshCarrierInfo(), mTelephonyCapable: " + Boolean.toString(CarrierTextManager.this.mTelephonyCapable));
+                }
                 CarrierTextManager.this.updateCarrierText();
             }
 
-            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
-            public void onTelephonyCapable(boolean z3) {
-                Log.d("CarrierTextController", "onTelephonyCapable() mTelephonyCapable: " + Boolean.toString(z3));
-                CarrierTextManager.this.mTelephonyCapable = z3;
+            public void onTelephonyCapable(boolean z) {
+                if (CarrierTextManager.DEBUG) {
+                    Log.d(CarrierTextManager.TAG, "onTelephonyCapable() mTelephonyCapable: " + Boolean.toString(z));
+                }
+                boolean unused = CarrierTextManager.this.mTelephonyCapable = z;
                 CarrierTextManager.this.updateCarrierText();
             }
 
-            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onSimStateChanged(int i, int i2, int i3) {
                 if (i2 < 0 || i2 >= CarrierTextManager.this.mSimSlotsNumber) {
-                    Log.d("CarrierTextController", "onSimStateChanged() - slotId invalid: " + i2 + " mTelephonyCapable: " + Boolean.toString(CarrierTextManager.this.mTelephonyCapable));
+                    Log.d(CarrierTextManager.TAG, "onSimStateChanged() - slotId invalid: " + i2 + " mTelephonyCapable: " + Boolean.toString(CarrierTextManager.this.mTelephonyCapable));
                     return;
                 }
-                Log.d("CarrierTextController", "onSimStateChanged: " + CarrierTextManager.this.getStatusForIccState(i3));
+                if (CarrierTextManager.DEBUG) {
+                    Log.d(CarrierTextManager.TAG, "onSimStateChanged: " + CarrierTextManager.this.getStatusForIccState(i3));
+                }
                 if (CarrierTextManager.this.getStatusForIccState(i3) == StatusMode.SimIoError) {
                     CarrierTextManager.this.mSimErrorState[i2] = true;
                     CarrierTextManager.this.updateCarrierText();
-                } else if (!CarrierTextManager.this.mSimErrorState[i2]) {
-                } else {
+                } else if (CarrierTextManager.this.mSimErrorState[i2]) {
                     CarrierTextManager.this.mSimErrorState[i2] = false;
                     CarrierTextManager.this.updateCarrierText();
                 }
             }
         };
-        this.mPhoneStateListener = new TelephonyCallback.ActiveDataSubscriptionIdListener() { // from class: com.android.keyguard.CarrierTextManager.3
-            @Override // android.telephony.TelephonyCallback.ActiveDataSubscriptionIdListener
+        this.mPhoneStateListener = new TelephonyCallback.ActiveDataSubscriptionIdListener() {
             public void onActiveDataSubscriptionIdChanged(int i) {
-                if (!CarrierTextManager.this.mNetworkSupported.get() || CarrierTextManager.this.mCarrierTextCallback == null) {
-                    return;
+                if (CarrierTextManager.this.mNetworkSupported.get() && CarrierTextManager.this.mCarrierTextCallback != null) {
+                    CarrierTextManager.this.updateCarrierText();
                 }
-                CarrierTextManager.this.updateCarrierText();
             }
         };
         this.mContext = context;
@@ -148,21 +150,17 @@ public class CarrierTextManager {
         this.mMainExecutor = executor;
         this.mBgExecutor = executor2;
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
-        executor2.execute(new Runnable() { // from class: com.android.keyguard.CarrierTextManager$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                CarrierTextManager.this.lambda$new$0();
-            }
-        });
+        executor2.execute(new CarrierTextManager$$ExternalSyntheticLambda4(this));
+        this.mCarrierNameCustomization = carrierNameCustomization;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-keyguard-CarrierTextManager  reason: not valid java name */
+    public /* synthetic */ void m2279lambda$new$0$comandroidkeyguardCarrierTextManager() {
         boolean hasSystemFeature = this.mContext.getPackageManager().hasSystemFeature("android.hardware.telephony");
-        if (!hasSystemFeature || !this.mNetworkSupported.compareAndSet(false, hasSystemFeature)) {
-            return;
+        if (hasSystemFeature && this.mNetworkSupported.compareAndSet(false, hasSystemFeature)) {
+            m2280lambda$setListening$4$comandroidkeyguardCarrierTextManager(this.mCarrierTextCallback);
         }
-        lambda$setListening$4(this.mCarrierTextCallback);
     }
 
     private TelephonyManager getTelephonyManager() {
@@ -174,10 +172,10 @@ public class CarrierTextManager {
         for (int i = 0; i < getTelephonyManager().getActiveModemCount(); i++) {
             if (this.mSimErrorState[i]) {
                 if (z) {
-                    return concatenate(carrierTextForSimState, getContext().getText(17040142), this.mSeparator);
+                    return concatenate(carrierTextForSimState, getContext().getText(17040205), this.mSeparator);
                 }
-                if (iArr[i] != -1) {
-                    int i2 = iArr[i];
+                int i2 = iArr[i];
+                if (i2 != -1) {
                     charSequenceArr[i2] = concatenate(carrierTextForSimState, charSequenceArr[i2], this.mSeparator);
                 } else {
                     charSequence = concatenate(charSequence, carrierTextForSimState, this.mSeparator);
@@ -187,179 +185,294 @@ public class CarrierTextManager {
         return charSequence;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: handleSetListening */
-    public void lambda$setListening$4(final CarrierTextCallback carrierTextCallback) {
+    public void m2280lambda$setListening$4$comandroidkeyguardCarrierTextManager(CarrierTextCallback carrierTextCallback) {
         if (carrierTextCallback != null) {
             this.mCarrierTextCallback = carrierTextCallback;
             if (this.mNetworkSupported.get()) {
-                this.mMainExecutor.execute(new Runnable() { // from class: com.android.keyguard.CarrierTextManager$$ExternalSyntheticLambda4
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        CarrierTextManager.this.lambda$handleSetListening$1();
-                    }
-                });
-                this.mWakefulnessLifecycle.addObserver(this.mWakefulnessObserver);
+                this.mMainExecutor.execute(new CarrierTextManager$$ExternalSyntheticLambda1(this));
                 this.mTelephonyListenerManager.addActiveDataSubscriptionIdListener(this.mPhoneStateListener);
                 return;
             }
-            this.mMainExecutor.execute(new Runnable() { // from class: com.android.keyguard.CarrierTextManager$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    CarrierTextManager.lambda$handleSetListening$2(CarrierTextManager.CarrierTextCallback.this);
-                }
-            });
+            this.mMainExecutor.execute(new CarrierTextManager$$ExternalSyntheticLambda2(carrierTextCallback));
             return;
         }
         this.mCarrierTextCallback = null;
-        this.mMainExecutor.execute(new Runnable() { // from class: com.android.keyguard.CarrierTextManager$$ExternalSyntheticLambda3
-            @Override // java.lang.Runnable
-            public final void run() {
-                CarrierTextManager.this.lambda$handleSetListening$3();
-            }
-        });
-        this.mWakefulnessLifecycle.removeObserver(this.mWakefulnessObserver);
+        this.mMainExecutor.execute(new CarrierTextManager$$ExternalSyntheticLambda3(this));
         this.mTelephonyListenerManager.removeActiveDataSubscriptionIdListener(this.mPhoneStateListener);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$handleSetListening$1() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$handleSetListening$1$com-android-keyguard-CarrierTextManager */
+    public /* synthetic */ void mo25558xd9ef2ecc() {
         this.mKeyguardUpdateMonitor.registerCallback(this.mCallback);
+        this.mWakefulnessLifecycle.addObserver(this.mWakefulnessObserver);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$handleSetListening$2(CarrierTextCallback carrierTextCallback) {
-        carrierTextCallback.updateCarrierInfo(new CarrierTextCallbackInfo("", null, false, null));
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$handleSetListening$3() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$handleSetListening$3$com-android-keyguard-CarrierTextManager */
+    public /* synthetic */ void mo25559xf32f84ce() {
         this.mKeyguardUpdateMonitor.removeCallback(this.mCallback);
+        this.mWakefulnessLifecycle.removeObserver(this.mWakefulnessObserver);
     }
 
-    public void setListening(final CarrierTextCallback carrierTextCallback) {
-        this.mBgExecutor.execute(new Runnable() { // from class: com.android.keyguard.CarrierTextManager$$ExternalSyntheticLambda5
-            @Override // java.lang.Runnable
-            public final void run() {
-                CarrierTextManager.this.lambda$setListening$4(carrierTextCallback);
-            }
-        });
+    public void setListening(CarrierTextCallback carrierTextCallback) {
+        this.mBgExecutor.execute(new CarrierTextManager$$ExternalSyntheticLambda0(this, carrierTextCallback));
     }
 
-    protected List<SubscriptionInfo> getSubscriptionInfo() {
+    /* access modifiers changed from: protected */
+    public List<SubscriptionInfo> getSubscriptionInfo() {
         return this.mKeyguardUpdateMonitor.getFilteredSubscriptionInfo(false);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:61:0x01b6  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    protected void updateCarrierText() {
-        String str;
-        boolean z;
-        CharSequence charSequence;
-        ServiceState serviceState;
-        WifiManager wifiManager;
-        boolean z2 = getContext().getResources().getBoolean(R$bool.config_show_customize_carrier_name);
-        List<SubscriptionInfo> subscriptionInfo = getSubscriptionInfo();
-        int size = subscriptionInfo.size();
-        int[] iArr = new int[size];
-        Log.d("CarrierTextController", "updateCarrierText(): " + size);
-        int[] iArr2 = new int[this.mSimSlotsNumber];
-        for (int i = 0; i < this.mSimSlotsNumber; i++) {
-            iArr2[i] = -1;
-        }
-        CharSequence[] charSequenceArr = new CharSequence[size];
-        Log.d("CarrierTextController", "updateCarrierText(): " + size);
-        int i2 = 0;
-        boolean z3 = true;
-        boolean z4 = false;
-        while (true) {
-            str = "";
-            if (i2 >= size) {
-                break;
-            }
-            int subscriptionId = subscriptionInfo.get(i2).getSubscriptionId();
-            charSequenceArr[i2] = str;
-            iArr[i2] = subscriptionId;
-            iArr2[subscriptionInfo.get(i2).getSimSlotIndex()] = i2;
-            int simState = this.mKeyguardUpdateMonitor.getSimState(subscriptionId);
-            CharSequence carrierName = subscriptionInfo.get(i2).getCarrierName();
-            if (z2) {
-                carrierName = getCustomizeCarrierName(carrierName, subscriptionInfo.get(i2));
-            }
-            CharSequence carrierTextForSimState = getCarrierTextForSimState(simState, carrierName);
-            StringBuilder sb = new StringBuilder();
-            boolean z5 = z2;
-            sb.append("Handling (subId=");
-            sb.append(subscriptionId);
-            sb.append("): ");
-            sb.append(simState);
-            sb.append(" ");
-            sb.append((Object) carrierName);
-            Log.d("CarrierTextController", sb.toString());
-            if (carrierTextForSimState != null) {
-                charSequenceArr[i2] = carrierTextForSimState;
-                z3 = false;
-            }
-            if (simState == 5 && (serviceState = this.mKeyguardUpdateMonitor.mServiceStates.get(Integer.valueOf(subscriptionId))) != null && serviceState.getDataRegistrationState() == 0 && (serviceState.getRilDataRadioTechnology() != 18 || ((wifiManager = this.mWifiManager) != null && wifiManager.isWifiEnabled() && this.mWifiManager.getConnectionInfo() != null && this.mWifiManager.getConnectionInfo().getBSSID() != null))) {
-                Log.d("CarrierTextController", "SIM ready and in service: subId=" + subscriptionId + ", ss=" + serviceState);
-                z4 = true;
-            }
-            i2++;
-            z2 = z5;
-        }
-        CharSequence charSequence2 = null;
-        if (z3 && !z4) {
-            if (size != 0) {
-                charSequence2 = makeCarrierStringOnEmergencyCapable(getMissingSimMessage(), subscriptionInfo.get(0).getCarrierName());
-            } else {
-                CharSequence text = getContext().getText(17040142);
-                Intent registerReceiver = getContext().registerReceiver(null, new IntentFilter("android.telephony.action.SERVICE_PROVIDERS_UPDATED"));
-                if (registerReceiver != null) {
-                    z = false;
-                    String stringExtra = registerReceiver.getBooleanExtra("android.telephony.extra.SHOW_SPN", false) ? registerReceiver.getStringExtra("android.telephony.extra.SPN") : str;
-                    if (registerReceiver.getBooleanExtra("android.telephony.extra.SHOW_PLMN", false)) {
-                        str = registerReceiver.getStringExtra("android.telephony.extra.PLMN");
-                    }
-                    Log.d("CarrierTextController", "Getting plmn/spn sticky brdcst " + str + "/" + stringExtra);
-                    text = Objects.equals(str, stringExtra) ? str : concatenate(str, stringExtra, this.mSeparator);
-                } else {
-                    z = false;
-                }
-                charSequence2 = makeCarrierStringOnEmergencyCapable(getMissingSimMessage(), text);
-                if (TextUtils.isEmpty(charSequence2)) {
-                    charSequence2 = joinNotEmpty(this.mSeparator, charSequenceArr);
-                }
-                CharSequence updateCarrierTextWithSimIoError = updateCarrierTextWithSimIoError(charSequence2, charSequenceArr, iArr2, z3);
-                if (!z4 || !WirelessUtils.isAirplaneModeOn(this.mContext)) {
-                    charSequence = updateCarrierTextWithSimIoError;
-                } else {
-                    charSequence = getAirplaneModeMessage();
-                    z = true;
-                }
-                postToCallback(new CarrierTextCallbackInfo(charSequence, charSequenceArr, !z3, iArr, z));
-            }
-        }
-        z = false;
-        if (TextUtils.isEmpty(charSequence2)) {
-        }
-        CharSequence updateCarrierTextWithSimIoError2 = updateCarrierTextWithSimIoError(charSequence2, charSequenceArr, iArr2, z3);
-        if (!z4) {
-        }
-        charSequence = updateCarrierTextWithSimIoError2;
-        postToCallback(new CarrierTextCallbackInfo(charSequence, charSequenceArr, !z3, iArr, z));
+    /* access modifiers changed from: protected */
+    /* JADX WARNING: Removed duplicated region for block: B:73:0x01df  */
+    /* JADX WARNING: Removed duplicated region for block: B:78:0x01f3  */
+    /* JADX WARNING: Removed duplicated region for block: B:79:0x01fa  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void updateCarrierText() {
+        /*
+            r18 = this;
+            r0 = r18
+            android.content.Context r1 = r18.getContext()
+            android.content.res.Resources r1 = r1.getResources()
+            r2 = 2131034174(0x7f05003e, float:1.7678858E38)
+            boolean r1 = r1.getBoolean(r2)
+            java.util.List r2 = r18.getSubscriptionInfo()
+            int r3 = r2.size()
+            int[] r8 = new int[r3]
+            boolean r4 = DEBUG
+            java.lang.String r5 = "updateCarrierText(): "
+            java.lang.String r6 = "CarrierTextController"
+            if (r4 == 0) goto L_0x0034
+            java.lang.StringBuilder r4 = new java.lang.StringBuilder
+            r4.<init>((java.lang.String) r5)
+            java.lang.StringBuilder r4 = r4.append((int) r3)
+            java.lang.String r4 = r4.toString()
+            android.util.Log.d(r6, r4)
+        L_0x0034:
+            int r4 = r0.mSimSlotsNumber
+            int[] r4 = new int[r4]
+            r9 = 0
+        L_0x0039:
+            int r10 = r0.mSimSlotsNumber
+            if (r9 >= r10) goto L_0x0043
+            r10 = -1
+            r4[r9] = r10
+            int r9 = r9 + 1
+            goto L_0x0039
+        L_0x0043:
+            java.lang.CharSequence[] r9 = new java.lang.CharSequence[r3]
+            boolean r10 = DEBUG
+            if (r10 == 0) goto L_0x0059
+            java.lang.StringBuilder r10 = new java.lang.StringBuilder
+            r10.<init>((java.lang.String) r5)
+            java.lang.StringBuilder r5 = r10.append((int) r3)
+            java.lang.String r5 = r5.toString()
+            android.util.Log.d(r6, r5)
+        L_0x0059:
+            r10 = 0
+            r11 = 1
+            r12 = 0
+        L_0x005c:
+            java.lang.String r13 = ""
+            if (r10 >= r3) goto L_0x0149
+            java.lang.Object r14 = r2.get(r10)
+            android.telephony.SubscriptionInfo r14 = (android.telephony.SubscriptionInfo) r14
+            int r14 = r14.getSubscriptionId()
+            r9[r10] = r13
+            r8[r10] = r14
+            java.lang.Object r13 = r2.get(r10)
+            android.telephony.SubscriptionInfo r13 = (android.telephony.SubscriptionInfo) r13
+            int r13 = r13.getSimSlotIndex()
+            r4[r13] = r10
+            com.android.keyguard.KeyguardUpdateMonitor r13 = r0.mKeyguardUpdateMonitor
+            int r13 = r13.getSimState(r14)
+            java.lang.Object r15 = r2.get(r10)
+            android.telephony.SubscriptionInfo r15 = (android.telephony.SubscriptionInfo) r15
+            java.lang.CharSequence r15 = r15.getCarrierName()
+            if (r1 == 0) goto L_0x00ad
+            com.android.systemui.util.CarrierNameCustomization r5 = r0.mCarrierNameCustomization
+            boolean r5 = r5.isRoamingCustomizationEnabled()
+            if (r5 == 0) goto L_0x00a3
+            com.android.systemui.util.CarrierNameCustomization r5 = r0.mCarrierNameCustomization
+            boolean r5 = r5.isRoaming(r14)
+            if (r5 == 0) goto L_0x00a3
+            com.android.systemui.util.CarrierNameCustomization r5 = r0.mCarrierNameCustomization
+            java.lang.String r15 = r5.getRoamingCarrierName(r14)
+            goto L_0x00ad
+        L_0x00a3:
+            java.lang.Object r5 = r2.get(r10)
+            android.telephony.SubscriptionInfo r5 = (android.telephony.SubscriptionInfo) r5
+            java.lang.String r15 = r0.getCustomizeCarrierName(r15, r5)
+        L_0x00ad:
+            java.lang.CharSequence r5 = r0.getCarrierTextForSimState(r13, r15)
+            boolean r16 = DEBUG
+            if (r16 == 0) goto L_0x00de
+            java.lang.StringBuilder r7 = new java.lang.StringBuilder
+            r17 = r1
+            java.lang.String r1 = "Handling (subId="
+            r7.<init>((java.lang.String) r1)
+            java.lang.StringBuilder r1 = r7.append((int) r14)
+            java.lang.String r7 = "): "
+            java.lang.StringBuilder r1 = r1.append((java.lang.String) r7)
+            java.lang.StringBuilder r1 = r1.append((int) r13)
+            java.lang.String r7 = " "
+            java.lang.StringBuilder r1 = r1.append((java.lang.String) r7)
+            java.lang.StringBuilder r1 = r1.append((java.lang.Object) r15)
+            java.lang.String r1 = r1.toString()
+            android.util.Log.d(r6, r1)
+            goto L_0x00e0
+        L_0x00de:
+            r17 = r1
+        L_0x00e0:
+            if (r5 == 0) goto L_0x00e5
+            r9[r10] = r5
+            r11 = 0
+        L_0x00e5:
+            r1 = 5
+            if (r13 != r1) goto L_0x0143
+            com.android.keyguard.KeyguardUpdateMonitor r1 = r0.mKeyguardUpdateMonitor
+            java.util.HashMap<java.lang.Integer, android.telephony.ServiceState> r1 = r1.mServiceStates
+            java.lang.Integer r5 = java.lang.Integer.valueOf((int) r14)
+            java.lang.Object r1 = r1.get(r5)
+            android.telephony.ServiceState r1 = (android.telephony.ServiceState) r1
+            if (r1 == 0) goto L_0x0143
+            int r5 = r1.getDataRegistrationState()
+            if (r5 != 0) goto L_0x0143
+            int r5 = r1.getRilDataRadioTechnology()
+            r7 = 18
+            if (r5 != r7) goto L_0x0124
+            android.net.wifi.WifiManager r5 = r0.mWifiManager
+            if (r5 == 0) goto L_0x0143
+            boolean r5 = r5.isWifiEnabled()
+            if (r5 == 0) goto L_0x0143
+            android.net.wifi.WifiManager r5 = r0.mWifiManager
+            android.net.wifi.WifiInfo r5 = r5.getConnectionInfo()
+            if (r5 == 0) goto L_0x0143
+            android.net.wifi.WifiManager r5 = r0.mWifiManager
+            android.net.wifi.WifiInfo r5 = r5.getConnectionInfo()
+            java.lang.String r5 = r5.getBSSID()
+            if (r5 == 0) goto L_0x0143
+        L_0x0124:
+            if (r16 == 0) goto L_0x0142
+            java.lang.StringBuilder r5 = new java.lang.StringBuilder
+            java.lang.String r7 = "SIM ready and in service: subId="
+            r5.<init>((java.lang.String) r7)
+            java.lang.StringBuilder r5 = r5.append((int) r14)
+            java.lang.String r7 = ", ss="
+            java.lang.StringBuilder r5 = r5.append((java.lang.String) r7)
+            java.lang.StringBuilder r1 = r5.append((java.lang.Object) r1)
+            java.lang.String r1 = r1.toString()
+            android.util.Log.d(r6, r1)
+        L_0x0142:
+            r12 = 1
+        L_0x0143:
+            int r10 = r10 + 1
+            r1 = r17
+            goto L_0x005c
+        L_0x0149:
+            r1 = 0
+            if (r11 == 0) goto L_0x0163
+            if (r12 != 0) goto L_0x0163
+            if (r3 == 0) goto L_0x0166
+            java.lang.String r1 = r18.getMissingSimMessage()
+            r3 = 0
+            java.lang.Object r2 = r2.get(r3)
+            android.telephony.SubscriptionInfo r2 = (android.telephony.SubscriptionInfo) r2
+            java.lang.CharSequence r2 = r2.getCarrierName()
+            java.lang.CharSequence r1 = r0.makeCarrierStringOnEmergencyCapable(r1, r2)
+        L_0x0163:
+            r3 = 0
+            goto L_0x01d9
+        L_0x0166:
+            android.content.Context r2 = r18.getContext()
+            r3 = 17040205(0x104034d, float:2.424694E-38)
+            java.lang.CharSequence r2 = r2.getText(r3)
+            android.content.Context r3 = r18.getContext()
+            android.content.IntentFilter r5 = new android.content.IntentFilter
+            java.lang.String r7 = "android.telephony.action.SERVICE_PROVIDERS_UPDATED"
+            r5.<init>(r7)
+            android.content.Intent r1 = r3.registerReceiver(r1, r5)
+            if (r1 == 0) goto L_0x01d0
+            java.lang.String r2 = "android.telephony.extra.SHOW_SPN"
+            r3 = 0
+            boolean r2 = r1.getBooleanExtra(r2, r3)
+            if (r2 == 0) goto L_0x0192
+            java.lang.String r2 = "android.telephony.extra.SPN"
+            java.lang.String r2 = r1.getStringExtra(r2)
+            goto L_0x0193
+        L_0x0192:
+            r2 = r13
+        L_0x0193:
+            java.lang.String r5 = "android.telephony.extra.SHOW_PLMN"
+            boolean r5 = r1.getBooleanExtra(r5, r3)
+            if (r5 == 0) goto L_0x01a1
+            java.lang.String r5 = "android.telephony.extra.PLMN"
+            java.lang.String r13 = r1.getStringExtra(r5)
+        L_0x01a1:
+            boolean r1 = DEBUG
+            if (r1 == 0) goto L_0x01c1
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            java.lang.String r5 = "Getting plmn/spn sticky brdcst "
+            r1.<init>((java.lang.String) r5)
+            java.lang.StringBuilder r1 = r1.append((java.lang.String) r13)
+            java.lang.String r5 = "/"
+            java.lang.StringBuilder r1 = r1.append((java.lang.String) r5)
+            java.lang.StringBuilder r1 = r1.append((java.lang.String) r2)
+            java.lang.String r1 = r1.toString()
+            android.util.Log.d(r6, r1)
+        L_0x01c1:
+            boolean r1 = java.util.Objects.equals(r13, r2)
+            if (r1 == 0) goto L_0x01c9
+            r2 = r13
+            goto L_0x01d1
+        L_0x01c9:
+            java.lang.CharSequence r1 = r0.mSeparator
+            java.lang.CharSequence r2 = concatenate(r13, r2, r1)
+            goto L_0x01d1
+        L_0x01d0:
+            r3 = 0
+        L_0x01d1:
+            java.lang.String r1 = r18.getMissingSimMessage()
+            java.lang.CharSequence r1 = r0.makeCarrierStringOnEmergencyCapable(r1, r2)
+        L_0x01d9:
+            boolean r2 = android.text.TextUtils.isEmpty(r1)
+            if (r2 == 0) goto L_0x01e5
+            java.lang.CharSequence r1 = r0.mSeparator
+            java.lang.CharSequence r1 = joinNotEmpty(r1, r9)
+        L_0x01e5:
+            java.lang.CharSequence r1 = r0.updateCarrierTextWithSimIoError(r1, r9, r4, r11)
+            if (r12 != 0) goto L_0x01fa
+            android.content.Context r2 = r0.mContext
+            boolean r2 = com.android.settingslib.WirelessUtils.isAirplaneModeOn(r2)
+            if (r2 == 0) goto L_0x01fa
+            java.lang.String r1 = r18.getAirplaneModeMessage()
+            r5 = r1
+            r3 = 1
+            goto L_0x01fb
+        L_0x01fa:
+            r5 = r1
+        L_0x01fb:
+            com.android.keyguard.CarrierTextManager$CarrierTextCallbackInfo r1 = new com.android.keyguard.CarrierTextManager$CarrierTextCallbackInfo
+            r2 = 1
+            r7 = r11 ^ 1
+            r4 = r1
+            r6 = r9
+            r9 = r3
+            r4.<init>(r5, r6, r7, r8, r9)
+            r0.postToCallback(r1)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.CarrierTextManager.updateCarrierText():void");
     }
 
-    protected void postToCallback(final CarrierTextCallbackInfo carrierTextCallbackInfo) {
-        final CarrierTextCallback carrierTextCallback = this.mCarrierTextCallback;
+    /* access modifiers changed from: protected */
+    public void postToCallback(CarrierTextCallbackInfo carrierTextCallbackInfo) {
+        CarrierTextCallback carrierTextCallback = this.mCarrierTextCallback;
         if (carrierTextCallback != null) {
-            this.mMainExecutor.execute(new Runnable() { // from class: com.android.keyguard.CarrierTextManager$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    CarrierTextManager.CarrierTextCallback.this.updateCarrierInfo(carrierTextCallbackInfo);
-                }
-            });
+            this.mMainExecutor.execute(new CarrierTextManager$$ExternalSyntheticLambda5(carrierTextCallback, carrierTextCallbackInfo));
         }
     }
 
@@ -368,86 +481,118 @@ public class CarrierTextManager {
     }
 
     private String getMissingSimMessage() {
-        return (!this.mShowMissingSim || !this.mTelephonyCapable) ? "" : getContext().getString(R$string.keyguard_missing_sim_message_short);
+        return (!this.mShowMissingSim || !this.mTelephonyCapable) ? "" : getContext().getString(C1893R.string.keyguard_missing_sim_message_short);
     }
 
     private String getAirplaneModeMessage() {
-        return this.mShowAirplaneMode ? getContext().getString(R$string.airplane_mode) : "";
+        return this.mShowAirplaneMode ? getContext().getString(C1893R.string.airplane_mode) : "";
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.keyguard.CarrierTextManager$4  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass4 {
+    /* renamed from: com.android.keyguard.CarrierTextManager$4 */
+    static /* synthetic */ class C15844 {
         static final /* synthetic */ int[] $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(20:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|(3:19|20|22)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(22:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|22) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0054 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0060 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x006c */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[StatusMode.values().length];
-            $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode = iArr;
-            try {
-                iArr[StatusMode.Normal.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[StatusMode.SimNotReady.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[StatusMode.NetworkLocked.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[StatusMode.SimMissing.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[StatusMode.SimPermDisabled.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[StatusMode.SimMissingLocked.ordinal()] = 6;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[StatusMode.SimLocked.ordinal()] = 7;
-            } catch (NoSuchFieldError unused7) {
-            }
-            try {
-                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[StatusMode.SimPukLocked.ordinal()] = 8;
-            } catch (NoSuchFieldError unused8) {
-            }
-            try {
-                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[StatusMode.SimIoError.ordinal()] = 9;
-            } catch (NoSuchFieldError unused9) {
-            }
-            try {
-                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[StatusMode.SimUnknown.ordinal()] = 10;
-            } catch (NoSuchFieldError unused10) {
-            }
+            /*
+                com.android.keyguard.CarrierTextManager$StatusMode[] r0 = com.android.keyguard.CarrierTextManager.StatusMode.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode = r0
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.Normal     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimNotReady     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.NetworkLocked     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimMissing     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimPermDisabled     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimMissingLocked     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimLocked     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                int[] r0 = $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode     // Catch:{ NoSuchFieldError -> 0x0060 }
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimPukLocked     // Catch:{ NoSuchFieldError -> 0x0060 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0060 }
+                r2 = 8
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0060 }
+            L_0x0060:
+                int[] r0 = $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode     // Catch:{ NoSuchFieldError -> 0x006c }
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimIoError     // Catch:{ NoSuchFieldError -> 0x006c }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006c }
+                r2 = 9
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006c }
+            L_0x006c:
+                int[] r0 = $SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode     // Catch:{ NoSuchFieldError -> 0x0078 }
+                com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimUnknown     // Catch:{ NoSuchFieldError -> 0x0078 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0078 }
+                r2 = 10
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0078 }
+            L_0x0078:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.CarrierTextManager.C15844.<clinit>():void");
         }
     }
 
     private CharSequence getCarrierTextForSimState(int i, CharSequence charSequence) {
-        switch (AnonymousClass4.$SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[getStatusForIccState(i).ordinal()]) {
+        switch (C15844.$SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[getStatusForIccState(i).ordinal()]) {
             case 1:
                 return charSequence;
             case 2:
                 return "";
             case 3:
-                return makeCarrierStringOnEmergencyCapable(this.mContext.getText(R$string.keyguard_network_locked_message), charSequence);
-            case 4:
-            case 6:
-            case 10:
+                return makeCarrierStringOnEmergencyCapable(this.mContext.getText(C1893R.string.keyguard_network_locked_message), charSequence);
+            case 5:
+                return makeCarrierStringOnEmergencyCapable(getContext().getText(C1893R.string.keyguard_permanent_disabled_sim_message_short), charSequence);
+            case 7:
+                return makeCarrierStringOnLocked(getContext().getText(C1893R.string.keyguard_sim_locked_message), charSequence);
+            case 8:
+                return makeCarrierStringOnLocked(getContext().getText(C1893R.string.keyguard_sim_puk_locked_message), charSequence);
+            case 9:
+                return makeCarrierStringOnEmergencyCapable(getContext().getText(C1893R.string.keyguard_sim_error_message_short), charSequence);
             default:
                 return null;
-            case 5:
-                return makeCarrierStringOnEmergencyCapable(getContext().getText(R$string.keyguard_permanent_disabled_sim_message_short), charSequence);
-            case 7:
-                return makeCarrierStringOnLocked(getContext().getText(R$string.keyguard_sim_locked_message), charSequence);
-            case 8:
-                return makeCarrierStringOnLocked(getContext().getText(R$string.keyguard_sim_puk_locked_message), charSequence);
-            case 9:
-                return makeCarrierStringOnEmergencyCapable(getContext().getText(R$string.keyguard_sim_error_message_short), charSequence);
         }
     }
 
@@ -458,53 +603,104 @@ public class CarrierTextManager {
     private CharSequence makeCarrierStringOnLocked(CharSequence charSequence, CharSequence charSequence2) {
         boolean z = !TextUtils.isEmpty(charSequence);
         boolean z2 = !TextUtils.isEmpty(charSequence2);
-        return (!z || !z2) ? z ? charSequence : z2 ? charSequence2 : "" : this.mContext.getString(R$string.keyguard_carrier_name_with_sim_locked_template, charSequence2, charSequence);
+        if (z && z2) {
+            return this.mContext.getString(C1893R.string.keyguard_carrier_name_with_sim_locked_template, new Object[]{charSequence2, charSequence});
+        } else if (z) {
+            return charSequence;
+        } else {
+            return z2 ? charSequence2 : "";
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public StatusMode getStatusForIccState(int i) {
-        boolean z = true;
-        if (this.mKeyguardUpdateMonitor.isDeviceProvisioned() || (i != 1 && i != 7)) {
-            z = false;
-        }
-        if (z) {
-            i = 4;
-        }
-        switch (i) {
-            case 0:
-                return StatusMode.SimUnknown;
-            case 1:
-                return StatusMode.SimMissing;
-            case 2:
-                return StatusMode.SimLocked;
-            case 3:
-                return StatusMode.SimPukLocked;
-            case 4:
-                return StatusMode.SimMissingLocked;
-            case 5:
-                return StatusMode.Normal;
-            case 6:
-                return StatusMode.SimNotReady;
-            case 7:
-                return StatusMode.SimPermDisabled;
-            case 8:
-                return StatusMode.SimIoError;
-            default:
-                return StatusMode.SimUnknown;
-        }
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Code restructure failed: missing block: B:5:0x000c, code lost:
+        if (r2 != 7) goto L_0x000f;
+     */
+    /* JADX WARNING: Removed duplicated region for block: B:10:0x0016  */
+    /* JADX WARNING: Removed duplicated region for block: B:12:0x0019  */
+    /* JADX WARNING: Removed duplicated region for block: B:14:0x001c  */
+    /* JADX WARNING: Removed duplicated region for block: B:16:0x001f  */
+    /* JADX WARNING: Removed duplicated region for block: B:18:0x0022  */
+    /* JADX WARNING: Removed duplicated region for block: B:20:0x0025  */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x0028  */
+    /* JADX WARNING: Removed duplicated region for block: B:24:0x002b  */
+    /* JADX WARNING: Removed duplicated region for block: B:26:0x002e  */
+    /* JADX WARNING: Removed duplicated region for block: B:28:0x0031  */
+    /* JADX WARNING: Removed duplicated region for block: B:8:0x0012  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public com.android.keyguard.CarrierTextManager.StatusMode getStatusForIccState(int r2) {
+        /*
+            r1 = this;
+            com.android.keyguard.KeyguardUpdateMonitor r1 = r1.mKeyguardUpdateMonitor
+            boolean r1 = r1.isDeviceProvisioned()
+            if (r1 != 0) goto L_0x000f
+            r1 = 1
+            if (r2 == r1) goto L_0x0010
+            r0 = 7
+            if (r2 != r0) goto L_0x000f
+            goto L_0x0010
+        L_0x000f:
+            r1 = 0
+        L_0x0010:
+            if (r1 == 0) goto L_0x0013
+            r2 = 4
+        L_0x0013:
+            switch(r2) {
+                case 0: goto L_0x0031;
+                case 1: goto L_0x002e;
+                case 2: goto L_0x002b;
+                case 3: goto L_0x0028;
+                case 4: goto L_0x0025;
+                case 5: goto L_0x0022;
+                case 6: goto L_0x001f;
+                case 7: goto L_0x001c;
+                case 8: goto L_0x0019;
+                default: goto L_0x0016;
+            }
+        L_0x0016:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimUnknown
+            return r1
+        L_0x0019:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimIoError
+            return r1
+        L_0x001c:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimPermDisabled
+            return r1
+        L_0x001f:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimNotReady
+            return r1
+        L_0x0022:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.Normal
+            return r1
+        L_0x0025:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimMissingLocked
+            return r1
+        L_0x0028:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimPukLocked
+            return r1
+        L_0x002b:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimLocked
+            return r1
+        L_0x002e:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimMissing
+            return r1
+        L_0x0031:
+            com.android.keyguard.CarrierTextManager$StatusMode r1 = com.android.keyguard.CarrierTextManager.StatusMode.SimUnknown
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.CarrierTextManager.getStatusForIccState(int):com.android.keyguard.CarrierTextManager$StatusMode");
     }
 
     private static CharSequence concatenate(CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3) {
         boolean z = !TextUtils.isEmpty(charSequence);
         boolean z2 = !TextUtils.isEmpty(charSequence2);
-        if (!z || !z2) {
-            return z ? charSequence : z2 ? charSequence2 : "";
+        if (z && z2) {
+            return new StringBuilder().append(charSequence).append(charSequence3).append(charSequence2).toString();
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append(charSequence);
-        sb.append(charSequence3);
-        sb.append(charSequence2);
-        return sb.toString();
+        if (z) {
+            return charSequence;
+        }
+        return z2 ? charSequence2 : "";
     }
 
     private static CharSequence joinNotEmpty(CharSequence charSequence, CharSequence[] charSequenceArr) {
@@ -524,9 +720,21 @@ public class CarrierTextManager {
         return sb.toString();
     }
 
-    /* loaded from: classes.dex */
+    private static List<CharSequence> append(List<CharSequence> list, CharSequence charSequence) {
+        if (!TextUtils.isEmpty(charSequence)) {
+            list.add(charSequence);
+        }
+        return list;
+    }
+
+    private CharSequence getCarrierHelpTextForSimState(int i, String str, String str2) {
+        int i2 = C15844.$SwitchMap$com$android$keyguard$CarrierTextManager$StatusMode[getStatusForIccState(i).ordinal()];
+        return this.mContext.getText(i2 != 3 ? i2 != 4 ? i2 != 5 ? i2 != 6 ? 0 : C1893R.string.keyguard_missing_sim_instructions : C1893R.string.keyguard_permanent_disabled_sim_instructions : C1893R.string.keyguard_missing_sim_instructions_long : C1893R.string.keyguard_instructions_when_pattern_disabled);
+    }
+
     public static class Builder {
         private final Executor mBgExecutor;
+        private CarrierNameCustomization mCarrierNameCustomization;
         private final Context mContext;
         private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
         private final Executor mMainExecutor;
@@ -538,9 +746,10 @@ public class CarrierTextManager {
         private final WakefulnessLifecycle mWakefulnessLifecycle;
         private final WifiManager mWifiManager;
 
-        public Builder(Context context, Resources resources, WifiManager wifiManager, TelephonyManager telephonyManager, TelephonyListenerManager telephonyListenerManager, WakefulnessLifecycle wakefulnessLifecycle, Executor executor, Executor executor2, KeyguardUpdateMonitor keyguardUpdateMonitor) {
+        @Inject
+        public Builder(Context context, @Main Resources resources, WifiManager wifiManager, TelephonyManager telephonyManager, TelephonyListenerManager telephonyListenerManager, WakefulnessLifecycle wakefulnessLifecycle, @Main Executor executor, @Background Executor executor2, KeyguardUpdateMonitor keyguardUpdateMonitor, CarrierNameCustomization carrierNameCustomization) {
             this.mContext = context;
-            this.mSeparator = resources.getString(17040495);
+            this.mSeparator = resources.getString(17040571);
             this.mWifiManager = wifiManager;
             this.mTelephonyManager = telephonyManager;
             this.mTelephonyListenerManager = telephonyListenerManager;
@@ -548,6 +757,7 @@ public class CarrierTextManager {
             this.mMainExecutor = executor;
             this.mBgExecutor = executor2;
             this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
+            this.mCarrierNameCustomization = carrierNameCustomization;
         }
 
         public Builder setShowAirplaneMode(boolean z) {
@@ -561,11 +771,10 @@ public class CarrierTextManager {
         }
 
         public CarrierTextManager build() {
-            return new CarrierTextManager(this.mContext, this.mSeparator, this.mShowAirplaneMode, this.mShowMissingSim, this.mWifiManager, this.mTelephonyManager, this.mTelephonyListenerManager, this.mWakefulnessLifecycle, this.mMainExecutor, this.mBgExecutor, this.mKeyguardUpdateMonitor);
+            return new CarrierTextManager(this.mContext, this.mSeparator, this.mShowAirplaneMode, this.mShowMissingSim, this.mWifiManager, this.mTelephonyManager, this.mTelephonyListenerManager, this.mWakefulnessLifecycle, this.mMainExecutor, this.mBgExecutor, this.mKeyguardUpdateMonitor, this.mCarrierNameCustomization);
         }
     }
 
-    /* loaded from: classes.dex */
     public static final class CarrierTextCallbackInfo {
         public boolean airplaneMode;
         public final boolean anySimReady;
@@ -597,10 +806,11 @@ public class CarrierTextManager {
         if (!TextUtils.isEmpty(charSequence)) {
             String[] split = charSequence.toString().split(this.mSeparator.toString(), 2);
             for (int i = 0; i < split.length; i++) {
-                split[i] = getLocalString(split[i], R$array.origin_carrier_names, R$array.locale_carrier_names);
-                if (!TextUtils.isEmpty(split[i])) {
+                String localString = getLocalString(split[i], C1893R.array.origin_carrier_names, C1893R.array.locale_carrier_names);
+                split[i] = localString;
+                if (!TextUtils.isEmpty(localString)) {
                     if (!TextUtils.isEmpty(networkTypeToString)) {
-                        split[i] = split[i] + " " + networkTypeToString;
+                        split[i] = split[i] + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + networkTypeToString;
                     }
                     if (i <= 0 || !split[i].equals(split[i - 1])) {
                         if (i > 0) {
@@ -627,7 +837,7 @@ public class CarrierTextManager {
 
     private int getNetworkType(int i) {
         ServiceState serviceState = this.mKeyguardUpdateMonitor.mServiceStates.get(Integer.valueOf(i));
-        if (serviceState == null || !(serviceState.getDataRegState() == 0 || serviceState.getVoiceRegState() == 0)) {
+        if (serviceState == null || (serviceState.getDataRegState() != 0 && serviceState.getVoiceRegState() != 0)) {
             return 0;
         }
         int dataNetworkType = serviceState.getDataNetworkType();
@@ -635,33 +845,25 @@ public class CarrierTextManager {
     }
 
     private String networkTypeToString(int i) {
-        int i2 = R$string.config_rat_unknown;
         long bitMaskForNetworkType = TelephonyManager.getBitMaskForNetworkType(i);
-        if ((32843 & bitMaskForNetworkType) != 0) {
-            i2 = R$string.config_rat_2g;
-        } else if ((93108 & bitMaskForNetworkType) != 0) {
-            i2 = R$string.config_rat_3g;
-        } else if ((bitMaskForNetworkType & 397312) != 0) {
-            i2 = R$string.config_rat_4g;
-        }
-        return getContext().getResources().getString(i2);
+        return getContext().getResources().getString((32843 & bitMaskForNetworkType) != 0 ? C1893R.string.config_rat_2g : (93108 & bitMaskForNetworkType) != 0 ? C1893R.string.config_rat_3g : (bitMaskForNetworkType & 397312) != 0 ? C1893R.string.config_rat_4g : C1893R.string.config_rat_unknown);
     }
 
     private String get5GNetworkClass(SubscriptionInfo subscriptionInfo, int i) {
         if (i == 20) {
-            return this.mContext.getResources().getString(R$string.data_connection_5g);
+            return this.mContext.getResources().getString(C1893R.string.data_connection_5g);
         }
         int simSlotIndex = subscriptionInfo.getSimSlotIndex();
         int subscriptionId = subscriptionInfo.getSubscriptionId();
         if (this.mFiveGServiceClient == null) {
-            FiveGServiceClient fiveGServiceClient = FiveGServiceClient.getInstance(this.mContext);
-            this.mFiveGServiceClient = fiveGServiceClient;
-            fiveGServiceClient.registerCallback(this.mCallback);
+            FiveGServiceClient instance = FiveGServiceClient.getInstance(this.mContext);
+            this.mFiveGServiceClient = instance;
+            instance.registerCallback(this.mCallback);
         }
-        if (this.mFiveGServiceClient.getCurrentServiceState(simSlotIndex).isNrIconTypeValid() && isDataRegisteredOnLte(subscriptionId)) {
-            return this.mContext.getResources().getString(R$string.data_connection_5g);
+        if (!this.mFiveGServiceClient.getCurrentServiceState(simSlotIndex).isNrIconTypeValid() || !isDataRegisteredOnLte(subscriptionId)) {
+            return null;
         }
-        return null;
+        return this.mContext.getResources().getString(C1893R.string.data_connection_5g);
     }
 
     private boolean isDataRegisteredOnLte(int i) {

@@ -5,106 +5,142 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Process;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
+import com.android.p019wm.shell.dagger.WMShellConcurrencyModule;
+import com.android.p019wm.shell.transition.ShellTransitions;
 import com.android.systemui.dagger.DaggerGlobalRootComponent;
 import com.android.systemui.dagger.GlobalRootComponent;
 import com.android.systemui.dagger.SysUIComponent;
 import com.android.systemui.dagger.WMComponent;
 import com.android.systemui.navigationbar.gestural.BackGestureTfClassifierProvider;
 import com.android.systemui.screenshot.ScreenshotNotificationSmartActionsProvider;
-import com.android.wm.shell.transition.Transitions;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+import javax.inject.Provider;
+
 public class SystemUIFactory {
+    private static final String TAG = "SystemUIFactory";
     static SystemUIFactory mFactory;
     private boolean mInitializeComponents;
     private GlobalRootComponent mRootComponent;
     private SysUIComponent mSysUIComponent;
     private WMComponent mWMComponent;
 
-    protected SysUIComponent.Builder prepareSysUIComponentBuilder(SysUIComponent.Builder builder, WMComponent wMComponent) {
+    /* access modifiers changed from: protected */
+    public SysUIComponent.Builder prepareSysUIComponentBuilder(SysUIComponent.Builder builder, WMComponent wMComponent) {
         return builder;
     }
 
     public static <T extends SystemUIFactory> T getInstance() {
-        return (T) mFactory;
+        return mFactory;
     }
 
     public static void createFromConfig(Context context) {
         createFromConfig(context, false);
     }
 
-    @VisibleForTesting
     public static void createFromConfig(Context context, boolean z) {
-        if (mFactory != null) {
-            return;
-        }
-        String string = context.getString(R$string.config_systemUIFactoryComponent);
-        if (string == null || string.length() == 0) {
-            throw new RuntimeException("No SystemUIFactory component configured");
-        }
-        try {
-            SystemUIFactory systemUIFactory = (SystemUIFactory) context.getClassLoader().loadClass(string).newInstance();
-            mFactory = systemUIFactory;
-            systemUIFactory.init(context, z);
-        } catch (Throwable th) {
-            Log.w("SystemUIFactory", "Error creating SystemUIFactory component: " + string, th);
-            throw new RuntimeException(th);
+        if (mFactory == null) {
+            String string = context.getString(C1893R.string.config_systemUIFactoryComponent);
+            if (string == null || string.length() == 0) {
+                throw new RuntimeException("No SystemUIFactory component configured");
+            }
+            try {
+                SystemUIFactory systemUIFactory = (SystemUIFactory) context.getClassLoader().loadClass(string).newInstance();
+                mFactory = systemUIFactory;
+                systemUIFactory.init(context, z);
+            } catch (Throwable th) {
+                Log.w(TAG, "Error creating SystemUIFactory component: " + string, th);
+                throw new RuntimeException(th);
+            }
         }
     }
 
-    @VisibleForTesting
     static void cleanup() {
         mFactory = null;
     }
 
-    @VisibleForTesting
     public void init(Context context, boolean z) throws ExecutionException, InterruptedException {
-        SysUIComponent.Builder mo1394setTaskSurfaceHelper;
+        SysUIComponent.Builder builder;
         this.mInitializeComponents = !z && Process.myUserHandle().isSystem() && ActivityThread.currentProcessName().equals(ActivityThread.currentPackageName());
-        GlobalRootComponent buildGlobalRootComponent = buildGlobalRootComponent(context);
-        this.mRootComponent = buildGlobalRootComponent;
-        WMComponent mo1418build = buildGlobalRootComponent.mo1379getWMComponentBuilder().mo1418build();
-        this.mWMComponent = mo1418build;
+        this.mRootComponent = buildGlobalRootComponent(context);
+        setupWmComponent(context);
         if (this.mInitializeComponents) {
-            mo1418build.init();
+            this.mWMComponent.init();
         }
-        SysUIComponent.Builder mo1378getSysUIComponent = this.mRootComponent.mo1378getSysUIComponent();
+        SysUIComponent.Builder sysUIComponent = this.mRootComponent.getSysUIComponent();
         if (this.mInitializeComponents) {
-            mo1394setTaskSurfaceHelper = prepareSysUIComponentBuilder(mo1378getSysUIComponent, this.mWMComponent).mo1390setPip(this.mWMComponent.getPip()).mo1388setLegacySplitScreen(this.mWMComponent.getLegacySplitScreen()).mo1392setSplitScreen(this.mWMComponent.getSplitScreen()).mo1389setOneHanded(this.mWMComponent.getOneHanded()).mo1386setBubbles(this.mWMComponent.getBubbles()).mo1387setHideDisplayCutout(this.mWMComponent.getHideDisplayCutout()).mo1391setShellCommandHandler(this.mWMComponent.getShellCommandHandler()).mo1385setAppPairs(this.mWMComponent.getAppPairs()).mo1395setTaskViewFactory(this.mWMComponent.getTaskViewFactory()).mo1396setTransitions(this.mWMComponent.getTransitions()).mo1393setStartingSurface(this.mWMComponent.getStartingSurface()).mo1394setTaskSurfaceHelper(this.mWMComponent.getTaskSurfaceHelper());
+            builder = prepareSysUIComponentBuilder(sysUIComponent, this.mWMComponent).setPip(this.mWMComponent.getPip()).setLegacySplitScreen(this.mWMComponent.getLegacySplitScreen()).setSplitScreen(this.mWMComponent.getSplitScreen()).setOneHanded(this.mWMComponent.getOneHanded()).setBubbles(this.mWMComponent.getBubbles()).setHideDisplayCutout(this.mWMComponent.getHideDisplayCutout()).setShellCommandHandler(this.mWMComponent.getShellCommandHandler()).setAppPairs(this.mWMComponent.getAppPairs()).setTaskViewFactory(this.mWMComponent.getTaskViewFactory()).setTransitions(this.mWMComponent.getTransitions()).setStartingSurface(this.mWMComponent.getStartingSurface()).setDisplayAreaHelper(this.mWMComponent.getDisplayAreaHelper()).setTaskSurfaceHelper(this.mWMComponent.getTaskSurfaceHelper()).setRecentTasks(this.mWMComponent.getRecentTasks()).setCompatUI(this.mWMComponent.getCompatUI()).setDragAndDrop(this.mWMComponent.getDragAndDrop()).setBackAnimation(this.mWMComponent.getBackAnimation());
         } else {
-            mo1394setTaskSurfaceHelper = prepareSysUIComponentBuilder(mo1378getSysUIComponent, this.mWMComponent).mo1390setPip(Optional.ofNullable(null)).mo1388setLegacySplitScreen(Optional.ofNullable(null)).mo1392setSplitScreen(Optional.ofNullable(null)).mo1389setOneHanded(Optional.ofNullable(null)).mo1386setBubbles(Optional.ofNullable(null)).mo1387setHideDisplayCutout(Optional.ofNullable(null)).mo1391setShellCommandHandler(Optional.ofNullable(null)).mo1385setAppPairs(Optional.ofNullable(null)).mo1395setTaskViewFactory(Optional.ofNullable(null)).mo1396setTransitions(Transitions.createEmptyForTesting()).mo1393setStartingSurface(Optional.ofNullable(null)).mo1394setTaskSurfaceHelper(Optional.ofNullable(null));
+            builder = prepareSysUIComponentBuilder(sysUIComponent, this.mWMComponent).setPip(Optional.ofNullable(null)).setLegacySplitScreen(Optional.ofNullable(null)).setSplitScreen(Optional.ofNullable(null)).setOneHanded(Optional.ofNullable(null)).setBubbles(Optional.ofNullable(null)).setHideDisplayCutout(Optional.ofNullable(null)).setShellCommandHandler(Optional.ofNullable(null)).setAppPairs(Optional.ofNullable(null)).setTaskViewFactory(Optional.ofNullable(null)).setTransitions(new ShellTransitions() {
+            }).setDisplayAreaHelper(Optional.ofNullable(null)).setStartingSurface(Optional.ofNullable(null)).setTaskSurfaceHelper(Optional.ofNullable(null)).setRecentTasks(Optional.ofNullable(null)).setCompatUI(Optional.ofNullable(null)).setDragAndDrop(Optional.ofNullable(null)).setBackAnimation(Optional.ofNullable(null));
         }
-        SysUIComponent mo1384build = mo1394setTaskSurfaceHelper.mo1384build();
-        this.mSysUIComponent = mo1384build;
+        SysUIComponent build = builder.build();
+        this.mSysUIComponent = build;
         if (this.mInitializeComponents) {
-            mo1384build.init();
+            build.init();
         }
         this.mSysUIComponent.createDependency().start();
+        this.mSysUIComponent.createDependencyEx().start();
     }
 
-    protected GlobalRootComponent buildGlobalRootComponent(Context context) {
-        return DaggerGlobalRootComponent.builder().mo1381context(context).mo1380build();
+    private void setupWmComponent(Context context) {
+        WMComponent.Builder wMComponentBuilder = this.mRootComponent.getWMComponentBuilder();
+        if (!this.mInitializeComponents || !WMShellConcurrencyModule.enableShellMainThread(context)) {
+            this.mWMComponent = wMComponentBuilder.build();
+            return;
+        }
+        HandlerThread createShellMainThread = WMShellConcurrencyModule.createShellMainThread();
+        createShellMainThread.start();
+        if (!Handler.createAsync(createShellMainThread.getLooper()).runWithScissors(new SystemUIFactory$$ExternalSyntheticLambda0(this, wMComponentBuilder, createShellMainThread), 5000)) {
+            Log.w(TAG, "Failed to initialize WMComponent");
+            throw new RuntimeException();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setupWmComponent$0$com-android-systemui-SystemUIFactory  reason: not valid java name */
+    public /* synthetic */ void m2530lambda$setupWmComponent$0$comandroidsystemuiSystemUIFactory(WMComponent.Builder builder, HandlerThread handlerThread) {
+        builder.setShellMainThread(handlerThread);
+        this.mWMComponent = builder.build();
+    }
+
+    /* access modifiers changed from: protected */
+    public GlobalRootComponent buildGlobalRootComponent(Context context) {
+        return DaggerGlobalRootComponent.builder().context(context).build();
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean shouldInitializeComponents() {
+        return this.mInitializeComponents;
     }
 
     public GlobalRootComponent getRootComponent() {
         return this.mRootComponent;
     }
 
+    public WMComponent getWMComponent() {
+        return this.mWMComponent;
+    }
+
     public SysUIComponent getSysUIComponent() {
         return this.mSysUIComponent;
     }
 
-    public String[] getSystemUIServiceComponents(Resources resources) {
-        return resources.getStringArray(R$array.config_systemUIServiceComponents);
+    public Map<Class<?>, Provider<CoreStartable>> getStartableComponents() {
+        return this.mSysUIComponent.getStartables();
     }
 
-    public String[] getSystemUIServiceComponentsPerUser(Resources resources) {
-        return resources.getStringArray(R$array.config_systemUIServiceComponentsPerUser);
+    public String getVendorComponent(Resources resources) {
+        return resources.getString(C1893R.string.config_systemUIVendorServiceComponent);
+    }
+
+    public Map<Class<?>, Provider<CoreStartable>> getStartableComponentsPerUser() {
+        return this.mSysUIComponent.getPerUserStartables();
     }
 
     public ScreenshotNotificationSmartActionsProvider createScreenshotNotificationSmartActionsProvider(Context context, Executor executor, Handler handler) {

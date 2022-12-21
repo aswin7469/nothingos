@@ -3,32 +3,35 @@ package androidx.leanback.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-/* loaded from: classes.dex */
+
 class GuidedActionItemContainer extends NonOverlappingLinearLayoutWithForeground {
     private boolean mFocusOutAllowed;
 
     public GuidedActionItemContainer(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    public GuidedActionItemContainer(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public GuidedActionItemContainer(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
     }
 
-    public GuidedActionItemContainer(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public GuidedActionItemContainer(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         this.mFocusOutAllowed = true;
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewParent
-    public View focusSearch(View focused, int direction) {
-        if (this.mFocusOutAllowed || !Util.isDescendant(this, focused)) {
-            return super.focusSearch(focused, direction);
+    public View focusSearch(View view, int i) {
+        if (this.mFocusOutAllowed || !Util.isDescendant(this, view)) {
+            return super.focusSearch(view, i);
         }
-        View focusSearch = super.focusSearch(focused, direction);
-        if (!Util.isDescendant(this, focusSearch)) {
-            return null;
+        View focusSearch = super.focusSearch(view, i);
+        if (Util.isDescendant(this, focusSearch)) {
+            return focusSearch;
         }
-        return focusSearch;
+        return null;
+    }
+
+    public void setFocusOutAllowed(boolean z) {
+        this.mFocusOutAllowed = z;
     }
 }

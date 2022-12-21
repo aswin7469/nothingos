@@ -2,239 +2,231 @@ package androidx.recyclerview.widget;
 
 import androidx.recyclerview.widget.AdapterHelper;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class OpReorderer {
+
+class OpReorderer {
     final Callback mCallback;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface Callback {
-        AdapterHelper.UpdateOp obtainUpdateOp(int cmd, int startPosition, int itemCount, Object payload);
+    interface Callback {
+        AdapterHelper.UpdateOp obtainUpdateOp(int i, int i2, int i3, Object obj);
 
-        void recycleUpdateOp(AdapterHelper.UpdateOp op);
+        void recycleUpdateOp(AdapterHelper.UpdateOp updateOp);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public OpReorderer(Callback callback) {
+    OpReorderer(Callback callback) {
         this.mCallback = callback;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void reorderOps(List<AdapterHelper.UpdateOp> ops) {
+    /* access modifiers changed from: package-private */
+    public void reorderOps(List<AdapterHelper.UpdateOp> list) {
         while (true) {
-            int lastMoveOutOfOrder = getLastMoveOutOfOrder(ops);
+            int lastMoveOutOfOrder = getLastMoveOutOfOrder(list);
             if (lastMoveOutOfOrder != -1) {
-                swapMoveOp(ops, lastMoveOutOfOrder, lastMoveOutOfOrder + 1);
+                swapMoveOp(list, lastMoveOutOfOrder, lastMoveOutOfOrder + 1);
             } else {
                 return;
             }
         }
     }
 
-    private void swapMoveOp(List<AdapterHelper.UpdateOp> list, int badMove, int next) {
-        AdapterHelper.UpdateOp updateOp = list.get(badMove);
-        AdapterHelper.UpdateOp updateOp2 = list.get(next);
-        int i = updateOp2.cmd;
-        if (i == 1) {
-            swapMoveAdd(list, badMove, updateOp, next, updateOp2);
-        } else if (i == 2) {
-            swapMoveRemove(list, badMove, updateOp, next, updateOp2);
-        } else if (i != 4) {
-        } else {
-            swapMoveUpdate(list, badMove, updateOp, next, updateOp2);
+    private void swapMoveOp(List<AdapterHelper.UpdateOp> list, int i, int i2) {
+        AdapterHelper.UpdateOp updateOp = list.get(i);
+        AdapterHelper.UpdateOp updateOp2 = list.get(i2);
+        int i3 = updateOp2.cmd;
+        if (i3 == 1) {
+            swapMoveAdd(list, i, updateOp, i2, updateOp2);
+        } else if (i3 == 2) {
+            swapMoveRemove(list, i, updateOp, i2, updateOp2);
+        } else if (i3 == 4) {
+            swapMoveUpdate(list, i, updateOp, i2, updateOp2);
         }
     }
 
-    void swapMoveRemove(List<AdapterHelper.UpdateOp> list, int movePos, AdapterHelper.UpdateOp moveOp, int removePos, AdapterHelper.UpdateOp removeOp) {
+    /* access modifiers changed from: package-private */
+    public void swapMoveRemove(List<AdapterHelper.UpdateOp> list, int i, AdapterHelper.UpdateOp updateOp, int i2, AdapterHelper.UpdateOp updateOp2) {
         boolean z;
-        int i = moveOp.positionStart;
-        int i2 = moveOp.itemCount;
         boolean z2 = false;
-        if (i < i2) {
-            if (removeOp.positionStart == i && removeOp.itemCount == i2 - i) {
+        if (updateOp.positionStart < updateOp.itemCount) {
+            if (updateOp2.positionStart == updateOp.positionStart && updateOp2.itemCount == updateOp.itemCount - updateOp.positionStart) {
                 z = false;
                 z2 = true;
             } else {
                 z = false;
             }
-        } else if (removeOp.positionStart == i2 + 1 && removeOp.itemCount == i - i2) {
+        } else if (updateOp2.positionStart == updateOp.itemCount + 1 && updateOp2.itemCount == updateOp.positionStart - updateOp.itemCount) {
             z = true;
             z2 = true;
         } else {
             z = true;
         }
-        int i3 = removeOp.positionStart;
-        if (i2 < i3) {
-            removeOp.positionStart = i3 - 1;
-        } else {
-            int i4 = removeOp.itemCount;
-            if (i2 < i3 + i4) {
-                removeOp.itemCount = i4 - 1;
-                moveOp.cmd = 2;
-                moveOp.itemCount = 1;
-                if (removeOp.itemCount != 0) {
-                    return;
-                }
-                list.remove(removePos);
-                this.mCallback.recycleUpdateOp(removeOp);
+        if (updateOp.itemCount < updateOp2.positionStart) {
+            updateOp2.positionStart--;
+        } else if (updateOp.itemCount < updateOp2.positionStart + updateOp2.itemCount) {
+            updateOp2.itemCount--;
+            updateOp.cmd = 2;
+            updateOp.itemCount = 1;
+            if (updateOp2.itemCount == 0) {
+                list.remove(i2);
+                this.mCallback.recycleUpdateOp(updateOp2);
                 return;
             }
+            return;
         }
-        int i5 = moveOp.positionStart;
-        int i6 = removeOp.positionStart;
-        AdapterHelper.UpdateOp updateOp = null;
-        if (i5 <= i6) {
-            removeOp.positionStart = i6 + 1;
-        } else {
-            int i7 = removeOp.itemCount;
-            if (i5 < i6 + i7) {
-                updateOp = this.mCallback.obtainUpdateOp(2, i5 + 1, (i6 + i7) - i5, null);
-                removeOp.itemCount = moveOp.positionStart - removeOp.positionStart;
-            }
+        AdapterHelper.UpdateOp updateOp3 = null;
+        if (updateOp.positionStart <= updateOp2.positionStart) {
+            updateOp2.positionStart++;
+        } else if (updateOp.positionStart < updateOp2.positionStart + updateOp2.itemCount) {
+            updateOp3 = this.mCallback.obtainUpdateOp(2, updateOp.positionStart + 1, (updateOp2.positionStart + updateOp2.itemCount) - updateOp.positionStart, (Object) null);
+            updateOp2.itemCount = updateOp.positionStart - updateOp2.positionStart;
         }
         if (z2) {
-            list.set(movePos, removeOp);
-            list.remove(removePos);
-            this.mCallback.recycleUpdateOp(moveOp);
+            list.set(i, updateOp2);
+            list.remove(i2);
+            this.mCallback.recycleUpdateOp(updateOp);
             return;
         }
         if (z) {
-            if (updateOp != null) {
-                int i8 = moveOp.positionStart;
-                if (i8 > updateOp.positionStart) {
-                    moveOp.positionStart = i8 - updateOp.itemCount;
+            if (updateOp3 != null) {
+                if (updateOp.positionStart > updateOp3.positionStart) {
+                    updateOp.positionStart -= updateOp3.itemCount;
                 }
-                int i9 = moveOp.itemCount;
-                if (i9 > updateOp.positionStart) {
-                    moveOp.itemCount = i9 - updateOp.itemCount;
+                if (updateOp.itemCount > updateOp3.positionStart) {
+                    updateOp.itemCount -= updateOp3.itemCount;
                 }
             }
-            int i10 = moveOp.positionStart;
-            if (i10 > removeOp.positionStart) {
-                moveOp.positionStart = i10 - removeOp.itemCount;
+            if (updateOp.positionStart > updateOp2.positionStart) {
+                updateOp.positionStart -= updateOp2.itemCount;
             }
-            int i11 = moveOp.itemCount;
-            if (i11 > removeOp.positionStart) {
-                moveOp.itemCount = i11 - removeOp.itemCount;
+            if (updateOp.itemCount > updateOp2.positionStart) {
+                updateOp.itemCount -= updateOp2.itemCount;
             }
         } else {
-            if (updateOp != null) {
-                int i12 = moveOp.positionStart;
-                if (i12 >= updateOp.positionStart) {
-                    moveOp.positionStart = i12 - updateOp.itemCount;
+            if (updateOp3 != null) {
+                if (updateOp.positionStart >= updateOp3.positionStart) {
+                    updateOp.positionStart -= updateOp3.itemCount;
                 }
-                int i13 = moveOp.itemCount;
-                if (i13 >= updateOp.positionStart) {
-                    moveOp.itemCount = i13 - updateOp.itemCount;
+                if (updateOp.itemCount >= updateOp3.positionStart) {
+                    updateOp.itemCount -= updateOp3.itemCount;
                 }
             }
-            int i14 = moveOp.positionStart;
-            if (i14 >= removeOp.positionStart) {
-                moveOp.positionStart = i14 - removeOp.itemCount;
+            if (updateOp.positionStart >= updateOp2.positionStart) {
+                updateOp.positionStart -= updateOp2.itemCount;
             }
-            int i15 = moveOp.itemCount;
-            if (i15 >= removeOp.positionStart) {
-                moveOp.itemCount = i15 - removeOp.itemCount;
+            if (updateOp.itemCount >= updateOp2.positionStart) {
+                updateOp.itemCount -= updateOp2.itemCount;
             }
         }
-        list.set(movePos, removeOp);
-        if (moveOp.positionStart != moveOp.itemCount) {
-            list.set(removePos, moveOp);
+        list.set(i, updateOp2);
+        if (updateOp.positionStart != updateOp.itemCount) {
+            list.set(i2, updateOp);
         } else {
-            list.remove(removePos);
+            list.remove(i2);
         }
-        if (updateOp == null) {
-            return;
+        if (updateOp3 != null) {
+            list.add(i, updateOp3);
         }
-        list.add(movePos, updateOp);
     }
 
-    private void swapMoveAdd(List<AdapterHelper.UpdateOp> list, int move, AdapterHelper.UpdateOp moveOp, int add, AdapterHelper.UpdateOp addOp) {
-        int i = moveOp.itemCount;
-        int i2 = addOp.positionStart;
-        int i3 = i < i2 ? -1 : 0;
-        int i4 = moveOp.positionStart;
-        if (i4 < i2) {
+    private void swapMoveAdd(List<AdapterHelper.UpdateOp> list, int i, AdapterHelper.UpdateOp updateOp, int i2, AdapterHelper.UpdateOp updateOp2) {
+        int i3 = updateOp.itemCount < updateOp2.positionStart ? -1 : 0;
+        if (updateOp.positionStart < updateOp2.positionStart) {
             i3++;
         }
-        if (i2 <= i4) {
-            moveOp.positionStart = i4 + addOp.itemCount;
+        if (updateOp2.positionStart <= updateOp.positionStart) {
+            updateOp.positionStart += updateOp2.itemCount;
         }
-        int i5 = addOp.positionStart;
-        if (i5 <= i) {
-            moveOp.itemCount = i + addOp.itemCount;
+        if (updateOp2.positionStart <= updateOp.itemCount) {
+            updateOp.itemCount += updateOp2.itemCount;
         }
-        addOp.positionStart = i5 + i3;
-        list.set(move, addOp);
-        list.set(add, moveOp);
+        updateOp2.positionStart += i3;
+        list.set(i, updateOp2);
+        list.set(i2, updateOp);
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:10:0x0048  */
-    /* JADX WARN: Removed duplicated region for block: B:12:0x0056  */
-    /* JADX WARN: Removed duplicated region for block: B:14:0x005b  */
-    /* JADX WARN: Removed duplicated region for block: B:17:? A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x004c  */
-    /* JADX WARN: Removed duplicated region for block: B:19:0x002b  */
-    /* JADX WARN: Removed duplicated region for block: B:7:0x0027  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    void swapMoveUpdate(List<AdapterHelper.UpdateOp> list, int move, AdapterHelper.UpdateOp moveOp, int update, AdapterHelper.UpdateOp updateOp) {
-        AdapterHelper.UpdateOp obtainUpdateOp;
-        int i;
-        int i2;
-        int i3 = moveOp.itemCount;
-        int i4 = updateOp.positionStart;
-        AdapterHelper.UpdateOp updateOp2 = null;
-        if (i3 < i4) {
-            updateOp.positionStart = i4 - 1;
-        } else {
-            int i5 = updateOp.itemCount;
-            if (i3 < i4 + i5) {
-                updateOp.itemCount = i5 - 1;
-                obtainUpdateOp = this.mCallback.obtainUpdateOp(4, moveOp.positionStart, 1, updateOp.payload);
-                i = moveOp.positionStart;
-                i2 = updateOp.positionStart;
-                if (i > i2) {
-                    updateOp.positionStart = i2 + 1;
-                } else {
-                    int i6 = updateOp.itemCount;
-                    if (i < i2 + i6) {
-                        int i7 = (i2 + i6) - i;
-                        updateOp2 = this.mCallback.obtainUpdateOp(4, i + 1, i7, updateOp.payload);
-                        updateOp.itemCount -= i7;
-                    }
-                }
-                list.set(update, moveOp);
-                if (updateOp.itemCount <= 0) {
-                    list.set(move, updateOp);
-                } else {
-                    list.remove(move);
-                    this.mCallback.recycleUpdateOp(updateOp);
-                }
-                if (obtainUpdateOp != null) {
-                    list.add(move, obtainUpdateOp);
-                }
-                if (updateOp2 != null) {
-                    return;
-                }
-                list.add(move, updateOp2);
-                return;
-            }
-        }
-        obtainUpdateOp = null;
-        i = moveOp.positionStart;
-        i2 = updateOp.positionStart;
-        if (i > i2) {
-        }
-        list.set(update, moveOp);
-        if (updateOp.itemCount <= 0) {
-        }
-        if (obtainUpdateOp != null) {
-        }
-        if (updateOp2 != null) {
-        }
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Removed duplicated region for block: B:10:0x0035  */
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x005d  */
+    /* JADX WARNING: Removed duplicated region for block: B:16:0x0061  */
+    /* JADX WARNING: Removed duplicated region for block: B:18:0x006b  */
+    /* JADX WARNING: Removed duplicated region for block: B:20:0x0070  */
+    /* JADX WARNING: Removed duplicated region for block: B:22:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:9:0x002f  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void swapMoveUpdate(java.util.List<androidx.recyclerview.widget.AdapterHelper.UpdateOp> r8, int r9, androidx.recyclerview.widget.AdapterHelper.UpdateOp r10, int r11, androidx.recyclerview.widget.AdapterHelper.UpdateOp r12) {
+        /*
+            r7 = this;
+            int r0 = r10.itemCount
+            int r1 = r12.positionStart
+            r2 = 4
+            r3 = 1
+            r4 = 0
+            if (r0 >= r1) goto L_0x000f
+            int r0 = r12.positionStart
+            int r0 = r0 - r3
+            r12.positionStart = r0
+            goto L_0x0028
+        L_0x000f:
+            int r0 = r10.itemCount
+            int r1 = r12.positionStart
+            int r5 = r12.itemCount
+            int r1 = r1 + r5
+            if (r0 >= r1) goto L_0x0028
+            int r0 = r12.itemCount
+            int r0 = r0 - r3
+            r12.itemCount = r0
+            androidx.recyclerview.widget.OpReorderer$Callback r0 = r7.mCallback
+            int r1 = r10.positionStart
+            java.lang.Object r5 = r12.payload
+            androidx.recyclerview.widget.AdapterHelper$UpdateOp r0 = r0.obtainUpdateOp(r2, r1, r3, r5)
+            goto L_0x0029
+        L_0x0028:
+            r0 = r4
+        L_0x0029:
+            int r1 = r10.positionStart
+            int r5 = r12.positionStart
+            if (r1 > r5) goto L_0x0035
+            int r1 = r12.positionStart
+            int r1 = r1 + r3
+            r12.positionStart = r1
+            goto L_0x0056
+        L_0x0035:
+            int r1 = r10.positionStart
+            int r5 = r12.positionStart
+            int r6 = r12.itemCount
+            int r5 = r5 + r6
+            if (r1 >= r5) goto L_0x0056
+            int r1 = r12.positionStart
+            int r4 = r12.itemCount
+            int r1 = r1 + r4
+            int r4 = r10.positionStart
+            int r1 = r1 - r4
+            androidx.recyclerview.widget.OpReorderer$Callback r4 = r7.mCallback
+            int r5 = r10.positionStart
+            int r5 = r5 + r3
+            java.lang.Object r3 = r12.payload
+            androidx.recyclerview.widget.AdapterHelper$UpdateOp r4 = r4.obtainUpdateOp(r2, r5, r1, r3)
+            int r2 = r12.itemCount
+            int r2 = r2 - r1
+            r12.itemCount = r2
+        L_0x0056:
+            r8.set(r11, r10)
+            int r10 = r12.itemCount
+            if (r10 <= 0) goto L_0x0061
+            r8.set(r9, r12)
+            goto L_0x0069
+        L_0x0061:
+            r8.remove((int) r9)
+            androidx.recyclerview.widget.OpReorderer$Callback r7 = r7.mCallback
+            r7.recycleUpdateOp(r12)
+        L_0x0069:
+            if (r0 == 0) goto L_0x006e
+            r8.add(r9, r0)
+        L_0x006e:
+            if (r4 == 0) goto L_0x0073
+            r8.add(r9, r4)
+        L_0x0073:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.recyclerview.widget.OpReorderer.swapMoveUpdate(java.util.List, int, androidx.recyclerview.widget.AdapterHelper$UpdateOp, int, androidx.recyclerview.widget.AdapterHelper$UpdateOp):void");
     }
 
     private int getLastMoveOutOfOrder(List<AdapterHelper.UpdateOp> list) {

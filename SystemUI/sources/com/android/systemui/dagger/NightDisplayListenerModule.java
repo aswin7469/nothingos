@@ -3,19 +3,25 @@ package com.android.systemui.dagger;
 import android.content.Context;
 import android.hardware.display.NightDisplayListener;
 import android.os.Handler;
-/* loaded from: classes.dex */
+import com.android.systemui.dagger.qualifiers.Background;
+import dagger.Module;
+import dagger.Provides;
+import javax.inject.Inject;
+
+@Module
 public class NightDisplayListenerModule {
-    public NightDisplayListener provideNightDisplayListener(Context context, Handler handler) {
+    @Provides
+    public NightDisplayListener provideNightDisplayListener(Context context, @Background Handler handler) {
         return new NightDisplayListener(context, handler);
     }
 
-    /* loaded from: classes.dex */
     public static class Builder {
         private final Handler mBgHandler;
         private final Context mContext;
         private int mUserId = 0;
 
-        public Builder(Context context, Handler handler) {
+        @Inject
+        public Builder(Context context, @Background Handler handler) {
             this.mContext = context;
             this.mBgHandler = handler;
         }

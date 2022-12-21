@@ -3,10 +3,10 @@ package com.android.systemui.statusbar.policy;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +16,10 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.ActivityIntentHelper;
 import com.android.systemui.statusbar.phone.KeyguardPreviewContainer;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 public class PreviewInflater {
+    private static final String META_DATA_KEYGUARD_LAYOUT = "com.android.keyguard.layout";
+    private static final String TAG = "PreviewInflater";
     private final ActivityIntentHelper mActivityIntentHelper;
     private Context mContext;
     private LockPatternUtils mLockPatternUtils;
@@ -41,7 +43,7 @@ public class PreviewInflater {
         if (widgetInfo == null || (inflateWidgetView = inflateWidgetView(widgetInfo)) == null) {
             return null;
         }
-        KeyguardPreviewContainer keyguardPreviewContainer = new KeyguardPreviewContainer(this.mContext, null);
+        KeyguardPreviewContainer keyguardPreviewContainer = new KeyguardPreviewContainer(this.mContext, (AttributeSet) null);
         keyguardPreviewContainer.addView(inflateWidgetView);
         return keyguardPreviewContainer;
     }
@@ -51,7 +53,7 @@ public class PreviewInflater {
             Context createPackageContext = this.mContext.createPackageContext(widgetInfo.contextPackage, 4);
             return ((LayoutInflater) createPackageContext.getSystemService("layout_inflater")).cloneInContext(createPackageContext).inflate(widgetInfo.layoutId, (ViewGroup) null, false);
         } catch (PackageManager.NameNotFoundException | RuntimeException e) {
-            Log.w("PreviewInflater", "Error creating widget view", e);
+            Log.w(TAG, "Error creating widget view", e);
             return null;
         }
     }
@@ -60,14 +62,14 @@ public class PreviewInflater {
         try {
             return getWidgetInfoFromMetaData(componentName.getPackageName(), this.mContext.getPackageManager().getServiceInfo(componentName, 128).metaData);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.w("PreviewInflater", "Failed to load preview; " + componentName.flattenToShortString() + " not found", e);
+            Log.w(TAG, "Failed to load preview; " + componentName.flattenToShortString() + " not found", e);
             return null;
         }
     }
 
     private WidgetInfo getWidgetInfoFromMetaData(String str, Bundle bundle) {
         int i;
-        if (bundle == null || (i = bundle.getInt("com.android.keyguard.layout")) == 0) {
+        if (bundle == null || (i = bundle.getInt(META_DATA_KEYGUARD_LAYOUT)) == 0) {
             return null;
         }
         WidgetInfo widgetInfo = new WidgetInfo();
@@ -77,22 +79,19 @@ public class PreviewInflater {
     }
 
     private WidgetInfo getWidgetInfo(Intent intent) {
-        ActivityInfo activityInfo;
         PackageManager packageManager = this.mContext.getPackageManager();
-        List<ResolveInfo> queryIntentActivitiesAsUser = packageManager.queryIntentActivitiesAsUser(intent, 851968, KeyguardUpdateMonitor.getCurrentUser());
+        List queryIntentActivitiesAsUser = packageManager.queryIntentActivitiesAsUser(intent, 851968, KeyguardUpdateMonitor.getCurrentUser());
         if (queryIntentActivitiesAsUser.size() == 0) {
             return null;
         }
         ResolveInfo resolveActivityAsUser = packageManager.resolveActivityAsUser(intent, 852096, KeyguardUpdateMonitor.getCurrentUser());
-        if (!this.mActivityIntentHelper.wouldLaunchResolverActivity(resolveActivityAsUser, queryIntentActivitiesAsUser) && resolveActivityAsUser != null && (activityInfo = resolveActivityAsUser.activityInfo) != null) {
-            return getWidgetInfoFromMetaData(activityInfo.packageName, activityInfo.metaData);
+        if (this.mActivityIntentHelper.wouldLaunchResolverActivity(resolveActivityAsUser, (List<ResolveInfo>) queryIntentActivitiesAsUser) || resolveActivityAsUser == null || resolveActivityAsUser.activityInfo == null) {
+            return null;
         }
-        return null;
+        return getWidgetInfoFromMetaData(resolveActivityAsUser.activityInfo.packageName, resolveActivityAsUser.activityInfo.metaData);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class WidgetInfo {
+    private static class WidgetInfo {
         String contextPackage;
         int layoutId;
 

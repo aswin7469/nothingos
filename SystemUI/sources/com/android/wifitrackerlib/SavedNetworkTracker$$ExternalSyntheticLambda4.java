@@ -1,17 +1,11 @@
 package com.android.wifitrackerlib;
 
-import android.net.wifi.ScanResult;
-import com.android.wifitrackerlib.StandardWifiEntry;
+import android.net.wifi.hotspot2.PasspointConfiguration;
 import java.util.function.Function;
-/* loaded from: classes2.dex */
+
+/* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class SavedNetworkTracker$$ExternalSyntheticLambda4 implements Function {
-    public static final /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda4 INSTANCE = new SavedNetworkTracker$$ExternalSyntheticLambda4();
-
-    private /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda4() {
-    }
-
-    @Override // java.util.function.Function
     public final Object apply(Object obj) {
-        return new StandardWifiEntry.ScanResultKey((ScanResult) obj);
+        return PasspointWifiEntry.uniqueIdToPasspointWifiEntryKey(((PasspointConfiguration) obj).getUniqueId());
     }
 }

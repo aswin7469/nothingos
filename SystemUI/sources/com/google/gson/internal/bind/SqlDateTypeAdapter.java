@@ -8,15 +8,14 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
+import java.p026io.IOException;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-/* loaded from: classes2.dex */
+
 public final class SqlDateTypeAdapter extends TypeAdapter<Date> {
-    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.SqlDateTypeAdapter.1
-        @Override // com.google.gson.TypeAdapterFactory
+    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
             if (typeToken.getRawType() == Date.class) {
                 return new SqlDateTypeAdapter();
@@ -26,9 +25,7 @@ public final class SqlDateTypeAdapter extends TypeAdapter<Date> {
     };
     private final DateFormat format = new SimpleDateFormat("MMM d, yyyy");
 
-    @Override // com.google.gson.TypeAdapter
-    /* renamed from: read  reason: collision with other method in class */
-    public synchronized Date mo1911read(JsonReader jsonReader) throws IOException {
+    public synchronized Date read(JsonReader jsonReader) throws IOException {
         if (jsonReader.peek() == JsonToken.NULL) {
             jsonReader.nextNull();
             return null;
@@ -36,12 +33,11 @@ public final class SqlDateTypeAdapter extends TypeAdapter<Date> {
         try {
             return new Date(this.format.parse(jsonReader.nextString()).getTime());
         } catch (ParseException e) {
-            throw new JsonSyntaxException(e);
+            throw new JsonSyntaxException((Throwable) e);
         }
     }
 
-    @Override // com.google.gson.TypeAdapter
     public synchronized void write(JsonWriter jsonWriter, Date date) throws IOException {
-        jsonWriter.value(date == null ? null : this.format.format((java.util.Date) date));
+        jsonWriter.value(date == null ? null : this.format.format(date));
     }
 }

@@ -2,56 +2,87 @@ package androidx.leanback.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import androidx.leanback.R$id;
-import androidx.leanback.R$layout;
-/* loaded from: classes.dex */
+import androidx.leanback.C0742R;
+
 final class RowContainerView extends LinearLayout {
     private Drawable mForeground;
     private boolean mForegroundBoundsChanged;
     private ViewGroup mHeaderDock;
 
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
     }
 
-    public RowContainerView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public RowContainerView(Context context) {
+        this(context, (AttributeSet) null, 0);
     }
 
-    public RowContainerView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public RowContainerView(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
+    }
+
+    public RowContainerView(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         this.mForegroundBoundsChanged = true;
         setOrientation(1);
-        LayoutInflater.from(context).inflate(R$layout.lb_row_container, this);
-        this.mHeaderDock = (ViewGroup) findViewById(R$id.lb_row_container_header_dock);
+        LayoutInflater.from(context).inflate(C0742R.layout.lb_row_container, this);
+        this.mHeaderDock = (ViewGroup) findViewById(C0742R.C0745id.lb_row_container_header_dock);
         setLayoutParams(new LinearLayout.LayoutParams(-2, -2));
     }
 
-    @Override // android.view.View
-    public void setForeground(Drawable d) {
-        this.mForeground = d;
-        setWillNotDraw(d == null);
+    public void addHeaderView(View view) {
+        if (this.mHeaderDock.indexOfChild(view) < 0) {
+            this.mHeaderDock.addView(view, 0);
+        }
+    }
+
+    public void removeHeaderView(View view) {
+        if (this.mHeaderDock.indexOfChild(view) >= 0) {
+            this.mHeaderDock.removeView(view);
+        }
+    }
+
+    public void addRowView(View view) {
+        addView(view);
+    }
+
+    public void showHeader(boolean z) {
+        this.mHeaderDock.setVisibility(z ? 0 : 8);
+    }
+
+    public void setForeground(Drawable drawable) {
+        this.mForeground = drawable;
+        setWillNotDraw(drawable == null);
         invalidate();
     }
 
-    @Override // android.view.View
+    public void setForegroundColor(int i) {
+        Drawable drawable = this.mForeground;
+        if (drawable instanceof ColorDrawable) {
+            ((ColorDrawable) drawable.mutate()).setColor(i);
+            invalidate();
+            return;
+        }
+        setForeground(new ColorDrawable(i));
+    }
+
     public Drawable getForeground() {
         return this.mForeground;
     }
 
-    @Override // android.view.View
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
+    /* access modifiers changed from: protected */
+    public void onSizeChanged(int i, int i2, int i3, int i4) {
+        super.onSizeChanged(i, i2, i3, i4);
         this.mForegroundBoundsChanged = true;
     }
 
-    @Override // android.view.View
     public void draw(Canvas canvas) {
         super.draw(canvas);
         Drawable drawable = this.mForeground;

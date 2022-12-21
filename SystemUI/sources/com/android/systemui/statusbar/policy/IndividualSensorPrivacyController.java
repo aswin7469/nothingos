@@ -1,8 +1,7 @@
 package com.android.systemui.statusbar.policy;
-/* loaded from: classes2.dex */
+
 public interface IndividualSensorPrivacyController extends CallbackController<Callback> {
 
-    /* loaded from: classes2.dex */
     public interface Callback {
         void onSensorBlockedChanged(int i, boolean z);
     }
@@ -10,6 +9,10 @@ public interface IndividualSensorPrivacyController extends CallbackController<Ca
     void init();
 
     boolean isSensorBlocked(int i);
+
+    boolean isSensorBlockedByHardwareToggle(int i);
+
+    boolean requiresAuthentication();
 
     void setSensorBlocked(int i, int i2, boolean z);
 

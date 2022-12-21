@@ -5,23 +5,23 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-/* loaded from: classes.dex */
+
 public class BrowseRowsFrameLayout extends FrameLayout {
     public BrowseRowsFrameLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    public BrowseRowsFrameLayout(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public BrowseRowsFrameLayout(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
     }
 
-    public BrowseRowsFrameLayout(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public BrowseRowsFrameLayout(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
     }
 
-    @Override // android.view.ViewGroup
-    protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
-        ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) child.getLayoutParams();
-        child.measure(FrameLayout.getChildMeasureSpec(parentWidthMeasureSpec, getPaddingLeft() + getPaddingRight() + widthUsed, marginLayoutParams.width), FrameLayout.getChildMeasureSpec(parentHeightMeasureSpec, getPaddingTop() + getPaddingBottom() + heightUsed, marginLayoutParams.height));
+    /* access modifiers changed from: protected */
+    public void measureChildWithMargins(View view, int i, int i2, int i3, int i4) {
+        ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        view.measure(getChildMeasureSpec(i, getPaddingLeft() + getPaddingRight() + i2, marginLayoutParams.width), getChildMeasureSpec(i3, getPaddingTop() + getPaddingBottom() + i4, marginLayoutParams.height));
     }
 }

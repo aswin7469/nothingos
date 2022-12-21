@@ -2,7 +2,7 @@ package com.android.systemui.dump;
 
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class SystemUIAuxiliaryDumpService_Factory implements Factory<SystemUIAuxiliaryDumpService> {
     private final Provider<DumpHandler> dumpHandlerProvider;
 
@@ -10,10 +10,8 @@ public final class SystemUIAuxiliaryDumpService_Factory implements Factory<Syste
         this.dumpHandlerProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SystemUIAuxiliaryDumpService mo1933get() {
-        return newInstance(this.dumpHandlerProvider.mo1933get());
+    public SystemUIAuxiliaryDumpService get() {
+        return newInstance(this.dumpHandlerProvider.get());
     }
 
     public static SystemUIAuxiliaryDumpService_Factory create(Provider<DumpHandler> provider) {

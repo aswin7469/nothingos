@@ -1,57 +1,38 @@
 package com.android.systemui.broadcast;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.util.Log;
-import com.android.systemui.broadcast.logging.BroadcastDispatcherLogger;
+import kotlin.Metadata;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
-import org.jetbrains.annotations.NotNull;
-/* JADX INFO: Access modifiers changed from: package-private */
+
+@Metadata(mo64986d1 = {"\u0000\f\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u0001*\u00020\u0002H\n¢\u0006\u0002\b\u0003"}, mo64987d2 = {"<anonymous>", "", "Landroid/content/BroadcastReceiver;", "invoke"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: UserBroadcastDispatcher.kt */
-/* loaded from: classes.dex */
-public final class UserBroadcastDispatcher$createActionReceiver$2 extends Lambda implements Function1<BroadcastReceiver, Unit> {
+final class UserBroadcastDispatcher$createActionReceiver$2 extends Lambda implements Function1<BroadcastReceiver, Unit> {
     final /* synthetic */ String $action;
     final /* synthetic */ UserBroadcastDispatcher this$0;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public UserBroadcastDispatcher$createActionReceiver$2(UserBroadcastDispatcher userBroadcastDispatcher, String str) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    UserBroadcastDispatcher$createActionReceiver$2(UserBroadcastDispatcher userBroadcastDispatcher, String str) {
         super(1);
         this.this$0 = userBroadcastDispatcher;
         this.$action = str;
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    /* renamed from: invoke */
-    public /* bridge */ /* synthetic */ Unit mo1949invoke(BroadcastReceiver broadcastReceiver) {
-        invoke2(broadcastReceiver);
+    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
+        invoke((BroadcastReceiver) obj);
         return Unit.INSTANCE;
     }
 
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final void invoke2(@NotNull BroadcastReceiver $receiver) {
-        int i;
-        Context context;
-        BroadcastDispatcherLogger broadcastDispatcherLogger;
-        int i2;
-        Intrinsics.checkNotNullParameter($receiver, "$this$$receiver");
+    public final void invoke(BroadcastReceiver broadcastReceiver) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, "$this$$receiver");
         try {
-            context = this.this$0.context;
-            context.unregisterReceiver($receiver);
-            broadcastDispatcherLogger = this.this$0.logger;
-            i2 = this.this$0.userId;
-            broadcastDispatcherLogger.logContextReceiverUnregistered(i2, this.$action);
+            this.this$0.context.unregisterReceiver(broadcastReceiver);
+            this.this$0.logger.logContextReceiverUnregistered(this.this$0.userId, this.$action);
         } catch (IllegalArgumentException e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Trying to unregister unregistered receiver for user ");
-            i = this.this$0.userId;
-            sb.append(i);
-            sb.append(", action ");
-            sb.append(this.$action);
-            Log.e("UserBroadcastDispatcher", sb.toString(), new IllegalStateException(e));
+            Log.e("UserBroadcastDispatcher", "Trying to unregister unregistered receiver for user " + this.this$0.userId + ", action " + this.$action, new IllegalStateException((Throwable) e));
         }
     }
 }

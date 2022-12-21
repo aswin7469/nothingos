@@ -2,7 +2,7 @@ package com.android.keyguard.clock;
 
 import android.graphics.Bitmap;
 import java.util.function.Supplier;
-/* loaded from: classes.dex */
+
 final class ClockInfo {
     private final String mId;
     private final String mName;
@@ -18,37 +18,35 @@ final class ClockInfo {
         this.mPreview = supplier3;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getName() {
         return this.mName;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getTitle() {
         return this.mTitle.get();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getId() {
         return this.mId;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Bitmap getThumbnail() {
         return this.mThumbnail.get();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Bitmap getPreview() {
         return this.mPreview.get();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Builder builder() {
+    static Builder builder() {
         return new Builder();
     }
 
-    /* loaded from: classes.dex */
     static class Builder {
         private String mId;
         private String mName;

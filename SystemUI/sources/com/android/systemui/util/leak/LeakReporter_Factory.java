@@ -3,7 +3,7 @@ package com.android.systemui.util.leak;
 import android.content.Context;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class LeakReporter_Factory implements Factory<LeakReporter> {
     private final Provider<Context> contextProvider;
     private final Provider<LeakDetector> leakDetectorProvider;
@@ -15,10 +15,8 @@ public final class LeakReporter_Factory implements Factory<LeakReporter> {
         this.leakReportEmailProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LeakReporter mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.leakDetectorProvider.mo1933get(), this.leakReportEmailProvider.mo1933get());
+    public LeakReporter get() {
+        return newInstance(this.contextProvider.get(), this.leakDetectorProvider.get(), this.leakReportEmailProvider.get());
     }
 
     public static LeakReporter_Factory create(Provider<Context> provider, Provider<LeakDetector> provider2, Provider<String> provider3) {

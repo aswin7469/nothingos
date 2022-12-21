@@ -1,33 +1,32 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.res.Configuration;
-/* loaded from: classes2.dex */
+
 public interface ConfigurationController extends CallbackController<ConfigurationListener> {
 
-    /* loaded from: classes2.dex */
     public interface ConfigurationListener {
-        default void onConfigChanged(Configuration configuration) {
+        void onConfigChanged(Configuration configuration) {
         }
 
-        default void onDensityOrFontScaleChanged() {
+        void onDensityOrFontScaleChanged() {
         }
 
-        default void onLayoutDirectionChanged(boolean z) {
+        void onLayoutDirectionChanged(boolean z) {
         }
 
-        default void onLocaleListChanged() {
+        void onLocaleListChanged() {
         }
 
-        default void onOverlayChanged() {
+        void onMaxBoundsChanged() {
         }
 
-        default void onSmallestScreenWidthChanged() {
+        void onSmallestScreenWidthChanged() {
         }
 
-        default void onThemeChanged() {
+        void onThemeChanged() {
         }
 
-        default void onUiModeChanged() {
+        void onUiModeChanged() {
         }
     }
 

@@ -5,7 +5,7 @@ import com.airbnb.lottie.animation.content.Content;
 import com.airbnb.lottie.animation.content.ShapeContent;
 import com.airbnb.lottie.model.animatable.AnimatableShapeValue;
 import com.airbnb.lottie.model.layer.BaseLayer;
-/* loaded from: classes.dex */
+
 public class ShapePath implements ContentModel {
     private final boolean hidden;
     private final int index;
@@ -27,7 +27,6 @@ public class ShapePath implements ContentModel {
         return this.shapePath;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new ShapeContent(lottieDrawable, baseLayer, this);
     }

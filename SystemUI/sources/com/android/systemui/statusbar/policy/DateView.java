@@ -8,76 +8,59 @@ import android.content.res.TypedArray;
 import android.icu.text.DateFormat;
 import android.icu.text.DisplayContext;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$string;
-import com.android.systemui.R$styleable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
-import com.android.systemui.statusbar.policy.DateView;
 import java.util.Date;
 import java.util.Locale;
-/* loaded from: classes2.dex */
+
 public class DateView extends TextView {
+    private static final String TAG = "DateView";
     private final BroadcastDispatcher mBroadcastDispatcher;
-    private DateFormat mDateFormat;
-    private String mDatePattern;
-    private String mLastText;
     private final Date mCurrentTime = new Date();
-    private BroadcastReceiver mIntentReceiver = new AnonymousClass1();
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.statusbar.policy.DateView$1  reason: invalid class name */
-    /* loaded from: classes2.dex */
-    public class AnonymousClass1 extends BroadcastReceiver {
-        AnonymousClass1() {
-        }
-
-        @Override // android.content.BroadcastReceiver
+    /* access modifiers changed from: private */
+    public DateFormat mDateFormat;
+    private String mDatePattern;
+    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             Handler handler = DateView.this.getHandler();
-            if (handler == null) {
-                return;
-            }
-            String action = intent.getAction();
-            if (!"android.intent.action.TIME_TICK".equals(action) && !"android.intent.action.TIME_SET".equals(action) && !"android.intent.action.TIMEZONE_CHANGED".equals(action) && !"android.intent.action.LOCALE_CHANGED".equals(action)) {
-                return;
-            }
-            if ("android.intent.action.LOCALE_CHANGED".equals(action) || "android.intent.action.TIMEZONE_CHANGED".equals(action)) {
-                handler.post(new Runnable() { // from class: com.android.systemui.statusbar.policy.DateView$1$$ExternalSyntheticLambda0
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        DateView.AnonymousClass1.this.lambda$onReceive$0();
+            if (handler != null) {
+                String action = intent.getAction();
+                if ("android.intent.action.TIME_TICK".equals(action) || "android.intent.action.TIME_SET".equals(action) || "android.intent.action.TIMEZONE_CHANGED".equals(action) || "android.intent.action.LOCALE_CHANGED".equals(action)) {
+                    if ("android.intent.action.LOCALE_CHANGED".equals(action) || "android.intent.action.TIMEZONE_CHANGED".equals(action)) {
+                        handler.post(new DateView$1$$ExternalSyntheticLambda0(this));
                     }
-                });
-            }
-            handler.post(new Runnable() { // from class: com.android.systemui.statusbar.policy.DateView$1$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DateView.AnonymousClass1.this.lambda$onReceive$1();
+                    handler.post(new DateView$1$$ExternalSyntheticLambda1(this));
                 }
-            });
+            }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onReceive$0() {
-            DateView.this.mDateFormat = null;
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onReceive$0$com-android-systemui-statusbar-policy-DateView$1 */
+        public /* synthetic */ void mo45676xe21620e0() {
+            DateFormat unused = DateView.this.mDateFormat = null;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onReceive$1() {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onReceive$1$com-android-systemui-statusbar-policy-DateView$1 */
+        public /* synthetic */ void mo45677xd3bfc6ff() {
             DateView.this.updateClock();
         }
-    }
+    };
+    private String mLastText;
 
+    /* JADX INFO: finally extract failed */
     public DateView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, R$styleable.DateView, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.DateView, 0, 0);
         try {
-            this.mDatePattern = obtainStyledAttributes.getString(R$styleable.DateView_datePattern);
+            this.mDatePattern = obtainStyledAttributes.getString(0);
             obtainStyledAttributes.recycle();
             if (this.mDatePattern == null) {
-                this.mDatePattern = getContext().getString(R$string.system_ui_date_pattern);
+                this.mDatePattern = getContext().getString(C1893R.string.system_ui_date_pattern);
             }
             this.mBroadcastDispatcher = (BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class);
         } catch (Throwable th) {
@@ -86,8 +69,8 @@ public class DateView extends TextView {
         }
     }
 
-    @Override // android.widget.TextView, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.TIME_TICK");
@@ -98,14 +81,15 @@ public class DateView extends TextView {
         updateClock();
     }
 
-    @Override // android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mDateFormat = null;
         this.mBroadcastDispatcher.unregisterReceiver(this.mIntentReceiver);
     }
 
-    protected void updateClock() {
+    /* access modifiers changed from: protected */
+    public void updateClock() {
         if (this.mDateFormat == null) {
             DateFormat instanceForSkeleton = DateFormat.getInstanceForSkeleton(this.mDatePattern, Locale.getDefault());
             instanceForSkeleton.setContext(DisplayContext.CAPITALIZATION_FOR_STANDALONE);
@@ -116,6 +100,16 @@ public class DateView extends TextView {
         if (!format.equals(this.mLastText)) {
             setText(format);
             this.mLastText = format;
+        }
+    }
+
+    public void setDatePattern(String str) {
+        if (!TextUtils.equals(str, this.mDatePattern)) {
+            this.mDatePattern = str;
+            this.mDateFormat = null;
+            if (isAttachedToWindow()) {
+                updateClock();
+            }
         }
     }
 }

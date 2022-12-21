@@ -2,18 +2,15 @@ package com.airbnb.lottie.parser;
 
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import com.airbnb.lottie.value.ScaleXY;
-import java.io.IOException;
-/* loaded from: classes.dex */
+import java.p026io.IOException;
+
 public class ScaleXYParser implements ValueParser<ScaleXY> {
     public static final ScaleXYParser INSTANCE = new ScaleXYParser();
 
     private ScaleXYParser() {
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.airbnb.lottie.parser.ValueParser
-    /* renamed from: parse */
-    public ScaleXY mo201parse(JsonReader jsonReader, float f) throws IOException {
+    public ScaleXY parse(JsonReader jsonReader, float f) throws IOException {
         boolean z = jsonReader.peek() == JsonReader.Token.BEGIN_ARRAY;
         if (z) {
             jsonReader.beginArray();

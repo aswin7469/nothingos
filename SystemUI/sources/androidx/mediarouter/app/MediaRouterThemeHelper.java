@@ -10,59 +10,56 @@ import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.ProgressBar;
-import androidx.appcompat.content.res.AppCompatResources;
+import androidx.appcompat.C0329R;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.graphics.drawable.DrawableCompat;
-import androidx.mediarouter.R$attr;
-import androidx.mediarouter.R$color;
-import androidx.mediarouter.R$drawable;
-import androidx.mediarouter.R$style;
-/* loaded from: classes.dex */
+import androidx.mediarouter.C1159R;
+
 final class MediaRouterThemeHelper {
-    private static final int COLOR_DARK_ON_LIGHT_BACKGROUND_RES_ID = R$color.mr_dynamic_dialog_icon_light;
+    static final int COLOR_DARK_ON_LIGHT_BACKGROUND = -570425344;
+    private static final int COLOR_DARK_ON_LIGHT_BACKGROUND_RES_ID = C1159R.C1160color.mr_dynamic_dialog_icon_light;
+    static final int COLOR_WHITE_ON_DARK_BACKGROUND = -1;
+    private static final float MIN_CONTRAST = 3.0f;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Drawable getMuteButtonDrawableIcon(Context context) {
-        return getIconByDrawableId(context, R$drawable.mr_cast_mute_button);
+    private MediaRouterThemeHelper() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Drawable getCheckBoxDrawableIcon(Context context) {
-        return getIconByDrawableId(context, R$drawable.mr_cast_checkbox);
+    static Drawable getMuteButtonDrawableIcon(Context context) {
+        return getIconByDrawableId(context, C1159R.C1161drawable.mr_cast_mute_button);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Drawable getDefaultDrawableIcon(Context context) {
-        return getIconByAttrId(context, R$attr.mediaRouteDefaultIconDrawable);
+    static Drawable getCheckBoxDrawableIcon(Context context) {
+        return getIconByDrawableId(context, C1159R.C1161drawable.mr_cast_checkbox);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Drawable getTvDrawableIcon(Context context) {
-        return getIconByAttrId(context, R$attr.mediaRouteTvIconDrawable);
+    static Drawable getDefaultDrawableIcon(Context context) {
+        return getIconByAttrId(context, C1159R.attr.mediaRouteDefaultIconDrawable);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Drawable getSpeakerDrawableIcon(Context context) {
-        return getIconByAttrId(context, R$attr.mediaRouteSpeakerIconDrawable);
+    static Drawable getTvDrawableIcon(Context context) {
+        return getIconByAttrId(context, C1159R.attr.mediaRouteTvIconDrawable);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Drawable getSpeakerGroupDrawableIcon(Context context) {
-        return getIconByAttrId(context, R$attr.mediaRouteSpeakerGroupIconDrawable);
+    static Drawable getSpeakerDrawableIcon(Context context) {
+        return getIconByAttrId(context, C1159R.attr.mediaRouteSpeakerIconDrawable);
     }
 
-    private static Drawable getIconByDrawableId(Context context, int drawableId) {
-        Drawable wrap = DrawableCompat.wrap(AppCompatResources.getDrawable(context, drawableId));
+    static Drawable getSpeakerGroupDrawableIcon(Context context) {
+        return getIconByAttrId(context, C1159R.attr.mediaRouteSpeakerGroupIconDrawable);
+    }
+
+    private static Drawable getIconByDrawableId(Context context, int i) {
+        Drawable wrap = DrawableCompat.wrap(ContextCompat.getDrawable(context, i));
         if (isLightTheme(context)) {
             DrawableCompat.setTint(wrap, ContextCompat.getColor(context, COLOR_DARK_ON_LIGHT_BACKGROUND_RES_ID));
         }
         return wrap;
     }
 
-    private static Drawable getIconByAttrId(Context context, int attrId) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{attrId});
-        Drawable wrap = DrawableCompat.wrap(AppCompatResources.getDrawable(context, obtainStyledAttributes.getResourceId(0, 0)));
+    private static Drawable getIconByAttrId(Context context, int i) {
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{i});
+        Drawable wrap = DrawableCompat.wrap(obtainStyledAttributes.getDrawable(0));
         if (isLightTheme(context)) {
             DrawableCompat.setTint(wrap, ContextCompat.getColor(context, COLOR_DARK_ON_LIGHT_BACKGROUND_RES_ID));
         }
@@ -70,45 +67,40 @@ final class MediaRouterThemeHelper {
         return wrap;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Context createThemedButtonContext(Context context) {
+    static Context createThemedButtonContext(Context context) {
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, getRouterThemeId(context));
-        int themeResource = getThemeResource(contextThemeWrapper, R$attr.mediaRouteTheme);
+        int themeResource = getThemeResource(contextThemeWrapper, C1159R.attr.mediaRouteTheme);
         return themeResource != 0 ? new ContextThemeWrapper(contextThemeWrapper, themeResource) : contextThemeWrapper;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Context createThemedDialogContext(Context context, int theme, boolean alertDialog) {
-        int i;
-        if (theme == 0) {
-            if (!alertDialog) {
-                i = androidx.appcompat.R$attr.dialogTheme;
+    static Context createThemedDialogContext(Context context, int i, boolean z) {
+        int i2;
+        if (i == 0) {
+            if (!z) {
+                i2 = C0329R.attr.dialogTheme;
             } else {
-                i = androidx.appcompat.R$attr.alertDialogTheme;
+                i2 = C0329R.attr.alertDialogTheme;
             }
-            theme = getThemeResource(context, i);
+            i = getThemeResource(context, i2);
         }
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, theme);
-        return getThemeResource(contextThemeWrapper, R$attr.mediaRouteTheme) != 0 ? new ContextThemeWrapper(contextThemeWrapper, getRouterThemeId(contextThemeWrapper)) : contextThemeWrapper;
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, i);
+        return getThemeResource(contextThemeWrapper, C1159R.attr.mediaRouteTheme) != 0 ? new ContextThemeWrapper(contextThemeWrapper, getRouterThemeId(contextThemeWrapper)) : contextThemeWrapper;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int createThemedDialogStyle(Context context) {
-        int themeResource = getThemeResource(context, R$attr.mediaRouteTheme);
+    static int createThemedDialogStyle(Context context) {
+        int themeResource = getThemeResource(context, C1159R.attr.mediaRouteTheme);
         return themeResource == 0 ? getRouterThemeId(context) : themeResource;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getThemeResource(Context context, int attr) {
+    static int getThemeResource(Context context, int i) {
         TypedValue typedValue = new TypedValue();
-        if (context.getTheme().resolveAttribute(attr, typedValue, true)) {
+        if (context.getTheme().resolveAttribute(i, typedValue, true)) {
             return typedValue.resourceId;
         }
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static float getDisabledAlpha(Context context) {
+    static float getDisabledAlpha(Context context) {
         TypedValue typedValue = new TypedValue();
         if (context.getTheme().resolveAttribute(16842803, typedValue, true)) {
             return typedValue.getFloat();
@@ -116,88 +108,87 @@ final class MediaRouterThemeHelper {
         return 0.5f;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getControllerColor(Context context, int style) {
-        return ColorUtils.calculateContrast(-1, getThemeColor(context, style, androidx.appcompat.R$attr.colorPrimary)) >= 3.0d ? -1 : -570425344;
+    static int getControllerColor(Context context, int i) {
+        if (ColorUtils.calculateContrast(-1, getThemeColor(context, i, C0329R.attr.colorPrimary)) >= 3.0d) {
+            return -1;
+        }
+        return COLOR_DARK_ON_LIGHT_BACKGROUND;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getButtonTextColor(Context context) {
-        int themeColor = getThemeColor(context, 0, androidx.appcompat.R$attr.colorPrimary);
-        return ColorUtils.calculateContrast(themeColor, getThemeColor(context, 0, 16842801)) < 3.0d ? getThemeColor(context, 0, androidx.appcompat.R$attr.colorAccent) : themeColor;
+    static int getButtonTextColor(Context context) {
+        int themeColor = getThemeColor(context, 0, C0329R.attr.colorPrimary);
+        return ColorUtils.calculateContrast(themeColor, getThemeColor(context, 0, 16842801)) < 3.0d ? getThemeColor(context, 0, C0329R.attr.colorAccent) : themeColor;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void setDialogBackgroundColor(Context context, Dialog dialog) {
+    static TypedArray getStyledAttributes(Context context) {
+        return context.obtainStyledAttributes(new int[]{C1159R.attr.mediaRouteDefaultIconDrawable, C1159R.attr.mediaRouteTvIconDrawable, C1159R.attr.mediaRouteSpeakerIconDrawable, C1159R.attr.mediaRouteSpeakerGroupIconDrawable});
+    }
+
+    static void setDialogBackgroundColor(Context context, Dialog dialog) {
         int i;
         View decorView = dialog.getWindow().getDecorView();
         if (isLightTheme(context)) {
-            i = R$color.mr_dynamic_dialog_background_light;
+            i = C1159R.C1160color.mr_dynamic_dialog_background_light;
         } else {
-            i = R$color.mr_dynamic_dialog_background_dark;
+            i = C1159R.C1160color.mr_dynamic_dialog_background_dark;
         }
         decorView.setBackgroundColor(ContextCompat.getColor(context, i));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void setMediaControlsBackgroundColor(Context context, View mainControls, View groupControls, boolean hasGroup) {
-        int themeColor = getThemeColor(context, 0, androidx.appcompat.R$attr.colorPrimary);
-        int themeColor2 = getThemeColor(context, 0, androidx.appcompat.R$attr.colorPrimaryDark);
-        if (hasGroup && getControllerColor(context, 0) == -570425344) {
+    static void setMediaControlsBackgroundColor(Context context, View view, View view2, boolean z) {
+        int themeColor = getThemeColor(context, 0, C0329R.attr.colorPrimary);
+        int themeColor2 = getThemeColor(context, 0, C0329R.attr.colorPrimaryDark);
+        if (z && getControllerColor(context, 0) == COLOR_DARK_ON_LIGHT_BACKGROUND) {
             themeColor2 = themeColor;
             themeColor = -1;
         }
-        mainControls.setBackgroundColor(themeColor);
-        groupControls.setBackgroundColor(themeColor2);
-        mainControls.setTag(Integer.valueOf(themeColor));
-        groupControls.setTag(Integer.valueOf(themeColor2));
+        view.setBackgroundColor(themeColor);
+        view2.setBackgroundColor(themeColor2);
+        view.setTag(Integer.valueOf(themeColor));
+        view2.setTag(Integer.valueOf(themeColor2));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void setVolumeSliderColor(Context context, MediaRouteVolumeSlider volumeSlider, View backgroundView) {
+    static void setVolumeSliderColor(Context context, MediaRouteVolumeSlider mediaRouteVolumeSlider, View view) {
         int controllerColor = getControllerColor(context, 0);
         if (Color.alpha(controllerColor) != 255) {
-            controllerColor = ColorUtils.compositeColors(controllerColor, ((Integer) backgroundView.getTag()).intValue());
+            controllerColor = ColorUtils.compositeColors(controllerColor, ((Integer) view.getTag()).intValue());
         }
-        volumeSlider.setColor(controllerColor);
+        mediaRouteVolumeSlider.setColor(controllerColor);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void setVolumeSliderColor(Context context, MediaRouteVolumeSlider volumeSlider) {
-        int color;
-        int color2;
-        if (isLightTheme(context)) {
-            color = ContextCompat.getColor(context, R$color.mr_cast_progressbar_progress_and_thumb_light);
-            color2 = ContextCompat.getColor(context, R$color.mr_cast_progressbar_background_light);
-        } else {
-            color = ContextCompat.getColor(context, R$color.mr_cast_progressbar_progress_and_thumb_dark);
-            color2 = ContextCompat.getColor(context, R$color.mr_cast_progressbar_background_dark);
-        }
-        volumeSlider.setColor(color, color2);
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void setIndeterminateProgressBarColor(Context context, ProgressBar progressBar) {
+    static void setVolumeSliderColor(Context context, MediaRouteVolumeSlider mediaRouteVolumeSlider) {
         int i;
-        if (!progressBar.isIndeterminate()) {
-            return;
-        }
+        int i2;
         if (isLightTheme(context)) {
-            i = R$color.mr_cast_progressbar_progress_and_thumb_light;
+            i2 = ContextCompat.getColor(context, C1159R.C1160color.mr_cast_progressbar_progress_and_thumb_light);
+            i = ContextCompat.getColor(context, C1159R.C1160color.mr_cast_progressbar_background_light);
         } else {
-            i = R$color.mr_cast_progressbar_progress_and_thumb_dark;
+            i2 = ContextCompat.getColor(context, C1159R.C1160color.mr_cast_progressbar_progress_and_thumb_dark);
+            i = ContextCompat.getColor(context, C1159R.C1160color.mr_cast_progressbar_background_dark);
         }
-        progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(context, i), PorterDuff.Mode.SRC_IN);
+        mediaRouteVolumeSlider.setColor(i2, i);
+    }
+
+    static void setIndeterminateProgressBarColor(Context context, ProgressBar progressBar) {
+        int i;
+        if (progressBar.isIndeterminate()) {
+            if (isLightTheme(context)) {
+                i = C1159R.C1160color.mr_cast_progressbar_progress_and_thumb_light;
+            } else {
+                i = C1159R.C1160color.mr_cast_progressbar_progress_and_thumb_dark;
+            }
+            progressBar.getIndeterminateDrawable().setColorFilter(ContextCompat.getColor(context, i), PorterDuff.Mode.SRC_IN);
+        }
     }
 
     private static boolean isLightTheme(Context context) {
         TypedValue typedValue = new TypedValue();
-        return context.getTheme().resolveAttribute(androidx.appcompat.R$attr.isLightTheme, typedValue, true) && typedValue.data != 0;
+        return context.getTheme().resolveAttribute(C0329R.attr.isLightTheme, typedValue, true) && typedValue.data != 0;
     }
 
-    private static int getThemeColor(Context context, int style, int attr) {
-        if (style != 0) {
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(style, new int[]{attr});
+    private static int getThemeColor(Context context, int i, int i2) {
+        if (i != 0) {
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(i, new int[]{i2});
             int color = obtainStyledAttributes.getColor(0, 0);
             obtainStyledAttributes.recycle();
             if (color != 0) {
@@ -205,7 +196,7 @@ final class MediaRouterThemeHelper {
             }
         }
         TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(attr, typedValue, true);
+        context.getTheme().resolveAttribute(i2, typedValue, true);
         if (typedValue.resourceId != 0) {
             return context.getResources().getColor(typedValue.resourceId);
         }
@@ -214,14 +205,14 @@ final class MediaRouterThemeHelper {
 
     private static int getRouterThemeId(Context context) {
         if (isLightTheme(context)) {
-            if (getControllerColor(context, 0) == -570425344) {
-                return R$style.Theme_MediaRouter_Light;
+            if (getControllerColor(context, 0) == COLOR_DARK_ON_LIGHT_BACKGROUND) {
+                return C1159R.style.Theme_MediaRouter_Light;
             }
-            return R$style.Theme_MediaRouter_Light_DarkControlPanel;
-        } else if (getControllerColor(context, 0) == -570425344) {
-            return R$style.Theme_MediaRouter_LightControlPanel;
+            return C1159R.style.Theme_MediaRouter_Light_DarkControlPanel;
+        } else if (getControllerColor(context, 0) == COLOR_DARK_ON_LIGHT_BACKGROUND) {
+            return C1159R.style.Theme_MediaRouter_LightControlPanel;
         } else {
-            return R$style.Theme_MediaRouter;
+            return C1159R.style.Theme_MediaRouter;
         }
     }
 }

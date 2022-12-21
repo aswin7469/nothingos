@@ -1,10 +1,11 @@
 package kotlin.sequences;
 
+import kotlin.Metadata;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u0000\u0010\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0000\n\u0002\b\u0003\u0010\u0000\u001a\u00020\u0001\"\b\b\u0000\u0010\u0002*\u00020\u00032\b\u0010\u0004\u001a\u0004\u0018\u0001H\u0002H\n¢\u0006\u0004\b\u0005\u0010\u0006"}, mo64987d2 = {"<anonymous>", "", "T", "", "it", "invoke", "(Ljava/lang/Object;)Ljava/lang/Boolean;"}, mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
 /* compiled from: _Sequences.kt */
-/* loaded from: classes2.dex */
 final class SequencesKt___SequencesKt$filterNotNull$1 extends Lambda implements Function1<T, Boolean> {
     public static final SequencesKt___SequencesKt$filterNotNull$1 INSTANCE = new SequencesKt___SequencesKt$filterNotNull$1();
 
@@ -12,15 +13,7 @@ final class SequencesKt___SequencesKt$filterNotNull$1 extends Lambda implements 
         super(1);
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    /* renamed from: invoke */
-    public /* bridge */ /* synthetic */ Boolean mo1949invoke(Object obj) {
-        return Boolean.valueOf(mo1949invoke((SequencesKt___SequencesKt$filterNotNull$1) obj));
-    }
-
-    @Override // kotlin.jvm.functions.Function1
-    /* renamed from: invoke  reason: collision with other method in class */
-    public final Boolean mo1949invoke(@Nullable T t) {
-        return t == 0 ? 1 : null;
+    public final Boolean invoke(T t) {
+        return Boolean.valueOf(t == null);
     }
 }

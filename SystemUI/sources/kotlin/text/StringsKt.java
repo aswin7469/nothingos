@@ -1,15 +1,9 @@
 package kotlin.text;
-/* loaded from: classes2.dex */
+
+import kotlin.Metadata;
+
+@Metadata(mo64986d1 = {"kotlin/text/StringsKt__AppendableKt", "kotlin/text/StringsKt__IndentKt", "kotlin/text/StringsKt__RegexExtensionsJVMKt", "kotlin/text/StringsKt__RegexExtensionsKt", "kotlin/text/StringsKt__StringBuilderJVMKt", "kotlin/text/StringsKt__StringBuilderKt", "kotlin/text/StringsKt__StringNumberConversionsJVMKt", "kotlin/text/StringsKt__StringNumberConversionsKt", "kotlin/text/StringsKt__StringsJVMKt", "kotlin/text/StringsKt__StringsKt", "kotlin/text/StringsKt___StringsJvmKt", "kotlin/text/StringsKt___StringsKt"}, mo64988k = 4, mo64989mv = {1, 7, 1}, mo64991xi = 49)
 public final class StringsKt extends StringsKt___StringsKt {
-    public static /* bridge */ /* synthetic */ int indexOf$default(CharSequence charSequence, char c, int i, boolean z, int i2, Object obj) {
-        return StringsKt__StringsKt.indexOf$default(charSequence, c, i, z, i2, obj);
-    }
-
-    public static /* bridge */ /* synthetic */ int lastIndexOf$default(CharSequence charSequence, String str, int i, boolean z, int i2, Object obj) {
-        return StringsKt__StringsKt.lastIndexOf$default(charSequence, str, i, z, i2, obj);
-    }
-
-    public static /* bridge */ /* synthetic */ boolean startsWith$default(String str, String str2, boolean z, int i, Object obj) {
-        return StringsKt__StringsJVMKt.startsWith$default(str, str2, z, i, obj);
+    private StringsKt() {
     }
 }

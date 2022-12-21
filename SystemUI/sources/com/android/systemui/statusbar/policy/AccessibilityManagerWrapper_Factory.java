@@ -1,27 +1,25 @@
 package com.android.systemui.statusbar.policy;
 
-import android.content.Context;
+import android.view.accessibility.AccessibilityManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class AccessibilityManagerWrapper_Factory implements Factory<AccessibilityManagerWrapper> {
-    private final Provider<Context> contextProvider;
+    private final Provider<AccessibilityManager> accessibilityManagerProvider;
 
-    public AccessibilityManagerWrapper_Factory(Provider<Context> provider) {
-        this.contextProvider = provider;
+    public AccessibilityManagerWrapper_Factory(Provider<AccessibilityManager> provider) {
+        this.accessibilityManagerProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AccessibilityManagerWrapper mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public AccessibilityManagerWrapper get() {
+        return newInstance(this.accessibilityManagerProvider.get());
     }
 
-    public static AccessibilityManagerWrapper_Factory create(Provider<Context> provider) {
+    public static AccessibilityManagerWrapper_Factory create(Provider<AccessibilityManager> provider) {
         return new AccessibilityManagerWrapper_Factory(provider);
     }
 
-    public static AccessibilityManagerWrapper newInstance(Context context) {
-        return new AccessibilityManagerWrapper(context);
+    public static AccessibilityManagerWrapper newInstance(AccessibilityManager accessibilityManager) {
+        return new AccessibilityManagerWrapper(accessibilityManager);
     }
 }

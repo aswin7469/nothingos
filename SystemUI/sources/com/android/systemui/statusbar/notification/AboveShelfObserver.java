@@ -2,15 +2,13 @@ package com.android.systemui.statusbar.notification;
 
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
-/* loaded from: classes.dex */
+
 public class AboveShelfObserver implements AboveShelfChangedListener {
     private boolean mHasViewsAboveShelf = false;
     private final ViewGroup mHostLayout;
     private HasViewAboveShelfChangedListener mListener;
 
-    /* loaded from: classes.dex */
     public interface HasViewAboveShelfChangedListener {
         void onHasViewsAboveShelfChanged(boolean z);
     }
@@ -23,7 +21,6 @@ public class AboveShelfObserver implements AboveShelfChangedListener {
         this.mListener = hasViewAboveShelfChangedListener;
     }
 
-    @Override // com.android.systemui.statusbar.notification.AboveShelfChangedListener
     public void onAboveShelfStateChanged(boolean z) {
         ViewGroup viewGroup;
         if (!z && (viewGroup = this.mHostLayout) != null) {
@@ -44,15 +41,14 @@ public class AboveShelfObserver implements AboveShelfChangedListener {
         if (this.mHasViewsAboveShelf != z) {
             this.mHasViewsAboveShelf = z;
             HasViewAboveShelfChangedListener hasViewAboveShelfChangedListener = this.mListener;
-            if (hasViewAboveShelfChangedListener == null) {
-                return;
+            if (hasViewAboveShelfChangedListener != null) {
+                hasViewAboveShelfChangedListener.onHasViewsAboveShelfChanged(z);
             }
-            hasViewAboveShelfChangedListener.onHasViewsAboveShelfChanged(z);
         }
     }
 
-    @VisibleForTesting
-    boolean hasViewsAboveShelf() {
+    /* access modifiers changed from: package-private */
+    public boolean hasViewsAboveShelf() {
         return this.mHasViewsAboveShelf;
     }
 }

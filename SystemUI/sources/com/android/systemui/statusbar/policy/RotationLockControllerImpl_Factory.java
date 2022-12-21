@@ -1,30 +1,29 @@
 package com.android.systemui.statusbar.policy;
 
-import android.content.Context;
-import com.android.systemui.util.settings.SecureSettings;
+import com.android.systemui.util.wrapper.RotationPolicyWrapper;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class RotationLockControllerImpl_Factory implements Factory<RotationLockControllerImpl> {
-    private final Provider<Context> contextProvider;
-    private final Provider<SecureSettings> secureSettingsProvider;
+    private final Provider<String[]> deviceStateRotationLockDefaultsProvider;
+    private final Provider<DeviceStateRotationLockSettingController> deviceStateRotationLockSettingControllerProvider;
+    private final Provider<RotationPolicyWrapper> rotationPolicyWrapperProvider;
 
-    public RotationLockControllerImpl_Factory(Provider<Context> provider, Provider<SecureSettings> provider2) {
-        this.contextProvider = provider;
-        this.secureSettingsProvider = provider2;
+    public RotationLockControllerImpl_Factory(Provider<RotationPolicyWrapper> provider, Provider<DeviceStateRotationLockSettingController> provider2, Provider<String[]> provider3) {
+        this.rotationPolicyWrapperProvider = provider;
+        this.deviceStateRotationLockSettingControllerProvider = provider2;
+        this.deviceStateRotationLockDefaultsProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public RotationLockControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.secureSettingsProvider.mo1933get());
+    public RotationLockControllerImpl get() {
+        return newInstance(this.rotationPolicyWrapperProvider.get(), this.deviceStateRotationLockSettingControllerProvider.get(), this.deviceStateRotationLockDefaultsProvider.get());
     }
 
-    public static RotationLockControllerImpl_Factory create(Provider<Context> provider, Provider<SecureSettings> provider2) {
-        return new RotationLockControllerImpl_Factory(provider, provider2);
+    public static RotationLockControllerImpl_Factory create(Provider<RotationPolicyWrapper> provider, Provider<DeviceStateRotationLockSettingController> provider2, Provider<String[]> provider3) {
+        return new RotationLockControllerImpl_Factory(provider, provider2, provider3);
     }
 
-    public static RotationLockControllerImpl newInstance(Context context, SecureSettings secureSettings) {
-        return new RotationLockControllerImpl(context, secureSettings);
+    public static RotationLockControllerImpl newInstance(RotationPolicyWrapper rotationPolicyWrapper, DeviceStateRotationLockSettingController deviceStateRotationLockSettingController, String[] strArr) {
+        return new RotationLockControllerImpl(rotationPolicyWrapper, deviceStateRotationLockSettingController, strArr);
     }
 }

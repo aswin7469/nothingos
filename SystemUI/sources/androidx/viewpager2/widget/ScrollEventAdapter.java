@@ -6,9 +6,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 import java.util.Locale;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
+
+final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
+    private static final int NO_POSITION = -1;
+    private static final int STATE_IDLE = 0;
+    private static final int STATE_IN_PROGRESS_FAKE_DRAG = 4;
+    private static final int STATE_IN_PROGRESS_IMMEDIATE_SCROLL = 3;
+    private static final int STATE_IN_PROGRESS_MANUAL_DRAG = 1;
+    private static final int STATE_IN_PROGRESS_SMOOTH_SCROLL = 2;
     private int mAdapterState;
     private ViewPager2.OnPageChangeCallback mCallback;
     private boolean mDataSetChangeHappened;
@@ -23,8 +28,7 @@ public final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
     private int mTarget;
     private final ViewPager2 mViewPager;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ScrollEventAdapter(ViewPager2 viewPager2) {
+    ScrollEventAdapter(ViewPager2 viewPager2) {
         this.mViewPager = viewPager2;
         RecyclerView recyclerView = viewPager2.mRecyclerView;
         this.mRecyclerView = recyclerView;
@@ -44,137 +48,149 @@ public final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
         this.mDataSetChangeHappened = false;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.OnScrollListener
     public void onScrollStateChanged(RecyclerView recyclerView, int i) {
         boolean z = true;
-        if ((this.mAdapterState != 1 || this.mScrollState != 1) && i == 1) {
+        if (!(this.mAdapterState == 1 && this.mScrollState == 1) && i == 1) {
             startDrag(false);
-        } else if (isInAnyDraggingState() && i == 2) {
-            if (!this.mScrollHappened) {
-                return;
-            }
-            dispatchStateChanged(2);
-            this.mDispatchSelected = true;
-        } else {
+        } else if (!isInAnyDraggingState() || i != 2) {
             if (isInAnyDraggingState() && i == 0) {
                 updateScrollEventValues();
                 if (!this.mScrollHappened) {
-                    int i2 = this.mScrollValues.mPosition;
-                    if (i2 != -1) {
-                        dispatchScrolled(i2, 0.0f, 0);
+                    if (this.mScrollValues.mPosition != -1) {
+                        dispatchScrolled(this.mScrollValues.mPosition, 0.0f, 0);
                     }
-                } else {
-                    ScrollEventValues scrollEventValues = this.mScrollValues;
-                    if (scrollEventValues.mOffsetPx == 0) {
-                        int i3 = this.mDragStartPosition;
-                        int i4 = scrollEventValues.mPosition;
-                        if (i3 != i4) {
-                            dispatchSelected(i4);
-                        }
-                    } else {
-                        z = false;
-                    }
+                } else if (this.mScrollValues.mOffsetPx != 0) {
+                    z = false;
+                } else if (this.mDragStartPosition != this.mScrollValues.mPosition) {
+                    dispatchSelected(this.mScrollValues.mPosition);
                 }
                 if (z) {
                     dispatchStateChanged(0);
                     resetState();
                 }
             }
-            if (this.mAdapterState != 2 || i != 0 || !this.mDataSetChangeHappened) {
-                return;
-            }
-            updateScrollEventValues();
-            ScrollEventValues scrollEventValues2 = this.mScrollValues;
-            if (scrollEventValues2.mOffsetPx != 0) {
-                return;
-            }
-            int i5 = this.mTarget;
-            int i6 = scrollEventValues2.mPosition;
-            if (i5 != i6) {
-                if (i6 == -1) {
-                    i6 = 0;
+            if (this.mAdapterState == 2 && i == 0 && this.mDataSetChangeHappened) {
+                updateScrollEventValues();
+                if (this.mScrollValues.mOffsetPx == 0) {
+                    if (this.mTarget != this.mScrollValues.mPosition) {
+                        dispatchSelected(this.mScrollValues.mPosition == -1 ? 0 : this.mScrollValues.mPosition);
+                    }
+                    dispatchStateChanged(0);
+                    resetState();
                 }
-                dispatchSelected(i6);
             }
-            dispatchStateChanged(0);
-            resetState();
+        } else if (this.mScrollHappened) {
+            dispatchStateChanged(2);
+            this.mDispatchSelected = true;
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x001d, code lost:
-        if ((r5 < 0) == r3.mViewPager.isRtl()) goto L36;
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x001d, code lost:
+        if ((r5 < 0) == r3.mViewPager.isRtl()) goto L_0x0022;
      */
-    /* JADX WARN: Removed duplicated region for block: B:13:0x0025  */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x0039  */
-    @Override // androidx.recyclerview.widget.RecyclerView.OnScrollListener
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void onScrolled(RecyclerView recyclerView, int i, int i2) {
-        boolean z;
-        int i3;
-        this.mScrollHappened = true;
-        updateScrollEventValues();
-        if (this.mDispatchSelected) {
-            this.mDispatchSelected = false;
-            if (i2 <= 0) {
-                if (i2 == 0) {
-                }
-                z = false;
-                if (z) {
-                    ScrollEventValues scrollEventValues = this.mScrollValues;
-                    if (scrollEventValues.mOffsetPx != 0) {
-                        i3 = scrollEventValues.mPosition + 1;
-                        this.mTarget = i3;
-                        if (this.mDragStartPosition != i3) {
-                            dispatchSelected(i3);
-                        }
-                    }
-                }
-                i3 = this.mScrollValues.mPosition;
-                this.mTarget = i3;
-                if (this.mDragStartPosition != i3) {
-                }
-            }
-            z = true;
-            if (z) {
-            }
-            i3 = this.mScrollValues.mPosition;
-            this.mTarget = i3;
-            if (this.mDragStartPosition != i3) {
-            }
-        } else if (this.mAdapterState == 0) {
-            int i4 = this.mScrollValues.mPosition;
-            if (i4 == -1) {
-                i4 = 0;
-            }
-            dispatchSelected(i4);
-        }
-        ScrollEventValues scrollEventValues2 = this.mScrollValues;
-        int i5 = scrollEventValues2.mPosition;
-        if (i5 == -1) {
-            i5 = 0;
-        }
-        dispatchScrolled(i5, scrollEventValues2.mOffset, scrollEventValues2.mOffsetPx);
-        ScrollEventValues scrollEventValues3 = this.mScrollValues;
-        int i6 = scrollEventValues3.mPosition;
-        int i7 = this.mTarget;
-        if ((i6 == i7 || i7 == -1) && scrollEventValues3.mOffsetPx == 0 && this.mScrollState != 1) {
-            dispatchStateChanged(0);
-            resetState();
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x002b  */
+    /* JADX WARNING: Removed duplicated region for block: B:16:0x0031  */
+    /* JADX WARNING: Removed duplicated region for block: B:19:0x003b  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onScrolled(androidx.recyclerview.widget.RecyclerView r4, int r5, int r6) {
+        /*
+            r3 = this;
+            r4 = 1
+            r3.mScrollHappened = r4
+            r3.updateScrollEventValues()
+            boolean r0 = r3.mDispatchSelected
+            r1 = -1
+            r2 = 0
+            if (r0 == 0) goto L_0x003f
+            r3.mDispatchSelected = r2
+            if (r6 > 0) goto L_0x0022
+            if (r6 != 0) goto L_0x0020
+            if (r5 >= 0) goto L_0x0016
+            r5 = r4
+            goto L_0x0017
+        L_0x0016:
+            r5 = r2
+        L_0x0017:
+            androidx.viewpager2.widget.ViewPager2 r6 = r3.mViewPager
+            boolean r6 = r6.isRtl()
+            if (r5 != r6) goto L_0x0020
+            goto L_0x0022
+        L_0x0020:
+            r5 = r2
+            goto L_0x0023
+        L_0x0022:
+            r5 = r4
+        L_0x0023:
+            if (r5 == 0) goto L_0x0031
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r5 = r3.mScrollValues
+            int r5 = r5.mOffsetPx
+            if (r5 == 0) goto L_0x0031
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r5 = r3.mScrollValues
+            int r5 = r5.mPosition
+            int r5 = r5 + r4
+            goto L_0x0035
+        L_0x0031:
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r5 = r3.mScrollValues
+            int r5 = r5.mPosition
+        L_0x0035:
+            r3.mTarget = r5
+            int r6 = r3.mDragStartPosition
+            if (r6 == r5) goto L_0x004d
+            r3.dispatchSelected(r5)
+            goto L_0x004d
+        L_0x003f:
+            int r5 = r3.mAdapterState
+            if (r5 != 0) goto L_0x004d
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r5 = r3.mScrollValues
+            int r5 = r5.mPosition
+            if (r5 != r1) goto L_0x004a
+            r5 = r2
+        L_0x004a:
+            r3.dispatchSelected(r5)
+        L_0x004d:
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r5 = r3.mScrollValues
+            int r5 = r5.mPosition
+            if (r5 != r1) goto L_0x0055
+            r5 = r2
+            goto L_0x0059
+        L_0x0055:
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r5 = r3.mScrollValues
+            int r5 = r5.mPosition
+        L_0x0059:
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r6 = r3.mScrollValues
+            float r6 = r6.mOffset
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r0 = r3.mScrollValues
+            int r0 = r0.mOffsetPx
+            r3.dispatchScrolled(r5, r6, r0)
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r5 = r3.mScrollValues
+            int r5 = r5.mPosition
+            int r6 = r3.mTarget
+            if (r5 == r6) goto L_0x006e
+            if (r6 != r1) goto L_0x007e
+        L_0x006e:
+            androidx.viewpager2.widget.ScrollEventAdapter$ScrollEventValues r5 = r3.mScrollValues
+            int r5 = r5.mOffsetPx
+            if (r5 != 0) goto L_0x007e
+            int r5 = r3.mScrollState
+            if (r5 == r4) goto L_0x007e
+            r3.dispatchStateChanged(r2)
+            r3.resetState()
+        L_0x007e:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.viewpager2.widget.ScrollEventAdapter.onScrolled(androidx.recyclerview.widget.RecyclerView, int, int):void");
     }
 
     private void updateScrollEventValues() {
-        int top;
+        int i;
+        float f;
         ScrollEventValues scrollEventValues = this.mScrollValues;
-        int findFirstVisibleItemPosition = this.mLayoutManager.findFirstVisibleItemPosition();
-        scrollEventValues.mPosition = findFirstVisibleItemPosition;
-        if (findFirstVisibleItemPosition == -1) {
+        scrollEventValues.mPosition = this.mLayoutManager.findFirstVisibleItemPosition();
+        if (scrollEventValues.mPosition == -1) {
             scrollEventValues.reset();
             return;
         }
-        View findViewByPosition = this.mLayoutManager.findViewByPosition(findFirstVisibleItemPosition);
+        View findViewByPosition = this.mLayoutManager.findViewByPosition(scrollEventValues.mPosition);
         if (findViewByPosition == null) {
             scrollEventValues.reset();
             return;
@@ -194,23 +210,27 @@ public final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
         int height = findViewByPosition.getHeight() + topDecorationHeight + bottomDecorationHeight;
         int width = findViewByPosition.getWidth() + leftDecorationWidth + rightDecorationWidth;
         if (this.mLayoutManager.getOrientation() == 0) {
-            top = (findViewByPosition.getLeft() - leftDecorationWidth) - this.mRecyclerView.getPaddingLeft();
+            i = (findViewByPosition.getLeft() - leftDecorationWidth) - this.mRecyclerView.getPaddingLeft();
             if (this.mViewPager.isRtl()) {
-                top = -top;
+                i = -i;
             }
             height = width;
         } else {
-            top = (findViewByPosition.getTop() - topDecorationHeight) - this.mRecyclerView.getPaddingTop();
+            i = (findViewByPosition.getTop() - topDecorationHeight) - this.mRecyclerView.getPaddingTop();
         }
-        int i = -top;
-        scrollEventValues.mOffsetPx = i;
-        if (i < 0) {
-            if (new AnimateLayoutChangeDetector(this.mLayoutManager).mayHaveInterferingAnimations()) {
-                throw new IllegalStateException("Page(s) contain a ViewGroup with a LayoutTransition (or animateLayoutChanges=\"true\"), which interferes with the scrolling animation. Make sure to call getLayoutTransition().setAnimateParentHierarchy(false) on all ViewGroups with a LayoutTransition before an animation is started.");
+        scrollEventValues.mOffsetPx = -i;
+        if (scrollEventValues.mOffsetPx >= 0) {
+            if (height == 0) {
+                f = 0.0f;
+            } else {
+                f = ((float) scrollEventValues.mOffsetPx) / ((float) height);
             }
-            throw new IllegalStateException(String.format(Locale.US, "Page can only be offset by a positive amount, not by %d", Integer.valueOf(scrollEventValues.mOffsetPx)));
+            scrollEventValues.mOffset = f;
+        } else if (new AnimateLayoutChangeDetector(this.mLayoutManager).mayHaveInterferingAnimations()) {
+            throw new IllegalStateException("Page(s) contain a ViewGroup with a LayoutTransition (or animateLayoutChanges=\"true\"), which interferes with the scrolling animation. Make sure to call getLayoutTransition().setAnimateParentHierarchy(false) on all ViewGroups with a LayoutTransition before an animation is started.");
+        } else {
+            throw new IllegalStateException(String.format(Locale.f700US, "Page can only be offset by a positive amount, not by %d", Integer.valueOf(scrollEventValues.mOffsetPx)));
         }
-        scrollEventValues.mOffset = height == 0 ? 0.0f : i / height;
     }
 
     private void startDrag(boolean z) {
@@ -226,12 +246,12 @@ public final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
         dispatchStateChanged(1);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void notifyDataSetChangeHappened() {
         this.mDataSetChangeHappened = true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void notifyProgrammaticScroll(int i, boolean z) {
         this.mAdapterState = z ? 2 : 3;
         boolean z2 = false;
@@ -246,22 +266,50 @@ public final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public void notifyBeginFakeDrag() {
+        this.mAdapterState = 4;
+        startDrag(true);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void notifyEndFakeDrag() {
+        if (!isDragging() || this.mFakeDragging) {
+            this.mFakeDragging = false;
+            updateScrollEventValues();
+            if (this.mScrollValues.mOffsetPx == 0) {
+                if (this.mScrollValues.mPosition != this.mDragStartPosition) {
+                    dispatchSelected(this.mScrollValues.mPosition);
+                }
+                dispatchStateChanged(0);
+                resetState();
+                return;
+            }
+            dispatchStateChanged(2);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
     public void setOnPageChangeCallback(ViewPager2.OnPageChangeCallback onPageChangeCallback) {
         this.mCallback = onPageChangeCallback;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getScrollState() {
         return this.mScrollState;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isIdle() {
         return this.mScrollState == 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public boolean isDragging() {
+        return this.mScrollState == 1;
+    }
+
+    /* access modifiers changed from: package-private */
     public boolean isFakeDragging() {
         return this.mFakeDragging;
     }
@@ -271,23 +319,20 @@ public final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
         return i == 1 || i == 4;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public double getRelativeScrollPosition() {
         updateScrollEventValues();
-        ScrollEventValues scrollEventValues = this.mScrollValues;
-        return scrollEventValues.mPosition + scrollEventValues.mOffset;
+        return ((double) this.mScrollValues.mPosition) + ((double) this.mScrollValues.mOffset);
     }
 
     private void dispatchStateChanged(int i) {
-        if ((this.mAdapterState == 3 && this.mScrollState == 0) || this.mScrollState == i) {
-            return;
+        if ((this.mAdapterState != 3 || this.mScrollState != 0) && this.mScrollState != i) {
+            this.mScrollState = i;
+            ViewPager2.OnPageChangeCallback onPageChangeCallback = this.mCallback;
+            if (onPageChangeCallback != null) {
+                onPageChangeCallback.onPageScrollStateChanged(i);
+            }
         }
-        this.mScrollState = i;
-        ViewPager2.OnPageChangeCallback onPageChangeCallback = this.mCallback;
-        if (onPageChangeCallback == null) {
-            return;
-        }
-        onPageChangeCallback.onPageScrollStateChanged(i);
     }
 
     private void dispatchSelected(int i) {
@@ -308,9 +353,7 @@ public final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
         return this.mLayoutManager.findFirstVisibleItemPosition();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class ScrollEventValues {
+    private static final class ScrollEventValues {
         float mOffset;
         int mOffsetPx;
         int mPosition;
@@ -318,7 +361,8 @@ public final class ScrollEventAdapter extends RecyclerView.OnScrollListener {
         ScrollEventValues() {
         }
 
-        void reset() {
+        /* access modifiers changed from: package-private */
+        public void reset() {
             this.mPosition = -1;
             this.mOffset = 0.0f;
             this.mOffsetPx = 0;

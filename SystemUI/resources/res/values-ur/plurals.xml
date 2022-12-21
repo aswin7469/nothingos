@@ -16,6 +16,10 @@
         <item quantity="one">%s کنٹرول شامل کر دیا گیا۔</item>
         <item quantity="other">%s کنٹرولز شامل کر دیے گئے۔</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s ایپ فعال ہے</item>
+        <item quantity="other">%s ایپس فعال ہیں</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">‏SIM کا PIN درج کریں، آپ کے پاس %d کوشش بچی ہے، اس کے بعد آپ کو اپنا آلہ غیر مقفل کرنے کے لیے اپنے کیریئر سے رابطہ کرنا ہوگا۔</item>
         <item quantity="other">‏SIM کا PIN درج کریں، آپ کے پاس %d کوششیں بچی ہیں۔</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">‏غلط SIM PUK کوڈ، آپ کے پاس %d کوشش بچی ہے، اس کے بعد SIM مستقل طور پر ناقابل استعمال ہو جائے گا۔</item>
         <item quantity="other">‏غلط SIM PUK کوڈ، آپ کے پاس %d کوششیں بچی ہیں، اس کے بعد SIM مستقل طور پر ناقابل استعمال ہو جائے گا۔</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">آلہ %d گھنٹہ سے غیر مقفل نہیں کیا گیا۔ پاس ورڈ کی توثیق کریں۔</item>
-        <item quantity="other">آلہ %d گھنٹوں سے غیر مقفل نہیں کیا گيا۔ پاس ورڈ کی توثیق کریں۔</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">آلہ %d گھنٹہ سے غیر مقفل نہیں کیا گیا۔ پیٹرن کی توثیق کریں۔</item>
-        <item quantity="other">آلہ %d گھنٹوں سے غیر مقفل نہیں کیا گیا۔ پیٹرن کی توثیق کریں۔</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">‏آلہ %d گھنٹہ سے غیر مقفل نہیں کیا گیا۔ PIN کی توثیق کریں۔</item>
-        <item quantity="other">‏آلہ %d گھنٹوں سے غیر مقفل نہیں کیا گیا۔ PIN کی توثیق کریں۔</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">1 سیکنڈ میں دوبارہ کوشش کریں۔</item>
-        <item quantity="other">%d سیکنڈز میں دوبارہ کوشش کریں۔</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d نئی اطلاع</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">صرف ایک صارف بنایا جا سکتا ہے۔</item>
         <item quantity="other">صرف %d صارفین بنائے جا سکتے ہیں۔</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">‏%1$d آلہ منسلک ہے</item>
-        <item quantity="other">‏%1$d آلات منسلک ہیں</item>
     </plurals>
 </resources>

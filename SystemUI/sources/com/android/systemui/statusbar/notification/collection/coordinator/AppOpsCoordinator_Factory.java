@@ -5,7 +5,7 @@ import com.android.systemui.appops.AppOpsController;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class AppOpsCoordinator_Factory implements Factory<AppOpsCoordinator> {
     private final Provider<AppOpsController> appOpsControllerProvider;
     private final Provider<ForegroundServiceController> foregroundServiceControllerProvider;
@@ -17,10 +17,8 @@ public final class AppOpsCoordinator_Factory implements Factory<AppOpsCoordinato
         this.mainExecutorProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AppOpsCoordinator mo1933get() {
-        return newInstance(this.foregroundServiceControllerProvider.mo1933get(), this.appOpsControllerProvider.mo1933get(), this.mainExecutorProvider.mo1933get());
+    public AppOpsCoordinator get() {
+        return newInstance(this.foregroundServiceControllerProvider.get(), this.appOpsControllerProvider.get(), this.mainExecutorProvider.get());
     }
 
     public static AppOpsCoordinator_Factory create(Provider<ForegroundServiceController> provider, Provider<AppOpsController> provider2, Provider<DelayableExecutor> provider3) {

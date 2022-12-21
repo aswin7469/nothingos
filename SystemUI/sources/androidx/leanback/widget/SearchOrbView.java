@@ -2,7 +2,6 @@ package androidx.leanback.widget;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -13,20 +12,11 @@ import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import androidx.core.view.ViewCompat;
-import androidx.leanback.R$attr;
-import androidx.leanback.R$color;
-import androidx.leanback.R$dimen;
-import androidx.leanback.R$drawable;
-import androidx.leanback.R$fraction;
-import androidx.leanback.R$id;
-import androidx.leanback.R$integer;
-import androidx.leanback.R$layout;
-import androidx.leanback.R$styleable;
-/* loaded from: classes.dex */
+import androidx.leanback.C0742R;
+
 public class SearchOrbView extends FrameLayout implements View.OnClickListener {
     private boolean mAttachedToWindow;
     private boolean mColorAnimationEnabled;
@@ -47,71 +37,76 @@ public class SearchOrbView extends FrameLayout implements View.OnClickListener {
     private final float mUnfocusedZ;
     private final ValueAnimator.AnimatorUpdateListener mUpdateListener;
 
-    /* loaded from: classes.dex */
     public static class Colors {
+        private static final float BRIGHTNESS_ALPHA = 0.15f;
         public int brightColor;
         public int color;
         public int iconColor;
 
-        public Colors(int color, int brightColor, int iconColor) {
-            this.color = color;
-            this.brightColor = brightColor == color ? getBrightColor(color) : brightColor;
-            this.iconColor = iconColor;
+        public Colors(int i) {
+            this(i, i);
         }
 
-        public static int getBrightColor(int color) {
-            return Color.argb((int) ((Color.alpha(color) * 0.85f) + 38.25f), (int) ((Color.red(color) * 0.85f) + 38.25f), (int) ((Color.green(color) * 0.85f) + 38.25f), (int) ((Color.blue(color) * 0.85f) + 38.25f));
+        public Colors(int i, int i2) {
+            this(i, i2, 0);
+        }
+
+        public Colors(int i, int i2, int i3) {
+            this.color = i;
+            this.brightColor = i2 == i ? getBrightColor(i) : i2;
+            this.iconColor = i3;
+        }
+
+        public static int getBrightColor(int i) {
+            return Color.argb((int) ((((float) Color.alpha(i)) * 0.85f) + 38.25f), (int) ((((float) Color.red(i)) * 0.85f) + 38.25f), (int) ((((float) Color.green(i)) * 0.85f) + 38.25f), (int) ((((float) Color.blue(i)) * 0.85f) + 38.25f));
         }
     }
 
-    void setSearchOrbZ(float fraction) {
+    /* access modifiers changed from: package-private */
+    public void setSearchOrbZ(float f) {
         View view = this.mSearchOrbView;
-        float f = this.mUnfocusedZ;
-        ViewCompat.setZ(view, f + (fraction * (this.mFocusedZ - f)));
+        float f2 = this.mUnfocusedZ;
+        ViewCompat.setZ(view, f2 + (f * (this.mFocusedZ - f2)));
     }
 
     public SearchOrbView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    public SearchOrbView(Context context, AttributeSet attrs) {
-        this(context, attrs, R$attr.searchOrbViewStyle);
+    public SearchOrbView(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, C0742R.attr.searchOrbViewStyle);
     }
 
-    @SuppressLint({"CustomViewStyleable"})
-    public SearchOrbView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public SearchOrbView(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         this.mColorEvaluator = new ArgbEvaluator();
-        this.mUpdateListener = new ValueAnimator.AnimatorUpdateListener() { // from class: androidx.leanback.widget.SearchOrbView.1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animator) {
-                SearchOrbView.this.setOrbViewColor(((Integer) animator.getAnimatedValue()).intValue());
+        this.mUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                SearchOrbView.this.setOrbViewColor(((Integer) valueAnimator.getAnimatedValue()).intValue());
             }
         };
-        this.mFocusUpdateListener = new ValueAnimator.AnimatorUpdateListener() { // from class: androidx.leanback.widget.SearchOrbView.2
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                SearchOrbView.this.setSearchOrbZ(animation.getAnimatedFraction());
+        this.mFocusUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                SearchOrbView.this.setSearchOrbZ(valueAnimator.getAnimatedFraction());
             }
         };
         Resources resources = context.getResources();
-        View inflate = ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(getLayoutResourceId(), (ViewGroup) this, true);
+        View inflate = ((LayoutInflater) context.getSystemService("layout_inflater")).inflate(getLayoutResourceId(), this, true);
         this.mRootView = inflate;
-        this.mSearchOrbView = inflate.findViewById(R$id.search_orb);
-        this.mIcon = (ImageView) this.mRootView.findViewById(R$id.icon);
-        this.mFocusedZoom = context.getResources().getFraction(R$fraction.lb_search_orb_focused_zoom, 1, 1);
-        this.mPulseDurationMs = context.getResources().getInteger(R$integer.lb_search_orb_pulse_duration_ms);
-        this.mScaleDurationMs = context.getResources().getInteger(R$integer.lb_search_orb_scale_duration_ms);
-        float dimensionPixelSize = context.getResources().getDimensionPixelSize(R$dimen.lb_search_orb_focused_z);
+        this.mSearchOrbView = inflate.findViewById(C0742R.C0745id.search_orb);
+        this.mIcon = (ImageView) this.mRootView.findViewById(C0742R.C0745id.icon);
+        this.mFocusedZoom = context.getResources().getFraction(C0742R.fraction.lb_search_orb_focused_zoom, 1, 1);
+        this.mPulseDurationMs = context.getResources().getInteger(C0742R.integer.lb_search_orb_pulse_duration_ms);
+        this.mScaleDurationMs = context.getResources().getInteger(C0742R.integer.lb_search_orb_scale_duration_ms);
+        float dimensionPixelSize = (float) context.getResources().getDimensionPixelSize(C0742R.dimen.lb_search_orb_focused_z);
         this.mFocusedZ = dimensionPixelSize;
-        this.mUnfocusedZ = context.getResources().getDimensionPixelSize(R$dimen.lb_search_orb_unfocused_z);
-        int[] iArr = R$styleable.lbSearchOrbView;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attrs, iArr, defStyleAttr, 0);
-        ViewCompat.saveAttributeDataForStyleable(this, context, iArr, attrs, obtainStyledAttributes, defStyleAttr, 0);
-        Drawable drawable = obtainStyledAttributes.getDrawable(R$styleable.lbSearchOrbView_searchOrbIcon);
-        setOrbIcon(drawable == null ? resources.getDrawable(R$drawable.lb_ic_in_app_search) : drawable);
-        int color = obtainStyledAttributes.getColor(R$styleable.lbSearchOrbView_searchOrbColor, resources.getColor(R$color.lb_default_search_color));
-        setOrbColors(new Colors(color, obtainStyledAttributes.getColor(R$styleable.lbSearchOrbView_searchOrbBrightColor, color), obtainStyledAttributes.getColor(R$styleable.lbSearchOrbView_searchOrbIconColor, 0)));
+        this.mUnfocusedZ = (float) context.getResources().getDimensionPixelSize(C0742R.dimen.lb_search_orb_unfocused_z);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0742R.styleable.lbSearchOrbView, i, 0);
+        ViewCompat.saveAttributeDataForStyleable(this, context, C0742R.styleable.lbSearchOrbView, attributeSet, obtainStyledAttributes, i, 0);
+        Drawable drawable = obtainStyledAttributes.getDrawable(C0742R.styleable.lbSearchOrbView_searchOrbIcon);
+        setOrbIcon(drawable == null ? resources.getDrawable(C0742R.C0744drawable.lb_ic_in_app_search) : drawable);
+        int color = obtainStyledAttributes.getColor(C0742R.styleable.lbSearchOrbView_searchOrbColor, resources.getColor(C0742R.C0743color.lb_default_search_color));
+        setOrbColors(new Colors(color, obtainStyledAttributes.getColor(C0742R.styleable.lbSearchOrbView_searchOrbBrightColor, color), obtainStyledAttributes.getColor(C0742R.styleable.lbSearchOrbView_searchOrbIconColor, 0)));
         obtainStyledAttributes.recycle();
         setFocusable(true);
         setClipChildren(false);
@@ -121,22 +116,22 @@ public class SearchOrbView extends FrameLayout implements View.OnClickListener {
         ViewCompat.setZ(this.mIcon, dimensionPixelSize);
     }
 
-    int getLayoutResourceId() {
-        return R$layout.lb_search_orb;
+    /* access modifiers changed from: package-private */
+    public int getLayoutResourceId() {
+        return C0742R.layout.lb_search_orb;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void scaleOrbViewOnly(float scale) {
-        this.mSearchOrbView.setScaleX(scale);
-        this.mSearchOrbView.setScaleY(scale);
+    /* access modifiers changed from: package-private */
+    public void scaleOrbViewOnly(float f) {
+        this.mSearchOrbView.setScaleX(f);
+        this.mSearchOrbView.setScaleY(f);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getFocusedZoom() {
         return this.mFocusedZoom;
     }
 
-    @Override // android.view.View.OnClickListener
     public void onClick(View view) {
         View.OnClickListener onClickListener = this.mListener;
         if (onClickListener != null) {
@@ -144,41 +139,58 @@ public class SearchOrbView extends FrameLayout implements View.OnClickListener {
         }
     }
 
-    private void startShadowFocusAnimation(boolean gainFocus, int duration) {
+    private void startShadowFocusAnimation(boolean z, int i) {
         if (this.mShadowFocusAnimator == null) {
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
             this.mShadowFocusAnimator = ofFloat;
             ofFloat.addUpdateListener(this.mFocusUpdateListener);
         }
-        if (gainFocus) {
+        if (z) {
             this.mShadowFocusAnimator.start();
         } else {
             this.mShadowFocusAnimator.reverse();
         }
-        this.mShadowFocusAnimator.setDuration(duration);
+        this.mShadowFocusAnimator.setDuration((long) i);
     }
 
-    @Override // android.view.View
-    protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
-        animateOnFocus(gainFocus);
+    /* access modifiers changed from: protected */
+    public void onFocusChanged(boolean z, int i, Rect rect) {
+        super.onFocusChanged(z, i, rect);
+        animateOnFocus(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void animateOnFocus(boolean hasFocus) {
-        float f = hasFocus ? this.mFocusedZoom : 1.0f;
-        this.mRootView.animate().scaleX(f).scaleY(f).setDuration(this.mScaleDurationMs).start();
-        startShadowFocusAnimation(hasFocus, this.mScaleDurationMs);
-        enableOrbColorAnimation(hasFocus);
+    /* access modifiers changed from: package-private */
+    public void animateOnFocus(boolean z) {
+        float f = z ? this.mFocusedZoom : 1.0f;
+        this.mRootView.animate().scaleX(f).scaleY(f).setDuration((long) this.mScaleDurationMs).start();
+        startShadowFocusAnimation(z, this.mScaleDurationMs);
+        enableOrbColorAnimation(z);
     }
 
-    public void setOrbIcon(Drawable icon) {
-        this.mIconDrawable = icon;
-        this.mIcon.setImageDrawable(icon);
+    public void setOrbIcon(Drawable drawable) {
+        this.mIconDrawable = drawable;
+        this.mIcon.setImageDrawable(drawable);
     }
 
-    public void setOnOrbClickedListener(View.OnClickListener listener) {
-        this.mListener = listener;
+    public Drawable getOrbIcon() {
+        return this.mIconDrawable;
+    }
+
+    public void setOnOrbClickedListener(View.OnClickListener onClickListener) {
+        this.mListener = onClickListener;
+    }
+
+    public void setOrbColor(int i) {
+        setOrbColors(new Colors(i, i, 0));
+    }
+
+    @Deprecated
+    public void setOrbColor(int i, int i2) {
+        setOrbColors(new Colors(i, i2, 0));
+    }
+
+    public int getOrbColor() {
+        return this.mColors.color;
     }
 
     public void setOrbColors(Colors colors) {
@@ -191,8 +203,12 @@ public class SearchOrbView extends FrameLayout implements View.OnClickListener {
         }
     }
 
-    public void enableOrbColorAnimation(boolean enable) {
-        this.mColorAnimationEnabled = enable;
+    public Colors getOrbColors() {
+        return this.mColors;
+    }
+
+    public void enableOrbColorAnimation(boolean z) {
+        this.mColorAnimationEnabled = z;
         updateColorAnimator();
     }
 
@@ -202,32 +218,32 @@ public class SearchOrbView extends FrameLayout implements View.OnClickListener {
             valueAnimator.end();
             this.mColorAnimator = null;
         }
-        if (!this.mColorAnimationEnabled || !this.mAttachedToWindow) {
-            return;
+        if (this.mColorAnimationEnabled && this.mAttachedToWindow) {
+            ValueAnimator ofObject = ValueAnimator.ofObject(this.mColorEvaluator, new Object[]{Integer.valueOf(this.mColors.color), Integer.valueOf(this.mColors.brightColor), Integer.valueOf(this.mColors.color)});
+            this.mColorAnimator = ofObject;
+            ofObject.setRepeatCount(-1);
+            this.mColorAnimator.setDuration((long) (this.mPulseDurationMs * 2));
+            this.mColorAnimator.addUpdateListener(this.mUpdateListener);
+            this.mColorAnimator.start();
         }
-        ValueAnimator ofObject = ValueAnimator.ofObject(this.mColorEvaluator, Integer.valueOf(this.mColors.color), Integer.valueOf(this.mColors.brightColor), Integer.valueOf(this.mColors.color));
-        this.mColorAnimator = ofObject;
-        ofObject.setRepeatCount(-1);
-        this.mColorAnimator.setDuration(this.mPulseDurationMs * 2);
-        this.mColorAnimator.addUpdateListener(this.mUpdateListener);
-        this.mColorAnimator.start();
     }
 
-    void setOrbViewColor(int color) {
+    /* access modifiers changed from: package-private */
+    public void setOrbViewColor(int i) {
         if (this.mSearchOrbView.getBackground() instanceof GradientDrawable) {
-            ((GradientDrawable) this.mSearchOrbView.getBackground()).setColor(color);
+            ((GradientDrawable) this.mSearchOrbView.getBackground()).setColor(i);
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mAttachedToWindow = true;
         updateColorAnimator();
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         this.mAttachedToWindow = false;
         updateColorAnimator();
         super.onDetachedFromWindow();

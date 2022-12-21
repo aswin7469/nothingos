@@ -1,20 +1,26 @@
 package com.android.systemui.statusbar.notification.init;
 
+import com.android.p019wm.shell.bubbles.Bubbles;
 import com.android.systemui.people.widget.PeopleSpaceWidgetManager;
-import com.android.systemui.statusbar.FeatureFlags;
 import com.android.systemui.statusbar.NotificationListener;
 import com.android.systemui.statusbar.notification.AnimatedImageNotificationManager;
+import com.android.systemui.statusbar.notification.NotifPipelineFlags;
 import com.android.systemui.statusbar.notification.NotificationClicker;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.collection.NotifLiveDataStore;
 import com.android.systemui.statusbar.notification.collection.NotifPipeline;
 import com.android.systemui.statusbar.notification.collection.NotificationRankingManager;
 import com.android.systemui.statusbar.notification.collection.TargetSdkResolver;
+import com.android.systemui.statusbar.notification.collection.inflation.BindEventManagerImpl;
 import com.android.systemui.statusbar.notification.collection.inflation.NotificationRowBinderImpl;
 import com.android.systemui.statusbar.notification.collection.init.NotifPipelineInitializer;
 import com.android.systemui.statusbar.notification.collection.legacy.NotificationGroupManagerLegacy;
+import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
+import com.android.systemui.statusbar.notification.collection.provider.DebugModeFilterProvider;
 import com.android.systemui.statusbar.notification.interruption.HeadsUpController;
 import com.android.systemui.statusbar.notification.interruption.HeadsUpViewBinder;
 import com.android.systemui.statusbar.notification.row.NotifBindPipelineInitializer;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
 import com.android.systemui.statusbar.phone.NotificationGroupAlertTransferHelper;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
@@ -22,22 +28,29 @@ import com.android.systemui.statusbar.policy.RemoteInputUriController;
 import dagger.Lazy;
 import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
+import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationsControllerImpl_Factory implements Factory<NotificationsControllerImpl> {
     private final Provider<AnimatedImageNotificationManager> animatedImageNotificationManagerProvider;
+    private final Provider<BindEventManagerImpl> bindEventManagerImplProvider;
+    private final Provider<Optional<Bubbles>> bubblesOptionalProvider;
+    private final Provider<CentralSurfaces> centralSurfacesProvider;
     private final Provider<NotificationClicker.Builder> clickerBuilderProvider;
+    private final Provider<CommonNotifCollection> commonNotifCollectionProvider;
+    private final Provider<DebugModeFilterProvider> debugModeFilterProvider;
     private final Provider<DeviceProvisionedController> deviceProvisionedControllerProvider;
     private final Provider<NotificationEntryManager> entryManagerProvider;
-    private final Provider<FeatureFlags> featureFlagsProvider;
     private final Provider<NotificationGroupAlertTransferHelper> groupAlertTransferHelperProvider;
     private final Provider<NotificationGroupManagerLegacy> groupManagerLegacyProvider;
     private final Provider<HeadsUpController> headsUpControllerProvider;
     private final Provider<HeadsUpManager> headsUpManagerProvider;
     private final Provider<HeadsUpViewBinder> headsUpViewBinderProvider;
     private final Provider<NotificationRankingManager> legacyRankerProvider;
-    private final Provider<NotifPipelineInitializer> newNotifPipelineProvider;
+    private final Provider<NotifPipelineInitializer> newNotifPipelineInitializerProvider;
     private final Provider<NotifBindPipelineInitializer> notifBindPipelineInitializerProvider;
+    private final Provider<NotifLiveDataStore> notifLiveDataStoreProvider;
+    private final Provider<NotifPipelineFlags> notifPipelineFlagsProvider;
     private final Provider<NotifPipeline> notifPipelineProvider;
     private final Provider<NotificationListener> notificationListenerProvider;
     private final Provider<NotificationRowBinderImpl> notificationRowBinderProvider;
@@ -45,39 +58,43 @@ public final class NotificationsControllerImpl_Factory implements Factory<Notifi
     private final Provider<RemoteInputUriController> remoteInputUriControllerProvider;
     private final Provider<TargetSdkResolver> targetSdkResolverProvider;
 
-    public NotificationsControllerImpl_Factory(Provider<FeatureFlags> provider, Provider<NotificationListener> provider2, Provider<NotificationEntryManager> provider3, Provider<NotificationRankingManager> provider4, Provider<NotifPipeline> provider5, Provider<TargetSdkResolver> provider6, Provider<NotifPipelineInitializer> provider7, Provider<NotifBindPipelineInitializer> provider8, Provider<DeviceProvisionedController> provider9, Provider<NotificationRowBinderImpl> provider10, Provider<RemoteInputUriController> provider11, Provider<NotificationGroupManagerLegacy> provider12, Provider<NotificationGroupAlertTransferHelper> provider13, Provider<HeadsUpManager> provider14, Provider<HeadsUpController> provider15, Provider<HeadsUpViewBinder> provider16, Provider<NotificationClicker.Builder> provider17, Provider<AnimatedImageNotificationManager> provider18, Provider<PeopleSpaceWidgetManager> provider19) {
-        this.featureFlagsProvider = provider;
-        this.notificationListenerProvider = provider2;
-        this.entryManagerProvider = provider3;
-        this.legacyRankerProvider = provider4;
-        this.notifPipelineProvider = provider5;
-        this.targetSdkResolverProvider = provider6;
-        this.newNotifPipelineProvider = provider7;
-        this.notifBindPipelineInitializerProvider = provider8;
-        this.deviceProvisionedControllerProvider = provider9;
-        this.notificationRowBinderProvider = provider10;
-        this.remoteInputUriControllerProvider = provider11;
-        this.groupManagerLegacyProvider = provider12;
-        this.groupAlertTransferHelperProvider = provider13;
-        this.headsUpManagerProvider = provider14;
-        this.headsUpControllerProvider = provider15;
-        this.headsUpViewBinderProvider = provider16;
-        this.clickerBuilderProvider = provider17;
-        this.animatedImageNotificationManagerProvider = provider18;
-        this.peopleSpaceWidgetManagerProvider = provider19;
+    public NotificationsControllerImpl_Factory(Provider<CentralSurfaces> provider, Provider<NotifPipelineFlags> provider2, Provider<NotificationListener> provider3, Provider<NotificationEntryManager> provider4, Provider<DebugModeFilterProvider> provider5, Provider<NotificationRankingManager> provider6, Provider<CommonNotifCollection> provider7, Provider<NotifPipeline> provider8, Provider<NotifLiveDataStore> provider9, Provider<TargetSdkResolver> provider10, Provider<NotifPipelineInitializer> provider11, Provider<NotifBindPipelineInitializer> provider12, Provider<DeviceProvisionedController> provider13, Provider<NotificationRowBinderImpl> provider14, Provider<BindEventManagerImpl> provider15, Provider<RemoteInputUriController> provider16, Provider<NotificationGroupManagerLegacy> provider17, Provider<NotificationGroupAlertTransferHelper> provider18, Provider<HeadsUpManager> provider19, Provider<HeadsUpController> provider20, Provider<HeadsUpViewBinder> provider21, Provider<NotificationClicker.Builder> provider22, Provider<AnimatedImageNotificationManager> provider23, Provider<PeopleSpaceWidgetManager> provider24, Provider<Optional<Bubbles>> provider25) {
+        this.centralSurfacesProvider = provider;
+        this.notifPipelineFlagsProvider = provider2;
+        this.notificationListenerProvider = provider3;
+        this.entryManagerProvider = provider4;
+        this.debugModeFilterProvider = provider5;
+        this.legacyRankerProvider = provider6;
+        this.commonNotifCollectionProvider = provider7;
+        this.notifPipelineProvider = provider8;
+        this.notifLiveDataStoreProvider = provider9;
+        this.targetSdkResolverProvider = provider10;
+        this.newNotifPipelineInitializerProvider = provider11;
+        this.notifBindPipelineInitializerProvider = provider12;
+        this.deviceProvisionedControllerProvider = provider13;
+        this.notificationRowBinderProvider = provider14;
+        this.bindEventManagerImplProvider = provider15;
+        this.remoteInputUriControllerProvider = provider16;
+        this.groupManagerLegacyProvider = provider17;
+        this.groupAlertTransferHelperProvider = provider18;
+        this.headsUpManagerProvider = provider19;
+        this.headsUpControllerProvider = provider20;
+        this.headsUpViewBinderProvider = provider21;
+        this.clickerBuilderProvider = provider22;
+        this.animatedImageNotificationManagerProvider = provider23;
+        this.peopleSpaceWidgetManagerProvider = provider24;
+        this.bubblesOptionalProvider = provider25;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationsControllerImpl mo1933get() {
-        return newInstance(this.featureFlagsProvider.mo1933get(), this.notificationListenerProvider.mo1933get(), this.entryManagerProvider.mo1933get(), this.legacyRankerProvider.mo1933get(), DoubleCheck.lazy(this.notifPipelineProvider), this.targetSdkResolverProvider.mo1933get(), DoubleCheck.lazy(this.newNotifPipelineProvider), this.notifBindPipelineInitializerProvider.mo1933get(), this.deviceProvisionedControllerProvider.mo1933get(), this.notificationRowBinderProvider.mo1933get(), this.remoteInputUriControllerProvider.mo1933get(), DoubleCheck.lazy(this.groupManagerLegacyProvider), this.groupAlertTransferHelperProvider.mo1933get(), this.headsUpManagerProvider.mo1933get(), this.headsUpControllerProvider.mo1933get(), this.headsUpViewBinderProvider.mo1933get(), this.clickerBuilderProvider.mo1933get(), this.animatedImageNotificationManagerProvider.mo1933get(), this.peopleSpaceWidgetManagerProvider.mo1933get());
+    public NotificationsControllerImpl get() {
+        return newInstance(DoubleCheck.lazy(this.centralSurfacesProvider), this.notifPipelineFlagsProvider.get(), this.notificationListenerProvider.get(), this.entryManagerProvider.get(), this.debugModeFilterProvider.get(), this.legacyRankerProvider.get(), DoubleCheck.lazy(this.commonNotifCollectionProvider), DoubleCheck.lazy(this.notifPipelineProvider), this.notifLiveDataStoreProvider.get(), this.targetSdkResolverProvider.get(), DoubleCheck.lazy(this.newNotifPipelineInitializerProvider), this.notifBindPipelineInitializerProvider.get(), this.deviceProvisionedControllerProvider.get(), this.notificationRowBinderProvider.get(), this.bindEventManagerImplProvider.get(), this.remoteInputUriControllerProvider.get(), DoubleCheck.lazy(this.groupManagerLegacyProvider), this.groupAlertTransferHelperProvider.get(), this.headsUpManagerProvider.get(), this.headsUpControllerProvider.get(), this.headsUpViewBinderProvider.get(), this.clickerBuilderProvider.get(), this.animatedImageNotificationManagerProvider.get(), this.peopleSpaceWidgetManagerProvider.get(), this.bubblesOptionalProvider.get());
     }
 
-    public static NotificationsControllerImpl_Factory create(Provider<FeatureFlags> provider, Provider<NotificationListener> provider2, Provider<NotificationEntryManager> provider3, Provider<NotificationRankingManager> provider4, Provider<NotifPipeline> provider5, Provider<TargetSdkResolver> provider6, Provider<NotifPipelineInitializer> provider7, Provider<NotifBindPipelineInitializer> provider8, Provider<DeviceProvisionedController> provider9, Provider<NotificationRowBinderImpl> provider10, Provider<RemoteInputUriController> provider11, Provider<NotificationGroupManagerLegacy> provider12, Provider<NotificationGroupAlertTransferHelper> provider13, Provider<HeadsUpManager> provider14, Provider<HeadsUpController> provider15, Provider<HeadsUpViewBinder> provider16, Provider<NotificationClicker.Builder> provider17, Provider<AnimatedImageNotificationManager> provider18, Provider<PeopleSpaceWidgetManager> provider19) {
-        return new NotificationsControllerImpl_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18, provider19);
+    public static NotificationsControllerImpl_Factory create(Provider<CentralSurfaces> provider, Provider<NotifPipelineFlags> provider2, Provider<NotificationListener> provider3, Provider<NotificationEntryManager> provider4, Provider<DebugModeFilterProvider> provider5, Provider<NotificationRankingManager> provider6, Provider<CommonNotifCollection> provider7, Provider<NotifPipeline> provider8, Provider<NotifLiveDataStore> provider9, Provider<TargetSdkResolver> provider10, Provider<NotifPipelineInitializer> provider11, Provider<NotifBindPipelineInitializer> provider12, Provider<DeviceProvisionedController> provider13, Provider<NotificationRowBinderImpl> provider14, Provider<BindEventManagerImpl> provider15, Provider<RemoteInputUriController> provider16, Provider<NotificationGroupManagerLegacy> provider17, Provider<NotificationGroupAlertTransferHelper> provider18, Provider<HeadsUpManager> provider19, Provider<HeadsUpController> provider20, Provider<HeadsUpViewBinder> provider21, Provider<NotificationClicker.Builder> provider22, Provider<AnimatedImageNotificationManager> provider23, Provider<PeopleSpaceWidgetManager> provider24, Provider<Optional<Bubbles>> provider25) {
+        return new NotificationsControllerImpl_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18, provider19, provider20, provider21, provider22, provider23, provider24, provider25);
     }
 
-    public static NotificationsControllerImpl newInstance(FeatureFlags featureFlags, NotificationListener notificationListener, NotificationEntryManager notificationEntryManager, NotificationRankingManager notificationRankingManager, Lazy<NotifPipeline> lazy, TargetSdkResolver targetSdkResolver, Lazy<NotifPipelineInitializer> lazy2, NotifBindPipelineInitializer notifBindPipelineInitializer, DeviceProvisionedController deviceProvisionedController, NotificationRowBinderImpl notificationRowBinderImpl, RemoteInputUriController remoteInputUriController, Lazy<NotificationGroupManagerLegacy> lazy3, NotificationGroupAlertTransferHelper notificationGroupAlertTransferHelper, HeadsUpManager headsUpManager, HeadsUpController headsUpController, HeadsUpViewBinder headsUpViewBinder, NotificationClicker.Builder builder, AnimatedImageNotificationManager animatedImageNotificationManager, PeopleSpaceWidgetManager peopleSpaceWidgetManager) {
-        return new NotificationsControllerImpl(featureFlags, notificationListener, notificationEntryManager, notificationRankingManager, lazy, targetSdkResolver, lazy2, notifBindPipelineInitializer, deviceProvisionedController, notificationRowBinderImpl, remoteInputUriController, lazy3, notificationGroupAlertTransferHelper, headsUpManager, headsUpController, headsUpViewBinder, builder, animatedImageNotificationManager, peopleSpaceWidgetManager);
+    public static NotificationsControllerImpl newInstance(Lazy<CentralSurfaces> lazy, NotifPipelineFlags notifPipelineFlags, NotificationListener notificationListener, NotificationEntryManager notificationEntryManager, DebugModeFilterProvider debugModeFilterProvider2, NotificationRankingManager notificationRankingManager, Lazy<CommonNotifCollection> lazy2, Lazy<NotifPipeline> lazy3, NotifLiveDataStore notifLiveDataStore, TargetSdkResolver targetSdkResolver, Lazy<NotifPipelineInitializer> lazy4, NotifBindPipelineInitializer notifBindPipelineInitializer, DeviceProvisionedController deviceProvisionedController, NotificationRowBinderImpl notificationRowBinderImpl, BindEventManagerImpl bindEventManagerImpl, RemoteInputUriController remoteInputUriController, Lazy<NotificationGroupManagerLegacy> lazy5, NotificationGroupAlertTransferHelper notificationGroupAlertTransferHelper, HeadsUpManager headsUpManager, HeadsUpController headsUpController, HeadsUpViewBinder headsUpViewBinder, NotificationClicker.Builder builder, AnimatedImageNotificationManager animatedImageNotificationManager, PeopleSpaceWidgetManager peopleSpaceWidgetManager, Optional<Bubbles> optional) {
+        return new NotificationsControllerImpl(lazy, notifPipelineFlags, notificationListener, notificationEntryManager, debugModeFilterProvider2, notificationRankingManager, lazy2, lazy3, notifLiveDataStore, targetSdkResolver, lazy4, notifBindPipelineInitializer, deviceProvisionedController, notificationRowBinderImpl, bindEventManagerImpl, remoteInputUriController, lazy5, notificationGroupAlertTransferHelper, headsUpManager, headsUpController, headsUpViewBinder, builder, animatedImageNotificationManager, peopleSpaceWidgetManager, optional);
     }
 }

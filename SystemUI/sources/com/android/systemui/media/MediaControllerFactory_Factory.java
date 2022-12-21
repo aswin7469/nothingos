@@ -3,7 +3,7 @@ package com.android.systemui.media;
 import android.content.Context;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class MediaControllerFactory_Factory implements Factory<MediaControllerFactory> {
     private final Provider<Context> contextProvider;
 
@@ -11,10 +11,8 @@ public final class MediaControllerFactory_Factory implements Factory<MediaContro
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaControllerFactory mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public MediaControllerFactory get() {
+        return newInstance(this.contextProvider.get());
     }
 
     public static MediaControllerFactory_Factory create(Provider<Context> provider) {

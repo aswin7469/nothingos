@@ -5,7 +5,7 @@ import android.media.MediaRouter2Manager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideMediaRouter2ManagerFactory implements Factory<MediaRouter2Manager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideMediaRouter2ManagerFactory imp
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaRouter2Manager mo1933get() {
-        return provideMediaRouter2Manager(this.contextProvider.mo1933get());
+    public MediaRouter2Manager get() {
+        return provideMediaRouter2Manager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideMediaRouter2ManagerFactory create(Provider<Context> provider) {

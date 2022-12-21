@@ -1,42 +1,26 @@
 package kotlinx.coroutines;
 
-import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceLoader;
+import kotlin.Metadata;
 import kotlin.coroutines.CoroutineContext;
-import kotlin.jvm.internal.Intrinsics;
-import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt__SequencesKt;
-import kotlin.sequences.SequencesKt___SequencesKt;
-import org.jetbrains.annotations.NotNull;
+import kotlin.sequences.SequencesKt;
+
+@Metadata(mo64986d1 = {"\u0000\u001e\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0003\n\u0000\u001a\u0018\u0010\u0003\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\bH\u0000\"\u0014\u0010\u0000\u001a\b\u0012\u0004\u0012\u00020\u00020\u0001X\u0004¢\u0006\u0002\n\u0000¨\u0006\t"}, mo64987d2 = {"handlers", "", "Lkotlinx/coroutines/CoroutineExceptionHandler;", "handleCoroutineExceptionImpl", "", "context", "Lkotlin/coroutines/CoroutineContext;", "exception", "", "kotlinx-coroutines-core"}, mo64988k = 2, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: CoroutineExceptionHandlerImpl.kt */
-/* loaded from: classes2.dex */
 public final class CoroutineExceptionHandlerImplKt {
-    private static final List<CoroutineExceptionHandler> handlers;
+    private static final List<CoroutineExceptionHandler> handlers = SequencesKt.toList(SequencesKt.asSequence(ServiceLoader.load(CoroutineExceptionHandler.class, CoroutineExceptionHandler.class.getClassLoader()).iterator()));
 
-    static {
-        Sequence asSequence;
-        List<CoroutineExceptionHandler> list;
-        Iterator m = CoroutineExceptionHandlerImplKt$$ExternalSyntheticServiceLoad0.m();
-        Intrinsics.checkExpressionValueIsNotNull(m, "ServiceLoader.load(\n    ….classLoader\n).iterator()");
-        asSequence = SequencesKt__SequencesKt.asSequence(m);
-        list = SequencesKt___SequencesKt.toList(asSequence);
-        handlers = list;
-    }
-
-    public static final void handleCoroutineExceptionImpl(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-        Intrinsics.checkParameterIsNotNull(context, "context");
-        Intrinsics.checkParameterIsNotNull(exception, "exception");
-        for (CoroutineExceptionHandler coroutineExceptionHandler : handlers) {
+    public static final void handleCoroutineExceptionImpl(CoroutineContext coroutineContext, Throwable th) {
+        for (CoroutineExceptionHandler handleException : handlers) {
             try {
-                coroutineExceptionHandler.handleException(context, exception);
-            } catch (Throwable th) {
+                handleException.handleException(coroutineContext, th);
+            } catch (Throwable th2) {
                 Thread currentThread = Thread.currentThread();
-                Intrinsics.checkExpressionValueIsNotNull(currentThread, "currentThread");
-                currentThread.getUncaughtExceptionHandler().uncaughtException(currentThread, CoroutineExceptionHandlerKt.handlerException(exception, th));
+                currentThread.getUncaughtExceptionHandler().uncaughtException(currentThread, CoroutineExceptionHandlerKt.handlerException(th, th2));
             }
         }
         Thread currentThread2 = Thread.currentThread();
-        Intrinsics.checkExpressionValueIsNotNull(currentThread2, "currentThread");
-        currentThread2.getUncaughtExceptionHandler().uncaughtException(currentThread2, exception);
+        currentThread2.getUncaughtExceptionHandler().uncaughtException(currentThread2, th);
     }
 }

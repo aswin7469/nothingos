@@ -10,42 +10,91 @@ import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyDisplayInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import androidx.mediarouter.media.MediaRoute2Provider$$ExternalSyntheticLambda0;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.util.Objects;
-/* loaded from: classes.dex */
+import tech.nothing.settingslib.mobile.SignalSmooth;
+import tech.nothing.settingslib.mobile.SignalSmoothImpl;
+
 public class MobileStatusTracker {
-    private final Callback mCallback;
+    private static final String TAG = "MobileStatusTracker";
+    /* access modifiers changed from: private */
+    public final Callback mCallback;
     private final SubscriptionDefaults mDefaults;
+    private final SignalSmoothImpl.OnDelayTimeoutListener mDelayTimeoutListener = new DelayTimeoutListener();
+    /* access modifiers changed from: private */
+    public final MobileStatus mMobileStatus;
     private final TelephonyManager mPhone;
     private final Handler mReceiverHandler;
+    /* access modifiers changed from: private */
+    public SignalSmooth mSignalSmooth = SignalSmoothImpl.EMPTY_IMPL;
     private final SubscriptionInfo mSubscriptionInfo;
-    private final MobileTelephonyCallback mTelephonyCallback = new MobileTelephonyCallback();
-    private final MobileStatus mMobileStatus = new MobileStatus();
+    private final MobileTelephonyCallback mTelephonyCallback;
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onMobileStatusChanged(boolean z, MobileStatus mobileStatus);
+    }
+
+    private class DelayTimeoutListener implements SignalSmoothImpl.OnDelayTimeoutListener {
+        private DelayTimeoutListener() {
+        }
+
+        public void onDelayTimeout(ServiceState serviceState) {
+            Object obj;
+            if (Log.isLoggable(MobileStatusTracker.TAG, 3)) {
+                StringBuilder sb = new StringBuilder("onDelayTimeout voiceState=");
+                Object obj2 = "";
+                if (serviceState == null) {
+                    obj = obj2;
+                } else {
+                    obj = Integer.valueOf(serviceState.getState());
+                }
+                StringBuilder append = sb.append(obj).append(" dataState=");
+                if (serviceState != null) {
+                    obj2 = Integer.valueOf(serviceState.getDataRegistrationState());
+                }
+                Log.d(MobileStatusTracker.TAG, append.append(obj2).toString());
+            }
+            MobileStatusTracker.this.mMobileStatus.serviceState = serviceState;
+            MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
+        }
+
+        public void onSmoothSignal(SignalStrength signalStrength) {
+            String str;
+            if (Log.isLoggable(MobileStatusTracker.TAG, 3)) {
+                StringBuilder append = new StringBuilder("onSmoothSignal signalStrength=").append((Object) signalStrength);
+                if (signalStrength == null) {
+                    str = "";
+                } else {
+                    str = " level=" + signalStrength.getLevel();
+                }
+                Log.d(MobileStatusTracker.TAG, append.append(str).toString());
+            }
+            MobileStatusTracker.this.mMobileStatus.signalStrength = signalStrength;
+            MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
+        }
     }
 
     public MobileStatusTracker(TelephonyManager telephonyManager, Looper looper, SubscriptionInfo subscriptionInfo, SubscriptionDefaults subscriptionDefaults, Callback callback) {
         this.mPhone = telephonyManager;
         Handler handler = new Handler(looper);
         this.mReceiverHandler = handler;
+        this.mTelephonyCallback = new MobileTelephonyCallback();
         this.mSubscriptionInfo = subscriptionInfo;
         this.mDefaults = subscriptionDefaults;
         this.mCallback = callback;
+        this.mMobileStatus = new MobileStatus();
         updateDataSim();
-        handler.post(new Runnable() { // from class: com.android.settingslib.mobile.MobileStatusTracker$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                MobileStatusTracker.this.lambda$new$0();
-            }
-        });
+        handler.post(new MobileStatusTracker$$ExternalSyntheticLambda1(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-settingslib-mobile-MobileStatusTracker  reason: not valid java name */
+    public /* synthetic */ void m2505lambda$new$0$comandroidsettingslibmobileMobileStatusTracker() {
         this.mCallback.onMobileStatusChanged(false, new MobileStatus(this.mMobileStatus));
+    }
+
+    public MobileTelephonyCallback getTelephonyCallback() {
+        return this.mTelephonyCallback;
     }
 
     public void setListening(boolean z) {
@@ -53,13 +102,25 @@ public class MobileStatusTracker {
             TelephonyManager telephonyManager = this.mPhone;
             Handler handler = this.mReceiverHandler;
             Objects.requireNonNull(handler);
-            telephonyManager.registerTelephonyCallback(new MediaRoute2Provider$$ExternalSyntheticLambda0(handler), this.mTelephonyCallback);
+            telephonyManager.registerTelephonyCallback(new MobileStatusTracker$$ExternalSyntheticLambda0(handler), this.mTelephonyCallback);
             return;
         }
         this.mPhone.unregisterTelephonyCallback(this.mTelephonyCallback);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    public void setSignalSmooth(boolean z) {
+        Log.d(TAG, "setSignalSmooth enabled: " + z);
+        if (!z) {
+            this.mSignalSmooth.setListening(false);
+        } else if (this.mSignalSmooth == SignalSmoothImpl.EMPTY_IMPL) {
+            this.mSignalSmooth = new SignalSmoothImpl(this.mReceiverHandler.getLooper(), this.mSubscriptionInfo.getSubscriptionId(), this.mDelayTimeoutListener);
+        } else {
+            Log.d(TAG, "SignalSmoothImpl already");
+            this.mSignalSmooth.setListening(true);
+        }
+    }
+
+    /* access modifiers changed from: private */
     public void updateDataSim() {
         int activeDataSubId = this.mDefaults.getActiveDataSubId();
         boolean z = true;
@@ -74,106 +135,101 @@ public class MobileStatusTracker {
         this.mMobileStatus.dataSim = true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setActivity(int i) {
-        MobileStatus mobileStatus = this.mMobileStatus;
         boolean z = false;
-        mobileStatus.activityIn = i == 3 || i == 1;
+        this.mMobileStatus.activityIn = i == 3 || i == 1;
+        MobileStatus mobileStatus = this.mMobileStatus;
         if (i == 3 || i == 2) {
             z = true;
         }
         mobileStatus.activityOut = z;
     }
 
-    /* loaded from: classes.dex */
     public class MobileTelephonyCallback extends TelephonyCallback implements TelephonyCallback.ServiceStateListener, TelephonyCallback.SignalStrengthsListener, TelephonyCallback.DataConnectionStateListener, TelephonyCallback.DataActivityListener, TelephonyCallback.CarrierNetworkListener, TelephonyCallback.ActiveDataSubscriptionIdListener, TelephonyCallback.DisplayInfoListener {
         public MobileTelephonyCallback() {
         }
 
-        @Override // android.telephony.TelephonyCallback.SignalStrengthsListener
         public void onSignalStrengthsChanged(SignalStrength signalStrength) {
             String str;
-            if (Log.isLoggable("MobileStatusTracker", 3)) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("onSignalStrengthsChanged signalStrength=");
-                sb.append(signalStrength);
+            if (Log.isLoggable(MobileStatusTracker.TAG, 3)) {
+                StringBuilder append = new StringBuilder("onSignalStrengthsChanged signalStrength=").append((Object) signalStrength);
                 if (signalStrength == null) {
                     str = "";
                 } else {
                     str = " level=" + signalStrength.getLevel();
                 }
-                sb.append(str);
-                Log.d("MobileStatusTracker", sb.toString());
+                Log.d(MobileStatusTracker.TAG, append.append(str).toString());
             }
-            MobileStatusTracker.this.mMobileStatus.signalStrength = signalStrength;
-            MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
+            if (!MobileStatusTracker.this.mSignalSmooth.smoothSignal(signalStrength)) {
+                MobileStatusTracker.this.mMobileStatus.signalStrength = signalStrength;
+                MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
+            }
         }
 
-        @Override // android.telephony.TelephonyCallback.ServiceStateListener
         public void onServiceStateChanged(ServiceState serviceState) {
-            if (Log.isLoggable("MobileStatusTracker", 3)) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("onServiceStateChanged voiceState=");
-                Object obj = "";
-                sb.append(serviceState == null ? obj : Integer.valueOf(serviceState.getState()));
-                sb.append(" dataState=");
-                if (serviceState != null) {
-                    obj = Integer.valueOf(serviceState.getDataRegistrationState());
+            Object obj;
+            if (Log.isLoggable(MobileStatusTracker.TAG, 3)) {
+                StringBuilder sb = new StringBuilder("onServiceStateChanged voiceState=");
+                Object obj2 = "";
+                if (serviceState == null) {
+                    obj = obj2;
+                } else {
+                    obj = Integer.valueOf(serviceState.getState());
                 }
-                sb.append(obj);
-                Log.d("MobileStatusTracker", sb.toString());
+                StringBuilder append = sb.append(obj).append(" dataState=");
+                if (serviceState != null) {
+                    obj2 = Integer.valueOf(serviceState.getDataRegistrationState());
+                }
+                Log.d(MobileStatusTracker.TAG, append.append(obj2).toString());
             }
-            MobileStatusTracker.this.mMobileStatus.serviceState = serviceState;
-            MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
+            if (!MobileStatusTracker.this.mSignalSmooth.delayNotifyOos(serviceState)) {
+                MobileStatusTracker.this.mMobileStatus.serviceState = serviceState;
+                MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
+            }
         }
 
-        @Override // android.telephony.TelephonyCallback.DataConnectionStateListener
         public void onDataConnectionStateChanged(int i, int i2) {
-            if (Log.isLoggable("MobileStatusTracker", 3)) {
-                Log.d("MobileStatusTracker", "onDataConnectionStateChanged: state=" + i + " type=" + i2);
+            if (Log.isLoggable(MobileStatusTracker.TAG, 3)) {
+                Log.d(MobileStatusTracker.TAG, "onDataConnectionStateChanged: state=" + i + " type=" + i2);
             }
             MobileStatusTracker.this.mMobileStatus.dataState = i;
             MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
         }
 
-        @Override // android.telephony.TelephonyCallback.DataActivityListener
         public void onDataActivity(int i) {
-            if (Log.isLoggable("MobileStatusTracker", 3)) {
-                Log.d("MobileStatusTracker", "onDataActivity: direction=" + i);
+            if (Log.isLoggable(MobileStatusTracker.TAG, 3)) {
+                Log.d(MobileStatusTracker.TAG, "onDataActivity: direction=" + i);
             }
             MobileStatusTracker.this.setActivity(i);
             MobileStatusTracker.this.mCallback.onMobileStatusChanged(false, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
         }
 
-        @Override // android.telephony.TelephonyCallback.CarrierNetworkListener
         public void onCarrierNetworkChange(boolean z) {
-            if (Log.isLoggable("MobileStatusTracker", 3)) {
-                Log.d("MobileStatusTracker", "onCarrierNetworkChange: active=" + z);
+            if (Log.isLoggable(MobileStatusTracker.TAG, 3)) {
+                Log.d(MobileStatusTracker.TAG, "onCarrierNetworkChange: active=" + z);
             }
             MobileStatusTracker.this.mMobileStatus.carrierNetworkChangeMode = z;
             MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
         }
 
-        @Override // android.telephony.TelephonyCallback.ActiveDataSubscriptionIdListener
         public void onActiveDataSubscriptionIdChanged(int i) {
-            if (Log.isLoggable("MobileStatusTracker", 3)) {
-                Log.d("MobileStatusTracker", "onActiveDataSubscriptionIdChanged: subId=" + i);
+            if (Log.isLoggable(MobileStatusTracker.TAG, 3)) {
+                Log.d(MobileStatusTracker.TAG, "onActiveDataSubscriptionIdChanged: subId=" + i);
             }
             MobileStatusTracker.this.updateDataSim();
             MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
         }
 
-        @Override // android.telephony.TelephonyCallback.DisplayInfoListener
         public void onDisplayInfoChanged(TelephonyDisplayInfo telephonyDisplayInfo) {
-            if (Log.isLoggable("MobileStatusTracker", 3)) {
-                Log.d("MobileStatusTracker", "onDisplayInfoChanged: telephonyDisplayInfo=" + telephonyDisplayInfo);
+            if (Log.isLoggable(MobileStatusTracker.TAG, 3)) {
+                Log.d(MobileStatusTracker.TAG, "onDisplayInfoChanged: telephonyDisplayInfo=" + telephonyDisplayInfo);
             }
             MobileStatusTracker.this.mMobileStatus.telephonyDisplayInfo = telephonyDisplayInfo;
             MobileStatusTracker.this.mCallback.onMobileStatusChanged(true, new MobileStatus(MobileStatusTracker.this.mMobileStatus));
         }
     }
 
-    /* loaded from: classes.dex */
     public static class SubscriptionDefaults {
         public int getDefaultVoiceSubId() {
             return SubscriptionManager.getDefaultVoiceSubscriptionId();
@@ -188,15 +244,14 @@ public class MobileStatusTracker {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class MobileStatus {
         public boolean activityIn;
         public boolean activityOut;
         public boolean carrierNetworkChangeMode;
         public boolean dataSim;
+        public int dataState = 0;
         public ServiceState serviceState;
         public SignalStrength signalStrength;
-        public int dataState = 0;
         public TelephonyDisplayInfo telephonyDisplayInfo = new TelephonyDisplayInfo(0, 0);
 
         public MobileStatus() {
@@ -206,7 +261,8 @@ public class MobileStatusTracker {
             copyFrom(mobileStatus);
         }
 
-        protected void copyFrom(MobileStatus mobileStatus) {
+        /* access modifiers changed from: protected */
+        public void copyFrom(MobileStatus mobileStatus) {
             this.activityIn = mobileStatus.activityIn;
             this.activityOut = mobileStatus.activityOut;
             this.dataSim = mobileStatus.dataSim;
@@ -219,43 +275,31 @@ public class MobileStatusTracker {
 
         public String toString() {
             String str;
-            StringBuilder sb = new StringBuilder();
-            sb.append("[activityIn=");
-            sb.append(this.activityIn);
-            sb.append(',');
-            sb.append("activityOut=");
-            sb.append(this.activityOut);
-            sb.append(',');
-            sb.append("dataSim=");
-            sb.append(this.dataSim);
-            sb.append(',');
-            sb.append("carrierNetworkChangeMode=");
-            sb.append(this.carrierNetworkChangeMode);
-            sb.append(',');
-            sb.append("dataState=");
-            sb.append(this.dataState);
-            sb.append(',');
-            sb.append("serviceState=");
+            Object obj;
+            StringBuilder append = new StringBuilder("[activityIn=").append(this.activityIn).append(",activityOut=").append(this.activityOut).append(",dataSim=").append(this.dataSim).append(",carrierNetworkChangeMode=").append(this.carrierNetworkChangeMode).append(",dataState=").append(this.dataState).append(",serviceState=");
             String str2 = "";
             if (this.serviceState == null) {
                 str = str2;
             } else {
-                str = "mVoiceRegState=" + this.serviceState.getState() + "(" + ServiceState.rilServiceStateToString(this.serviceState.getState()) + "), mDataRegState=" + this.serviceState.getDataRegState() + "(" + ServiceState.rilServiceStateToString(this.serviceState.getDataRegState()) + ")";
+                str = "mVoiceRegState=" + this.serviceState.getState() + NavigationBarInflaterView.KEY_CODE_START + ServiceState.rilServiceStateToString(this.serviceState.getState()) + "), mDataRegState=" + this.serviceState.getDataRegState() + NavigationBarInflaterView.KEY_CODE_START + ServiceState.rilServiceStateToString(this.serviceState.getDataRegState()) + NavigationBarInflaterView.KEY_CODE_END;
             }
-            sb.append(str);
-            sb.append(',');
-            sb.append("signalStrength=");
-            SignalStrength signalStrength = this.signalStrength;
-            sb.append(signalStrength == null ? str2 : Integer.valueOf(signalStrength.getLevel()));
-            sb.append(',');
-            sb.append("telephonyDisplayInfo=");
-            TelephonyDisplayInfo telephonyDisplayInfo = this.telephonyDisplayInfo;
-            if (telephonyDisplayInfo != null) {
-                str2 = telephonyDisplayInfo.toString();
+            StringBuilder append2 = append.append(str).append(",signalStrength=");
+            SignalStrength signalStrength2 = this.signalStrength;
+            if (signalStrength2 == null) {
+                obj = str2;
+            } else {
+                obj = Integer.valueOf(signalStrength2.getLevel());
             }
-            sb.append(str2);
-            sb.append(']');
-            return sb.toString();
+            StringBuilder append3 = append2.append(obj).append(",telephonyDisplayInfo=");
+            TelephonyDisplayInfo telephonyDisplayInfo2 = this.telephonyDisplayInfo;
+            if (telephonyDisplayInfo2 != null) {
+                str2 = telephonyDisplayInfo2.toString();
+            }
+            return append3.append(str2).append(']').toString();
         }
+    }
+
+    public int getSmoothLevel(SignalStrength signalStrength) {
+        return this.mSignalSmooth.getSmoothLevel(signalStrength);
     }
 }

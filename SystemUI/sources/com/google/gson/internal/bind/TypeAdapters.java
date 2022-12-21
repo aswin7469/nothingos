@@ -1,5 +1,6 @@
 package com.google.gson.internal.bind;
 
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -16,13 +17,13 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.p026io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -39,7 +40,8 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicIntegerArray;
-/* loaded from: classes2.dex */
+import sun.util.locale.BaseLocale;
+
 public final class TypeAdapters {
     public static final TypeAdapter<AtomicBoolean> ATOMIC_BOOLEAN;
     public static final TypeAdapterFactory ATOMIC_BOOLEAN_FACTORY;
@@ -47,9 +49,56 @@ public final class TypeAdapters {
     public static final TypeAdapter<AtomicIntegerArray> ATOMIC_INTEGER_ARRAY;
     public static final TypeAdapterFactory ATOMIC_INTEGER_ARRAY_FACTORY;
     public static final TypeAdapterFactory ATOMIC_INTEGER_FACTORY;
+    public static final TypeAdapter<BigDecimal> BIG_DECIMAL = new TypeAdapter<BigDecimal>() {
+        public BigDecimal read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() == JsonToken.NULL) {
+                jsonReader.nextNull();
+                return null;
+            }
+            try {
+                return new BigDecimal(jsonReader.nextString());
+            } catch (NumberFormatException e) {
+                throw new JsonSyntaxException((Throwable) e);
+            }
+        }
+
+        public void write(JsonWriter jsonWriter, BigDecimal bigDecimal) throws IOException {
+            jsonWriter.value((Number) bigDecimal);
+        }
+    };
+    public static final TypeAdapter<BigInteger> BIG_INTEGER = new TypeAdapter<BigInteger>() {
+        public BigInteger read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() == JsonToken.NULL) {
+                jsonReader.nextNull();
+                return null;
+            }
+            try {
+                return new BigInteger(jsonReader.nextString());
+            } catch (NumberFormatException e) {
+                throw new JsonSyntaxException((Throwable) e);
+            }
+        }
+
+        public void write(JsonWriter jsonWriter, BigInteger bigInteger) throws IOException {
+            jsonWriter.value((Number) bigInteger);
+        }
+    };
     public static final TypeAdapter<BitSet> BIT_SET;
     public static final TypeAdapterFactory BIT_SET_FACTORY;
     public static final TypeAdapter<Boolean> BOOLEAN;
+    public static final TypeAdapter<Boolean> BOOLEAN_AS_STRING = new TypeAdapter<Boolean>() {
+        public Boolean read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() != JsonToken.NULL) {
+                return Boolean.valueOf(jsonReader.nextString());
+            }
+            jsonReader.nextNull();
+            return null;
+        }
+
+        public void write(JsonWriter jsonWriter, Boolean bool) throws IOException {
+            jsonWriter.value(bool == null ? "null" : bool.toString());
+        }
+    };
     public static final TypeAdapterFactory BOOLEAN_FACTORY;
     public static final TypeAdapter<Number> BYTE;
     public static final TypeAdapterFactory BYTE_FACTORY;
@@ -61,6 +110,61 @@ public final class TypeAdapters {
     public static final TypeAdapterFactory CLASS_FACTORY;
     public static final TypeAdapter<Currency> CURRENCY;
     public static final TypeAdapterFactory CURRENCY_FACTORY;
+    public static final TypeAdapter<Number> DOUBLE = new TypeAdapter<Number>() {
+        public Number read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() != JsonToken.NULL) {
+                return Double.valueOf(jsonReader.nextDouble());
+            }
+            jsonReader.nextNull();
+            return null;
+        }
+
+        public void write(JsonWriter jsonWriter, Number number) throws IOException {
+            jsonWriter.value(number);
+        }
+    };
+    public static final TypeAdapterFactory ENUM_FACTORY = new TypeAdapterFactory() {
+        /* JADX WARNING: type inference failed for: r2v0, types: [com.google.gson.reflect.TypeToken<T>, com.google.gson.reflect.TypeToken] */
+        /* JADX WARNING: Unknown variable types count: 1 */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public <T> com.google.gson.TypeAdapter<T> create(com.google.gson.Gson r1, com.google.gson.reflect.TypeToken<T> r2) {
+            /*
+                r0 = this;
+                java.lang.Class r0 = r2.getRawType()
+                java.lang.Class<java.lang.Enum> r1 = java.lang.Enum.class
+                boolean r1 = r1.isAssignableFrom(r0)
+                if (r1 == 0) goto L_0x0021
+                java.lang.Class<java.lang.Enum> r1 = java.lang.Enum.class
+                if (r0 != r1) goto L_0x0011
+                goto L_0x0021
+            L_0x0011:
+                boolean r1 = r0.isEnum()
+                if (r1 != 0) goto L_0x001b
+                java.lang.Class r0 = r0.getSuperclass()
+            L_0x001b:
+                com.google.gson.internal.bind.TypeAdapters$EnumTypeAdapter r1 = new com.google.gson.internal.bind.TypeAdapters$EnumTypeAdapter
+                r1.<init>(r0)
+                return r1
+            L_0x0021:
+                r0 = 0
+                return r0
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.TypeAdapters.C404730.create(com.google.gson.Gson, com.google.gson.reflect.TypeToken):com.google.gson.TypeAdapter");
+        }
+    };
+    public static final TypeAdapter<Number> FLOAT = new TypeAdapter<Number>() {
+        public Number read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() != JsonToken.NULL) {
+                return Float.valueOf((float) jsonReader.nextDouble());
+            }
+            jsonReader.nextNull();
+            return null;
+        }
+
+        public void write(JsonWriter jsonWriter, Number number) throws IOException {
+            jsonWriter.value(number);
+        }
+    };
     public static final TypeAdapter<InetAddress> INET_ADDRESS;
     public static final TypeAdapterFactory INET_ADDRESS_FACTORY;
     public static final TypeAdapter<Number> INTEGER;
@@ -69,6 +173,23 @@ public final class TypeAdapters {
     public static final TypeAdapterFactory JSON_ELEMENT_FACTORY;
     public static final TypeAdapter<Locale> LOCALE;
     public static final TypeAdapterFactory LOCALE_FACTORY;
+    public static final TypeAdapter<Number> LONG = new TypeAdapter<Number>() {
+        public Number read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() == JsonToken.NULL) {
+                jsonReader.nextNull();
+                return null;
+            }
+            try {
+                return Long.valueOf(jsonReader.nextLong());
+            } catch (NumberFormatException e) {
+                throw new JsonSyntaxException((Throwable) e);
+            }
+        }
+
+        public void write(JsonWriter jsonWriter, Number number) throws IOException {
+            jsonWriter.value(number);
+        }
+    };
     public static final TypeAdapter<Number> NUMBER;
     public static final TypeAdapterFactory NUMBER_FACTORY;
     public static final TypeAdapter<Number> SHORT;
@@ -79,242 +200,139 @@ public final class TypeAdapters {
     public static final TypeAdapter<StringBuilder> STRING_BUILDER;
     public static final TypeAdapterFactory STRING_BUILDER_FACTORY;
     public static final TypeAdapterFactory STRING_FACTORY;
-    public static final TypeAdapter<URI> URI;
-    public static final TypeAdapterFactory URI_FACTORY;
-    public static final TypeAdapter<URL> URL;
-    public static final TypeAdapterFactory URL_FACTORY;
-    public static final TypeAdapter<UUID> UUID;
-    public static final TypeAdapterFactory UUID_FACTORY;
-    public static final TypeAdapter<Boolean> BOOLEAN_AS_STRING = new TypeAdapter<Boolean>() { // from class: com.google.gson.internal.bind.TypeAdapters.4
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // com.google.gson.TypeAdapter
-        /* renamed from: read */
-        public Boolean mo1911read(JsonReader jsonReader) throws IOException {
-            if (jsonReader.peek() == JsonToken.NULL) {
-                jsonReader.nextNull();
-                return null;
-            }
-            return Boolean.valueOf(jsonReader.nextString());
-        }
-
-        @Override // com.google.gson.TypeAdapter
-        public void write(JsonWriter jsonWriter, Boolean bool) throws IOException {
-            jsonWriter.value(bool == null ? "null" : bool.toString());
-        }
-    };
-    public static final TypeAdapter<Number> LONG = new TypeAdapter<Number>() { // from class: com.google.gson.internal.bind.TypeAdapters.11
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // com.google.gson.TypeAdapter
-        /* renamed from: read */
-        public Number mo1911read(JsonReader jsonReader) throws IOException {
-            if (jsonReader.peek() == JsonToken.NULL) {
-                jsonReader.nextNull();
-                return null;
-            }
-            try {
-                return Long.valueOf(jsonReader.nextLong());
-            } catch (NumberFormatException e) {
-                throw new JsonSyntaxException(e);
-            }
-        }
-
-        @Override // com.google.gson.TypeAdapter
-        public void write(JsonWriter jsonWriter, Number number) throws IOException {
-            jsonWriter.value(number);
-        }
-    };
-    public static final TypeAdapter<Number> FLOAT = new TypeAdapter<Number>() { // from class: com.google.gson.internal.bind.TypeAdapters.12
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // com.google.gson.TypeAdapter
-        /* renamed from: read */
-        public Number mo1911read(JsonReader jsonReader) throws IOException {
-            if (jsonReader.peek() == JsonToken.NULL) {
-                jsonReader.nextNull();
-                return null;
-            }
-            return Float.valueOf((float) jsonReader.nextDouble());
-        }
-
-        @Override // com.google.gson.TypeAdapter
-        public void write(JsonWriter jsonWriter, Number number) throws IOException {
-            jsonWriter.value(number);
-        }
-    };
-    public static final TypeAdapter<Number> DOUBLE = new TypeAdapter<Number>() { // from class: com.google.gson.internal.bind.TypeAdapters.13
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // com.google.gson.TypeAdapter
-        /* renamed from: read */
-        public Number mo1911read(JsonReader jsonReader) throws IOException {
-            if (jsonReader.peek() == JsonToken.NULL) {
-                jsonReader.nextNull();
-                return null;
-            }
-            return Double.valueOf(jsonReader.nextDouble());
-        }
-
-        @Override // com.google.gson.TypeAdapter
-        public void write(JsonWriter jsonWriter, Number number) throws IOException {
-            jsonWriter.value(number);
-        }
-    };
-    public static final TypeAdapter<BigDecimal> BIG_DECIMAL = new TypeAdapter<BigDecimal>() { // from class: com.google.gson.internal.bind.TypeAdapters.17
-        @Override // com.google.gson.TypeAdapter
-        /* renamed from: read  reason: collision with other method in class */
-        public BigDecimal mo1911read(JsonReader jsonReader) throws IOException {
-            if (jsonReader.peek() == JsonToken.NULL) {
-                jsonReader.nextNull();
-                return null;
-            }
-            try {
-                return new BigDecimal(jsonReader.nextString());
-            } catch (NumberFormatException e) {
-                throw new JsonSyntaxException(e);
-            }
-        }
-
-        @Override // com.google.gson.TypeAdapter
-        public void write(JsonWriter jsonWriter, BigDecimal bigDecimal) throws IOException {
-            jsonWriter.value(bigDecimal);
-        }
-    };
-    public static final TypeAdapter<BigInteger> BIG_INTEGER = new TypeAdapter<BigInteger>() { // from class: com.google.gson.internal.bind.TypeAdapters.18
-        @Override // com.google.gson.TypeAdapter
-        /* renamed from: read  reason: collision with other method in class */
-        public BigInteger mo1911read(JsonReader jsonReader) throws IOException {
-            if (jsonReader.peek() == JsonToken.NULL) {
-                jsonReader.nextNull();
-                return null;
-            }
-            try {
-                return new BigInteger(jsonReader.nextString());
-            } catch (NumberFormatException e) {
-                throw new JsonSyntaxException(e);
-            }
-        }
-
-        @Override // com.google.gson.TypeAdapter
-        public void write(JsonWriter jsonWriter, BigInteger bigInteger) throws IOException {
-            jsonWriter.value(bigInteger);
-        }
-    };
-    public static final TypeAdapterFactory TIMESTAMP_FACTORY = new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.TypeAdapters.26
-        @Override // com.google.gson.TypeAdapterFactory
+    public static final TypeAdapterFactory TIMESTAMP_FACTORY = new TypeAdapterFactory() {
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
             if (typeToken.getRawType() != Timestamp.class) {
                 return null;
             }
-            final TypeAdapter<T> adapter = gson.getAdapter(Date.class);
-            return (TypeAdapter<T>) new TypeAdapter<Timestamp>() { // from class: com.google.gson.internal.bind.TypeAdapters.26.1
-                @Override // com.google.gson.TypeAdapter
-                /* renamed from: read  reason: collision with other method in class */
-                public Timestamp mo1911read(JsonReader jsonReader) throws IOException {
-                    Date date = (Date) adapter.mo1911read(jsonReader);
+            final TypeAdapter<Date> adapter = gson.getAdapter(Date.class);
+            return new TypeAdapter<Timestamp>() {
+                public Timestamp read(JsonReader jsonReader) throws IOException {
+                    Date date = (Date) adapter.read(jsonReader);
                     if (date != null) {
                         return new Timestamp(date.getTime());
                     }
                     return null;
                 }
 
-                @Override // com.google.gson.TypeAdapter
                 public void write(JsonWriter jsonWriter, Timestamp timestamp) throws IOException {
                     adapter.write(jsonWriter, timestamp);
                 }
             };
         }
     };
-    public static final TypeAdapterFactory ENUM_FACTORY = new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.TypeAdapters.30
-        @Override // com.google.gson.TypeAdapterFactory
-        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
-            Class rawType = typeToken.getRawType();
-            if (!Enum.class.isAssignableFrom(rawType) || rawType == Enum.class) {
-                return null;
-            }
-            if (!rawType.isEnum()) {
-                rawType = (Class<? super Object>) rawType.getSuperclass();
-            }
-            return new EnumTypeAdapter(rawType);
-        }
-    };
+    public static final TypeAdapter<URI> URI;
+    public static final TypeAdapterFactory URI_FACTORY;
+    public static final TypeAdapter<URL> URL;
+    public static final TypeAdapterFactory URL_FACTORY;
+    public static final TypeAdapter<UUID> UUID;
+    public static final TypeAdapterFactory UUID_FACTORY;
+
+    private TypeAdapters() {
+        throw new UnsupportedOperationException();
+    }
 
     static {
-        TypeAdapter<Class> nullSafe = new TypeAdapter<Class>() { // from class: com.google.gson.internal.bind.TypeAdapters.1
-            @Override // com.google.gson.TypeAdapter
+        TypeAdapter<Class> nullSafe = new TypeAdapter<Class>() {
             public void write(JsonWriter jsonWriter, Class cls) throws IOException {
                 throw new UnsupportedOperationException("Attempted to serialize java.lang.Class: " + cls.getName() + ". Forgot to register a type adapter?");
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read */
-            public Class mo1911read(JsonReader jsonReader) throws IOException {
+            public Class read(JsonReader jsonReader) throws IOException {
                 throw new UnsupportedOperationException("Attempted to deserialize a java.lang.Class. Forgot to register a type adapter?");
             }
         }.nullSafe();
         CLASS = nullSafe;
         CLASS_FACTORY = newFactory(Class.class, nullSafe);
-        TypeAdapter<BitSet> nullSafe2 = new TypeAdapter<BitSet>() { // from class: com.google.gson.internal.bind.TypeAdapters.2
-            /* JADX WARN: Code restructure failed: missing block: B:13:0x002b, code lost:
-                if (java.lang.Integer.parseInt(r0) != 0) goto L15;
+        TypeAdapter<BitSet> nullSafe2 = new TypeAdapter<BitSet>() {
+            /* JADX WARNING: Code restructure failed: missing block: B:12:0x002b, code lost:
+                if (java.lang.Integer.parseInt(r0) != 0) goto L_0x0065;
              */
-            /* JADX WARN: Code restructure failed: missing block: B:14:0x002e, code lost:
-                r4 = false;
+            /* JADX WARNING: Code restructure failed: missing block: B:21:0x0063, code lost:
+                if (r7.nextInt() != 0) goto L_0x0065;
              */
-            /* JADX WARN: Code restructure failed: missing block: B:29:0x0067, code lost:
-                if (r7.nextInt() != 0) goto L15;
-             */
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            /*
-                Code decompiled incorrectly, please refer to instructions dump.
-            */
-            public BitSet mo1911read(JsonReader jsonReader) throws IOException {
-                BitSet bitSet = new BitSet();
-                jsonReader.beginArray();
-                JsonToken peek = jsonReader.peek();
-                int i = 0;
-                while (peek != JsonToken.END_ARRAY) {
-                    int i2 = AnonymousClass36.$SwitchMap$com$google$gson$stream$JsonToken[peek.ordinal()];
-                    boolean z = true;
-                    if (i2 != 1) {
-                        if (i2 == 2) {
-                            z = jsonReader.nextBoolean();
-                        } else if (i2 == 3) {
-                            String nextString = jsonReader.nextString();
-                            try {
-                            } catch (NumberFormatException unused) {
-                                throw new JsonSyntaxException("Error: Expecting: bitset number value (1, 0), Found: " + nextString);
-                            }
-                        } else {
-                            throw new JsonSyntaxException("Invalid bitset value type: " + peek);
-                        }
-                        if (z) {
-                            bitSet.set(i);
-                        }
-                        i++;
-                        peek = jsonReader.peek();
-                    }
-                }
-                jsonReader.endArray();
-                return bitSet;
+            /* JADX WARNING: Removed duplicated region for block: B:23:0x0067  */
+            /* JADX WARNING: Removed duplicated region for block: B:30:0x006a A[SYNTHETIC] */
+            /* Code decompiled incorrectly, please refer to instructions dump. */
+            public java.util.BitSet read(com.google.gson.stream.JsonReader r7) throws java.p026io.IOException {
+                /*
+                    r6 = this;
+                    java.util.BitSet r6 = new java.util.BitSet
+                    r6.<init>()
+                    r7.beginArray()
+                    com.google.gson.stream.JsonToken r0 = r7.peek()
+                    r1 = 0
+                    r2 = r1
+                L_0x000e:
+                    com.google.gson.stream.JsonToken r3 = com.google.gson.stream.JsonToken.END_ARRAY
+                    if (r0 == r3) goto L_0x0071
+                    int[] r3 = com.google.gson.internal.bind.TypeAdapters.C405436.$SwitchMap$com$google$gson$stream$JsonToken
+                    int r4 = r0.ordinal()
+                    r3 = r3[r4]
+                    r4 = 1
+                    if (r3 == r4) goto L_0x005f
+                    r5 = 2
+                    if (r3 == r5) goto L_0x005a
+                    r5 = 3
+                    if (r3 != r5) goto L_0x0045
+                    java.lang.String r0 = r7.nextString()
+                    int r0 = java.lang.Integer.parseInt(r0)     // Catch:{ NumberFormatException -> 0x0030 }
+                    if (r0 == 0) goto L_0x002e
+                    goto L_0x0065
+                L_0x002e:
+                    r4 = r1
+                    goto L_0x0065
+                L_0x0030:
+                    com.google.gson.JsonSyntaxException r6 = new com.google.gson.JsonSyntaxException
+                    java.lang.StringBuilder r7 = new java.lang.StringBuilder
+                    java.lang.String r1 = "Error: Expecting: bitset number value (1, 0), Found: "
+                    r7.<init>((java.lang.String) r1)
+                    java.lang.StringBuilder r7 = r7.append((java.lang.String) r0)
+                    java.lang.String r7 = r7.toString()
+                    r6.<init>((java.lang.String) r7)
+                    throw r6
+                L_0x0045:
+                    com.google.gson.JsonSyntaxException r6 = new com.google.gson.JsonSyntaxException
+                    java.lang.StringBuilder r7 = new java.lang.StringBuilder
+                    java.lang.String r1 = "Invalid bitset value type: "
+                    r7.<init>((java.lang.String) r1)
+                    java.lang.StringBuilder r7 = r7.append((java.lang.Object) r0)
+                    java.lang.String r7 = r7.toString()
+                    r6.<init>((java.lang.String) r7)
+                    throw r6
+                L_0x005a:
+                    boolean r4 = r7.nextBoolean()
+                    goto L_0x0065
+                L_0x005f:
+                    int r0 = r7.nextInt()
+                    if (r0 == 0) goto L_0x002e
+                L_0x0065:
+                    if (r4 == 0) goto L_0x006a
+                    r6.set(r2)
+                L_0x006a:
+                    int r2 = r2 + 1
+                    com.google.gson.stream.JsonToken r0 = r7.peek()
+                    goto L_0x000e
+                L_0x0071:
+                    r7.endArray()
+                    return r6
+                */
+                throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.TypeAdapters.C40342.read(com.google.gson.stream.JsonReader):java.util.BitSet");
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, BitSet bitSet) throws IOException {
                 jsonWriter.beginArray();
                 int length = bitSet.length();
                 for (int i = 0; i < length; i++) {
-                    jsonWriter.value(bitSet.get(i) ? 1L : 0L);
+                    jsonWriter.value(bitSet.get(i) ? 1 : 0);
                 }
                 jsonWriter.endArray();
             }
         }.nullSafe();
         BIT_SET = nullSafe2;
         BIT_SET_FACTORY = newFactory(BitSet.class, nullSafe2);
-        TypeAdapter<Boolean> typeAdapter = new TypeAdapter<Boolean>() { // from class: com.google.gson.internal.bind.TypeAdapters.3
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read */
-            public Boolean mo1911read(JsonReader jsonReader) throws IOException {
+        C40463 r0 = new TypeAdapter<Boolean>() {
+            public Boolean read(JsonReader jsonReader) throws IOException {
                 JsonToken peek = jsonReader.peek();
                 if (peek == JsonToken.NULL) {
                     jsonReader.nextNull();
@@ -326,18 +344,14 @@ public final class TypeAdapters {
                 }
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, Boolean bool) throws IOException {
                 jsonWriter.value(bool);
             }
         };
-        BOOLEAN = typeAdapter;
-        BOOLEAN_FACTORY = newFactory(Boolean.TYPE, Boolean.class, typeAdapter);
-        TypeAdapter<Number> typeAdapter2 = new TypeAdapter<Number>() { // from class: com.google.gson.internal.bind.TypeAdapters.5
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read */
-            public Number mo1911read(JsonReader jsonReader) throws IOException {
+        BOOLEAN = r0;
+        BOOLEAN_FACTORY = newFactory(Boolean.TYPE, Boolean.class, r0);
+        C40565 r02 = new TypeAdapter<Number>() {
+            public Number read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
                     return null;
@@ -345,22 +359,18 @@ public final class TypeAdapters {
                 try {
                     return Byte.valueOf((byte) jsonReader.nextInt());
                 } catch (NumberFormatException e) {
-                    throw new JsonSyntaxException(e);
+                    throw new JsonSyntaxException((Throwable) e);
                 }
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, Number number) throws IOException {
                 jsonWriter.value(number);
             }
         };
-        BYTE = typeAdapter2;
-        BYTE_FACTORY = newFactory(Byte.TYPE, Byte.class, typeAdapter2);
-        TypeAdapter<Number> typeAdapter3 = new TypeAdapter<Number>() { // from class: com.google.gson.internal.bind.TypeAdapters.6
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read */
-            public Number mo1911read(JsonReader jsonReader) throws IOException {
+        BYTE = r02;
+        BYTE_FACTORY = newFactory(Byte.TYPE, Byte.class, r02);
+        C40576 r03 = new TypeAdapter<Number>() {
+            public Number read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
                     return null;
@@ -368,22 +378,18 @@ public final class TypeAdapters {
                 try {
                     return Short.valueOf((short) jsonReader.nextInt());
                 } catch (NumberFormatException e) {
-                    throw new JsonSyntaxException(e);
+                    throw new JsonSyntaxException((Throwable) e);
                 }
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, Number number) throws IOException {
                 jsonWriter.value(number);
             }
         };
-        SHORT = typeAdapter3;
-        SHORT_FACTORY = newFactory(Short.TYPE, Short.class, typeAdapter3);
-        TypeAdapter<Number> typeAdapter4 = new TypeAdapter<Number>() { // from class: com.google.gson.internal.bind.TypeAdapters.7
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read */
-            public Number mo1911read(JsonReader jsonReader) throws IOException {
+        SHORT = r03;
+        SHORT_FACTORY = newFactory(Short.TYPE, Short.class, r03);
+        C40587 r04 = new TypeAdapter<Number>() {
+            public Number read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
                     return null;
@@ -391,60 +397,51 @@ public final class TypeAdapters {
                 try {
                     return Integer.valueOf(jsonReader.nextInt());
                 } catch (NumberFormatException e) {
-                    throw new JsonSyntaxException(e);
+                    throw new JsonSyntaxException((Throwable) e);
                 }
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, Number number) throws IOException {
                 jsonWriter.value(number);
             }
         };
-        INTEGER = typeAdapter4;
-        INTEGER_FACTORY = newFactory(Integer.TYPE, Integer.class, typeAdapter4);
-        TypeAdapter<AtomicInteger> nullSafe3 = new TypeAdapter<AtomicInteger>() { // from class: com.google.gson.internal.bind.TypeAdapters.8
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public AtomicInteger mo1911read(JsonReader jsonReader) throws IOException {
+        INTEGER = r04;
+        INTEGER_FACTORY = newFactory(Integer.TYPE, Integer.class, r04);
+        TypeAdapter<AtomicInteger> nullSafe3 = new TypeAdapter<AtomicInteger>() {
+            public AtomicInteger read(JsonReader jsonReader) throws IOException {
                 try {
                     return new AtomicInteger(jsonReader.nextInt());
                 } catch (NumberFormatException e) {
-                    throw new JsonSyntaxException(e);
+                    throw new JsonSyntaxException((Throwable) e);
                 }
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, AtomicInteger atomicInteger) throws IOException {
-                jsonWriter.value(atomicInteger.get());
+                jsonWriter.value((long) atomicInteger.get());
             }
         }.nullSafe();
         ATOMIC_INTEGER = nullSafe3;
         ATOMIC_INTEGER_FACTORY = newFactory(AtomicInteger.class, nullSafe3);
-        TypeAdapter<AtomicBoolean> nullSafe4 = new TypeAdapter<AtomicBoolean>() { // from class: com.google.gson.internal.bind.TypeAdapters.9
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public AtomicBoolean mo1911read(JsonReader jsonReader) throws IOException {
+        TypeAdapter<AtomicBoolean> nullSafe4 = new TypeAdapter<AtomicBoolean>() {
+            public AtomicBoolean read(JsonReader jsonReader) throws IOException {
                 return new AtomicBoolean(jsonReader.nextBoolean());
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, AtomicBoolean atomicBoolean) throws IOException {
                 jsonWriter.value(atomicBoolean.get());
             }
         }.nullSafe();
         ATOMIC_BOOLEAN = nullSafe4;
         ATOMIC_BOOLEAN_FACTORY = newFactory(AtomicBoolean.class, nullSafe4);
-        TypeAdapter<AtomicIntegerArray> nullSafe5 = new TypeAdapter<AtomicIntegerArray>() { // from class: com.google.gson.internal.bind.TypeAdapters.10
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public AtomicIntegerArray mo1911read(JsonReader jsonReader) throws IOException {
+        TypeAdapter<AtomicIntegerArray> nullSafe5 = new TypeAdapter<AtomicIntegerArray>() {
+            public AtomicIntegerArray read(JsonReader jsonReader) throws IOException {
                 ArrayList arrayList = new ArrayList();
                 jsonReader.beginArray();
                 while (jsonReader.hasNext()) {
                     try {
                         arrayList.add(Integer.valueOf(jsonReader.nextInt()));
                     } catch (NumberFormatException e) {
-                        throw new JsonSyntaxException(e);
+                        throw new JsonSyntaxException((Throwable) e);
                     }
                 }
                 jsonReader.endArray();
@@ -456,25 +453,21 @@ public final class TypeAdapters {
                 return atomicIntegerArray;
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, AtomicIntegerArray atomicIntegerArray) throws IOException {
                 jsonWriter.beginArray();
                 int length = atomicIntegerArray.length();
                 for (int i = 0; i < length; i++) {
-                    jsonWriter.value(atomicIntegerArray.get(i));
+                    jsonWriter.value((long) atomicIntegerArray.get(i));
                 }
                 jsonWriter.endArray();
             }
         }.nullSafe();
         ATOMIC_INTEGER_ARRAY = nullSafe5;
         ATOMIC_INTEGER_ARRAY_FACTORY = newFactory(AtomicIntegerArray.class, nullSafe5);
-        TypeAdapter<Number> typeAdapter5 = new TypeAdapter<Number>() { // from class: com.google.gson.internal.bind.TypeAdapters.14
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read */
-            public Number mo1911read(JsonReader jsonReader) throws IOException {
+        C402814 r05 = new TypeAdapter<Number>() {
+            public Number read(JsonReader jsonReader) throws IOException {
                 JsonToken peek = jsonReader.peek();
-                int i = AnonymousClass36.$SwitchMap$com$google$gson$stream$JsonToken[peek.ordinal()];
+                int i = C405436.$SwitchMap$com$google$gson$stream$JsonToken[peek.ordinal()];
                 if (i == 1 || i == 3) {
                     return new LazilyParsedNumber(jsonReader.nextString());
                 }
@@ -485,40 +478,33 @@ public final class TypeAdapters {
                 throw new JsonSyntaxException("Expecting number, got: " + peek);
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, Number number) throws IOException {
                 jsonWriter.value(number);
             }
         };
-        NUMBER = typeAdapter5;
-        NUMBER_FACTORY = newFactory(Number.class, typeAdapter5);
-        TypeAdapter<Character> typeAdapter6 = new TypeAdapter<Character>() { // from class: com.google.gson.internal.bind.TypeAdapters.15
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read */
-            public Character mo1911read(JsonReader jsonReader) throws IOException {
+        NUMBER = r05;
+        NUMBER_FACTORY = newFactory(Number.class, r05);
+        C402915 r06 = new TypeAdapter<Character>() {
+            public Character read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
                     return null;
                 }
                 String nextString = jsonReader.nextString();
-                if (nextString.length() != 1) {
-                    throw new JsonSyntaxException("Expecting character, got: " + nextString);
+                if (nextString.length() == 1) {
+                    return Character.valueOf(nextString.charAt(0));
                 }
-                return Character.valueOf(nextString.charAt(0));
+                throw new JsonSyntaxException("Expecting character, got: " + nextString);
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, Character ch) throws IOException {
-                jsonWriter.value(ch == null ? null : String.valueOf(ch));
+                jsonWriter.value(ch == null ? null : String.valueOf((Object) ch));
             }
         };
-        CHARACTER = typeAdapter6;
-        CHARACTER_FACTORY = newFactory(Character.TYPE, Character.class, typeAdapter6);
-        TypeAdapter<String> typeAdapter7 = new TypeAdapter<String>() { // from class: com.google.gson.internal.bind.TypeAdapters.16
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public String mo1911read(JsonReader jsonReader) throws IOException {
+        CHARACTER = r06;
+        CHARACTER_FACTORY = newFactory(Character.TYPE, Character.class, r06);
+        C403016 r07 = new TypeAdapter<String>() {
+            public String read(JsonReader jsonReader) throws IOException {
                 JsonToken peek = jsonReader.peek();
                 if (peek == JsonToken.NULL) {
                     jsonReader.nextNull();
@@ -530,151 +516,134 @@ public final class TypeAdapters {
                 }
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, String str) throws IOException {
                 jsonWriter.value(str);
             }
         };
-        STRING = typeAdapter7;
-        STRING_FACTORY = newFactory(String.class, typeAdapter7);
-        TypeAdapter<StringBuilder> typeAdapter8 = new TypeAdapter<StringBuilder>() { // from class: com.google.gson.internal.bind.TypeAdapters.19
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public StringBuilder mo1911read(JsonReader jsonReader) throws IOException {
-                if (jsonReader.peek() == JsonToken.NULL) {
-                    jsonReader.nextNull();
-                    return null;
+        STRING = r07;
+        STRING_FACTORY = newFactory(String.class, r07);
+        C403319 r08 = new TypeAdapter<StringBuilder>() {
+            public StringBuilder read(JsonReader jsonReader) throws IOException {
+                if (jsonReader.peek() != JsonToken.NULL) {
+                    return new StringBuilder(jsonReader.nextString());
                 }
-                return new StringBuilder(jsonReader.nextString());
+                jsonReader.nextNull();
+                return null;
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, StringBuilder sb) throws IOException {
                 jsonWriter.value(sb == null ? null : sb.toString());
             }
         };
-        STRING_BUILDER = typeAdapter8;
-        STRING_BUILDER_FACTORY = newFactory(StringBuilder.class, typeAdapter8);
-        TypeAdapter<StringBuffer> typeAdapter9 = new TypeAdapter<StringBuffer>() { // from class: com.google.gson.internal.bind.TypeAdapters.20
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public StringBuffer mo1911read(JsonReader jsonReader) throws IOException {
-                if (jsonReader.peek() == JsonToken.NULL) {
-                    jsonReader.nextNull();
-                    return null;
+        STRING_BUILDER = r08;
+        STRING_BUILDER_FACTORY = newFactory(StringBuilder.class, r08);
+        C403520 r09 = new TypeAdapter<StringBuffer>() {
+            public StringBuffer read(JsonReader jsonReader) throws IOException {
+                if (jsonReader.peek() != JsonToken.NULL) {
+                    return new StringBuffer(jsonReader.nextString());
                 }
-                return new StringBuffer(jsonReader.nextString());
+                jsonReader.nextNull();
+                return null;
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, StringBuffer stringBuffer) throws IOException {
                 jsonWriter.value(stringBuffer == null ? null : stringBuffer.toString());
             }
         };
-        STRING_BUFFER = typeAdapter9;
-        STRING_BUFFER_FACTORY = newFactory(StringBuffer.class, typeAdapter9);
-        TypeAdapter<URL> typeAdapter10 = new TypeAdapter<URL>() { // from class: com.google.gson.internal.bind.TypeAdapters.21
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public URL mo1911read(JsonReader jsonReader) throws IOException {
+        STRING_BUFFER = r09;
+        STRING_BUFFER_FACTORY = newFactory(StringBuffer.class, r09);
+        C403621 r010 = new TypeAdapter<URL>() {
+            public URL read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
                     return null;
                 }
                 String nextString = jsonReader.nextString();
-                if (!"null".equals(nextString)) {
-                    return new URL(nextString);
+                if ("null".equals(nextString)) {
+                    return null;
                 }
-                return null;
+                return new URL(nextString);
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, URL url) throws IOException {
                 jsonWriter.value(url == null ? null : url.toExternalForm());
             }
         };
-        URL = typeAdapter10;
-        URL_FACTORY = newFactory(URL.class, typeAdapter10);
-        TypeAdapter<URI> typeAdapter11 = new TypeAdapter<URI>() { // from class: com.google.gson.internal.bind.TypeAdapters.22
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public URI mo1911read(JsonReader jsonReader) throws IOException {
+        URL = r010;
+        URL_FACTORY = newFactory(URL.class, r010);
+        C403722 r011 = new TypeAdapter<URI>() {
+            public URI read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
                     return null;
                 }
                 try {
                     String nextString = jsonReader.nextString();
-                    if (!"null".equals(nextString)) {
-                        return new URI(nextString);
+                    if ("null".equals(nextString)) {
+                        return null;
                     }
-                    return null;
+                    return new URI(nextString);
                 } catch (URISyntaxException e) {
-                    throw new JsonIOException(e);
+                    throw new JsonIOException((Throwable) e);
                 }
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, URI uri) throws IOException {
                 jsonWriter.value(uri == null ? null : uri.toASCIIString());
             }
         };
-        URI = typeAdapter11;
-        URI_FACTORY = newFactory(URI.class, typeAdapter11);
-        TypeAdapter<InetAddress> typeAdapter12 = new TypeAdapter<InetAddress>() { // from class: com.google.gson.internal.bind.TypeAdapters.23
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public InetAddress mo1911read(JsonReader jsonReader) throws IOException {
-                if (jsonReader.peek() == JsonToken.NULL) {
-                    jsonReader.nextNull();
-                    return null;
+        URI = r011;
+        URI_FACTORY = newFactory(URI.class, r011);
+        C403823 r012 = new TypeAdapter<InetAddress>() {
+            public InetAddress read(JsonReader jsonReader) throws IOException {
+                if (jsonReader.peek() != JsonToken.NULL) {
+                    return InetAddress.getByName(jsonReader.nextString());
                 }
-                return InetAddress.getByName(jsonReader.nextString());
+                jsonReader.nextNull();
+                return null;
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, InetAddress inetAddress) throws IOException {
                 jsonWriter.value(inetAddress == null ? null : inetAddress.getHostAddress());
             }
         };
-        INET_ADDRESS = typeAdapter12;
-        INET_ADDRESS_FACTORY = newTypeHierarchyFactory(InetAddress.class, typeAdapter12);
-        TypeAdapter<UUID> typeAdapter13 = new TypeAdapter<UUID>() { // from class: com.google.gson.internal.bind.TypeAdapters.24
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public UUID mo1911read(JsonReader jsonReader) throws IOException {
-                if (jsonReader.peek() == JsonToken.NULL) {
-                    jsonReader.nextNull();
-                    return null;
+        INET_ADDRESS = r012;
+        INET_ADDRESS_FACTORY = newTypeHierarchyFactory(InetAddress.class, r012);
+        C403924 r013 = new TypeAdapter<UUID>() {
+            public UUID read(JsonReader jsonReader) throws IOException {
+                if (jsonReader.peek() != JsonToken.NULL) {
+                    return UUID.fromString(jsonReader.nextString());
                 }
-                return UUID.fromString(jsonReader.nextString());
+                jsonReader.nextNull();
+                return null;
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, UUID uuid) throws IOException {
                 jsonWriter.value(uuid == null ? null : uuid.toString());
             }
         };
-        UUID = typeAdapter13;
-        UUID_FACTORY = newFactory(UUID.class, typeAdapter13);
-        TypeAdapter<Currency> nullSafe6 = new TypeAdapter<Currency>() { // from class: com.google.gson.internal.bind.TypeAdapters.25
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public Currency mo1911read(JsonReader jsonReader) throws IOException {
+        UUID = r013;
+        UUID_FACTORY = newFactory(UUID.class, r013);
+        TypeAdapter<Currency> nullSafe6 = new TypeAdapter<Currency>() {
+            public Currency read(JsonReader jsonReader) throws IOException {
                 return Currency.getInstance(jsonReader.nextString());
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, Currency currency) throws IOException {
                 jsonWriter.value(currency.getCurrencyCode());
             }
         }.nullSafe();
         CURRENCY = nullSafe6;
         CURRENCY_FACTORY = newFactory(Currency.class, nullSafe6);
-        TypeAdapter<Calendar> typeAdapter14 = new TypeAdapter<Calendar>() { // from class: com.google.gson.internal.bind.TypeAdapters.27
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public Calendar mo1911read(JsonReader jsonReader) throws IOException {
+        C404327 r014 = new TypeAdapter<Calendar>() {
+            private static final String DAY_OF_MONTH = "dayOfMonth";
+            private static final String HOUR_OF_DAY = "hourOfDay";
+            private static final String MINUTE = "minute";
+            private static final String MONTH = "month";
+            private static final String SECOND = "second";
+            private static final String YEAR = "year";
+
+            public Calendar read(JsonReader jsonReader) throws IOException {
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
                     return null;
@@ -689,17 +658,17 @@ public final class TypeAdapters {
                 while (jsonReader.peek() != JsonToken.END_OBJECT) {
                     String nextName = jsonReader.nextName();
                     int nextInt = jsonReader.nextInt();
-                    if ("year".equals(nextName)) {
+                    if (YEAR.equals(nextName)) {
                         i = nextInt;
-                    } else if ("month".equals(nextName)) {
+                    } else if (MONTH.equals(nextName)) {
                         i2 = nextInt;
-                    } else if ("dayOfMonth".equals(nextName)) {
+                    } else if (DAY_OF_MONTH.equals(nextName)) {
                         i3 = nextInt;
-                    } else if ("hourOfDay".equals(nextName)) {
+                    } else if (HOUR_OF_DAY.equals(nextName)) {
                         i4 = nextInt;
-                    } else if ("minute".equals(nextName)) {
+                    } else if (MINUTE.equals(nextName)) {
                         i5 = nextInt;
-                    } else if ("second".equals(nextName)) {
+                    } else if (SECOND.equals(nextName)) {
                         i6 = nextInt;
                     }
                 }
@@ -707,40 +676,37 @@ public final class TypeAdapters {
                 return new GregorianCalendar(i, i2, i3, i4, i5, i6);
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, Calendar calendar) throws IOException {
                 if (calendar == null) {
                     jsonWriter.nullValue();
                     return;
                 }
                 jsonWriter.beginObject();
-                jsonWriter.name("year");
-                jsonWriter.value(calendar.get(1));
-                jsonWriter.name("month");
-                jsonWriter.value(calendar.get(2));
-                jsonWriter.name("dayOfMonth");
-                jsonWriter.value(calendar.get(5));
-                jsonWriter.name("hourOfDay");
-                jsonWriter.value(calendar.get(11));
-                jsonWriter.name("minute");
-                jsonWriter.value(calendar.get(12));
-                jsonWriter.name("second");
-                jsonWriter.value(calendar.get(13));
+                jsonWriter.name(YEAR);
+                jsonWriter.value((long) calendar.get(1));
+                jsonWriter.name(MONTH);
+                jsonWriter.value((long) calendar.get(2));
+                jsonWriter.name(DAY_OF_MONTH);
+                jsonWriter.value((long) calendar.get(5));
+                jsonWriter.name(HOUR_OF_DAY);
+                jsonWriter.value((long) calendar.get(11));
+                jsonWriter.name(MINUTE);
+                jsonWriter.value((long) calendar.get(12));
+                jsonWriter.name(SECOND);
+                jsonWriter.value((long) calendar.get(13));
                 jsonWriter.endObject();
             }
         };
-        CALENDAR = typeAdapter14;
-        CALENDAR_FACTORY = newFactoryForMultipleTypes(Calendar.class, GregorianCalendar.class, typeAdapter14);
-        TypeAdapter<Locale> typeAdapter15 = new TypeAdapter<Locale>() { // from class: com.google.gson.internal.bind.TypeAdapters.28
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read  reason: collision with other method in class */
-            public Locale mo1911read(JsonReader jsonReader) throws IOException {
+        CALENDAR = r014;
+        CALENDAR_FACTORY = newFactoryForMultipleTypes(Calendar.class, GregorianCalendar.class, r014);
+        C404428 r015 = new TypeAdapter<Locale>() {
+            public Locale read(JsonReader jsonReader) throws IOException {
                 String str = null;
                 if (jsonReader.peek() == JsonToken.NULL) {
                     jsonReader.nextNull();
                     return null;
                 }
-                StringTokenizer stringTokenizer = new StringTokenizer(jsonReader.nextString(), "_");
+                StringTokenizer stringTokenizer = new StringTokenizer(jsonReader.nextString(), BaseLocale.SEP);
                 String nextToken = stringTokenizer.hasMoreElements() ? stringTokenizer.nextToken() : null;
                 String nextToken2 = stringTokenizer.hasMoreElements() ? stringTokenizer.nextToken() : null;
                 if (stringTokenizer.hasMoreElements()) {
@@ -755,21 +721,17 @@ public final class TypeAdapters {
                 return new Locale(nextToken, nextToken2, str);
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, Locale locale) throws IOException {
                 jsonWriter.value(locale == null ? null : locale.toString());
             }
         };
-        LOCALE = typeAdapter15;
-        LOCALE_FACTORY = newFactory(Locale.class, typeAdapter15);
-        TypeAdapter<JsonElement> typeAdapter16 = new TypeAdapter<JsonElement>() { // from class: com.google.gson.internal.bind.TypeAdapters.29
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read */
-            public JsonElement mo1911read(JsonReader jsonReader) throws IOException {
-                switch (AnonymousClass36.$SwitchMap$com$google$gson$stream$JsonToken[jsonReader.peek().ordinal()]) {
+        LOCALE = r015;
+        LOCALE_FACTORY = newFactory(Locale.class, r015);
+        C404529 r016 = new TypeAdapter<JsonElement>() {
+            public JsonElement read(JsonReader jsonReader) throws IOException {
+                switch (C405436.$SwitchMap$com$google$gson$stream$JsonToken[jsonReader.peek().ordinal()]) {
                     case 1:
-                        return new JsonPrimitive(new LazilyParsedNumber(jsonReader.nextString()));
+                        return new JsonPrimitive((Number) new LazilyParsedNumber(jsonReader.nextString()));
                     case 2:
                         return new JsonPrimitive(Boolean.valueOf(jsonReader.nextBoolean()));
                     case 3:
@@ -781,7 +743,7 @@ public final class TypeAdapters {
                         JsonArray jsonArray = new JsonArray();
                         jsonReader.beginArray();
                         while (jsonReader.hasNext()) {
-                            jsonArray.add(mo1911read(jsonReader));
+                            jsonArray.add(read(jsonReader));
                         }
                         jsonReader.endArray();
                         return jsonArray;
@@ -789,7 +751,7 @@ public final class TypeAdapters {
                         JsonObject jsonObject = new JsonObject();
                         jsonReader.beginObject();
                         while (jsonReader.hasNext()) {
-                            jsonObject.add(jsonReader.nextName(), mo1911read(jsonReader));
+                            jsonObject.add(jsonReader.nextName(), read(jsonReader));
                         }
                         jsonReader.endObject();
                         return jsonObject;
@@ -798,7 +760,6 @@ public final class TypeAdapters {
                 }
             }
 
-            @Override // com.google.gson.TypeAdapter
             public void write(JsonWriter jsonWriter, JsonElement jsonElement) throws IOException {
                 if (jsonElement == null || jsonElement.isJsonNull()) {
                     jsonWriter.nullValue();
@@ -820,9 +781,9 @@ public final class TypeAdapters {
                     jsonWriter.endArray();
                 } else if (jsonElement.isJsonObject()) {
                     jsonWriter.beginObject();
-                    for (Map.Entry<String, JsonElement> entry : jsonElement.getAsJsonObject().entrySet()) {
-                        jsonWriter.name(entry.getKey());
-                        write(jsonWriter, entry.getValue());
+                    for (Map.Entry next : jsonElement.getAsJsonObject().entrySet()) {
+                        jsonWriter.name((String) next.getKey());
+                        write(jsonWriter, (JsonElement) next.getValue());
                     }
                     jsonWriter.endObject();
                 } else {
@@ -830,101 +791,126 @@ public final class TypeAdapters {
                 }
             }
         };
-        JSON_ELEMENT = typeAdapter16;
-        JSON_ELEMENT_FACTORY = newTypeHierarchyFactory(JsonElement.class, typeAdapter16);
+        JSON_ELEMENT = r016;
+        JSON_ELEMENT_FACTORY = newTypeHierarchyFactory(JsonElement.class, r016);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.google.gson.internal.bind.TypeAdapters$36  reason: invalid class name */
-    /* loaded from: classes2.dex */
-    public static /* synthetic */ class AnonymousClass36 {
+    /* renamed from: com.google.gson.internal.bind.TypeAdapters$36 */
+    static /* synthetic */ class C405436 {
         static final /* synthetic */ int[] $SwitchMap$com$google$gson$stream$JsonToken;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(20:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|(3:19|20|22)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(22:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|22) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0054 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0060 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x006c */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[JsonToken.values().length];
-            $SwitchMap$com$google$gson$stream$JsonToken = iArr;
-            try {
-                iArr[JsonToken.NUMBER.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$google$gson$stream$JsonToken[JsonToken.BOOLEAN.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$google$gson$stream$JsonToken[JsonToken.STRING.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$com$google$gson$stream$JsonToken[JsonToken.NULL.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$com$google$gson$stream$JsonToken[JsonToken.BEGIN_ARRAY.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$com$google$gson$stream$JsonToken[JsonToken.BEGIN_OBJECT.ordinal()] = 6;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$com$google$gson$stream$JsonToken[JsonToken.END_DOCUMENT.ordinal()] = 7;
-            } catch (NoSuchFieldError unused7) {
-            }
-            try {
-                $SwitchMap$com$google$gson$stream$JsonToken[JsonToken.NAME.ordinal()] = 8;
-            } catch (NoSuchFieldError unused8) {
-            }
-            try {
-                $SwitchMap$com$google$gson$stream$JsonToken[JsonToken.END_OBJECT.ordinal()] = 9;
-            } catch (NoSuchFieldError unused9) {
-            }
-            try {
-                $SwitchMap$com$google$gson$stream$JsonToken[JsonToken.END_ARRAY.ordinal()] = 10;
-            } catch (NoSuchFieldError unused10) {
-            }
+            /*
+                com.google.gson.stream.JsonToken[] r0 = com.google.gson.stream.JsonToken.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$google$gson$stream$JsonToken = r0
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.NUMBER     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$google$gson$stream$JsonToken     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.BOOLEAN     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$google$gson$stream$JsonToken     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.STRING     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$google$gson$stream$JsonToken     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.NULL     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$google$gson$stream$JsonToken     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.BEGIN_ARRAY     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$google$gson$stream$JsonToken     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.BEGIN_OBJECT     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = $SwitchMap$com$google$gson$stream$JsonToken     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.END_DOCUMENT     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                int[] r0 = $SwitchMap$com$google$gson$stream$JsonToken     // Catch:{ NoSuchFieldError -> 0x0060 }
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.NAME     // Catch:{ NoSuchFieldError -> 0x0060 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0060 }
+                r2 = 8
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0060 }
+            L_0x0060:
+                int[] r0 = $SwitchMap$com$google$gson$stream$JsonToken     // Catch:{ NoSuchFieldError -> 0x006c }
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.END_OBJECT     // Catch:{ NoSuchFieldError -> 0x006c }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006c }
+                r2 = 9
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006c }
+            L_0x006c:
+                int[] r0 = $SwitchMap$com$google$gson$stream$JsonToken     // Catch:{ NoSuchFieldError -> 0x0078 }
+                com.google.gson.stream.JsonToken r1 = com.google.gson.stream.JsonToken.END_ARRAY     // Catch:{ NoSuchFieldError -> 0x0078 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0078 }
+                r2 = 10
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0078 }
+            L_0x0078:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.bind.TypeAdapters.C405436.<clinit>():void");
         }
     }
 
-    /* loaded from: classes2.dex */
     private static final class EnumTypeAdapter<T extends Enum<T>> extends TypeAdapter<T> {
-        private final Map<String, T> nameToConstant = new HashMap();
         private final Map<T, String> constantToName = new HashMap();
-
-        /* JADX WARN: Multi-variable type inference failed */
-        @Override // com.google.gson.TypeAdapter
-        public /* bridge */ /* synthetic */ void write(JsonWriter jsonWriter, Object obj) throws IOException {
-            write(jsonWriter, (JsonWriter) ((Enum) obj));
-        }
+        private final Map<String, T> nameToConstant = new HashMap();
 
         public EnumTypeAdapter(Class<T> cls) {
-            T[] enumConstants;
             try {
-                for (T t : cls.getEnumConstants()) {
-                    String name = t.name();
+                for (Enum enumR : (Enum[]) cls.getEnumConstants()) {
+                    String name = enumR.name();
                     SerializedName serializedName = (SerializedName) cls.getField(name).getAnnotation(SerializedName.class);
                     if (serializedName != null) {
                         name = serializedName.value();
-                        for (String str : serializedName.alternate()) {
-                            this.nameToConstant.put(str, t);
+                        for (String put : serializedName.alternate()) {
+                            this.nameToConstant.put(put, enumR);
                         }
                     }
-                    this.nameToConstant.put(name, t);
-                    this.constantToName.put(t, name);
+                    this.nameToConstant.put(name, enumR);
+                    this.constantToName.put(enumR, name);
                 }
             } catch (NoSuchFieldException e) {
-                throw new AssertionError(e);
+                throw new AssertionError((Object) e);
             }
         }
 
-        @Override // com.google.gson.TypeAdapter
-        /* renamed from: read */
-        public T mo1911read(JsonReader jsonReader) throws IOException {
-            if (jsonReader.peek() == JsonToken.NULL) {
-                jsonReader.nextNull();
-                return null;
+        public T read(JsonReader jsonReader) throws IOException {
+            if (jsonReader.peek() != JsonToken.NULL) {
+                return (Enum) this.nameToConstant.get(jsonReader.nextString());
             }
-            return this.nameToConstant.get(jsonReader.nextString());
+            jsonReader.nextNull();
+            return null;
         }
 
         public void write(JsonWriter jsonWriter, T t) throws IOException {
@@ -932,86 +918,88 @@ public final class TypeAdapters {
         }
     }
 
-    public static <TT> TypeAdapterFactory newFactory(final Class<TT> cls, final TypeAdapter<TT> typeAdapter) {
-        return new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.TypeAdapters.32
-            @Override // com.google.gson.TypeAdapterFactory
+    public static <TT> TypeAdapterFactory newFactory(final TypeToken<TT> typeToken, final TypeAdapter<TT> typeAdapter) {
+        return new TypeAdapterFactory() {
             public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
-                if (typeToken.getRawType() == cls) {
+                if (typeToken.equals(TypeToken.this)) {
+                    return typeAdapter;
+                }
+                return null;
+            }
+        };
+    }
+
+    public static <TT> TypeAdapterFactory newFactory(final Class<TT> cls, final TypeAdapter<TT> typeAdapter) {
+        return new TypeAdapterFactory() {
+            public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
+                if (typeToken.getRawType() == Class.this) {
                     return typeAdapter;
                 }
                 return null;
             }
 
             public String toString() {
-                return "Factory[type=" + cls.getName() + ",adapter=" + typeAdapter + "]";
+                return "Factory[type=" + Class.this.getName() + ",adapter=" + typeAdapter + NavigationBarInflaterView.SIZE_MOD_END;
             }
         };
     }
 
     public static <TT> TypeAdapterFactory newFactory(final Class<TT> cls, final Class<TT> cls2, final TypeAdapter<? super TT> typeAdapter) {
-        return new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.TypeAdapters.33
-            @Override // com.google.gson.TypeAdapterFactory
+        return new TypeAdapterFactory() {
             public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
                 Class<? super T> rawType = typeToken.getRawType();
-                if (rawType == cls || rawType == cls2) {
+                if (rawType == Class.this || rawType == cls2) {
                     return typeAdapter;
                 }
                 return null;
             }
 
             public String toString() {
-                return "Factory[type=" + cls2.getName() + "+" + cls.getName() + ",adapter=" + typeAdapter + "]";
+                return "Factory[type=" + cls2.getName() + "+" + Class.this.getName() + ",adapter=" + typeAdapter + NavigationBarInflaterView.SIZE_MOD_END;
             }
         };
     }
 
     public static <TT> TypeAdapterFactory newFactoryForMultipleTypes(final Class<TT> cls, final Class<? extends TT> cls2, final TypeAdapter<? super TT> typeAdapter) {
-        return new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.TypeAdapters.34
-            @Override // com.google.gson.TypeAdapterFactory
+        return new TypeAdapterFactory() {
             public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
                 Class<? super T> rawType = typeToken.getRawType();
-                if (rawType == cls || rawType == cls2) {
+                if (rawType == Class.this || rawType == cls2) {
                     return typeAdapter;
                 }
                 return null;
             }
 
             public String toString() {
-                return "Factory[type=" + cls.getName() + "+" + cls2.getName() + ",adapter=" + typeAdapter + "]";
+                return "Factory[type=" + Class.this.getName() + "+" + cls2.getName() + ",adapter=" + typeAdapter + NavigationBarInflaterView.SIZE_MOD_END;
             }
         };
     }
 
     public static <T1> TypeAdapterFactory newTypeHierarchyFactory(final Class<T1> cls, final TypeAdapter<T1> typeAdapter) {
-        return new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.TypeAdapters.35
-            @Override // com.google.gson.TypeAdapterFactory
+        return new TypeAdapterFactory() {
             public <T2> TypeAdapter<T2> create(Gson gson, TypeToken<T2> typeToken) {
                 final Class<? super T2> rawType = typeToken.getRawType();
-                if (!cls.isAssignableFrom(rawType)) {
+                if (!Class.this.isAssignableFrom(rawType)) {
                     return null;
                 }
-                return (TypeAdapter<T2>) new TypeAdapter<T1>() { // from class: com.google.gson.internal.bind.TypeAdapters.35.1
-                    @Override // com.google.gson.TypeAdapter
+                return new TypeAdapter<T1>() {
                     public void write(JsonWriter jsonWriter, T1 t1) throws IOException {
                         typeAdapter.write(jsonWriter, t1);
                     }
 
-                    /* JADX WARN: Multi-variable type inference failed */
-                    /* JADX WARN: Type inference failed for: r4v1, types: [java.lang.Object, T1] */
-                    @Override // com.google.gson.TypeAdapter
-                    /* renamed from: read */
-                    public T1 mo1911read(JsonReader jsonReader) throws IOException {
-                        ?? mo1911read = typeAdapter.mo1911read(jsonReader);
-                        if (mo1911read == 0 || rawType.isInstance(mo1911read)) {
-                            return mo1911read;
+                    public T1 read(JsonReader jsonReader) throws IOException {
+                        T1 read = typeAdapter.read(jsonReader);
+                        if (read == null || rawType.isInstance(read)) {
+                            return read;
                         }
-                        throw new JsonSyntaxException("Expected a " + rawType.getName() + " but was " + mo1911read.getClass().getName());
+                        throw new JsonSyntaxException("Expected a " + rawType.getName() + " but was " + read.getClass().getName());
                     }
                 };
             }
 
             public String toString() {
-                return "Factory[typeHierarchy=" + cls.getName() + ",adapter=" + typeAdapter + "]";
+                return "Factory[typeHierarchy=" + Class.this.getName() + ",adapter=" + typeAdapter + NavigationBarInflaterView.SIZE_MOD_END;
             }
         };
     }

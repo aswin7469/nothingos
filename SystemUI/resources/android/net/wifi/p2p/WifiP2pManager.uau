@@ -1,0 +1,5 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/wifi/p2p/WifiP2pManager;->CREATE_GROUP:I,packages/modules/Wifi/framework/java/android/net/wifi/p2p/WifiP2pManager.java,544,5,544,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/wifi/p2p/WifiP2pManager;-><init>(Landroid/net/wifi/p2p/IWifiP2pManager;)V,packages/modules/Wifi/framework/java/android/net/wifi/p2p/WifiP2pManager.java,787,5,787,88,maxTargetSdk=28&trackingBug=115609023L
+Landroid/net/wifi/p2p/WifiP2pManager;->startWps(Landroid/net/wifi/p2p/WifiP2pManager$Channel;Landroid/net/wifi/WpsInfo;Landroid/net/wifi/p2p/WifiP2pManager$ActionListener;)V,packages/modules/Wifi/framework/java/android/net/wifi/p2p/WifiP2pManager.java,1997,5,1997,50,trackingBug=185141982L
+Landroid/net/wifi/p2p/WifiP2pManager;->setWFDInfo(Landroid/net/wifi/p2p/WifiP2pManager$Channel;Landroid/net/wifi/p2p/WifiP2pWfdInfo;Landroid/net/wifi/p2p/WifiP2pManager$ActionListener;)V,packages/modules/Wifi/framework/java/android/net/wifi/p2p/WifiP2pManager.java,2337,5,2337,88,maxTargetSdk=30&trackingBug=170729553L

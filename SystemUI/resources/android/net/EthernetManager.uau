@@ -1,0 +1,9 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/EthernetManager;->getConfiguration(Ljava/lang/String;)Landroid/net/IpConfiguration;,packages/modules/Connectivity/framework-t/src/android/net/EthernetManager.java,194,5,194,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/EthernetManager;->setConfiguration(Ljava/lang/String;Landroid/net/IpConfiguration;)V,packages/modules/Connectivity/framework-t/src/android/net/EthernetManager.java,207,5,207,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/EthernetManager;->isAvailable()Z,packages/modules/Connectivity/framework-t/src/android/net/EthernetManager.java,220,5,220,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/EthernetManager;->isAvailable(Ljava/lang/String;)Z,packages/modules/Connectivity/framework-t/src/android/net/EthernetManager.java,231,5,231,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/EthernetManager;->addListener(Landroid/net/EthernetManager$Listener;)V,packages/modules/Connectivity/framework-t/src/android/net/EthernetManager.java,248,5,248,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/EthernetManager;->addListener(Landroid/net/EthernetManager$Listener;Ljava/util/concurrent/Executor;)V,packages/modules/Connectivity/framework-t/src/android/net/EthernetManager.java,262,5,262,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/EthernetManager;->getAvailableInterfaces()[Ljava/lang/String;,packages/modules/Connectivity/framework-t/src/android/net/EthernetManager.java,321,5,321,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/EthernetManager;->removeListener(Landroid/net/EthernetManager$Listener;)V,packages/modules/Connectivity/framework-t/src/android/net/EthernetManager.java,361,5,361,88,maxTargetSdk=30&trackingBug=170729553L

@@ -24,21 +24,24 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.R$string;
-/* loaded from: classes2.dex */
+import com.android.systemui.C1893R;
+
 public class WifiDebuggingActivity extends AlertActivity implements DialogInterface.OnClickListener {
+    private static final String TAG = "WifiDebuggingActivity";
     private CheckBox mAlwaysAllow;
-    private String mBssid;
+    /* access modifiers changed from: private */
+    public String mBssid;
     private boolean mClicked = false;
     private WifiChangeReceiver mWifiChangeReceiver;
-    private WifiManager mWifiManager;
+    /* access modifiers changed from: private */
+    public WifiManager mWifiManager;
 
-    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARNING: type inference failed for: r5v0, types: [android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.systemui.wifi.WifiDebuggingActivity, android.app.Activity] */
     public void onCreate(Bundle bundle) {
         Window window = getWindow();
         window.addSystemFlags(524288);
         window.setType(2008);
-        super.onCreate(bundle);
+        WifiDebuggingActivity.super.onCreate(bundle);
         this.mWifiManager = (WifiManager) getSystemService("wifi");
         this.mWifiChangeReceiver = new WifiChangeReceiver(this);
         Intent intent = getIntent();
@@ -49,40 +52,38 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
             finish();
             return;
         }
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mTitle = getString(R$string.wifi_debugging_title);
-        alertParams.mMessage = getString(R$string.wifi_debugging_message, new Object[]{stringExtra, this.mBssid});
-        alertParams.mPositiveButtonText = getString(R$string.wifi_debugging_allow);
+        AlertController.AlertParams alertParams = this.mAlertParams;
+        alertParams.mTitle = getString(C1893R.string.wifi_debugging_title);
+        alertParams.mMessage = getString(C1893R.string.wifi_debugging_message, new Object[]{stringExtra, this.mBssid});
+        alertParams.mPositiveButtonText = getString(C1893R.string.wifi_debugging_allow);
         alertParams.mNegativeButtonText = getString(17039360);
         alertParams.mPositiveButtonListener = this;
         alertParams.mNegativeButtonListener = this;
         View inflate = LayoutInflater.from(alertParams.mContext).inflate(17367093, (ViewGroup) null);
-        CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
+        CheckBox checkBox = (CheckBox) inflate.findViewById(16908774);
         this.mAlwaysAllow = checkBox;
-        checkBox.setText(getString(R$string.wifi_debugging_always));
+        checkBox.setText(getString(C1893R.string.wifi_debugging_always));
         alertParams.mView = inflate;
         window.setCloseOnTouchOutside(false);
         setupAlert();
-        ((AlertActivity) this).mAlert.getButton(-1).setOnTouchListener(WifiDebuggingActivity$$ExternalSyntheticLambda0.INSTANCE);
+        this.mAlert.getButton(-1).setOnTouchListener(new WifiDebuggingActivity$$ExternalSyntheticLambda0());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$onCreate$0(View view, MotionEvent motionEvent) {
+    static /* synthetic */ boolean lambda$onCreate$0(View view, MotionEvent motionEvent) {
         if ((motionEvent.getFlags() & 1) == 0 && (motionEvent.getFlags() & 2) == 0) {
             return false;
         }
         if (motionEvent.getAction() == 1) {
             EventLog.writeEvent(1397638484, "62187985");
-            Toast.makeText(view.getContext(), R$string.touch_filtered_warning, 0).show();
+            Toast.makeText(view.getContext(), C1893R.string.touch_filtered_warning, 0).show();
         }
         return true;
     }
 
     public void onWindowAttributesChanged(WindowManager.LayoutParams layoutParams) {
-        super.onWindowAttributesChanged(layoutParams);
+        WifiDebuggingActivity.super.onWindowAttributesChanged(layoutParams);
     }
 
-    /* loaded from: classes2.dex */
     private class WifiChangeReceiver extends BroadcastReceiver {
         private final Activity mActivity;
 
@@ -90,70 +91,65 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
             this.mActivity = activity;
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if ("android.net.wifi.WIFI_STATE_CHANGED".equals(action)) {
-                if (intent.getIntExtra("wifi_state", 1) != 1) {
-                    return;
+            if (WifiManager.WIFI_STATE_CHANGED_ACTION.equals(action)) {
+                if (intent.getIntExtra("wifi_state", 1) == 1) {
+                    this.mActivity.finish();
                 }
-                this.mActivity.finish();
-            } else if (!"android.net.wifi.STATE_CHANGE".equals(action)) {
-            } else {
+            } else if (WifiManager.NETWORK_STATE_CHANGED_ACTION.equals(action)) {
                 NetworkInfo networkInfo = (NetworkInfo) intent.getParcelableExtra("networkInfo");
                 if (networkInfo.getType() != 1) {
                     return;
                 }
-                if (networkInfo.isConnected()) {
-                    WifiInfo connectionInfo = WifiDebuggingActivity.this.mWifiManager.getConnectionInfo();
-                    if (connectionInfo == null || connectionInfo.getNetworkId() == -1) {
-                        this.mActivity.finish();
-                        return;
-                    }
-                    String bssid = connectionInfo.getBSSID();
-                    if (bssid != null && !bssid.isEmpty()) {
-                        if (bssid.equals(WifiDebuggingActivity.this.mBssid)) {
-                            return;
-                        }
-                        this.mActivity.finish();
-                        return;
-                    }
+                if (!networkInfo.isConnected()) {
                     this.mActivity.finish();
                     return;
                 }
-                this.mActivity.finish();
+                WifiInfo connectionInfo = WifiDebuggingActivity.this.mWifiManager.getConnectionInfo();
+                if (connectionInfo == null || connectionInfo.getNetworkId() == -1) {
+                    this.mActivity.finish();
+                    return;
+                }
+                String bssid = connectionInfo.getBSSID();
+                if (bssid == null || bssid.isEmpty()) {
+                    this.mActivity.finish();
+                } else if (!bssid.equals(WifiDebuggingActivity.this.mBssid)) {
+                    this.mActivity.finish();
+                }
             }
         }
     }
 
     public void onStart() {
-        super.onStart();
-        IntentFilter intentFilter = new IntentFilter("android.net.wifi.WIFI_STATE_CHANGED");
-        intentFilter.addAction("android.net.wifi.STATE_CHANGE");
+        WifiDebuggingActivity.super.onStart();
+        IntentFilter intentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         registerReceiver(this.mWifiChangeReceiver, intentFilter);
         sendBroadcast(new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
     }
 
-    protected void onStop() {
+    /* access modifiers changed from: protected */
+    public void onStop() {
         WifiChangeReceiver wifiChangeReceiver = this.mWifiChangeReceiver;
         if (wifiChangeReceiver != null) {
             unregisterReceiver(wifiChangeReceiver);
         }
-        super.onStop();
+        WifiDebuggingActivity.super.onStop();
     }
 
-    protected void onDestroy() {
-        super.onDestroy();
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
+        WifiDebuggingActivity.super.onDestroy();
         if (!this.mClicked) {
             try {
                 IAdbManager.Stub.asInterface(ServiceManager.getService("adb")).denyWirelessDebugging();
             } catch (Exception e) {
-                Log.e("WifiDebuggingActivity", "Unable to notify Adb service", e);
+                Log.e(TAG, "Unable to notify Adb service", e);
             }
         }
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         boolean z = true;
         this.mClicked = true;
@@ -169,7 +165,7 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
                 asInterface.denyWirelessDebugging();
             }
         } catch (Exception e) {
-            Log.e("WifiDebuggingActivity", "Unable to notify Adb service", e);
+            Log.e(TAG, "Unable to notify Adb service", e);
         }
         finish();
     }

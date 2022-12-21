@@ -9,24 +9,19 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$style;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.keyguard.KeyguardIndication;
-import java.util.LinkedList;
-/* loaded from: classes.dex */
+
 public class KeyguardIndicationTextView extends TextView {
-    private static int sStyleId = R$style.TextAppearance_Keyguard_BottomArea;
-    private static int sButtonStyleId = R$style.TextAppearance_Keyguard_BottomArea_Button;
-    private long mNextAnimationTime = 0;
+    private static int sButtonStyleId = 2132017923;
+    private static int sStyleId = 2132017922;
     private boolean mAnimationsEnabled = true;
-    private LinkedList<CharSequence> mMessages = new LinkedList<>();
-    private LinkedList<KeyguardIndication> mKeyguardIndicationInfo = new LinkedList<>();
-    private LinkedList<AnimatorSet> mAnimSet = new LinkedList<>();
+    private KeyguardIndication mKeyguardIndicationInfo;
+    private Animator mLastAnimator;
+    private CharSequence mMessage;
 
     public KeyguardIndicationTextView(Context context) {
         super(context);
@@ -45,10 +40,15 @@ public class KeyguardIndicationTextView extends TextView {
     }
 
     public void clearMessages() {
-        this.mMessages.clear();
-        this.mKeyguardIndicationInfo.clear();
-        cancelAnimatorSet();
-        setNextAnimationTime(System.currentTimeMillis());
+        Animator animator = this.mLastAnimator;
+        if (animator != null) {
+            animator.cancel();
+        }
+        setText("");
+    }
+
+    public void switchIndication(int i) {
+        switchIndication(getResources().getText(i), (KeyguardIndication) null);
     }
 
     public void switchIndication(KeyguardIndication keyguardIndication) {
@@ -56,129 +56,153 @@ public class KeyguardIndicationTextView extends TextView {
     }
 
     public void switchIndication(CharSequence charSequence, KeyguardIndication keyguardIndication) {
-        if (charSequence == null) {
-            charSequence = "";
-        }
-        CharSequence peekLast = this.mMessages.peekLast();
-        if (!TextUtils.equals(peekLast, charSequence)) {
-            if (peekLast == null && TextUtils.equals(charSequence, getText())) {
-                return;
-            }
-            this.mMessages.add(charSequence);
-            this.mKeyguardIndicationInfo.add(keyguardIndication);
-            boolean z = (keyguardIndication == null || keyguardIndication.getIcon() == null) ? false : true;
+        switchIndication(charSequence, keyguardIndication, true, (Runnable) null);
+    }
+
+    public void switchIndication(CharSequence charSequence, KeyguardIndication keyguardIndication, boolean z, final Runnable runnable) {
+        this.mMessage = charSequence;
+        this.mKeyguardIndicationInfo = keyguardIndication;
+        if (z) {
+            boolean z2 = (keyguardIndication == null || keyguardIndication.getIcon() == null) ? false : true;
             AnimatorSet animatorSet = new AnimatorSet();
-            AnimatorSet.Builder play = animatorSet.play(getOutAnimator());
-            long currentTimeMillis = System.currentTimeMillis();
-            long max = Math.max(0L, this.mNextAnimationTime - currentTimeMillis);
-            setNextAnimationTime(currentTimeMillis + max + getFadeOutDuration());
-            long longValue = (keyguardIndication == null || keyguardIndication.getMinVisibilityMillis() == null) ? 1500L : keyguardIndication.getMinVisibilityMillis().longValue();
-            if (!charSequence.equals("") || z) {
-                setNextAnimationTime(this.mNextAnimationTime + longValue);
-                play.before(getInAnimator());
+            if (!TextUtils.isEmpty(this.mMessage) || z2) {
+                AnimatorSet inAnimator = getInAnimator();
+                inAnimator.addListener(new AnimatorListenerAdapter() {
+                    public void onAnimationEnd(Animator animator) {
+                        super.onAnimationEnd(animator);
+                        Runnable runnable = runnable;
+                        if (runnable != null) {
+                            runnable.run();
+                        }
+                    }
+                });
+                animatorSet.playSequentially(new Animator[]{getOutAnimator(), inAnimator});
+            } else {
+                AnimatorSet outAnimator = getOutAnimator();
+                outAnimator.addListener(new AnimatorListenerAdapter() {
+                    public void onAnimationEnd(Animator animator) {
+                        super.onAnimationEnd(animator);
+                        Runnable runnable = runnable;
+                        if (runnable != null) {
+                            runnable.run();
+                        }
+                    }
+                });
+                animatorSet.play(outAnimator);
             }
-            animatorSet.setStartDelay(max);
+            Animator animator = this.mLastAnimator;
+            if (animator != null) {
+                animator.cancel();
+            }
+            this.mLastAnimator = animatorSet;
             animatorSet.start();
-            this.mAnimSet.add(animatorSet);
+            return;
+        }
+        setAlpha(1.0f);
+        setTranslationY(0.0f);
+        setNextIndication();
+        if (runnable != null) {
+            runnable.run();
+        }
+        Animator animator2 = this.mLastAnimator;
+        if (animator2 != null) {
+            animator2.cancel();
+            this.mLastAnimator = null;
         }
     }
 
     private AnimatorSet getOutAnimator() {
         AnimatorSet animatorSet = new AnimatorSet();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, 0.0f);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, new float[]{0.0f});
         ofFloat.setDuration(getFadeOutDuration());
         ofFloat.setInterpolator(Interpolators.FAST_OUT_LINEAR_IN);
-        ofFloat.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.KeyguardIndicationTextView.1
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+        ofFloat.addListener(new AnimatorListenerAdapter() {
+            private boolean mCancelled = false;
+
             public void onAnimationEnd(Animator animator) {
-                KeyguardIndication keyguardIndication = (KeyguardIndication) KeyguardIndicationTextView.this.mKeyguardIndicationInfo.poll();
-                if (keyguardIndication != null) {
-                    if (keyguardIndication.getBackground() != null) {
-                        KeyguardIndicationTextView.this.setTextAppearance(KeyguardIndicationTextView.sButtonStyleId);
-                    } else {
-                        KeyguardIndicationTextView.this.setTextAppearance(KeyguardIndicationTextView.sStyleId);
-                    }
-                    KeyguardIndicationTextView.this.setBackground(keyguardIndication.getBackground());
-                    KeyguardIndicationTextView.this.setTextColor(keyguardIndication.getTextColor());
-                    KeyguardIndicationTextView.this.setOnClickListener(keyguardIndication.getClickListener());
-                    KeyguardIndicationTextView.this.setClickable(keyguardIndication.getClickListener() != null);
-                    Drawable icon = keyguardIndication.getIcon();
-                    if (icon != null) {
-                        icon.setTint(KeyguardIndicationTextView.this.getCurrentTextColor());
-                        if (icon instanceof AnimatedVectorDrawable) {
-                            ((AnimatedVectorDrawable) icon).start();
-                        }
-                    }
-                    KeyguardIndicationTextView.this.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, (Drawable) null, (Drawable) null, (Drawable) null);
+                super.onAnimationEnd(animator);
+                if (!this.mCancelled) {
+                    KeyguardIndicationTextView.this.setNextIndication();
                 }
-                KeyguardIndicationTextView keyguardIndicationTextView = KeyguardIndicationTextView.this;
-                keyguardIndicationTextView.setText((CharSequence) keyguardIndicationTextView.mMessages.poll());
-                KeyguardIndicationTextView.this.mAnimSet.poll();
-                Log.d("IndicationTextView", "ACTION_BATTERY_CHANGED Indication showing text=" + ((Object) KeyguardIndicationTextView.this.getText()) + ", time=" + System.currentTimeMillis());
+            }
+
+            public void onAnimationCancel(Animator animator) {
+                super.onAnimationCancel(animator);
+                this.mCancelled = true;
+                KeyguardIndicationTextView.this.setAlpha(0.0f);
             }
         });
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, 0.0f, -getYTranslationPixels());
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, new float[]{0.0f, (float) (-getYTranslationPixels())});
         ofFloat2.setDuration(getFadeOutDuration());
-        animatorSet.playTogether(ofFloat, ofFloat2);
+        animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2});
         return animatorSet;
+    }
+
+    /* access modifiers changed from: private */
+    public void setNextIndication() {
+        KeyguardIndication keyguardIndication = this.mKeyguardIndicationInfo;
+        if (keyguardIndication != null) {
+            if (keyguardIndication.getBackground() != null) {
+                setTextAppearance(sButtonStyleId);
+            } else {
+                setTextAppearance(sStyleId);
+            }
+            setBackground(this.mKeyguardIndicationInfo.getBackground());
+            setTextColor(this.mKeyguardIndicationInfo.getTextColor());
+            setOnClickListener(this.mKeyguardIndicationInfo.getClickListener());
+            setClickable(this.mKeyguardIndicationInfo.getClickListener() != null);
+            Drawable icon = this.mKeyguardIndicationInfo.getIcon();
+            if (icon != null) {
+                icon.setTint(getCurrentTextColor());
+                if (icon instanceof AnimatedVectorDrawable) {
+                    ((AnimatedVectorDrawable) icon).start();
+                }
+            }
+            setCompoundDrawablesRelativeWithIntrinsicBounds(icon, (Drawable) null, (Drawable) null, (Drawable) null);
+        }
+        setText(this.mMessage);
     }
 
     private AnimatorSet getInAnimator() {
         AnimatorSet animatorSet = new AnimatorSet();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, 1.0f);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, new float[]{1.0f});
         ofFloat.setStartDelay(getFadeInDelay());
         ofFloat.setDuration(getFadeInDuration());
         ofFloat.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, getYTranslationPixels(), 0.0f);
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, new float[]{(float) getYTranslationPixels(), 0.0f});
         ofFloat2.setDuration(getYInDuration());
-        ofFloat2.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.KeyguardIndicationTextView.2
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+        ofFloat2.addListener(new AnimatorListenerAdapter() {
             public void onAnimationCancel(Animator animator) {
+                super.onAnimationCancel(animator);
                 KeyguardIndicationTextView.this.setTranslationY(0.0f);
+                KeyguardIndicationTextView.this.setAlpha(1.0f);
             }
         });
-        animatorSet.playTogether(ofFloat2, ofFloat);
+        animatorSet.playTogether(new Animator[]{ofFloat2, ofFloat});
         return animatorSet;
     }
 
-    @VisibleForTesting
     public void setAnimationsEnabled(boolean z) {
         this.mAnimationsEnabled = z;
     }
 
     private long getFadeInDelay() {
-        return !this.mAnimationsEnabled ? 0L : 150L;
+        return !this.mAnimationsEnabled ? 0 : 150;
     }
 
     private long getFadeInDuration() {
-        return !this.mAnimationsEnabled ? 0L : 317L;
+        return !this.mAnimationsEnabled ? 0 : 317;
     }
 
     private long getYInDuration() {
-        return !this.mAnimationsEnabled ? 0L : 600L;
+        return !this.mAnimationsEnabled ? 0 : 600;
     }
 
     private long getFadeOutDuration() {
-        return !this.mAnimationsEnabled ? 0L : 167L;
-    }
-
-    private void setNextAnimationTime(long j) {
-        if (this.mAnimationsEnabled) {
-            this.mNextAnimationTime = j;
-        } else {
-            this.mNextAnimationTime = 0L;
-        }
+        return !this.mAnimationsEnabled ? 0 : 167;
     }
 
     private int getYTranslationPixels() {
-        return ((TextView) this).mContext.getResources().getDimensionPixelSize(R$dimen.keyguard_indication_y_translation);
-    }
-
-    private void cancelAnimatorSet() {
-        for (int i = 0; i < this.mAnimSet.size(); i++) {
-            this.mAnimSet.get(i).cancel();
-        }
-        this.mAnimSet.clear();
-        setText("");
+        return this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_indication_y_translation);
     }
 }

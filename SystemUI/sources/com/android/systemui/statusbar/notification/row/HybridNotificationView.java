@@ -6,19 +6,23 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.TransformableView;
 import com.android.systemui.statusbar.ViewTransformationHelper;
+import com.android.systemui.statusbar.notification.NotificationFadeAware;
 import com.android.systemui.statusbar.notification.TransformState;
-/* loaded from: classes.dex */
-public class HybridNotificationView extends AlphaOptimizedLinearLayout implements TransformableView {
+
+public class HybridNotificationView extends AlphaOptimizedLinearLayout implements TransformableView, NotificationFadeAware {
     protected TextView mTextView;
     protected TextView mTitleView;
     protected final ViewTransformationHelper mTransformationHelper;
 
+    public void setNotificationFaded(boolean z) {
+    }
+
     public HybridNotificationView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public HybridNotificationView(Context context, AttributeSet attributeSet) {
@@ -42,17 +46,15 @@ public class HybridNotificationView extends AlphaOptimizedLinearLayout implement
         return this.mTextView;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.View
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTitleView = (TextView) findViewById(R$id.notification_title);
-        this.mTextView = (TextView) findViewById(R$id.notification_text);
-        this.mTransformationHelper.setCustomTransformation(new ViewTransformationHelper.CustomTransformation() { // from class: com.android.systemui.statusbar.notification.row.HybridNotificationView.1
-            @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
+        this.mTitleView = (TextView) findViewById(C1893R.C1897id.notification_title);
+        this.mTextView = (TextView) findViewById(C1893R.C1897id.notification_text);
+        this.mTransformationHelper.setCustomTransformation(new ViewTransformationHelper.CustomTransformation() {
             public boolean transformTo(TransformState transformState, TransformableView transformableView, float f) {
                 TransformState currentState = transformableView.getCurrentState(1);
-                CrossFadeHelper.fadeOut(HybridNotificationView.this.mTextView, f);
+                CrossFadeHelper.fadeOut((View) HybridNotificationView.this.mTextView, f);
                 if (currentState != null) {
                     transformState.transformViewVerticalTo(currentState, f);
                     currentState.recycle();
@@ -60,7 +62,6 @@ public class HybridNotificationView extends AlphaOptimizedLinearLayout implement
                 return true;
             }
 
-            @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
             public boolean transformFrom(TransformState transformState, TransformableView transformableView, float f) {
                 TransformState currentState = transformableView.getCurrentState(1);
                 CrossFadeHelper.fadeIn((View) HybridNotificationView.this.mTextView, f, true);
@@ -88,32 +89,26 @@ public class HybridNotificationView extends AlphaOptimizedLinearLayout implement
         requestLayout();
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public TransformState getCurrentState(int i) {
         return this.mTransformationHelper.getCurrentState(i);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, Runnable runnable) {
         this.mTransformationHelper.transformTo(transformableView, runnable);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, float f) {
         this.mTransformationHelper.transformTo(transformableView, f);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView) {
         this.mTransformationHelper.transformFrom(transformableView);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView, float f) {
         this.mTransformationHelper.transformFrom(transformableView, f);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void setVisible(boolean z) {
         setVisibility(z ? 0 : 4);
         this.mTransformationHelper.setVisible(z);

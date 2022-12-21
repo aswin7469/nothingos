@@ -9,27 +9,27 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
-import com.android.systemui.R$string;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+import java.sql.Types;
+
 public class NetworkOverLimitActivity extends Activity {
-    @Override // android.app.Activity
+    private static final String TAG = "NetworkOverLimitActivity";
+
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        final NetworkTemplate parcelableExtra = getIntent().getParcelableExtra("android.net.NETWORK_TEMPLATE");
+        final NetworkTemplate networkTemplate = (NetworkTemplate) getIntent().getParcelableExtra("android.net.NETWORK_TEMPLATE");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getLimitedDialogTitleForTemplate(parcelableExtra));
-        builder.setMessage(R$string.data_usage_disabled_dialog);
+        builder.setTitle(getLimitedDialogTitleForTemplate(networkTemplate));
+        builder.setMessage(C1893R.string.data_usage_disabled_dialog);
         builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
-        builder.setNegativeButton(R$string.data_usage_disabled_dialog_enable, new DialogInterface.OnClickListener() { // from class: com.android.systemui.net.NetworkOverLimitActivity.1
-            @Override // android.content.DialogInterface.OnClickListener
+        builder.setNegativeButton(C1893R.string.data_usage_disabled_dialog_enable, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
-                NetworkOverLimitActivity.this.snoozePolicy(parcelableExtra);
+                NetworkOverLimitActivity.this.snoozePolicy(networkTemplate);
             }
         });
         AlertDialog create = builder.create();
-        create.getWindow().setType(2003);
-        create.setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.android.systemui.net.NetworkOverLimitActivity.2
-            @Override // android.content.DialogInterface.OnDismissListener
+        create.getWindow().setType(Types.ARRAY);
+        create.setOnDismissListener(new DialogInterface.OnDismissListener() {
             public void onDismiss(DialogInterface dialogInterface) {
                 NetworkOverLimitActivity.this.finish();
             }
@@ -37,19 +37,16 @@ public class NetworkOverLimitActivity extends Activity {
         create.show();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void snoozePolicy(NetworkTemplate networkTemplate) {
         try {
             INetworkPolicyManager.Stub.asInterface(ServiceManager.getService("netpolicy")).snoozeLimit(networkTemplate);
         } catch (RemoteException e) {
-            Log.w("NetworkOverLimitActivity", "problem snoozing network policy", e);
+            Log.w(TAG, "problem snoozing network policy", e);
         }
     }
 
     private static int getLimitedDialogTitleForTemplate(NetworkTemplate networkTemplate) {
-        if (networkTemplate.getMatchRule() == 1) {
-            return R$string.data_usage_disabled_dialog_mobile_title;
-        }
-        return R$string.data_usage_disabled_dialog_title;
+        return networkTemplate.getMatchRule() != 1 ? C1893R.string.data_usage_disabled_dialog_title : C1893R.string.data_usage_disabled_dialog_mobile_title;
     }
 }

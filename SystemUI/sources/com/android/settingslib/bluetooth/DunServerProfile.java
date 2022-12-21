@@ -7,65 +7,97 @@ import android.bluetooth.BluetoothDun;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.util.Log;
-/* loaded from: classes.dex */
-public final class DunServerProfile implements LocalBluetoothProfile {
-    private static boolean V = true;
-    private boolean mIsProfileReady;
-    private BluetoothDun mService;
+import com.android.settingslib.C1757R;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+public final class DunServerProfile implements LocalBluetoothProfile {
+    static final String NAME = "DUN Server";
+    private static final int ORDINAL = 11;
+    private static final String TAG = "DunServerProfile";
+    /* access modifiers changed from: private */
+
+    /* renamed from: V */
+    public static boolean f241V = true;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    /* access modifiers changed from: private */
+    public BluetoothDun mService;
+
     public boolean accessProfileEnabled() {
         return true;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public boolean connect(BluetoothDevice bluetoothDevice) {
+        return false;
+    }
+
+    public int getConnectionPolicy(BluetoothDevice bluetoothDevice) {
+        return -1;
+    }
+
     public int getDrawableResource(BluetoothClass bluetoothClass) {
-        return 17302333;
+        return 17302341;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public int getOrdinal() {
+        return 11;
+    }
+
     public int getProfileId() {
-        return 23;
+        return 31;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public boolean isAutoConnectable() {
+        return false;
+    }
+
+    public boolean isEnabled(BluetoothDevice bluetoothDevice) {
+        return true;
+    }
+
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         return true;
     }
 
     public String toString() {
-        return "DUN Server";
+        return NAME;
     }
 
-    /* loaded from: classes.dex */
     private final class DunServiceListener implements BluetoothProfile.ServiceListener {
         private DunServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
-            if (DunServerProfile.V) {
-                Log.d("DunServerProfile", "Bluetooth service connected");
+            if (DunServerProfile.f241V) {
+                Log.d(DunServerProfile.TAG, "Bluetooth service connected");
             }
-            DunServerProfile.this.mService = (BluetoothDun) bluetoothProfile;
-            DunServerProfile.this.mIsProfileReady = true;
+            BluetoothDun unused = DunServerProfile.this.mService = (BluetoothDun) bluetoothProfile;
+            boolean unused2 = DunServerProfile.this.mIsProfileReady = true;
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
-            if (DunServerProfile.V) {
-                Log.d("DunServerProfile", "Bluetooth service disconnected");
+            if (DunServerProfile.f241V) {
+                Log.d(DunServerProfile.TAG, "Bluetooth service disconnected");
             }
-            DunServerProfile.this.mIsProfileReady = false;
+            boolean unused = DunServerProfile.this.mIsProfileReady = false;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public DunServerProfile(Context context) {
-        BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new DunServiceListener(), 23);
+    public boolean isProfileReady() {
+        return this.mIsProfileReady;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    DunServerProfile(Context context) {
+        BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new DunServiceListener(), 31);
+    }
+
+    public boolean disconnect(BluetoothDevice bluetoothDevice) {
+        BluetoothDun bluetoothDun = this.mService;
+        if (bluetoothDun == null) {
+            return false;
+        }
+        return bluetoothDun.disconnect(bluetoothDevice);
+    }
+
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothDun bluetoothDun = this.mService;
         if (bluetoothDun == null) {
@@ -74,16 +106,32 @@ public final class DunServerProfile implements LocalBluetoothProfile {
         return bluetoothDun.getConnectionState(bluetoothDevice);
     }
 
-    protected void finalize() {
-        if (V) {
-            Log.d("DunServerProfile", "finalize()");
+    public int getNameResource(BluetoothDevice bluetoothDevice) {
+        return C1757R.string.bluetooth_profile_dun;
+    }
+
+    public int getSummaryResourceForDevice(BluetoothDevice bluetoothDevice) {
+        int connectionStatus = getConnectionStatus(bluetoothDevice);
+        if (connectionStatus == 0) {
+            return C1757R.string.bluetooth_dun_profile_summary_use_for;
+        }
+        if (connectionStatus != 2) {
+            return BluetoothUtils.getConnectionStateSummary(connectionStatus);
+        }
+        return C1757R.string.bluetooth_dun_profile_summary_connected;
+    }
+
+    /* access modifiers changed from: protected */
+    public void finalize() {
+        if (f241V) {
+            Log.d(TAG, "finalize()");
         }
         if (this.mService != null) {
             try {
-                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(23, this.mService);
+                BluetoothAdapter.getDefaultAdapter().closeProfileProxy(31, this.mService);
                 this.mService = null;
             } catch (Throwable th) {
-                Log.w("DunServerProfile", "Error cleaning up DUN proxy", th);
+                Log.w(TAG, "Error cleaning up DUN proxy", th);
             }
         }
     }

@@ -1,71 +1,109 @@
 package com.android.systemui.media.dialog;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import androidx.core.graphics.drawable.IconCompat;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.R$dimen;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+import com.android.systemui.broadcast.BroadcastSender;
+import com.android.systemui.dagger.SysUISingleton;
+
+@SysUISingleton
 public class MediaOutputDialog extends MediaOutputBaseDialog {
     final UiEventLogger mUiEventLogger;
 
-    @Override // com.android.systemui.media.dialog.MediaOutputBaseDialog
-    int getHeaderIconRes() {
+    /* access modifiers changed from: package-private */
+    public int getHeaderIconRes() {
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MediaOutputDialog(Context context, boolean z, MediaOutputController mediaOutputController, UiEventLogger uiEventLogger) {
-        super(context, mediaOutputController);
+    MediaOutputDialog(Context context, boolean z, BroadcastSender broadcastSender, MediaOutputController mediaOutputController, UiEventLogger uiEventLogger) {
+        super(context, broadcastSender, mediaOutputController);
         this.mUiEventLogger = uiEventLogger;
-        this.mAdapter = new MediaOutputAdapter(this.mMediaOutputController);
+        this.mAdapter = new MediaOutputAdapter(this.mMediaOutputController, this);
         if (!z) {
             getWindow().setType(2038);
         }
-        show();
     }
 
-    @Override // com.android.systemui.media.dialog.MediaOutputBaseDialog, android.app.AlertDialog, android.app.Dialog
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         this.mUiEventLogger.log(MediaOutputEvent.MEDIA_OUTPUT_DIALOG_SHOW);
     }
 
-    @Override // com.android.systemui.media.dialog.MediaOutputBaseDialog
-    IconCompat getHeaderIcon() {
+    /* access modifiers changed from: package-private */
+    public IconCompat getHeaderIcon() {
         return this.mMediaOutputController.getHeaderIcon();
     }
 
-    @Override // com.android.systemui.media.dialog.MediaOutputBaseDialog
-    int getHeaderIconSize() {
-        return ((MediaOutputBaseDialog) this).mContext.getResources().getDimensionPixelSize(R$dimen.media_output_dialog_header_album_icon_size);
+    /* access modifiers changed from: package-private */
+    public int getHeaderIconSize() {
+        return this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.media_output_dialog_header_album_icon_size);
     }
 
-    @Override // com.android.systemui.media.dialog.MediaOutputBaseDialog
-    CharSequence getHeaderText() {
+    /* access modifiers changed from: package-private */
+    public CharSequence getHeaderText() {
         return this.mMediaOutputController.getHeaderTitle();
     }
 
-    @Override // com.android.systemui.media.dialog.MediaOutputBaseDialog
-    CharSequence getHeaderSubtitle() {
+    /* access modifiers changed from: package-private */
+    public CharSequence getHeaderSubtitle() {
         return this.mMediaOutputController.getHeaderSubTitle();
     }
 
-    @Override // com.android.systemui.media.dialog.MediaOutputBaseDialog
-    int getStopButtonVisibility() {
-        MediaOutputController mediaOutputController = this.mMediaOutputController;
-        return mediaOutputController.isActiveRemoteDevice(mediaOutputController.getCurrentConnectedMediaDevice()) ? 0 : 8;
+    /* access modifiers changed from: package-private */
+    public Drawable getAppSourceIcon() {
+        return this.mMediaOutputController.getAppSourceIcon();
     }
 
-    @VisibleForTesting
-    /* loaded from: classes.dex */
+    /* access modifiers changed from: package-private */
+    public int getStopButtonVisibility() {
+        boolean isActiveRemoteDevice = this.mMediaOutputController.getCurrentConnectedMediaDevice() != null ? this.mMediaOutputController.isActiveRemoteDevice(this.mMediaOutputController.getCurrentConnectedMediaDevice()) : false;
+        boolean z = isBroadcastSupported() && this.mMediaOutputController.isPlaying();
+        if (isActiveRemoteDevice || z) {
+            return 0;
+        }
+        return 8;
+    }
+
+    public boolean isBroadcastSupported() {
+        boolean isBluetoothLeDevice = this.mMediaOutputController.getCurrentConnectedMediaDevice() != null ? this.mMediaOutputController.isBluetoothLeDevice(this.mMediaOutputController.getCurrentConnectedMediaDevice()) : false;
+        if (!this.mMediaOutputController.isBroadcastSupported() || !isBluetoothLeDevice) {
+            return false;
+        }
+        return true;
+    }
+
+    public CharSequence getStopButtonText() {
+        return this.mContext.getText((!isBroadcastSupported() || !this.mMediaOutputController.isPlaying() || this.mMediaOutputController.isBluetoothLeBroadcastEnabled()) ? C1893R.string.media_output_dialog_button_stop_casting : C1893R.string.media_output_broadcast);
+    }
+
+    public void onStopButtonClick() {
+        if (!isBroadcastSupported() || !this.mMediaOutputController.isPlaying()) {
+            this.mMediaOutputController.releaseSession();
+            dismiss();
+        } else if (this.mMediaOutputController.isBluetoothLeBroadcastEnabled()) {
+            stopLeBroadcast();
+        } else if (!startLeBroadcastDialogForFirstTime()) {
+            startLeBroadcast();
+        }
+    }
+
+    public int getBroadcastIconVisibility() {
+        return (!isBroadcastSupported() || !this.mMediaOutputController.isBluetoothLeBroadcastEnabled()) ? 8 : 0;
+    }
+
+    public void onBroadcastIconClick() {
+        startLeBroadcastDialog();
+    }
+
     public enum MediaOutputEvent implements UiEventLogger.UiEventEnum {
         MEDIA_OUTPUT_DIALOG_SHOW(655);
         
         private final int mId;
 
-        MediaOutputEvent(int i) {
+        private MediaOutputEvent(int i) {
             this.mId = i;
         }
 

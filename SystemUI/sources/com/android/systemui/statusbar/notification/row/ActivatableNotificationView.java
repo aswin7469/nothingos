@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.MathUtils;
@@ -13,33 +15,39 @@ import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
-import android.widget.FrameLayout;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.settingslib.Utils;
+import com.android.systemui.C1893R;
 import com.android.systemui.Gefingerpoken;
-import com.android.systemui.R$color;
-import com.android.systemui.R$drawable;
-import com.android.systemui.R$id;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.notification.FakeShadowView;
 import com.android.systemui.statusbar.notification.NotificationUtils;
-/* loaded from: classes.dex */
+
 public abstract class ActivatableNotificationView extends ExpandableOutlineView {
+    private static final Interpolator ACTIVATE_INVERSE_ALPHA_INTERPOLATOR = new PathInterpolator(0.0f, 0.0f, 0.5f, 1.0f);
+    private static final Interpolator ACTIVATE_INVERSE_INTERPOLATOR = new PathInterpolator(0.6f, 0.0f, 0.5f, 1.0f);
+    private static final float ALPHA_APPEAR_END_FRACTION = 1.0f;
+    private static final float ALPHA_APPEAR_START_FRACTION = 0.4f;
+    private static final float HORIZONTAL_ANIMATION_END = 0.2f;
+    private static final float HORIZONTAL_ANIMATION_START = 1.0f;
+    private static final float HORIZONTAL_COLLAPSED_REST_PARTIAL = 0.05f;
+    protected static final int NO_COLOR = 0;
+    private static final float VERTICAL_ANIMATION_START = 1.0f;
     private AccessibilityManager mAccessibilityManager;
     private boolean mActivated;
     private float mAnimationTranslationY;
+    private float mAppearAnimationFraction = -1.0f;
     private float mAppearAnimationTranslation;
     private ValueAnimator mAppearAnimator;
-    private ValueAnimator mBackgroundColorAnimator;
+    /* access modifiers changed from: private */
+    public ValueAnimator mBackgroundColorAnimator;
     NotificationBackgroundView mBackgroundNormal;
+    int mBgTint = 0;
     private Interpolator mCurrentAppearInterpolator;
     private int mCurrentBackgroundTint;
     private boolean mDismissed;
     private boolean mDrawingAppearAnimation;
     private FakeShadowView mFakeShadow;
-    private int mHeadsUpAddStartLocation;
-    private float mHeadsUpLocation;
-    private boolean mIsAppearing;
     private boolean mIsBelowSpeedBump;
     private boolean mIsHeadsUpAnimation;
     private long mLastActionUpTime;
@@ -51,52 +59,60 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
     private int mOverrideTint;
     private boolean mRefocusOnDismiss;
     private boolean mShadowHidden;
+    private final Interpolator mSlowOutFastInInterpolator = new PathInterpolator(0.8f, 0.0f, 0.6f, 1.0f);
+    private final Interpolator mSlowOutLinearInInterpolator = new PathInterpolator(0.8f, 0.0f, 1.0f, 1.0f);
     private int mStartTint;
+    protected Point mTargetPoint;
     private int mTargetTint;
     private int mTintedRippleColor;
     private Gefingerpoken mTouchHandler;
-    private static final Interpolator ACTIVATE_INVERSE_INTERPOLATOR = new PathInterpolator(0.6f, 0.0f, 0.5f, 1.0f);
-    private static final Interpolator ACTIVATE_INVERSE_ALPHA_INTERPOLATOR = new PathInterpolator(0.0f, 0.0f, 0.5f, 1.0f);
-    int mBgTint = 0;
-    private RectF mAppearAnimationRect = new RectF();
-    private float mAppearAnimationFraction = -1.0f;
-    private ValueAnimator.AnimatorUpdateListener mBackgroundVisibilityUpdater = new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.notification.row.ActivatableNotificationView.1
-        @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-        public void onAnimationUpdate(ValueAnimator valueAnimator) {
-            ActivatableNotificationView activatableNotificationView = ActivatableNotificationView.this;
-            activatableNotificationView.setNormalBackgroundVisibilityAmount(activatableNotificationView.mBackgroundNormal.getAlpha());
-        }
-    };
-    private final Interpolator mSlowOutFastInInterpolator = new PathInterpolator(0.8f, 0.0f, 0.6f, 1.0f);
-    private final Interpolator mSlowOutLinearInInterpolator = new PathInterpolator(0.8f, 0.0f, 1.0f, 1.0f);
 
-    /* loaded from: classes.dex */
     public interface OnActivatedListener {
         void onActivated(ActivatableNotificationView activatableNotificationView);
 
         void onActivationReset(ActivatableNotificationView activatableNotificationView);
     }
 
-    protected abstract View getContentView();
+    /* access modifiers changed from: protected */
+    public boolean disallowSingleClick(MotionEvent motionEvent) {
+        return false;
+    }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
+    public abstract View getContentView();
+
+    /* access modifiers changed from: protected */
     public boolean handleSlideBack() {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean hideBackground() {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    public boolean isHeadsUp() {
+        return false;
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean isInteractive() {
+        return true;
+    }
+
+    /* access modifiers changed from: protected */
     public void onAppearAnimationFinished(boolean z) {
     }
 
-    protected void onBelowSpeedBumpChanged() {
+    /* access modifiers changed from: protected */
+    public void onBelowSpeedBumpChanged() {
     }
 
     public void onTap() {
+    }
+
+    /* access modifiers changed from: protected */
+    public void resetAllContentAlphas() {
     }
 
     public ActivatableNotificationView(Context context, AttributeSet attributeSet) {
@@ -104,23 +120,12 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         setClipChildren(false);
         setClipToPadding(false);
         updateColors();
-        initDimens();
     }
 
     private void updateColors() {
-        this.mNormalColor = Utils.getColorAttrDefaultColor(((FrameLayout) this).mContext, 17956909);
-        this.mTintedRippleColor = ((FrameLayout) this).mContext.getColor(R$color.notification_ripple_tinted_color);
-        this.mNormalRippleColor = ((FrameLayout) this).mContext.getColor(R$color.notification_ripple_untinted_color);
-    }
-
-    private void initDimens() {
-        this.mHeadsUpAddStartLocation = getResources().getDimensionPixelSize(17105379);
-    }
-
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView
-    public void onDensityOrFontScaleChanged() {
-        super.onDensityOrFontScaleChanged();
-        initDimens();
+        this.mNormalColor = Utils.getColorAttrDefaultColor(this.mContext, 17956909);
+        this.mTintedRippleColor = this.mContext.getColor(C1893R.C1894color.notification_ripple_tinted_color);
+        this.mNormalRippleColor = this.mContext.getColor(C1893R.C1894color.notification_ripple_untinted_color);
     }
 
     public void updateBackgroundColors() {
@@ -129,12 +134,18 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         updateBackgroundTint();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.View
+    public void setBackgroundWidth(int i) {
+        NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;
+        if (notificationBackgroundView != null) {
+            notificationBackgroundView.setActualWidth(i);
+        }
+    }
+
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mBackgroundNormal = (NotificationBackgroundView) findViewById(R$id.backgroundNormal);
-        FakeShadowView fakeShadowView = (FakeShadowView) findViewById(R$id.fake_shadow);
+        this.mBackgroundNormal = (NotificationBackgroundView) findViewById(C1893R.C1897id.backgroundNormal);
+        FakeShadowView fakeShadowView = (FakeShadowView) findViewById(C1893R.C1897id.fake_shadow);
         this.mFakeShadow = fakeShadowView;
         this.mShadowHidden = fakeShadowView.getVisibility() != 0;
         initBackground();
@@ -142,17 +153,16 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         updateOutlineAlpha();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void initBackground() {
-        this.mBackgroundNormal.setCustomBackground(R$drawable.notification_material_bg);
+        this.mBackgroundNormal.setCustomBackground((int) C1893R.C1895drawable.notification_material_bg);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void updateBackground() {
         this.mBackgroundNormal.setVisibility(hideBackground() ? 4 : 0);
     }
 
-    @Override // android.view.ViewGroup
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         Gefingerpoken gefingerpoken = this.mTouchHandler;
         if (gefingerpoken == null || !gefingerpoken.onInterceptTouchEvent(motionEvent)) {
@@ -161,35 +171,39 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setLastActionUpTime(long j) {
         this.mLastActionUpTime = j;
     }
 
     public long getAndResetLastActionUpTime() {
         long j = this.mLastActionUpTime;
-        this.mLastActionUpTime = 0L;
+        this.mLastActionUpTime = 0;
         return j;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void drawableStateChanged() {
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
         super.drawableStateChanged();
         this.mBackgroundNormal.setState(getDrawableState());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setRippleAllowed(boolean z) {
         this.mBackgroundNormal.setPressedAllowed(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void makeActive() {
         this.mActivated = true;
         OnActivatedListener onActivatedListener = this.mOnActivatedListener;
         if (onActivatedListener != null) {
             onActivatedListener.onActivated(this);
         }
+    }
+
+    public boolean isActive() {
+        return this.mActivated;
     }
 
     public void makeInactive(boolean z) {
@@ -206,13 +220,11 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         setOutlineAlpha((0.3f * this.mNormalBackgroundVisibilityAmount) + 0.7f);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void setNormalBackgroundVisibilityAmount(float f) {
+    private void setNormalBackgroundVisibilityAmount(float f) {
         this.mNormalBackgroundVisibilityAmount = f;
         updateOutlineAlpha();
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void setBelowSpeedBump(boolean z) {
         super.setBelowSpeedBump(z);
         if (z != this.mIsBelowSpeedBump) {
@@ -222,12 +234,16 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    public boolean isBelowSpeedBump() {
+        return this.mIsBelowSpeedBump;
+    }
+
+    /* access modifiers changed from: protected */
     public void setTintColor(int i) {
         setTintColor(i, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setTintColor(int i, boolean z) {
         if (i != this.mBgTint) {
             this.mBgTint = i;
@@ -241,7 +257,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         setBackgroundTintColor(calculateBgColor());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void updateBackgroundTint() {
         updateBackgroundTint(false);
     }
@@ -258,36 +274,30 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
             return;
         }
         int i = this.mCurrentBackgroundTint;
-        if (calculateBgColor == i) {
-            return;
+        if (calculateBgColor != i) {
+            this.mStartTint = i;
+            this.mTargetTint = calculateBgColor;
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+            this.mBackgroundColorAnimator = ofFloat;
+            ofFloat.addUpdateListener(new ActivatableNotificationView$$ExternalSyntheticLambda0(this));
+            this.mBackgroundColorAnimator.setDuration(360);
+            this.mBackgroundColorAnimator.setInterpolator(Interpolators.LINEAR);
+            this.mBackgroundColorAnimator.addListener(new AnimatorListenerAdapter() {
+                public void onAnimationEnd(Animator animator) {
+                    ValueAnimator unused = ActivatableNotificationView.this.mBackgroundColorAnimator = null;
+                }
+            });
+            this.mBackgroundColorAnimator.start();
         }
-        this.mStartTint = i;
-        this.mTargetTint = calculateBgColor;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
-        this.mBackgroundColorAnimator = ofFloat;
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.notification.row.ActivatableNotificationView$$ExternalSyntheticLambda0
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator2) {
-                ActivatableNotificationView.this.lambda$updateBackgroundTint$0(valueAnimator2);
-            }
-        });
-        this.mBackgroundColorAnimator.setDuration(360L);
-        this.mBackgroundColorAnimator.setInterpolator(Interpolators.LINEAR);
-        this.mBackgroundColorAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.notification.row.ActivatableNotificationView.2
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-            public void onAnimationEnd(Animator animator) {
-                ActivatableNotificationView.this.mBackgroundColorAnimator = null;
-            }
-        });
-        this.mBackgroundColorAnimator.start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateBackgroundTint$0(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateBackgroundTint$0$com-android-systemui-statusbar-notification-row-ActivatableNotificationView */
+    public /* synthetic */ void mo40898x14e5c68a(ValueAnimator valueAnimator) {
         setBackgroundTintColor(NotificationUtils.interpolateColors(this.mStartTint, this.mTargetTint, valueAnimator.getAnimatedFraction()));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setBackgroundTintColor(int i) {
         if (i != this.mCurrentBackgroundTint) {
             this.mCurrentBackgroundTint = i;
@@ -298,65 +308,57 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void updateBackgroundClipping() {
         this.mBackgroundNormal.setBottomAmountClips(!isChildInGroup());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView, android.widget.FrameLayout, android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
-        setPivotX(getWidth() / 2);
+        setPivotX((float) (getWidth() / 2));
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView, com.android.systemui.statusbar.notification.row.ExpandableView
     public void setActualHeight(int i, boolean z) {
         super.setActualHeight(i, z);
-        setPivotY(i / 2);
+        setPivotY((float) (i / 2));
         this.mBackgroundNormal.setActualHeight(i);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView, com.android.systemui.statusbar.notification.row.ExpandableView
     public void setClipTopAmount(int i) {
         super.setClipTopAmount(i);
         this.mBackgroundNormal.setClipTopAmount(i);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView, com.android.systemui.statusbar.notification.row.ExpandableView
     public void setClipBottomAmount(int i) {
         super.setClipBottomAmount(i);
         this.mBackgroundNormal.setClipBottomAmount(i);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public long performRemoveAnimation(long j, long j2, float f, boolean z, float f2, Runnable runnable, AnimatorListenerAdapter animatorListenerAdapter) {
         enableAppearDrawing(true);
         this.mIsHeadsUpAnimation = z;
-        this.mHeadsUpLocation = f2;
         if (this.mDrawingAppearAnimation) {
             startAppearAnimation(false, f, j2, j, runnable, animatorListenerAdapter);
-            return 0L;
+            return 0;
         } else if (runnable == null) {
-            return 0L;
+            return 0;
         } else {
             runnable.run();
-            return 0L;
+            return 0;
         }
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
-    public void performAddAnimation(long j, long j2, boolean z) {
+    public void performAddAnimation(long j, long j2, boolean z, Runnable runnable) {
         enableAppearDrawing(true);
         this.mIsHeadsUpAnimation = z;
-        this.mHeadsUpLocation = this.mHeadsUpAddStartLocation;
         if (this.mDrawingAppearAnimation) {
-            startAppearAnimation(true, z ? 0.0f : -1.0f, j, j2, null, null);
+            startAppearAnimation(true, z ? 0.0f : -1.0f, j, j2, (Runnable) null, (AnimatorListenerAdapter) null);
         }
     }
 
     private void startAppearAnimation(final boolean z, float f, long j, long j2, final Runnable runnable, AnimatorListenerAdapter animatorListenerAdapter) {
-        this.mAnimationTranslationY = f * getActualHeight();
+        this.mAnimationTranslationY = f * ((float) getActualHeight());
         cancelAppearAnimation();
         float f2 = 1.0f;
         if (this.mAppearAnimationFraction == -1.0f) {
@@ -368,23 +370,17 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
                 this.mAppearAnimationTranslation = 0.0f;
             }
         }
-        this.mIsAppearing = z;
         if (z) {
             this.mCurrentAppearInterpolator = Interpolators.FAST_OUT_SLOW_IN;
         } else {
             this.mCurrentAppearInterpolator = this.mSlowOutFastInInterpolator;
             f2 = 0.0f;
         }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mAppearAnimationFraction, f2);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mAppearAnimationFraction, f2});
         this.mAppearAnimator = ofFloat;
         ofFloat.setInterpolator(Interpolators.LINEAR);
-        this.mAppearAnimator.setDuration(((float) j2) * Math.abs(this.mAppearAnimationFraction - f2));
-        this.mAppearAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.notification.row.ActivatableNotificationView$$ExternalSyntheticLambda1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                ActivatableNotificationView.this.lambda$startAppearAnimation$1(valueAnimator);
-            }
-        });
+        this.mAppearAnimator.setDuration((long) (((float) j2) * Math.abs(this.mAppearAnimationFraction - f2)));
+        this.mAppearAnimator.addUpdateListener(new ActivatableNotificationView$$ExternalSyntheticLambda1(this));
         if (animatorListenerAdapter != null) {
             this.mAppearAnimator.addListener(animatorListenerAdapter);
         }
@@ -393,14 +389,13 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
             updateAppearRect();
             this.mAppearAnimator.setStartDelay(j);
         }
-        this.mAppearAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.notification.row.ActivatableNotificationView.3
+        this.mAppearAnimator.addListener(new AnimatorListenerAdapter() {
             private boolean mWasCancelled;
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
-                Runnable runnable2 = runnable;
-                if (runnable2 != null) {
-                    runnable2.run();
+                Runnable runnable = runnable;
+                if (runnable != null) {
+                    runnable.run();
                 }
                 if (!this.mWasCancelled) {
                     ActivatableNotificationView.this.enableAppearDrawing(false);
@@ -411,13 +406,11 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
                 InteractionJankMonitor.getInstance().cancel(ActivatableNotificationView.this.getCujType(z));
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationStart(Animator animator) {
                 this.mWasCancelled = false;
-                InteractionJankMonitor.getInstance().begin(new InteractionJankMonitor.Configuration.Builder(ActivatableNotificationView.this.getCujType(z)).setView(ActivatableNotificationView.this));
+                InteractionJankMonitor.getInstance().begin(InteractionJankMonitor.Configuration.Builder.withView(ActivatableNotificationView.this.getCujType(z), ActivatableNotificationView.this));
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationCancel(Animator animator) {
                 this.mWasCancelled = true;
             }
@@ -425,15 +418,16 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         this.mAppearAnimator.start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$startAppearAnimation$1(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$startAppearAnimation$1$com-android-systemui-statusbar-notification-row-ActivatableNotificationView */
+    public /* synthetic */ void mo40897x484fec06(ValueAnimator valueAnimator) {
         this.mAppearAnimationFraction = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         updateAppearAnimationAlpha();
         updateAppearRect();
         invalidate();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int getCujType(boolean z) {
         return this.mIsHeadsUpAnimation ? z ? 12 : 13 : z ? 14 : 15;
     }
@@ -454,7 +448,17 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
     private void updateAppearRect() {
         float interpolation = this.mCurrentAppearInterpolator.getInterpolation(this.mAppearAnimationFraction);
         this.mAppearAnimationTranslation = (1.0f - interpolation) * this.mAnimationTranslationY;
-        setOutlineRect(0.0f, this.mAppearAnimationTranslation, getWidth(), (getActualHeight() * interpolation) + this.mAppearAnimationTranslation);
+        int actualHeight = getActualHeight();
+        float f = (float) actualHeight;
+        float f2 = interpolation * f;
+        if (this.mTargetPoint != null) {
+            int width = getWidth();
+            float f3 = 1.0f - this.mAppearAnimationFraction;
+            float f4 = this.mAnimationTranslationY;
+            setOutlineRect(((float) this.mTargetPoint.x) * f3, f4 + ((f4 - ((float) this.mTargetPoint.y)) * f3), ((float) width) - (((float) (width - this.mTargetPoint.x)) * f3), f - (((float) (actualHeight - this.mTargetPoint.y)) * f3));
+            return;
+        }
+        setOutlineRect(0.0f, this.mAppearAnimationTranslation, (float) getWidth(), f2 + this.mAppearAnimationTranslation);
     }
 
     private float getInterpolatedAppearAnimationFraction() {
@@ -466,33 +470,30 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
     }
 
     private void updateAppearAnimationAlpha() {
-        setContentAlpha(Interpolators.ALPHA_IN.getInterpolation((MathUtils.constrain(this.mAppearAnimationFraction, 0.4f, 1.0f) - 0.4f) / 0.6f));
+        setContentAlpha(Interpolators.ALPHA_IN.getInterpolation((MathUtils.constrain(this.mAppearAnimationFraction, ALPHA_APPEAR_START_FRACTION, 1.0f) - ALPHA_APPEAR_START_FRACTION) / 0.6f));
     }
 
     private void setContentAlpha(float f) {
         View contentView = getContentView();
         if (contentView.hasOverlappingRendering()) {
-            int i = (f == 0.0f || f == 1.0f) ? 0 : 2;
-            if (contentView.getLayerType() != i) {
-                contentView.setLayerType(i, null);
-            }
+            contentView.setLayerType((f == 0.0f || f == 1.0f) ? 0 : 2, (Paint) null);
         }
         contentView.setAlpha(f);
+        if (f == 1.0f) {
+            resetAllContentAlphas();
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView
+    /* access modifiers changed from: protected */
     public void applyRoundness() {
         super.applyRoundness();
         applyBackgroundRoundness(getCurrentBackgroundRadiusTop(), getCurrentBackgroundRadiusBottom());
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView
     public float getCurrentBackgroundRadiusTop() {
         return MathUtils.lerp(0.0f, super.getCurrentBackgroundRadiusTop(), getInterpolatedAppearAnimationFraction());
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView
     public float getCurrentBackgroundRadiusBottom() {
         return MathUtils.lerp(0.0f, super.getCurrentBackgroundRadiusBottom(), getInterpolatedAppearAnimationFraction());
     }
@@ -501,7 +502,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         this.mBackgroundNormal.setRadius(f, f2);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setBackgroundTop(int i) {
         this.mBackgroundNormal.setBackgroundTop(i);
     }
@@ -510,8 +511,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         return calculateBgColor(true, true);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView
+    /* access modifiers changed from: protected */
     public boolean childNeedsClipping(View view) {
         if (!(view instanceof NotificationBackgroundView) || !isClippingNeeded()) {
             return super.childNeedsClipping(view);
@@ -521,10 +521,13 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
 
     private int calculateBgColor(boolean z, boolean z2) {
         int i;
-        if (!z2 || this.mOverrideTint == 0) {
-            return (!z || (i = this.mBgTint) == 0) ? this.mNormalColor : i;
+        if (z2 && this.mOverrideTint != 0) {
+            return NotificationUtils.interpolateColors(calculateBgColor(z, false), this.mOverrideTint, this.mOverrideAmount);
         }
-        return NotificationUtils.interpolateColors(calculateBgColor(z, false), this.mOverrideTint, this.mOverrideAmount);
+        if (!z || (i = this.mBgTint) == 0) {
+            return this.mNormalColor;
+        }
+        return i;
     }
 
     private int getRippleColor() {
@@ -534,14 +537,14 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         return this.mNormalRippleColor;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void enableAppearDrawing(boolean z) {
         if (z != this.mDrawingAppearAnimation) {
             this.mDrawingAppearAnimation = z;
             if (!z) {
                 setContentAlpha(1.0f);
                 this.mAppearAnimationFraction = -1.0f;
-                setOutlineRect(null);
+                setOutlineRect((RectF) null);
             }
             invalidate();
         }
@@ -551,8 +554,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         return this.mDrawingAppearAnimation;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void dispatchDraw(Canvas canvas) {
         if (this.mDrawingAppearAnimation) {
             canvas.save();
@@ -568,7 +570,6 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         this.mOnActivatedListener = onActivatedListener;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void setFakeShadowIntensity(float f, float f2, int i, int i2) {
         boolean z = this.mShadowHidden;
         boolean z2 = f == 0.0f;
@@ -586,7 +587,6 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         return this.mCurrentBackgroundTint;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public int getHeadsUpHeightWithoutHeader() {
         return getHeight();
     }
@@ -608,7 +608,7 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         return this.mRefocusOnDismiss || isAccessibilityFocused();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setTouchHandler(Gefingerpoken gefingerpoken) {
         this.mTouchHandler = gefingerpoken;
     }

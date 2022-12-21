@@ -3,14 +3,14 @@ package com.android.systemui.controls.controller;
 import android.content.Context;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.management.ControlsListingController;
-import com.android.systemui.controls.ui.ControlsUiController;
+import com.android.systemui.controls.p010ui.ControlsUiController;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.settings.UserTracker;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import dagger.internal.Factory;
 import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ControlsControllerImpl_Factory implements Factory<ControlsControllerImpl> {
     private final Provider<ControlsBindingController> bindingControllerProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
@@ -34,10 +34,8 @@ public final class ControlsControllerImpl_Factory implements Factory<ControlsCon
         this.userTrackerProvider = provider9;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ControlsControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.executorProvider.mo1933get(), this.uiControllerProvider.mo1933get(), this.bindingControllerProvider.mo1933get(), this.listingControllerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.optionalWrapperProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.userTrackerProvider.mo1933get());
+    public ControlsControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.executorProvider.get(), this.uiControllerProvider.get(), this.bindingControllerProvider.get(), this.listingControllerProvider.get(), this.broadcastDispatcherProvider.get(), this.optionalWrapperProvider.get(), this.dumpManagerProvider.get(), this.userTrackerProvider.get());
     }
 
     public static ControlsControllerImpl_Factory create(Provider<Context> provider, Provider<DelayableExecutor> provider2, Provider<ControlsUiController> provider3, Provider<ControlsBindingController> provider4, Provider<ControlsListingController> provider5, Provider<BroadcastDispatcher> provider6, Provider<Optional<ControlsFavoritePersistenceWrapper>> provider7, Provider<DumpManager> provider8, Provider<UserTracker> provider9) {

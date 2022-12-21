@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.collection.coordinator;
 import com.android.systemui.log.LogBuffer;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class SharedCoordinatorLogger_Factory implements Factory<SharedCoordinatorLogger> {
     private final Provider<LogBuffer> bufferProvider;
 
@@ -11,10 +11,8 @@ public final class SharedCoordinatorLogger_Factory implements Factory<SharedCoor
         this.bufferProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SharedCoordinatorLogger mo1933get() {
-        return newInstance(this.bufferProvider.mo1933get());
+    public SharedCoordinatorLogger get() {
+        return newInstance(this.bufferProvider.get());
     }
 
     public static SharedCoordinatorLogger_Factory create(Provider<LogBuffer> provider) {

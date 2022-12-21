@@ -1,47 +1,66 @@
 package androidx.appcompat.widget;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.os.Bundle;
 import android.text.Editable;
+import android.text.method.KeyListener;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.DragEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.view.inspector.InspectionCompanion;
+import android.view.inspector.PropertyMapper;
+import android.view.inspector.PropertyReader;
 import android.view.textclassifier.TextClassifier;
 import android.widget.EditText;
-import androidx.appcompat.R$attr;
+import androidx.appcompat.C0329R;
 import androidx.core.view.ContentInfoCompat;
 import androidx.core.view.OnReceiveContentViewBehavior;
 import androidx.core.view.TintableBackgroundView;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.inputmethod.EditorInfoCompat;
 import androidx.core.view.inputmethod.InputConnectionCompat;
-import androidx.core.view.inputmethod.InputContentInfoCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.core.widget.TextViewOnReceiveContentListener;
-/* loaded from: classes.dex */
-public class AppCompatEditText extends EditText implements TintableBackgroundView, OnReceiveContentViewBehavior {
+
+public class AppCompatEditText extends EditText implements TintableBackgroundView, OnReceiveContentViewBehavior, EmojiCompatConfigurationView {
+    private final AppCompatEmojiEditTextHelper mAppCompatEmojiEditTextHelper;
     private final AppCompatBackgroundHelper mBackgroundTintHelper;
     private final TextViewOnReceiveContentListener mDefaultOnReceiveContentListener;
-    private final AppCompatEditor mEditor;
     private final AppCompatTextClassifierHelper mTextClassifierHelper;
     private final AppCompatTextHelper mTextHelper;
 
+    public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<AppCompatEditText> {
+        private int mBackgroundTintId;
+        private int mBackgroundTintModeId;
+        private boolean mPropertiesMapped = false;
+
+        public void mapProperties(PropertyMapper propertyMapper) {
+            this.mBackgroundTintId = propertyMapper.mapObject("backgroundTint", C0329R.attr.backgroundTint);
+            this.mBackgroundTintModeId = propertyMapper.mapObject("backgroundTintMode", C0329R.attr.backgroundTintMode);
+            this.mPropertiesMapped = true;
+        }
+
+        public void readProperties(AppCompatEditText appCompatEditText, PropertyReader propertyReader) {
+            if (this.mPropertiesMapped) {
+                propertyReader.readObject(this.mBackgroundTintId, appCompatEditText.getBackgroundTintList());
+                propertyReader.readObject(this.mBackgroundTintModeId, appCompatEditText.getBackgroundTintMode());
+                return;
+            }
+            throw new InspectionCompanion.UninitializedPropertyMapException();
+        }
+    }
+
     public AppCompatEditText(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public AppCompatEditText(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, R$attr.editTextStyle);
+        this(context, attributeSet, C0329R.attr.editTextStyle);
     }
 
     public AppCompatEditText(Context context, AttributeSet attributeSet, int i) {
@@ -56,19 +75,16 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         appCompatTextHelper.applyCompoundDrawablesTints();
         this.mTextClassifierHelper = new AppCompatTextClassifierHelper(this);
         this.mDefaultOnReceiveContentListener = new TextViewOnReceiveContentListener();
-        this.mEditor = new AppCompatEditor(this);
+        AppCompatEmojiEditTextHelper appCompatEmojiEditTextHelper = new AppCompatEmojiEditTextHelper(this);
+        this.mAppCompatEmojiEditTextHelper = appCompatEmojiEditTextHelper;
+        appCompatEmojiEditTextHelper.loadFromAttributes(attributeSet, i);
+        appCompatEmojiEditTextHelper.initKeyListener();
     }
 
-    @Override // android.widget.EditText, android.widget.TextView
-    /* renamed from: getText */
-    public Editable mo51getText() {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return super.getText();
-        }
-        return super.getEditableText();
+    public Editable getText() {
+        return super.getText();
     }
 
-    @Override // android.view.View
     public void setBackgroundResource(int i) {
         super.setBackgroundResource(i);
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
@@ -77,7 +93,6 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         }
     }
 
-    @Override // android.view.View
     public void setBackgroundDrawable(Drawable drawable) {
         super.setBackgroundDrawable(drawable);
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
@@ -86,7 +101,6 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public void setSupportBackgroundTintList(ColorStateList colorStateList) {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -94,7 +108,6 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public ColorStateList getSupportBackgroundTintList() {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -103,7 +116,6 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         return null;
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public void setSupportBackgroundTintMode(PorterDuff.Mode mode) {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -111,7 +123,6 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public PorterDuff.Mode getSupportBackgroundTintMode() {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -120,8 +131,8 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         return null;
     }
 
-    @Override // android.widget.TextView, android.view.View
-    protected void drawableStateChanged() {
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
         super.drawableStateChanged();
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -133,7 +144,6 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         }
     }
 
-    @Override // android.widget.TextView
     public void setTextAppearance(Context context, int i) {
         super.setTextAppearance(context, i);
         AppCompatTextHelper appCompatTextHelper = this.mTextHelper;
@@ -142,83 +152,61 @@ public class AppCompatEditText extends EditText implements TintableBackgroundVie
         }
     }
 
-    @Override // android.widget.TextView, android.view.View
     public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
         InputConnection onCreateInputConnection = super.onCreateInputConnection(editorInfo);
         this.mTextHelper.populateSurroundingTextIfNeeded(this, onCreateInputConnection, editorInfo);
         InputConnection onCreateInputConnection2 = AppCompatHintHelper.onCreateInputConnection(onCreateInputConnection, editorInfo, this);
         String[] onReceiveContentMimeTypes = ViewCompat.getOnReceiveContentMimeTypes(this);
-        if (onCreateInputConnection2 == null || onReceiveContentMimeTypes == null) {
-            return onCreateInputConnection2;
+        if (!(onCreateInputConnection2 == null || onReceiveContentMimeTypes == null)) {
+            EditorInfoCompat.setContentMimeTypes(editorInfo, onReceiveContentMimeTypes);
+            onCreateInputConnection2 = InputConnectionCompat.createWrapper((View) this, onCreateInputConnection2, editorInfo);
         }
-        EditorInfoCompat.setContentMimeTypes(editorInfo, onReceiveContentMimeTypes);
-        return InputConnectionCompat.createWrapper(onCreateInputConnection2, editorInfo, buildOnCommitContentListener(this));
+        return this.mAppCompatEmojiEditTextHelper.onCreateInputConnection(onCreateInputConnection2, editorInfo);
     }
 
-    private static InputConnectionCompat.OnCommitContentListener buildOnCommitContentListener(final View view) {
-        return new InputConnectionCompat.OnCommitContentListener() { // from class: androidx.appcompat.widget.AppCompatEditText.1
-            @Override // androidx.core.view.inputmethod.InputConnectionCompat.OnCommitContentListener
-            public boolean onCommitContent(InputContentInfoCompat inputContentInfoCompat, int i, Bundle bundle) {
-                if ((i & 1) != 0) {
-                    try {
-                        inputContentInfoCompat.requestPermission();
-                    } catch (Exception e) {
-                        Log.w("AppCompatEditText", "Can't insert content from IME; requestPermission() failed", e);
-                        return false;
-                    }
-                }
-                return ViewCompat.performReceiveContent(view, new ContentInfoCompat.Builder(new ClipData(inputContentInfoCompat.getDescription(), new ClipData.Item(inputContentInfoCompat.getContentUri())), 2).setLinkUri(inputContentInfoCompat.getLinkUri()).setExtras(bundle).build()) == null;
-            }
-        };
-    }
-
-    @Override // android.widget.TextView
     public void setCustomSelectionActionModeCallback(ActionMode.Callback callback) {
         super.setCustomSelectionActionModeCallback(TextViewCompat.wrapCustomSelectionActionModeCallback(this, callback));
     }
 
-    @Override // android.widget.TextView
+    public ActionMode.Callback getCustomSelectionActionModeCallback() {
+        return TextViewCompat.unwrapCustomSelectionActionModeCallback(super.getCustomSelectionActionModeCallback());
+    }
+
     public void setTextClassifier(TextClassifier textClassifier) {
-        AppCompatTextClassifierHelper appCompatTextClassifierHelper;
-        if (Build.VERSION.SDK_INT >= 28 || (appCompatTextClassifierHelper = this.mTextClassifierHelper) == null) {
-            super.setTextClassifier(textClassifier);
-        } else {
-            appCompatTextClassifierHelper.setTextClassifier(textClassifier);
-        }
+        super.setTextClassifier(textClassifier);
     }
 
-    @Override // android.widget.TextView
     public TextClassifier getTextClassifier() {
-        AppCompatTextClassifierHelper appCompatTextClassifierHelper;
-        if (Build.VERSION.SDK_INT >= 28 || (appCompatTextClassifierHelper = this.mTextClassifierHelper) == null) {
-            return super.getTextClassifier();
-        }
-        return appCompatTextClassifierHelper.getTextClassifier();
+        return super.getTextClassifier();
     }
 
-    @Override // android.widget.TextView, android.view.View
     public boolean onDragEvent(DragEvent dragEvent) {
-        if (this.mEditor.onDragEvent(dragEvent)) {
+        if (AppCompatReceiveContentHelper.maybeHandleDragEventViaPerformReceiveContent(this, dragEvent)) {
             return true;
         }
         return super.onDragEvent(dragEvent);
     }
 
-    @Override // android.widget.TextView
     public boolean onTextContextMenuItem(int i) {
-        if (ViewCompat.getOnReceiveContentMimeTypes(this) != null && (i == 16908322 || i == 16908337)) {
-            ClipboardManager clipboardManager = (ClipboardManager) getContext().getSystemService("clipboard");
-            ClipData primaryClip = clipboardManager == null ? null : clipboardManager.getPrimaryClip();
-            if (primaryClip != null) {
-                ViewCompat.performReceiveContent(this, new ContentInfoCompat.Builder(primaryClip, 1).setFlags(i == 16908322 ? 0 : 1).build());
-            }
+        if (AppCompatReceiveContentHelper.maybeHandleMenuActionViaPerformReceiveContent(this, i)) {
             return true;
         }
         return super.onTextContextMenuItem(i);
     }
 
-    @Override // androidx.core.view.OnReceiveContentViewBehavior
     public ContentInfoCompat onReceiveContent(ContentInfoCompat contentInfoCompat) {
         return this.mDefaultOnReceiveContentListener.onReceiveContent(this, contentInfoCompat);
+    }
+
+    public void setKeyListener(KeyListener keyListener) {
+        super.setKeyListener(this.mAppCompatEmojiEditTextHelper.getKeyListener(keyListener));
+    }
+
+    public void setEmojiCompatEnabled(boolean z) {
+        this.mAppCompatEmojiEditTextHelper.setEnabled(z);
+    }
+
+    public boolean isEmojiCompatEnabled() {
+        return this.mAppCompatEmojiEditTextHelper.isEnabled();
     }
 }

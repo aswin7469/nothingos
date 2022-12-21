@@ -5,7 +5,7 @@ import android.content.om.OverlayManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideOverlayManagerFactory implements Factory<OverlayManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideOverlayManagerFactory implemen
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public OverlayManager mo1933get() {
-        return provideOverlayManager(this.contextProvider.mo1933get());
+    public OverlayManager get() {
+        return provideOverlayManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideOverlayManagerFactory create(Provider<Context> provider) {

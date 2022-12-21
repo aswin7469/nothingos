@@ -1,8 +1,7 @@
 package com.android.systemui.statusbar.policy;
-/* loaded from: classes2.dex */
-public interface RotationLockController extends CallbackController<RotationLockControllerCallback> {
 
-    /* loaded from: classes2.dex */
+public interface RotationLockController extends Listenable, CallbackController<RotationLockControllerCallback> {
+
     public interface RotationLockControllerCallback {
         void onRotationLockStateChanged(boolean z, boolean z2);
     }
@@ -10,6 +9,8 @@ public interface RotationLockController extends CallbackController<RotationLockC
     int getRotationLockOrientation();
 
     boolean isCameraRotationEnabled();
+
+    boolean isRotationLockAffordanceVisible();
 
     boolean isRotationLocked();
 

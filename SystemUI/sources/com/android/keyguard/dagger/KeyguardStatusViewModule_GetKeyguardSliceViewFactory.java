@@ -5,7 +5,7 @@ import com.android.keyguard.KeyguardSliceView;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardStatusViewModule_GetKeyguardSliceViewFactory implements Factory<KeyguardSliceView> {
     private final Provider<KeyguardClockSwitch> keyguardClockSwitchProvider;
 
@@ -13,10 +13,8 @@ public final class KeyguardStatusViewModule_GetKeyguardSliceViewFactory implemen
         this.keyguardClockSwitchProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardSliceView mo1933get() {
-        return getKeyguardSliceView(this.keyguardClockSwitchProvider.mo1933get());
+    public KeyguardSliceView get() {
+        return getKeyguardSliceView(this.keyguardClockSwitchProvider.get());
     }
 
     public static KeyguardStatusViewModule_GetKeyguardSliceViewFactory create(Provider<KeyguardClockSwitch> provider) {

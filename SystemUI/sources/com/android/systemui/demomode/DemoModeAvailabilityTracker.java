@@ -2,23 +2,20 @@ package com.android.systemui.demomode;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000.\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\b\u0005\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\b\u0005\n\u0002\u0010\u0002\n\u0002\b\u0005*\u0002\u0006\u0012\b&\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\b\u0010\u0014\u001a\u00020\u000bH\u0002J\b\u0010\u0015\u001a\u00020\u000bH\u0002J\b\u0010\u0016\u001a\u00020\u0017H&J\b\u0010\u0018\u001a\u00020\u0017H&J\b\u0010\u0019\u001a\u00020\u0017H&J\u0006\u0010\u001a\u001a\u00020\u0017J\u0006\u0010\u001b\u001a\u00020\u0017R\u0010\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0004\n\u0002\u0010\u0007R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\b\u0010\tR\u001a\u0010\n\u001a\u00020\u000bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\n\u0010\f\"\u0004\b\r\u0010\u000eR\u001a\u0010\u000f\u001a\u00020\u000bX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000f\u0010\f\"\u0004\b\u0010\u0010\u000eR\u0010\u0010\u0011\u001a\u00020\u0012X\u0004¢\u0006\u0004\n\u0002\u0010\u0013¨\u0006\u001c"}, mo64987d2 = {"Lcom/android/systemui/demomode/DemoModeAvailabilityTracker;", "", "context", "Landroid/content/Context;", "(Landroid/content/Context;)V", "allowedObserver", "com/android/systemui/demomode/DemoModeAvailabilityTracker$allowedObserver$1", "Lcom/android/systemui/demomode/DemoModeAvailabilityTracker$allowedObserver$1;", "getContext", "()Landroid/content/Context;", "isDemoModeAvailable", "", "()Z", "setDemoModeAvailable", "(Z)V", "isInDemoMode", "setInDemoMode", "onObserver", "com/android/systemui/demomode/DemoModeAvailabilityTracker$onObserver$1", "Lcom/android/systemui/demomode/DemoModeAvailabilityTracker$onObserver$1;", "checkIsDemoModeAllowed", "checkIsDemoModeOn", "onDemoModeAvailabilityChanged", "", "onDemoModeFinished", "onDemoModeStarted", "startTracking", "stopTracking", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: DemoModeAvailabilityTracker.kt */
-/* loaded from: classes.dex */
 public abstract class DemoModeAvailabilityTracker {
-    @NotNull
-    private final DemoModeAvailabilityTracker$allowedObserver$1 allowedObserver;
-    @NotNull
+    private final DemoModeAvailabilityTracker$allowedObserver$1 allowedObserver = new DemoModeAvailabilityTracker$allowedObserver$1(this, new Handler(Looper.getMainLooper()));
     private final Context context;
-    @NotNull
-    private final DemoModeAvailabilityTracker$onObserver$1 onObserver;
-    private boolean isInDemoMode = checkIsDemoModeOn();
     private boolean isDemoModeAvailable = checkIsDemoModeAllowed();
+    private boolean isInDemoMode = checkIsDemoModeOn();
+    private final DemoModeAvailabilityTracker$onObserver$1 onObserver = new DemoModeAvailabilityTracker$onObserver$1(this, new Handler(Looper.getMainLooper()));
 
     public abstract void onDemoModeAvailabilityChanged();
 
@@ -26,41 +23,13 @@ public abstract class DemoModeAvailabilityTracker {
 
     public abstract void onDemoModeStarted();
 
-    /* JADX WARN: Type inference failed for: r0v2, types: [com.android.systemui.demomode.DemoModeAvailabilityTracker$allowedObserver$1] */
-    /* JADX WARN: Type inference failed for: r0v4, types: [com.android.systemui.demomode.DemoModeAvailabilityTracker$onObserver$1] */
-    public DemoModeAvailabilityTracker(@NotNull Context context) {
-        Intrinsics.checkNotNullParameter(context, "context");
-        this.context = context;
-        final Handler handler = new Handler(Looper.getMainLooper());
-        this.allowedObserver = new ContentObserver(handler) { // from class: com.android.systemui.demomode.DemoModeAvailabilityTracker$allowedObserver$1
-            @Override // android.database.ContentObserver
-            public void onChange(boolean z) {
-                boolean checkIsDemoModeAllowed;
-                checkIsDemoModeAllowed = DemoModeAvailabilityTracker.this.checkIsDemoModeAllowed();
-                if (DemoModeAvailabilityTracker.this.isDemoModeAvailable() == checkIsDemoModeAllowed) {
-                    return;
-                }
-                DemoModeAvailabilityTracker.this.setDemoModeAvailable(checkIsDemoModeAllowed);
-                DemoModeAvailabilityTracker.this.onDemoModeAvailabilityChanged();
-            }
-        };
-        final Handler handler2 = new Handler(Looper.getMainLooper());
-        this.onObserver = new ContentObserver(handler2) { // from class: com.android.systemui.demomode.DemoModeAvailabilityTracker$onObserver$1
-            @Override // android.database.ContentObserver
-            public void onChange(boolean z) {
-                boolean checkIsDemoModeOn;
-                checkIsDemoModeOn = DemoModeAvailabilityTracker.this.checkIsDemoModeOn();
-                if (DemoModeAvailabilityTracker.this.isInDemoMode() == checkIsDemoModeOn) {
-                    return;
-                }
-                DemoModeAvailabilityTracker.this.setInDemoMode(checkIsDemoModeOn);
-                if (checkIsDemoModeOn) {
-                    DemoModeAvailabilityTracker.this.onDemoModeStarted();
-                } else {
-                    DemoModeAvailabilityTracker.this.onDemoModeFinished();
-                }
-            }
-        };
+    public DemoModeAvailabilityTracker(Context context2) {
+        Intrinsics.checkNotNullParameter(context2, "context");
+        this.context = context2;
+    }
+
+    public final Context getContext() {
+        return this.context;
     }
 
     public final boolean isInDemoMode() {
@@ -91,12 +60,12 @@ public abstract class DemoModeAvailabilityTracker {
         contentResolver.unregisterContentObserver(this.onObserver);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public final boolean checkIsDemoModeAllowed() {
         return Settings.Global.getInt(this.context.getContentResolver(), "sysui_demo_allowed", 0) != 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public final boolean checkIsDemoModeOn() {
         return Settings.Global.getInt(this.context.getContentResolver(), "sysui_tuner_demo_on", 0) != 0;
     }

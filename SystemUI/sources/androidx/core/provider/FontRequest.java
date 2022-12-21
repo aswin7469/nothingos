@@ -3,25 +3,37 @@ package androidx.core.provider;
 import android.util.Base64;
 import androidx.core.util.Preconditions;
 import java.util.List;
-/* loaded from: classes.dex */
+import sun.util.locale.LanguageTag;
+
 public final class FontRequest {
     private final List<List<byte[]>> mCertificates;
-    private final int mCertificatesArray = 0;
+    private final int mCertificatesArray;
     private final String mIdentifier;
     private final String mProviderAuthority;
     private final String mProviderPackage;
     private final String mQuery;
 
-    public FontRequest(String providerAuthority, String providerPackage, String query, List<List<byte[]>> certificates) {
-        this.mProviderAuthority = (String) Preconditions.checkNotNull(providerAuthority);
-        this.mProviderPackage = (String) Preconditions.checkNotNull(providerPackage);
-        this.mQuery = (String) Preconditions.checkNotNull(query);
-        this.mCertificates = (List) Preconditions.checkNotNull(certificates);
-        this.mIdentifier = createIdentifier(providerAuthority, providerPackage, query);
+    public FontRequest(String str, String str2, String str3, List<List<byte[]>> list) {
+        this.mProviderAuthority = (String) Preconditions.checkNotNull(str);
+        this.mProviderPackage = (String) Preconditions.checkNotNull(str2);
+        this.mQuery = (String) Preconditions.checkNotNull(str3);
+        this.mCertificates = (List) Preconditions.checkNotNull(list);
+        this.mCertificatesArray = 0;
+        this.mIdentifier = createIdentifier(str, str2, str3);
     }
 
-    private String createIdentifier(String providerAuthority, String providerPackage, String query) {
-        return providerAuthority + "-" + providerPackage + "-" + query;
+    public FontRequest(String str, String str2, String str3, int i) {
+        this.mProviderAuthority = (String) Preconditions.checkNotNull(str);
+        this.mProviderPackage = (String) Preconditions.checkNotNull(str2);
+        this.mQuery = (String) Preconditions.checkNotNull(str3);
+        this.mCertificates = null;
+        Preconditions.checkArgument(i != 0);
+        this.mCertificatesArray = i;
+        this.mIdentifier = createIdentifier(str, str2, str3);
+    }
+
+    private String createIdentifier(String str, String str2, String str3) {
+        return str + LanguageTag.SEP + str2 + LanguageTag.SEP + str3;
     }
 
     public String getProviderAuthority() {
@@ -44,7 +56,12 @@ public final class FontRequest {
         return this.mCertificatesArray;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    @Deprecated
+    public String getIdentifier() {
+        return this.mIdentifier;
+    }
+
+    /* access modifiers changed from: package-private */
     public String getId() {
         return this.mIdentifier;
     }
@@ -54,10 +71,10 @@ public final class FontRequest {
         sb.append("FontRequest {mProviderAuthority: " + this.mProviderAuthority + ", mProviderPackage: " + this.mProviderPackage + ", mQuery: " + this.mQuery + ", mCertificates:");
         for (int i = 0; i < this.mCertificates.size(); i++) {
             sb.append(" [");
-            List<byte[]> list = this.mCertificates.get(i);
+            List list = this.mCertificates.get(i);
             for (int i2 = 0; i2 < list.size(); i2++) {
                 sb.append(" \"");
-                sb.append(Base64.encodeToString(list.get(i2), 0));
+                sb.append(Base64.encodeToString((byte[]) list.get(i2), 0));
                 sb.append("\"");
             }
             sb.append(" ]");

@@ -8,12 +8,11 @@ import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-/* loaded from: classes.dex */
+
 public class ResizingSpace extends View {
     private final int mHeight;
     private final int mWidth;
 
-    @Override // android.view.View
     public void draw(Canvas canvas) {
     }
 
@@ -25,10 +24,11 @@ public class ResizingSpace extends View {
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R.styleable.ViewGroup_Layout);
         this.mWidth = obtainStyledAttributes.getResourceId(0, 0);
         this.mHeight = obtainStyledAttributes.getResourceId(1, 0);
+        obtainStyledAttributes.recycle();
     }
 
-    @Override // android.view.View
-    protected void onConfigurationChanged(Configuration configuration) {
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
         boolean z;
         int dimensionPixelOffset;
         int dimensionPixelOffset2;
@@ -54,14 +54,17 @@ public class ResizingSpace extends View {
     private static int getDefaultSize2(int i, int i2) {
         int mode = View.MeasureSpec.getMode(i2);
         int size = View.MeasureSpec.getSize(i2);
-        if (mode != Integer.MIN_VALUE) {
-            return mode != 1073741824 ? i : size;
+        if (mode == Integer.MIN_VALUE) {
+            return Math.min(i, size);
         }
-        return Math.min(i, size);
+        if (mode != 1073741824) {
+            return i;
+        }
+        return size;
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         setMeasuredDimension(getDefaultSize2(getSuggestedMinimumWidth(), i), getDefaultSize2(getSuggestedMinimumHeight(), i2));
     }
 }

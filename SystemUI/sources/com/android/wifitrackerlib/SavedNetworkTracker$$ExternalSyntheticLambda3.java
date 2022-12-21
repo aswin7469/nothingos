@@ -1,18 +1,16 @@
 package com.android.wifitrackerlib;
 
-import android.net.wifi.hotspot2.PasspointConfiguration;
-import java.util.function.Function;
-/* loaded from: classes2.dex */
-public final /* synthetic */ class SavedNetworkTracker$$ExternalSyntheticLambda3 implements Function {
-    public static final /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda3 INSTANCE = new SavedNetworkTracker$$ExternalSyntheticLambda3();
+import com.android.wifitrackerlib.SavedNetworkTracker;
 
-    private /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda3() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class SavedNetworkTracker$$ExternalSyntheticLambda3 implements Runnable {
+    public final /* synthetic */ SavedNetworkTracker.SavedNetworkTrackerCallback f$0;
+
+    public /* synthetic */ SavedNetworkTracker$$ExternalSyntheticLambda3(SavedNetworkTracker.SavedNetworkTrackerCallback savedNetworkTrackerCallback) {
+        this.f$0 = savedNetworkTrackerCallback;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        String lambda$updatePasspointWifiEntryConfigs$3;
-        lambda$updatePasspointWifiEntryConfigs$3 = SavedNetworkTracker.lambda$updatePasspointWifiEntryConfigs$3((PasspointConfiguration) obj);
-        return lambda$updatePasspointWifiEntryConfigs$3;
+    public final void run() {
+        this.f$0.onSubscriptionWifiEntriesChanged();
     }
 }

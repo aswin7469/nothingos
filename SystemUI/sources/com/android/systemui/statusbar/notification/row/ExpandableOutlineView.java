@@ -10,35 +10,37 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
-import com.android.systemui.R$bool;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.statusbar.notification.AnimatableProperty;
 import com.android.systemui.statusbar.notification.PropertyAnimator;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
-/* loaded from: classes.dex */
+
 public abstract class ExpandableOutlineView extends ExpandableView {
-    private boolean mAlwaysRoundBothCorners;
-    private int mBackgroundTop;
+    private static final AnimatableProperty BOTTOM_ROUNDNESS = AnimatableProperty.from("bottomRoundness", new ExpandableOutlineView$$ExternalSyntheticLambda2(), new ExpandableOutlineView$$ExternalSyntheticLambda3(), C1893R.C1897id.bottom_roundess_animator_tag, C1893R.C1897id.bottom_roundess_animator_end_tag, C1893R.C1897id.bottom_roundess_animator_start_tag);
+    private static final Path EMPTY_PATH = new Path();
+    private static final AnimationProperties ROUNDNESS_PROPERTIES = new AnimationProperties().setDuration(200);
+    private static final AnimatableProperty TOP_ROUNDNESS = AnimatableProperty.from("topRoundness", new ExpandableOutlineView$$ExternalSyntheticLambda0(), new ExpandableOutlineView$$ExternalSyntheticLambda1(), C1893R.C1897id.top_roundess_animator_tag, C1893R.C1897id.top_roundess_animator_end_tag, C1893R.C1897id.top_roundess_animator_start_tag);
+    /* access modifiers changed from: private */
+    public boolean mAlwaysRoundBothCorners;
+    /* access modifiers changed from: private */
+    public int mBackgroundTop;
     private float mBottomRoundness;
+    private final Path mClipPath = new Path();
     private float mCurrentBottomRoundness;
     private float mCurrentTopRoundness;
-    private boolean mCustomOutline;
-    protected float mOutlineRadius;
-    private final ViewOutlineProvider mProvider;
-    private float mTopRoundness;
-    private static final AnimatableProperty TOP_ROUNDNESS = AnimatableProperty.from("topRoundness", ExpandableOutlineView$$ExternalSyntheticLambda0.INSTANCE, ExpandableOutlineView$$ExternalSyntheticLambda3.INSTANCE, R$id.top_roundess_animator_tag, R$id.top_roundess_animator_end_tag, R$id.top_roundess_animator_start_tag);
-    private static final AnimatableProperty BOTTOM_ROUNDNESS = AnimatableProperty.from("bottomRoundness", ExpandableOutlineView$$ExternalSyntheticLambda1.INSTANCE, ExpandableOutlineView$$ExternalSyntheticLambda2.INSTANCE, R$id.bottom_roundess_animator_tag, R$id.bottom_roundess_animator_end_tag, R$id.bottom_roundess_animator_start_tag);
-    private static final AnimationProperties ROUNDNESS_PROPERTIES = new AnimationProperties().setDuration(200);
-    private static final Path EMPTY_PATH = new Path();
-    private final Rect mOutlineRect = new Rect();
-    private final Path mClipPath = new Path();
-    private float mOutlineAlpha = -1.0f;
-    private Path mTmpPath = new Path();
+    /* access modifiers changed from: private */
+    public boolean mCustomOutline;
     protected boolean mDismissUsingRowTranslationX = true;
+    /* access modifiers changed from: private */
+    public float mOutlineAlpha = -1.0f;
+    protected float mOutlineRadius;
+    private final Rect mOutlineRect = new Rect();
+    private final ViewOutlineProvider mProvider;
     private float[] mTmpCornerRadii = new float[8];
+    private Path mTmpPath = new Path();
+    private float mTopRoundness;
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean childNeedsClipping(View view) {
         return false;
     }
@@ -47,7 +49,7 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Path getClipPath(boolean z) {
         int i;
         int i2;
@@ -57,28 +59,27 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         if (!this.mCustomOutline) {
             int translation = (this.mDismissUsingRowTranslationX || z) ? 0 : (int) getTranslation();
             int i5 = (int) (this.mExtraWidthForClipping / 2.0f);
-            i = Math.max(translation, 0) - i5;
-            i2 = this.mClipTopAmount + this.mBackgroundTop;
-            i3 = getWidth() + i5 + Math.min(translation, 0);
-            i4 = Math.max(this.mMinimumHeightForClipping, Math.max(getActualHeight() - this.mClipBottomAmount, (int) (i2 + currentBackgroundRadiusTop)));
+            i4 = Math.max(translation, 0) - i5;
+            i3 = this.mClipTopAmount + this.mBackgroundTop;
+            i2 = getWidth() + i5 + Math.min(translation, 0);
+            i = Math.max(this.mMinimumHeightForClipping, Math.max(getActualHeight() - this.mClipBottomAmount, (int) (((float) i3) + currentBackgroundRadiusTop)));
         } else {
-            Rect rect = this.mOutlineRect;
-            i = rect.left;
-            i2 = rect.top;
-            i3 = rect.right;
-            i4 = rect.bottom;
+            i4 = this.mOutlineRect.left;
+            i3 = this.mOutlineRect.top;
+            i2 = this.mOutlineRect.right;
+            i = this.mOutlineRect.bottom;
         }
-        int i6 = i4;
-        int i7 = i;
-        int i8 = i2;
-        int i9 = i3;
+        int i6 = i;
+        int i7 = i4;
+        int i8 = i3;
+        int i9 = i2;
         int i10 = i6 - i8;
         if (i10 == 0) {
             return EMPTY_PATH;
         }
         float currentBackgroundRadiusBottom = this.mAlwaysRoundBothCorners ? this.mOutlineRadius : getCurrentBackgroundRadiusBottom();
         float f = currentBackgroundRadiusTop + currentBackgroundRadiusBottom;
-        float f2 = i10;
+        float f2 = (float) i10;
         if (f > f2) {
             float f3 = f - f2;
             float currentTopRoundness = getCurrentTopRoundness();
@@ -103,37 +104,34 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         fArr[5] = f2;
         fArr[6] = f2;
         fArr[7] = f2;
-        path.addRoundRect(i, i2, i3, i4, fArr, Path.Direction.CW);
+        path.addRoundRect((float) i, (float) i2, (float) i3, (float) i4, fArr, Path.Direction.CW);
     }
 
     public ExpandableOutlineView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        ViewOutlineProvider viewOutlineProvider = new ViewOutlineProvider() { // from class: com.android.systemui.statusbar.notification.row.ExpandableOutlineView.1
-            @Override // android.view.ViewOutlineProvider
+        C27501 r1 = new ViewOutlineProvider() {
             public void getOutline(View view, Outline outline) {
-                if (!ExpandableOutlineView.this.mCustomOutline && ExpandableOutlineView.this.getCurrentTopRoundness() == 0.0f && ExpandableOutlineView.this.getCurrentBottomRoundness() == 0.0f && !ExpandableOutlineView.this.mAlwaysRoundBothCorners) {
-                    ExpandableOutlineView expandableOutlineView = ExpandableOutlineView.this;
-                    int translation = !expandableOutlineView.mDismissUsingRowTranslationX ? (int) expandableOutlineView.getTranslation() : 0;
-                    int max = Math.max(translation, 0);
-                    ExpandableOutlineView expandableOutlineView2 = ExpandableOutlineView.this;
-                    int i = expandableOutlineView2.mClipTopAmount + expandableOutlineView2.mBackgroundTop;
-                    outline.setRect(max, i, ExpandableOutlineView.this.getWidth() + Math.min(translation, 0), Math.max(ExpandableOutlineView.this.getActualHeight() - ExpandableOutlineView.this.mClipBottomAmount, i));
-                } else {
+                if (ExpandableOutlineView.this.mCustomOutline || ExpandableOutlineView.this.getCurrentTopRoundness() != 0.0f || ExpandableOutlineView.this.getCurrentBottomRoundness() != 0.0f || ExpandableOutlineView.this.mAlwaysRoundBothCorners) {
                     Path clipPath = ExpandableOutlineView.this.getClipPath(false);
                     if (clipPath != null) {
                         outline.setPath(clipPath);
                     }
+                } else {
+                    int translation = !ExpandableOutlineView.this.mDismissUsingRowTranslationX ? (int) ExpandableOutlineView.this.getTranslation() : 0;
+                    int max = Math.max(translation, 0);
+                    int access$200 = ExpandableOutlineView.this.mClipTopAmount + ExpandableOutlineView.this.mBackgroundTop;
+                    outline.setRect(max, access$200, ExpandableOutlineView.this.getWidth() + Math.min(translation, 0), Math.max(ExpandableOutlineView.this.getActualHeight() - ExpandableOutlineView.this.mClipBottomAmount, access$200));
                 }
                 outline.setAlpha(ExpandableOutlineView.this.mOutlineAlpha);
             }
         };
-        this.mProvider = viewOutlineProvider;
-        setOutlineProvider(viewOutlineProvider);
+        this.mProvider = r1;
+        setOutlineProvider(r1);
         initDimens();
     }
 
-    @Override // android.view.ViewGroup
-    protected boolean drawChild(Canvas canvas, View view, long j) {
+    /* access modifiers changed from: protected */
+    public boolean drawChild(Canvas canvas, View view, long j) {
         canvas.save();
         if (childNeedsClipping(view)) {
             Path customClipPath = getCustomClipPath(view);
@@ -149,51 +147,52 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         return drawChild;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void setExtraWidthForClipping(float f) {
         super.setExtraWidthForClipping(f);
         invalidate();
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void setMinimumHeightForClipping(int i) {
         super.setMinimumHeightForClipping(i);
         invalidate();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isClippingNeeded() {
-        return this.mAlwaysRoundBothCorners || this.mCustomOutline || ((getTranslation() > 0.0f ? 1 : (getTranslation() == 0.0f ? 0 : -1)) != 0 && !this.mDismissUsingRowTranslationX);
-    }
-
-    private void initDimens() {
-        Resources resources = getResources();
-        this.mOutlineRadius = resources.getDimension(R$dimen.notification_shadow_radius);
-        boolean z = resources.getBoolean(R$bool.config_clipNotificationsToOutline);
-        this.mAlwaysRoundBothCorners = z;
-        if (!z) {
-            this.mOutlineRadius = resources.getDimensionPixelSize(R$dimen.notification_corner_radius);
-        }
-        setClipToOutline(this.mAlwaysRoundBothCorners);
-    }
-
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
-    public boolean setTopRoundness(float f, boolean z) {
-        float f2 = this.mTopRoundness;
-        if (f2 != f) {
-            float abs = Math.abs(f - f2);
-            this.mTopRoundness = f;
-            AnimatableProperty animatableProperty = TOP_ROUNDNESS;
-            if (PropertyAnimator.isAnimating(this, animatableProperty) && abs > 0.5f) {
-                z = true;
-            }
-            PropertyAnimator.setProperty(this, animatableProperty, f, ROUNDNESS_PROPERTIES, z);
+        boolean z = getTranslation() != 0.0f && !this.mDismissUsingRowTranslationX;
+        if (this.mAlwaysRoundBothCorners || this.mCustomOutline || z) {
             return true;
         }
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    private void initDimens() {
+        Resources resources = getResources();
+        this.mOutlineRadius = resources.getDimension(C1893R.dimen.notification_shadow_radius);
+        boolean z = resources.getBoolean(C1893R.bool.config_clipNotificationsToOutline);
+        this.mAlwaysRoundBothCorners = z;
+        if (!z) {
+            this.mOutlineRadius = (float) resources.getDimensionPixelSize(C1893R.dimen.notification_corner_radius);
+        }
+        setClipToOutline(this.mAlwaysRoundBothCorners);
+    }
+
+    public boolean setTopRoundness(float f, boolean z) {
+        float f2 = this.mTopRoundness;
+        if (f2 == f) {
+            return false;
+        }
+        float abs = Math.abs(f - f2);
+        this.mTopRoundness = f;
+        AnimatableProperty animatableProperty = TOP_ROUNDNESS;
+        if (PropertyAnimator.isAnimating(this, animatableProperty) && abs > 0.5f) {
+            z = true;
+        }
+        PropertyAnimator.setProperty(this, animatableProperty, f, ROUNDNESS_PROPERTIES, z);
+        return true;
+    }
+
+    /* access modifiers changed from: protected */
     public void applyRoundness() {
         invalidateOutline();
         invalidate();
@@ -215,29 +214,36 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         return getCurrentBottomRoundness() * this.mOutlineRadius;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public boolean setBottomRoundness(float f, boolean z) {
         float f2 = this.mBottomRoundness;
-        if (f2 != f) {
-            float abs = Math.abs(f - f2);
-            this.mBottomRoundness = f;
-            AnimatableProperty animatableProperty = BOTTOM_ROUNDNESS;
-            if (PropertyAnimator.isAnimating(this, animatableProperty) && abs > 0.5f) {
-                z = true;
-            }
-            PropertyAnimator.setProperty(this, animatableProperty, f, ROUNDNESS_PROPERTIES, z);
-            return true;
+        if (f2 == f) {
+            return false;
         }
-        return false;
+        float abs = Math.abs(f - f2);
+        this.mBottomRoundness = f;
+        AnimatableProperty animatableProperty = BOTTOM_ROUNDNESS;
+        if (PropertyAnimator.isAnimating(this, animatableProperty) && abs > 0.5f) {
+            z = true;
+        }
+        PropertyAnimator.setProperty(this, animatableProperty, f, ROUNDNESS_PROPERTIES, z);
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: protected */
+    public void setBackgroundTop(int i) {
+        if (this.mBackgroundTop != i) {
+            this.mBackgroundTop = i;
+            invalidateOutline();
+        }
+    }
+
+    /* access modifiers changed from: private */
     public void setTopRoundnessInternal(float f) {
         this.mCurrentTopRoundness = f;
         applyRoundness();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setBottomRoundnessInternal(float f) {
         this.mCurrentBottomRoundness = f;
         applyRoundness();
@@ -248,7 +254,6 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         applyRoundness();
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void setActualHeight(int i, boolean z) {
         int actualHeight = getActualHeight();
         super.setActualHeight(i, z);
@@ -257,7 +262,6 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         }
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void setClipTopAmount(int i) {
         int clipTopAmount = getClipTopAmount();
         super.setClipTopAmount(i);
@@ -266,7 +270,6 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         }
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void setClipBottomAmount(int i) {
         int clipBottomAmount = getClipBottomAmount();
         super.setClipBottomAmount(i);
@@ -275,7 +278,7 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setOutlineAlpha(float f) {
         if (f != this.mOutlineAlpha) {
             this.mOutlineAlpha = f;
@@ -283,12 +286,11 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         }
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public float getOutlineAlpha() {
         return this.mOutlineAlpha;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setOutlineRect(RectF rectF) {
         if (rectF != null) {
             setOutlineRect(rectF.left, rectF.top, rectF.right, rectF.bottom);
@@ -302,43 +304,51 @@ public abstract class ExpandableOutlineView extends ExpandableView {
         this.mDismissUsingRowTranslationX = z;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public int getOutlineTranslation() {
         if (this.mCustomOutline) {
             return this.mOutlineRect.left;
         }
-        if (!this.mDismissUsingRowTranslationX) {
-            return (int) getTranslation();
+        if (this.mDismissUsingRowTranslationX) {
+            return 0;
         }
-        return 0;
+        return (int) getTranslation();
     }
 
     public void updateOutline() {
-        if (this.mCustomOutline) {
-            return;
+        if (!this.mCustomOutline) {
+            setOutlineProvider(needsOutline() ? this.mProvider : null);
         }
-        setOutlineProvider(needsOutline() ? this.mProvider : null);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean needsOutline() {
         if (isChildInGroup()) {
-            return isGroupExpanded() && !isGroupExpansionChanging();
+            if (!isGroupExpanded() || isGroupExpansionChanging()) {
+                return false;
+            }
+            return true;
         } else if (!isSummaryWithChildren()) {
             return true;
         } else {
-            return !isGroupExpanded() || isGroupExpansionChanging();
+            if (!isGroupExpanded() || isGroupExpansionChanging()) {
+                return true;
+            }
+            return false;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    public boolean isOutlineShowing() {
+        return getOutlineProvider() != null;
+    }
+
+    /* access modifiers changed from: protected */
     public void setOutlineRect(float f, float f2, float f3, float f4) {
         this.mCustomOutline = true;
         this.mOutlineRect.set((int) f, (int) f2, (int) f3, (int) f4);
         Rect rect = this.mOutlineRect;
-        rect.bottom = (int) Math.max(f2, rect.bottom);
+        rect.bottom = (int) Math.max(f2, (float) rect.bottom);
         Rect rect2 = this.mOutlineRect;
-        rect2.right = (int) Math.max(f, rect2.right);
+        rect2.right = (int) Math.max(f, (float) rect2.right);
         applyRoundness();
     }
 }

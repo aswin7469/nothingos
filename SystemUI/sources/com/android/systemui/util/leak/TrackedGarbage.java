@@ -2,21 +2,22 @@ package com.android.systemui.util.leak;
 
 import android.os.SystemClock;
 import android.util.ArrayMap;
-import java.io.PrintWriter;
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
+import java.p026io.PrintWriter;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
-/* loaded from: classes2.dex */
+
 public class TrackedGarbage {
+    private static final long GARBAGE_COLLECTION_DEADLINE_MILLIS = 60000;
     private final HashSet<LeakReference> mGarbage = new HashSet<>();
     private final ReferenceQueue<Object> mRefQueue = new ReferenceQueue<>();
     private final TrackedCollections mTrackedCollections;
 
     private boolean isOld(long j, long j2) {
-        return j + 60000 < j2;
+        return j + GARBAGE_COLLECTION_DEADLINE_MILLIS < j2;
     }
 
     public TrackedGarbage(TrackedCollections trackedCollections) {
@@ -40,11 +41,11 @@ public class TrackedGarbage {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class LeakReference extends WeakReference<Object> {
-        private final Class<?> clazz;
-        private final long createdUptimeMillis = SystemClock.uptimeMillis();
+    private static class LeakReference extends WeakReference<Object> {
+        /* access modifiers changed from: private */
+        public final Class<?> clazz;
+        /* access modifiers changed from: private */
+        public final long createdUptimeMillis = SystemClock.uptimeMillis();
 
         LeakReference(Object obj, ReferenceQueue<Object> referenceQueue) {
             super(obj, referenceQueue);
@@ -80,8 +81,8 @@ public class TrackedGarbage {
         int i;
         cleanUp();
         long uptimeMillis = SystemClock.uptimeMillis();
-        i = 0;
         Iterator<LeakReference> it = this.mGarbage.iterator();
+        i = 0;
         while (it.hasNext()) {
             if (isOld(it.next().createdUptimeMillis, uptimeMillis)) {
                 i++;

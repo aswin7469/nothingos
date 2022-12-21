@@ -9,68 +9,63 @@ import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$string;
-/* loaded from: classes2.dex */
+import com.android.systemui.C1893R;
+import com.android.systemui.shared.system.SysUiStatsLog;
+
 public class PowerNotificationControlsFragment extends Fragment {
-    @Override // android.app.Fragment
+    private static final String KEY_SHOW_PNC = "show_importance_slider";
+
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
     }
 
-    @Override // android.app.Fragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(R$layout.power_notification_controls_settings, viewGroup, false);
+        return layoutInflater.inflate(C1893R.layout.power_notification_controls_settings, viewGroup, false);
     }
 
-    @Override // android.app.Fragment
     public void onViewCreated(View view, Bundle bundle) {
-        String string;
+        String str;
         super.onViewCreated(view, bundle);
-        View findViewById = view.findViewById(R$id.switch_bar);
-        final Switch r3 = (Switch) findViewById.findViewById(16908352);
-        final TextView textView = (TextView) findViewById.findViewById(R$id.switch_text);
-        r3.setChecked(isEnabled());
+        View findViewById = view.findViewById(C1893R.C1897id.switch_bar);
+        final Switch switchR = (Switch) findViewById.findViewById(16908352);
+        final TextView textView = (TextView) findViewById.findViewById(C1893R.C1897id.switch_text);
+        switchR.setChecked(isEnabled());
         if (isEnabled()) {
-            string = getString(R$string.switch_bar_on);
+            str = getString(C1893R.string.switch_bar_on);
         } else {
-            string = getString(R$string.switch_bar_off);
+            str = getString(C1893R.string.switch_bar_off);
         }
-        textView.setText(string);
-        r3.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.tuner.PowerNotificationControlsFragment.1
-            @Override // android.view.View.OnClickListener
-            public void onClick(View view2) {
-                String string2;
-                boolean z = !PowerNotificationControlsFragment.this.isEnabled() ? 1 : 0;
-                MetricsLogger.action(PowerNotificationControlsFragment.this.getContext(), 393, z);
-                Settings.Secure.putInt(PowerNotificationControlsFragment.this.getContext().getContentResolver(), "show_importance_slider", z ? 1 : 0);
-                r3.setChecked(z);
-                TextView textView2 = textView;
+        textView.setText(str);
+        switchR.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                String str;
+                boolean z = !PowerNotificationControlsFragment.this.isEnabled();
+                MetricsLogger.action(PowerNotificationControlsFragment.this.getContext(), SysUiStatsLog.ACCESSIBILITY_FLOATING_MENU_UI_CHANGED, z);
+                Settings.Secure.putInt(PowerNotificationControlsFragment.this.getContext().getContentResolver(), PowerNotificationControlsFragment.KEY_SHOW_PNC, z ? 1 : 0);
+                switchR.setChecked(z);
+                TextView textView = textView;
                 if (z) {
-                    string2 = PowerNotificationControlsFragment.this.getString(R$string.switch_bar_on);
+                    str = PowerNotificationControlsFragment.this.getString(C1893R.string.switch_bar_on);
                 } else {
-                    string2 = PowerNotificationControlsFragment.this.getString(R$string.switch_bar_off);
+                    str = PowerNotificationControlsFragment.this.getString(C1893R.string.switch_bar_off);
                 }
-                textView2.setText(string2);
+                textView.setText(str);
             }
         });
     }
 
-    @Override // android.app.Fragment
     public void onResume() {
         super.onResume();
         MetricsLogger.visibility(getContext(), 392, true);
     }
 
-    @Override // android.app.Fragment
     public void onPause() {
         super.onPause();
         MetricsLogger.visibility(getContext(), 392, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isEnabled() {
-        return Settings.Secure.getInt(getContext().getContentResolver(), "show_importance_slider", 0) == 1;
+        return Settings.Secure.getInt(getContext().getContentResolver(), KEY_SHOW_PNC, 0) == 1;
     }
 }

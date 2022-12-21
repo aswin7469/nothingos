@@ -1,11 +1,9 @@
 package com.android.systemui.telephony;
 
 import dagger.internal.Factory;
-/* loaded from: classes2.dex */
+
 public final class TelephonyCallback_Factory implements Factory<TelephonyCallback> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public TelephonyCallback mo1933get() {
+    public TelephonyCallback get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class TelephonyCallback_Factory implements Factory<TelephonyCallbac
         return new TelephonyCallback();
     }
 
-    /* loaded from: classes2.dex */
     private static final class InstanceHolder {
-        private static final TelephonyCallback_Factory INSTANCE = new TelephonyCallback_Factory();
+        /* access modifiers changed from: private */
+        public static final TelephonyCallback_Factory INSTANCE = new TelephonyCallback_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

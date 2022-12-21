@@ -1,31 +1,38 @@
 package androidx.mediarouter.media;
 
 import android.media.MediaRouter;
-/* loaded from: classes.dex */
+
 final class MediaRouterJellybeanMr2 {
-    public static Object getDefaultRoute(Object routerObj) {
-        return ((android.media.MediaRouter) routerObj).getDefaultRoute();
+    public static Object getDefaultRoute(Object obj) {
+        return ((MediaRouter) obj).getDefaultRoute();
     }
 
-    public static void addCallback(Object routerObj, int types, Object callbackObj, int flags) {
-        ((android.media.MediaRouter) routerObj).addCallback(types, (MediaRouter.Callback) callbackObj, flags);
+    public static void addCallback(Object obj, int i, Object obj2, int i2) {
+        ((MediaRouter) obj).addCallback(i, (MediaRouter.Callback) obj2, i2);
     }
 
-    /* loaded from: classes.dex */
     public static final class RouteInfo {
-        public static CharSequence getDescription(Object routeObj) {
-            return ((MediaRouter.RouteInfo) routeObj).getDescription();
+        public static CharSequence getDescription(Object obj) {
+            return ((MediaRouter.RouteInfo) obj).getDescription();
         }
 
-        public static boolean isConnecting(Object routeObj) {
-            return ((MediaRouter.RouteInfo) routeObj).isConnecting();
+        public static boolean isConnecting(Object obj) {
+            return ((MediaRouter.RouteInfo) obj).isConnecting();
+        }
+
+        private RouteInfo() {
         }
     }
 
-    /* loaded from: classes.dex */
     public static final class UserRouteInfo {
-        public static void setDescription(Object routeObj, CharSequence description) {
-            ((MediaRouter.UserRouteInfo) routeObj).setDescription(description);
+        public static void setDescription(Object obj, CharSequence charSequence) {
+            ((MediaRouter.UserRouteInfo) obj).setDescription(charSequence);
         }
+
+        private UserRouteInfo() {
+        }
+    }
+
+    private MediaRouterJellybeanMr2() {
     }
 }

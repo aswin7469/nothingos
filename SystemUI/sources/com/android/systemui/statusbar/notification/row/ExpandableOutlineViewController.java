@@ -1,9 +1,12 @@
 package com.android.systemui.statusbar.notification.row;
-/* loaded from: classes.dex */
+
+import javax.inject.Inject;
+
 public class ExpandableOutlineViewController {
     private final ExpandableViewController mExpandableViewController;
     private final ExpandableOutlineView mView;
 
+    @Inject
     public ExpandableOutlineViewController(ExpandableOutlineView expandableOutlineView, ExpandableViewController expandableViewController) {
         this.mView = expandableOutlineView;
         this.mExpandableViewController = expandableViewController;

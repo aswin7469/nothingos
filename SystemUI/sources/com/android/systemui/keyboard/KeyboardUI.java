@@ -26,51 +26,84 @@ import com.android.settingslib.bluetooth.CachedBluetoothDeviceManager;
 import com.android.settingslib.bluetooth.LocalBluetoothAdapter;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.bluetooth.LocalBluetoothProfileManager;
+import com.android.systemui.C1893R;
+import com.android.systemui.CoreStartable;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$string;
-import com.android.systemui.SystemUI;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
+import com.google.android.setupcompat.util.WizardManagerHelper;
+import java.p026io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
-public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeChangedListener {
+import javax.inject.Inject;
+
+@SysUISingleton
+public class KeyboardUI extends CoreStartable implements InputManager.OnTabletModeChangedListener {
+    private static final long BLUETOOTH_SCAN_TIMEOUT_MILLIS = 30000;
+    private static final long BLUETOOTH_START_DELAY_MILLIS = 10000;
+    private static final boolean DEBUG = false;
+    private static final int MSG_BLE_ABORT_SCAN = 10;
+    private static final int MSG_DISMISS_BLUETOOTH_DIALOG = 9;
+    private static final int MSG_ENABLE_BLUETOOTH = 3;
+    private static final int MSG_INIT = 0;
+    private static final int MSG_ON_BLE_SCAN_FAILED = 7;
+    private static final int MSG_ON_BLUETOOTH_DEVICE_ADDED = 6;
+    private static final int MSG_ON_BLUETOOTH_STATE_CHANGED = 4;
+    private static final int MSG_ON_BOOT_COMPLETED = 1;
+    private static final int MSG_ON_DEVICE_BOND_STATE_CHANGED = 5;
+    private static final int MSG_PROCESS_KEYBOARD_STATE = 2;
+    private static final int MSG_SHOW_BLUETOOTH_DIALOG = 8;
+    private static final int MSG_SHOW_ERROR = 11;
+    private static final int STATE_DEVICE_NOT_FOUND = 9;
+    private static final int STATE_NOT_ENABLED = -1;
+    private static final int STATE_PAIRED = 6;
+    private static final int STATE_PAIRING = 5;
+    private static final int STATE_PAIRING_FAILED = 7;
+    private static final int STATE_UNKNOWN = 0;
+    private static final int STATE_USER_CANCELLED = 8;
+    private static final int STATE_WAITING_FOR_BLUETOOTH = 4;
+    private static final int STATE_WAITING_FOR_BOOT_COMPLETED = 1;
+    private static final int STATE_WAITING_FOR_DEVICE_DISCOVERY = 3;
+    private static final int STATE_WAITING_FOR_TABLET_MODE_EXIT = 2;
+    private static final String TAG = "KeyboardUI";
     private boolean mBootCompleted;
     private long mBootCompletedTime;
     private CachedBluetoothDeviceManager mCachedDeviceManager;
     protected volatile Context mContext;
-    private BluetoothDialog mDialog;
+    /* access modifiers changed from: private */
+    public BluetoothDialog mDialog;
     private boolean mEnabled;
-    private volatile KeyboardHandler mHandler;
-    private String mKeyboardName;
-    private LocalBluetoothAdapter mLocalBluetoothAdapter;
-    private LocalBluetoothProfileManager mProfileManager;
-    private ScanCallback mScanCallback;
-    private int mState;
-    private volatile KeyboardUIHandler mUIHandler;
+    /* access modifiers changed from: private */
+    public volatile KeyboardHandler mHandler;
     private int mInTabletMode = -1;
+    private String mKeyboardName;
+    /* access modifiers changed from: private */
+    public LocalBluetoothAdapter mLocalBluetoothAdapter;
+    private LocalBluetoothProfileManager mProfileManager;
     private int mScanAttempt = 0;
+    private ScanCallback mScanCallback;
+    /* access modifiers changed from: private */
+    public int mState;
+    private volatile KeyboardUIHandler mUIHandler;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.SystemUI
+    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
     }
 
+    @Inject
     public KeyboardUI(Context context) {
         super(context);
     }
 
-    @Override // com.android.systemui.SystemUI
     public void start() {
-        this.mContext = super.mContext;
+        this.mContext = this.mContext;
         HandlerThread handlerThread = new HandlerThread("Keyboard", 10);
         handlerThread.start();
         this.mHandler = new KeyboardHandler(handlerThread.getLooper());
         this.mHandler.sendEmptyMessage(0);
     }
 
-    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("KeyboardUI:");
         printWriter.println("  mEnabled=" + this.mEnabled);
         printWriter.println("  mBootCompleted=" + this.mEnabled);
@@ -80,25 +113,23 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
         printWriter.println("  mState=" + stateToString(this.mState));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.SystemUI
+    /* access modifiers changed from: protected */
     public void onBootCompleted() {
         this.mHandler.sendEmptyMessage(1);
     }
 
     public void onTabletModeChanged(long j, boolean z) {
-        if ((!z || this.mInTabletMode == 1) && (z || this.mInTabletMode == 0)) {
-            return;
+        if ((z && this.mInTabletMode != 1) || (!z && this.mInTabletMode != 0)) {
+            this.mInTabletMode = z ? 1 : 0;
+            processKeyboardState();
         }
-        this.mInTabletMode = z ? 1 : 0;
-        processKeyboardState();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void init() {
         LocalBluetoothManager localBluetoothManager;
         Context context = this.mContext;
-        String string = context.getString(17039975);
+        String string = context.getString(17040012);
         this.mKeyboardName = string;
         if (!TextUtils.isEmpty(string) && (localBluetoothManager = (LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class)) != null) {
             this.mEnabled = true;
@@ -115,7 +146,7 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void processKeyboardState() {
         this.mHandler.removeMessages(2);
         if (!this.mEnabled) {
@@ -174,41 +205,43 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
     private void showBluetoothDialog() {
         if (isUserSetupComplete()) {
             long uptimeMillis = SystemClock.uptimeMillis();
-            long j = this.mBootCompletedTime + 10000;
+            long j = this.mBootCompletedTime + BLUETOOTH_START_DELAY_MILLIS;
             if (j < uptimeMillis) {
                 this.mUIHandler.sendEmptyMessage(8);
-                return;
             } else {
                 this.mHandler.sendEmptyMessageAtTime(2, j);
-                return;
             }
+        } else {
+            this.mLocalBluetoothAdapter.enable();
         }
-        this.mLocalBluetoothAdapter.enable();
     }
 
     private boolean isUserSetupComplete() {
-        return Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "user_setup_complete", 0, -2) != 0;
+        if (Settings.Secure.getIntForUser(this.mContext.getContentResolver(), WizardManagerHelper.SETTINGS_SECURE_USER_SETUP_COMPLETE, 0, -2) != 0) {
+            return true;
+        }
+        return false;
     }
 
     private CachedBluetoothDevice getPairedKeyboard() {
-        for (BluetoothDevice bluetoothDevice : this.mLocalBluetoothAdapter.getBondedDevices()) {
-            if (this.mKeyboardName.equals(bluetoothDevice.getName())) {
-                return getCachedBluetoothDevice(bluetoothDevice);
+        for (BluetoothDevice next : this.mLocalBluetoothAdapter.getBondedDevices()) {
+            if (this.mKeyboardName.equals(next.getName())) {
+                return getCachedBluetoothDevice(next);
             }
         }
         return null;
     }
 
     private CachedBluetoothDevice getDiscoveredKeyboard() {
-        for (CachedBluetoothDevice cachedBluetoothDevice : this.mCachedDeviceManager.getCachedDevicesCopy()) {
-            if (cachedBluetoothDevice.getName().equals(this.mKeyboardName)) {
-                return cachedBluetoothDevice;
+        for (CachedBluetoothDevice next : this.mCachedDeviceManager.getCachedDevicesCopy()) {
+            if (next.getName().equals(this.mKeyboardName)) {
+                return next;
             }
         }
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public CachedBluetoothDevice getCachedBluetoothDevice(BluetoothDevice bluetoothDevice) {
         CachedBluetoothDevice findDevice = this.mCachedDeviceManager.findDevice(bluetoothDevice);
         return findDevice == null ? this.mCachedDeviceManager.addDevice(bluetoothDevice) : findDevice;
@@ -217,13 +250,13 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
     private void startScanning() {
         BluetoothLeScanner bluetoothLeScanner = this.mLocalBluetoothAdapter.getBluetoothLeScanner();
         ScanFilter build = new ScanFilter.Builder().setDeviceName(this.mKeyboardName).build();
-        ScanSettings build2 = new ScanSettings.Builder().setCallbackType(1).setNumOfMatches(1).setScanMode(2).setReportDelay(0L).build();
+        ScanSettings build2 = new ScanSettings.Builder().setCallbackType(1).setNumOfMatches(1).setScanMode(2).setReportDelay(0).build();
         this.mScanCallback = new KeyboardScanCallback();
         bluetoothLeScanner.startScan(Arrays.asList(build), build2, this.mScanCallback);
         KeyboardHandler keyboardHandler = this.mHandler;
         int i = this.mScanAttempt + 1;
         this.mScanAttempt = i;
-        this.mHandler.sendMessageDelayed(keyboardHandler.obtainMessage(10, i, 0), 30000L);
+        this.mHandler.sendMessageDelayed(keyboardHandler.obtainMessage(10, i, 0), 30000);
     }
 
     private void stopScanning() {
@@ -236,7 +269,7 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void bleAbortScanInternal(int i) {
         if (this.mState == 3 && i == this.mScanAttempt) {
             stopScanning();
@@ -244,37 +277,34 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onDeviceAddedInternal(CachedBluetoothDevice cachedBluetoothDevice) {
-        if (this.mState != 3 || !cachedBluetoothDevice.getName().equals(this.mKeyboardName)) {
-            return;
+        if (this.mState == 3 && cachedBluetoothDevice.getName().equals(this.mKeyboardName)) {
+            stopScanning();
+            cachedBluetoothDevice.startPairing();
+            this.mState = 5;
         }
-        stopScanning();
-        cachedBluetoothDevice.startPairing();
-        this.mState = 5;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onBluetoothStateChangedInternal(int i) {
         if (i == 12 && this.mState == 4) {
             processKeyboardState();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onDeviceBondStateChangedInternal(CachedBluetoothDevice cachedBluetoothDevice, int i) {
-        if (this.mState != 5 || !cachedBluetoothDevice.getName().equals(this.mKeyboardName)) {
-            return;
-        }
-        if (i == 12) {
-            this.mState = 6;
-        } else if (i != 10) {
-        } else {
-            this.mState = 7;
+        if (this.mState == 5 && cachedBluetoothDevice.getName().equals(this.mKeyboardName)) {
+            if (i == 12) {
+                this.mState = 6;
+            } else if (i == 10) {
+                this.mState = 7;
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onBleScanFailedInternal() {
         this.mScanCallback = null;
         if (this.mState == 3) {
@@ -282,37 +312,32 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onShowErrorInternal(Context context, String str, int i) {
         int i2 = this.mState;
         if ((i2 == 5 || i2 == 7) && this.mKeyboardName.equals(str)) {
-            Toast.makeText(context, context.getString(i, str), 0).show();
+            Toast.makeText(context, context.getString(i, new Object[]{str}), 0).show();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class KeyboardUIHandler extends Handler {
+    private final class KeyboardUIHandler extends Handler {
         public KeyboardUIHandler() {
-            super(Looper.getMainLooper(), null, true);
+            super(Looper.getMainLooper(), (Handler.Callback) null, true);
         }
 
-        @Override // android.os.Handler
         public void handleMessage(Message message) {
             int i = message.what;
             if (i != 8) {
-                if (i != 9 || KeyboardUI.this.mDialog == null) {
-                    return;
+                if (i == 9 && KeyboardUI.this.mDialog != null) {
+                    KeyboardUI.this.mDialog.dismiss();
                 }
-                KeyboardUI.this.mDialog.dismiss();
-            } else if (KeyboardUI.this.mDialog != null) {
-            } else {
+            } else if (KeyboardUI.this.mDialog == null) {
                 BluetoothDialogClickListener bluetoothDialogClickListener = new BluetoothDialogClickListener();
                 BluetoothDialogDismissListener bluetoothDialogDismissListener = new BluetoothDialogDismissListener();
-                KeyboardUI.this.mDialog = new BluetoothDialog(KeyboardUI.this.mContext);
-                KeyboardUI.this.mDialog.setTitle(R$string.enable_bluetooth_title);
-                KeyboardUI.this.mDialog.setMessage(R$string.enable_bluetooth_message);
-                KeyboardUI.this.mDialog.setPositiveButton(R$string.enable_bluetooth_confirmation_ok, bluetoothDialogClickListener);
+                BluetoothDialog unused = KeyboardUI.this.mDialog = new BluetoothDialog(KeyboardUI.this.mContext);
+                KeyboardUI.this.mDialog.setTitle(C1893R.string.enable_bluetooth_title);
+                KeyboardUI.this.mDialog.setMessage(C1893R.string.enable_bluetooth_message);
+                KeyboardUI.this.mDialog.setPositiveButton(C1893R.string.enable_bluetooth_confirmation_ok, bluetoothDialogClickListener);
                 KeyboardUI.this.mDialog.setNegativeButton(17039360, bluetoothDialogClickListener);
                 KeyboardUI.this.mDialog.setOnDismissListener(bluetoothDialogDismissListener);
                 KeyboardUI.this.mDialog.show();
@@ -320,14 +345,11 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class KeyboardHandler extends Handler {
+    private final class KeyboardHandler extends Handler {
         public KeyboardHandler(Looper looper) {
-            super(looper, null, true);
+            super(looper, (Handler.Callback) null, true);
         }
 
-        @Override // android.os.Handler
         public void handleMessage(Message message) {
             switch (message.what) {
                 case 0:
@@ -348,7 +370,7 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
                         KeyboardUI.this.mLocalBluetoothAdapter.enable();
                         return;
                     } else {
-                        KeyboardUI.this.mState = 8;
+                        int unused = KeyboardUI.this.mState = 8;
                         return;
                     }
                 case 4:
@@ -364,10 +386,6 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
                 case 7:
                     KeyboardUI.this.onBleScanFailedInternal();
                     return;
-                case 8:
-                case 9:
-                default:
-                    return;
                 case 10:
                     KeyboardUI.this.bleAbortScanInternal(message.arg1);
                     return;
@@ -375,36 +393,32 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
                     Pair pair = (Pair) message.obj;
                     KeyboardUI.this.onShowErrorInternal((Context) pair.first, (String) pair.second, message.arg1);
                     return;
+                default:
+                    return;
             }
         }
     }
 
-    /* loaded from: classes.dex */
     private final class BluetoothDialogClickListener implements DialogInterface.OnClickListener {
         private BluetoothDialogClickListener() {
         }
 
-        @Override // android.content.DialogInterface.OnClickListener
         public void onClick(DialogInterface dialogInterface, int i) {
             KeyboardUI.this.mHandler.obtainMessage(3, -1 == i ? 1 : 0, 0).sendToTarget();
-            KeyboardUI.this.mDialog = null;
+            BluetoothDialog unused = KeyboardUI.this.mDialog = null;
         }
     }
 
-    /* loaded from: classes.dex */
     private final class BluetoothDialogDismissListener implements DialogInterface.OnDismissListener {
         private BluetoothDialogDismissListener() {
         }
 
-        @Override // android.content.DialogInterface.OnDismissListener
         public void onDismiss(DialogInterface dialogInterface) {
-            KeyboardUI.this.mDialog = null;
+            BluetoothDialog unused = KeyboardUI.this.mDialog = null;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class KeyboardScanCallback extends ScanCallback {
+    private final class KeyboardScanCallback extends ScanCallback {
         private KeyboardScanCallback() {
         }
 
@@ -412,14 +426,13 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
             return (scanResult.getScanRecord().getAdvertiseFlags() & 3) != 0;
         }
 
-        @Override // android.bluetooth.le.ScanCallback
         public void onBatchScanResults(List<ScanResult> list) {
             BluetoothDevice bluetoothDevice = null;
             int i = Integer.MIN_VALUE;
-            for (ScanResult scanResult : list) {
-                if (isDeviceDiscoverable(scanResult) && scanResult.getRssi() > i) {
-                    bluetoothDevice = scanResult.getDevice();
-                    i = scanResult.getRssi();
+            for (ScanResult next : list) {
+                if (isDeviceDiscoverable(next) && next.getRssi() > i) {
+                    bluetoothDevice = next.getDevice();
+                    i = next.getRssi();
                 }
             }
             if (bluetoothDevice != null) {
@@ -427,12 +440,10 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
             }
         }
 
-        @Override // android.bluetooth.le.ScanCallback
         public void onScanFailed(int i) {
             KeyboardUI.this.mHandler.obtainMessage(7).sendToTarget();
         }
 
-        @Override // android.bluetooth.le.ScanCallback
         public void onScanResult(int i, ScanResult scanResult) {
             if (isDeviceDiscoverable(scanResult)) {
                 KeyboardUI.this.mHandler.obtainMessage(6, scanResult.getDevice()).sendToTarget();
@@ -440,30 +451,23 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class BluetoothCallbackHandler implements BluetoothCallback {
+    private final class BluetoothCallbackHandler implements BluetoothCallback {
         private BluetoothCallbackHandler() {
         }
 
-        @Override // com.android.settingslib.bluetooth.BluetoothCallback
         public void onBluetoothStateChanged(int i) {
             KeyboardUI.this.mHandler.obtainMessage(4, i, 0).sendToTarget();
         }
 
-        @Override // com.android.settingslib.bluetooth.BluetoothCallback
         public void onDeviceBondStateChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
             KeyboardUI.this.mHandler.obtainMessage(5, i, 0, cachedBluetoothDevice).sendToTarget();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class BluetoothErrorListener implements BluetoothUtils.ErrorListener {
+    private final class BluetoothErrorListener implements BluetoothUtils.ErrorListener {
         private BluetoothErrorListener() {
         }
 
-        @Override // com.android.settingslib.bluetooth.BluetoothUtils.ErrorListener
         public void onShowError(Context context, String str, int i) {
             KeyboardUI.this.mHandler.obtainMessage(11, i, 0, new Pair(context, str)).sendToTarget();
         }
@@ -473,9 +477,6 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
         switch (i) {
             case -1:
                 return "STATE_NOT_ENABLED";
-            case 0:
-            default:
-                return "STATE_UNKNOWN (" + i + ")";
             case 1:
                 return "STATE_WAITING_FOR_BOOT_COMPLETED";
             case 2:
@@ -494,6 +495,8 @@ public class KeyboardUI extends SystemUI implements InputManager.OnTabletModeCha
                 return "STATE_USER_CANCELLED";
             case 9:
                 return "STATE_DEVICE_NOT_FOUND";
+            default:
+                return "STATE_UNKNOWN (" + i + NavigationBarInflaterView.KEY_CODE_END;
         }
     }
 }

@@ -1,38 +1,45 @@
 package com.android.systemui.power;
 
 import android.content.Context;
+import android.os.PowerManager;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.power.PowerUI;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
 import dagger.Lazy;
 import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
+import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class PowerUI_Factory implements Factory<PowerUI> {
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
+    private final Provider<Optional<CentralSurfaces>> centralSurfacesOptionalLazyProvider;
     private final Provider<CommandQueue> commandQueueProvider;
     private final Provider<Context> contextProvider;
-    private final Provider<StatusBar> statusBarLazyProvider;
+    private final Provider<EnhancedEstimates> enhancedEstimatesProvider;
+    private final Provider<PowerManager> powerManagerProvider;
+    private final Provider<PowerUI.WarningsUI> warningsUIProvider;
 
-    public PowerUI_Factory(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<CommandQueue> provider3, Provider<StatusBar> provider4) {
+    public PowerUI_Factory(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<CommandQueue> provider3, Provider<Optional<CentralSurfaces>> provider4, Provider<PowerUI.WarningsUI> provider5, Provider<EnhancedEstimates> provider6, Provider<PowerManager> provider7) {
         this.contextProvider = provider;
         this.broadcastDispatcherProvider = provider2;
         this.commandQueueProvider = provider3;
-        this.statusBarLazyProvider = provider4;
+        this.centralSurfacesOptionalLazyProvider = provider4;
+        this.warningsUIProvider = provider5;
+        this.enhancedEstimatesProvider = provider6;
+        this.powerManagerProvider = provider7;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PowerUI mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.commandQueueProvider.mo1933get(), DoubleCheck.lazy(this.statusBarLazyProvider));
+    public PowerUI get() {
+        return newInstance(this.contextProvider.get(), this.broadcastDispatcherProvider.get(), this.commandQueueProvider.get(), DoubleCheck.lazy(this.centralSurfacesOptionalLazyProvider), this.warningsUIProvider.get(), this.enhancedEstimatesProvider.get(), this.powerManagerProvider.get());
     }
 
-    public static PowerUI_Factory create(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<CommandQueue> provider3, Provider<StatusBar> provider4) {
-        return new PowerUI_Factory(provider, provider2, provider3, provider4);
+    public static PowerUI_Factory create(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<CommandQueue> provider3, Provider<Optional<CentralSurfaces>> provider4, Provider<PowerUI.WarningsUI> provider5, Provider<EnhancedEstimates> provider6, Provider<PowerManager> provider7) {
+        return new PowerUI_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7);
     }
 
-    public static PowerUI newInstance(Context context, BroadcastDispatcher broadcastDispatcher, CommandQueue commandQueue, Lazy<StatusBar> lazy) {
-        return new PowerUI(context, broadcastDispatcher, commandQueue, lazy);
+    public static PowerUI newInstance(Context context, BroadcastDispatcher broadcastDispatcher, CommandQueue commandQueue, Lazy<Optional<CentralSurfaces>> lazy, PowerUI.WarningsUI warningsUI, EnhancedEstimates enhancedEstimates, PowerManager powerManager) {
+        return new PowerUI(context, broadcastDispatcher, commandQueue, lazy, warningsUI, enhancedEstimates, powerManager);
     }
 }

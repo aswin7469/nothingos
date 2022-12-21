@@ -5,77 +5,61 @@ import android.graphics.PorterDuff;
 import android.view.MenuItem;
 import android.view.View;
 import androidx.core.view.ActionProvider;
-/* loaded from: classes.dex */
+
 public interface SupportMenuItem extends MenuItem {
-    @Override // android.view.MenuItem
+    public static final int SHOW_AS_ACTION_ALWAYS = 2;
+    public static final int SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW = 8;
+    public static final int SHOW_AS_ACTION_IF_ROOM = 1;
+    public static final int SHOW_AS_ACTION_NEVER = 0;
+    public static final int SHOW_AS_ACTION_WITH_TEXT = 4;
+
     boolean collapseActionView();
 
-    @Override // android.view.MenuItem
     boolean expandActionView();
 
-    @Override // android.view.MenuItem
     View getActionView();
 
-    @Override // android.view.MenuItem
     int getAlphabeticModifiers();
 
-    @Override // android.view.MenuItem
     CharSequence getContentDescription();
 
-    @Override // android.view.MenuItem
     ColorStateList getIconTintList();
 
-    @Override // android.view.MenuItem
     PorterDuff.Mode getIconTintMode();
 
-    @Override // android.view.MenuItem
     int getNumericModifiers();
 
     ActionProvider getSupportActionProvider();
 
-    @Override // android.view.MenuItem
     CharSequence getTooltipText();
 
-    @Override // android.view.MenuItem
     boolean isActionViewExpanded();
 
-    @Override // android.view.MenuItem
-    /* renamed from: setActionView */
-    MenuItem mo39setActionView(int resId);
+    boolean requiresActionButton();
 
-    @Override // android.view.MenuItem
-    /* renamed from: setActionView */
-    MenuItem mo40setActionView(View view);
+    boolean requiresOverflow();
 
-    @Override // android.view.MenuItem
-    MenuItem setAlphabeticShortcut(char alphaChar, int alphaModifiers);
+    MenuItem setActionView(int i);
 
-    @Override // android.view.MenuItem
-    /* renamed from: setContentDescription */
-    SupportMenuItem mo41setContentDescription(CharSequence contentDescription);
+    MenuItem setActionView(View view);
 
-    @Override // android.view.MenuItem
-    MenuItem setIconTintList(ColorStateList tint);
+    MenuItem setAlphabeticShortcut(char c, int i);
 
-    @Override // android.view.MenuItem
-    MenuItem setIconTintMode(PorterDuff.Mode tintMode);
+    SupportMenuItem setContentDescription(CharSequence charSequence);
 
-    @Override // android.view.MenuItem
-    MenuItem setNumericShortcut(char numericChar, int numericModifiers);
+    MenuItem setIconTintList(ColorStateList colorStateList);
 
-    @Override // android.view.MenuItem
-    MenuItem setShortcut(char numericChar, char alphaChar, int numericModifiers, int alphaModifiers);
+    MenuItem setIconTintMode(PorterDuff.Mode mode);
 
-    @Override // android.view.MenuItem
-    void setShowAsAction(int actionEnum);
+    MenuItem setNumericShortcut(char c, int i);
 
-    @Override // android.view.MenuItem
-    /* renamed from: setShowAsActionFlags */
-    MenuItem mo42setShowAsActionFlags(int actionEnum);
+    MenuItem setShortcut(char c, char c2, int i, int i2);
+
+    void setShowAsAction(int i);
+
+    MenuItem setShowAsActionFlags(int i);
 
     SupportMenuItem setSupportActionProvider(ActionProvider actionProvider);
 
-    @Override // android.view.MenuItem
-    /* renamed from: setTooltipText */
-    SupportMenuItem mo43setTooltipText(CharSequence tooltipText);
+    SupportMenuItem setTooltipText(CharSequence charSequence);
 }

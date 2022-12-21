@@ -1,10 +1,8 @@
 package androidx.viewpager2.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,51 +12,57 @@ import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowInsets;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.core.view.accessibility.AccessibilityViewCommand;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.R$styleable;
+import androidx.viewpager2.C1466R;
 import androidx.viewpager2.adapter.StatefulAdapter;
-/* loaded from: classes.dex */
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public final class ViewPager2 extends ViewGroup {
-    private static final WindowInsetsCompat EMPTY_INSETS = new WindowInsetsCompat.Builder().build();
+    public static final int OFFSCREEN_PAGE_LIMIT_DEFAULT = -1;
+    public static final int ORIENTATION_HORIZONTAL = 0;
+    public static final int ORIENTATION_VERTICAL = 1;
+    public static final int SCROLL_STATE_DRAGGING = 1;
+    public static final int SCROLL_STATE_IDLE = 0;
+    public static final int SCROLL_STATE_SETTLING = 2;
     static boolean sFeatureEnhancedA11yEnabled = true;
     AccessibilityProvider mAccessibilityProvider;
     int mCurrentItem;
+    private RecyclerView.AdapterDataObserver mCurrentItemDataSetChangeObserver = new DataSetChangeObserver() {
+        public void onChanged() {
+            ViewPager2.this.mCurrentItemDirty = true;
+            ViewPager2.this.mScrollEventAdapter.notifyDataSetChangeHappened();
+        }
+    };
+    boolean mCurrentItemDirty = false;
+    private CompositeOnPageChangeCallback mExternalPageChangeCallbacks = new CompositeOnPageChangeCallback(3);
     private FakeDrag mFakeDragger;
     LinearLayoutManager mLayoutManager;
+    private int mOffscreenPageLimit = -1;
     private CompositeOnPageChangeCallback mPageChangeEventDispatcher;
     private PageTransformerAdapter mPageTransformerAdapter;
     private PagerSnapHelper mPagerSnapHelper;
     private Parcelable mPendingAdapterState;
-    RecyclerView mRecyclerView;
-    ScrollEventAdapter mScrollEventAdapter;
-    private final Rect mTmpContainerRect = new Rect();
-    private final Rect mTmpChildRect = new Rect();
-    private CompositeOnPageChangeCallback mExternalPageChangeCallbacks = new CompositeOnPageChangeCallback(3);
-    boolean mCurrentItemDirty = false;
-    private RecyclerView.AdapterDataObserver mCurrentItemDataSetChangeObserver = new DataSetChangeObserver() { // from class: androidx.viewpager2.widget.ViewPager2.1
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
-        public void onChanged() {
-            ViewPager2 viewPager2 = ViewPager2.this;
-            viewPager2.mCurrentItemDirty = true;
-            viewPager2.mScrollEventAdapter.notifyDataSetChangeHappened();
-        }
-    };
     private int mPendingCurrentItem = -1;
+    RecyclerView mRecyclerView;
     private RecyclerView.ItemAnimator mSavedItemAnimator = null;
     private boolean mSavedItemAnimatorPresent = false;
+    ScrollEventAdapter mScrollEventAdapter;
+    private final Rect mTmpChildRect = new Rect();
+    private final Rect mTmpContainerRect = new Rect();
     private boolean mUserInputEnabled = true;
-    private int mOffscreenPageLimit = -1;
 
-    /* loaded from: classes.dex */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface OffscreenPageLimit {
+    }
+
     public static abstract class OnPageChangeCallback {
         public void onPageScrollStateChanged(int i) {
         }
@@ -70,14 +74,21 @@ public final class ViewPager2 extends ViewGroup {
         }
     }
 
-    /* loaded from: classes.dex */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Orientation {
+    }
+
     public interface PageTransformer {
         void transformPage(View view, float f);
     }
 
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ScrollState {
+    }
+
     public ViewPager2(Context context) {
         super(context);
-        initialize(context, null);
+        initialize(context, (AttributeSet) null);
     }
 
     public ViewPager2(Context context, AttributeSet attributeSet) {
@@ -96,13 +107,13 @@ public final class ViewPager2 extends ViewGroup {
     }
 
     private void initialize(Context context, AttributeSet attributeSet) {
-        AccessibilityProvider basicAccessibilityProvider;
+        AccessibilityProvider accessibilityProvider;
         if (sFeatureEnhancedA11yEnabled) {
-            basicAccessibilityProvider = new PageAwareAccessibilityProvider();
+            accessibilityProvider = new PageAwareAccessibilityProvider();
         } else {
-            basicAccessibilityProvider = new BasicAccessibilityProvider();
+            accessibilityProvider = new BasicAccessibilityProvider();
         }
-        this.mAccessibilityProvider = basicAccessibilityProvider;
+        this.mAccessibilityProvider = accessibilityProvider;
         RecyclerViewImpl recyclerViewImpl = new RecyclerViewImpl(context);
         this.mRecyclerView = recyclerViewImpl;
         recyclerViewImpl.setId(ViewCompat.generateViewId());
@@ -114,9 +125,8 @@ public final class ViewPager2 extends ViewGroup {
         setOrientation(context, attributeSet);
         this.mRecyclerView.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
         this.mRecyclerView.addOnChildAttachStateChangeListener(enforceChildFillListener());
-        ScrollEventAdapter scrollEventAdapter = new ScrollEventAdapter(this);
-        this.mScrollEventAdapter = scrollEventAdapter;
-        this.mFakeDragger = new FakeDrag(this, scrollEventAdapter, this.mRecyclerView);
+        this.mScrollEventAdapter = new ScrollEventAdapter(this);
+        this.mFakeDragger = new FakeDrag(this, this.mScrollEventAdapter, this.mRecyclerView);
         PagerSnapHelperImpl pagerSnapHelperImpl = new PagerSnapHelperImpl();
         this.mPagerSnapHelper = pagerSnapHelperImpl;
         pagerSnapHelperImpl.attachToRecyclerView(this.mRecyclerView);
@@ -124,25 +134,21 @@ public final class ViewPager2 extends ViewGroup {
         CompositeOnPageChangeCallback compositeOnPageChangeCallback = new CompositeOnPageChangeCallback(3);
         this.mPageChangeEventDispatcher = compositeOnPageChangeCallback;
         this.mScrollEventAdapter.setOnPageChangeCallback(compositeOnPageChangeCallback);
-        OnPageChangeCallback onPageChangeCallback = new OnPageChangeCallback() { // from class: androidx.viewpager2.widget.ViewPager2.2
-            @Override // androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+        C14812 r3 = new OnPageChangeCallback() {
             public void onPageSelected(int i) {
-                ViewPager2 viewPager2 = ViewPager2.this;
-                if (viewPager2.mCurrentItem != i) {
-                    viewPager2.mCurrentItem = i;
-                    viewPager2.mAccessibilityProvider.onSetNewCurrentItem();
+                if (ViewPager2.this.mCurrentItem != i) {
+                    ViewPager2.this.mCurrentItem = i;
+                    ViewPager2.this.mAccessibilityProvider.onSetNewCurrentItem();
                 }
             }
 
-            @Override // androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
             public void onPageScrollStateChanged(int i) {
                 if (i == 0) {
                     ViewPager2.this.updateCurrentItem();
                 }
             }
         };
-        OnPageChangeCallback onPageChangeCallback2 = new OnPageChangeCallback() { // from class: androidx.viewpager2.widget.ViewPager2.3
-            @Override // androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
+        C14823 r4 = new OnPageChangeCallback() {
             public void onPageSelected(int i) {
                 ViewPager2.this.clearFocus();
                 if (ViewPager2.this.hasFocus()) {
@@ -150,8 +156,8 @@ public final class ViewPager2 extends ViewGroup {
                 }
             }
         };
-        this.mPageChangeEventDispatcher.addOnPageChangeCallback(onPageChangeCallback);
-        this.mPageChangeEventDispatcher.addOnPageChangeCallback(onPageChangeCallback2);
+        this.mPageChangeEventDispatcher.addOnPageChangeCallback(r3);
+        this.mPageChangeEventDispatcher.addOnPageChangeCallback(r4);
         this.mAccessibilityProvider.onInitialize(this.mPageChangeEventDispatcher, this.mRecyclerView);
         this.mPageChangeEventDispatcher.addOnPageChangeCallback(this.mExternalPageChangeCallbacks);
         PageTransformerAdapter pageTransformerAdapter = new PageTransformerAdapter(this.mLayoutManager);
@@ -162,23 +168,19 @@ public final class ViewPager2 extends ViewGroup {
     }
 
     private RecyclerView.OnChildAttachStateChangeListener enforceChildFillListener() {
-        return new RecyclerView.OnChildAttachStateChangeListener() { // from class: androidx.viewpager2.widget.ViewPager2.4
-            @Override // androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
+        return new RecyclerView.OnChildAttachStateChangeListener() {
             public void onChildViewDetachedFromWindow(View view) {
             }
 
-            @Override // androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
             public void onChildViewAttachedToWindow(View view) {
                 RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) view.getLayoutParams();
-                if (((ViewGroup.MarginLayoutParams) layoutParams).width == -1 && ((ViewGroup.MarginLayoutParams) layoutParams).height == -1) {
-                    return;
+                if (layoutParams.width != -1 || layoutParams.height != -1) {
+                    throw new IllegalStateException("Pages must fill the whole ViewPager2 (use match_parent)");
                 }
-                throw new IllegalStateException("Pages must fill the whole ViewPager2 (use match_parent)");
             }
         };
     }
 
-    @Override // android.view.ViewGroup, android.view.View
     public CharSequence getAccessibilityClassName() {
         if (this.mAccessibilityProvider.handlesGetAccessibilityClassName()) {
             return this.mAccessibilityProvider.onGetAccessibilityClassName();
@@ -187,18 +189,17 @@ public final class ViewPager2 extends ViewGroup {
     }
 
     private void setOrientation(Context context, AttributeSet attributeSet) {
-        int[] iArr = R$styleable.ViewPager2;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, iArr);
-        ViewCompat.saveAttributeDataForStyleable(this, context, iArr, attributeSet, obtainStyledAttributes, 0, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1466R.styleable.ViewPager2);
+        ViewCompat.saveAttributeDataForStyleable(this, context, C1466R.styleable.ViewPager2, attributeSet, obtainStyledAttributes, 0, 0);
         try {
-            setOrientation(obtainStyledAttributes.getInt(R$styleable.ViewPager2_android_orientation, 0));
+            setOrientation(obtainStyledAttributes.getInt(C1466R.styleable.ViewPager2_android_orientation, 0));
         } finally {
             obtainStyledAttributes.recycle();
         }
     }
 
-    @Override // android.view.View
-    protected Parcelable onSaveInstanceState() {
+    /* access modifiers changed from: protected */
+    public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState(super.onSaveInstanceState());
         savedState.mRecyclerViewId = this.mRecyclerView.getId();
         int i = this.mPendingCurrentItem;
@@ -218,8 +219,8 @@ public final class ViewPager2 extends ViewGroup {
         return savedState;
     }
 
-    @Override // android.view.View
-    protected void onRestoreInstanceState(Parcelable parcelable) {
+    /* access modifiers changed from: protected */
+    public void onRestoreInstanceState(Parcelable parcelable) {
         if (!(parcelable instanceof SavedState)) {
             super.onRestoreInstanceState(parcelable);
             return;
@@ -232,25 +233,24 @@ public final class ViewPager2 extends ViewGroup {
 
     private void restorePendingState() {
         RecyclerView.Adapter adapter;
-        if (this.mPendingCurrentItem == -1 || (adapter = getAdapter()) == null) {
-            return;
-        }
-        Parcelable parcelable = this.mPendingAdapterState;
-        if (parcelable != null) {
-            if (adapter instanceof StatefulAdapter) {
-                ((StatefulAdapter) adapter).restoreState(parcelable);
+        if (this.mPendingCurrentItem != -1 && (adapter = getAdapter()) != null) {
+            Parcelable parcelable = this.mPendingAdapterState;
+            if (parcelable != null) {
+                if (adapter instanceof StatefulAdapter) {
+                    ((StatefulAdapter) adapter).restoreState(parcelable);
+                }
+                this.mPendingAdapterState = null;
             }
-            this.mPendingAdapterState = null;
+            int max = Math.max(0, Math.min(this.mPendingCurrentItem, adapter.getItemCount() - 1));
+            this.mCurrentItem = max;
+            this.mPendingCurrentItem = -1;
+            this.mRecyclerView.scrollToPosition(max);
+            this.mAccessibilityProvider.onRestorePendingState();
         }
-        int max = Math.max(0, Math.min(this.mPendingCurrentItem, adapter.getItemCount() - 1));
-        this.mCurrentItem = max;
-        this.mPendingCurrentItem = -1;
-        this.mRecyclerView.scrollToPosition(max);
-        this.mAccessibilityProvider.onRestorePendingState();
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void dispatchRestoreInstanceState(SparseArray<Parcelable> sparseArray) {
+    /* access modifiers changed from: protected */
+    public void dispatchRestoreInstanceState(SparseArray<Parcelable> sparseArray) {
         Parcelable parcelable = sparseArray.get(getId());
         if (parcelable instanceof SavedState) {
             int i = ((SavedState) parcelable).mRecyclerViewId;
@@ -261,29 +261,17 @@ public final class ViewPager2 extends ViewGroup {
         restorePendingState();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends View.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() { // from class: androidx.viewpager2.widget.ViewPager2.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.ClassLoaderCreator
-            /* renamed from: createFromParcel */
-            public SavedState mo172createFromParcel(Parcel parcel, ClassLoader classLoader) {
-                if (Build.VERSION.SDK_INT >= 24) {
-                    return new SavedState(parcel, classLoader);
-                }
-                return new SavedState(parcel);
+    static class SavedState extends View.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel, ClassLoader classLoader) {
+                return new SavedState(parcel, classLoader);
             }
 
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo171createFromParcel(Parcel parcel) {
-                return mo172createFromParcel(parcel, (ClassLoader) null);
+            public SavedState createFromParcel(Parcel parcel) {
+                return createFromParcel(parcel, (ClassLoader) null);
             }
 
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo173newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -298,7 +286,7 @@ public final class ViewPager2 extends ViewGroup {
 
         SavedState(Parcel parcel) {
             super(parcel);
-            readValues(parcel, null);
+            readValues(parcel, (ClassLoader) null);
         }
 
         SavedState(Parcelable parcelable) {
@@ -311,7 +299,6 @@ public final class ViewPager2 extends ViewGroup {
             this.mAdapterState = parcel.readParcelable(classLoader);
         }
 
-        @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeInt(this.mRecyclerViewId);
@@ -347,24 +334,23 @@ public final class ViewPager2 extends ViewGroup {
         return this.mRecyclerView.getAdapter();
     }
 
-    @Override // android.view.ViewGroup
     public void onViewAdded(View view) {
-        throw new IllegalStateException(ViewPager2.class.getSimpleName() + " does not support direct child views");
+        throw new IllegalStateException(getClass().getSimpleName() + " does not support direct child views");
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         measureChild(this.mRecyclerView, i, i2);
         int measuredWidth = this.mRecyclerView.getMeasuredWidth();
         int measuredHeight = this.mRecyclerView.getMeasuredHeight();
         int measuredState = this.mRecyclerView.getMeasuredState();
         int paddingLeft = measuredWidth + getPaddingLeft() + getPaddingRight();
         int paddingTop = measuredHeight + getPaddingTop() + getPaddingBottom();
-        setMeasuredDimension(ViewGroup.resolveSizeAndState(Math.max(paddingLeft, getSuggestedMinimumWidth()), i, measuredState), ViewGroup.resolveSizeAndState(Math.max(paddingTop, getSuggestedMinimumHeight()), i2, measuredState << 16));
+        setMeasuredDimension(resolveSizeAndState(Math.max(paddingLeft, getSuggestedMinimumWidth()), i, measuredState), resolveSizeAndState(Math.max(paddingTop, getSuggestedMinimumHeight()), i2, measuredState << 16));
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         int measuredWidth = this.mRecyclerView.getMeasuredWidth();
         int measuredHeight = this.mRecyclerView.getMeasuredHeight();
         this.mTmpContainerRect.left = getPaddingLeft();
@@ -372,42 +358,43 @@ public final class ViewPager2 extends ViewGroup {
         this.mTmpContainerRect.top = getPaddingTop();
         this.mTmpContainerRect.bottom = (i4 - i2) - getPaddingBottom();
         Gravity.apply(8388659, measuredWidth, measuredHeight, this.mTmpContainerRect, this.mTmpChildRect);
-        RecyclerView recyclerView = this.mRecyclerView;
-        Rect rect = this.mTmpChildRect;
-        recyclerView.layout(rect.left, rect.top, rect.right, rect.bottom);
+        this.mRecyclerView.layout(this.mTmpChildRect.left, this.mTmpChildRect.top, this.mTmpChildRect.right, this.mTmpChildRect.bottom);
         if (this.mCurrentItemDirty) {
             updateCurrentItem();
         }
     }
 
-    void updateCurrentItem() {
+    /* access modifiers changed from: package-private */
+    public void updateCurrentItem() {
         PagerSnapHelper pagerSnapHelper = this.mPagerSnapHelper;
-        if (pagerSnapHelper == null) {
-            throw new IllegalStateException("Design assumption violated.");
-        }
-        View findSnapView = pagerSnapHelper.findSnapView(this.mLayoutManager);
-        if (findSnapView == null) {
+        if (pagerSnapHelper != null) {
+            View findSnapView = pagerSnapHelper.findSnapView(this.mLayoutManager);
+            if (findSnapView != null) {
+                int position = this.mLayoutManager.getPosition(findSnapView);
+                if (position != this.mCurrentItem && getScrollState() == 0) {
+                    this.mPageChangeEventDispatcher.onPageSelected(position);
+                }
+                this.mCurrentItemDirty = false;
+                return;
+            }
             return;
         }
-        int position = this.mLayoutManager.getPosition(findSnapView);
-        if (position != this.mCurrentItem && getScrollState() == 0) {
-            this.mPageChangeEventDispatcher.onPageSelected(position);
-        }
-        this.mCurrentItemDirty = false;
+        throw new IllegalStateException("Design assumption violated.");
     }
 
-    int getPageSize() {
-        int height;
-        int paddingBottom;
+    /* access modifiers changed from: package-private */
+    public int getPageSize() {
+        int i;
+        int i2;
         RecyclerView recyclerView = this.mRecyclerView;
         if (getOrientation() == 0) {
-            height = recyclerView.getWidth() - recyclerView.getPaddingLeft();
-            paddingBottom = recyclerView.getPaddingRight();
+            i = recyclerView.getWidth() - recyclerView.getPaddingLeft();
+            i2 = recyclerView.getPaddingRight();
         } else {
-            height = recyclerView.getHeight() - recyclerView.getPaddingTop();
-            paddingBottom = recyclerView.getPaddingBottom();
+            i = recyclerView.getHeight() - recyclerView.getPaddingTop();
+            i2 = recyclerView.getPaddingBottom();
         }
-        return height - paddingBottom;
+        return i - i2;
     }
 
     public void setOrientation(int i) {
@@ -419,7 +406,7 @@ public final class ViewPager2 extends ViewGroup {
         return this.mLayoutManager.getOrientation();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isRtl() {
         return this.mLayoutManager.getLayoutDirection() == 1;
     }
@@ -429,48 +416,45 @@ public final class ViewPager2 extends ViewGroup {
     }
 
     public void setCurrentItem(int i, boolean z) {
-        if (isFakeDragging()) {
-            throw new IllegalStateException("Cannot change current item when ViewPager2 is fake dragging");
+        if (!isFakeDragging()) {
+            setCurrentItemInternal(i, z);
+            return;
         }
-        setCurrentItemInternal(i, z);
+        throw new IllegalStateException("Cannot change current item when ViewPager2 is fake dragging");
     }
 
-    void setCurrentItemInternal(int i, boolean z) {
+    /* access modifiers changed from: package-private */
+    public void setCurrentItemInternal(int i, boolean z) {
         RecyclerView.Adapter adapter = getAdapter();
         if (adapter == null) {
-            if (this.mPendingCurrentItem == -1) {
-                return;
+            if (this.mPendingCurrentItem != -1) {
+                this.mPendingCurrentItem = Math.max(i, 0);
             }
-            this.mPendingCurrentItem = Math.max(i, 0);
-        } else if (adapter.getItemCount() <= 0) {
-        } else {
+        } else if (adapter.getItemCount() > 0) {
             int min = Math.min(Math.max(i, 0), adapter.getItemCount() - 1);
-            if (min == this.mCurrentItem && this.mScrollEventAdapter.isIdle()) {
-                return;
+            if (min != this.mCurrentItem || !this.mScrollEventAdapter.isIdle()) {
+                int i2 = this.mCurrentItem;
+                if (min != i2 || !z) {
+                    double d = (double) i2;
+                    this.mCurrentItem = min;
+                    this.mAccessibilityProvider.onSetNewCurrentItem();
+                    if (!this.mScrollEventAdapter.isIdle()) {
+                        d = this.mScrollEventAdapter.getRelativeScrollPosition();
+                    }
+                    this.mScrollEventAdapter.notifyProgrammaticScroll(min, z);
+                    if (!z) {
+                        this.mRecyclerView.scrollToPosition(min);
+                        return;
+                    }
+                    double d2 = (double) min;
+                    if (Math.abs(d2 - d) > 3.0d) {
+                        this.mRecyclerView.scrollToPosition(d2 > d ? min - 3 : min + 3);
+                        this.mRecyclerView.post(new SmoothScrollToPosition(min, this.mRecyclerView));
+                        return;
+                    }
+                    this.mRecyclerView.smoothScrollToPosition(min);
+                }
             }
-            int i2 = this.mCurrentItem;
-            if (min == i2 && z) {
-                return;
-            }
-            double d = i2;
-            this.mCurrentItem = min;
-            this.mAccessibilityProvider.onSetNewCurrentItem();
-            if (!this.mScrollEventAdapter.isIdle()) {
-                d = this.mScrollEventAdapter.getRelativeScrollPosition();
-            }
-            this.mScrollEventAdapter.notifyProgrammaticScroll(min, z);
-            if (!z) {
-                this.mRecyclerView.scrollToPosition(min);
-                return;
-            }
-            double d2 = min;
-            if (Math.abs(d2 - d) > 3.0d) {
-                this.mRecyclerView.scrollToPosition(d2 > d ? min - 3 : min + 3);
-                RecyclerView recyclerView = this.mRecyclerView;
-                recyclerView.post(new SmoothScrollToPosition(min, recyclerView));
-                return;
-            }
-            this.mRecyclerView.smoothScrollToPosition(min);
         }
     }
 
@@ -482,24 +466,60 @@ public final class ViewPager2 extends ViewGroup {
         return this.mScrollEventAdapter.getScrollState();
     }
 
+    public boolean beginFakeDrag() {
+        return this.mFakeDragger.beginFakeDrag();
+    }
+
+    public boolean fakeDragBy(float f) {
+        return this.mFakeDragger.fakeDragBy(f);
+    }
+
+    public boolean endFakeDrag() {
+        return this.mFakeDragger.endFakeDrag();
+    }
+
     public boolean isFakeDragging() {
         return this.mFakeDragger.isFakeDragging();
+    }
+
+    /* access modifiers changed from: package-private */
+    public void snapToPage() {
+        View findSnapView = this.mPagerSnapHelper.findSnapView(this.mLayoutManager);
+        if (findSnapView != null) {
+            int[] calculateDistanceToFinalSnap = this.mPagerSnapHelper.calculateDistanceToFinalSnap(this.mLayoutManager, findSnapView);
+            int i = calculateDistanceToFinalSnap[0];
+            if (i != 0 || calculateDistanceToFinalSnap[1] != 0) {
+                this.mRecyclerView.smoothScrollBy(i, calculateDistanceToFinalSnap[1]);
+            }
+        }
+    }
+
+    public void setUserInputEnabled(boolean z) {
+        this.mUserInputEnabled = z;
+        this.mAccessibilityProvider.onSetUserInputEnabled();
     }
 
     public boolean isUserInputEnabled() {
         return this.mUserInputEnabled;
     }
 
+    public void setOffscreenPageLimit(int i) {
+        if (i >= 1 || i == -1) {
+            this.mOffscreenPageLimit = i;
+            this.mRecyclerView.requestLayout();
+            return;
+        }
+        throw new IllegalArgumentException("Offscreen page limit must be OFFSCREEN_PAGE_LIMIT_DEFAULT or a number > 0");
+    }
+
     public int getOffscreenPageLimit() {
         return this.mOffscreenPageLimit;
     }
 
-    @Override // android.view.View
     public boolean canScrollHorizontally(int i) {
         return this.mRecyclerView.canScrollHorizontally(i);
     }
 
-    @Override // android.view.View
     public boolean canScrollVertically(int i) {
         return this.mRecyclerView.canScrollVertically(i);
     }
@@ -508,19 +528,47 @@ public final class ViewPager2 extends ViewGroup {
         this.mExternalPageChangeCallbacks.addOnPageChangeCallback(onPageChangeCallback);
     }
 
-    @Override // android.view.View
+    public void unregisterOnPageChangeCallback(OnPageChangeCallback onPageChangeCallback) {
+        this.mExternalPageChangeCallbacks.removeOnPageChangeCallback(onPageChangeCallback);
+    }
+
+    public void setPageTransformer(PageTransformer pageTransformer) {
+        if (pageTransformer != null) {
+            if (!this.mSavedItemAnimatorPresent) {
+                this.mSavedItemAnimator = this.mRecyclerView.getItemAnimator();
+                this.mSavedItemAnimatorPresent = true;
+            }
+            this.mRecyclerView.setItemAnimator((RecyclerView.ItemAnimator) null);
+        } else if (this.mSavedItemAnimatorPresent) {
+            this.mRecyclerView.setItemAnimator(this.mSavedItemAnimator);
+            this.mSavedItemAnimator = null;
+            this.mSavedItemAnimatorPresent = false;
+        }
+        if (pageTransformer != this.mPageTransformerAdapter.getPageTransformer()) {
+            this.mPageTransformerAdapter.setPageTransformer(pageTransformer);
+            requestTransform();
+        }
+    }
+
+    public void requestTransform() {
+        if (this.mPageTransformerAdapter.getPageTransformer() != null) {
+            double relativeScrollPosition = this.mScrollEventAdapter.getRelativeScrollPosition();
+            int i = (int) relativeScrollPosition;
+            float f = (float) (relativeScrollPosition - ((double) i));
+            this.mPageTransformerAdapter.onPageScrolled(i, f, Math.round(((float) getPageSize()) * f));
+        }
+    }
+
     public void setLayoutDirection(int i) {
         super.setLayoutDirection(i);
         this.mAccessibilityProvider.onSetLayoutDirection();
     }
 
-    @Override // android.view.View
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
         this.mAccessibilityProvider.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
     }
 
-    @Override // android.view.View
     public boolean performAccessibilityAction(int i, Bundle bundle) {
         if (this.mAccessibilityProvider.handlesPerformAccessibilityAction(i, bundle)) {
             return this.mAccessibilityProvider.onPerformAccessibilityAction(i, bundle);
@@ -528,35 +576,11 @@ public final class ViewPager2 extends ViewGroup {
         return super.performAccessibilityAction(i, bundle);
     }
 
-    @Override // android.view.View
-    public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
-        WindowInsets onApplyWindowInsets = super.onApplyWindowInsets(windowInsets);
-        if (onApplyWindowInsets.isConsumed()) {
-            return onApplyWindowInsets;
-        }
-        int childCount = this.mRecyclerView.getChildCount();
-        for (int i = 0; i < childCount; i++) {
-            this.mRecyclerView.getChildAt(i).dispatchApplyWindowInsets(new WindowInsets(onApplyWindowInsets));
-        }
-        return consumeAllInsets(windowInsets);
-    }
-
-    private WindowInsets consumeAllInsets(WindowInsets windowInsets) {
-        WindowInsetsCompat windowInsetsCompat = EMPTY_INSETS;
-        if (windowInsetsCompat.toWindowInsets() != null) {
-            return windowInsetsCompat.toWindowInsets();
-        }
-        return windowInsets.consumeSystemWindowInsets().consumeStableInsets();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class RecyclerViewImpl extends RecyclerView {
+    private class RecyclerViewImpl extends RecyclerView {
         RecyclerViewImpl(Context context) {
             super(context);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView, android.view.ViewGroup, android.view.View
         public CharSequence getAccessibilityClassName() {
             if (ViewPager2.this.mAccessibilityProvider.handlesRvGetAccessibilityClassName()) {
                 return ViewPager2.this.mAccessibilityProvider.onRvGetAccessibilityClassName();
@@ -564,7 +588,6 @@ public final class ViewPager2 extends ViewGroup {
             return super.getAccessibilityClassName();
         }
 
-        @Override // android.view.View
         public void onInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
             super.onInitializeAccessibilityEvent(accessibilityEvent);
             accessibilityEvent.setFromIndex(ViewPager2.this.mCurrentItem);
@@ -572,22 +595,16 @@ public final class ViewPager2 extends ViewGroup {
             ViewPager2.this.mAccessibilityProvider.onRvInitializeAccessibilityEvent(accessibilityEvent);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView, android.view.View
-        @SuppressLint({"ClickableViewAccessibility"})
         public boolean onTouchEvent(MotionEvent motionEvent) {
             return ViewPager2.this.isUserInputEnabled() && super.onTouchEvent(motionEvent);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView, android.view.ViewGroup
         public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
             return ViewPager2.this.isUserInputEnabled() && super.onInterceptTouchEvent(motionEvent);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class LinearLayoutManagerImpl extends LinearLayoutManager {
-        @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
+    private class LinearLayoutManagerImpl extends LinearLayoutManager {
         public boolean requestChildRectangleOnScreen(RecyclerView recyclerView, View view, Rect rect, boolean z, boolean z2) {
             return false;
         }
@@ -596,7 +613,6 @@ public final class ViewPager2 extends ViewGroup {
             super(context);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
         public boolean performAccessibilityAction(RecyclerView.Recycler recycler, RecyclerView.State state, int i, Bundle bundle) {
             if (ViewPager2.this.mAccessibilityProvider.handlesLmPerformAccessibilityAction(i)) {
                 return ViewPager2.this.mAccessibilityProvider.onLmPerformAccessibilityAction(i);
@@ -604,19 +620,17 @@ public final class ViewPager2 extends ViewGroup {
             return super.performAccessibilityAction(recycler, state, i, bundle);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
         public void onInitializeAccessibilityNodeInfo(RecyclerView.Recycler recycler, RecyclerView.State state, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             super.onInitializeAccessibilityNodeInfo(recycler, state, accessibilityNodeInfoCompat);
             ViewPager2.this.mAccessibilityProvider.onLmInitializeAccessibilityNodeInfo(accessibilityNodeInfoCompat);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager
         public void onInitializeAccessibilityNodeInfoForItem(RecyclerView.Recycler recycler, RecyclerView.State state, View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             ViewPager2.this.mAccessibilityProvider.onLmInitializeAccessibilityNodeInfoForItem(view, accessibilityNodeInfoCompat);
         }
 
-        @Override // androidx.recyclerview.widget.LinearLayoutManager
-        protected void calculateExtraLayoutSpace(RecyclerView.State state, int[] iArr) {
+        /* access modifiers changed from: protected */
+        public void calculateExtraLayoutSpace(RecyclerView.State state, int[] iArr) {
             int offscreenPageLimit = ViewPager2.this.getOffscreenPageLimit();
             if (offscreenPageLimit == -1) {
                 super.calculateExtraLayoutSpace(state, iArr);
@@ -628,13 +642,10 @@ public final class ViewPager2 extends ViewGroup {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class PagerSnapHelperImpl extends PagerSnapHelper {
+    private class PagerSnapHelperImpl extends PagerSnapHelper {
         PagerSnapHelperImpl() {
         }
 
-        @Override // androidx.recyclerview.widget.PagerSnapHelper, androidx.recyclerview.widget.SnapHelper
         public View findSnapView(RecyclerView.LayoutManager layoutManager) {
             if (ViewPager2.this.isFakeDragging()) {
                 return null;
@@ -643,9 +654,7 @@ public final class ViewPager2 extends ViewGroup {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class SmoothScrollToPosition implements Runnable {
+    private static class SmoothScrollToPosition implements Runnable {
         private final int mPosition;
         private final RecyclerView mRecyclerView;
 
@@ -654,88 +663,133 @@ public final class ViewPager2 extends ViewGroup {
             this.mRecyclerView = recyclerView;
         }
 
-        @Override // java.lang.Runnable
         public void run() {
             this.mRecyclerView.smoothScrollToPosition(this.mPosition);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public abstract class AccessibilityProvider {
-        boolean handlesGetAccessibilityClassName() {
+    public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration) {
+        this.mRecyclerView.addItemDecoration(itemDecoration);
+    }
+
+    public void addItemDecoration(RecyclerView.ItemDecoration itemDecoration, int i) {
+        this.mRecyclerView.addItemDecoration(itemDecoration, i);
+    }
+
+    public RecyclerView.ItemDecoration getItemDecorationAt(int i) {
+        return this.mRecyclerView.getItemDecorationAt(i);
+    }
+
+    public int getItemDecorationCount() {
+        return this.mRecyclerView.getItemDecorationCount();
+    }
+
+    public void invalidateItemDecorations() {
+        this.mRecyclerView.invalidateItemDecorations();
+    }
+
+    public void removeItemDecorationAt(int i) {
+        this.mRecyclerView.removeItemDecorationAt(i);
+    }
+
+    public void removeItemDecoration(RecyclerView.ItemDecoration itemDecoration) {
+        this.mRecyclerView.removeItemDecoration(itemDecoration);
+    }
+
+    private abstract class AccessibilityProvider {
+        /* access modifiers changed from: package-private */
+        public boolean handlesGetAccessibilityClassName() {
             return false;
         }
 
-        boolean handlesLmPerformAccessibilityAction(int i) {
+        /* access modifiers changed from: package-private */
+        public boolean handlesLmPerformAccessibilityAction(int i) {
             return false;
         }
 
-        boolean handlesPerformAccessibilityAction(int i, Bundle bundle) {
+        /* access modifiers changed from: package-private */
+        public boolean handlesPerformAccessibilityAction(int i, Bundle bundle) {
             return false;
         }
 
-        boolean handlesRvGetAccessibilityClassName() {
+        /* access modifiers changed from: package-private */
+        public boolean handlesRvGetAccessibilityClassName() {
             return false;
         }
 
-        void onAttachAdapter(RecyclerView.Adapter<?> adapter) {
+        /* access modifiers changed from: package-private */
+        public void onAttachAdapter(RecyclerView.Adapter<?> adapter) {
         }
 
-        void onDetachAdapter(RecyclerView.Adapter<?> adapter) {
+        /* access modifiers changed from: package-private */
+        public void onDetachAdapter(RecyclerView.Adapter<?> adapter) {
         }
 
-        void onInitialize(CompositeOnPageChangeCallback compositeOnPageChangeCallback, RecyclerView recyclerView) {
+        /* access modifiers changed from: package-private */
+        public void onInitialize(CompositeOnPageChangeCallback compositeOnPageChangeCallback, RecyclerView recyclerView) {
         }
 
-        void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
+        /* access modifiers changed from: package-private */
+        public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
         }
 
-        void onLmInitializeAccessibilityNodeInfo(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
+        /* access modifiers changed from: package-private */
+        public void onLmInitializeAccessibilityNodeInfo(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         }
 
-        void onLmInitializeAccessibilityNodeInfoForItem(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
+        /* access modifiers changed from: package-private */
+        public void onLmInitializeAccessibilityNodeInfoForItem(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         }
 
-        void onRestorePendingState() {
+        /* access modifiers changed from: package-private */
+        public void onRestorePendingState() {
         }
 
-        void onRvInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
+        /* access modifiers changed from: package-private */
+        public void onRvInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         }
 
-        void onSetLayoutDirection() {
+        /* access modifiers changed from: package-private */
+        public void onSetLayoutDirection() {
         }
 
-        void onSetNewCurrentItem() {
+        /* access modifiers changed from: package-private */
+        public void onSetNewCurrentItem() {
         }
 
-        void onSetOrientation() {
+        /* access modifiers changed from: package-private */
+        public void onSetOrientation() {
+        }
+
+        /* access modifiers changed from: package-private */
+        public void onSetUserInputEnabled() {
         }
 
         private AccessibilityProvider() {
         }
 
-        String onGetAccessibilityClassName() {
+        /* access modifiers changed from: package-private */
+        public String onGetAccessibilityClassName() {
             throw new IllegalStateException("Not implemented.");
         }
 
-        boolean onPerformAccessibilityAction(int i, Bundle bundle) {
+        /* access modifiers changed from: package-private */
+        public boolean onPerformAccessibilityAction(int i, Bundle bundle) {
             throw new IllegalStateException("Not implemented.");
         }
 
-        boolean onLmPerformAccessibilityAction(int i) {
+        /* access modifiers changed from: package-private */
+        public boolean onLmPerformAccessibilityAction(int i) {
             throw new IllegalStateException("Not implemented.");
         }
 
-        CharSequence onRvGetAccessibilityClassName() {
+        /* access modifiers changed from: package-private */
+        public CharSequence onRvGetAccessibilityClassName() {
             throw new IllegalStateException("Not implemented.");
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class BasicAccessibilityProvider extends AccessibilityProvider {
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
+    class BasicAccessibilityProvider extends AccessibilityProvider {
         public boolean handlesRvGetAccessibilityClassName() {
             return true;
         }
@@ -744,12 +798,10 @@ public final class ViewPager2 extends ViewGroup {
             super();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public boolean handlesLmPerformAccessibilityAction(int i) {
             return (i == 8192 || i == 4096) && !ViewPager2.this.isUserInputEnabled();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public boolean onLmPerformAccessibilityAction(int i) {
             if (handlesLmPerformAccessibilityAction(i)) {
                 return false;
@@ -757,7 +809,6 @@ public final class ViewPager2 extends ViewGroup {
             throw new IllegalStateException();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public void onLmInitializeAccessibilityNodeInfo(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             if (!ViewPager2.this.isUserInputEnabled()) {
                 accessibilityNodeInfoCompat.removeAction(AccessibilityNodeInfoCompat.AccessibilityActionCompat.ACTION_SCROLL_BACKWARD);
@@ -766,7 +817,6 @@ public final class ViewPager2 extends ViewGroup {
             }
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public CharSequence onRvGetAccessibilityClassName() {
             if (handlesRvGetAccessibilityClassName()) {
                 return "androidx.viewpager.widget.ViewPager";
@@ -775,31 +825,25 @@ public final class ViewPager2 extends ViewGroup {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class PageAwareAccessibilityProvider extends AccessibilityProvider {
-        private RecyclerView.AdapterDataObserver mAdapterDataObserver;
-        private final AccessibilityViewCommand mActionPageForward = new AccessibilityViewCommand() { // from class: androidx.viewpager2.widget.ViewPager2.PageAwareAccessibilityProvider.1
-            @Override // androidx.core.view.accessibility.AccessibilityViewCommand
-            public boolean perform(View view, AccessibilityViewCommand.CommandArguments commandArguments) {
-                PageAwareAccessibilityProvider.this.setCurrentItemFromAccessibilityCommand(((ViewPager2) view).getCurrentItem() + 1);
-                return true;
-            }
-        };
-        private final AccessibilityViewCommand mActionPageBackward = new AccessibilityViewCommand() { // from class: androidx.viewpager2.widget.ViewPager2.PageAwareAccessibilityProvider.2
-            @Override // androidx.core.view.accessibility.AccessibilityViewCommand
+    class PageAwareAccessibilityProvider extends AccessibilityProvider {
+        private final AccessibilityViewCommand mActionPageBackward = new AccessibilityViewCommand() {
             public boolean perform(View view, AccessibilityViewCommand.CommandArguments commandArguments) {
                 PageAwareAccessibilityProvider.this.setCurrentItemFromAccessibilityCommand(((ViewPager2) view).getCurrentItem() - 1);
                 return true;
             }
         };
+        private final AccessibilityViewCommand mActionPageForward = new AccessibilityViewCommand() {
+            public boolean perform(View view, AccessibilityViewCommand.CommandArguments commandArguments) {
+                PageAwareAccessibilityProvider.this.setCurrentItemFromAccessibilityCommand(((ViewPager2) view).getCurrentItem() + 1);
+                return true;
+            }
+        };
+        private RecyclerView.AdapterDataObserver mAdapterDataObserver;
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public boolean handlesGetAccessibilityClassName() {
             return true;
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public boolean handlesPerformAccessibilityAction(int i, Bundle bundle) {
             return i == 8192 || i == 4096;
         }
@@ -808,11 +852,9 @@ public final class ViewPager2 extends ViewGroup {
             super();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public void onInitialize(CompositeOnPageChangeCallback compositeOnPageChangeCallback, RecyclerView recyclerView) {
             ViewCompat.setImportantForAccessibility(recyclerView, 2);
-            this.mAdapterDataObserver = new DataSetChangeObserver() { // from class: androidx.viewpager2.widget.ViewPager2.PageAwareAccessibilityProvider.3
-                @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
+            this.mAdapterDataObserver = new DataSetChangeObserver() {
                 public void onChanged() {
                     PageAwareAccessibilityProvider.this.updatePageAccessibilityActions();
                 }
@@ -822,7 +864,6 @@ public final class ViewPager2 extends ViewGroup {
             }
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public String onGetAccessibilityClassName() {
             if (handlesGetAccessibilityClassName()) {
                 return "androidx.viewpager.widget.ViewPager";
@@ -830,12 +871,10 @@ public final class ViewPager2 extends ViewGroup {
             throw new IllegalStateException();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public void onRestorePendingState() {
             updatePageAccessibilityActions();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public void onAttachAdapter(RecyclerView.Adapter<?> adapter) {
             updatePageAccessibilityActions();
             if (adapter != null) {
@@ -843,70 +882,67 @@ public final class ViewPager2 extends ViewGroup {
             }
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public void onDetachAdapter(RecyclerView.Adapter<?> adapter) {
             if (adapter != null) {
                 adapter.unregisterAdapterDataObserver(this.mAdapterDataObserver);
             }
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public void onSetOrientation() {
             updatePageAccessibilityActions();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public void onSetNewCurrentItem() {
             updatePageAccessibilityActions();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
+        public void onSetUserInputEnabled() {
+            updatePageAccessibilityActions();
+        }
+
         public void onSetLayoutDirection() {
             updatePageAccessibilityActions();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
             AccessibilityNodeInfoCompat wrap = AccessibilityNodeInfoCompat.wrap(accessibilityNodeInfo);
             addCollectionInfo(wrap);
-            if (Build.VERSION.SDK_INT >= 16) {
-                addScrollActions(wrap);
-            }
+            addScrollActions(wrap);
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
-        void onLmInitializeAccessibilityNodeInfoForItem(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
+        /* access modifiers changed from: package-private */
+        public void onLmInitializeAccessibilityNodeInfoForItem(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             addCollectionItemInfo(view, accessibilityNodeInfoCompat);
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public boolean onPerformAccessibilityAction(int i, Bundle bundle) {
-            int currentItem;
-            if (!handlesPerformAccessibilityAction(i, bundle)) {
-                throw new IllegalStateException();
+            int i2;
+            if (handlesPerformAccessibilityAction(i, bundle)) {
+                if (i == 8192) {
+                    i2 = ViewPager2.this.getCurrentItem() - 1;
+                } else {
+                    i2 = ViewPager2.this.getCurrentItem() + 1;
+                }
+                setCurrentItemFromAccessibilityCommand(i2);
+                return true;
             }
-            if (i == 8192) {
-                currentItem = ViewPager2.this.getCurrentItem() - 1;
-            } else {
-                currentItem = ViewPager2.this.getCurrentItem() + 1;
-            }
-            setCurrentItemFromAccessibilityCommand(currentItem);
-            return true;
+            throw new IllegalStateException();
         }
 
-        @Override // androidx.viewpager2.widget.ViewPager2.AccessibilityProvider
         public void onRvInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
             accessibilityEvent.setSource(ViewPager2.this);
             accessibilityEvent.setClassName(onGetAccessibilityClassName());
         }
 
-        void setCurrentItemFromAccessibilityCommand(int i) {
+        /* access modifiers changed from: package-private */
+        public void setCurrentItemFromAccessibilityCommand(int i) {
             if (ViewPager2.this.isUserInputEnabled()) {
                 ViewPager2.this.setCurrentItemInternal(i, true);
             }
         }
 
-        void updatePageAccessibilityActions() {
+        /* access modifiers changed from: package-private */
+        public void updatePageAccessibilityActions() {
             int itemCount;
             ViewPager2 viewPager2 = ViewPager2.this;
             int i = 16908360;
@@ -914,44 +950,45 @@ public final class ViewPager2 extends ViewGroup {
             ViewCompat.removeAccessibilityAction(viewPager2, 16908361);
             ViewCompat.removeAccessibilityAction(viewPager2, 16908358);
             ViewCompat.removeAccessibilityAction(viewPager2, 16908359);
-            if (ViewPager2.this.getAdapter() == null || (itemCount = ViewPager2.this.getAdapter().getItemCount()) == 0 || !ViewPager2.this.isUserInputEnabled()) {
-                return;
-            }
-            if (ViewPager2.this.getOrientation() == 0) {
-                boolean isRtl = ViewPager2.this.isRtl();
-                int i2 = isRtl ? 16908360 : 16908361;
-                if (isRtl) {
-                    i = 16908361;
-                }
-                if (ViewPager2.this.mCurrentItem < itemCount - 1) {
-                    ViewCompat.replaceAccessibilityAction(viewPager2, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(i2, null), null, this.mActionPageForward);
-                }
-                if (ViewPager2.this.mCurrentItem <= 0) {
+            if (ViewPager2.this.getAdapter() != null && (itemCount = ViewPager2.this.getAdapter().getItemCount()) != 0 && ViewPager2.this.isUserInputEnabled()) {
+                if (ViewPager2.this.getOrientation() == 0) {
+                    boolean isRtl = ViewPager2.this.isRtl();
+                    int i2 = isRtl ? 16908360 : 16908361;
+                    if (isRtl) {
+                        i = 16908361;
+                    }
+                    if (ViewPager2.this.mCurrentItem < itemCount - 1) {
+                        ViewCompat.replaceAccessibilityAction(viewPager2, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(i2, (CharSequence) null), (CharSequence) null, this.mActionPageForward);
+                    }
+                    if (ViewPager2.this.mCurrentItem > 0) {
+                        ViewCompat.replaceAccessibilityAction(viewPager2, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(i, (CharSequence) null), (CharSequence) null, this.mActionPageBackward);
+                        return;
+                    }
                     return;
                 }
-                ViewCompat.replaceAccessibilityAction(viewPager2, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(i, null), null, this.mActionPageBackward);
-                return;
+                if (ViewPager2.this.mCurrentItem < itemCount - 1) {
+                    ViewCompat.replaceAccessibilityAction(viewPager2, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(16908359, (CharSequence) null), (CharSequence) null, this.mActionPageForward);
+                }
+                if (ViewPager2.this.mCurrentItem > 0) {
+                    ViewCompat.replaceAccessibilityAction(viewPager2, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(16908358, (CharSequence) null), (CharSequence) null, this.mActionPageBackward);
+                }
             }
-            if (ViewPager2.this.mCurrentItem < itemCount - 1) {
-                ViewCompat.replaceAccessibilityAction(viewPager2, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(16908359, null), null, this.mActionPageForward);
-            }
-            if (ViewPager2.this.mCurrentItem <= 0) {
-                return;
-            }
-            ViewCompat.replaceAccessibilityAction(viewPager2, new AccessibilityNodeInfoCompat.AccessibilityActionCompat(16908358, null), null, this.mActionPageBackward);
         }
 
         private void addCollectionInfo(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             int i;
-            int i2 = 1;
-            if (ViewPager2.this.getAdapter() == null) {
+            int i2;
+            if (ViewPager2.this.getAdapter() != null) {
+                i2 = 1;
+                if (ViewPager2.this.getOrientation() == 1) {
+                    i2 = ViewPager2.this.getAdapter().getItemCount();
+                    i = 1;
+                } else {
+                    i = ViewPager2.this.getAdapter().getItemCount();
+                }
+            } else {
                 i = 0;
                 i2 = 0;
-            } else if (ViewPager2.this.getOrientation() == 1) {
-                i2 = ViewPager2.this.getAdapter().getItemCount();
-                i = 1;
-            } else {
-                i = ViewPager2.this.getAdapter().getItemCount();
             }
             accessibilityNodeInfoCompat.setCollectionInfo(AccessibilityNodeInfoCompat.CollectionInfoCompat.obtain(i2, i, false, 0));
         }
@@ -968,45 +1005,40 @@ public final class ViewPager2 extends ViewGroup {
         private void addScrollActions(AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             int itemCount;
             RecyclerView.Adapter adapter = ViewPager2.this.getAdapter();
-            if (adapter == null || (itemCount = adapter.getItemCount()) == 0 || !ViewPager2.this.isUserInputEnabled()) {
-                return;
+            if (adapter != null && (itemCount = adapter.getItemCount()) != 0 && ViewPager2.this.isUserInputEnabled()) {
+                if (ViewPager2.this.mCurrentItem > 0) {
+                    accessibilityNodeInfoCompat.addAction(8192);
+                }
+                if (ViewPager2.this.mCurrentItem < itemCount - 1) {
+                    accessibilityNodeInfoCompat.addAction(4096);
+                }
+                accessibilityNodeInfoCompat.setScrollable(true);
             }
-            if (ViewPager2.this.mCurrentItem > 0) {
-                accessibilityNodeInfoCompat.addAction(8192);
-            }
-            if (ViewPager2.this.mCurrentItem < itemCount - 1) {
-                accessibilityNodeInfoCompat.addAction(4096);
-            }
-            accessibilityNodeInfoCompat.setScrollable(true);
         }
     }
 
-    /* loaded from: classes.dex */
     private static abstract class DataSetChangeObserver extends RecyclerView.AdapterDataObserver {
+        public abstract void onChanged();
+
         private DataSetChangeObserver() {
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public final void onItemRangeChanged(int i, int i2) {
             onChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public final void onItemRangeChanged(int i, int i2, Object obj) {
             onChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public final void onItemRangeInserted(int i, int i2) {
             onChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public final void onItemRangeRemoved(int i, int i2) {
             onChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
         public final void onItemRangeMoved(int i, int i2, int i3) {
             onChanged();
         }

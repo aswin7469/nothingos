@@ -2,7 +2,7 @@ package androidx.leanback.widget;
 
 import android.view.View;
 import androidx.leanback.widget.ItemAlignmentFacet;
-/* loaded from: classes.dex */
+
 class ItemAlignment {
     public final Axis horizontal;
     private Axis mMainAxis;
@@ -10,8 +10,7 @@ class ItemAlignment {
     private Axis mSecondAxis;
     public final Axis vertical;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ItemAlignment() {
+    ItemAlignment() {
         Axis axis = new Axis(1);
         this.vertical = axis;
         Axis axis2 = new Axis(0);
@@ -20,27 +19,38 @@ class ItemAlignment {
         this.mSecondAxis = axis;
     }
 
-    /* loaded from: classes.dex */
     static final class Axis extends ItemAlignmentFacet.ItemAlignmentDef {
         private int mOrientation;
 
-        Axis(int orientation) {
-            this.mOrientation = orientation;
+        Axis(int i) {
+            this.mOrientation = i;
         }
 
-        public int getAlignmentPosition(View itemView) {
-            return ItemAlignmentFacetHelper.getAlignmentPosition(itemView, this, this.mOrientation);
+        public int getAlignmentPosition(View view) {
+            return ItemAlignmentFacetHelper.getAlignmentPosition(view, this, this.mOrientation);
         }
     }
 
-    public final void setOrientation(int orientation) {
-        this.mOrientation = orientation;
-        if (orientation == 0) {
+    public final Axis mainAxis() {
+        return this.mMainAxis;
+    }
+
+    public final Axis secondAxis() {
+        return this.mSecondAxis;
+    }
+
+    public final void setOrientation(int i) {
+        this.mOrientation = i;
+        if (i == 0) {
             this.mMainAxis = this.horizontal;
             this.mSecondAxis = this.vertical;
             return;
         }
         this.mMainAxis = this.vertical;
         this.mSecondAxis = this.horizontal;
+    }
+
+    public final int getOrientation() {
+        return this.mOrientation;
     }
 }

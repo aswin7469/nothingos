@@ -4,8 +4,9 @@ import androidx.slice.Clock;
 import androidx.slice.Slice;
 import androidx.slice.SliceSpec;
 import androidx.slice.SystemClock;
+import androidx.slice.core.SliceHints;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public abstract class TemplateBuilderImpl {
     private Clock mClock;
     private Slice.Builder mSliceBuilder;
@@ -13,19 +14,17 @@ public abstract class TemplateBuilderImpl {
 
     public abstract void apply(Slice.Builder builder);
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public TemplateBuilderImpl(Slice.Builder b, SliceSpec spec) {
-        this(b, spec, new SystemClock());
+    protected TemplateBuilderImpl(Slice.Builder builder, SliceSpec sliceSpec) {
+        this(builder, sliceSpec, new SystemClock());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public TemplateBuilderImpl(Slice.Builder b, SliceSpec spec, Clock clock) {
-        this.mSliceBuilder = b;
-        this.mSpec = spec;
+    protected TemplateBuilderImpl(Slice.Builder builder, SliceSpec sliceSpec, Clock clock) {
+        this.mSliceBuilder = builder;
+        this.mSpec = sliceSpec;
         this.mClock = clock;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setBuilder(Slice.Builder builder) {
         this.mSliceBuilder = builder;
     }
@@ -48,22 +47,26 @@ public abstract class TemplateBuilderImpl {
         return this.mClock;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public ArrayList<String> parseImageMode(int imageMode, boolean isLoading) {
+    public SliceSpec getSpec() {
+        return this.mSpec;
+    }
+
+    /* access modifiers changed from: protected */
+    public ArrayList<String> parseImageMode(int i, boolean z) {
         ArrayList<String> arrayList = new ArrayList<>();
-        if (imageMode == 6) {
-            arrayList.add("show_label");
+        if (i == 6) {
+            arrayList.add(SliceHints.HINT_SHOW_LABEL);
         }
-        if (imageMode != 0) {
+        if (i != 0) {
             arrayList.add("no_tint");
         }
-        if (imageMode == 2 || imageMode == 4) {
+        if (i == 2 || i == 4) {
             arrayList.add("large");
         }
-        if (imageMode == 3 || imageMode == 4) {
-            arrayList.add("raw");
+        if (i == 3 || i == 4) {
+            arrayList.add(SliceHints.HINT_RAW);
         }
-        if (isLoading) {
+        if (z) {
             arrayList.add("partial");
         }
         return arrayList;

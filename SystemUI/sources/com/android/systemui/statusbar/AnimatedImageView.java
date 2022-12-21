@@ -9,9 +9,9 @@ import android.view.RemotableViewMethod;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
-import com.android.systemui.R$styleable;
+import com.android.systemui.C1893R;
+
 @RemoteViews.RemoteView
-/* loaded from: classes.dex */
 public class AnimatedImageView extends ImageView {
     private boolean mAllowAnimation;
     AnimationDrawable mAnim;
@@ -20,15 +20,15 @@ public class AnimatedImageView extends ImageView {
     private final boolean mHasOverlappingRendering;
 
     public AnimatedImageView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public AnimatedImageView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mAllowAnimation = true;
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, R$styleable.AnimatedImageView, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.AnimatedImageView, 0, 0);
         try {
-            this.mHasOverlappingRendering = obtainStyledAttributes.getBoolean(R$styleable.AnimatedImageView_hasOverlappingRendering, true);
+            this.mHasOverlappingRendering = obtainStyledAttributes.getBoolean(0, true);
         } finally {
             obtainStyledAttributes.recycle();
         }
@@ -39,10 +39,9 @@ public class AnimatedImageView extends ImageView {
         if (this.mAllowAnimation != z) {
             this.mAllowAnimation = z;
             updateAnim();
-            if (this.mAllowAnimation || (animationDrawable = this.mAnim) == null) {
-                return;
+            if (!this.mAllowAnimation && (animationDrawable = this.mAnim) != null) {
+                animationDrawable.setVisible(getVisibility() == 0, true);
             }
-            animationDrawable.setVisible(getVisibility() == 0, true);
         }
     }
 
@@ -54,48 +53,42 @@ public class AnimatedImageView extends ImageView {
         }
         if (drawable instanceof AnimationDrawable) {
             this.mAnim = (AnimationDrawable) drawable;
-            if (!isShown() || !this.mAllowAnimation) {
+            if (isShown() && this.mAllowAnimation) {
+                this.mAnim.start();
                 return;
             }
-            this.mAnim.start();
             return;
         }
         this.mAnim = null;
     }
 
-    @Override // android.widget.ImageView
     public void setImageDrawable(Drawable drawable) {
-        if (drawable != null) {
-            if (this.mDrawableId == drawable.hashCode()) {
-                return;
-            }
+        if (drawable == null) {
+            this.mDrawableId = 0;
+        } else if (this.mDrawableId != drawable.hashCode()) {
             this.mDrawableId = drawable.hashCode();
         } else {
-            this.mDrawableId = 0;
+            return;
         }
         super.setImageDrawable(drawable);
         updateAnim();
     }
 
-    @Override // android.widget.ImageView
     @RemotableViewMethod
     public void setImageResource(int i) {
-        if (this.mDrawableId == i) {
-            return;
+        if (this.mDrawableId != i) {
+            this.mDrawableId = i;
+            super.setImageResource(i);
+            updateAnim();
         }
-        this.mDrawableId = i;
-        super.setImageResource(i);
-        updateAnim();
     }
 
-    @Override // android.widget.ImageView, android.view.View
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mAttached = true;
         updateAnim();
     }
 
-    @Override // android.widget.ImageView, android.view.View
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         AnimationDrawable animationDrawable = this.mAnim;
@@ -105,19 +98,19 @@ public class AnimatedImageView extends ImageView {
         this.mAttached = false;
     }
 
-    @Override // android.view.View
-    protected void onVisibilityChanged(View view, int i) {
+    /* access modifiers changed from: protected */
+    public void onVisibilityChanged(View view, int i) {
         super.onVisibilityChanged(view, i);
-        if (this.mAnim != null) {
-            if (isShown() && this.mAllowAnimation) {
-                this.mAnim.start();
-            } else {
-                this.mAnim.stop();
-            }
+        if (this.mAnim == null) {
+            return;
+        }
+        if (!isShown() || !this.mAllowAnimation) {
+            this.mAnim.stop();
+        } else {
+            this.mAnim.start();
         }
     }
 
-    @Override // android.widget.ImageView, android.view.View
     public boolean hasOverlappingRendering() {
         return this.mHasOverlappingRendering;
     }

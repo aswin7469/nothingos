@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">Нетачан SIM%d PIN код, преостало вам је %d покушаја пре него што будете морали да контактирате свог пружаоца мреже да бисте откључали свој уређај.</item>
+        <item quantity="other">Нетачан SIM%d PIN код, преостало вам је %d покушаја.</item>
+    </plurals>
+</resources>

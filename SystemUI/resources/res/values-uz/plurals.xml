@@ -16,6 +16,10 @@
         <item quantity="one">%s ta nazorat kiritilgan.</item>
         <item quantity="other">%s ta nazorat kiritilgan.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s ta ilova faol</item>
+        <item quantity="other">%s ta ilova faol</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">SIM PIN kodini kiriting, qurilmani qulfdan chiqarish uchun sizda %d ta urinish bor.</item>
         <item quantity="other">SIM PIN kodini kiriting, sizda %d ta urinish bor.</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">SIM karta PUK kodi noto‘g‘ri terildi, yana %d marta urinib ko‘rganingizdan keyin SIM kartadan umuman foydalanib bo‘lmaydi.</item>
         <item quantity="other">SIM kartaning PUK kodi noto‘g‘ri kiritildi. Yana %d ta muvaffaqiyatsiz urinishdan keyin SIM karta butunlay ishdan chiqadi.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Qurilma %d soatdan beri qulfdan chiqarilgani yo‘q. Parolni yana bir marta kiriting.</item>
-        <item quantity="other">Qurilma %d soatdan beri qulfdan chiqarilgani yo‘q. Parolni yana bir marta kiriting.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Qurilma %d soatdan beri qulfdan chiqarilgani yo‘q. Chizmali kalitni yana bir marta kiriting.</item>
-        <item quantity="other">Qurilma %d soatdan beri qulfdan chiqarilgani yo‘q. Chizmali kalitni yana bir marta kiriting.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Qurilma %d soatdan beri qulfdan chiqarilgani yo‘q. PIN kodni yana bir marta kiriting.</item>
-        <item quantity="other">Qurilma %d soatdan beri qulfdan chiqarilgani yo‘q. PIN kodni yana bir marta kiriting.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">1 soniyadan keyin qaytadan urining.</item>
-        <item quantity="other">%d soniyadan keyin qaytadan urining.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d ta yangi bildirishnoma</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">Faqat bitta foydalanuvchi yaratish mumkin.</item>
         <item quantity="other">%d tagacha foydalanuvchi qo‘shish mumkin.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d ta qurilma ulangan</item>
-        <item quantity="other">%1$d ta qurilma ulangan</item>
     </plurals>
 </resources>

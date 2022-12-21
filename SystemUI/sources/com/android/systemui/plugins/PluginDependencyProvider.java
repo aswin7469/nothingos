@@ -4,17 +4,21 @@ import android.util.ArrayMap;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.PluginDependency;
 import com.android.systemui.shared.plugins.PluginManager;
-/* loaded from: classes.dex */
+import dagger.Lazy;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class PluginDependencyProvider extends PluginDependency.DependencyProvider {
     private final ArrayMap<Class<?>, Object> mDependencies = new ArrayMap<>();
-    private final PluginManager mManager;
+    private final Lazy<PluginManager> mManagerLazy;
 
-    public PluginDependencyProvider(PluginManager pluginManager) {
-        this.mManager = pluginManager;
+    @Inject
+    public PluginDependencyProvider(Lazy<PluginManager> lazy) {
+        this.mManagerLazy = lazy;
         PluginDependency.sProvider = this;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
     public <T> void allowPluginDependency(Class<T> cls) {
         allowPluginDependency(cls, Dependency.get(cls));
     }
@@ -25,18 +29,19 @@ public class PluginDependencyProvider extends PluginDependency.DependencyProvide
         }
     }
 
-    @Override // com.android.systemui.plugins.PluginDependency.DependencyProvider
-    <T> T get(Plugin plugin, Class<T> cls) {
+    /* access modifiers changed from: package-private */
+    public <T> T get(Plugin plugin, Class<T> cls) {
         T t;
-        if (!this.mManager.dependsOn(plugin, cls)) {
-            throw new IllegalArgumentException(plugin.getClass() + " does not depend on " + cls);
-        }
-        synchronized (this.mDependencies) {
-            if (!this.mDependencies.containsKey(cls)) {
-                throw new IllegalArgumentException("Unknown dependency " + cls);
+        if (this.mManagerLazy.get().dependsOn(plugin, cls)) {
+            synchronized (this.mDependencies) {
+                if (this.mDependencies.containsKey(cls)) {
+                    t = this.mDependencies.get(cls);
+                } else {
+                    throw new IllegalArgumentException("Unknown dependency " + cls);
+                }
             }
-            t = (T) this.mDependencies.get(cls);
+            return t;
         }
-        return t;
+        throw new IllegalArgumentException(plugin.getClass() + " does not depend on " + cls);
     }
 }

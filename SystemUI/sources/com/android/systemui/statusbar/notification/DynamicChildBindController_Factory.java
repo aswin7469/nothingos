@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification;
 import com.android.systemui.statusbar.notification.row.RowContentBindStage;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DynamicChildBindController_Factory implements Factory<DynamicChildBindController> {
     private final Provider<RowContentBindStage> stageProvider;
 
@@ -11,10 +11,8 @@ public final class DynamicChildBindController_Factory implements Factory<Dynamic
         this.stageProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DynamicChildBindController mo1933get() {
-        return newInstance(this.stageProvider.mo1933get());
+    public DynamicChildBindController get() {
+        return newInstance(this.stageProvider.get());
     }
 
     public static DynamicChildBindController_Factory create(Provider<RowContentBindStage> provider) {

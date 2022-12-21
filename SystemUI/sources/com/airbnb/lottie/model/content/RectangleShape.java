@@ -5,21 +5,20 @@ import com.airbnb.lottie.LottieDrawable;
 import com.airbnb.lottie.animation.content.Content;
 import com.airbnb.lottie.animation.content.RectangleContent;
 import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
-import com.airbnb.lottie.model.animatable.AnimatablePointValue;
 import com.airbnb.lottie.model.animatable.AnimatableValue;
 import com.airbnb.lottie.model.layer.BaseLayer;
-/* loaded from: classes.dex */
+
 public class RectangleShape implements ContentModel {
     private final AnimatableFloatValue cornerRadius;
     private final boolean hidden;
     private final String name;
     private final AnimatableValue<PointF, PointF> position;
-    private final AnimatablePointValue size;
+    private final AnimatableValue<PointF, PointF> size;
 
-    public RectangleShape(String str, AnimatableValue<PointF, PointF> animatableValue, AnimatablePointValue animatablePointValue, AnimatableFloatValue animatableFloatValue, boolean z) {
+    public RectangleShape(String str, AnimatableValue<PointF, PointF> animatableValue, AnimatableValue<PointF, PointF> animatableValue2, AnimatableFloatValue animatableFloatValue, boolean z) {
         this.name = str;
         this.position = animatableValue;
-        this.size = animatablePointValue;
+        this.size = animatableValue2;
         this.cornerRadius = animatableFloatValue;
         this.hidden = z;
     }
@@ -32,7 +31,7 @@ public class RectangleShape implements ContentModel {
         return this.cornerRadius;
     }
 
-    public AnimatablePointValue getSize() {
+    public AnimatableValue<PointF, PointF> getSize() {
         return this.size;
     }
 
@@ -44,7 +43,6 @@ public class RectangleShape implements ContentModel {
         return this.hidden;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new RectangleContent(lottieDrawable, baseLayer, this);
     }

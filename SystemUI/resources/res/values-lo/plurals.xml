@@ -16,6 +16,10 @@
         <item quantity="one">ເພີ່ມ %s ການຄວບຄຸມແລ້ວ.</item>
         <item quantity="other">ເພີ່ມ %s ການຄວບຄຸມແລ້ວ.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s ແອັບນຳໃຊ້ຢູ່</item>
+        <item quantity="other">%s ແອັບນຳໃຊ້ຢູ່</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">ໃສ່ລະຫັດ SIM PIN. ທ່ານສາມາດລອງໄດ້ອີກ %d ເທື່ອກ່ອນທີ່ຈະຕ້ອງຕິດຕໍ່ຜູ້ໃຫ້ບໍລິການເພື່ອປົດລັອກ.</item>
         <item quantity="other">ລະຫັດ SIM PIN ບໍ່ຖືກຕ້ອງ. ທ່ານສາມາດລອງໄດ້ອີກ %d ເທື່ອ.</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">ລະຫັດ PUK ຂອງ SIM ບໍ່ຖືກຕ້ອງ, ທ່ານສາມາດລອງໄດ້ອີກ %d ເທື່ອກ່ອນທີ່ SIM ຂອງທ່ານຈະໃຊ້ບໍ່ໄດ້ຢ່າງຖາວອນ.</item>
         <item quantity="other">ລະຫັດ PUK ຂອງ SIM ບໍ່ຖືກຕ້ອງ, ທ່ານສາມາດລອງໄດ້ອີກ %d ເທື່ອກ່ອນທີ່ SIM ຂອງທ່ານຈະໃຊ້ບໍ່ໄດ້ຢ່າງຖາວອນ.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">ອຸປະກອນບໍ່ໄດ້ຖືກປົດລັອກເປັນເວລາ %d ຊົ່ວໂມງ. ຢືນຢັນລະຫັດຜ່ານ.</item>
-        <item quantity="other">ອຸປະກອນບໍ່ໄດ້ຖືກປົດລັອກເປັນເວລາ %d ຊົ່ວໂມງ. ຢືນຢັນລະຫັດຜ່ານ.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">ອຸປະກອນບໍ່ໄດ້ຖືກປົດລັອກເປັນເວລາ %d ຊົ່ວໂມງ. ຢືນຢັນແບບຮູບ.</item>
-        <item quantity="other">ອຸປະກອນບໍ່ໄດ້ຖືກປົດລັອກເປັນເວລາ %d ຊົ່ວໂມງ. ຢືນຢັນແບບຮູບ.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">ອຸປະກອນບໍ່ໄດ້ຖືກປົດລັອກເປັນເວລາ %d ຊົ່ວໂມງ. ຢືນຢັນ PIN</item>
-        <item quantity="other">ອຸປະກອນບໍ່ໄດ້ຖືກປົດລັອກເປັນເວລາ %d ຊົ່ວໂມງ. ຢືນຢັນ PIN</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">ລອງໃໝ່ໃນອີກ 1 ວິນາທີ.</item>
-        <item quantity="other">ລອງໃໝ່ໃນອີກ %d ວິນາທີ.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d ການແຈ້ງເຕືອນໃໝ່</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">ສາມາດສ້າງໄດ້ໜຶ່ງຜູ້ໃຊ້ເທົ່ານັ້ນ.</item>
         <item quantity="other">ທ່ານສາມາດເພີ່ມໄດ້ສູງສຸດ %d ຄົນ.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">ເຊື່ອມຕໍ່ %1$d ອຸປະກອນແລ້ວ</item>
-        <item quantity="other">ເຊື່ອມຕໍ່ %1$d ອຸປະກອນແລ້ວ</item>
     </plurals>
 </resources>

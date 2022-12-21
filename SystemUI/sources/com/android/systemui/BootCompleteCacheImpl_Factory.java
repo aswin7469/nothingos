@@ -3,7 +3,7 @@ package com.android.systemui;
 import com.android.systemui.dump.DumpManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class BootCompleteCacheImpl_Factory implements Factory<BootCompleteCacheImpl> {
     private final Provider<DumpManager> dumpManagerProvider;
 
@@ -11,10 +11,8 @@ public final class BootCompleteCacheImpl_Factory implements Factory<BootComplete
         this.dumpManagerProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public BootCompleteCacheImpl mo1933get() {
-        return newInstance(this.dumpManagerProvider.mo1933get());
+    public BootCompleteCacheImpl get() {
+        return newInstance(this.dumpManagerProvider.get());
     }
 
     public static BootCompleteCacheImpl_Factory create(Provider<DumpManager> provider) {

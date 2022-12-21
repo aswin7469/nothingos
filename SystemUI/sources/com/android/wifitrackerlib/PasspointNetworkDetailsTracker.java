@@ -1,50 +1,101 @@
 package com.android.wifitrackerlib;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.net.wifi.hotspot2.OsuProvider;
 import android.net.wifi.hotspot2.PasspointConfiguration;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Pair;
 import androidx.core.util.Preconditions;
+import androidx.lifecycle.Lifecycle;
+import java.time.Clock;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
-/* loaded from: classes2.dex */
+import java.util.Optional;
+
 public class PasspointNetworkDetailsTracker extends NetworkDetailsTracker {
+    private static final String TAG = "PasspointNetworkDetailsTracker";
     private final PasspointWifiEntry mChosenEntry;
     private NetworkInfo mCurrentNetworkInfo;
     private WifiConfiguration mCurrentWifiConfig;
     private OsuWifiEntry mOsuWifiEntry;
 
-    @Override // com.android.wifitrackerlib.NetworkDetailsTracker
+    /* JADX WARNING: Illegal instructions before constructor call */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public PasspointNetworkDetailsTracker(androidx.lifecycle.Lifecycle r15, android.content.Context r16, android.net.wifi.WifiManager r17, android.net.ConnectivityManager r18, android.os.Handler r19, android.os.Handler r20, java.time.Clock r21, long r22, long r24, java.lang.String r26) {
+        /*
+            r14 = this;
+            com.android.wifitrackerlib.WifiTrackerInjector r1 = new com.android.wifitrackerlib.WifiTrackerInjector
+            r3 = r16
+            r1.<init>(r3)
+            r0 = r14
+            r2 = r15
+            r4 = r17
+            r5 = r18
+            r6 = r19
+            r7 = r20
+            r8 = r21
+            r9 = r22
+            r11 = r24
+            r13 = r26
+            r0.<init>(r1, r2, r3, r4, r5, r6, r7, r8, r9, r11, r13)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.wifitrackerlib.PasspointNetworkDetailsTracker.<init>(androidx.lifecycle.Lifecycle, android.content.Context, android.net.wifi.WifiManager, android.net.ConnectivityManager, android.os.Handler, android.os.Handler, java.time.Clock, long, long, java.lang.String):void");
+    }
+
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    PasspointNetworkDetailsTracker(WifiTrackerInjector wifiTrackerInjector, Lifecycle lifecycle, Context context, WifiManager wifiManager, ConnectivityManager connectivityManager, Handler handler, Handler handler2, Clock clock, long j, long j2, String str) {
+        super(wifiTrackerInjector, lifecycle, context, wifiManager, connectivityManager, handler, handler2, clock, j, j2, TAG);
+        String str2 = str;
+        Optional<PasspointConfiguration> findAny = this.mWifiManager.getPasspointConfigurations().stream().filter(new PasspointNetworkDetailsTracker$$ExternalSyntheticLambda0(str2)).findAny();
+        if (findAny.isPresent()) {
+            this.mChosenEntry = new PasspointWifiEntry(this.mInjector, this.mContext, this.mMainHandler, findAny.get(), this.mWifiManager, false);
+        } else {
+            Optional<WifiConfiguration> findAny2 = this.mWifiManager.getPrivilegedConfiguredNetworks().stream().filter(new PasspointNetworkDetailsTracker$$ExternalSyntheticLambda1(str2)).findAny();
+            if (findAny2.isPresent()) {
+                this.mChosenEntry = new PasspointWifiEntry(this.mInjector, this.mContext, this.mMainHandler, findAny2.get(), this.mWifiManager, false);
+            } else {
+                throw new IllegalArgumentException("Cannot find config for given PasspointWifiEntry key!");
+            }
+        }
+        updateStartInfo();
+    }
+
+    static /* synthetic */ boolean lambda$new$1(String str, WifiConfiguration wifiConfiguration) {
+        return wifiConfiguration.isPasspoint() && TextUtils.equals(str, PasspointWifiEntry.uniqueIdToPasspointWifiEntryKey(wifiConfiguration.getKey()));
+    }
+
     public WifiEntry getWifiEntry() {
         return this.mChosenEntry;
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker
-    protected void handleOnStart() {
+    /* access modifiers changed from: protected */
+    public void handleOnStart() {
         updateStartInfo();
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker
-    protected void handleWifiStateChangedAction() {
+    /* access modifiers changed from: protected */
+    public void handleWifiStateChangedAction() {
         conditionallyUpdateScanResults(true);
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker
-    protected void handleScanResultsAvailableAction(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void handleScanResultsAvailableAction(Intent intent) {
         Preconditions.checkNotNull(intent, "Intent cannot be null!");
-        conditionallyUpdateScanResults(intent.getBooleanExtra("resultsUpdated", true));
+        conditionallyUpdateScanResults(intent.getBooleanExtra(WifiManager.EXTRA_RESULTS_UPDATED, true));
     }
 
-    @Override // com.android.wifitrackerlib.BaseWifiTracker
-    protected void handleConfiguredNetworksChangedAction(Intent intent) {
+    /* access modifiers changed from: protected */
+    public void handleConfiguredNetworksChangedAction(Intent intent) {
         Preconditions.checkNotNull(intent, "Intent cannot be null!");
         conditionallyUpdateConfig();
     }
@@ -70,31 +121,31 @@ public class PasspointNetworkDetailsTracker extends NetworkDetailsTracker {
 
     private void updatePasspointWifiEntryScans(List<ScanResult> list) {
         Preconditions.checkNotNull(list, "Scan Result list should not be null!");
-        for (Pair pair : this.mWifiManager.getAllMatchingWifiConfigs(list)) {
-            WifiConfiguration wifiConfiguration = (WifiConfiguration) pair.first;
+        for (Pair next : this.mWifiManager.getAllMatchingWifiConfigs(list)) {
+            WifiConfiguration wifiConfiguration = (WifiConfiguration) next.first;
             if (TextUtils.equals(PasspointWifiEntry.uniqueIdToPasspointWifiEntryKey(wifiConfiguration.getKey()), this.mChosenEntry.getKey())) {
                 this.mCurrentWifiConfig = wifiConfiguration;
-                this.mChosenEntry.updateScanResultInfo(wifiConfiguration, (List) ((Map) pair.second).get(0), (List) ((Map) pair.second).get(1));
+                this.mChosenEntry.updateScanResultInfo(wifiConfiguration, (List) ((Map) next.second).get(0), (List) ((Map) next.second).get(1));
                 return;
             }
         }
-        this.mChosenEntry.updateScanResultInfo(this.mCurrentWifiConfig, null, null);
+        this.mChosenEntry.updateScanResultInfo(this.mCurrentWifiConfig, (List<ScanResult>) null, (List<ScanResult>) null);
     }
 
     private void updateOsuWifiEntryScans(List<ScanResult> list) {
         Preconditions.checkNotNull(list, "Scan Result list should not be null!");
-        Map matchingOsuProviders = this.mWifiManager.getMatchingOsuProviders(list);
-        Map matchingPasspointConfigsForOsuProviders = this.mWifiManager.getMatchingPasspointConfigsForOsuProviders(matchingOsuProviders.keySet());
+        Map<OsuProvider, List<ScanResult>> matchingOsuProviders = this.mWifiManager.getMatchingOsuProviders(list);
+        Map<OsuProvider, PasspointConfiguration> matchingPasspointConfigsForOsuProviders = this.mWifiManager.getMatchingPasspointConfigsForOsuProviders(matchingOsuProviders.keySet());
         OsuWifiEntry osuWifiEntry = this.mOsuWifiEntry;
         if (osuWifiEntry != null) {
-            osuWifiEntry.updateScanResultInfo((List) matchingOsuProviders.get(osuWifiEntry.getOsuProvider()));
+            osuWifiEntry.updateScanResultInfo(matchingOsuProviders.get(osuWifiEntry.getOsuProvider()));
         } else {
-            for (OsuProvider osuProvider : matchingOsuProviders.keySet()) {
-                PasspointConfiguration passpointConfiguration = (PasspointConfiguration) matchingPasspointConfigsForOsuProviders.get(osuProvider);
+            for (OsuProvider next : matchingOsuProviders.keySet()) {
+                PasspointConfiguration passpointConfiguration = matchingPasspointConfigsForOsuProviders.get(next);
                 if (passpointConfiguration != null && TextUtils.equals(this.mChosenEntry.getKey(), PasspointWifiEntry.uniqueIdToPasspointWifiEntryKey(passpointConfiguration.getUniqueId()))) {
-                    OsuWifiEntry osuWifiEntry2 = new OsuWifiEntry(this.mContext, this.mMainHandler, osuProvider, this.mWifiManager, this.mWifiNetworkScoreCache, false);
+                    OsuWifiEntry osuWifiEntry2 = new OsuWifiEntry(this.mInjector, this.mContext, this.mMainHandler, next, this.mWifiManager, false);
                     this.mOsuWifiEntry = osuWifiEntry2;
-                    osuWifiEntry2.updateScanResultInfo((List) matchingOsuProviders.get(osuProvider));
+                    osuWifiEntry2.updateScanResultInfo(matchingOsuProviders.get(next));
                     this.mOsuWifiEntry.setAlreadyProvisioned(true);
                     this.mChosenEntry.setOsuWifiEntry(this.mOsuWifiEntry);
                     return;
@@ -102,16 +153,15 @@ public class PasspointNetworkDetailsTracker extends NetworkDetailsTracker {
             }
         }
         OsuWifiEntry osuWifiEntry3 = this.mOsuWifiEntry;
-        if (osuWifiEntry3 == null || osuWifiEntry3.getLevel() != -1) {
-            return;
+        if (osuWifiEntry3 != null && osuWifiEntry3.getLevel() == -1) {
+            this.mChosenEntry.setOsuWifiEntry((OsuWifiEntry) null);
+            this.mOsuWifiEntry = null;
         }
-        this.mChosenEntry.setOsuWifiEntry(null);
-        this.mOsuWifiEntry = null;
     }
 
     private void conditionallyUpdateScanResults(boolean z) {
         if (this.mWifiManager.getWifiState() == 1) {
-            this.mChosenEntry.updateScanResultInfo(this.mCurrentWifiConfig, null, null);
+            this.mChosenEntry.updateScanResultInfo(this.mCurrentWifiConfig, (List<ScanResult>) null, (List<ScanResult>) null);
             return;
         }
         long j = this.mMaxScanAgeMillis;
@@ -126,28 +176,18 @@ public class PasspointNetworkDetailsTracker extends NetworkDetailsTracker {
     }
 
     private void conditionallyUpdateConfig() {
-        this.mWifiManager.getPasspointConfigurations().stream().filter(new Predicate() { // from class: com.android.wifitrackerlib.PasspointNetworkDetailsTracker$$ExternalSyntheticLambda1
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$conditionallyUpdateConfig$2;
-                lambda$conditionallyUpdateConfig$2 = PasspointNetworkDetailsTracker.this.lambda$conditionallyUpdateConfig$2((PasspointConfiguration) obj);
-                return lambda$conditionallyUpdateConfig$2;
-            }
-        }).findAny().ifPresent(new Consumer() { // from class: com.android.wifitrackerlib.PasspointNetworkDetailsTracker$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                PasspointNetworkDetailsTracker.this.lambda$conditionallyUpdateConfig$3((PasspointConfiguration) obj);
-            }
-        });
+        this.mWifiManager.getPasspointConfigurations().stream().filter(new PasspointNetworkDetailsTracker$$ExternalSyntheticLambda2(this)).findAny().ifPresent(new PasspointNetworkDetailsTracker$$ExternalSyntheticLambda3(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$conditionallyUpdateConfig$2(PasspointConfiguration passpointConfiguration) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$conditionallyUpdateConfig$2$com-android-wifitrackerlib-PasspointNetworkDetailsTracker */
+    public /* synthetic */ boolean mo47819x38068e71(PasspointConfiguration passpointConfiguration) {
         return TextUtils.equals(PasspointWifiEntry.uniqueIdToPasspointWifiEntryKey(passpointConfiguration.getUniqueId()), this.mChosenEntry.getKey());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$conditionallyUpdateConfig$3(PasspointConfiguration passpointConfiguration) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$conditionallyUpdateConfig$3$com-android-wifitrackerlib-PasspointNetworkDetailsTracker */
+    public /* synthetic */ void mo47820x48bc5b32(PasspointConfiguration passpointConfiguration) {
         this.mChosenEntry.updatePasspointConfig(passpointConfiguration);
     }
 

@@ -1,5 +1,5 @@
 package com.airbnb.lottie.value;
-/* loaded from: classes.dex */
+
 public class LottieFrameInfo<T> {
     private float endFrame;
     private T endValue;
@@ -18,5 +18,33 @@ public class LottieFrameInfo<T> {
         this.interpolatedKeyframeProgress = f4;
         this.overallProgress = f5;
         return this;
+    }
+
+    public float getStartFrame() {
+        return this.startFrame;
+    }
+
+    public float getEndFrame() {
+        return this.endFrame;
+    }
+
+    public T getStartValue() {
+        return this.startValue;
+    }
+
+    public T getEndValue() {
+        return this.endValue;
+    }
+
+    public float getLinearKeyframeProgress() {
+        return this.linearKeyframeProgress;
+    }
+
+    public float getInterpolatedKeyframeProgress() {
+        return this.interpolatedKeyframeProgress;
+    }
+
+    public float getOverallProgress() {
+        return this.overallProgress;
     }
 }

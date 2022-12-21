@@ -8,63 +8,72 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import androidx.leanback.R$id;
-/* loaded from: classes.dex */
+import androidx.leanback.C0742R;
+
 public class PlaybackTransportRowView extends LinearLayout {
     private OnUnhandledKeyListener mOnUnhandledKeyListener;
 
-    /* loaded from: classes.dex */
     public interface OnUnhandledKeyListener {
-        boolean onUnhandledKey(KeyEvent event);
+        boolean onUnhandledKey(KeyEvent keyEvent);
     }
 
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
     }
 
-    public PlaybackTransportRowView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public PlaybackTransportRowView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
     }
 
-    public PlaybackTransportRowView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public PlaybackTransportRowView(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (super.dispatchKeyEvent(event)) {
+    /* access modifiers changed from: package-private */
+    public void setOnUnhandledKeyListener(OnUnhandledKeyListener onUnhandledKeyListener) {
+        this.mOnUnhandledKeyListener = onUnhandledKeyListener;
+    }
+
+    /* access modifiers changed from: package-private */
+    public OnUnhandledKeyListener getOnUnhandledKeyListener() {
+        return this.mOnUnhandledKeyListener;
+    }
+
+    public boolean dispatchKeyEvent(KeyEvent keyEvent) {
+        if (super.dispatchKeyEvent(keyEvent)) {
             return true;
         }
         OnUnhandledKeyListener onUnhandledKeyListener = this.mOnUnhandledKeyListener;
-        return onUnhandledKeyListener != null && onUnhandledKeyListener.onUnhandledKey(event);
-    }
-
-    @Override // android.view.ViewGroup
-    protected boolean onRequestFocusInDescendants(int direction, Rect previouslyFocusedRect) {
-        View findFocus = findFocus();
-        if (findFocus == null || !findFocus.requestFocus(direction, previouslyFocusedRect)) {
-            View findViewById = findViewById(R$id.playback_progress);
-            if (findViewById != null && findViewById.isFocusable() && findViewById.requestFocus(direction, previouslyFocusedRect)) {
-                return true;
-            }
-            return super.onRequestFocusInDescendants(direction, previouslyFocusedRect);
+        if (onUnhandledKeyListener == null || !onUnhandledKeyListener.onUnhandledKey(keyEvent)) {
+            return false;
         }
         return true;
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewParent
-    public View focusSearch(View focused, int direction) {
+    /* access modifiers changed from: protected */
+    public boolean onRequestFocusInDescendants(int i, Rect rect) {
+        View findFocus = findFocus();
+        if (findFocus != null && findFocus.requestFocus(i, rect)) {
+            return true;
+        }
+        View findViewById = findViewById(C0742R.C0745id.playback_progress);
+        if (findViewById == null || !findViewById.isFocusable() || !findViewById.requestFocus(i, rect)) {
+            return super.onRequestFocusInDescendants(i, rect);
+        }
+        return true;
+    }
+
+    public View focusSearch(View view, int i) {
         View childAt;
-        if (focused != null) {
-            if (direction == 33) {
+        if (view != null) {
+            if (i == 33) {
                 for (int indexOfChild = indexOfChild(getFocusedChild()) - 1; indexOfChild >= 0; indexOfChild--) {
                     View childAt2 = getChildAt(indexOfChild);
                     if (childAt2.hasFocusable()) {
                         return childAt2;
                     }
                 }
-            } else if (direction == 130) {
+            } else if (i == 130) {
                 int indexOfChild2 = indexOfChild(getFocusedChild());
                 do {
                     indexOfChild2++;
@@ -73,10 +82,10 @@ public class PlaybackTransportRowView extends LinearLayout {
                     }
                 } while (!childAt.hasFocusable());
                 return childAt;
-            } else if ((direction == 17 || direction == 66) && (getFocusedChild() instanceof ViewGroup)) {
-                return FocusFinder.getInstance().findNextFocus((ViewGroup) getFocusedChild(), focused, direction);
+            } else if ((i == 17 || i == 66) && (getFocusedChild() instanceof ViewGroup)) {
+                return FocusFinder.getInstance().findNextFocus((ViewGroup) getFocusedChild(), view, i);
             }
         }
-        return super.focusSearch(focused, direction);
+        return super.focusSearch(view, i);
     }
 }

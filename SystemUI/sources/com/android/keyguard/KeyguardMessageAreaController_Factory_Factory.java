@@ -4,7 +4,7 @@ import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardMessageAreaController_Factory_Factory implements Factory<KeyguardMessageAreaController.Factory> {
     private final Provider<ConfigurationController> configurationControllerProvider;
     private final Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
@@ -14,10 +14,8 @@ public final class KeyguardMessageAreaController_Factory_Factory implements Fact
         this.configurationControllerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardMessageAreaController.Factory mo1933get() {
-        return newInstance(this.keyguardUpdateMonitorProvider.mo1933get(), this.configurationControllerProvider.mo1933get());
+    public KeyguardMessageAreaController.Factory get() {
+        return newInstance(this.keyguardUpdateMonitorProvider.get(), this.configurationControllerProvider.get());
     }
 
     public static KeyguardMessageAreaController_Factory_Factory create(Provider<KeyguardUpdateMonitor> provider, Provider<ConfigurationController> provider2) {

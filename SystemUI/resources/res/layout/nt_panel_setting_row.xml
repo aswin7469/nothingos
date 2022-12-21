@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <include android:id="@+id/pinned_header" layout="@layout/nt_panel_setting_item_row"/>
+    <include android:id="@+id/pinned_tesla_header" layout="@layout/tesla_panel_header"/>
+    <com.nothing.systemui.p024qs.tiles.settings.panel.SettingView android:orientation="vertical" android:id="@+id/setting_view" android:layout_width="match_parent" android:layout_height="wrap_content"/>
+</LinearLayout>

@@ -5,7 +5,7 @@ import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DynamicPrivacyController_Factory implements Factory<DynamicPrivacyController> {
     private final Provider<KeyguardStateController> keyguardStateControllerProvider;
     private final Provider<NotificationLockscreenUserManager> notificationLockscreenUserManagerProvider;
@@ -17,10 +17,8 @@ public final class DynamicPrivacyController_Factory implements Factory<DynamicPr
         this.stateControllerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DynamicPrivacyController mo1933get() {
-        return newInstance(this.notificationLockscreenUserManagerProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.stateControllerProvider.mo1933get());
+    public DynamicPrivacyController get() {
+        return newInstance(this.notificationLockscreenUserManagerProvider.get(), this.keyguardStateControllerProvider.get(), this.stateControllerProvider.get());
     }
 
     public static DynamicPrivacyController_Factory create(Provider<NotificationLockscreenUserManager> provider, Provider<KeyguardStateController> provider2, Provider<StatusBarStateController> provider3) {

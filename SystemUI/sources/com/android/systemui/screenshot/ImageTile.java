@@ -8,25 +8,21 @@ import android.graphics.Rect;
 import android.graphics.RenderNode;
 import android.media.Image;
 import java.util.Objects;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class ImageTile implements AutoCloseable {
+
+class ImageTile implements AutoCloseable {
     private static final ColorSpace COLOR_SPACE = ColorSpace.get(ColorSpace.Named.SRGB);
     private final Image mImage;
     private final Rect mLocation;
     private RenderNode mNode;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ImageTile(Image image, Rect rect) {
-        Objects.requireNonNull(image, "image");
-        Image image2 = image;
+    ImageTile(Image image, Rect rect) {
+        Image image2 = (Image) Objects.requireNonNull(image, "image");
         this.mImage = image2;
-        Objects.requireNonNull(rect);
-        this.mLocation = rect;
+        this.mLocation = (Rect) Objects.requireNonNull(rect);
         Objects.requireNonNull(image2.getHardwareBuffer(), "image must be a hardware image");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public synchronized RenderNode getDisplayList() {
         if (this.mNode == null) {
             this.mNode = new RenderNode("Tile{" + Integer.toHexString(this.mImage.hashCode()) + "}");
@@ -46,22 +42,31 @@ public class ImageTile implements AutoCloseable {
         return this.mNode;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public Rect getLocation() {
         return this.mLocation;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getLeft() {
         return this.mLocation.left;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getTop() {
         return this.mLocation.top;
     }
 
-    @Override // java.lang.AutoCloseable
+    /* access modifiers changed from: package-private */
+    public int getRight() {
+        return this.mLocation.right;
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getBottom() {
+        return this.mLocation.bottom;
+    }
+
     public synchronized void close() {
         this.mImage.close();
         RenderNode renderNode = this.mNode;

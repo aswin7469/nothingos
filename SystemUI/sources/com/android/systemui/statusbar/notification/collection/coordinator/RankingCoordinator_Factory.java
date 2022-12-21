@@ -1,35 +1,39 @@
 package com.android.systemui.statusbar.notification.collection.coordinator;
 
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
+import com.android.systemui.statusbar.notification.SectionClassifier;
 import com.android.systemui.statusbar.notification.collection.provider.HighPriorityProvider;
 import com.android.systemui.statusbar.notification.collection.render.NodeController;
+import com.android.systemui.statusbar.notification.collection.render.SectionHeaderController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class RankingCoordinator_Factory implements Factory<RankingCoordinator> {
     private final Provider<NodeController> alertingHeaderControllerProvider;
     private final Provider<HighPriorityProvider> highPriorityProvider;
-    private final Provider<NodeController> silentHeaderControllerProvider;
+    private final Provider<SectionClassifier> sectionClassifierProvider;
+    private final Provider<SectionHeaderController> silentHeaderControllerProvider;
+    private final Provider<NodeController> silentNodeControllerProvider;
     private final Provider<StatusBarStateController> statusBarStateControllerProvider;
 
-    public RankingCoordinator_Factory(Provider<StatusBarStateController> provider, Provider<HighPriorityProvider> provider2, Provider<NodeController> provider3, Provider<NodeController> provider4) {
+    public RankingCoordinator_Factory(Provider<StatusBarStateController> provider, Provider<HighPriorityProvider> provider2, Provider<SectionClassifier> provider3, Provider<NodeController> provider4, Provider<SectionHeaderController> provider5, Provider<NodeController> provider6) {
         this.statusBarStateControllerProvider = provider;
         this.highPriorityProvider = provider2;
-        this.alertingHeaderControllerProvider = provider3;
-        this.silentHeaderControllerProvider = provider4;
+        this.sectionClassifierProvider = provider3;
+        this.alertingHeaderControllerProvider = provider4;
+        this.silentHeaderControllerProvider = provider5;
+        this.silentNodeControllerProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public RankingCoordinator mo1933get() {
-        return newInstance(this.statusBarStateControllerProvider.mo1933get(), this.highPriorityProvider.mo1933get(), this.alertingHeaderControllerProvider.mo1933get(), this.silentHeaderControllerProvider.mo1933get());
+    public RankingCoordinator get() {
+        return newInstance(this.statusBarStateControllerProvider.get(), this.highPriorityProvider.get(), this.sectionClassifierProvider.get(), this.alertingHeaderControllerProvider.get(), this.silentHeaderControllerProvider.get(), this.silentNodeControllerProvider.get());
     }
 
-    public static RankingCoordinator_Factory create(Provider<StatusBarStateController> provider, Provider<HighPriorityProvider> provider2, Provider<NodeController> provider3, Provider<NodeController> provider4) {
-        return new RankingCoordinator_Factory(provider, provider2, provider3, provider4);
+    public static RankingCoordinator_Factory create(Provider<StatusBarStateController> provider, Provider<HighPriorityProvider> provider2, Provider<SectionClassifier> provider3, Provider<NodeController> provider4, Provider<SectionHeaderController> provider5, Provider<NodeController> provider6) {
+        return new RankingCoordinator_Factory(provider, provider2, provider3, provider4, provider5, provider6);
     }
 
-    public static RankingCoordinator newInstance(StatusBarStateController statusBarStateController, HighPriorityProvider highPriorityProvider, NodeController nodeController, NodeController nodeController2) {
-        return new RankingCoordinator(statusBarStateController, highPriorityProvider, nodeController, nodeController2);
+    public static RankingCoordinator newInstance(StatusBarStateController statusBarStateController, HighPriorityProvider highPriorityProvider2, SectionClassifier sectionClassifier, NodeController nodeController, SectionHeaderController sectionHeaderController, NodeController nodeController2) {
+        return new RankingCoordinator(statusBarStateController, highPriorityProvider2, sectionClassifier, nodeController, sectionHeaderController, nodeController2);
     }
 }

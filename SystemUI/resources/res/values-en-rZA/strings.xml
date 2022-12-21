@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_mode_portrait_mode">Portrait Mode</string>
+    <string name="click_again">Click again</string>
+    <string name="critical_temperature_warning_content">your phone needs to cool down before you can use it</string>
+    <string name="critical_temperature_warning_title">High temperature</string>
+    <string name="empty_shade_text">No Notifications</string>
+    <string name="mic_mode_ambient_sound">Environment</string>
+    <string name="mic_mode_standard">Normal</string>
+    <string name="mic_mode_voice_focus">Voice Focus</string>
+    <string name="nt_face_recognition_error">Face not recognised. System error.</string>
+    <string name="nt_face_recognition_fail">Face not recognised. Try again.</string>
+    <string name="nt_face_recognition_timeout">Tap the icon and try again</string>
+    <string name="qs_tesla_def_label">Your Tesla</string>
+    <string name="qs_tesla_def_second_label">No network</string>
+    <string name="quick_settings_batteryshare_label">Battery Share</string>
+    <string name="quick_settings_glyphs_label">Glyphs</string>
+    <string name="shutdown_temperature_warning_content">For your safety, your phone will be turned off in %ds.</string>
+    <string name="shutdown_temperature_warning_title">High temperature warning</string>
+    <string name="swipe_again">Swipe again</string>
+    <string name="temperature_turn_off_now">Turn off now</string>
+</resources>

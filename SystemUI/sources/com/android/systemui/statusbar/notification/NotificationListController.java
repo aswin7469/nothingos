@@ -5,31 +5,28 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class NotificationListController {
     private final DeviceProvisionedController mDeviceProvisionedController;
-    private final NotificationEntryManager mEntryManager;
-    private final NotificationListContainer mListContainer;
-    private final NotificationEntryListener mEntryListener = new NotificationEntryListener() { // from class: com.android.systemui.statusbar.notification.NotificationListController.1
-        @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
-        public void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
-            NotificationListController.this.mListContainer.cleanUpViewStateForEntry(notificationEntry);
-        }
-    };
-    private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedListener = new DeviceProvisionedController.DeviceProvisionedListener() { // from class: com.android.systemui.statusbar.notification.NotificationListController.2
-        @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
+    private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedListener = new DeviceProvisionedController.DeviceProvisionedListener() {
         public void onDeviceProvisionedChanged() {
             NotificationListController.this.mEntryManager.updateNotifications("device provisioned changed");
         }
     };
+    private final NotificationEntryListener mEntryListener = new NotificationEntryListener() {
+        public void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
+            NotificationListController.this.mListContainer.cleanUpViewStateForEntry(notificationEntry);
+        }
+    };
+    /* access modifiers changed from: private */
+    public final NotificationEntryManager mEntryManager;
+    /* access modifiers changed from: private */
+    public final NotificationListContainer mListContainer;
 
     public NotificationListController(NotificationEntryManager notificationEntryManager, NotificationListContainer notificationListContainer, DeviceProvisionedController deviceProvisionedController) {
-        Objects.requireNonNull(notificationEntryManager);
-        this.mEntryManager = notificationEntryManager;
-        Objects.requireNonNull(notificationListContainer);
-        this.mListContainer = notificationListContainer;
-        Objects.requireNonNull(deviceProvisionedController);
-        this.mDeviceProvisionedController = deviceProvisionedController;
+        this.mEntryManager = (NotificationEntryManager) Objects.requireNonNull(notificationEntryManager);
+        this.mListContainer = (NotificationListContainer) Objects.requireNonNull(notificationListContainer);
+        this.mDeviceProvisionedController = (DeviceProvisionedController) Objects.requireNonNull(deviceProvisionedController);
     }
 
     public void bind() {

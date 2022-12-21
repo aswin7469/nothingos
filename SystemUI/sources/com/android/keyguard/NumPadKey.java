@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RippleDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -12,33 +12,35 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.settingslib.Utils;
-import com.android.systemui.R$array;
-import com.android.systemui.R$attr;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$style;
-import com.android.systemui.R$styleable;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+
 public class NumPadKey extends ViewGroup {
     static String[] sKlondike;
     private NumPadAnimator mAnimator;
-    private int mDigit;
+    /* access modifiers changed from: private */
+    public int mDigit;
     private final TextView mDigitText;
     private final TextView mKlondikeText;
     private View.OnClickListener mListener;
     private final LockPatternUtils mLockPatternUtils;
     private int mOrientation;
     private final PowerManager mPM;
-    private PasswordTextView mTextView;
-    private int mTextViewResId;
+    /* access modifiers changed from: private */
+    public PasswordTextView mTextView;
+    /* access modifiers changed from: private */
+    public int mTextViewResId;
 
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
     }
 
     public void userActivity() {
@@ -46,26 +48,27 @@ public class NumPadKey extends ViewGroup {
     }
 
     public NumPadKey(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public NumPadKey(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, R$attr.numPadKeyStyle);
+        this(context, attributeSet, C1893R.attr.numPadKeyStyle);
     }
 
     public NumPadKey(Context context, AttributeSet attributeSet, int i) {
-        this(context, attributeSet, i, R$layout.keyguard_num_pad_key);
+        this(context, attributeSet, i, C1893R.layout.keyguard_num_pad_key);
     }
 
+    /* JADX INFO: finally extract failed */
     protected NumPadKey(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i);
+        int i3;
         this.mDigit = -1;
-        this.mListener = new View.OnClickListener() { // from class: com.android.keyguard.NumPadKey.1
-            @Override // android.view.View.OnClickListener
+        this.mListener = new View.OnClickListener() {
             public void onClick(View view) {
                 View findViewById;
                 if (NumPadKey.this.mTextView == null && NumPadKey.this.mTextViewResId > 0 && (findViewById = NumPadKey.this.getRootView().findViewById(NumPadKey.this.mTextViewResId)) != null && (findViewById instanceof PasswordTextView)) {
-                    NumPadKey.this.mTextView = (PasswordTextView) findViewById;
+                    PasswordTextView unused = NumPadKey.this.mTextView = (PasswordTextView) findViewById;
                 }
                 if (NumPadKey.this.mTextView != null && NumPadKey.this.mTextView.isEnabled()) {
                     NumPadKey.this.mTextView.append(Character.forDigit(NumPadKey.this.mDigit, 10));
@@ -74,54 +77,50 @@ public class NumPadKey extends ViewGroup {
             }
         };
         setFocusable(true);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.NumPadKey, i, i2);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.NumPadKey, i, i2);
         try {
-            this.mDigit = obtainStyledAttributes.getInt(R$styleable.NumPadKey_digit, this.mDigit);
-            this.mTextViewResId = obtainStyledAttributes.getResourceId(R$styleable.NumPadKey_textView, 0);
+            this.mDigit = obtainStyledAttributes.getInt(0, this.mDigit);
+            this.mTextViewResId = obtainStyledAttributes.getResourceId(1, 0);
             obtainStyledAttributes.recycle();
             setOnClickListener(this.mListener);
             setOnHoverListener(new LiftToActivateListener((AccessibilityManager) context.getSystemService("accessibility")));
             this.mLockPatternUtils = new LockPatternUtils(context);
-            this.mPM = (PowerManager) ((ViewGroup) this).mContext.getSystemService("power");
-            ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(i2, (ViewGroup) this, true);
-            TextView textView = (TextView) findViewById(R$id.digit_text);
+            this.mPM = (PowerManager) this.mContext.getSystemService("power");
+            ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(i2, this, true);
+            TextView textView = (TextView) findViewById(C1893R.C1897id.digit_text);
             this.mDigitText = textView;
             textView.setText(Integer.toString(this.mDigit));
-            TextView textView2 = (TextView) findViewById(R$id.klondike_text);
+            TextView textView2 = (TextView) findViewById(C1893R.C1897id.klondike_text);
             this.mKlondikeText = textView2;
             if (this.mDigit >= 0) {
                 if (sKlondike == null) {
-                    sKlondike = getResources().getStringArray(R$array.lockscreen_num_pad_klondike);
+                    sKlondike = getResources().getStringArray(C1893R.array.lockscreen_num_pad_klondike);
                 }
                 String[] strArr = sKlondike;
-                if (strArr != null) {
-                    int length = strArr.length;
-                    int i3 = this.mDigit;
-                    if (length > i3) {
-                        String str = strArr[i3];
-                        if (str.length() > 0) {
-                            textView2.setText(str);
-                        } else if (textView2.getVisibility() != 8) {
-                            textView2.setVisibility(4);
-                        }
+                if (strArr != null && strArr.length > (i3 = this.mDigit)) {
+                    String str = strArr[i3];
+                    if (str.length() > 0) {
+                        textView2.setText(str);
+                    } else if (textView2.getVisibility() != 8) {
+                        textView2.setVisibility(4);
                     }
                 }
             }
             setContentDescription(textView.getText().toString());
             Drawable background = getBackground();
-            if (background instanceof RippleDrawable) {
-                this.mAnimator = new NumPadAnimator(context, (RippleDrawable) background, R$style.NumPadKey);
-            } else {
-                this.mAnimator = null;
+            if (background instanceof GradientDrawable) {
+                this.mAnimator = new NumPadAnimator(context, background.mutate(), C1893R.style.NumPadKey, textView, (Drawable) null);
+                return;
             }
+            this.mAnimator = null;
         } catch (Throwable th) {
             obtainStyledAttributes.recycle();
             throw th;
         }
     }
 
-    @Override // android.view.View
-    protected void onConfigurationChanged(Configuration configuration) {
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
         this.mOrientation = configuration.orientation;
     }
 
@@ -136,31 +135,34 @@ public class NumPadKey extends ViewGroup {
         }
     }
 
-    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        if (motionEvent.getActionMasked() == 0) {
+        NumPadAnimator numPadAnimator;
+        int actionMasked = motionEvent.getActionMasked();
+        if (actionMasked == 0) {
             doHapticKeyClick();
-            NumPadAnimator numPadAnimator = this.mAnimator;
-            if (numPadAnimator != null) {
-                numPadAnimator.start();
+            NumPadAnimator numPadAnimator2 = this.mAnimator;
+            if (numPadAnimator2 != null) {
+                numPadAnimator2.expand();
             }
+        } else if ((actionMasked == 1 || actionMasked == 3) && (numPadAnimator = this.mAnimator) != null) {
+            numPadAnimator.contract();
         }
         return super.onTouchEvent(motionEvent);
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         measureChildren(i, i2);
         int measuredWidth = getMeasuredWidth();
         if (this.mAnimator == null || this.mOrientation == 2) {
-            measuredWidth = (int) (measuredWidth * 0.66f);
+            measuredWidth = (int) (((float) measuredWidth) * 0.66f);
         }
         setMeasuredDimension(getMeasuredWidth(), measuredWidth);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         int measuredHeight = this.mDigitText.getMeasuredHeight();
         int measuredHeight2 = this.mKlondikeText.getMeasuredHeight();
         int height = (getHeight() / 2) - ((measuredHeight + measuredHeight2) / 2);
@@ -169,7 +171,7 @@ public class NumPadKey extends ViewGroup {
         int i5 = measuredHeight + height;
         TextView textView = this.mDigitText;
         textView.layout(measuredWidth, height, textView.getMeasuredWidth() + measuredWidth, i5);
-        int i6 = (int) (i5 - (measuredHeight2 * 0.35f));
+        int i6 = (int) (((float) i5) - (((float) measuredHeight2) * 0.35f));
         int measuredWidth2 = width - (this.mKlondikeText.getMeasuredWidth() / 2);
         TextView textView2 = this.mKlondikeText;
         textView2.layout(measuredWidth2, i6, textView2.getMeasuredWidth() + measuredWidth2, measuredHeight2 + i6);
@@ -180,8 +182,6 @@ public class NumPadKey extends ViewGroup {
     }
 
     public void doHapticKeyClick() {
-        if (this.mLockPatternUtils.isTactileFeedbackEnabled()) {
-            performHapticFeedback(1, 3);
-        }
+        performHapticFeedback(1, 1);
     }
 }

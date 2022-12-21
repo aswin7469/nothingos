@@ -5,33 +5,32 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-/* loaded from: classes.dex */
+
 class NonOverlappingLinearLayoutWithForeground extends LinearLayout {
+    private static final int VERSION_M = 23;
     private Drawable mForeground;
     private boolean mForegroundBoundsChanged;
     private final Rect mSelfBounds;
 
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
     }
 
     public NonOverlappingLinearLayoutWithForeground(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    public NonOverlappingLinearLayoutWithForeground(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public NonOverlappingLinearLayoutWithForeground(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
     }
 
-    public NonOverlappingLinearLayoutWithForeground(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public NonOverlappingLinearLayoutWithForeground(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         this.mSelfBounds = new Rect();
-        if (context.getApplicationInfo().targetSdkVersion < 23 || Build.VERSION.SDK_INT < 23) {
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attrs, new int[]{16843017});
+        if (context.getApplicationInfo().targetSdkVersion < 23) {
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, new int[]{16843017});
             Drawable drawable = obtainStyledAttributes.getDrawable(0);
             if (drawable != null) {
                 setForegroundCompat(drawable);
@@ -40,23 +39,14 @@ class NonOverlappingLinearLayoutWithForeground extends LinearLayout {
         }
     }
 
-    public void setForegroundCompat(Drawable d) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            ForegroundHelper.setForeground(this, d);
-        } else if (this.mForeground == d) {
-        } else {
-            this.mForeground = d;
-            this.mForegroundBoundsChanged = true;
-            setWillNotDraw(false);
-            this.mForeground.setCallback(this);
-            if (!this.mForeground.isStateful()) {
-                return;
-            }
-            this.mForeground.setState(getDrawableState());
-        }
+    public void setForegroundCompat(Drawable drawable) {
+        ForegroundHelper.setForeground(this, drawable);
     }
 
-    @Override // android.view.View
+    public Drawable getForegroundCompat() {
+        return ForegroundHelper.getForeground(this);
+    }
+
     public void draw(Canvas canvas) {
         super.draw(canvas);
         Drawable drawable = this.mForeground;
@@ -71,18 +61,17 @@ class NonOverlappingLinearLayoutWithForeground extends LinearLayout {
         }
     }
 
-    @Override // android.widget.LinearLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        this.mForegroundBoundsChanged = changed | this.mForegroundBoundsChanged;
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
+        super.onLayout(z, i, i2, i3, i4);
+        this.mForegroundBoundsChanged = z | this.mForegroundBoundsChanged;
     }
 
-    @Override // android.view.View
-    protected boolean verifyDrawable(Drawable who) {
-        return super.verifyDrawable(who) || who == this.mForeground;
+    /* access modifiers changed from: protected */
+    public boolean verifyDrawable(Drawable drawable) {
+        return super.verifyDrawable(drawable) || drawable == this.mForeground;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
         Drawable drawable = this.mForeground;
@@ -91,13 +80,12 @@ class NonOverlappingLinearLayoutWithForeground extends LinearLayout {
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void drawableStateChanged() {
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
         super.drawableStateChanged();
         Drawable drawable = this.mForeground;
-        if (drawable == null || !drawable.isStateful()) {
-            return;
+        if (drawable != null && drawable.isStateful()) {
+            this.mForeground.setState(getDrawableState());
         }
-        this.mForeground.setState(getDrawableState());
     }
 }

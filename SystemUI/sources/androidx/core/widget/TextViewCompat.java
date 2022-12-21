@@ -3,7 +3,6 @@ package androidx.core.widget;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.ColorStateList;
@@ -11,39 +10,61 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.icu.text.DecimalFormatSymbols;
-import android.os.Build;
 import android.text.Editable;
+import android.text.PrecomputedText;
 import android.text.TextDirectionHeuristic;
 import android.text.TextDirectionHeuristics;
-import android.text.TextPaint;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import androidx.core.text.PrecomputedTextCompat;
 import androidx.core.util.Preconditions;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+import java.util.Locale;
+
 public final class TextViewCompat {
+    public static final int AUTO_SIZE_TEXT_TYPE_NONE = 0;
+    public static final int AUTO_SIZE_TEXT_TYPE_UNIFORM = 1;
+    private static final int LINES = 1;
+    private static final String LOG_TAG = "TextViewCompat";
     private static Field sMaxModeField;
     private static boolean sMaxModeFieldFetched;
     private static Field sMaximumField;
     private static boolean sMaximumFieldFetched;
+    private static Field sMinModeField;
+    private static boolean sMinModeFieldFetched;
+    private static Field sMinimumField;
+    private static boolean sMinimumFieldFetched;
 
-    private static Field retrieveField(String fieldName) {
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface AutoSizeTextType {
+    }
+
+    public static ActionMode.Callback wrapCustomSelectionActionModeCallback(TextView textView, ActionMode.Callback callback) {
+        return callback;
+    }
+
+    private TextViewCompat() {
+    }
+
+    private static Field retrieveField(String str) {
         Field field = null;
         try {
-            field = TextView.class.getDeclaredField(fieldName);
+            field = TextView.class.getDeclaredField(str);
             field.setAccessible(true);
             return field;
         } catch (NoSuchFieldException unused) {
-            Log.e("TextViewCompat", "Could not retrieve " + fieldName + " field.");
+            Log.e(LOG_TAG, "Could not retrieve " + str + " field.");
             return field;
         }
     }
@@ -52,91 +73,81 @@ public final class TextViewCompat {
         try {
             return field.getInt(textView);
         } catch (IllegalAccessException unused) {
-            Log.d("TextViewCompat", "Could not retrieve value of " + field.getName() + " field.");
+            Log.d(LOG_TAG, "Could not retrieve value of " + field.getName() + " field.");
             return -1;
         }
     }
 
-    public static void setCompoundDrawablesRelative(TextView textView, Drawable start, Drawable top, Drawable end, Drawable bottom) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 18) {
-            textView.setCompoundDrawablesRelative(start, top, end, bottom);
-        } else if (i >= 17) {
-            boolean z = true;
-            if (textView.getLayoutDirection() != 1) {
-                z = false;
-            }
-            Drawable drawable = z ? end : start;
-            if (!z) {
-                start = end;
-            }
-            textView.setCompoundDrawables(drawable, top, start, bottom);
-        } else {
-            textView.setCompoundDrawables(start, top, end, bottom);
-        }
+    public static void setCompoundDrawablesRelative(TextView textView, Drawable drawable, Drawable drawable2, Drawable drawable3, Drawable drawable4) {
+        Api17Impl.setCompoundDrawablesRelative(textView, drawable, drawable2, drawable3, drawable4);
+    }
+
+    public static void setCompoundDrawablesRelativeWithIntrinsicBounds(TextView textView, Drawable drawable, Drawable drawable2, Drawable drawable3, Drawable drawable4) {
+        Api17Impl.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, drawable, drawable2, drawable3, drawable4);
+    }
+
+    public static void setCompoundDrawablesRelativeWithIntrinsicBounds(TextView textView, int i, int i2, int i3, int i4) {
+        Api17Impl.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, i, i2, i3, i4);
     }
 
     public static int getMaxLines(TextView textView) {
-        if (Build.VERSION.SDK_INT >= 16) {
-            return textView.getMaxLines();
-        }
-        if (!sMaxModeFieldFetched) {
-            sMaxModeField = retrieveField("mMaxMode");
-            sMaxModeFieldFetched = true;
-        }
-        Field field = sMaxModeField;
-        if (field == null || retrieveIntFromField(field, textView) != 1) {
-            return -1;
-        }
-        if (!sMaximumFieldFetched) {
-            sMaximumField = retrieveField("mMaximum");
-            sMaximumFieldFetched = true;
-        }
-        Field field2 = sMaximumField;
-        if (field2 == null) {
-            return -1;
-        }
-        return retrieveIntFromField(field2, textView);
+        return Api16Impl.getMaxLines(textView);
     }
 
-    public static void setTextAppearance(TextView textView, int resId) {
-        if (Build.VERSION.SDK_INT >= 23) {
-            textView.setTextAppearance(resId);
-        } else {
-            textView.setTextAppearance(textView.getContext(), resId);
-        }
+    public static int getMinLines(TextView textView) {
+        return Api16Impl.getMinLines(textView);
+    }
+
+    public static void setTextAppearance(TextView textView, int i) {
+        textView.setTextAppearance(i);
     }
 
     public static Drawable[] getCompoundDrawablesRelative(TextView textView) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 18) {
-            return textView.getCompoundDrawablesRelative();
-        }
-        if (i >= 17) {
-            boolean z = true;
-            if (textView.getLayoutDirection() != 1) {
-                z = false;
-            }
-            Drawable[] compoundDrawables = textView.getCompoundDrawables();
-            if (z) {
-                Drawable drawable = compoundDrawables[2];
-                Drawable drawable2 = compoundDrawables[0];
-                compoundDrawables[0] = drawable;
-                compoundDrawables[2] = drawable2;
-            }
-            return compoundDrawables;
-        }
-        return textView.getCompoundDrawables();
+        return Api17Impl.getCompoundDrawablesRelative(textView);
     }
 
-    public static ActionMode.Callback wrapCustomSelectionActionModeCallback(final TextView textView, final ActionMode.Callback callback) {
-        int i = Build.VERSION.SDK_INT;
-        return (i < 26 || i > 27 || (callback instanceof OreoCallback) || callback == null) ? callback : new OreoCallback(callback, textView);
+    public static void setAutoSizeTextTypeWithDefaults(TextView textView, int i) {
+        Api26Impl.setAutoSizeTextTypeWithDefaults(textView, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class OreoCallback implements ActionMode.Callback {
+    public static void setAutoSizeTextTypeUniformWithConfiguration(TextView textView, int i, int i2, int i3, int i4) throws IllegalArgumentException {
+        Api26Impl.setAutoSizeTextTypeUniformWithConfiguration(textView, i, i2, i3, i4);
+    }
+
+    public static void setAutoSizeTextTypeUniformWithPresetSizes(TextView textView, int[] iArr, int i) throws IllegalArgumentException {
+        Api26Impl.setAutoSizeTextTypeUniformWithPresetSizes(textView, iArr, i);
+    }
+
+    public static int getAutoSizeTextType(TextView textView) {
+        return Api26Impl.getAutoSizeTextType(textView);
+    }
+
+    public static int getAutoSizeStepGranularity(TextView textView) {
+        return Api26Impl.getAutoSizeStepGranularity(textView);
+    }
+
+    public static int getAutoSizeMinTextSize(TextView textView) {
+        return Api26Impl.getAutoSizeMinTextSize(textView);
+    }
+
+    public static int getAutoSizeMaxTextSize(TextView textView) {
+        return Api26Impl.getAutoSizeMaxTextSize(textView);
+    }
+
+    public static int[] getAutoSizeTextAvailableSizes(TextView textView) {
+        return Api26Impl.getAutoSizeTextAvailableSizes(textView);
+    }
+
+    public static void setCustomSelectionActionModeCallback(TextView textView, ActionMode.Callback callback) {
+        textView.setCustomSelectionActionModeCallback(wrapCustomSelectionActionModeCallback(textView, callback));
+    }
+
+    public static ActionMode.Callback unwrapCustomSelectionActionModeCallback(ActionMode.Callback callback) {
+        return callback instanceof OreoCallback ? ((OreoCallback) callback).getWrappedCallback() : callback;
+    }
+
+    private static class OreoCallback implements ActionMode.Callback {
+        private static final int MENU_ITEM_ORDER_PROCESS_TEXT_INTENT_ACTIONS_START = 100;
         private final ActionMode.Callback mCallback;
         private boolean mCanUseMenuBuilderReferences;
         private boolean mInitializedMenuBuilderReferences = false;
@@ -149,29 +160,30 @@ public final class TextViewCompat {
             this.mTextView = textView;
         }
 
-        @Override // android.view.ActionMode.Callback
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            return this.mCallback.onCreateActionMode(mode, menu);
+        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+            return this.mCallback.onCreateActionMode(actionMode, menu);
         }
 
-        @Override // android.view.ActionMode.Callback
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
             recomputeProcessTextMenuItems(menu);
-            return this.mCallback.onPrepareActionMode(mode, menu);
+            return this.mCallback.onPrepareActionMode(actionMode, menu);
         }
 
-        @Override // android.view.ActionMode.Callback
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            return this.mCallback.onActionItemClicked(mode, item);
+        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+            return this.mCallback.onActionItemClicked(actionMode, menuItem);
         }
 
-        @Override // android.view.ActionMode.Callback
-        public void onDestroyActionMode(ActionMode mode) {
-            this.mCallback.onDestroyActionMode(mode);
+        public void onDestroyActionMode(ActionMode actionMode) {
+            this.mCallback.onDestroyActionMode(actionMode);
         }
 
-        private void recomputeProcessTextMenuItems(final Menu menu) {
-            Method declaredMethod;
+        /* access modifiers changed from: package-private */
+        public ActionMode.Callback getWrappedCallback() {
+            return this.mCallback;
+        }
+
+        private void recomputeProcessTextMenuItems(Menu menu) {
+            Method method;
             Context context = this.mTextView.getContext();
             PackageManager packageManager = context.getPackageManager();
             if (!this.mInitializedMenuBuilderReferences) {
@@ -188,15 +200,15 @@ public final class TextViewCompat {
                 }
             }
             try {
-                if (this.mCanUseMenuBuilderReferences && this.mMenuBuilderClass.isInstance(menu)) {
-                    declaredMethod = this.mMenuBuilderRemoveItemAtMethod;
+                if (!this.mCanUseMenuBuilderReferences || !this.mMenuBuilderClass.isInstance(menu)) {
+                    method = menu.getClass().getDeclaredMethod("removeItemAt", Integer.TYPE);
                 } else {
-                    declaredMethod = menu.getClass().getDeclaredMethod("removeItemAt", Integer.TYPE);
+                    method = this.mMenuBuilderRemoveItemAtMethod;
                 }
                 for (int size = menu.size() - 1; size >= 0; size--) {
                     MenuItem item = menu.getItem(size);
                     if (item.getIntent() != null && "android.intent.action.PROCESS_TEXT".equals(item.getIntent().getAction())) {
-                        declaredMethod.invoke(menu, Integer.valueOf(size));
+                        method.invoke(menu, Integer.valueOf(size));
                     }
                 }
                 List<ResolveInfo> supportedActivities = getSupportedActivities(context, packageManager);
@@ -208,39 +220,38 @@ public final class TextViewCompat {
             }
         }
 
-        private List<ResolveInfo> getSupportedActivities(final Context context, final PackageManager packageManager) {
+        private List<ResolveInfo> getSupportedActivities(Context context, PackageManager packageManager) {
             ArrayList arrayList = new ArrayList();
             if (!(context instanceof Activity)) {
                 return arrayList;
             }
-            for (ResolveInfo resolveInfo : packageManager.queryIntentActivities(createProcessTextIntent(), 0)) {
-                if (isSupportedActivity(resolveInfo, context)) {
-                    arrayList.add(resolveInfo);
+            for (ResolveInfo next : packageManager.queryIntentActivities(createProcessTextIntent(), 0)) {
+                if (isSupportedActivity(next, context)) {
+                    arrayList.add(next);
                 }
             }
             return arrayList;
         }
 
-        private boolean isSupportedActivity(final ResolveInfo info, final Context context) {
-            if (context.getPackageName().equals(info.activityInfo.packageName)) {
+        private boolean isSupportedActivity(ResolveInfo resolveInfo, Context context) {
+            if (context.getPackageName().equals(resolveInfo.activityInfo.packageName)) {
                 return true;
             }
-            ActivityInfo activityInfo = info.activityInfo;
-            if (!activityInfo.exported) {
+            if (!resolveInfo.activityInfo.exported) {
                 return false;
             }
-            String str = activityInfo.permission;
-            return str == null || context.checkSelfPermission(str) == 0;
+            if (resolveInfo.activityInfo.permission == null || context.checkSelfPermission(resolveInfo.activityInfo.permission) == 0) {
+                return true;
+            }
+            return false;
         }
 
-        private Intent createProcessTextIntentForResolveInfo(final ResolveInfo info, final TextView textView11) {
-            Intent putExtra = createProcessTextIntent().putExtra("android.intent.extra.PROCESS_TEXT_READONLY", !isEditable(textView11));
-            ActivityInfo activityInfo = info.activityInfo;
-            return putExtra.setClassName(activityInfo.packageName, activityInfo.name);
+        private Intent createProcessTextIntentForResolveInfo(ResolveInfo resolveInfo, TextView textView) {
+            return createProcessTextIntent().putExtra("android.intent.extra.PROCESS_TEXT_READONLY", !isEditable(textView)).setClassName(resolveInfo.activityInfo.packageName, resolveInfo.activityInfo.name);
         }
 
-        private boolean isEditable(final TextView textView11) {
-            return (textView11 instanceof Editable) && textView11.onCheckIsTextEditor() && textView11.isEnabled();
+        private boolean isEditable(TextView textView) {
+            return (textView instanceof Editable) && textView.onCheckIsTextEditor() && textView.isEnabled();
         }
 
         private Intent createProcessTextIntent() {
@@ -248,80 +259,54 @@ public final class TextViewCompat {
         }
     }
 
-    public static void setFirstBaselineToTopHeight(final TextView textView, final int firstBaselineToTopHeight) {
-        int i;
-        Preconditions.checkArgumentNonnegative(firstBaselineToTopHeight);
-        int i2 = Build.VERSION.SDK_INT;
-        if (i2 >= 28) {
-            textView.setFirstBaselineToTopHeight(firstBaselineToTopHeight);
-            return;
-        }
-        Paint.FontMetricsInt fontMetricsInt = textView.getPaint().getFontMetricsInt();
-        if (i2 < 16 || textView.getIncludeFontPadding()) {
-            i = fontMetricsInt.top;
-        } else {
-            i = fontMetricsInt.ascent;
-        }
-        if (firstBaselineToTopHeight <= Math.abs(i)) {
-            return;
-        }
-        textView.setPadding(textView.getPaddingLeft(), firstBaselineToTopHeight + i, textView.getPaddingRight(), textView.getPaddingBottom());
+    public static void setFirstBaselineToTopHeight(TextView textView, int i) {
+        Preconditions.checkArgumentNonnegative(i);
+        Api28Impl.setFirstBaselineToTopHeight(textView, i);
     }
 
-    public static void setLastBaselineToBottomHeight(final TextView textView, int lastBaselineToBottomHeight) {
-        int i;
-        Preconditions.checkArgumentNonnegative(lastBaselineToBottomHeight);
+    public static void setLastBaselineToBottomHeight(TextView textView, int i) {
+        int i2;
+        Preconditions.checkArgumentNonnegative(i);
         Paint.FontMetricsInt fontMetricsInt = textView.getPaint().getFontMetricsInt();
-        if (Build.VERSION.SDK_INT < 16 || textView.getIncludeFontPadding()) {
-            i = fontMetricsInt.bottom;
+        if (Api16Impl.getIncludeFontPadding(textView)) {
+            i2 = fontMetricsInt.bottom;
         } else {
-            i = fontMetricsInt.descent;
+            i2 = fontMetricsInt.descent;
         }
-        if (lastBaselineToBottomHeight > Math.abs(i)) {
-            textView.setPadding(textView.getPaddingLeft(), textView.getPaddingTop(), textView.getPaddingRight(), lastBaselineToBottomHeight - i);
+        if (i > Math.abs(i2)) {
+            textView.setPadding(textView.getPaddingLeft(), textView.getPaddingTop(), textView.getPaddingRight(), i - i2);
         }
     }
 
-    public static int getFirstBaselineToTopHeight(final TextView textView) {
+    public static int getFirstBaselineToTopHeight(TextView textView) {
         return textView.getPaddingTop() - textView.getPaint().getFontMetricsInt().top;
     }
 
-    public static int getLastBaselineToBottomHeight(final TextView textView) {
+    public static int getLastBaselineToBottomHeight(TextView textView) {
         return textView.getPaddingBottom() + textView.getPaint().getFontMetricsInt().bottom;
     }
 
-    public static void setLineHeight(final TextView textView, int lineHeight) {
-        Preconditions.checkArgumentNonnegative(lineHeight);
-        int fontMetricsInt = textView.getPaint().getFontMetricsInt(null);
-        if (lineHeight != fontMetricsInt) {
-            textView.setLineSpacing(lineHeight - fontMetricsInt, 1.0f);
+    public static void setLineHeight(TextView textView, int i) {
+        Preconditions.checkArgumentNonnegative(i);
+        int fontMetricsInt = textView.getPaint().getFontMetricsInt((Paint.FontMetricsInt) null);
+        if (i != fontMetricsInt) {
+            textView.setLineSpacing((float) (i - fontMetricsInt), 1.0f);
         }
     }
 
-    public static PrecomputedTextCompat.Params getTextMetricsParams(final TextView textView) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 28) {
-            return new PrecomputedTextCompat.Params(textView.getTextMetricsParams());
-        }
-        PrecomputedTextCompat.Params.Builder builder = new PrecomputedTextCompat.Params.Builder(new TextPaint(textView.getPaint()));
-        if (i >= 23) {
-            builder.setBreakStrategy(textView.getBreakStrategy());
-            builder.setHyphenationFrequency(textView.getHyphenationFrequency());
-        }
-        if (i >= 18) {
-            builder.setTextDirection(getTextDirectionHeuristic(textView));
-        }
-        return builder.build();
+    public static PrecomputedTextCompat.Params getTextMetricsParams(TextView textView) {
+        return new PrecomputedTextCompat.Params(Api28Impl.getTextMetricsParams(textView));
     }
 
-    public static void setPrecomputedText(TextView textView, PrecomputedTextCompat precomputed) {
-        if (Build.VERSION.SDK_INT >= 29) {
-            textView.setText(precomputed.getPrecomputedText());
-        } else if (!getTextMetricsParams(textView).equalsWithoutTextDirection(precomputed.getParams())) {
-            throw new IllegalArgumentException("Given text can not be applied to TextView.");
-        } else {
-            textView.setText(precomputed);
-        }
+    public static void setTextMetricsParams(TextView textView, PrecomputedTextCompat.Params params) {
+        Api17Impl.setTextDirection(textView, getTextDirection(params.getTextDirection()));
+        textView.getPaint().set(params.getTextPaint());
+        Api23Impl.setBreakStrategy(textView, params.getBreakStrategy());
+        Api23Impl.setHyphenationFrequency(textView, params.getHyphenationFrequency());
+    }
+
+    public static void setPrecomputedText(TextView textView, PrecomputedTextCompat precomputedTextCompat) {
+        textView.setText(precomputedTextCompat.getPrecomputedText());
     }
 
     private static TextDirectionHeuristic getTextDirectionHeuristic(TextView textView) {
@@ -329,17 +314,17 @@ public final class TextViewCompat {
             return TextDirectionHeuristics.LTR;
         }
         boolean z = false;
-        if (Build.VERSION.SDK_INT >= 28 && (textView.getInputType() & 15) == 3) {
-            byte directionality = Character.getDirectionality(DecimalFormatSymbols.getInstance(textView.getTextLocale()).getDigitStrings()[0].codePointAt(0));
+        if ((textView.getInputType() & 15) == 3) {
+            byte directionality = Character.getDirectionality(Api28Impl.getDigitStrings(Api24Impl.getInstance(Api17Impl.getTextLocale(textView)))[0].codePointAt(0));
             if (directionality == 1 || directionality == 2) {
                 return TextDirectionHeuristics.RTL;
             }
             return TextDirectionHeuristics.LTR;
         }
-        if (textView.getLayoutDirection() == 1) {
+        if (Api17Impl.getLayoutDirection(textView) == 1) {
             z = true;
         }
-        switch (textView.getTextDirection()) {
+        switch (Api17Impl.getTextDirection(textView)) {
             case 2:
                 return TextDirectionHeuristics.ANYRTL_LTR;
             case 3:
@@ -360,23 +345,202 @@ public final class TextViewCompat {
         }
     }
 
-    public static void setCompoundDrawableTintList(TextView textView, ColorStateList tint) {
+    private static int getTextDirection(TextDirectionHeuristic textDirectionHeuristic) {
+        if (textDirectionHeuristic == TextDirectionHeuristics.FIRSTSTRONG_RTL || textDirectionHeuristic == TextDirectionHeuristics.FIRSTSTRONG_LTR) {
+            return 1;
+        }
+        if (textDirectionHeuristic == TextDirectionHeuristics.ANYRTL_LTR) {
+            return 2;
+        }
+        if (textDirectionHeuristic == TextDirectionHeuristics.LTR) {
+            return 3;
+        }
+        if (textDirectionHeuristic == TextDirectionHeuristics.RTL) {
+            return 4;
+        }
+        if (textDirectionHeuristic == TextDirectionHeuristics.LOCALE) {
+            return 5;
+        }
+        if (textDirectionHeuristic == TextDirectionHeuristics.FIRSTSTRONG_LTR) {
+            return 6;
+        }
+        if (textDirectionHeuristic == TextDirectionHeuristics.FIRSTSTRONG_RTL) {
+            return 7;
+        }
+        return 1;
+    }
+
+    public static void setCompoundDrawableTintList(TextView textView, ColorStateList colorStateList) {
         Preconditions.checkNotNull(textView);
-        if (Build.VERSION.SDK_INT >= 24) {
-            textView.setCompoundDrawableTintList(tint);
-        } else if (!(textView instanceof TintableCompoundDrawablesView)) {
-        } else {
-            ((TintableCompoundDrawablesView) textView).setSupportCompoundDrawablesTintList(tint);
+        Api23Impl.setCompoundDrawableTintList(textView, colorStateList);
+    }
+
+    public static ColorStateList getCompoundDrawableTintList(TextView textView) {
+        Preconditions.checkNotNull(textView);
+        return Api23Impl.getCompoundDrawableTintList(textView);
+    }
+
+    public static void setCompoundDrawableTintMode(TextView textView, PorterDuff.Mode mode) {
+        Preconditions.checkNotNull(textView);
+        Api23Impl.setCompoundDrawableTintMode(textView, mode);
+    }
+
+    public static PorterDuff.Mode getCompoundDrawableTintMode(TextView textView) {
+        Preconditions.checkNotNull(textView);
+        return Api23Impl.getCompoundDrawableTintMode(textView);
+    }
+
+    static class Api17Impl {
+        private Api17Impl() {
+        }
+
+        static void setCompoundDrawablesRelative(TextView textView, Drawable drawable, Drawable drawable2, Drawable drawable3, Drawable drawable4) {
+            textView.setCompoundDrawablesRelative(drawable, drawable2, drawable3, drawable4);
+        }
+
+        static int getLayoutDirection(View view) {
+            return view.getLayoutDirection();
+        }
+
+        static void setCompoundDrawablesRelativeWithIntrinsicBounds(TextView textView, Drawable drawable, Drawable drawable2, Drawable drawable3, Drawable drawable4) {
+            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, drawable2, drawable3, drawable4);
+        }
+
+        static void setCompoundDrawablesRelativeWithIntrinsicBounds(TextView textView, int i, int i2, int i3, int i4) {
+            textView.setCompoundDrawablesRelativeWithIntrinsicBounds(i, i2, i3, i4);
+        }
+
+        static Drawable[] getCompoundDrawablesRelative(TextView textView) {
+            return textView.getCompoundDrawablesRelative();
+        }
+
+        static void setTextDirection(View view, int i) {
+            view.setTextDirection(i);
+        }
+
+        static Locale getTextLocale(TextView textView) {
+            return textView.getTextLocale();
+        }
+
+        static int getTextDirection(View view) {
+            return view.getTextDirection();
         }
     }
 
-    public static void setCompoundDrawableTintMode(TextView textView, PorterDuff.Mode tintMode) {
-        Preconditions.checkNotNull(textView);
-        if (Build.VERSION.SDK_INT >= 24) {
-            textView.setCompoundDrawableTintMode(tintMode);
-        } else if (!(textView instanceof TintableCompoundDrawablesView)) {
-        } else {
-            ((TintableCompoundDrawablesView) textView).setSupportCompoundDrawablesTintMode(tintMode);
+    static class Api16Impl {
+        private Api16Impl() {
+        }
+
+        static int getMaxLines(TextView textView) {
+            return textView.getMaxLines();
+        }
+
+        static int getMinLines(TextView textView) {
+            return textView.getMinLines();
+        }
+
+        static boolean getIncludeFontPadding(TextView textView) {
+            return textView.getIncludeFontPadding();
+        }
+    }
+
+    static class Api26Impl {
+        private Api26Impl() {
+        }
+
+        static void setAutoSizeTextTypeWithDefaults(TextView textView, int i) {
+            textView.setAutoSizeTextTypeWithDefaults(i);
+        }
+
+        static void setAutoSizeTextTypeUniformWithConfiguration(TextView textView, int i, int i2, int i3, int i4) {
+            textView.setAutoSizeTextTypeUniformWithConfiguration(i, i2, i3, i4);
+        }
+
+        static void setAutoSizeTextTypeUniformWithPresetSizes(TextView textView, int[] iArr, int i) {
+            textView.setAutoSizeTextTypeUniformWithPresetSizes(iArr, i);
+        }
+
+        static int getAutoSizeTextType(TextView textView) {
+            return textView.getAutoSizeTextType();
+        }
+
+        static int getAutoSizeStepGranularity(TextView textView) {
+            return textView.getAutoSizeStepGranularity();
+        }
+
+        static int getAutoSizeMinTextSize(TextView textView) {
+            return textView.getAutoSizeMinTextSize();
+        }
+
+        static int getAutoSizeMaxTextSize(TextView textView) {
+            return textView.getAutoSizeMaxTextSize();
+        }
+
+        static int[] getAutoSizeTextAvailableSizes(TextView textView) {
+            return textView.getAutoSizeTextAvailableSizes();
+        }
+    }
+
+    static class Api28Impl {
+        private Api28Impl() {
+        }
+
+        static void setFirstBaselineToTopHeight(TextView textView, int i) {
+            textView.setFirstBaselineToTopHeight(i);
+        }
+
+        static PrecomputedText.Params getTextMetricsParams(TextView textView) {
+            return textView.getTextMetricsParams();
+        }
+
+        static String[] getDigitStrings(DecimalFormatSymbols decimalFormatSymbols) {
+            return decimalFormatSymbols.getDigitStrings();
+        }
+    }
+
+    static class Api23Impl {
+        private Api23Impl() {
+        }
+
+        static int getBreakStrategy(TextView textView) {
+            return textView.getBreakStrategy();
+        }
+
+        static void setBreakStrategy(TextView textView, int i) {
+            textView.setBreakStrategy(i);
+        }
+
+        static int getHyphenationFrequency(TextView textView) {
+            return textView.getHyphenationFrequency();
+        }
+
+        static void setHyphenationFrequency(TextView textView, int i) {
+            textView.setHyphenationFrequency(i);
+        }
+
+        static PorterDuff.Mode getCompoundDrawableTintMode(TextView textView) {
+            return textView.getCompoundDrawableTintMode();
+        }
+
+        static ColorStateList getCompoundDrawableTintList(TextView textView) {
+            return textView.getCompoundDrawableTintList();
+        }
+
+        static void setCompoundDrawableTintList(TextView textView, ColorStateList colorStateList) {
+            textView.setCompoundDrawableTintList(colorStateList);
+        }
+
+        static void setCompoundDrawableTintMode(TextView textView, PorterDuff.Mode mode) {
+            textView.setCompoundDrawableTintMode(mode);
+        }
+    }
+
+    static class Api24Impl {
+        private Api24Impl() {
+        }
+
+        static DecimalFormatSymbols getInstance(Locale locale) {
+            return DecimalFormatSymbols.getInstance(locale);
         }
     }
 }

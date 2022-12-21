@@ -21,82 +21,91 @@ import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
 import com.android.internal.logging.MetricsLogger;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public final class ForegroundServicesDialog extends AlertActivity implements AdapterView.OnItemSelectedListener, DialogInterface.OnClickListener, AlertController.AlertParams.OnPrepareListViewListener {
-    private PackageItemAdapter mAdapter;
-    private DialogInterface.OnClickListener mAppClickListener = new DialogInterface.OnClickListener() { // from class: com.android.systemui.ForegroundServicesDialog.1
-        @Override // android.content.DialogInterface.OnClickListener
+    private static final String TAG = "ForegroundServicesDialog";
+    /* access modifiers changed from: private */
+    public PackageItemAdapter mAdapter;
+    private DialogInterface.OnClickListener mAppClickListener = new DialogInterface.OnClickListener() {
         public void onClick(DialogInterface dialogInterface, int i) {
-            String str = ForegroundServicesDialog.this.mAdapter.getItem(i).packageName;
+            String str = ((ApplicationInfo) ForegroundServicesDialog.this.mAdapter.getItem(i)).packageName;
             Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
-            intent.setData(Uri.fromParts("package", str, null));
+            intent.setData(Uri.fromParts("package", str, (String) null));
             ForegroundServicesDialog.this.startActivity(intent);
             ForegroundServicesDialog.this.finish();
         }
     };
     LayoutInflater mInflater;
-    private MetricsLogger mMetricsLogger;
+    private final MetricsLogger mMetricsLogger;
     private String[] mPackages;
 
-    @Override // android.widget.AdapterView.OnItemSelectedListener
     public void onItemSelected(AdapterView adapterView, View view, int i, long j) {
     }
 
-    @Override // android.widget.AdapterView.OnItemSelectedListener
     public void onNothingSelected(AdapterView adapterView) {
     }
 
     public void onPrepareListView(ListView listView) {
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    protected void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        this.mMetricsLogger = (MetricsLogger) Dependency.get(MetricsLogger.class);
+    @Inject
+    ForegroundServicesDialog(MetricsLogger metricsLogger) {
+        this.mMetricsLogger = metricsLogger;
+    }
+
+    /* JADX WARNING: type inference failed for: r3v0, types: [android.content.Context, android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.systemui.ForegroundServicesDialog, com.android.internal.app.AlertController$AlertParams$OnPrepareListViewListener, android.widget.AdapterView$OnItemSelectedListener] */
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
+        ForegroundServicesDialog.super.onCreate(bundle);
         this.mInflater = LayoutInflater.from(this);
-        PackageItemAdapter packageItemAdapter = new PackageItemAdapter(this);
-        this.mAdapter = packageItemAdapter;
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mAdapter = packageItemAdapter;
+        this.mAdapter = new PackageItemAdapter(this);
+        AlertController.AlertParams alertParams = this.mAlertParams;
+        alertParams.mAdapter = this.mAdapter;
         alertParams.mOnClickListener = this.mAppClickListener;
-        alertParams.mCustomTitleView = this.mInflater.inflate(R$layout.foreground_service_title, (ViewGroup) null);
+        alertParams.mCustomTitleView = this.mInflater.inflate(C1893R.layout.foreground_service_title, (ViewGroup) null);
         alertParams.mIsSingleChoice = true;
         alertParams.mOnItemSelectedListener = this;
-        alertParams.mPositiveButtonText = getString(17040120);
+        alertParams.mPositiveButtonText = getString(17040167);
         alertParams.mPositiveButtonListener = this;
         alertParams.mOnPrepareListViewListener = this;
         updateApps(getIntent());
         if (this.mPackages == null) {
-            Log.w("ForegroundServicesDialog", "No packages supplied");
+            Log.w(TAG, "No packages supplied");
             finish();
             return;
         }
         setupAlert();
     }
 
-    protected void onResume() {
-        super.onResume();
+    /* access modifiers changed from: protected */
+    public void onResume() {
+        ForegroundServicesDialog.super.onResume();
         this.mMetricsLogger.visible(944);
     }
 
-    protected void onPause() {
-        super.onPause();
+    /* access modifiers changed from: protected */
+    public void onPause() {
+        ForegroundServicesDialog.super.onPause();
         this.mMetricsLogger.hidden(944);
     }
 
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
+    /* access modifiers changed from: protected */
+    public void onNewIntent(Intent intent) {
+        ForegroundServicesDialog.super.onNewIntent(intent);
         updateApps(intent);
     }
 
-    protected void onStop() {
-        super.onStop();
+    /* access modifiers changed from: protected */
+    public void onStop() {
+        ForegroundServicesDialog.super.onStop();
         if (!isChangingConfigurations()) {
             finish();
         }
     }
 
-    void updateApps(Intent intent) {
+    /* access modifiers changed from: package-private */
+    public void updateApps(Intent intent) {
         String[] stringArrayExtra = intent.getStringArrayExtra("packages");
         this.mPackages = stringArrayExtra;
         if (stringArrayExtra != null) {
@@ -104,20 +113,17 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         }
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class PackageItemAdapter extends ArrayAdapter<ApplicationInfo> {
+    private static class PackageItemAdapter extends ArrayAdapter<ApplicationInfo> {
         final IconDrawableFactory mIconDrawableFactory;
         final LayoutInflater mInflater;
         final PackageManager mPm;
 
         public PackageItemAdapter(Context context) {
-            super(context, R$layout.foreground_service_item);
+            super(context, C1893R.layout.foreground_service_item);
             this.mPm = context.getPackageManager();
             this.mInflater = LayoutInflater.from(context);
             this.mIconDrawableFactory = IconDrawableFactory.newInstance(context, true);
@@ -126,9 +132,9 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         public void setPackages(String[] strArr) {
             clear();
             ArrayList arrayList = new ArrayList();
-            for (String str : strArr) {
+            for (int i = 0; i < strArr.length; i++) {
                 try {
-                    arrayList.add(this.mPm.getApplicationInfo(str, 4202496));
+                    arrayList.add(this.mPm.getApplicationInfo(strArr[i], 4202496));
                 } catch (PackageManager.NameNotFoundException unused) {
                 }
             }
@@ -136,13 +142,12 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
             addAll(arrayList);
         }
 
-        @Override // android.widget.ArrayAdapter, android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
             if (view == null) {
-                view = this.mInflater.inflate(R$layout.foreground_service_item, viewGroup, false);
+                view = this.mInflater.inflate(C1893R.layout.foreground_service_item, viewGroup, false);
             }
-            ((ImageView) view.findViewById(R$id.app_icon)).setImageDrawable(this.mIconDrawableFactory.getBadgedIcon(getItem(i)));
-            ((TextView) view.findViewById(R$id.app_name)).setText(getItem(i).loadLabel(this.mPm));
+            ((ImageView) view.findViewById(C1893R.C1897id.app_icon)).setImageDrawable(this.mIconDrawableFactory.getBadgedIcon((ApplicationInfo) getItem(i)));
+            ((TextView) view.findViewById(C1893R.C1897id.app_name)).setText(((ApplicationInfo) getItem(i)).loadLabel(this.mPm));
             return view;
         }
     }

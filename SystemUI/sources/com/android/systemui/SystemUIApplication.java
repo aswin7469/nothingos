@@ -1,209 +1,260 @@
 package com.android.systemui;
 
+import android.app.ActivityManager;
 import android.app.ActivityThread;
 import android.app.Application;
-import android.app.NotificationManager;
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Configuration;
-import android.os.Environment;
+import android.net.wifi.WifiEnterpriseConfig;
+import android.os.Bundle;
+import android.os.Looper;
 import android.os.Process;
+import android.os.RemoteException;
 import android.os.SystemProperties;
 import android.os.UserHandle;
+import android.util.ArrayMap;
+import android.util.Dumpable;
+import android.util.DumpableContainer;
 import android.util.Log;
 import android.util.TimingsTraceLog;
 import android.view.SurfaceControl;
+import android.view.ThreadedRenderer;
 import com.android.internal.protolog.common.ProtoLog;
+import com.android.launcher3.icons.cache.BaseIconCache;
 import com.android.systemui.SystemUIAppComponentFactory;
 import com.android.systemui.dagger.ContextComponentHelper;
 import com.android.systemui.dagger.GlobalRootComponent;
 import com.android.systemui.dagger.SysUIComponent;
 import com.android.systemui.dump.DumpManager;
-import com.android.systemui.shared.system.ThreadedRendererCompat;
-import com.android.systemui.statusbar.FeatureFlags;
 import com.android.systemui.util.NotificationChannels;
-import com.android.systemui.util.Utils;
-import com.nothingos.utils.SystemUIUtils;
-import java.io.File;
+import com.android.systemui.utils.FwkResIdLoader;
+import com.nothing.utils.NTSystemUIUtils;
 import java.lang.reflect.InvocationTargetException;
-/* loaded from: classes.dex */
-public class SystemUIApplication extends Application implements SystemUIAppComponentFactory.ContextInitializer {
-    private BootCompleteCacheImpl mBootCompleteCache;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
+import javax.inject.Provider;
+
+public class SystemUIApplication extends Application implements SystemUIAppComponentFactory.ContextInitializer, DumpableContainer {
+    private static final boolean DEBUG = false;
+    public static final String TAG = "SystemUIService";
+    /* access modifiers changed from: private */
+    public BootCompleteCacheImpl mBootCompleteCache;
     private ContextComponentHelper mComponentHelper;
     private SystemUIAppComponentFactory.ContextAvailableCallback mContextAvailableCallback;
+    private DumpManager mDumpManager;
+    private final ArrayMap<String, Dumpable> mDumpables = new ArrayMap<>();
     private GlobalRootComponent mRootComponent;
-    private SystemUI[] mServices;
-    private boolean mServicesStarted;
+    /* access modifiers changed from: private */
+    public CoreStartable[] mServices;
+    /* access modifiers changed from: private */
+    public boolean mServicesStarted;
     private SysUIComponent mSysUIComponent;
 
     public SystemUIApplication() {
-        Log.v("SystemUIService", "SystemUIApplication constructed.");
+        Log.v(TAG, "SystemUIApplication constructed.");
         ProtoLog.REQUIRE_PROTOLOGTOOL = false;
     }
 
-    @Override // android.app.Application
     public void onCreate() {
         super.onCreate();
-        Log.v("SystemUIService", "SystemUIApplication created.");
-        TimingsTraceLog timingsTraceLog = new TimingsTraceLog("SystemUIBootTiming", 4096L);
+        Log.v(TAG, "SystemUIApplication created.");
+        TimingsTraceLog timingsTraceLog = new TimingsTraceLog("SystemUIBootTiming", 4096);
         timingsTraceLog.traceBegin("DependencyInjection");
         this.mContextAvailableCallback.onContextAvailable(this);
+        FwkResIdLoader.init(getApplicationContext());
         this.mRootComponent = SystemUIFactory.getInstance().getRootComponent();
         SysUIComponent sysUIComponent = SystemUIFactory.getInstance().getSysUIComponent();
         this.mSysUIComponent = sysUIComponent;
         this.mComponentHelper = sysUIComponent.getContextComponentHelper();
         this.mBootCompleteCache = this.mSysUIComponent.provideBootCacheImpl();
         timingsTraceLog.traceEnd();
-        setTheme(R$style.Theme_SystemUI);
+        Looper.getMainLooper().setTraceTag(4096);
+        setTheme(C1893R.style.Theme_SystemUI);
+        NTSystemUIUtils.getInstance().setSplitShadeEnabled(getBaseContext().getResources().getBoolean(C1893R.bool.config_use_split_notification_shade));
         if (Process.myUserHandle().equals(UserHandle.SYSTEM)) {
             IntentFilter intentFilter = new IntentFilter("android.intent.action.BOOT_COMPLETED");
             intentFilter.setPriority(1000);
             int gPUContextPriority = SurfaceControl.getGPUContextPriority();
-            Log.i("SystemUIService", "Found SurfaceFlinger's GPU Priority: " + gPUContextPriority);
-            if (gPUContextPriority == ThreadedRendererCompat.EGL_CONTEXT_PRIORITY_REALTIME_NV) {
-                Log.i("SystemUIService", "Setting SysUI's GPU Context priority to: " + ThreadedRendererCompat.EGL_CONTEXT_PRIORITY_HIGH_IMG);
-                ThreadedRendererCompat.setContextPriority(ThreadedRendererCompat.EGL_CONTEXT_PRIORITY_HIGH_IMG);
+            Log.i(TAG, "Found SurfaceFlinger's GPU Priority: " + gPUContextPriority);
+            if (gPUContextPriority == ThreadedRenderer.EGL_CONTEXT_PRIORITY_REALTIME_NV) {
+                Log.i(TAG, "Setting SysUI's GPU Context priority to: " + ThreadedRenderer.EGL_CONTEXT_PRIORITY_HIGH_IMG);
+                ThreadedRenderer.setContextPriority(ThreadedRenderer.EGL_CONTEXT_PRIORITY_HIGH_IMG);
             }
-            registerReceiver(new BroadcastReceiver() { // from class: com.android.systemui.SystemUIApplication.1
-                @Override // android.content.BroadcastReceiver
+            try {
+                ActivityManager.getService().enableBinderTracing();
+            } catch (RemoteException e) {
+                Log.e(TAG, "Unable to enable binder tracing", e);
+            }
+            registerReceiver(new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
-                    if (SystemUIApplication.this.mBootCompleteCache.isBootComplete()) {
-                        return;
-                    }
-                    SystemUIApplication.this.unregisterReceiver(this);
-                    SystemUIApplication.this.mBootCompleteCache.setBootComplete();
-                    if (!SystemUIApplication.this.mServicesStarted) {
-                        return;
-                    }
-                    int length = SystemUIApplication.this.mServices.length;
-                    for (int i = 0; i < length; i++) {
-                        SystemUIApplication.this.mServices[i].onBootCompleted();
+                    if (!SystemUIApplication.this.mBootCompleteCache.isBootComplete()) {
+                        SystemUIApplication.this.unregisterReceiver(this);
+                        SystemUIApplication.this.mBootCompleteCache.setBootComplete();
+                        if (SystemUIApplication.this.mServicesStarted) {
+                            for (CoreStartable onBootCompleted : SystemUIApplication.this.mServices) {
+                                onBootCompleted.onBootCompleted();
+                            }
+                        }
                     }
                 }
             }, intentFilter);
-            registerReceiver(new BroadcastReceiver() { // from class: com.android.systemui.SystemUIApplication.2
-                @Override // android.content.BroadcastReceiver
+            registerReceiver(new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
-                    if (!"android.intent.action.LOCALE_CHANGED".equals(intent.getAction()) || !SystemUIApplication.this.mBootCompleteCache.isBootComplete()) {
-                        return;
+                    if ("android.intent.action.LOCALE_CHANGED".equals(intent.getAction()) && SystemUIApplication.this.mBootCompleteCache.isBootComplete()) {
+                        NotificationChannels.createAll(context);
                     }
-                    NotificationChannels.createAll(context);
                 }
             }, new IntentFilter("android.intent.action.LOCALE_CHANGED"));
-        } else {
-            String currentProcessName = ActivityThread.currentProcessName();
-            ApplicationInfo applicationInfo = getApplicationInfo();
-            if (currentProcessName != null) {
-                if (currentProcessName.startsWith(applicationInfo.processName + ":")) {
-                    return;
-                }
-            }
+            return;
+        }
+        String currentProcessName = ActivityThread.currentProcessName();
+        ApplicationInfo applicationInfo = getApplicationInfo();
+        if (currentProcessName == null || !currentProcessName.startsWith(applicationInfo.processName + ":")) {
             startSecondaryUserServicesIfNeeded();
         }
-        if (checkSelfPermission("android.permission.MANAGE_TOAST_RATE_LIMITING") == 0) {
-            ((NotificationManager) getSystemService(NotificationManager.class)).setToastRateLimitingEnabled(false);
-        } else {
-            Log.e("SystemUIService", "MANAGE_TOAST_RATE_LIMITING permission not granted. you should grant it in frameworks/data/etc/.");
-        }
-        SystemUIUtils.getInstance().updateShouldUseSplitNotificationShade(Utils.shouldUseSplitNotificationShade((FeatureFlags) Dependency.get(FeatureFlags.class), getResources()));
-        registerReceiver(new BroadcastReceiver() { // from class: com.android.systemui.SystemUIApplication.3
-            @Override // android.content.BroadcastReceiver
-            public void onReceive(Context context, Intent intent) {
-                try {
-                    if (!"1".equals(SystemProperties.get("sys.ship_mode.enable")) || !"android.intent.action.ACTION_SHUTDOWN".equals(intent.getAction())) {
-                        return;
-                    }
-                    Log.d("SystemUIService", "Received shutdown to delete ship mode screenshots+");
-                    File file = new File(Environment.getExternalStorageDirectory() + "/Pictures/Screenshots/");
-                    if (file.isDirectory()) {
-                        Log.d("SystemUIService", "Clean up screenshot for ship mode...");
-                        String[] list = file.list();
-                        for (int i = 0; i < list.length; i++) {
-                            Log.d("SystemUIService", "Deleting: " + list[i]);
-                            new File(file, list[i]).delete();
-                        }
-                    }
-                    Log.d("SystemUIService", "Received shutdown to delete ship mode screenshots-");
-                } catch (Exception e) {
-                    Log.e("SystemUIService", "Exception happened when trying to clean screenshots for ship mode");
-                    e.printStackTrace();
-                }
-            }
-        }, new IntentFilter("android.intent.action.ACTION_SHUTDOWN"));
     }
 
     public void startServicesIfNeeded() {
-        startServicesIfNeeded("StartServices", SystemUIFactory.getInstance().getSystemUIServiceComponents(getResources()));
+        String vendorComponent = SystemUIFactory.getInstance().getVendorComponent(getResources());
+        TreeMap treeMap = new TreeMap(Comparator.comparing(new SystemUIApplication$$ExternalSyntheticLambda0()));
+        treeMap.putAll(SystemUIFactory.getInstance().getStartableComponents());
+        treeMap.putAll(SystemUIFactory.getInstance().getStartableComponentsPerUser());
+        startServicesIfNeeded(treeMap, "StartServices", vendorComponent);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void startSecondaryUserServicesIfNeeded() {
-        startServicesIfNeeded("StartSecondaryServices", SystemUIFactory.getInstance().getSystemUIServiceComponentsPerUser(getResources()));
+        TreeMap treeMap = new TreeMap(Comparator.comparing(new SystemUIApplication$$ExternalSyntheticLambda0()));
+        treeMap.putAll(SystemUIFactory.getInstance().getStartableComponentsPerUser());
+        startServicesIfNeeded(treeMap, "StartSecondaryServices", (String) null);
     }
 
-    private void startServicesIfNeeded(String str, String[] strArr) {
-        if (this.mServicesStarted) {
-            return;
-        }
-        this.mServices = new SystemUI[strArr.length];
-        if (!this.mBootCompleteCache.isBootComplete() && "1".equals(SystemProperties.get("sys.boot_completed"))) {
-            this.mBootCompleteCache.setBootComplete();
-        }
-        DumpManager createDumpManager = this.mSysUIComponent.createDumpManager();
-        Log.v("SystemUIService", "Starting SystemUI services for user " + Process.myUserHandle().getIdentifier() + ".");
-        TimingsTraceLog timingsTraceLog = new TimingsTraceLog("SystemUIBootTiming", 4096L);
-        timingsTraceLog.traceBegin(str);
-        int length = strArr.length;
-        for (int i = 0; i < length; i++) {
-            String str2 = strArr[i];
-            timingsTraceLog.traceBegin(str + str2);
-            long currentTimeMillis = System.currentTimeMillis();
-            try {
-                SystemUI resolveSystemUI = this.mComponentHelper.resolveSystemUI(str2);
-                if (resolveSystemUI == null) {
-                    resolveSystemUI = (SystemUI) Class.forName(str2).getConstructor(Context.class).newInstance(this);
-                }
-                SystemUI[] systemUIArr = this.mServices;
-                systemUIArr[i] = resolveSystemUI;
-                systemUIArr[i].start();
-                timingsTraceLog.traceEnd();
-                long currentTimeMillis2 = System.currentTimeMillis() - currentTimeMillis;
-                if (currentTimeMillis2 > 1000) {
-                    Log.w("SystemUIService", "Initialization of " + str2 + " took " + currentTimeMillis2 + " ms");
-                }
-                if (this.mBootCompleteCache.isBootComplete()) {
-                    this.mServices[i].onBootCompleted();
-                }
-                createDumpManager.registerDumpable(this.mServices[i].getClass().getName(), this.mServices[i]);
-            } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-                throw new RuntimeException(e);
+    private void startServicesIfNeeded(Map<Class<?>, Provider<CoreStartable>> map, String str, String str2) {
+        if (!this.mServicesStarted) {
+            this.mServices = new CoreStartable[(map.size() + (str2 == null ? 0 : 1))];
+            if (!this.mBootCompleteCache.isBootComplete() && "1".equals(SystemProperties.get("sys.boot_completed"))) {
+                this.mBootCompleteCache.setBootComplete();
             }
+            this.mDumpManager = this.mSysUIComponent.createDumpManager();
+            Log.v(TAG, "Starting SystemUI services for user " + Process.myUserHandle().getIdentifier() + BaseIconCache.EMPTY_CLASS_NAME);
+            TimingsTraceLog timingsTraceLog = new TimingsTraceLog("SystemUIBootTiming", 4096);
+            timingsTraceLog.traceBegin(str);
+            int i = 0;
+            for (Map.Entry next : map.entrySet()) {
+                String name = ((Class) next.getKey()).getName();
+                timeInitialization(name, new SystemUIApplication$$ExternalSyntheticLambda1(this, i, name, next), timingsTraceLog, str);
+                i++;
+            }
+            if (str2 != null) {
+                timeInitialization(str2, new SystemUIApplication$$ExternalSyntheticLambda2(this, str2), timingsTraceLog, str);
+            }
+            for (int i2 = 0; i2 < this.mServices.length; i2++) {
+                if (this.mBootCompleteCache.isBootComplete()) {
+                    this.mServices[i2].onBootCompleted();
+                }
+                this.mDumpManager.registerDumpable(this.mServices[i2].getClass().getName(), this.mServices[i2]);
+            }
+            this.mSysUIComponent.getInitController().executePostInitTasks();
+            timingsTraceLog.traceEnd();
+            this.mServicesStarted = true;
         }
-        this.mSysUIComponent.getInitController().executePostInitTasks();
-        timingsTraceLog.traceEnd();
-        this.mServicesStarted = true;
     }
 
-    @Override // android.app.Application, android.content.ComponentCallbacks
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$startServicesIfNeeded$0$com-android-systemui-SystemUIApplication */
+    public /* synthetic */ void mo29856x898064b0(int i, String str, Map.Entry entry) {
+        this.mServices[i] = startStartable(str, (Provider) entry.getValue());
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$startServicesIfNeeded$1$com-android-systemui-SystemUIApplication */
+    public /* synthetic */ void mo29857x90e599cf(String str) {
+        CoreStartable[] coreStartableArr = this.mServices;
+        coreStartableArr[coreStartableArr.length - 1] = startAdditionalStartable(str);
+    }
+
+    private void timeInitialization(String str, Runnable runnable, TimingsTraceLog timingsTraceLog, String str2) {
+        long currentTimeMillis = System.currentTimeMillis();
+        timingsTraceLog.traceBegin(str2 + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + str);
+        runnable.run();
+        timingsTraceLog.traceEnd();
+        long currentTimeMillis2 = System.currentTimeMillis() - currentTimeMillis;
+        if (currentTimeMillis2 > 1000) {
+            Log.w(TAG, "Initialization of " + str + " took " + currentTimeMillis2 + " ms");
+        }
+    }
+
+    private CoreStartable startAdditionalStartable(String str) {
+        try {
+            return startStartable((CoreStartable) Class.forName(str).getConstructor(Context.class).newInstance(this));
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private CoreStartable startStartable(String str, Provider<CoreStartable> provider) {
+        return startStartable(provider.get());
+    }
+
+    private CoreStartable startStartable(CoreStartable coreStartable) {
+        coreStartable.start();
+        return coreStartable;
+    }
+
+    public boolean addDumpable(Dumpable dumpable) {
+        String dumpableName = dumpable.getDumpableName();
+        if (this.mDumpables.containsKey(dumpableName)) {
+            return false;
+        }
+        this.mDumpables.put(dumpableName, dumpable);
+        DumpManager dumpManager = this.mDumpManager;
+        String dumpableName2 = dumpable.getDumpableName();
+        Objects.requireNonNull(dumpable);
+        dumpManager.registerDumpable(dumpableName2, new SystemUIApplication$$ExternalSyntheticLambda3(dumpable));
+        return true;
+    }
+
+    public boolean removeDumpable(Dumpable dumpable) {
+        Log.w(TAG, "removeDumpable(" + dumpable + "): not implemented");
+        return false;
+    }
+
     public void onConfigurationChanged(Configuration configuration) {
         if (this.mServicesStarted) {
-            SystemUIUtils.getInstance().updateShouldUseSplitNotificationShade(Utils.shouldUseSplitNotificationShade((FeatureFlags) Dependency.get(FeatureFlags.class), getResources()));
             this.mSysUIComponent.getConfigurationController().onConfigurationChanged(configuration);
-            int length = this.mServices.length;
-            for (int i = 0; i < length; i++) {
-                SystemUI[] systemUIArr = this.mServices;
-                if (systemUIArr[i] != null) {
-                    systemUIArr[i].onConfigurationChanged(configuration);
+            NTSystemUIUtils.getInstance().setSplitShadeEnabled(getBaseContext().getResources().getBoolean(C1893R.bool.config_use_split_notification_shade));
+            for (CoreStartable coreStartable : this.mServices) {
+                if (coreStartable != null) {
+                    coreStartable.onConfigurationChanged(configuration);
                 }
             }
         }
     }
 
-    @Override // com.android.systemui.SystemUIAppComponentFactory.ContextInitializer
+    public CoreStartable[] getServices() {
+        return this.mServices;
+    }
+
     public void setContextAvailableCallback(SystemUIAppComponentFactory.ContextAvailableCallback contextAvailableCallback) {
         this.mContextAvailableCallback = contextAvailableCallback;
+    }
+
+    public static void overrideNotificationAppName(Context context, Notification.Builder builder, boolean z) {
+        String str;
+        Bundle bundle = new Bundle();
+        if (z) {
+            str = context.getString(17040870);
+        } else {
+            str = context.getString(17040869);
+        }
+        bundle.putString("android.substName", str);
+        builder.addExtras(bundle);
     }
 }

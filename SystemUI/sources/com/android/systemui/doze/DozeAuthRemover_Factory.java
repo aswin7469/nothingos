@@ -3,7 +3,7 @@ package com.android.systemui.doze;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DozeAuthRemover_Factory implements Factory<DozeAuthRemover> {
     private final Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
 
@@ -11,10 +11,8 @@ public final class DozeAuthRemover_Factory implements Factory<DozeAuthRemover> {
         this.keyguardUpdateMonitorProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DozeAuthRemover mo1933get() {
-        return newInstance(this.keyguardUpdateMonitorProvider.mo1933get());
+    public DozeAuthRemover get() {
+        return newInstance(this.keyguardUpdateMonitorProvider.get());
     }
 
     public static DozeAuthRemover_Factory create(Provider<KeyguardUpdateMonitor> provider) {

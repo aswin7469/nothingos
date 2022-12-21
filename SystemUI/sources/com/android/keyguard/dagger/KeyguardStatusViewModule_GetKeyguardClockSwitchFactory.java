@@ -5,7 +5,7 @@ import com.android.keyguard.KeyguardStatusView;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardStatusViewModule_GetKeyguardClockSwitchFactory implements Factory<KeyguardClockSwitch> {
     private final Provider<KeyguardStatusView> keyguardPresentationProvider;
 
@@ -13,10 +13,8 @@ public final class KeyguardStatusViewModule_GetKeyguardClockSwitchFactory implem
         this.keyguardPresentationProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardClockSwitch mo1933get() {
-        return getKeyguardClockSwitch(this.keyguardPresentationProvider.mo1933get());
+    public KeyguardClockSwitch get() {
+        return getKeyguardClockSwitch(this.keyguardPresentationProvider.get());
     }
 
     public static KeyguardStatusViewModule_GetKeyguardClockSwitchFactory create(Provider<KeyguardStatusView> provider) {

@@ -1,73 +1,87 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import com.android.internal.view.RotationPolicy;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.policy.RotationLockController;
-import com.android.systemui.util.settings.SecureSettings;
+import com.android.systemui.util.wrapper.RotationPolicyWrapper;
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+import javax.inject.Named;
+
+@SysUISingleton
 public final class RotationLockControllerImpl implements RotationLockController {
-    private final Context mContext;
-    private final SecureSettings mSecureSettings;
-    private final CopyOnWriteArrayList<RotationLockController.RotationLockControllerCallback> mCallbacks = new CopyOnWriteArrayList<>();
-    private final RotationPolicy.RotationPolicyListener mRotationPolicyListener = new RotationPolicy.RotationPolicyListener() { // from class: com.android.systemui.statusbar.policy.RotationLockControllerImpl.1
+    private final CopyOnWriteArrayList<RotationLockController.RotationLockControllerCallback> mCallbacks;
+    private final DeviceStateRotationLockSettingController mDeviceStateRotationLockSettingController;
+    private final boolean mIsPerDeviceStateRotationLockEnabled;
+    private final RotationPolicyWrapper mRotationPolicy;
+    private final RotationPolicy.RotationPolicyListener mRotationPolicyListener = new RotationPolicy.RotationPolicyListener() {
         public void onChange() {
             RotationLockControllerImpl.this.notifyChanged();
         }
     };
 
-    public RotationLockControllerImpl(Context context, SecureSettings secureSettings) {
-        this.mContext = context;
-        this.mSecureSettings = secureSettings;
+    @Inject
+    public RotationLockControllerImpl(RotationPolicyWrapper rotationPolicyWrapper, DeviceStateRotationLockSettingController deviceStateRotationLockSettingController, @Named("DEVICE_STATE_ROTATION_LOCK_DEFAULTS") String[] strArr) {
+        CopyOnWriteArrayList<RotationLockController.RotationLockControllerCallback> copyOnWriteArrayList = new CopyOnWriteArrayList<>();
+        this.mCallbacks = copyOnWriteArrayList;
+        this.mRotationPolicy = rotationPolicyWrapper;
+        this.mDeviceStateRotationLockSettingController = deviceStateRotationLockSettingController;
+        boolean z = strArr.length > 0;
+        this.mIsPerDeviceStateRotationLockEnabled = z;
+        if (z) {
+            copyOnWriteArrayList.add(deviceStateRotationLockSettingController);
+        }
         setListening(true);
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void addCallback(RotationLockController.RotationLockControllerCallback rotationLockControllerCallback) {
         this.mCallbacks.add(rotationLockControllerCallback);
         notifyChanged(rotationLockControllerCallback);
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void removeCallback(RotationLockController.RotationLockControllerCallback rotationLockControllerCallback) {
-        this.mCallbacks.remove(rotationLockControllerCallback);
+        this.mCallbacks.remove((Object) rotationLockControllerCallback);
     }
 
-    @Override // com.android.systemui.statusbar.policy.RotationLockController
     public int getRotationLockOrientation() {
-        return RotationPolicy.getRotationLockOrientation(this.mContext);
+        return this.mRotationPolicy.getRotationLockOrientation();
     }
 
-    @Override // com.android.systemui.statusbar.policy.RotationLockController
     public boolean isRotationLocked() {
-        return RotationPolicy.isRotationLocked(this.mContext);
+        return this.mRotationPolicy.isRotationLocked();
     }
 
-    @Override // com.android.systemui.statusbar.policy.RotationLockController
     public boolean isCameraRotationEnabled() {
-        return this.mSecureSettings.getIntForUser("camera_autorotate", 0, -2) == 1;
+        return this.mRotationPolicy.isCameraRotationEnabled();
     }
 
-    @Override // com.android.systemui.statusbar.policy.RotationLockController
     public void setRotationLocked(boolean z) {
-        RotationPolicy.setRotationLock(this.mContext, z);
+        this.mRotationPolicy.setRotationLock(z);
     }
 
-    @Override // com.android.systemui.statusbar.policy.RotationLockController
     public void setRotationLockedAtAngle(boolean z, int i) {
-        RotationPolicy.setRotationLockAtAngle(this.mContext, z, i);
+        this.mRotationPolicy.setRotationLockAtAngle(z, i);
+    }
+
+    public boolean isRotationLockAffordanceVisible() {
+        return this.mRotationPolicy.isRotationLockToggleVisible();
     }
 
     public void setListening(boolean z) {
         if (z) {
-            RotationPolicy.registerRotationPolicyListener(this.mContext, this.mRotationPolicyListener, -1);
+            this.mRotationPolicy.registerRotationPolicyListener(this.mRotationPolicyListener, -1);
         } else {
-            RotationPolicy.unregisterRotationPolicyListener(this.mContext, this.mRotationPolicyListener);
+            this.mRotationPolicy.unregisterRotationPolicyListener(this.mRotationPolicyListener);
+        }
+        if (this.mIsPerDeviceStateRotationLockEnabled) {
+            this.mDeviceStateRotationLockSettingController.setListening(z);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void notifyChanged() {
         Iterator<RotationLockController.RotationLockControllerCallback> it = this.mCallbacks.iterator();
         while (it.hasNext()) {
@@ -76,6 +90,12 @@ public final class RotationLockControllerImpl implements RotationLockController 
     }
 
     private void notifyChanged(RotationLockController.RotationLockControllerCallback rotationLockControllerCallback) {
-        rotationLockControllerCallback.onRotationLockStateChanged(RotationPolicy.isRotationLocked(this.mContext), RotationPolicy.isRotationLockToggleVisible(this.mContext));
+        rotationLockControllerCallback.onRotationLockStateChanged(this.mRotationPolicy.isRotationLocked(), this.mRotationPolicy.isRotationLockToggleVisible());
+    }
+
+    public static boolean hasSufficientPermission(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        String rotationResolverPackageName = packageManager.getRotationResolverPackageName();
+        return rotationResolverPackageName != null && packageManager.checkPermission("android.permission.CAMERA", rotationResolverPackageName) == 0;
     }
 }

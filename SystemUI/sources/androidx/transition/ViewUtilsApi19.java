@@ -1,21 +1,19 @@
 package androidx.transition;
 
-import android.annotation.SuppressLint;
 import android.view.View;
-/* loaded from: classes.dex */
+
 class ViewUtilsApi19 extends ViewUtilsBase {
     private static boolean sTryHiddenTransitionAlpha = true;
 
-    @Override // androidx.transition.ViewUtilsBase
     public void clearNonTransitionAlpha(View view) {
     }
 
-    @Override // androidx.transition.ViewUtilsBase
     public void saveNonTransitionAlpha(View view) {
     }
 
-    @Override // androidx.transition.ViewUtilsBase
-    @SuppressLint({"NewApi"})
+    ViewUtilsApi19() {
+    }
+
     public void setTransitionAlpha(View view, float f) {
         if (sTryHiddenTransitionAlpha) {
             try {
@@ -28,8 +26,6 @@ class ViewUtilsApi19 extends ViewUtilsBase {
         view.setAlpha(f);
     }
 
-    @Override // androidx.transition.ViewUtilsBase
-    @SuppressLint({"NewApi"})
     public float getTransitionAlpha(View view) {
         if (sTryHiddenTransitionAlpha) {
             try {

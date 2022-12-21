@@ -9,8 +9,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import androidx.core.content.res.TypedArrayUtils;
 import androidx.preference.Preference;
-/* loaded from: classes.dex */
+
 public class ListPreference extends DialogPreference {
+    private static final String TAG = "ListPreference";
     private CharSequence[] mEntries;
     private CharSequence[] mEntryValues;
     private String mSummary;
@@ -19,16 +20,15 @@ public class ListPreference extends DialogPreference {
 
     public ListPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.ListPreference, i, i2);
-        this.mEntries = TypedArrayUtils.getTextArray(obtainStyledAttributes, R$styleable.ListPreference_entries, R$styleable.ListPreference_android_entries);
-        this.mEntryValues = TypedArrayUtils.getTextArray(obtainStyledAttributes, R$styleable.ListPreference_entryValues, R$styleable.ListPreference_android_entryValues);
-        int i3 = R$styleable.ListPreference_useSimpleSummaryProvider;
-        if (TypedArrayUtils.getBoolean(obtainStyledAttributes, i3, i3, false)) {
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1246R.styleable.ListPreference, i, i2);
+        this.mEntries = TypedArrayUtils.getTextArray(obtainStyledAttributes, C1246R.styleable.ListPreference_entries, C1246R.styleable.ListPreference_android_entries);
+        this.mEntryValues = TypedArrayUtils.getTextArray(obtainStyledAttributes, C1246R.styleable.ListPreference_entryValues, C1246R.styleable.ListPreference_android_entryValues);
+        if (TypedArrayUtils.getBoolean(obtainStyledAttributes, C1246R.styleable.ListPreference_useSimpleSummaryProvider, C1246R.styleable.ListPreference_useSimpleSummaryProvider, false)) {
             setSummaryProvider(SimpleSummaryProvider.getInstance());
         }
         obtainStyledAttributes.recycle();
-        TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, R$styleable.Preference, i, i2);
-        this.mSummary = TypedArrayUtils.getString(obtainStyledAttributes2, R$styleable.Preference_summary, R$styleable.Preference_android_summary);
+        TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, C1246R.styleable.Preference, i, i2);
+        this.mSummary = TypedArrayUtils.getString(obtainStyledAttributes2, C1246R.styleable.Preference_summary, C1246R.styleable.Preference_android_summary);
         obtainStyledAttributes2.recycle();
     }
 
@@ -37,15 +37,19 @@ public class ListPreference extends DialogPreference {
     }
 
     public ListPreference(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, TypedArrayUtils.getAttr(context, R$attr.dialogPreferenceStyle, 16842897));
+        this(context, attributeSet, TypedArrayUtils.getAttr(context, C1246R.attr.dialogPreferenceStyle, 16842897));
     }
 
     public ListPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public void setEntries(CharSequence[] charSequenceArr) {
         this.mEntries = charSequenceArr;
+    }
+
+    public void setEntries(int i) {
+        setEntries(getContext().getResources().getTextArray(i));
     }
 
     public CharSequence[] getEntries() {
@@ -56,26 +60,28 @@ public class ListPreference extends DialogPreference {
         this.mEntryValues = charSequenceArr;
     }
 
+    public void setEntryValues(int i) {
+        setEntryValues(getContext().getResources().getTextArray(i));
+    }
+
     public CharSequence[] getEntryValues() {
         return this.mEntryValues;
     }
 
-    @Override // androidx.preference.Preference
     public void setSummary(CharSequence charSequence) {
         super.setSummary(charSequence);
-        if (charSequence == null) {
+        if (charSequence == null && this.mSummary != null) {
             this.mSummary = null;
-        } else {
+        } else if (charSequence != null && !charSequence.equals(this.mSummary)) {
             this.mSummary = charSequence.toString();
         }
     }
 
-    @Override // androidx.preference.Preference
     public CharSequence getSummary() {
         if (getSummaryProvider() != null) {
             return getSummaryProvider().provideSummary(this);
         }
-        CharSequence entry = getEntry();
+        Object entry = getEntry();
         CharSequence summary = super.getSummary();
         String str = this.mSummary;
         if (str == null) {
@@ -90,7 +96,7 @@ public class ListPreference extends DialogPreference {
         if (TextUtils.equals(format, summary)) {
             return summary;
         }
-        Log.w("ListPreference", "Setting a summary with a String formatting marker is no longer supported. You should use a SummaryProvider instead.");
+        Log.w(TAG, "Setting a summary with a String formatting marker is no longer supported. You should use a SummaryProvider instead.");
         return format;
     }
 
@@ -100,10 +106,9 @@ public class ListPreference extends DialogPreference {
             this.mValue = str;
             this.mValueSet = true;
             persistString(str);
-            if (!z) {
-                return;
+            if (z) {
+                notifyChanged();
             }
-            notifyChanged();
         }
     }
 
@@ -126,29 +131,35 @@ public class ListPreference extends DialogPreference {
             return -1;
         }
         for (int length = charSequenceArr.length - 1; length >= 0; length--) {
-            if (TextUtils.equals(this.mEntryValues[length].toString(), str)) {
+            if (this.mEntryValues[length].equals(str)) {
                 return length;
             }
         }
         return -1;
     }
 
+    public void setValueIndex(int i) {
+        CharSequence[] charSequenceArr = this.mEntryValues;
+        if (charSequenceArr != null) {
+            setValue(charSequenceArr[i].toString());
+        }
+    }
+
     private int getValueIndex() {
         return findIndexOfValue(this.mValue);
     }
 
-    @Override // androidx.preference.Preference
-    protected Object onGetDefaultValue(TypedArray typedArray, int i) {
+    /* access modifiers changed from: protected */
+    public Object onGetDefaultValue(TypedArray typedArray, int i) {
         return typedArray.getString(i);
     }
 
-    @Override // androidx.preference.Preference
-    protected void onSetInitialValue(Object obj) {
+    /* access modifiers changed from: protected */
+    public void onSetInitialValue(Object obj) {
         setValue(getPersistedString((String) obj));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public Parcelable onSaveInstanceState() {
         Parcelable onSaveInstanceState = super.onSaveInstanceState();
         if (isPersistent()) {
@@ -159,8 +170,7 @@ public class ListPreference extends DialogPreference {
         return savedState;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onRestoreInstanceState(Parcelable parcelable) {
         if (parcelable == null || !parcelable.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(parcelable);
@@ -171,21 +181,13 @@ public class ListPreference extends DialogPreference {
         setValue(savedState.mValue);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: androidx.preference.ListPreference.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo127createFromParcel(Parcel parcel) {
+    private static class SavedState extends Preference.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo128newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -200,14 +202,12 @@ public class ListPreference extends DialogPreference {
             super(parcelable);
         }
 
-        @Override // android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeString(this.mValue);
         }
     }
 
-    /* loaded from: classes.dex */
     public static final class SimpleSummaryProvider implements Preference.SummaryProvider<ListPreference> {
         private static SimpleSummaryProvider sSimpleSummaryProvider;
 
@@ -221,10 +221,9 @@ public class ListPreference extends DialogPreference {
             return sSimpleSummaryProvider;
         }
 
-        @Override // androidx.preference.Preference.SummaryProvider
         public CharSequence provideSummary(ListPreference listPreference) {
             if (TextUtils.isEmpty(listPreference.getEntry())) {
-                return listPreference.getContext().getString(R$string.not_set);
+                return listPreference.getContext().getString(C1246R.string.not_set);
             }
             return listPreference.getEntry();
         }

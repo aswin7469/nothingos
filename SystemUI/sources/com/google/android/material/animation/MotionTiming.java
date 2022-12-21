@@ -6,7 +6,7 @@ import android.animation.ValueAnimator;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-/* loaded from: classes2.dex */
+
 public class MotionTiming {
     private long delay;
     private long duration;
@@ -15,8 +15,6 @@ public class MotionTiming {
     private int repeatMode;
 
     public MotionTiming(long j, long j2) {
-        this.delay = 0L;
-        this.duration = 300L;
         this.interpolator = null;
         this.repeatCount = 0;
         this.repeatMode = 1;
@@ -25,9 +23,6 @@ public class MotionTiming {
     }
 
     public MotionTiming(long j, long j2, TimeInterpolator timeInterpolator) {
-        this.delay = 0L;
-        this.duration = 300L;
-        this.interpolator = null;
         this.repeatCount = 0;
         this.repeatMode = 1;
         this.delay = j;
@@ -67,8 +62,7 @@ public class MotionTiming {
         return this.repeatMode;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static MotionTiming createFromAnimator(ValueAnimator valueAnimator) {
+    static MotionTiming createFromAnimator(ValueAnimator valueAnimator) {
         MotionTiming motionTiming = new MotionTiming(valueAnimator.getStartDelay(), valueAnimator.getDuration(), getInterpolatorCompat(valueAnimator));
         motionTiming.repeatCount = valueAnimator.getRepeatCount();
         motionTiming.repeatMode = valueAnimator.getRepeatMode();
@@ -76,14 +70,14 @@ public class MotionTiming {
     }
 
     private static TimeInterpolator getInterpolatorCompat(ValueAnimator valueAnimator) {
-        TimeInterpolator interpolator = valueAnimator.getInterpolator();
-        if ((interpolator instanceof AccelerateDecelerateInterpolator) || interpolator == null) {
+        TimeInterpolator interpolator2 = valueAnimator.getInterpolator();
+        if ((interpolator2 instanceof AccelerateDecelerateInterpolator) || interpolator2 == null) {
             return AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR;
         }
-        if (interpolator instanceof AccelerateInterpolator) {
+        if (interpolator2 instanceof AccelerateInterpolator) {
             return AnimationUtils.FAST_OUT_LINEAR_IN_INTERPOLATOR;
         }
-        return interpolator instanceof DecelerateInterpolator ? AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR : interpolator;
+        return interpolator2 instanceof DecelerateInterpolator ? AnimationUtils.LINEAR_OUT_SLOW_IN_INTERPOLATOR : interpolator2;
     }
 
     public boolean equals(Object obj) {
@@ -94,10 +88,10 @@ public class MotionTiming {
             return false;
         }
         MotionTiming motionTiming = (MotionTiming) obj;
-        if (getDelay() != motionTiming.getDelay() || getDuration() != motionTiming.getDuration() || getRepeatCount() != motionTiming.getRepeatCount() || getRepeatMode() != motionTiming.getRepeatMode()) {
-            return false;
+        if (getDelay() == motionTiming.getDelay() && getDuration() == motionTiming.getDuration() && getRepeatCount() == motionTiming.getRepeatCount() && getRepeatMode() == motionTiming.getRepeatMode()) {
+            return getInterpolator().getClass().equals(motionTiming.getInterpolator().getClass());
         }
-        return getInterpolator().getClass().equals(motionTiming.getInterpolator().getClass());
+        return false;
     }
 
     public int hashCode() {
@@ -105,6 +99,6 @@ public class MotionTiming {
     }
 
     public String toString() {
-        return '\n' + MotionTiming.class.getName() + '{' + Integer.toHexString(System.identityHashCode(this)) + " delay: " + getDelay() + " duration: " + getDuration() + " interpolator: " + getInterpolator().getClass() + " repeatCount: " + getRepeatCount() + " repeatMode: " + getRepeatMode() + "}\n";
+        return "\n" + getClass().getName() + '{' + Integer.toHexString(System.identityHashCode(this)) + " delay: " + getDelay() + " duration: " + getDuration() + " interpolator: " + getInterpolator().getClass() + " repeatCount: " + getRepeatCount() + " repeatMode: " + getRepeatMode() + "}\n";
     }
 }

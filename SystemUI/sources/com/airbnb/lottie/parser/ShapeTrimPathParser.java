@@ -1,22 +1,25 @@
 package com.airbnb.lottie.parser;
 
+import android.icu.text.DateFormat;
 import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.content.ShapeTrimPath;
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
-/* loaded from: classes.dex */
-class ShapeTrimPathParser {
-    private static JsonReader.Options NAMES = JsonReader.Options.of("s", "e", "o", "nm", "m", "hd");
+import java.p026io.IOException;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static ShapeTrimPath parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
-        boolean z = false;
+class ShapeTrimPathParser {
+    private static JsonReader.Options NAMES = JsonReader.Options.m137of(DateFormat.SECOND, "e", "o", "nm", DateFormat.MINUTE, "hd");
+
+    private ShapeTrimPathParser() {
+    }
+
+    static ShapeTrimPath parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         String str = null;
         ShapeTrimPath.Type type = null;
         AnimatableFloatValue animatableFloatValue = null;
         AnimatableFloatValue animatableFloatValue2 = null;
         AnimatableFloatValue animatableFloatValue3 = null;
+        boolean z = false;
         while (jsonReader.hasNext()) {
             int selectName = jsonReader.selectName(NAMES);
             if (selectName == 0) {
@@ -29,10 +32,10 @@ class ShapeTrimPathParser {
                 str = jsonReader.nextString();
             } else if (selectName == 4) {
                 type = ShapeTrimPath.Type.forId(jsonReader.nextInt());
-            } else if (selectName == 5) {
-                z = jsonReader.nextBoolean();
-            } else {
+            } else if (selectName != 5) {
                 jsonReader.skipValue();
+            } else {
+                z = jsonReader.nextBoolean();
             }
         }
         return new ShapeTrimPath(str, type, animatableFloatValue, animatableFloatValue2, animatableFloatValue3, z);

@@ -3,7 +3,7 @@ package com.android.systemui.doze;
 import com.android.systemui.log.LogBuffer;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DozeLogger_Factory implements Factory<DozeLogger> {
     private final Provider<LogBuffer> bufferProvider;
 
@@ -11,10 +11,8 @@ public final class DozeLogger_Factory implements Factory<DozeLogger> {
         this.bufferProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DozeLogger mo1933get() {
-        return newInstance(this.bufferProvider.mo1933get());
+    public DozeLogger get() {
+        return newInstance(this.bufferProvider.get());
     }
 
     public static DozeLogger_Factory create(Provider<LogBuffer> provider) {

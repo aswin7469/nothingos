@@ -1,27 +1,23 @@
 package kotlin.text;
 
+import kotlin.Metadata;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
-import org.jetbrains.annotations.NotNull;
-/* JADX INFO: Access modifiers changed from: package-private */
+
+@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0002\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0001H\n¢\u0006\u0002\b\u0003"}, mo64987d2 = {"<anonymous>", "", "line", "invoke"}, mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
 /* compiled from: Indent.kt */
-/* loaded from: classes2.dex */
-public final class StringsKt__IndentKt$getIndentFunction$2 extends Lambda implements Function1<String, String> {
+final class StringsKt__IndentKt$getIndentFunction$2 extends Lambda implements Function1<String, String> {
     final /* synthetic */ String $indent;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public StringsKt__IndentKt$getIndentFunction$2(String str) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    StringsKt__IndentKt$getIndentFunction$2(String str) {
         super(1);
         this.$indent = str;
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    @NotNull
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final String mo1949invoke(@NotNull String line) {
-        Intrinsics.checkNotNullParameter(line, "line");
-        return this.$indent + line;
+    public final String invoke(String str) {
+        Intrinsics.checkNotNullParameter(str, "line");
+        return this.$indent + str;
     }
 }

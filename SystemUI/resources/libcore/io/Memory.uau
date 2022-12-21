@@ -1,0 +1,9 @@
+signature,file,startline,startcol,endline,endcol,properties
+Llibcore/io/Memory;->peekByte(J)B,libcore/luni/src/main/java/libcore/io/Memory.java,241,5,241,25,
+Llibcore/io/Memory;->peekInt(JZ)I,libcore/luni/src/main/java/libcore/io/Memory.java,248,5,248,25,
+Llibcore/io/Memory;->peekLong(JZ)J,libcore/luni/src/main/java/libcore/io/Memory.java,262,5,262,25,
+Llibcore/io/Memory;->peekByteArray(J[BII)V,libcore/luni/src/main/java/libcore/io/Memory.java,289,5,289,25,
+Llibcore/io/Memory;->pokeByte(JB)V,libcore/luni/src/main/java/libcore/io/Memory.java,332,5,332,25,
+Llibcore/io/Memory;->pokeInt(JIZ)V,libcore/luni/src/main/java/libcore/io/Memory.java,339,5,339,25,
+Llibcore/io/Memory;->pokeLong(JJZ)V,libcore/luni/src/main/java/libcore/io/Memory.java,352,5,352,25,
+Llibcore/io/Memory;->pokeByteArray(J[BII)V,libcore/luni/src/main/java/libcore/io/Memory.java,377,5,377,25,

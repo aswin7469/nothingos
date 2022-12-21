@@ -5,17 +5,17 @@ import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.R$id;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
-/* loaded from: classes.dex */
-public class EmptyShadeView extends StackScrollerDecorView {
-    private TextView mEmptyText;
-    private int mText = R$string.empty_shade_text;
 
-    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
-    protected View findSecondaryView() {
+public class EmptyShadeView extends StackScrollerDecorView {
+    /* access modifiers changed from: private */
+    public TextView mEmptyText;
+    private int mText = C1893R.string.empty_shade_text;
+
+    /* access modifiers changed from: protected */
+    public View findSecondaryView() {
         return null;
     }
 
@@ -23,16 +23,15 @@ public class EmptyShadeView extends StackScrollerDecorView {
         super(context, attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView, android.view.View
+    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         this.mEmptyText.setText(this.mText);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
-    protected View findContentView() {
-        return findViewById(R$id.no_notifications);
+    /* access modifiers changed from: protected */
+    public View findContentView() {
+        return findViewById(C1893R.C1897id.no_notifications);
     }
 
     public void setTextColor(int i) {
@@ -48,24 +47,20 @@ public class EmptyShadeView extends StackScrollerDecorView {
         return this.mText;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView, android.view.View
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mEmptyText = (TextView) findContentView();
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public ExpandableViewState createExpandableViewState() {
         return new EmptyShadeViewState();
     }
 
-    /* loaded from: classes.dex */
     public class EmptyShadeViewState extends ExpandableViewState {
         public EmptyShadeViewState() {
         }
 
-        @Override // com.android.systemui.statusbar.notification.stack.ExpandableViewState, com.android.systemui.statusbar.notification.stack.ViewState
         public void applyToView(View view) {
             super.applyToView(view);
             if (view instanceof EmptyShadeView) {

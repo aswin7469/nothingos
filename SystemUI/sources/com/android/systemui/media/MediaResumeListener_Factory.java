@@ -8,7 +8,7 @@ import com.android.systemui.util.time.SystemClock;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class MediaResumeListener_Factory implements Factory<MediaResumeListener> {
     private final Provider<Executor> backgroundExecutorProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
@@ -28,10 +28,8 @@ public final class MediaResumeListener_Factory implements Factory<MediaResumeLis
         this.systemClockProvider = provider7;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaResumeListener mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.backgroundExecutorProvider.mo1933get(), this.tunerServiceProvider.mo1933get(), this.mediaBrowserFactoryProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.systemClockProvider.mo1933get());
+    public MediaResumeListener get() {
+        return newInstance(this.contextProvider.get(), this.broadcastDispatcherProvider.get(), this.backgroundExecutorProvider.get(), this.tunerServiceProvider.get(), this.mediaBrowserFactoryProvider.get(), this.dumpManagerProvider.get(), this.systemClockProvider.get());
     }
 
     public static MediaResumeListener_Factory create(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<Executor> provider3, Provider<TunerService> provider4, Provider<ResumeMediaBrowserFactory> provider5, Provider<DumpManager> provider6, Provider<SystemClock> provider7) {

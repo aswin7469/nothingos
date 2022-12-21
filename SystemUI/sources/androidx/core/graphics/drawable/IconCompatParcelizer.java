@@ -1,58 +1,49 @@
 package androidx.core.graphics.drawable;
 
 import android.content.res.ColorStateList;
-import android.os.Parcelable;
 import androidx.versionedparcelable.VersionedParcel;
-/* loaded from: classes.dex */
+
 public class IconCompatParcelizer {
-    public static IconCompat read(VersionedParcel parcel) {
+    public static IconCompat read(VersionedParcel versionedParcel) {
         IconCompat iconCompat = new IconCompat();
-        iconCompat.mType = parcel.readInt(iconCompat.mType, 1);
-        iconCompat.mData = parcel.readByteArray(iconCompat.mData, 2);
-        iconCompat.mParcelable = parcel.readParcelable(iconCompat.mParcelable, 3);
-        iconCompat.mInt1 = parcel.readInt(iconCompat.mInt1, 4);
-        iconCompat.mInt2 = parcel.readInt(iconCompat.mInt2, 5);
-        iconCompat.mTintList = (ColorStateList) parcel.readParcelable(iconCompat.mTintList, 6);
-        iconCompat.mTintModeStr = parcel.readString(iconCompat.mTintModeStr, 7);
-        iconCompat.mString1 = parcel.readString(iconCompat.mString1, 8);
+        iconCompat.mType = versionedParcel.readInt(iconCompat.mType, 1);
+        iconCompat.mData = versionedParcel.readByteArray(iconCompat.mData, 2);
+        iconCompat.mParcelable = versionedParcel.readParcelable(iconCompat.mParcelable, 3);
+        iconCompat.mInt1 = versionedParcel.readInt(iconCompat.mInt1, 4);
+        iconCompat.mInt2 = versionedParcel.readInt(iconCompat.mInt2, 5);
+        iconCompat.mTintList = (ColorStateList) versionedParcel.readParcelable(iconCompat.mTintList, 6);
+        iconCompat.mTintModeStr = versionedParcel.readString(iconCompat.mTintModeStr, 7);
+        iconCompat.mString1 = versionedParcel.readString(iconCompat.mString1, 8);
         iconCompat.onPostParceling();
         return iconCompat;
     }
 
-    public static void write(IconCompat obj, VersionedParcel parcel) {
-        parcel.setSerializationFlags(true, true);
-        obj.onPreParceling(parcel.isStream());
-        int i = obj.mType;
-        if (-1 != i) {
-            parcel.writeInt(i, 1);
+    public static void write(IconCompat iconCompat, VersionedParcel versionedParcel) {
+        versionedParcel.setSerializationFlags(true, true);
+        iconCompat.onPreParceling(versionedParcel.isStream());
+        if (-1 != iconCompat.mType) {
+            versionedParcel.writeInt(iconCompat.mType, 1);
         }
-        byte[] bArr = obj.mData;
-        if (bArr != null) {
-            parcel.writeByteArray(bArr, 2);
+        if (iconCompat.mData != null) {
+            versionedParcel.writeByteArray(iconCompat.mData, 2);
         }
-        Parcelable parcelable = obj.mParcelable;
-        if (parcelable != null) {
-            parcel.writeParcelable(parcelable, 3);
+        if (iconCompat.mParcelable != null) {
+            versionedParcel.writeParcelable(iconCompat.mParcelable, 3);
         }
-        int i2 = obj.mInt1;
-        if (i2 != 0) {
-            parcel.writeInt(i2, 4);
+        if (iconCompat.mInt1 != 0) {
+            versionedParcel.writeInt(iconCompat.mInt1, 4);
         }
-        int i3 = obj.mInt2;
-        if (i3 != 0) {
-            parcel.writeInt(i3, 5);
+        if (iconCompat.mInt2 != 0) {
+            versionedParcel.writeInt(iconCompat.mInt2, 5);
         }
-        ColorStateList colorStateList = obj.mTintList;
-        if (colorStateList != null) {
-            parcel.writeParcelable(colorStateList, 6);
+        if (iconCompat.mTintList != null) {
+            versionedParcel.writeParcelable(iconCompat.mTintList, 6);
         }
-        String str = obj.mTintModeStr;
-        if (str != null) {
-            parcel.writeString(str, 7);
+        if (iconCompat.mTintModeStr != null) {
+            versionedParcel.writeString(iconCompat.mTintModeStr, 7);
         }
-        String str2 = obj.mString1;
-        if (str2 != null) {
-            parcel.writeString(str2, 8);
+        if (iconCompat.mString1 != null) {
+            versionedParcel.writeString(iconCompat.mString1, 8);
         }
     }
 }

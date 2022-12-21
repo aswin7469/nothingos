@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="BrightnessDialogContainer" parent="@style/BaseBrightnessDialogContainer">
+    <style name="BrightnessDialogContainer">
         <item name="android:layout_width">360dp</item>
     </style>
     <style name="DockedDividerBackground">
-        <item name="android:layout_gravity">0x1</item>
-        <item name="android:layout_width">10dp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:background">@color/split_divider_background</item>
+        <item name="android:layout_width">@dimen/split_divider_bar_width</item>
         <item name="android:layout_height">match_parent</item>
     </style>
     <style name="DockedDividerHandle">
-        <item name="android:layout_gravity">0x10</item>
+        <item name="android:layout_gravity">left|center_horizontal|clip_horizontal</item>
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_height">96dp</item>
     </style>
@@ -17,14 +18,20 @@
         <item name="android:layout_width">8dp</item>
         <item name="android:layout_height">match_parent</item>
     </style>
-    <style name="Widget_Design_TabLayout" parent="@style/Base.Widget.Design.TabLayout">
+    <style name="SudCardTitle">
+        <item name="android:maxLines">6</item>
+    </style>
+    <style name="Widget.Design.TabLayout">
         <item name="tabGravity">1</item>
         <item name="tabMode">1</item>
     </style>
-    <style name="Widget.MaterialComponents.MaterialCalendar.HeaderSelection" parent="@style/Widget.AppCompat.TextView">
+    <style name="Widget.MaterialComponents.MaterialCalendar.HeaderSelection">
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">@integer/mtrl_calendar_selection_text_lines</item>
+    </style>
+    <style name="Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">
+        <item name="android:layout_gravity">top|right|center_vertical|center_horizontal|center</item>
     </style>
 </resources>

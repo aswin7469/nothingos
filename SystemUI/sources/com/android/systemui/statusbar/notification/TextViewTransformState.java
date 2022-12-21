@@ -7,19 +7,17 @@ import android.util.Pools;
 import android.view.View;
 import android.widget.TextView;
 import com.android.systemui.statusbar.notification.TransformState;
-/* loaded from: classes.dex */
+
 public class TextViewTransformState extends TransformState {
     private static Pools.SimplePool<TextViewTransformState> sInstancePool = new Pools.SimplePool<>(40);
     private TextView mText;
 
-    @Override // com.android.systemui.statusbar.notification.TransformState
     public void initFrom(View view, TransformState.TransformInfo transformInfo) {
         super.initFrom(view, transformInfo);
         this.mText = (TextView) view;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.TransformState
+    /* access modifiers changed from: protected */
     public boolean sameAs(TransformState transformState) {
         if (super.sameAs(transformState)) {
             return true;
@@ -27,7 +25,10 @@ public class TextViewTransformState extends TransformState {
         if (transformState instanceof TextViewTransformState) {
             TextViewTransformState textViewTransformState = (TextViewTransformState) transformState;
             if (TextUtils.equals(textViewTransformState.mText.getText(), this.mText.getText())) {
-                return getEllipsisCount() == textViewTransformState.getEllipsisCount() && this.mText.getLineCount() == textViewTransformState.mText.getLineCount() && hasSameSpans(textViewTransformState);
+                if (getEllipsisCount() == textViewTransformState.getEllipsisCount() && this.mText.getLineCount() == textViewTransformState.mText.getLineCount() && hasSameSpans(textViewTransformState)) {
+                    return true;
+                }
+                return false;
             }
         }
         return false;
@@ -59,18 +60,20 @@ public class TextViewTransformState extends TransformState {
         return true;
     }
 
-    @Override // com.android.systemui.statusbar.notification.TransformState
-    protected boolean transformScale(TransformState transformState) {
+    /* access modifiers changed from: protected */
+    public boolean transformScale(TransformState transformState) {
         int lineCount;
         if (!(transformState instanceof TextViewTransformState)) {
             return false;
         }
         TextViewTransformState textViewTransformState = (TextViewTransformState) transformState;
-        return TextUtils.equals(this.mText.getText(), textViewTransformState.mText.getText()) && (lineCount = this.mText.getLineCount()) == 1 && lineCount == textViewTransformState.mText.getLineCount() && getEllipsisCount() == textViewTransformState.getEllipsisCount() && getContentHeight() != textViewTransformState.getContentHeight();
+        if (TextUtils.equals(this.mText.getText(), textViewTransformState.mText.getText()) && (lineCount = this.mText.getLineCount()) == 1 && lineCount == textViewTransformState.mText.getLineCount() && getEllipsisCount() == textViewTransformState.getEllipsisCount() && getContentHeight() != textViewTransformState.getContentHeight()) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.TransformState
+    /* access modifiers changed from: protected */
     public int getContentWidth() {
         Layout layout = this.mText.getLayout();
         if (layout != null) {
@@ -79,9 +82,13 @@ public class TextViewTransformState extends TransformState {
         return super.getContentWidth();
     }
 
-    @Override // com.android.systemui.statusbar.notification.TransformState
-    protected int getContentHeight() {
+    /* access modifiers changed from: protected */
+    public int getContentHeight() {
         return this.mText.getLineHeight();
+    }
+
+    private int getInnerHeight(TextView textView) {
+        return (textView.getHeight() - textView.getPaddingTop()) - textView.getPaddingBottom();
     }
 
     private int getEllipsisCount() {
@@ -94,17 +101,18 @@ public class TextViewTransformState extends TransformState {
 
     public static TextViewTransformState obtain() {
         TextViewTransformState textViewTransformState = (TextViewTransformState) sInstancePool.acquire();
-        return textViewTransformState != null ? textViewTransformState : new TextViewTransformState();
+        if (textViewTransformState != null) {
+            return textViewTransformState;
+        }
+        return new TextViewTransformState();
     }
 
-    @Override // com.android.systemui.statusbar.notification.TransformState
     public void recycle() {
         super.recycle();
         sInstancePool.release(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.TransformState
+    /* access modifiers changed from: protected */
     public void reset() {
         super.reset();
         this.mText = null;

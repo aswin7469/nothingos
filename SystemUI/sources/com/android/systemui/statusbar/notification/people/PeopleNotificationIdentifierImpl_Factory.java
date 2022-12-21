@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.people;
 import com.android.systemui.statusbar.notification.collection.render.GroupMembershipManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class PeopleNotificationIdentifierImpl_Factory implements Factory<PeopleNotificationIdentifierImpl> {
     private final Provider<GroupMembershipManager> groupManagerProvider;
     private final Provider<NotificationPersonExtractor> personExtractorProvider;
@@ -13,10 +13,8 @@ public final class PeopleNotificationIdentifierImpl_Factory implements Factory<P
         this.groupManagerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PeopleNotificationIdentifierImpl mo1933get() {
-        return newInstance(this.personExtractorProvider.mo1933get(), this.groupManagerProvider.mo1933get());
+    public PeopleNotificationIdentifierImpl get() {
+        return newInstance(this.personExtractorProvider.get(), this.groupManagerProvider.get());
     }
 
     public static PeopleNotificationIdentifierImpl_Factory create(Provider<NotificationPersonExtractor> provider, Provider<GroupMembershipManager> provider2) {

@@ -10,7 +10,7 @@ import com.android.systemui.statusbar.phone.ShadeController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class EmergencyButtonController_Factory_Factory implements Factory<EmergencyButtonController.Factory> {
     private final Provider<ActivityTaskManager> activityTaskManagerProvider;
     private final Provider<ConfigurationController> configurationControllerProvider;
@@ -32,10 +32,8 @@ public final class EmergencyButtonController_Factory_Factory implements Factory<
         this.metricsLoggerProvider = provider8;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public EmergencyButtonController.Factory mo1933get() {
-        return newInstance(this.configurationControllerProvider.mo1933get(), this.keyguardUpdateMonitorProvider.mo1933get(), this.telephonyManagerProvider.mo1933get(), this.powerManagerProvider.mo1933get(), this.activityTaskManagerProvider.mo1933get(), this.shadeControllerProvider.mo1933get(), this.telecomManagerProvider.mo1933get(), this.metricsLoggerProvider.mo1933get());
+    public EmergencyButtonController.Factory get() {
+        return newInstance(this.configurationControllerProvider.get(), this.keyguardUpdateMonitorProvider.get(), this.telephonyManagerProvider.get(), this.powerManagerProvider.get(), this.activityTaskManagerProvider.get(), this.shadeControllerProvider.get(), this.telecomManagerProvider.get(), this.metricsLoggerProvider.get());
     }
 
     public static EmergencyButtonController_Factory_Factory create(Provider<ConfigurationController> provider, Provider<KeyguardUpdateMonitor> provider2, Provider<TelephonyManager> provider3, Provider<PowerManager> provider4, Provider<ActivityTaskManager> provider5, Provider<ShadeController> provider6, Provider<TelecomManager> provider7, Provider<MetricsLogger> provider8) {

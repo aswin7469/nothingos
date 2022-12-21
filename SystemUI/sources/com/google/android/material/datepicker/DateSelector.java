@@ -8,16 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.core.util.Pair;
 import java.util.Collection;
-/* loaded from: classes2.dex */
+
 public interface DateSelector<S> extends Parcelable {
     int getDefaultThemeResId(Context context);
+
+    int getDefaultTitleResId();
 
     Collection<Long> getSelectedDays();
 
     Collection<Pair<Long, Long>> getSelectedRanges();
 
-    /* renamed from: getSelection */
-    S mo1831getSelection();
+    S getSelection();
 
     String getSelectionDisplayString(Context context);
 
@@ -26,4 +27,6 @@ public interface DateSelector<S> extends Parcelable {
     View onCreateTextInputView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle, CalendarConstraints calendarConstraints, OnSelectionChangedListener<S> onSelectionChangedListener);
 
     void select(long j);
+
+    void setSelection(S s);
 }

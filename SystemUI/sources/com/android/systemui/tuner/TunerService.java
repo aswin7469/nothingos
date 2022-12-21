@@ -4,11 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import com.android.systemui.Dependency;
-/* loaded from: classes2.dex */
+
 public abstract class TunerService {
+    public static final String ACTION_CLEAR = "com.android.systemui.action.CLEAR_TUNER";
     private final Context mContext;
 
-    /* loaded from: classes2.dex */
     public interface Tunable {
         void onTuningChanged(String str, String str2);
     }
@@ -17,9 +17,13 @@ public abstract class TunerService {
 
     public abstract void clearAll();
 
+    public abstract void destroy();
+
     public abstract int getValue(String str, int i);
 
     public abstract String getValue(String str);
+
+    public abstract String getValue(String str, String str2);
 
     public abstract boolean isTunerEnabled();
 
@@ -37,24 +41,22 @@ public abstract class TunerService {
         this.mContext = context;
     }
 
-    /* loaded from: classes2.dex */
     public static class ClearReceiver extends BroadcastReceiver {
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
-            if ("com.android.systemui.action.CLEAR_TUNER".equals(intent.getAction())) {
+            if (TunerService.ACTION_CLEAR.equals(intent.getAction())) {
                 ((TunerService) Dependency.get(TunerService.class)).clearAll();
             }
         }
     }
 
     public static boolean parseIntegerSwitch(String str, boolean z) {
-        if (str != null) {
-            try {
-                return Integer.parseInt(str) != 0;
-            } catch (NumberFormatException unused) {
-                return z;
-            }
+        if (str == null) {
+            return z;
         }
-        return z;
+        try {
+            return Integer.parseInt(str) != 0;
+        } catch (NumberFormatException unused) {
+            return z;
+        }
     }
 }

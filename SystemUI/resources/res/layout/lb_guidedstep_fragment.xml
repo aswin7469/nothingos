@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.leanback.app.GuidedStepRootLayout xmlns:android="http://schemas.android.com/apk/res/android" android:gravity="bottom" android:orientation="vertical" android:id="@+id/guidedstep_root" android:layout_width="match_parent" android:layout_height="match_parent" android:weightSum="2">
+<androidx.leanback.app.GuidedStepRootLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:gravity="bottom" android:orientation="vertical" android:id="@+id/guidedstep_root" android:layout_width="match_parent" android:layout_height="match_parent" android:weightSum="2">
     <FrameLayout android:id="@+id/guidedstep_background_view_root" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="?attr/guidedStepHeightWeight">
         <LinearLayout android:orientation="horizontal" android:id="@+id/content_frame" android:layout_width="match_parent" android:layout_height="match_parent" android:baselineAligned="false">
             <androidx.leanback.widget.NonOverlappingFrameLayout android:id="@+id/content_fragment" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1"/>

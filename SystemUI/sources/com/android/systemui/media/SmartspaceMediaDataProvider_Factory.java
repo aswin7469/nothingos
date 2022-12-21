@@ -1,11 +1,9 @@
 package com.android.systemui.media;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class SmartspaceMediaDataProvider_Factory implements Factory<SmartspaceMediaDataProvider> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SmartspaceMediaDataProvider mo1933get() {
+    public SmartspaceMediaDataProvider get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class SmartspaceMediaDataProvider_Factory implements Factory<Smarts
         return new SmartspaceMediaDataProvider();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final SmartspaceMediaDataProvider_Factory INSTANCE = new SmartspaceMediaDataProvider_Factory();
+        /* access modifiers changed from: private */
+        public static final SmartspaceMediaDataProvider_Factory INSTANCE = new SmartspaceMediaDataProvider_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

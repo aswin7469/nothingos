@@ -7,44 +7,48 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
 import com.android.internal.accessibility.dialog.AccessibilityTargetHelper;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.Prefs;
 import com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenuView;
-/* loaded from: classes.dex */
+import com.android.systemui.shared.system.SysUiStatsLog;
+import java.util.List;
+
 public class AccessibilityFloatingMenu implements IAccessibilityFloatingMenu {
+    private static final int DEFAULT_FADE_EFFECT_IS_ENABLED = 1;
+    private static final int DEFAULT_MIGRATION_TOOLTIP_PROMPT_IS_DISABLED = 0;
+    private static final float DEFAULT_OPACITY_VALUE = 0.55f;
+    private static final float DEFAULT_POSITION_X_PERCENT = 1.0f;
+    private static final float DEFAULT_POSITION_Y_PERCENT = 0.9f;
     private final ContentObserver mContentObserver;
-    private final Context mContext;
+    /* access modifiers changed from: private */
+    public final Context mContext;
     private final DockTooltipView mDockTooltipView;
     private final ContentObserver mEnabledA11yServicesContentObserver;
     private final ContentObserver mFadeOutContentObserver;
     private final Handler mHandler;
-    private final AccessibilityFloatingMenuView mMenuView;
+    /* access modifiers changed from: private */
+    public final AccessibilityFloatingMenuView mMenuView;
     private final MigrationTooltipView mMigrationTooltipView;
     private final ContentObserver mSizeContentObserver;
 
     public AccessibilityFloatingMenu(Context context) {
         Handler handler = new Handler(Looper.getMainLooper());
         this.mHandler = handler;
-        this.mContentObserver = new ContentObserver(handler) { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenu.1
-            @Override // android.database.ContentObserver
+        this.mContentObserver = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 AccessibilityFloatingMenu.this.mMenuView.onTargetsChanged(AccessibilityTargetHelper.getTargets(AccessibilityFloatingMenu.this.mContext, 0));
             }
         };
-        this.mSizeContentObserver = new ContentObserver(handler) { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenu.2
-            @Override // android.database.ContentObserver
+        this.mSizeContentObserver = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 AccessibilityFloatingMenu.this.mMenuView.setSizeType(AccessibilityFloatingMenu.getSizeType(AccessibilityFloatingMenu.this.mContext));
             }
         };
-        this.mFadeOutContentObserver = new ContentObserver(handler) { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenu.3
-            @Override // android.database.ContentObserver
+        this.mFadeOutContentObserver = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 AccessibilityFloatingMenu.this.mMenuView.updateOpacityWith(AccessibilityFloatingMenu.isFadeEffectEnabled(AccessibilityFloatingMenu.this.mContext), AccessibilityFloatingMenu.getOpacityValue(AccessibilityFloatingMenu.this.mContext));
             }
         };
-        this.mEnabledA11yServicesContentObserver = new ContentObserver(handler) { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenu.4
-            @Override // android.database.ContentObserver
+        this.mEnabledA11yServicesContentObserver = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 AccessibilityFloatingMenu.this.mMenuView.onEnabledFeaturesChanged();
             }
@@ -56,30 +60,25 @@ public class AccessibilityFloatingMenu implements IAccessibilityFloatingMenu {
         this.mDockTooltipView = new DockTooltipView(context, accessibilityFloatingMenuView);
     }
 
-    @VisibleForTesting
     AccessibilityFloatingMenu(Context context, AccessibilityFloatingMenuView accessibilityFloatingMenuView) {
         Handler handler = new Handler(Looper.getMainLooper());
         this.mHandler = handler;
-        this.mContentObserver = new ContentObserver(handler) { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenu.1
-            @Override // android.database.ContentObserver
+        this.mContentObserver = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 AccessibilityFloatingMenu.this.mMenuView.onTargetsChanged(AccessibilityTargetHelper.getTargets(AccessibilityFloatingMenu.this.mContext, 0));
             }
         };
-        this.mSizeContentObserver = new ContentObserver(handler) { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenu.2
-            @Override // android.database.ContentObserver
+        this.mSizeContentObserver = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 AccessibilityFloatingMenu.this.mMenuView.setSizeType(AccessibilityFloatingMenu.getSizeType(AccessibilityFloatingMenu.this.mContext));
             }
         };
-        this.mFadeOutContentObserver = new ContentObserver(handler) { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenu.3
-            @Override // android.database.ContentObserver
+        this.mFadeOutContentObserver = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 AccessibilityFloatingMenu.this.mMenuView.updateOpacityWith(AccessibilityFloatingMenu.isFadeEffectEnabled(AccessibilityFloatingMenu.this.mContext), AccessibilityFloatingMenu.getOpacityValue(AccessibilityFloatingMenu.this.mContext));
             }
         };
-        this.mEnabledA11yServicesContentObserver = new ContentObserver(handler) { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenu.4
-            @Override // android.database.ContentObserver
+        this.mEnabledA11yServicesContentObserver = new ContentObserver(handler) {
             public void onChange(boolean z) {
                 AccessibilityFloatingMenu.this.mMenuView.onEnabledFeaturesChanged();
             }
@@ -94,40 +93,34 @@ public class AccessibilityFloatingMenu implements IAccessibilityFloatingMenu {
         return this.mMenuView.isShowing();
     }
 
-    @Override // com.android.systemui.accessibility.floatingmenu.IAccessibilityFloatingMenu
     public void show() {
-        if (isShowing()) {
-            return;
-        }
-        this.mMenuView.show();
-        this.mMenuView.onTargetsChanged(AccessibilityTargetHelper.getTargets(this.mContext, 0));
-        this.mMenuView.updateOpacityWith(isFadeEffectEnabled(this.mContext), getOpacityValue(this.mContext));
-        this.mMenuView.setSizeType(getSizeType(this.mContext));
-        this.mMenuView.setShapeType(getShapeType(this.mContext));
-        this.mMenuView.setOnDragEndListener(new AccessibilityFloatingMenuView.OnDragEndListener() { // from class: com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenu$$ExternalSyntheticLambda0
-            @Override // com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenuView.OnDragEndListener
-            public final void onDragEnd(Position position) {
-                AccessibilityFloatingMenu.this.onDragEnd(position);
+        if (!isShowing()) {
+            List targets = AccessibilityTargetHelper.getTargets(this.mContext, 0);
+            if (!targets.isEmpty()) {
+                this.mMenuView.show();
+                this.mMenuView.onTargetsChanged(targets);
+                this.mMenuView.updateOpacityWith(isFadeEffectEnabled(this.mContext), getOpacityValue(this.mContext));
+                this.mMenuView.setSizeType(getSizeType(this.mContext));
+                this.mMenuView.setShapeType(getShapeType(this.mContext));
+                this.mMenuView.setOnDragEndListener(new AccessibilityFloatingMenu$$ExternalSyntheticLambda0(this));
+                showMigrationTooltipIfNecessary();
+                registerContentObservers();
             }
-        });
-        showMigrationTooltipIfNecessary();
-        registerContentObservers();
+        }
     }
 
-    @Override // com.android.systemui.accessibility.floatingmenu.IAccessibilityFloatingMenu
     public void hide() {
-        if (!isShowing()) {
-            return;
+        if (isShowing()) {
+            this.mMenuView.hide();
+            this.mMenuView.setOnDragEndListener((AccessibilityFloatingMenuView.OnDragEndListener) null);
+            this.mMigrationTooltipView.hide();
+            this.mDockTooltipView.hide();
+            unregisterContentObservers();
         }
-        this.mMenuView.hide();
-        this.mMenuView.setOnDragEndListener(null);
-        this.mMigrationTooltipView.hide();
-        this.mDockTooltipView.hide();
-        unregisterContentObservers();
     }
 
     private Position getPosition(Context context) {
-        String string = Prefs.getString(context, "AccessibilityFloatingMenuPosition", null);
+        String string = Prefs.getString(context, Prefs.Key.ACCESSIBILITY_FLOATING_MENU_POSITION, (String) null);
         if (TextUtils.isEmpty(string)) {
             return new Position(1.0f, 0.9f);
         }
@@ -142,39 +135,46 @@ public class AccessibilityFloatingMenu implements IAccessibilityFloatingMenu {
     }
 
     private static boolean isMigrationTooltipPromptEnabled(Context context) {
-        return Settings.Secure.getInt(context.getContentResolver(), "accessibility_floating_menu_migration_tooltip_prompt", 0) == 1;
+        if (Settings.Secure.getInt(context.getContentResolver(), "accessibility_floating_menu_migration_tooltip_prompt", 0) == 1) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onDragEnd(Position position) {
+        SysUiStatsLog.write((int) SysUiStatsLog.ACCESSIBILITY_FLOATING_MENU_UI_CHANGED, position.getPercentageX(), position.getPercentageY(), this.mContext.getResources().getConfiguration().orientation);
         savePosition(this.mContext, position);
         showDockTooltipIfNecessary(this.mContext);
     }
 
     private void savePosition(Context context, Position position) {
-        Prefs.putString(context, "AccessibilityFloatingMenuPosition", position.toString());
+        Prefs.putString(context, Prefs.Key.ACCESSIBILITY_FLOATING_MENU_POSITION, position.toString());
     }
 
     private void showDockTooltipIfNecessary(Context context) {
-        if (!Prefs.get(context).getBoolean("HasSeenAccessibilityFloatingMenuDockTooltip", false)) {
+        if (!Prefs.get(context).getBoolean(Prefs.Key.HAS_SEEN_ACCESSIBILITY_FLOATING_MENU_DOCK_TOOLTIP, false)) {
             if (this.mMenuView.isOvalShape()) {
                 this.mDockTooltipView.show();
             }
-            Prefs.putBoolean(context, "HasSeenAccessibilityFloatingMenuDockTooltip", true);
+            Prefs.putBoolean(context, Prefs.Key.HAS_SEEN_ACCESSIBILITY_FLOATING_MENU_DOCK_TOOLTIP, true);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static boolean isFadeEffectEnabled(Context context) {
-        return Settings.Secure.getInt(context.getContentResolver(), "accessibility_floating_menu_fade_enabled", 1) == 1;
+        if (Settings.Secure.getInt(context.getContentResolver(), "accessibility_floating_menu_fade_enabled", 1) == 1) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static float getOpacityValue(Context context) {
-        return Settings.Secure.getFloat(context.getContentResolver(), "accessibility_floating_menu_opacity", 0.55f);
+        return Settings.Secure.getFloat(context.getContentResolver(), "accessibility_floating_menu_opacity", DEFAULT_OPACITY_VALUE);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static int getSizeType(Context context) {
         return Settings.Secure.getInt(context.getContentResolver(), "accessibility_floating_menu_size", 0);
     }

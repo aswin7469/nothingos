@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt" android:ordering="sequentially">
-    <objectAnimator android:interpolator="@drawable/res_0x7f08011a_ic_sysbar_rotate_button_cw_start_90__2__0" android:duration="600" android:startOffset="100" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
+<set xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:ordering="sequentially">
+    <objectAnimator android:interpolator="@drawable/$ic_sysbar_rotate_button_cw_start_90__3" android:duration="600" android:startOffset="100" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
     <objectAnimator android:duration="100" android:startOffset="1300" android:valueFrom="90" android:valueTo="90" android:propertyName="rotation"/>
-    <objectAnimator android:interpolator="@drawable/res_0x7f08011b_ic_sysbar_rotate_button_cw_start_90__2__1" android:duration="600" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
+    <objectAnimator android:interpolator="@drawable/$ic_sysbar_rotate_button_cw_start_90__4" android:duration="600" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
     <objectAnimator android:duration="100" android:startOffset="1300" android:valueFrom="90" android:valueTo="90" android:propertyName="rotation"/>
-    <objectAnimator android:interpolator="@drawable/res_0x7f08011c_ic_sysbar_rotate_button_cw_start_90__2__2" android:duration="600" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
+    <objectAnimator android:interpolator="@drawable/$ic_sysbar_rotate_button_cw_start_90__5" android:duration="600" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
     <objectAnimator android:duration="100" android:startOffset="1300" android:valueFrom="90" android:valueTo="90" android:propertyName="rotation"/>
-    <objectAnimator android:interpolator="@drawable/res_0x7f08011d_ic_sysbar_rotate_button_cw_start_90__2__3" android:duration="600" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
+    <objectAnimator android:interpolator="@drawable/$ic_sysbar_rotate_button_cw_start_90__6" android:duration="600" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
     <objectAnimator android:duration="100" android:startOffset="1300" android:valueFrom="90" android:valueTo="90" android:propertyName="rotation"/>
-    <objectAnimator android:interpolator="@drawable/res_0x7f08011e_ic_sysbar_rotate_button_cw_start_90__2__4" android:duration="600" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
+    <objectAnimator android:interpolator="@drawable/$ic_sysbar_rotate_button_cw_start_90__7" android:duration="600" android:valueFrom="90" android:valueTo="180" android:propertyName="rotation"/>
 </set>

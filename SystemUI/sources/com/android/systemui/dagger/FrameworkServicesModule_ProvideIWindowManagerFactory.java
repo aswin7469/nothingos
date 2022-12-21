@@ -3,11 +3,9 @@ package com.android.systemui.dagger;
 import android.view.IWindowManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideIWindowManagerFactory implements Factory<IWindowManager> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public IWindowManager mo1933get() {
+    public IWindowManager get() {
         return provideIWindowManager();
     }
 
@@ -19,8 +17,11 @@ public final class FrameworkServicesModule_ProvideIWindowManagerFactory implemen
         return (IWindowManager) Preconditions.checkNotNullFromProvides(FrameworkServicesModule.provideIWindowManager());
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final FrameworkServicesModule_ProvideIWindowManagerFactory INSTANCE = new FrameworkServicesModule_ProvideIWindowManagerFactory();
+        /* access modifiers changed from: private */
+        public static final FrameworkServicesModule_ProvideIWindowManagerFactory INSTANCE = new FrameworkServicesModule_ProvideIWindowManagerFactory();
+
+        private InstanceHolder() {
+        }
     }
 }

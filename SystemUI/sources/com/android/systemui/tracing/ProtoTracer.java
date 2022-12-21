@@ -3,6 +3,7 @@ package com.android.systemui.tracing;
 import android.content.Context;
 import android.os.SystemClock;
 import com.android.systemui.Dumpable;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.shared.tracing.FrameProtoTracer;
 import com.android.systemui.shared.tracing.ProtoTraceable;
@@ -10,45 +11,40 @@ import com.android.systemui.tracing.nano.SystemUiTraceEntryProto;
 import com.android.systemui.tracing.nano.SystemUiTraceFileProto;
 import com.android.systemui.tracing.nano.SystemUiTraceProto;
 import com.google.protobuf.nano.MessageNano;
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.File;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Queue;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class ProtoTracer implements Dumpable, FrameProtoTracer.ProtoTraceParams<MessageNano, SystemUiTraceFileProto, SystemUiTraceEntryProto, SystemUiTraceProto> {
+    private static final long MAGIC_NUMBER_VALUE = 4851032422572317011L;
+    private static final String TAG = "ProtoTracer";
     private final Context mContext;
     private final FrameProtoTracer<MessageNano, SystemUiTraceFileProto, SystemUiTraceEntryProto, SystemUiTraceProto> mProtoTracer = new FrameProtoTracer<>(this);
 
+    @Inject
     public ProtoTracer(Context context, DumpManager dumpManager) {
         this.mContext = context;
-        dumpManager.registerDumpable(ProtoTracer.class.getName(), this);
+        dumpManager.registerDumpable(this);
     }
 
-    @Override // com.android.systemui.shared.tracing.FrameProtoTracer.ProtoTraceParams
     public File getTraceFile() {
         return new File(this.mContext.getFilesDir(), "sysui_trace.pb");
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.android.systemui.shared.tracing.FrameProtoTracer.ProtoTraceParams
-    /* renamed from: getEncapsulatingTraceProto */
-    public SystemUiTraceFileProto mo1360getEncapsulatingTraceProto() {
+    public SystemUiTraceFileProto getEncapsulatingTraceProto() {
         return new SystemUiTraceFileProto();
     }
 
-    @Override // com.android.systemui.shared.tracing.FrameProtoTracer.ProtoTraceParams
     public SystemUiTraceEntryProto updateBufferProto(SystemUiTraceEntryProto systemUiTraceEntryProto, ArrayList<ProtoTraceable<SystemUiTraceProto>> arrayList) {
         if (systemUiTraceEntryProto == null) {
             systemUiTraceEntryProto = new SystemUiTraceEntryProto();
         }
         systemUiTraceEntryProto.elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos();
-        SystemUiTraceProto systemUiTraceProto = systemUiTraceEntryProto.systemUi;
-        if (systemUiTraceProto == null) {
-            systemUiTraceProto = new SystemUiTraceProto();
-        }
-        systemUiTraceEntryProto.systemUi = systemUiTraceProto;
+        systemUiTraceEntryProto.systemUi = systemUiTraceEntryProto.systemUi != null ? systemUiTraceEntryProto.systemUi : new SystemUiTraceProto();
         Iterator<ProtoTraceable<SystemUiTraceProto>> it = arrayList.iterator();
         while (it.hasNext()) {
             it.next().writeToProto(systemUiTraceEntryProto.systemUi);
@@ -56,19 +52,16 @@ public class ProtoTracer implements Dumpable, FrameProtoTracer.ProtoTraceParams<
         return systemUiTraceEntryProto;
     }
 
-    @Override // com.android.systemui.shared.tracing.FrameProtoTracer.ProtoTraceParams
     public byte[] serializeEncapsulatingProto(SystemUiTraceFileProto systemUiTraceFileProto, Queue<SystemUiTraceEntryProto> queue) {
-        systemUiTraceFileProto.magicNumber = 4851032422572317011L;
-        systemUiTraceFileProto.entry = (SystemUiTraceEntryProto[]) queue.toArray(new SystemUiTraceEntryProto[0]);
+        systemUiTraceFileProto.magicNumber = MAGIC_NUMBER_VALUE;
+        systemUiTraceFileProto.entry = (SystemUiTraceEntryProto[]) queue.toArray((T[]) new SystemUiTraceEntryProto[0]);
         return MessageNano.toByteArray(systemUiTraceFileProto);
     }
 
-    @Override // com.android.systemui.shared.tracing.FrameProtoTracer.ProtoTraceParams
     public byte[] getProtoBytes(MessageNano messageNano) {
         return MessageNano.toByteArray(messageNano);
     }
 
-    @Override // com.android.systemui.shared.tracing.FrameProtoTracer.ProtoTraceParams
     public int getProtoSize(MessageNano messageNano) {
         return messageNano.getCachedSize();
     }
@@ -79,6 +72,10 @@ public class ProtoTracer implements Dumpable, FrameProtoTracer.ProtoTraceParams<
 
     public void stop() {
         this.mProtoTracer.stop();
+    }
+
+    public boolean isEnabled() {
+        return this.mProtoTracer.isEnabled();
     }
 
     public void add(ProtoTraceable<SystemUiTraceProto> protoTraceable) {
@@ -93,8 +90,11 @@ public class ProtoTracer implements Dumpable, FrameProtoTracer.ProtoTraceParams<
         this.mProtoTracer.scheduleFrameUpdate();
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void update() {
+        this.mProtoTracer.update();
+    }
+
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("ProtoTracer:");
         printWriter.print("    ");
         printWriter.println("enabled: " + this.mProtoTracer.isEnabled());

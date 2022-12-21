@@ -4,13 +4,15 @@ import android.hardware.biometrics.BiometricSourceType;
 import android.os.SystemClock;
 import android.telephony.ServiceState;
 import com.android.settingslib.fuelgauge.BatteryStatus;
+import com.nothing.keyguard.KeyguardUpdateMonitorCallbackEx;
 import java.util.TimeZone;
-/* loaded from: classes.dex */
-public class KeyguardUpdateMonitorCallback {
+
+public class KeyguardUpdateMonitorCallback extends KeyguardUpdateMonitorCallbackEx {
+    private static final long VISIBILITY_CHANGED_COLLAPSE_MS = 1000;
     private boolean mShowing;
     private long mVisibilityChangedCalled;
 
-    public void onBiometricAcquired(BiometricSourceType biometricSourceType) {
+    public void onBiometricAcquired(BiometricSourceType biometricSourceType, int i) {
     }
 
     public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
@@ -56,16 +58,22 @@ public class KeyguardUpdateMonitorCallback {
     public void onFinishedGoingToSleep(int i) {
     }
 
-    public void onHasLockscreenWallpaperChanged(boolean z) {
+    public void onKeyguardBouncerFullyShowingChanged(boolean z) {
     }
 
-    public void onKeyguardBouncerChanged(boolean z) {
+    public void onKeyguardBouncerStateChanged(boolean z) {
+    }
+
+    public void onKeyguardDismissAnimationFinished() {
+    }
+
+    public void onKeyguardOccludedChanged(boolean z) {
     }
 
     public void onKeyguardVisibilityChanged(boolean z) {
     }
 
-    public void onLockScreenModeChanged(int i) {
+    public void onLockedOutStateChanged(BiometricSourceType biometricSourceType) {
     }
 
     public void onLogoutEnabledChanged() {
@@ -81,17 +89,6 @@ public class KeyguardUpdateMonitorCallback {
     }
 
     public void onRequireUnlockForNfc() {
-    }
-
-    public void onRingerModeChanged(int i) {
-    }
-
-    @Deprecated
-    public void onScreenTurnedOff() {
-    }
-
-    @Deprecated
-    public void onScreenTurnedOn() {
     }
 
     public void onSecondaryLockscreenRequirementChanged(int i) {
@@ -115,9 +112,6 @@ public class KeyguardUpdateMonitorCallback {
     }
 
     public void onStrongAuthStateChanged(int i) {
-    }
-
-    public void onTapWake() {
     }
 
     public void onTelephonyCapable(boolean z) {
@@ -154,6 +148,9 @@ public class KeyguardUpdateMonitorCallback {
     }
 
     public void onUserUnlocked() {
+    }
+
+    public void showTrustGrantedMessage(CharSequence charSequence) {
     }
 
     public void onKeyguardVisibilityChangedRaw(boolean z) {

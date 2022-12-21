@@ -4,68 +4,77 @@ import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
+import android.os.Trace;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.Log;
-import com.android.internal.annotations.GuardedBy;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
+import com.android.systemui.dagger.qualifiers.UiBackground;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationListener;
+import com.android.systemui.statusbar.notification.NotifPipelineFlags;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.collection.NotifLiveDataStore;
+import com.android.systemui.statusbar.notification.collection.NotifPipeline;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-import com.android.systemui.statusbar.notification.logging.NotificationLogger;
+import com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener;
+import com.android.systemui.statusbar.notification.collection.render.NotificationVisibilityProvider;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class NotificationLogger implements StatusBarStateController.StateListener {
-    private final NotificationEntryManager mEntryManager;
-    private final ExpansionStateLogger mExpansionStateLogger;
-    private long mLastVisibilityReportUptimeMs;
-    private NotificationListContainer mListContainer;
-    private final NotificationListenerService mNotificationListener;
-    private final NotificationPanelLogger mNotificationPanelLogger;
-    private final Executor mUiBgExecutor;
-    private final ArraySet<NotificationVisibility> mCurrentlyVisibleNotifications = new ArraySet<>();
-    protected Handler mHandler = new Handler();
-    private final Object mDozingLock = new Object();
-    @GuardedBy({"mDozingLock"})
+    private static final boolean DEBUG = false;
+    private static final String TAG = "NotificationLogger";
+    private static final int VISIBILITY_REPORT_MIN_DELAY_MS = 500;
+    protected IStatusBarService mBarService;
+    /* access modifiers changed from: private */
+    public final ArraySet<NotificationVisibility> mCurrentlyVisibleNotifications = new ArraySet<>();
     private Boolean mDozing = null;
-    @GuardedBy({"mDozingLock"})
+    private final Object mDozingLock = new Object();
+    private final NotificationEntryManager mEntryManager;
+    /* access modifiers changed from: private */
+    public final ExpansionStateLogger mExpansionStateLogger;
+    protected Handler mHandler = new Handler();
+    /* access modifiers changed from: private */
+    public long mLastVisibilityReportUptimeMs;
+    /* access modifiers changed from: private */
+    public NotificationListContainer mListContainer;
     private Boolean mLockscreen = null;
-    private Boolean mPanelExpanded = null;
     private boolean mLogging = false;
-    protected final OnChildLocationsChangedListener mNotificationLocationsChangedListener = new OnChildLocationsChangedListener() { // from class: com.android.systemui.statusbar.notification.logging.NotificationLogger.1
-        @Override // com.android.systemui.statusbar.notification.logging.NotificationLogger.OnChildLocationsChangedListener
+    private final NotifLiveDataStore mNotifLiveDataStore;
+    private final NotifPipeline mNotifPipeline;
+    private final NotificationListenerService mNotificationListener;
+    protected final OnChildLocationsChangedListener mNotificationLocationsChangedListener = new OnChildLocationsChangedListener() {
         public void onChildLocationsChanged() {
-            NotificationLogger notificationLogger = NotificationLogger.this;
-            if (notificationLogger.mHandler.hasCallbacks(notificationLogger.mVisibilityReporter)) {
-                return;
+            if (!NotificationLogger.this.mHandler.hasCallbacks(NotificationLogger.this.mVisibilityReporter)) {
+                NotificationLogger.this.mHandler.postAtTime(NotificationLogger.this.mVisibilityReporter, NotificationLogger.this.mLastVisibilityReportUptimeMs + 500);
             }
-            NotificationLogger notificationLogger2 = NotificationLogger.this;
-            notificationLogger2.mHandler.postAtTime(notificationLogger2.mVisibilityReporter, NotificationLogger.this.mLastVisibilityReportUptimeMs + 500);
         }
     };
-    protected Runnable mVisibilityReporter = new Runnable() { // from class: com.android.systemui.statusbar.notification.logging.NotificationLogger.2
-        private final ArraySet<NotificationVisibility> mTmpNewlyVisibleNotifications = new ArraySet<>();
+    private final NotificationPanelLogger mNotificationPanelLogger;
+    private Boolean mPanelExpanded = null;
+    private final Executor mUiBgExecutor;
+    private final NotificationVisibilityProvider mVisibilityProvider;
+    protected Runnable mVisibilityReporter = new Runnable() {
         private final ArraySet<NotificationVisibility> mTmpCurrentlyVisibleNotifications = new ArraySet<>();
+        private final ArraySet<NotificationVisibility> mTmpNewlyVisibleNotifications = new ArraySet<>();
         private final ArraySet<NotificationVisibility> mTmpNoLongerVisibleNotifications = new ArraySet<>();
 
-        @Override // java.lang.Runnable
         public void run() {
-            NotificationLogger.this.mLastVisibilityReportUptimeMs = SystemClock.uptimeMillis();
-            List<NotificationEntry> visibleNotifications = NotificationLogger.this.mEntryManager.getVisibleNotifications();
-            int size = visibleNotifications.size();
+            long unused = NotificationLogger.this.mLastVisibilityReportUptimeMs = SystemClock.uptimeMillis();
+            List access$100 = NotificationLogger.this.getVisibleNotifications();
+            int size = access$100.size();
             for (int i = 0; i < size; i++) {
-                NotificationEntry notificationEntry = visibleNotifications.get(i);
+                NotificationEntry notificationEntry = (NotificationEntry) access$100.get(i);
                 String key = notificationEntry.getSbn().getKey();
                 boolean isInVisibleLocation = NotificationLogger.this.mListContainer.isInVisibleLocation(notificationEntry);
                 NotificationVisibility obtain = NotificationVisibility.obtain(key, i, size, isInVisibleLocation, NotificationLogger.getNotificationLocation(notificationEntry));
@@ -80,25 +89,30 @@ public class NotificationLogger implements StatusBarStateController.StateListene
                 }
             }
             this.mTmpNoLongerVisibleNotifications.addAll(NotificationLogger.this.mCurrentlyVisibleNotifications);
-            this.mTmpNoLongerVisibleNotifications.removeAll((ArraySet<? extends NotificationVisibility>) this.mTmpCurrentlyVisibleNotifications);
+            this.mTmpNoLongerVisibleNotifications.removeAll(this.mTmpCurrentlyVisibleNotifications);
             NotificationLogger.this.logNotificationVisibilityChanges(this.mTmpNewlyVisibleNotifications, this.mTmpNoLongerVisibleNotifications);
             NotificationLogger notificationLogger = NotificationLogger.this;
-            notificationLogger.recycleAllVisibilityObjects(notificationLogger.mCurrentlyVisibleNotifications);
-            NotificationLogger.this.mCurrentlyVisibleNotifications.addAll((ArraySet) this.mTmpCurrentlyVisibleNotifications);
-            ExpansionStateLogger expansionStateLogger = NotificationLogger.this.mExpansionStateLogger;
+            notificationLogger.recycleAllVisibilityObjects((ArraySet<NotificationVisibility>) notificationLogger.mCurrentlyVisibleNotifications);
+            NotificationLogger.this.mCurrentlyVisibleNotifications.addAll(this.mTmpCurrentlyVisibleNotifications);
+            ExpansionStateLogger access$600 = NotificationLogger.this.mExpansionStateLogger;
             ArraySet<NotificationVisibility> arraySet = this.mTmpCurrentlyVisibleNotifications;
-            expansionStateLogger.onVisibilityChanged(arraySet, arraySet);
+            access$600.onVisibilityChanged(arraySet, arraySet);
+            Trace.traceCounter(4096, "Notifications [Active]", size);
+            Trace.traceCounter(4096, "Notifications [Visible]", NotificationLogger.this.mCurrentlyVisibleNotifications.size());
             NotificationLogger.this.recycleAllVisibilityObjects(this.mTmpNoLongerVisibleNotifications);
             this.mTmpCurrentlyVisibleNotifications.clear();
             this.mTmpNewlyVisibleNotifications.clear();
             this.mTmpNoLongerVisibleNotifications.clear();
         }
     };
-    protected IStatusBarService mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
 
-    /* loaded from: classes.dex */
     public interface OnChildLocationsChangedListener {
         void onChildLocationsChanged();
+    }
+
+    /* access modifiers changed from: private */
+    public List<NotificationEntry> getVisibleNotifications() {
+        return this.mNotifLiveDataStore.getActiveNotifList().getValue();
     }
 
     public static NotificationVisibility.NotificationLocation getNotificationLocation(NotificationEntry notificationEntry) {
@@ -109,48 +123,69 @@ public class NotificationLogger implements StatusBarStateController.StateListene
     }
 
     private static NotificationVisibility.NotificationLocation convertNotificationLocation(int i) {
-        if (i != 1) {
-            if (i == 2) {
-                return NotificationVisibility.NotificationLocation.LOCATION_HIDDEN_TOP;
-            }
-            if (i == 4) {
-                return NotificationVisibility.NotificationLocation.LOCATION_MAIN_AREA;
-            }
-            if (i == 8) {
-                return NotificationVisibility.NotificationLocation.LOCATION_BOTTOM_STACK_PEEKING;
-            }
-            if (i == 16) {
-                return NotificationVisibility.NotificationLocation.LOCATION_BOTTOM_STACK_HIDDEN;
-            }
-            if (i == 64) {
-                return NotificationVisibility.NotificationLocation.LOCATION_GONE;
-            }
+        if (i == 1) {
+            return NotificationVisibility.NotificationLocation.LOCATION_FIRST_HEADS_UP;
+        }
+        if (i == 2) {
+            return NotificationVisibility.NotificationLocation.LOCATION_HIDDEN_TOP;
+        }
+        if (i == 4) {
+            return NotificationVisibility.NotificationLocation.LOCATION_MAIN_AREA;
+        }
+        if (i == 8) {
+            return NotificationVisibility.NotificationLocation.LOCATION_BOTTOM_STACK_PEEKING;
+        }
+        if (i == 16) {
+            return NotificationVisibility.NotificationLocation.LOCATION_BOTTOM_STACK_HIDDEN;
+        }
+        if (i != 64) {
             return NotificationVisibility.NotificationLocation.LOCATION_UNKNOWN;
         }
-        return NotificationVisibility.NotificationLocation.LOCATION_FIRST_HEADS_UP;
+        return NotificationVisibility.NotificationLocation.LOCATION_GONE;
     }
 
-    public NotificationLogger(NotificationListener notificationListener, Executor executor, NotificationEntryManager notificationEntryManager, StatusBarStateController statusBarStateController, ExpansionStateLogger expansionStateLogger, NotificationPanelLogger notificationPanelLogger) {
+    public NotificationLogger(NotificationListener notificationListener, @UiBackground Executor executor, NotifPipelineFlags notifPipelineFlags, NotifLiveDataStore notifLiveDataStore, NotificationVisibilityProvider notificationVisibilityProvider, NotificationEntryManager notificationEntryManager, NotifPipeline notifPipeline, StatusBarStateController statusBarStateController, ExpansionStateLogger expansionStateLogger, NotificationPanelLogger notificationPanelLogger) {
         this.mNotificationListener = notificationListener;
         this.mUiBgExecutor = executor;
+        this.mNotifLiveDataStore = notifLiveDataStore;
+        this.mVisibilityProvider = notificationVisibilityProvider;
         this.mEntryManager = notificationEntryManager;
+        this.mNotifPipeline = notifPipeline;
+        this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
         this.mExpansionStateLogger = expansionStateLogger;
         this.mNotificationPanelLogger = notificationPanelLogger;
         statusBarStateController.addCallback(this);
-        notificationEntryManager.addNotificationEntryListener(new NotificationEntryListener() { // from class: com.android.systemui.statusbar.notification.logging.NotificationLogger.3
-            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
+        if (notifPipelineFlags.isNewPipelineEnabled()) {
+            registerNewPipelineListener();
+        } else {
+            registerLegacyListener();
+        }
+    }
+
+    private void registerLegacyListener() {
+        this.mEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
             public void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
                 NotificationLogger.this.mExpansionStateLogger.onEntryRemoved(notificationEntry.getKey());
             }
 
-            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onPreEntryUpdated(NotificationEntry notificationEntry) {
                 NotificationLogger.this.mExpansionStateLogger.onEntryUpdated(notificationEntry.getKey());
             }
 
-            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onInflationError(StatusBarNotification statusBarNotification, Exception exc) {
                 NotificationLogger.this.logNotificationError(statusBarNotification, exc);
+            }
+        });
+    }
+
+    private void registerNewPipelineListener() {
+        this.mNotifPipeline.addCollectionListener(new NotifCollectionListener() {
+            public void onEntryUpdated(NotificationEntry notificationEntry, boolean z) {
+                NotificationLogger.this.mExpansionStateLogger.onEntryUpdated(notificationEntry.getKey());
+            }
+
+            public void onEntryRemoved(NotificationEntry notificationEntry, int i) {
+                NotificationLogger.this.mExpansionStateLogger.onEntryRemoved(notificationEntry.getKey());
             }
         });
     }
@@ -162,18 +197,24 @@ public class NotificationLogger implements StatusBarStateController.StateListene
     public void stopNotificationLogging() {
         if (this.mLogging) {
             this.mLogging = false;
+            if (DEBUG) {
+                Log.i(TAG, "stopNotificationLogging: log notifications invisible");
+            }
             if (!this.mCurrentlyVisibleNotifications.isEmpty()) {
                 logNotificationVisibilityChanges(Collections.emptyList(), this.mCurrentlyVisibleNotifications);
                 recycleAllVisibilityObjects(this.mCurrentlyVisibleNotifications);
             }
             this.mHandler.removeCallbacks(this.mVisibilityReporter);
-            this.mListContainer.setChildLocationsChangedListener(null);
+            this.mListContainer.setChildLocationsChangedListener((OnChildLocationsChangedListener) null);
         }
     }
 
     public void startNotificationLogging() {
         if (!this.mLogging) {
             this.mLogging = true;
+            if (DEBUG) {
+                Log.i(TAG, "startNotificationLogging");
+            }
             this.mListContainer.setChildLocationsChangedListener(this.mNotificationLocationsChangedListener);
             this.mNotificationLocationsChangedListener.onChildLocationsChanged();
         }
@@ -186,7 +227,7 @@ public class NotificationLogger implements StatusBarStateController.StateListene
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void logNotificationError(StatusBarNotification statusBarNotification, Exception exc) {
         try {
             this.mBarService.onNotificationError(statusBarNotification.getPackageName(), statusBarNotification.getTag(), statusBarNotification.getId(), statusBarNotification.getUid(), statusBarNotification.getInitialPid(), exc.getMessage(), statusBarNotification.getUserId());
@@ -194,22 +235,16 @@ public class NotificationLogger implements StatusBarStateController.StateListene
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void logNotificationVisibilityChanges(Collection<NotificationVisibility> collection, Collection<NotificationVisibility> collection2) {
         if (!collection.isEmpty() || !collection2.isEmpty()) {
-            final NotificationVisibility[] cloneVisibilitiesAsArr = cloneVisibilitiesAsArr(collection);
-            final NotificationVisibility[] cloneVisibilitiesAsArr2 = cloneVisibilitiesAsArr(collection2);
-            this.mUiBgExecutor.execute(new Runnable() { // from class: com.android.systemui.statusbar.notification.logging.NotificationLogger$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    NotificationLogger.this.lambda$logNotificationVisibilityChanges$0(cloneVisibilitiesAsArr, cloneVisibilitiesAsArr2);
-                }
-            });
+            this.mUiBgExecutor.execute(new NotificationLogger$$ExternalSyntheticLambda0(this, cloneVisibilitiesAsArr(collection), cloneVisibilitiesAsArr(collection2)));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$logNotificationVisibilityChanges$0(NotificationVisibility[] notificationVisibilityArr, NotificationVisibility[] notificationVisibilityArr2) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$logNotificationVisibilityChanges$0$com-android-systemui-statusbar-notification-logging-NotificationLogger */
+    public /* synthetic */ void mo40793xde1be78(NotificationVisibility[] notificationVisibilityArr, NotificationVisibility[] notificationVisibilityArr2) {
         try {
             this.mBarService.onNotificationVisibilityChanged(notificationVisibilityArr, notificationVisibilityArr2);
         } catch (RemoteException unused) {
@@ -223,14 +258,14 @@ public class NotificationLogger implements StatusBarStateController.StateListene
             try {
                 this.mNotificationListener.setNotificationsShown(strArr);
             } catch (RuntimeException e) {
-                Log.d("NotificationLogger", "failed setNotificationsShown: ", e);
+                Log.d(TAG, "failed setNotificationsShown: ", e);
             }
         }
         recycleAllVisibilityObjects(notificationVisibilityArr);
         recycleAllVisibilityObjects(notificationVisibilityArr2);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void recycleAllVisibilityObjects(ArraySet<NotificationVisibility> arraySet) {
         int size = arraySet.size();
         for (int i = 0; i < size; i++) {
@@ -240,64 +275,82 @@ public class NotificationLogger implements StatusBarStateController.StateListene
     }
 
     private void recycleAllVisibilityObjects(NotificationVisibility[] notificationVisibilityArr) {
-        int length = notificationVisibilityArr.length;
-        for (int i = 0; i < length; i++) {
-            if (notificationVisibilityArr[i] != null) {
-                notificationVisibilityArr[i].recycle();
+        for (NotificationVisibility notificationVisibility : notificationVisibilityArr) {
+            if (notificationVisibility != null) {
+                notificationVisibility.recycle();
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static NotificationVisibility[] cloneVisibilitiesAsArr(Collection<NotificationVisibility> collection) {
         NotificationVisibility[] notificationVisibilityArr = new NotificationVisibility[collection.size()];
         int i = 0;
-        for (NotificationVisibility notificationVisibility : collection) {
-            if (notificationVisibility != null) {
-                notificationVisibilityArr[i] = notificationVisibility.clone();
+        for (NotificationVisibility next : collection) {
+            if (next != null) {
+                notificationVisibilityArr[i] = next.clone();
             }
             i++;
         }
         return notificationVisibilityArr;
     }
 
-    @VisibleForTesting
     public Runnable getVisibilityReporter() {
         return this.mVisibilityReporter;
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStateChanged(int i) {
+        if (DEBUG) {
+            Log.i(TAG, "onStateChanged: new=" + i);
+        }
         synchronized (this.mDozingLock) {
             boolean z = true;
-            if (i != 1 && i != 2) {
+            if (!(i == 1 || i == 2)) {
                 z = false;
             }
             this.mLockscreen = Boolean.valueOf(z);
         }
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozingChanged(boolean z) {
+        if (DEBUG) {
+            Log.i(TAG, "onDozingChanged: new=" + z);
+        }
         setDozing(z);
     }
 
-    @GuardedBy({"mDozingLock"})
     private void maybeUpdateLoggingStatus() {
-        if (this.mPanelExpanded == null || this.mDozing == null) {
-            return;
-        }
-        Boolean bool = this.mLockscreen;
-        boolean booleanValue = bool == null ? false : bool.booleanValue();
-        if (this.mPanelExpanded.booleanValue() && !this.mDozing.booleanValue()) {
-            this.mNotificationPanelLogger.logPanelShown(booleanValue, this.mEntryManager.getVisibleNotifications());
+        boolean z = false;
+        if (this.mPanelExpanded != null && this.mDozing != null) {
+            Boolean bool = this.mLockscreen;
+            if (bool != null) {
+                z = bool.booleanValue();
+            }
+            if (!this.mPanelExpanded.booleanValue() || this.mDozing.booleanValue()) {
+                if (DEBUG) {
+                    Log.i(TAG, "Notification panel hidden, lockscreen=" + z);
+                }
+                stopNotificationLogging();
+                return;
+            }
+            this.mNotificationPanelLogger.logPanelShown(z, getVisibleNotifications());
+            if (DEBUG) {
+                Log.i(TAG, "Notification panel shown, lockscreen=" + z);
+            }
             startNotificationLogging();
-            return;
+        } else if (DEBUG) {
+            StringBuilder append = new StringBuilder("Panel status unclear: panelExpandedKnown=").append(this.mPanelExpanded == null).append(" dozingKnown=");
+            if (this.mDozing == null) {
+                z = true;
+            }
+            Log.i(TAG, append.append(z).toString());
         }
-        stopNotificationLogging();
     }
 
     public void onPanelExpandedChanged(boolean z) {
+        if (DEBUG) {
+            Log.i(TAG, "onPanelExpandedChanged: new=" + z);
+        }
         this.mPanelExpanded = Boolean.valueOf(z);
         synchronized (this.mDozingLock) {
             maybeUpdateLoggingStatus();
@@ -305,28 +358,27 @@ public class NotificationLogger implements StatusBarStateController.StateListene
     }
 
     public void onExpansionChanged(String str, boolean z, boolean z2) {
-        this.mExpansionStateLogger.onExpansionChanged(str, z, z2, getNotificationLocation(this.mEntryManager.getActiveNotificationUnfiltered(str)));
+        this.mExpansionStateLogger.onExpansionChanged(str, z, z2, this.mVisibilityProvider.getLocation(str));
     }
 
-    @VisibleForTesting
     public void setVisibilityReporter(Runnable runnable) {
         this.mVisibilityReporter = runnable;
     }
 
-    /* loaded from: classes.dex */
     public static class ExpansionStateLogger {
-        private final Executor mUiBgExecutor;
+        IStatusBarService mBarService;
         private final Map<String, State> mExpansionStates = new ArrayMap();
         private final Map<String, Boolean> mLoggedExpansionState = new ArrayMap();
-        @VisibleForTesting
-        IStatusBarService mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
+        private final Executor mUiBgExecutor;
 
-        public ExpansionStateLogger(Executor executor) {
+        @Inject
+        public ExpansionStateLogger(@UiBackground Executor executor) {
             this.mUiBgExecutor = executor;
+            this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
         }
 
-        @VisibleForTesting
-        void onExpansionChanged(String str, boolean z, boolean z2, NotificationVisibility.NotificationLocation notificationLocation) {
+        /* access modifiers changed from: package-private */
+        public void onExpansionChanged(String str, boolean z, boolean z2, NotificationVisibility.NotificationLocation notificationLocation) {
             State state = getState(str);
             state.mIsUserAction = Boolean.valueOf(z);
             state.mIsExpanded = Boolean.valueOf(z2);
@@ -334,74 +386,66 @@ public class NotificationLogger implements StatusBarStateController.StateListene
             maybeNotifyOnNotificationExpansionChanged(str, state);
         }
 
-        @VisibleForTesting
-        void onVisibilityChanged(Collection<NotificationVisibility> collection, Collection<NotificationVisibility> collection2) {
-            NotificationVisibility[] cloneVisibilitiesAsArr = NotificationLogger.cloneVisibilitiesAsArr(collection);
-            NotificationVisibility[] cloneVisibilitiesAsArr2 = NotificationLogger.cloneVisibilitiesAsArr(collection2);
-            for (NotificationVisibility notificationVisibility : cloneVisibilitiesAsArr) {
+        /* access modifiers changed from: package-private */
+        public void onVisibilityChanged(Collection<NotificationVisibility> collection, Collection<NotificationVisibility> collection2) {
+            NotificationVisibility[] access$800 = NotificationLogger.cloneVisibilitiesAsArr(collection);
+            NotificationVisibility[] access$8002 = NotificationLogger.cloneVisibilitiesAsArr(collection2);
+            for (NotificationVisibility notificationVisibility : access$800) {
                 State state = getState(notificationVisibility.key);
-                state.mIsVisible = Boolean.TRUE;
+                state.mIsVisible = true;
                 state.mLocation = notificationVisibility.location;
                 maybeNotifyOnNotificationExpansionChanged(notificationVisibility.key, state);
             }
-            for (NotificationVisibility notificationVisibility2 : cloneVisibilitiesAsArr2) {
-                getState(notificationVisibility2.key).mIsVisible = Boolean.FALSE;
+            for (NotificationVisibility notificationVisibility2 : access$8002) {
+                getState(notificationVisibility2.key).mIsVisible = false;
             }
         }
 
-        @VisibleForTesting
-        void onEntryRemoved(String str) {
+        /* access modifiers changed from: package-private */
+        public void onEntryRemoved(String str) {
             this.mExpansionStates.remove(str);
             this.mLoggedExpansionState.remove(str);
         }
 
-        @VisibleForTesting
-        void onEntryUpdated(String str) {
+        /* access modifiers changed from: package-private */
+        public void onEntryUpdated(String str) {
             this.mLoggedExpansionState.remove(str);
         }
 
         private State getState(String str) {
             State state = this.mExpansionStates.get(str);
-            if (state == null) {
-                State state2 = new State();
-                this.mExpansionStates.put(str, state2);
-                return state2;
+            if (state != null) {
+                return state;
             }
-            return state;
+            State state2 = new State();
+            this.mExpansionStates.put(str, state2);
+            return state2;
         }
 
-        private void maybeNotifyOnNotificationExpansionChanged(final String str, State state) {
+        private void maybeNotifyOnNotificationExpansionChanged(String str, State state) {
             if (state.isFullySet() && state.mIsVisible.booleanValue()) {
                 Boolean bool = this.mLoggedExpansionState.get(str);
                 if (bool == null && !state.mIsExpanded.booleanValue()) {
                     return;
                 }
-                if (bool != null && state.mIsExpanded == bool) {
-                    return;
+                if (bool == null || state.mIsExpanded != bool) {
+                    this.mLoggedExpansionState.put(str, state.mIsExpanded);
+                    this.mUiBgExecutor.execute(new C2729x56ec96fa(this, str, new State(state)));
                 }
-                this.mLoggedExpansionState.put(str, state.mIsExpanded);
-                final State state2 = new State(state);
-                this.mUiBgExecutor.execute(new Runnable() { // from class: com.android.systemui.statusbar.notification.logging.NotificationLogger$ExpansionStateLogger$$ExternalSyntheticLambda0
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        NotificationLogger.ExpansionStateLogger.this.lambda$maybeNotifyOnNotificationExpansionChanged$0(str, state2);
-                    }
-                });
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$maybeNotifyOnNotificationExpansionChanged$0(String str, State state) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$maybeNotifyOnNotificationExpansionChanged$0$com-android-systemui-statusbar-notification-logging-NotificationLogger$ExpansionStateLogger */
+        public /* synthetic */ void mo40801xe665ec22(String str, State state) {
             try {
                 this.mBarService.onNotificationExpansionChanged(str, state.mIsUserAction.booleanValue(), state.mIsExpanded.booleanValue(), state.mLocation.ordinal());
             } catch (RemoteException e) {
-                Log.e("NotificationLogger", "Failed to call onNotificationExpansionChanged: ", e);
+                Log.e(NotificationLogger.TAG, "Failed to call onNotificationExpansionChanged: ", e);
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* loaded from: classes.dex */
-        public static class State {
+        private static class State {
             Boolean mIsExpanded;
             Boolean mIsUserAction;
             Boolean mIsVisible;
@@ -417,7 +461,7 @@ public class NotificationLogger implements StatusBarStateController.StateListene
                 this.mLocation = state.mLocation;
             }
 
-            /* JADX INFO: Access modifiers changed from: private */
+            /* access modifiers changed from: private */
             public boolean isFullySet() {
                 return (this.mIsUserAction == null || this.mIsExpanded == null || this.mIsVisible == null || this.mLocation == null) ? false : true;
             }

@@ -1,188 +1,422 @@
 package okio;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import android.net.connectivity.com.android.net.module.util.NetworkStackConstants;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.p026io.EOFException;
+import java.p026io.IOException;
+import java.p026io.InputStream;
+import java.p026io.ObjectInputStream;
+import java.p026io.ObjectOutputStream;
+import java.p026io.OutputStream;
+import java.p026io.Serializable;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.Objects;
-import kotlin.collections.ArraysKt___ArraysJvmKt;
-import kotlin.jvm.internal.DefaultConstructorMarker;
-import kotlin.jvm.internal.Intrinsics;
-import kotlin.text.StringsKt__StringsJVMKt;
-import okio.internal.ByteStringKt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-/* compiled from: ByteString.kt */
-/* loaded from: classes2.dex */
+import javax.annotation.Nullable;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
 public class ByteString implements Serializable, Comparable<ByteString> {
-    @NotNull
-    public static final Companion Companion = new Companion(null);
-    @NotNull
-    public static final ByteString EMPTY = new ByteString(new byte[0]);
+    public static final ByteString EMPTY = m1815of(new byte[0]);
+    static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
     private static final long serialVersionUID = 1;
-    @NotNull
-    private final byte[] data;
-    private transient int hashCode;
-    @Nullable
-    private transient String utf8;
+    final byte[] data;
+    transient int hashCode;
+    transient String utf8;
 
-    @NotNull
-    public static final ByteString encodeUtf8(@NotNull String str) {
-        return Companion.encodeUtf8(str);
+    ByteString(byte[] bArr) {
+        this.data = bArr;
     }
 
-    @NotNull
-    public String utf8() {
-        String utf8$external__okio__android_common__okio_lib = getUtf8$external__okio__android_common__okio_lib();
-        if (utf8$external__okio__android_common__okio_lib == null) {
-            String utf8String = Platform.toUtf8String(internalArray$external__okio__android_common__okio_lib());
-            setUtf8$external__okio__android_common__okio_lib(utf8String);
-            return utf8String;
+    /* renamed from: of */
+    public static ByteString m1815of(byte... bArr) {
+        if (bArr != null) {
+            return new ByteString((byte[]) bArr.clone());
         }
-        return utf8$external__okio__android_common__okio_lib;
+        throw new IllegalArgumentException("data == null");
     }
 
-    public ByteString(@NotNull byte[] data) {
-        Intrinsics.checkNotNullParameter(data, "data");
-        this.data = data;
+    /* renamed from: of */
+    public static ByteString m1816of(byte[] bArr, int i, int i2) {
+        if (bArr != null) {
+            Util.checkOffsetAndCount((long) bArr.length, (long) i, (long) i2);
+            byte[] bArr2 = new byte[i2];
+            System.arraycopy((Object) bArr, i, (Object) bArr2, 0, i2);
+            return new ByteString(bArr2);
+        }
+        throw new IllegalArgumentException("data == null");
     }
 
-    @NotNull
+    /* renamed from: of */
+    public static ByteString m1814of(ByteBuffer byteBuffer) {
+        if (byteBuffer != null) {
+            byte[] bArr = new byte[byteBuffer.remaining()];
+            byteBuffer.get(bArr);
+            return new ByteString(bArr);
+        }
+        throw new IllegalArgumentException("data == null");
+    }
+
+    public static ByteString encodeUtf8(String str) {
+        if (str != null) {
+            ByteString byteString = new ByteString(str.getBytes(Util.UTF_8));
+            byteString.utf8 = str;
+            return byteString;
+        }
+        throw new IllegalArgumentException("s == null");
+    }
+
+    public static ByteString encodeString(String str, Charset charset) {
+        if (str == null) {
+            throw new IllegalArgumentException("s == null");
+        } else if (charset != null) {
+            return new ByteString(str.getBytes(charset));
+        } else {
+            throw new IllegalArgumentException("charset == null");
+        }
+    }
+
+    public String utf8() {
+        String str = this.utf8;
+        if (str != null) {
+            return str;
+        }
+        String str2 = new String(this.data, Util.UTF_8);
+        this.utf8 = str2;
+        return str2;
+    }
+
+    public String string(Charset charset) {
+        if (charset != null) {
+            return new String(this.data, charset);
+        }
+        throw new IllegalArgumentException("charset == null");
+    }
+
+    public String base64() {
+        return Base64.encode(this.data);
+    }
+
+    public ByteString md5() {
+        return digest("MD5");
+    }
+
+    public ByteString sha1() {
+        return digest("SHA-1");
+    }
+
+    public ByteString sha256() {
+        return digest("SHA-256");
+    }
+
+    public ByteString sha512() {
+        return digest("SHA-512");
+    }
+
+    private ByteString digest(String str) {
+        try {
+            return m1815of(MessageDigest.getInstance(str).digest(this.data));
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError((Object) e);
+        }
+    }
+
+    public ByteString hmacSha1(ByteString byteString) {
+        return hmac("HmacSHA1", byteString);
+    }
+
+    public ByteString hmacSha256(ByteString byteString) {
+        return hmac("HmacSHA256", byteString);
+    }
+
+    public ByteString hmacSha512(ByteString byteString) {
+        return hmac("HmacSHA512", byteString);
+    }
+
+    private ByteString hmac(String str, ByteString byteString) {
+        try {
+            Mac instance = Mac.getInstance(str);
+            instance.init(new SecretKeySpec(byteString.toByteArray(), str));
+            return m1815of(instance.doFinal(this.data));
+        } catch (NoSuchAlgorithmException e) {
+            throw new AssertionError((Object) e);
+        } catch (InvalidKeyException e2) {
+            throw new IllegalArgumentException((Throwable) e2);
+        }
+    }
+
+    public String base64Url() {
+        return Base64.encodeUrl(this.data);
+    }
+
+    @Nullable
+    public static ByteString decodeBase64(String str) {
+        if (str != null) {
+            byte[] decode = Base64.decode(str);
+            if (decode != null) {
+                return new ByteString(decode);
+            }
+            return null;
+        }
+        throw new IllegalArgumentException("base64 == null");
+    }
+
     public String hex() {
-        char[] cArr = new char[getData$external__okio__android_common__okio_lib().length * 2];
-        byte[] data$external__okio__android_common__okio_lib = getData$external__okio__android_common__okio_lib();
-        int length = data$external__okio__android_common__okio_lib.length;
+        byte[] bArr = this.data;
+        char[] cArr = new char[(bArr.length * 2)];
         int i = 0;
-        int i2 = 0;
-        while (i < length) {
-            byte b = data$external__okio__android_common__okio_lib[i];
-            i++;
-            int i3 = i2 + 1;
-            cArr[i2] = ByteStringKt.getHEX_DIGIT_CHARS()[(b >> 4) & 15];
-            i2 = i3 + 1;
-            cArr[i3] = ByteStringKt.getHEX_DIGIT_CHARS()[b & 15];
+        for (byte b : bArr) {
+            int i2 = i + 1;
+            char[] cArr2 = HEX_DIGITS;
+            cArr[i] = cArr2[(b >> 4) & 15];
+            i = i2 + 1;
+            cArr[i2] = cArr2[b & 15];
         }
         return new String(cArr);
     }
 
-    @NotNull
-    public final byte[] getData$external__okio__android_common__okio_lib() {
+    public static ByteString decodeHex(String str) {
+        if (str == null) {
+            throw new IllegalArgumentException("hex == null");
+        } else if (str.length() % 2 == 0) {
+            int length = str.length() / 2;
+            byte[] bArr = new byte[length];
+            for (int i = 0; i < length; i++) {
+                int i2 = i * 2;
+                bArr[i] = (byte) ((decodeHexDigit(str.charAt(i2)) << 4) + decodeHexDigit(str.charAt(i2 + 1)));
+            }
+            return m1815of(bArr);
+        } else {
+            throw new IllegalArgumentException("Unexpected hex string: " + str);
+        }
+    }
+
+    private static int decodeHexDigit(char c) {
+        if (c >= '0' && c <= '9') {
+            return c - '0';
+        }
+        char c2 = 'a';
+        if (c < 'a' || c > 'f') {
+            c2 = 'A';
+            if (c < 'A' || c > 'F') {
+                throw new IllegalArgumentException("Unexpected hex digit: " + c);
+            }
+        }
+        return (c - c2) + 10;
+    }
+
+    public static ByteString read(InputStream inputStream, int i) throws IOException {
+        if (inputStream == null) {
+            throw new IllegalArgumentException("in == null");
+        } else if (i >= 0) {
+            byte[] bArr = new byte[i];
+            int i2 = 0;
+            while (i2 < i) {
+                int read = inputStream.read(bArr, i2, i - i2);
+                if (read != -1) {
+                    i2 += read;
+                } else {
+                    throw new EOFException();
+                }
+            }
+            return new ByteString(bArr);
+        } else {
+            throw new IllegalArgumentException("byteCount < 0: " + i);
+        }
+    }
+
+    public ByteString toAsciiLowercase() {
+        int i = 0;
+        while (true) {
+            byte[] bArr = this.data;
+            if (i >= bArr.length) {
+                return this;
+            }
+            byte b = bArr[i];
+            if (b < 65 || b > 90) {
+                i++;
+            } else {
+                byte[] bArr2 = (byte[]) bArr.clone();
+                bArr2[i] = (byte) (b + NetworkStackConstants.TCPHDR_URG);
+                for (int i2 = i + 1; i2 < bArr2.length; i2++) {
+                    byte b2 = bArr2[i2];
+                    if (b2 >= 65 && b2 <= 90) {
+                        bArr2[i2] = (byte) (b2 + NetworkStackConstants.TCPHDR_URG);
+                    }
+                }
+                return new ByteString(bArr2);
+            }
+        }
+    }
+
+    public ByteString toAsciiUppercase() {
+        int i = 0;
+        while (true) {
+            byte[] bArr = this.data;
+            if (i >= bArr.length) {
+                return this;
+            }
+            byte b = bArr[i];
+            if (b < 97 || b > 122) {
+                i++;
+            } else {
+                byte[] bArr2 = (byte[]) bArr.clone();
+                bArr2[i] = (byte) (b - 32);
+                for (int i2 = i + 1; i2 < bArr2.length; i2++) {
+                    byte b2 = bArr2[i2];
+                    if (b2 >= 97 && b2 <= 122) {
+                        bArr2[i2] = (byte) (b2 - 32);
+                    }
+                }
+                return new ByteString(bArr2);
+            }
+        }
+    }
+
+    public ByteString substring(int i) {
+        return substring(i, this.data.length);
+    }
+
+    public ByteString substring(int i, int i2) {
+        if (i >= 0) {
+            byte[] bArr = this.data;
+            if (i2 <= bArr.length) {
+                int i3 = i2 - i;
+                if (i3 < 0) {
+                    throw new IllegalArgumentException("endIndex < beginIndex");
+                } else if (i == 0 && i2 == bArr.length) {
+                    return this;
+                } else {
+                    byte[] bArr2 = new byte[i3];
+                    System.arraycopy((Object) bArr, i, (Object) bArr2, 0, i3);
+                    return new ByteString(bArr2);
+                }
+            } else {
+                throw new IllegalArgumentException("endIndex > length(" + this.data.length + NavigationBarInflaterView.KEY_CODE_END);
+            }
+        } else {
+            throw new IllegalArgumentException("beginIndex < 0");
+        }
+    }
+
+    public byte getByte(int i) {
+        return this.data[i];
+    }
+
+    public int size() {
+        return this.data.length;
+    }
+
+    public byte[] toByteArray() {
+        return (byte[]) this.data.clone();
+    }
+
+    /* access modifiers changed from: package-private */
+    public byte[] internalArray() {
         return this.data;
     }
 
-    public final int getHashCode$external__okio__android_common__okio_lib() {
-        return this.hashCode;
+    public ByteBuffer asByteBuffer() {
+        return ByteBuffer.wrap(this.data).asReadOnlyBuffer();
     }
 
-    public final void setHashCode$external__okio__android_common__okio_lib(int i) {
-        this.hashCode = i;
-    }
-
-    @Nullable
-    public final String getUtf8$external__okio__android_common__okio_lib() {
-        return this.utf8;
-    }
-
-    public final void setUtf8$external__okio__android_common__okio_lib(@Nullable String str) {
-        this.utf8 = str;
-    }
-
-    public final byte getByte(int i) {
-        return internalGet$external__okio__android_common__okio_lib(i);
-    }
-
-    public final int size() {
-        return getSize$external__okio__android_common__okio_lib();
-    }
-
-    public byte internalGet$external__okio__android_common__okio_lib(int i) {
-        return getData$external__okio__android_common__okio_lib()[i];
-    }
-
-    public int getSize$external__okio__android_common__okio_lib() {
-        return getData$external__okio__android_common__okio_lib().length;
-    }
-
-    @NotNull
-    public byte[] internalArray$external__okio__android_common__okio_lib() {
-        return getData$external__okio__android_common__okio_lib();
-    }
-
-    public boolean rangeEquals(int i, @NotNull ByteString other, int i2, int i3) {
-        Intrinsics.checkNotNullParameter(other, "other");
-        return other.rangeEquals(i2, getData$external__okio__android_common__okio_lib(), i, i3);
-    }
-
-    public boolean rangeEquals(int i, @NotNull byte[] other, int i2, int i3) {
-        Intrinsics.checkNotNullParameter(other, "other");
-        return i >= 0 && i <= getData$external__okio__android_common__okio_lib().length - i3 && i2 >= 0 && i2 <= other.length - i3 && Util.arrayRangeEquals(getData$external__okio__android_common__okio_lib(), i, other, i2, i3);
-    }
-
-    public final boolean startsWith(@NotNull ByteString prefix) {
-        Intrinsics.checkNotNullParameter(prefix, "prefix");
-        return rangeEquals(0, prefix, 0, prefix.size());
-    }
-
-    private final void readObject(ObjectInputStream objectInputStream) throws IOException {
-        ByteString read = Companion.read(objectInputStream, objectInputStream.readInt());
-        Field declaredField = ByteString.class.getDeclaredField("data");
-        declaredField.setAccessible(true);
-        declaredField.set(this, read.data);
-    }
-
-    private final void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
-        objectOutputStream.writeInt(this.data.length);
-        objectOutputStream.write(this.data);
-    }
-
-    /* compiled from: ByteString.kt */
-    /* loaded from: classes2.dex */
-    public static final class Companion {
-        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
-            this();
+    public void write(OutputStream outputStream) throws IOException {
+        if (outputStream != null) {
+            outputStream.write(this.data);
+            return;
         }
+        throw new IllegalArgumentException("out == null");
+    }
 
-        private Companion() {
+    /* access modifiers changed from: package-private */
+    public void write(Buffer buffer) {
+        byte[] bArr = this.data;
+        buffer.write(bArr, 0, bArr.length);
+    }
+
+    public boolean rangeEquals(int i, ByteString byteString, int i2, int i3) {
+        return byteString.rangeEquals(i2, this.data, i, i3);
+    }
+
+    public boolean rangeEquals(int i, byte[] bArr, int i2, int i3) {
+        if (i >= 0) {
+            byte[] bArr2 = this.data;
+            return i <= bArr2.length - i3 && i2 >= 0 && i2 <= bArr.length - i3 && Util.arrayRangeEquals(bArr2, i, bArr, i2, i3);
         }
+    }
 
-        @NotNull
-        public final ByteString encodeUtf8(@NotNull String str) {
-            Intrinsics.checkNotNullParameter(str, "<this>");
-            ByteString byteString = new ByteString(Platform.asUtf8ToByteArray(str));
-            byteString.setUtf8$external__okio__android_common__okio_lib(str);
-            return byteString;
-        }
+    public final boolean startsWith(ByteString byteString) {
+        return rangeEquals(0, byteString, 0, byteString.size());
+    }
 
-        @NotNull
-        public final ByteString read(@NotNull InputStream inputStream, int i) throws IOException {
-            Intrinsics.checkNotNullParameter(inputStream, "<this>");
-            int i2 = 0;
-            if (!(i >= 0)) {
-                throw new IllegalArgumentException(Intrinsics.stringPlus("byteCount < 0: ", Integer.valueOf(i)).toString());
+    public final boolean startsWith(byte[] bArr) {
+        return rangeEquals(0, bArr, 0, bArr.length);
+    }
+
+    public final boolean endsWith(ByteString byteString) {
+        return rangeEquals(size() - byteString.size(), byteString, 0, byteString.size());
+    }
+
+    public final boolean endsWith(byte[] bArr) {
+        return rangeEquals(size() - bArr.length, bArr, 0, bArr.length);
+    }
+
+    public final int indexOf(ByteString byteString) {
+        return indexOf(byteString.internalArray(), 0);
+    }
+
+    public final int indexOf(ByteString byteString, int i) {
+        return indexOf(byteString.internalArray(), i);
+    }
+
+    public final int indexOf(byte[] bArr) {
+        return indexOf(bArr, 0);
+    }
+
+    public int indexOf(byte[] bArr, int i) {
+        int length = this.data.length - bArr.length;
+        for (int max = Math.max(i, 0); max <= length; max++) {
+            if (Util.arrayRangeEquals(this.data, max, bArr, 0, bArr.length)) {
+                return max;
             }
-            byte[] bArr = new byte[i];
-            while (i2 < i) {
-                int read = inputStream.read(bArr, i2, i - i2);
-                if (read == -1) {
-                    throw new EOFException();
-                }
-                i2 += read;
-            }
-            return new ByteString(bArr);
         }
+        return -1;
     }
 
-    public boolean equals(@Nullable Object obj) {
+    public final int lastIndexOf(ByteString byteString) {
+        return lastIndexOf(byteString.internalArray(), size());
+    }
+
+    public final int lastIndexOf(ByteString byteString, int i) {
+        return lastIndexOf(byteString.internalArray(), i);
+    }
+
+    public final int lastIndexOf(byte[] bArr) {
+        return lastIndexOf(bArr, size());
+    }
+
+    public int lastIndexOf(byte[] bArr, int i) {
+        for (int min = Math.min(i, this.data.length - bArr.length); min >= 0; min--) {
+            if (Util.arrayRangeEquals(this.data, min, bArr, 0, bArr.length)) {
+                return min;
+            }
+        }
+        return -1;
+    }
+
+    public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
         if (obj instanceof ByteString) {
             ByteString byteString = (ByteString) obj;
-            if (byteString.size() == getData$external__okio__android_common__okio_lib().length && byteString.rangeEquals(0, getData$external__okio__android_common__okio_lib(), 0, getData$external__okio__android_common__okio_lib().length)) {
+            int size = byteString.size();
+            byte[] bArr = this.data;
+            if (size == bArr.length && byteString.rangeEquals(0, bArr, 0, bArr.length)) {
                 return true;
             }
         }
@@ -190,94 +424,92 @@ public class ByteString implements Serializable, Comparable<ByteString> {
     }
 
     public int hashCode() {
-        int hashCode$external__okio__android_common__okio_lib = getHashCode$external__okio__android_common__okio_lib();
-        if (hashCode$external__okio__android_common__okio_lib != 0) {
-            return hashCode$external__okio__android_common__okio_lib;
+        int i = this.hashCode;
+        if (i != 0) {
+            return i;
         }
-        int hashCode = Arrays.hashCode(getData$external__okio__android_common__okio_lib());
-        setHashCode$external__okio__android_common__okio_lib(hashCode);
-        return hashCode;
+        int hashCode2 = Arrays.hashCode(this.data);
+        this.hashCode = hashCode2;
+        return hashCode2;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:10:0x0033, code lost:
-        return 1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:13:?, code lost:
-        return -1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:16:0x002e, code lost:
-        if (r0 < r1) goto L12;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:8:0x0028, code lost:
-        if (r7 < r8) goto L12;
-     */
-    @Override // java.lang.Comparable
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public int compareTo(@NotNull ByteString other) {
-        Intrinsics.checkNotNullParameter(other, "other");
+    public int compareTo(ByteString byteString) {
         int size = size();
-        int size2 = other.size();
+        int size2 = byteString.size();
         int min = Math.min(size, size2);
-        for (int i = 0; i < min; i++) {
-            int i2 = getByte(i) & 255;
-            int i3 = other.getByte(i) & 255;
-            if (i2 == i3) {
+        int i = 0;
+        while (i < min) {
+            byte b = getByte(i) & 255;
+            byte b2 = byteString.getByte(i) & 255;
+            if (b == b2) {
+                i++;
+            } else if (b < b2) {
+                return -1;
+            } else {
+                return 1;
             }
         }
         if (size == size2) {
             return 0;
         }
+        if (size < size2) {
+            return -1;
+        }
+        return 1;
     }
 
-    @NotNull
     public String toString() {
-        int codePointIndexToCharIndex;
-        String replace$default;
-        String replace$default2;
-        String replace$default3;
-        ByteString byteString;
-        byte[] copyOfRange;
-        boolean z = true;
-        if (getData$external__okio__android_common__okio_lib().length == 0) {
+        if (this.data.length == 0) {
             return "[size=0]";
         }
-        codePointIndexToCharIndex = ByteStringKt.codePointIndexToCharIndex(getData$external__okio__android_common__okio_lib(), 64);
-        if (codePointIndexToCharIndex == -1) {
-            if (getData$external__okio__android_common__okio_lib().length <= 64) {
-                return "[hex=" + hex() + ']';
+        String utf82 = utf8();
+        int codePointIndexToCharIndex = codePointIndexToCharIndex(utf82, 64);
+        if (codePointIndexToCharIndex != -1) {
+            String replace = utf82.substring(0, codePointIndexToCharIndex).replace((CharSequence) "\\", (CharSequence) "\\\\").replace((CharSequence) "\n", (CharSequence) "\\n").replace((CharSequence) "\r", (CharSequence) "\\r");
+            if (codePointIndexToCharIndex < utf82.length()) {
+                return "[size=" + this.data.length + " text=" + replace + "…]";
             }
-            StringBuilder sb = new StringBuilder();
-            sb.append("[size=");
-            sb.append(getData$external__okio__android_common__okio_lib().length);
-            sb.append(" hex=");
-            if (64 > getData$external__okio__android_common__okio_lib().length) {
-                z = false;
-            }
-            if (!z) {
-                throw new IllegalArgumentException(("endIndex > length(" + getData$external__okio__android_common__okio_lib().length + ')').toString());
-            }
-            if (64 == getData$external__okio__android_common__okio_lib().length) {
-                byteString = this;
-            } else {
-                copyOfRange = ArraysKt___ArraysJvmKt.copyOfRange(getData$external__okio__android_common__okio_lib(), 0, 64);
-                byteString = new ByteString(copyOfRange);
-            }
-            sb.append(byteString.hex());
-            sb.append("…]");
-            return sb.toString();
+            return "[text=" + replace + NavigationBarInflaterView.SIZE_MOD_END;
+        } else if (this.data.length <= 64) {
+            return "[hex=" + hex() + NavigationBarInflaterView.SIZE_MOD_END;
+        } else {
+            return "[size=" + this.data.length + " hex=" + substring(0, 64).hex() + "…]";
         }
-        String utf8 = utf8();
-        Objects.requireNonNull(utf8, "null cannot be cast to non-null type java.lang.String");
-        String substring = utf8.substring(0, codePointIndexToCharIndex);
-        Intrinsics.checkNotNullExpressionValue(substring, "(this as java.lang.Strin…ing(startIndex, endIndex)");
-        replace$default = StringsKt__StringsJVMKt.replace$default(substring, "\\", "\\\\", false, 4, null);
-        replace$default2 = StringsKt__StringsJVMKt.replace$default(replace$default, "\n", "\\n", false, 4, null);
-        replace$default3 = StringsKt__StringsJVMKt.replace$default(replace$default2, "\r", "\\r", false, 4, null);
-        if (codePointIndexToCharIndex < utf8.length()) {
-            return "[size=" + getData$external__okio__android_common__okio_lib().length + " text=" + replace$default3 + "…]";
+    }
+
+    static int codePointIndexToCharIndex(String str, int i) {
+        int length = str.length();
+        int i2 = 0;
+        int i3 = 0;
+        while (i2 < length) {
+            if (i3 == i) {
+                return i2;
+            }
+            int codePointAt = str.codePointAt(i2);
+            if ((Character.isISOControl(codePointAt) && codePointAt != 10 && codePointAt != 13) || codePointAt == 65533) {
+                return -1;
+            }
+            i3++;
+            i2 += Character.charCount(codePointAt);
         }
-        return "[text=" + replace$default3 + ']';
+        return str.length();
+    }
+
+    private void readObject(ObjectInputStream objectInputStream) throws IOException {
+        ByteString read = read(objectInputStream, objectInputStream.readInt());
+        try {
+            Field declaredField = ByteString.class.getDeclaredField("data");
+            declaredField.setAccessible(true);
+            declaredField.set(this, read.data);
+        } catch (NoSuchFieldException unused) {
+            throw new AssertionError();
+        } catch (IllegalAccessException unused2) {
+            throw new AssertionError();
+        }
+    }
+
+    private void writeObject(ObjectOutputStream objectOutputStream) throws IOException {
+        objectOutputStream.writeInt(this.data.length);
+        objectOutputStream.write(this.data);
     }
 }

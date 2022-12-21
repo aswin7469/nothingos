@@ -2,42 +2,52 @@ package com.android.systemui.statusbar.notification.dagger;
 
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationListener;
+import com.android.systemui.statusbar.notification.NotifPipelineFlags;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.collection.NotifLiveDataStore;
+import com.android.systemui.statusbar.notification.collection.NotifPipeline;
+import com.android.systemui.statusbar.notification.collection.render.NotificationVisibilityProvider;
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.android.systemui.statusbar.notification.logging.NotificationPanelLogger;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationsModule_ProvideNotificationLoggerFactory implements Factory<NotificationLogger> {
     private final Provider<NotificationEntryManager> entryManagerProvider;
     private final Provider<NotificationLogger.ExpansionStateLogger> expansionStateLoggerProvider;
+    private final Provider<NotifLiveDataStore> notifLiveDataStoreProvider;
+    private final Provider<NotifPipelineFlags> notifPipelineFlagsProvider;
+    private final Provider<NotifPipeline> notifPipelineProvider;
     private final Provider<NotificationListener> notificationListenerProvider;
     private final Provider<NotificationPanelLogger> notificationPanelLoggerProvider;
     private final Provider<StatusBarStateController> statusBarStateControllerProvider;
     private final Provider<Executor> uiBgExecutorProvider;
+    private final Provider<NotificationVisibilityProvider> visibilityProvider;
 
-    public NotificationsModule_ProvideNotificationLoggerFactory(Provider<NotificationListener> provider, Provider<Executor> provider2, Provider<NotificationEntryManager> provider3, Provider<StatusBarStateController> provider4, Provider<NotificationLogger.ExpansionStateLogger> provider5, Provider<NotificationPanelLogger> provider6) {
+    public NotificationsModule_ProvideNotificationLoggerFactory(Provider<NotificationListener> provider, Provider<Executor> provider2, Provider<NotifPipelineFlags> provider3, Provider<NotifLiveDataStore> provider4, Provider<NotificationVisibilityProvider> provider5, Provider<NotificationEntryManager> provider6, Provider<NotifPipeline> provider7, Provider<StatusBarStateController> provider8, Provider<NotificationLogger.ExpansionStateLogger> provider9, Provider<NotificationPanelLogger> provider10) {
         this.notificationListenerProvider = provider;
         this.uiBgExecutorProvider = provider2;
-        this.entryManagerProvider = provider3;
-        this.statusBarStateControllerProvider = provider4;
-        this.expansionStateLoggerProvider = provider5;
-        this.notificationPanelLoggerProvider = provider6;
+        this.notifPipelineFlagsProvider = provider3;
+        this.notifLiveDataStoreProvider = provider4;
+        this.visibilityProvider = provider5;
+        this.entryManagerProvider = provider6;
+        this.notifPipelineProvider = provider7;
+        this.statusBarStateControllerProvider = provider8;
+        this.expansionStateLoggerProvider = provider9;
+        this.notificationPanelLoggerProvider = provider10;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationLogger mo1933get() {
-        return provideNotificationLogger(this.notificationListenerProvider.mo1933get(), this.uiBgExecutorProvider.mo1933get(), this.entryManagerProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.expansionStateLoggerProvider.mo1933get(), this.notificationPanelLoggerProvider.mo1933get());
+    public NotificationLogger get() {
+        return provideNotificationLogger(this.notificationListenerProvider.get(), this.uiBgExecutorProvider.get(), this.notifPipelineFlagsProvider.get(), this.notifLiveDataStoreProvider.get(), this.visibilityProvider.get(), this.entryManagerProvider.get(), this.notifPipelineProvider.get(), this.statusBarStateControllerProvider.get(), this.expansionStateLoggerProvider.get(), this.notificationPanelLoggerProvider.get());
     }
 
-    public static NotificationsModule_ProvideNotificationLoggerFactory create(Provider<NotificationListener> provider, Provider<Executor> provider2, Provider<NotificationEntryManager> provider3, Provider<StatusBarStateController> provider4, Provider<NotificationLogger.ExpansionStateLogger> provider5, Provider<NotificationPanelLogger> provider6) {
-        return new NotificationsModule_ProvideNotificationLoggerFactory(provider, provider2, provider3, provider4, provider5, provider6);
+    public static NotificationsModule_ProvideNotificationLoggerFactory create(Provider<NotificationListener> provider, Provider<Executor> provider2, Provider<NotifPipelineFlags> provider3, Provider<NotifLiveDataStore> provider4, Provider<NotificationVisibilityProvider> provider5, Provider<NotificationEntryManager> provider6, Provider<NotifPipeline> provider7, Provider<StatusBarStateController> provider8, Provider<NotificationLogger.ExpansionStateLogger> provider9, Provider<NotificationPanelLogger> provider10) {
+        return new NotificationsModule_ProvideNotificationLoggerFactory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10);
     }
 
-    public static NotificationLogger provideNotificationLogger(NotificationListener notificationListener, Executor executor, NotificationEntryManager notificationEntryManager, StatusBarStateController statusBarStateController, NotificationLogger.ExpansionStateLogger expansionStateLogger, NotificationPanelLogger notificationPanelLogger) {
-        return (NotificationLogger) Preconditions.checkNotNullFromProvides(NotificationsModule.provideNotificationLogger(notificationListener, executor, notificationEntryManager, statusBarStateController, expansionStateLogger, notificationPanelLogger));
+    public static NotificationLogger provideNotificationLogger(NotificationListener notificationListener, Executor executor, NotifPipelineFlags notifPipelineFlags, NotifLiveDataStore notifLiveDataStore, NotificationVisibilityProvider notificationVisibilityProvider, NotificationEntryManager notificationEntryManager, NotifPipeline notifPipeline, StatusBarStateController statusBarStateController, NotificationLogger.ExpansionStateLogger expansionStateLogger, NotificationPanelLogger notificationPanelLogger) {
+        return (NotificationLogger) Preconditions.checkNotNullFromProvides(NotificationsModule.provideNotificationLogger(notificationListener, executor, notifPipelineFlags, notifLiveDataStore, notificationVisibilityProvider, notificationEntryManager, notifPipeline, statusBarStateController, expansionStateLogger, notificationPanelLogger));
     }
 }

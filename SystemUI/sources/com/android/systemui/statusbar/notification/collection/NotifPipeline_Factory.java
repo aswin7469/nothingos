@@ -1,28 +1,32 @@
 package com.android.systemui.statusbar.notification.collection;
 
+import com.android.systemui.statusbar.notification.NotifPipelineFlags;
+import com.android.systemui.statusbar.notification.collection.render.RenderStageManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotifPipeline_Factory implements Factory<NotifPipeline> {
-    private final Provider<NotifCollection> notifCollectionProvider;
-    private final Provider<ShadeListBuilder> shadeListBuilderProvider;
+    private final Provider<NotifCollection> mNotifCollectionProvider;
+    private final Provider<RenderStageManager> mRenderStageManagerProvider;
+    private final Provider<ShadeListBuilder> mShadeListBuilderProvider;
+    private final Provider<NotifPipelineFlags> notifPipelineFlagsProvider;
 
-    public NotifPipeline_Factory(Provider<NotifCollection> provider, Provider<ShadeListBuilder> provider2) {
-        this.notifCollectionProvider = provider;
-        this.shadeListBuilderProvider = provider2;
+    public NotifPipeline_Factory(Provider<NotifPipelineFlags> provider, Provider<NotifCollection> provider2, Provider<ShadeListBuilder> provider3, Provider<RenderStageManager> provider4) {
+        this.notifPipelineFlagsProvider = provider;
+        this.mNotifCollectionProvider = provider2;
+        this.mShadeListBuilderProvider = provider3;
+        this.mRenderStageManagerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotifPipeline mo1933get() {
-        return newInstance(this.notifCollectionProvider.mo1933get(), this.shadeListBuilderProvider.mo1933get());
+    public NotifPipeline get() {
+        return newInstance(this.notifPipelineFlagsProvider.get(), this.mNotifCollectionProvider.get(), this.mShadeListBuilderProvider.get(), this.mRenderStageManagerProvider.get());
     }
 
-    public static NotifPipeline_Factory create(Provider<NotifCollection> provider, Provider<ShadeListBuilder> provider2) {
-        return new NotifPipeline_Factory(provider, provider2);
+    public static NotifPipeline_Factory create(Provider<NotifPipelineFlags> provider, Provider<NotifCollection> provider2, Provider<ShadeListBuilder> provider3, Provider<RenderStageManager> provider4) {
+        return new NotifPipeline_Factory(provider, provider2, provider3, provider4);
     }
 
-    public static NotifPipeline newInstance(NotifCollection notifCollection, ShadeListBuilder shadeListBuilder) {
-        return new NotifPipeline(notifCollection, shadeListBuilder);
+    public static NotifPipeline newInstance(NotifPipelineFlags notifPipelineFlags, NotifCollection notifCollection, ShadeListBuilder shadeListBuilder, RenderStageManager renderStageManager) {
+        return new NotifPipeline(notifPipelineFlags, notifCollection, shadeListBuilder, renderStageManager);
     }
 }

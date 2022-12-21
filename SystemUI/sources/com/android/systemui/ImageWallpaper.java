@@ -15,26 +15,31 @@ import android.util.MathUtils;
 import android.util.Size;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.ImageWallpaper;
 import com.android.systemui.glwallpaper.EglHelper;
 import com.android.systemui.glwallpaper.ImageWallpaperRenderer;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.FileDescriptor;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public class ImageWallpaper extends WallpaperService {
-    private Bitmap mMiniBitmap;
-    private HandlerThread mWorker;
-    private static final String TAG = ImageWallpaper.class.getSimpleName();
-    private static final RectF LOCAL_COLOR_BOUNDS = new RectF(0.0f, 0.0f, 1.0f, 1.0f);
-    private final ArrayList<RectF> mLocalColorsToAdd = new ArrayList<>();
-    private final ArraySet<RectF> mColorAreas = new ArraySet<>();
-    private volatile int mPages = 1;
 
-    @Override // android.service.wallpaper.WallpaperService, android.app.Service
+public class ImageWallpaper extends WallpaperService {
+    private static final boolean DEBUG = false;
+    private static final int DELAY_FINISH_RENDERING = 1000;
+    /* access modifiers changed from: private */
+    public static final RectF LOCAL_COLOR_BOUNDS = new RectF(0.0f, 0.0f, 1.0f, 1.0f);
+    /* access modifiers changed from: private */
+    public static final String TAG = "ImageWallpaper";
+    /* access modifiers changed from: private */
+    public final ArraySet<RectF> mColorAreas = new ArraySet<>();
+    /* access modifiers changed from: private */
+    public final ArrayList<RectF> mLocalColorsToAdd = new ArrayList<>();
+    /* access modifiers changed from: private */
+    public Bitmap mMiniBitmap;
+    /* access modifiers changed from: private */
+    public volatile int mPages = 1;
+    /* access modifiers changed from: private */
+    public HandlerThread mWorker;
+
     public void onCreate() {
         super.onCreate();
         HandlerThread handlerThread = new HandlerThread(TAG);
@@ -42,12 +47,10 @@ public class ImageWallpaper extends WallpaperService {
         handlerThread.start();
     }
 
-    @Override // android.service.wallpaper.WallpaperService
     public WallpaperService.Engine onCreateEngine() {
         return new GLEngine();
     }
 
-    @Override // android.service.wallpaper.WallpaperService, android.app.Service
     public void onDestroy() {
         super.onDestroy();
         this.mWorker.quitSafely();
@@ -55,32 +58,22 @@ public class ImageWallpaper extends WallpaperService {
         this.mMiniBitmap = null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class GLEngine extends WallpaperService.Engine implements DisplayManager.DisplayListener {
-        @VisibleForTesting
+    class GLEngine extends WallpaperService.Engine implements DisplayManager.DisplayListener {
         static final int MIN_SURFACE_HEIGHT = 128;
-        @VisibleForTesting
         static final int MIN_SURFACE_WIDTH = 128;
-        private EglHelper mEglHelper;
-        private ImageWallpaperRenderer mRenderer;
-        private final Runnable mFinishRenderingTask = new Runnable() { // from class: com.android.systemui.ImageWallpaper$GLEngine$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                ImageWallpaper.GLEngine.this.finishRendering();
-            }
-        };
+        private int mDisplayHeight = 1;
         private boolean mDisplaySizeValid = false;
         private int mDisplayWidth = 1;
-        private int mDisplayHeight = 1;
-        private int mImgWidth = 1;
+        private EglHelper mEglHelper;
+        private final Runnable mFinishRenderingTask = new ImageWallpaper$GLEngine$$ExternalSyntheticLambda7(this);
         private int mImgHeight = 1;
+        private int mImgWidth = 1;
+        private boolean mNeedRedraw;
+        private ImageWallpaperRenderer mRenderer;
 
-        @Override // android.hardware.display.DisplayManager.DisplayListener
         public void onDisplayAdded(int i) {
         }
 
-        @Override // android.hardware.display.DisplayManager.DisplayListener
         public void onDisplayRemoved(int i) {
         }
 
@@ -100,131 +93,123 @@ public class ImageWallpaper extends WallpaperService {
             super(ImageWallpaper.this);
         }
 
-        @VisibleForTesting
         GLEngine(Handler handler) {
-            super(ImageWallpaper.this, ImageWallpaper$GLEngine$$ExternalSyntheticLambda9.INSTANCE, handler);
+            super(ImageWallpaper.this, new ImageWallpaper$GLEngine$$ExternalSyntheticLambda10(), handler);
         }
 
-        @Override // android.service.wallpaper.WallpaperService.Engine
         public void onCreate(SurfaceHolder surfaceHolder) {
             Trace.beginSection("ImageWallpaper.Engine#onCreate");
             this.mEglHelper = getEglHelperInstance();
             this.mRenderer = getRendererInstance();
             setFixedSizeAllowed(true);
             updateSurfaceSize();
-            this.mRenderer.setOnBitmapChanged(new Consumer() { // from class: com.android.systemui.ImageWallpaper$GLEngine$$ExternalSyntheticLambda8
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    ImageWallpaper.GLEngine.this.updateMiniBitmap((Bitmap) obj);
-                }
-            });
+            setShowForAllUsers(true);
+            this.mRenderer.setOnBitmapChanged(new ImageWallpaper$GLEngine$$ExternalSyntheticLambda6(this));
             ((DisplayManager) getDisplayContext().getSystemService(DisplayManager.class)).registerDisplayListener(this, ImageWallpaper.this.mWorker.getThreadHandler());
             Trace.endSection();
         }
 
-        @Override // android.hardware.display.DisplayManager.DisplayListener
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onCreate$0$com-android-systemui-ImageWallpaper$GLEngine  reason: not valid java name */
+        public /* synthetic */ void m2519lambda$onCreate$0$comandroidsystemuiImageWallpaper$GLEngine(Bitmap bitmap) {
+            ImageWallpaper.this.mLocalColorsToAdd.addAll(ImageWallpaper.this.mColorAreas);
+            if (ImageWallpaper.this.mLocalColorsToAdd.size() > 0) {
+                updateMiniBitmapAndNotify(bitmap);
+            }
+        }
+
         public void onDisplayChanged(int i) {
             if (i == getDisplayContext().getDisplayId()) {
                 this.mDisplaySizeValid = false;
             }
         }
 
-        EglHelper getEglHelperInstance() {
+        /* access modifiers changed from: package-private */
+        public EglHelper getEglHelperInstance() {
             return new EglHelper();
         }
 
-        ImageWallpaperRenderer getRendererInstance() {
+        /* access modifiers changed from: package-private */
+        public ImageWallpaperRenderer getRendererInstance() {
             return new ImageWallpaperRenderer(getDisplayContext());
         }
 
-        @Override // android.service.wallpaper.WallpaperService.Engine
         public void onOffsetsChanged(float f, float f2, float f3, float f4, int i, int i2) {
             int i3 = 1;
             if (f3 > 0.0f && f3 <= 1.0f) {
                 i3 = 1 + Math.round(1.0f / f3);
             }
-            if (i3 == ImageWallpaper.this.mPages) {
-                return;
-            }
-            ImageWallpaper.this.mPages = i3;
-            if (ImageWallpaper.this.mMiniBitmap == null || ImageWallpaper.this.mMiniBitmap.isRecycled()) {
-                return;
-            }
-            ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable() { // from class: com.android.systemui.ImageWallpaper$GLEngine$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ImageWallpaper.GLEngine.this.lambda$onOffsetsChanged$0();
+            if (i3 != ImageWallpaper.this.mPages) {
+                int unused = ImageWallpaper.this.mPages = i3;
+                if (ImageWallpaper.this.mMiniBitmap != null && !ImageWallpaper.this.mMiniBitmap.isRecycled()) {
+                    ImageWallpaper.this.mWorker.getThreadHandler().post(new ImageWallpaper$GLEngine$$ExternalSyntheticLambda4(this));
                 }
-            });
+            }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onOffsetsChanged$0() {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onOffsetsChanged$1$com-android-systemui-ImageWallpaper$GLEngine */
+        public /* synthetic */ void mo29690x2aa9b98b() {
             computeAndNotifyLocalColors(new ArrayList(ImageWallpaper.this.mColorAreas), ImageWallpaper.this.mMiniBitmap);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public void updateMiniBitmap(Bitmap bitmap) {
-            if (bitmap == null) {
-                return;
+        /* access modifiers changed from: private */
+        public void updateMiniBitmapAndNotify(Bitmap bitmap) {
+            if (bitmap != null) {
+                int min = Math.min(bitmap.getWidth(), bitmap.getHeight());
+                float f = min > 128 ? 128.0f / ((float) min) : 1.0f;
+                this.mImgHeight = bitmap.getHeight();
+                this.mImgWidth = bitmap.getWidth();
+                Bitmap unused = ImageWallpaper.this.mMiniBitmap = Bitmap.createScaledBitmap(bitmap, (int) Math.max(((float) bitmap.getWidth()) * f, 1.0f), (int) Math.max(f * ((float) bitmap.getHeight()), 1.0f), false);
+                computeAndNotifyLocalColors(ImageWallpaper.this.mLocalColorsToAdd, ImageWallpaper.this.mMiniBitmap);
+                ImageWallpaper.this.mLocalColorsToAdd.clear();
             }
-            int min = Math.min(bitmap.getWidth(), bitmap.getHeight());
-            float f = min > 128 ? 128.0f / min : 1.0f;
-            this.mImgHeight = bitmap.getHeight();
-            this.mImgWidth = bitmap.getWidth();
-            ImageWallpaper.this.mMiniBitmap = Bitmap.createScaledBitmap(bitmap, (int) Math.max(bitmap.getWidth() * f, 1.0f), (int) Math.max(f * bitmap.getHeight(), 1.0f), false);
-            computeAndNotifyLocalColors(ImageWallpaper.this.mLocalColorsToAdd, ImageWallpaper.this.mMiniBitmap);
-            ImageWallpaper.this.mLocalColorsToAdd.clear();
         }
 
         private void updateSurfaceSize() {
+            Trace.beginSection("ImageWallpaper#updateSurfaceSize");
             SurfaceHolder surfaceHolder = getSurfaceHolder();
             Size reportSurfaceSize = this.mRenderer.reportSurfaceSize();
             surfaceHolder.setFixedSize(Math.max(128, reportSurfaceSize.getWidth()), Math.max(128, reportSurfaceSize.getHeight()));
+            Trace.endSection();
         }
 
-        @Override // android.service.wallpaper.WallpaperService.Engine
         public void onDestroy() {
             ((DisplayManager) getDisplayContext().getSystemService(DisplayManager.class)).unregisterDisplayListener(this);
-            ImageWallpaper.this.mMiniBitmap = null;
-            ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable() { // from class: com.android.systemui.ImageWallpaper$GLEngine$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ImageWallpaper.GLEngine.this.lambda$onDestroy$1();
-                }
-            });
+            Bitmap unused = ImageWallpaper.this.mMiniBitmap = null;
+            ImageWallpaper.this.mWorker.getThreadHandler().post(new ImageWallpaper$GLEngine$$ExternalSyntheticLambda1(this));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onDestroy$1() {
-            Trace.beginSection("ImageWallpaper.Engine#onDestroy");
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onDestroy$2$com-android-systemui-ImageWallpaper$GLEngine  reason: not valid java name */
+        public /* synthetic */ void m2520lambda$onDestroy$2$comandroidsystemuiImageWallpaper$GLEngine() {
             this.mRenderer.finish();
             this.mRenderer = null;
             this.mEglHelper.finish();
             this.mEglHelper = null;
-            Trace.endSection();
         }
 
-        public void addLocalColorsAreas(final List<RectF> list) {
-            ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable() { // from class: com.android.systemui.ImageWallpaper$GLEngine$$ExternalSyntheticLambda6
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ImageWallpaper.GLEngine.this.lambda$addLocalColorsAreas$2(list);
-                }
-            });
+        public void addLocalColorsAreas(List<RectF> list) {
+            ImageWallpaper.this.mWorker.getThreadHandler().post(new ImageWallpaper$GLEngine$$ExternalSyntheticLambda0(this, list));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$addLocalColorsAreas$2(List list) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$addLocalColorsAreas$3$com-android-systemui-ImageWallpaper$GLEngine */
+        public /* synthetic */ void mo29687x2b06aa4a(List list) {
             if (ImageWallpaper.this.mColorAreas.size() + ImageWallpaper.this.mLocalColorsToAdd.size() == 0) {
                 setOffsetNotificationsEnabled(true);
             }
-            Bitmap bitmap = ImageWallpaper.this.mMiniBitmap;
-            if (bitmap == null) {
+            Bitmap access$200 = ImageWallpaper.this.mMiniBitmap;
+            if (access$200 == null) {
                 ImageWallpaper.this.mLocalColorsToAdd.addAll(list);
-            } else {
-                computeAndNotifyLocalColors(list, bitmap);
+                ImageWallpaperRenderer imageWallpaperRenderer = this.mRenderer;
+                if (imageWallpaperRenderer != null) {
+                    imageWallpaperRenderer.use(new ImageWallpaper$GLEngine$$ExternalSyntheticLambda5(this));
+                    return;
+                }
+                return;
             }
+            computeAndNotifyLocalColors(list, access$200);
         }
 
         private void computeAndNotifyLocalColors(List<RectF> list, Bitmap bitmap) {
@@ -237,17 +222,13 @@ public class ImageWallpaper extends WallpaperService {
             }
         }
 
-        public void removeLocalColorsAreas(final List<RectF> list) {
-            ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable() { // from class: com.android.systemui.ImageWallpaper$GLEngine$$ExternalSyntheticLambda7
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ImageWallpaper.GLEngine.this.lambda$removeLocalColorsAreas$3(list);
-                }
-            });
+        public void removeLocalColorsAreas(List<RectF> list) {
+            ImageWallpaper.this.mWorker.getThreadHandler().post(new ImageWallpaper$GLEngine$$ExternalSyntheticLambda8(this, list));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$removeLocalColorsAreas$3(List list) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$removeLocalColorsAreas$4$com-android-systemui-ImageWallpaper$GLEngine */
+        public /* synthetic */ void mo29693x42de68c(List list) {
             ImageWallpaper.this.mColorAreas.removeAll(list);
             ImageWallpaper.this.mLocalColorsToAdd.removeAll(list);
             if (ImageWallpaper.this.mColorAreas.size() + ImageWallpaper.this.mLocalColorsToAdd.size() == 0) {
@@ -256,30 +237,27 @@ public class ImageWallpaper extends WallpaperService {
         }
 
         private RectF pageToImgRect(RectF rectF) {
-            int i;
-            int i2;
             if (!this.mDisplaySizeValid) {
                 Rect bounds = ((WindowManager) getDisplayContext().getSystemService(WindowManager.class)).getCurrentWindowMetrics().getBounds();
                 this.mDisplayWidth = bounds.width();
                 this.mDisplayHeight = bounds.height();
                 this.mDisplaySizeValid = true;
             }
-            float f = 1.0f / ImageWallpaper.this.mPages;
-            float f2 = (rectF.left % f) / f;
-            float f3 = (rectF.right % f) / f;
-            int floor = (int) Math.floor(rectF.centerX() / f);
+            float access$100 = 1.0f / ((float) ImageWallpaper.this.mPages);
+            float f = (rectF.left % access$100) / access$100;
+            float f2 = (rectF.right % access$100) / access$100;
+            int floor = (int) Math.floor((double) (rectF.centerX() / access$100));
             RectF rectF2 = new RectF();
-            if (this.mImgWidth != 0 && (i = this.mImgHeight) != 0 && this.mDisplayWidth > 0 && (i2 = this.mDisplayHeight) > 0) {
+            if (this.mImgWidth != 0 && this.mImgHeight != 0 && this.mDisplayWidth > 0 && this.mDisplayHeight > 0) {
                 rectF2.bottom = rectF.bottom;
                 rectF2.top = rectF.top;
-                float min = this.mDisplayWidth * Math.min(i / i2, 1.0f);
-                int i3 = this.mImgWidth;
-                float min2 = Math.min(1.0f, i3 > 0 ? min / i3 : 1.0f);
-                float f4 = floor * ((1.0f - min2) / (ImageWallpaper.this.mPages - 1));
-                rectF2.left = MathUtils.constrain((f2 * min2) + f4, 0.0f, 1.0f);
-                float constrain = MathUtils.constrain((f3 * min2) + f4, 0.0f, 1.0f);
-                rectF2.right = constrain;
-                if (rectF2.left > constrain) {
+                float min = ((float) this.mDisplayWidth) * Math.min(((float) this.mImgHeight) / ((float) this.mDisplayHeight), 1.0f);
+                int i = this.mImgWidth;
+                float min2 = Math.min(1.0f, i > 0 ? min / ((float) i) : 1.0f);
+                float access$1002 = ((float) floor) * ((1.0f - min2) / ((float) (ImageWallpaper.this.mPages - 1)));
+                rectF2.left = MathUtils.constrain((f * min2) + access$1002, 0.0f, 1.0f);
+                rectF2.right = MathUtils.constrain((f2 * min2) + access$1002, 0.0f, 1.0f);
+                if (rectF2.left > rectF2.right) {
                     rectF2.left = 0.0f;
                     rectF2.right = 1.0f;
                 }
@@ -294,7 +272,7 @@ public class ImageWallpaper extends WallpaperService {
                 if (pageToImgRect == null || !ImageWallpaper.LOCAL_COLOR_BOUNDS.contains(pageToImgRect)) {
                     arrayList.add(null);
                 } else {
-                    Rect rect = new Rect((int) Math.floor(pageToImgRect.left * bitmap.getWidth()), (int) Math.floor(pageToImgRect.top * bitmap.getHeight()), (int) Math.ceil(pageToImgRect.right * bitmap.getWidth()), (int) Math.ceil(pageToImgRect.bottom * bitmap.getHeight()));
+                    Rect rect = new Rect((int) Math.floor((double) (pageToImgRect.left * ((float) bitmap.getWidth()))), (int) Math.floor((double) (pageToImgRect.top * ((float) bitmap.getHeight()))), (int) Math.ceil((double) (pageToImgRect.right * ((float) bitmap.getWidth()))), (int) Math.ceil((double) (pageToImgRect.bottom * ((float) bitmap.getHeight()))));
                     if (rect.isEmpty()) {
                         arrayList.add(null);
                     } else {
@@ -305,59 +283,40 @@ public class ImageWallpaper extends WallpaperService {
             return arrayList;
         }
 
-        @Override // android.service.wallpaper.WallpaperService.Engine
-        public void onSurfaceCreated(final SurfaceHolder surfaceHolder) {
-            if (ImageWallpaper.this.mWorker == null) {
-                return;
+        public void onSurfaceCreated(SurfaceHolder surfaceHolder) {
+            if (ImageWallpaper.this.mWorker != null) {
+                ImageWallpaper.this.mWorker.getThreadHandler().post(new ImageWallpaper$GLEngine$$ExternalSyntheticLambda9(this, surfaceHolder));
             }
-            ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable() { // from class: com.android.systemui.ImageWallpaper$GLEngine$$ExternalSyntheticLambda5
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ImageWallpaper.GLEngine.this.lambda$onSurfaceCreated$4(surfaceHolder);
-                }
-            });
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onSurfaceCreated$4(SurfaceHolder surfaceHolder) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onSurfaceCreated$5$com-android-systemui-ImageWallpaper$GLEngine */
+        public /* synthetic */ void mo29692x1ac4c000(SurfaceHolder surfaceHolder) {
             Trace.beginSection("ImageWallpaper#onSurfaceCreated");
             this.mEglHelper.init(surfaceHolder, needSupportWideColorGamut());
             this.mRenderer.onSurfaceCreated();
             Trace.endSection();
         }
 
-        @Override // android.service.wallpaper.WallpaperService.Engine
-        public void onSurfaceChanged(SurfaceHolder surfaceHolder, int i, final int i2, final int i3) {
-            if (ImageWallpaper.this.mWorker == null) {
-                return;
+        public void onSurfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
+            if (ImageWallpaper.this.mWorker != null) {
+                ImageWallpaper.this.mWorker.getThreadHandler().post(new ImageWallpaper$GLEngine$$ExternalSyntheticLambda3(this, i2, i3));
             }
-            ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable() { // from class: com.android.systemui.ImageWallpaper$GLEngine$$ExternalSyntheticLambda4
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ImageWallpaper.GLEngine.this.lambda$onSurfaceChanged$5(i2, i3);
-                }
-            });
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onSurfaceChanged$5(int i, int i2) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onSurfaceChanged$6$com-android-systemui-ImageWallpaper$GLEngine */
+        public /* synthetic */ void mo29691xc1020853(int i, int i2) {
             this.mRenderer.onSurfaceChanged(i, i2);
         }
 
-        @Override // android.service.wallpaper.WallpaperService.Engine
         public void onSurfaceRedrawNeeded(SurfaceHolder surfaceHolder) {
-            if (ImageWallpaper.this.mWorker == null) {
-                return;
+            if (ImageWallpaper.this.mWorker != null) {
+                ImageWallpaper.this.mWorker.getThreadHandler().post(new ImageWallpaper$GLEngine$$ExternalSyntheticLambda2(this));
             }
-            ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable() { // from class: com.android.systemui.ImageWallpaper$GLEngine$$ExternalSyntheticLambda3
-                @Override // java.lang.Runnable
-                public final void run() {
-                    ImageWallpaper.GLEngine.this.drawFrame();
-                }
-            });
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void drawFrame() {
             Trace.beginSection("ImageWallpaper#drawFrame");
             preRender();
@@ -385,19 +344,16 @@ public class ImageWallpaper extends WallpaperService {
                     if (this.mEglHelper.hasEglContext() && !this.mEglHelper.hasEglSurface() && !this.mEglHelper.createEglSurface(getSurfaceHolder(), needSupportWideColorGamut())) {
                         Log.w(ImageWallpaper.TAG, "recreate egl surface failed!");
                     }
-                    if (this.mEglHelper.hasEglContext() || !this.mEglHelper.hasEglSurface() || !z) {
+                    if (!this.mEglHelper.hasEglContext() && !this.mEglHelper.hasEglSurface() && z) {
+                        this.mRenderer.onSurfaceCreated();
+                        this.mRenderer.onSurfaceChanged(surfaceFrame.width(), surfaceFrame.height());
                         return;
                     }
-                    this.mRenderer.onSurfaceCreated();
-                    this.mRenderer.onSurfaceChanged(surfaceFrame.width(), surfaceFrame.height());
-                    return;
                 }
             }
             z = false;
-            if (this.mEglHelper.hasEglContext()) {
-                Log.w(ImageWallpaper.TAG, "recreate egl surface failed!");
-            }
-            if (this.mEglHelper.hasEglContext()) {
+            Log.w(ImageWallpaper.TAG, "recreate egl surface failed!");
+            if (!this.mEglHelper.hasEglContext() && !this.mEglHelper.hasEglSurface()) {
             }
         }
 
@@ -409,41 +365,36 @@ public class ImageWallpaper extends WallpaperService {
 
         private void requestRenderInternal() {
             Rect surfaceFrame = getSurfaceHolder().getSurfaceFrame();
-            if (!(this.mEglHelper.hasEglContext() && this.mEglHelper.hasEglSurface() && surfaceFrame.width() > 0 && surfaceFrame.height() > 0)) {
-                String str = ImageWallpaper.TAG;
-                Log.e(str, "requestRender: not ready, has context=" + this.mEglHelper.hasEglContext() + ", has surface=" + this.mEglHelper.hasEglSurface() + ", frame=" + surfaceFrame);
+            if (this.mEglHelper.hasEglContext() && this.mEglHelper.hasEglSurface() && surfaceFrame.width() > 0 && surfaceFrame.height() > 0) {
+                this.mRenderer.onDrawFrame();
+                if (!this.mEglHelper.swapBuffer()) {
+                    Log.e(ImageWallpaper.TAG, "drawFrame failed!");
+                    return;
+                }
                 return;
             }
-            this.mRenderer.onDrawFrame();
-            if (this.mEglHelper.swapBuffer()) {
-                return;
-            }
-            Log.e(ImageWallpaper.TAG, "drawFrame failed!");
+            Log.e(ImageWallpaper.TAG, "requestRender: not ready, has context=" + this.mEglHelper.hasEglContext() + ", has surface=" + this.mEglHelper.hasEglSurface() + ", frame=" + surfaceFrame);
         }
 
         public void postRender() {
-            Trace.beginSection("ImageWallpaper#postRender");
             scheduleFinishRendering();
             reportEngineShown(false);
-            Trace.endSection();
         }
 
         private void cancelFinishRenderingTask() {
-            if (ImageWallpaper.this.mWorker == null) {
-                return;
+            if (ImageWallpaper.this.mWorker != null) {
+                ImageWallpaper.this.mWorker.getThreadHandler().removeCallbacks(this.mFinishRenderingTask);
             }
-            ImageWallpaper.this.mWorker.getThreadHandler().removeCallbacks(this.mFinishRenderingTask);
         }
 
         private void scheduleFinishRendering() {
-            if (ImageWallpaper.this.mWorker == null) {
-                return;
+            if (ImageWallpaper.this.mWorker != null) {
+                cancelFinishRenderingTask();
+                ImageWallpaper.this.mWorker.getThreadHandler().postDelayed(this.mFinishRenderingTask, 1000);
             }
-            cancelFinishRenderingTask();
-            ImageWallpaper.this.mWorker.getThreadHandler().postDelayed(this.mFinishRenderingTask, 1000L);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void finishRendering() {
             Trace.beginSection("ImageWallpaper#finishRendering");
             EglHelper eglHelper = this.mEglHelper;
@@ -458,12 +409,12 @@ public class ImageWallpaper extends WallpaperService {
             return this.mRenderer.isWcgContent();
         }
 
-        @Override // android.service.wallpaper.WallpaperService.Engine
-        protected void dump(String str, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+        /* access modifiers changed from: protected */
+        public void dump(String str, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
             super.dump(str, fileDescriptor, printWriter, strArr);
             printWriter.print(str);
             printWriter.print("Engine=");
-            printWriter.println(this);
+            printWriter.println((Object) this);
             printWriter.print(str);
             printWriter.print("valid surface=");
             Object obj = "null";

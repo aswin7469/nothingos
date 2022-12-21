@@ -5,7 +5,7 @@ import android.view.WindowManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideWindowManagerFactory implements Factory<WindowManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideWindowManagerFactory implement
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public WindowManager mo1933get() {
-        return provideWindowManager(this.contextProvider.mo1933get());
+    public WindowManager get() {
+        return provideWindowManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideWindowManagerFactory create(Provider<Context> provider) {

@@ -18,64 +18,75 @@ import android.os.Temperature;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.fuelgauge.Estimate;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.Dependency;
-import com.android.systemui.R$integer;
-import com.android.systemui.SystemUI;
+import com.android.systemui.C1893R;
+import com.android.systemui.CoreStartable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
-import com.android.systemui.power.PowerUI;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
+import com.nothing.systemui.power.PowerUIEx;
 import dagger.Lazy;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-import java.time.Duration;
+import java.p026io.PrintWriter;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.concurrent.Future;
-/* loaded from: classes.dex */
-public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
-    static final boolean DEBUG = Log.isLoggable("PowerUI", 3);
-    private static final long SIX_HOURS_MILLIS = Duration.ofHours(6).toMillis();
-    private final BroadcastDispatcher mBroadcastDispatcher;
+import javax.inject.Inject;
+
+@SysUISingleton
+public class PowerUI extends CoreStartable implements CommandQueue.Callbacks {
+    private static final String BOOT_COUNT_KEY = "boot_count";
+    private static final int CHARGE_CYCLE_PERCENT_RESET = 30;
+    static final boolean DEBUG = Log.isLoggable(TAG, 3);
+    private static final int MAX_RECENT_TEMPS = 125;
+    public static final int NO_ESTIMATE_AVAILABLE = -1;
+    private static final String PREFS = "powerui_prefs";
+    static final String TAG = "PowerUI";
+    private static final long TEMPERATURE_INTERVAL = 30000;
+    private static final long TEMPERATURE_LOGGING_INTERVAL = 3600000;
+    static final long THREE_HOURS_IN_MILLIS = 10800000;
+    int mBatteryLevel = 100;
+    int mBatteryStatus = 1;
+    /* access modifiers changed from: private */
+    public final BroadcastDispatcher mBroadcastDispatcher;
+    private final Lazy<Optional<CentralSurfaces>> mCentralSurfacesOptionalLazy;
     private final CommandQueue mCommandQueue;
-    @VisibleForTesting
     BatteryStateSnapshot mCurrentBatteryStateSnapshot;
     private boolean mEnableSkinTemperatureWarning;
     private boolean mEnableUsbTemperatureAlarm;
-    private EnhancedEstimates mEnhancedEstimates;
-    @VisibleForTesting
+    private final EnhancedEstimates mEnhancedEstimates;
+    /* access modifiers changed from: private */
+    public final PowerUIEx mEx;
+    /* access modifiers changed from: private */
+    public final Handler mHandler;
+    /* access modifiers changed from: private */
+    public int mInvalidCharger = 0;
     BatteryStateSnapshot mLastBatteryStateSnapshot;
-    private Future mLastShowWarningTask;
-    private int mLowBatteryAlertCloseLevel;
-    @VisibleForTesting
+    private final Configuration mLastConfiguration = new Configuration();
+    /* access modifiers changed from: private */
+    public Future mLastShowWarningTask;
+    /* access modifiers changed from: private */
+    public int mLowBatteryAlertCloseLevel;
+    /* access modifiers changed from: private */
+    public final int[] mLowBatteryReminderLevels = new int[2];
     boolean mLowWarningShownThisChargeCycle;
     private InattentiveSleepWarningView mOverlayView;
-    private PowerManager mPowerManager;
-    @VisibleForTesting
+    /* access modifiers changed from: private */
+    public int mPlugType = 0;
+    /* access modifiers changed from: private */
+    public final PowerManager mPowerManager;
+    final Receiver mReceiver = new Receiver();
+    /* access modifiers changed from: private */
+    public long mScreenOffTime = -1;
     boolean mSevereWarningShownThisChargeCycle;
     private IThermalEventListener mSkinThermalEventListener;
-    private final Lazy<StatusBar> mStatusBarLazy;
-    @VisibleForTesting
     IThermalService mThermalService;
     private IThermalEventListener mUsbThermalEventListener;
-    private WarningsUI mWarnings;
-    private final Handler mHandler = new Handler();
-    @VisibleForTesting
-    final Receiver mReceiver = new Receiver();
-    private final Configuration mLastConfiguration = new Configuration();
-    private int mPlugType = 0;
-    private int mInvalidCharger = 0;
-    private final int[] mLowBatteryReminderLevels = new int[2];
-    private long mScreenOffTime = -1;
-    @VisibleForTesting
-    int mBatteryLevel = 100;
-    @VisibleForTesting
-    int mBatteryStatus = 1;
+    /* access modifiers changed from: private */
+    public final WarningsUI mWarnings;
 
-    /* loaded from: classes.dex */
-    public interface WarningsUI {
+    public interface WarningsUI extends PowerUIEx.WarningsUI {
         void dismissHighTemperatureWarning();
 
         void dismissInvalidChargerWarning();
@@ -105,40 +116,39 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         void userSwitched();
     }
 
-    public PowerUI(Context context, BroadcastDispatcher broadcastDispatcher, CommandQueue commandQueue, Lazy<StatusBar> lazy) {
+    @Inject
+    public PowerUI(Context context, BroadcastDispatcher broadcastDispatcher, CommandQueue commandQueue, Lazy<Optional<CentralSurfaces>> lazy, WarningsUI warningsUI, EnhancedEstimates enhancedEstimates, PowerManager powerManager) {
         super(context);
+        Handler handler = new Handler();
+        this.mHandler = handler;
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mCommandQueue = commandQueue;
-        this.mStatusBarLazy = lazy;
+        this.mCentralSurfacesOptionalLazy = lazy;
+        this.mWarnings = warningsUI;
+        this.mEnhancedEstimates = enhancedEstimates;
+        this.mPowerManager = powerManager;
+        this.mEx = new PowerUIEx(context, warningsUI, handler);
     }
 
-    @Override // com.android.systemui.SystemUI
     public void start() {
-        PowerManager powerManager = (PowerManager) this.mContext.getSystemService("power");
-        this.mPowerManager = powerManager;
-        this.mScreenOffTime = powerManager.isScreenOn() ? -1L : SystemClock.elapsedRealtime();
-        this.mWarnings = (WarningsUI) Dependency.get(WarningsUI.class);
-        this.mEnhancedEstimates = (EnhancedEstimates) Dependency.get(EnhancedEstimates.class);
+        this.mScreenOffTime = this.mPowerManager.isScreenOn() ? -1 : SystemClock.elapsedRealtime();
         this.mLastConfiguration.setTo(this.mContext.getResources().getConfiguration());
-        ContentObserver contentObserver = new ContentObserver(this.mHandler) { // from class: com.android.systemui.power.PowerUI.1
-            @Override // android.database.ContentObserver
+        C23061 r0 = new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 PowerUI.this.updateBatteryWarningLevels();
             }
         };
         ContentResolver contentResolver = this.mContext.getContentResolver();
-        contentResolver.registerContentObserver(Settings.Global.getUriFor("low_power_trigger_level"), false, contentObserver, -1);
+        contentResolver.registerContentObserver(Settings.Global.getUriFor("low_power_trigger_level"), false, r0, -1);
         updateBatteryWarningLevels();
         this.mReceiver.init();
         showWarnOnThermalShutdown();
-        contentResolver.registerContentObserver(Settings.Global.getUriFor("show_temperature_warning"), false, new ContentObserver(this.mHandler) { // from class: com.android.systemui.power.PowerUI.2
-            @Override // android.database.ContentObserver
+        contentResolver.registerContentObserver(Settings.Global.getUriFor("show_temperature_warning"), false, new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 PowerUI.this.doSkinThermalEventListenerRegistration();
             }
         });
-        contentResolver.registerContentObserver(Settings.Global.getUriFor("show_usb_temperature_alarm"), false, new ContentObserver(this.mHandler) { // from class: com.android.systemui.power.PowerUI.3
-            @Override // android.database.ContentObserver
+        contentResolver.registerContentObserver(Settings.Global.getUriFor("show_usb_temperature_alarm"), false, new ContentObserver(this.mHandler) {
             public void onChange(boolean z) {
                 PowerUI.this.doUsbThermalEventListenerRegistration();
             }
@@ -147,32 +157,27 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.SystemUI
+    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         if ((this.mLastConfiguration.updateFrom(configuration) & 3) != 0) {
-            this.mHandler.post(new Runnable() { // from class: com.android.systemui.power.PowerUI$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    PowerUI.this.initThermalEventListeners();
-                }
-            });
+            this.mHandler.post(new PowerUI$$ExternalSyntheticLambda0(this));
         }
     }
 
-    void updateBatteryWarningLevels() {
-        int integer = this.mContext.getResources().getInteger(17694768);
-        int integer2 = this.mContext.getResources().getInteger(17694848);
+    /* access modifiers changed from: package-private */
+    public void updateBatteryWarningLevels() {
+        int integer = this.mContext.getResources().getInteger(C1893R.integer.config_criticalBatteryWarningLevel);
+        int integer2 = this.mContext.getResources().getInteger(C1893R.integer.config_lowBatteryWarningLevel);
         if (integer2 < integer) {
             integer2 = integer;
         }
         int[] iArr = this.mLowBatteryReminderLevels;
         iArr[0] = integer2;
         iArr[1] = integer;
-        this.mLowBatteryAlertCloseLevel = iArr[0] + this.mContext.getResources().getInteger(17694847);
+        this.mLowBatteryAlertCloseLevel = integer2 + this.mContext.getResources().getInteger(17694858);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int findBatteryLevelBucket(int i) {
         if (i >= this.mLowBatteryAlertCloseLevel) {
             return 1;
@@ -183,16 +188,13 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         }
         for (int length = iArr.length - 1; length >= 0; length--) {
             if (i <= this.mLowBatteryReminderLevels[length]) {
-                return (-1) - length;
+                return -1 - length;
             }
         }
         throw new RuntimeException("not possible!");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
-    /* loaded from: classes.dex */
-    public final class Receiver extends BroadcastReceiver {
+    final class Receiver extends BroadcastReceiver {
         private boolean mHasReceivedBattery = false;
 
         Receiver() {
@@ -207,121 +209,101 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
             intentFilter.addAction("android.intent.action.SCREEN_ON");
             intentFilter.addAction("android.intent.action.USER_SWITCHED");
             PowerUI.this.mBroadcastDispatcher.registerReceiverWithHandler(this, intentFilter, PowerUI.this.mHandler);
-            if (this.mHasReceivedBattery || (registerReceiver = ((SystemUI) PowerUI.this).mContext.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED"))) == null) {
-                return;
+            if (!this.mHasReceivedBattery && (registerReceiver = PowerUI.this.mContext.registerReceiver((BroadcastReceiver) null, new IntentFilter("android.intent.action.BATTERY_CHANGED"))) != null) {
+                onReceive(PowerUI.this.mContext, registerReceiver);
             }
-            onReceive(((SystemUI) PowerUI.this).mContext, registerReceiver);
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
+            PowerUI.this.mEx.onReceive(context, intent);
             String action = intent.getAction();
             if ("android.os.action.POWER_SAVE_MODE_CHANGED".equals(action)) {
-                ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.systemui.power.PowerUI$Receiver$$ExternalSyntheticLambda0
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        PowerUI.Receiver.this.lambda$onReceive$0();
-                    }
-                });
+                ThreadUtils.postOnBackgroundThread((Runnable) new PowerUI$Receiver$$ExternalSyntheticLambda0(this));
             } else if ("android.intent.action.BATTERY_CHANGED".equals(action)) {
                 this.mHasReceivedBattery = true;
+                int i = PowerUI.this.mBatteryLevel;
+                PowerUI.this.mBatteryLevel = intent.getIntExtra("level", 100);
+                int i2 = PowerUI.this.mBatteryStatus;
+                PowerUI.this.mBatteryStatus = intent.getIntExtra("status", 1);
+                int access$500 = PowerUI.this.mPlugType;
+                int unused = PowerUI.this.mPlugType = intent.getIntExtra("plugged", 1);
+                int access$600 = PowerUI.this.mInvalidCharger;
+                int unused2 = PowerUI.this.mInvalidCharger = intent.getIntExtra("invalid_charger", 0);
                 PowerUI powerUI = PowerUI.this;
-                int i = powerUI.mBatteryLevel;
-                powerUI.mBatteryLevel = intent.getIntExtra("level", 100);
+                powerUI.mLastBatteryStateSnapshot = powerUI.mCurrentBatteryStateSnapshot;
+                boolean z = PowerUI.this.mPlugType != 0;
+                boolean z2 = access$500 != 0;
+                int access$700 = PowerUI.this.findBatteryLevelBucket(i);
                 PowerUI powerUI2 = PowerUI.this;
-                int i2 = powerUI2.mBatteryStatus;
-                powerUI2.mBatteryStatus = intent.getIntExtra("status", 1);
-                int i3 = PowerUI.this.mPlugType;
-                PowerUI.this.mPlugType = intent.getIntExtra("plugged", 1);
-                int i4 = PowerUI.this.mInvalidCharger;
-                PowerUI.this.mInvalidCharger = intent.getIntExtra("invalid_charger", 0);
-                PowerUI powerUI3 = PowerUI.this;
-                powerUI3.mLastBatteryStateSnapshot = powerUI3.mCurrentBatteryStateSnapshot;
-                final boolean z = powerUI3.mPlugType != 0;
-                boolean z2 = i3 != 0;
-                int findBatteryLevelBucket = PowerUI.this.findBatteryLevelBucket(i);
-                PowerUI powerUI4 = PowerUI.this;
-                final int findBatteryLevelBucket2 = powerUI4.findBatteryLevelBucket(powerUI4.mBatteryLevel);
-                boolean z3 = PowerUI.DEBUG;
-                if (z3) {
-                    Slog.d("PowerUI", "buckets   ....." + PowerUI.this.mLowBatteryAlertCloseLevel + " .. " + PowerUI.this.mLowBatteryReminderLevels[0] + " .. " + PowerUI.this.mLowBatteryReminderLevels[1]);
-                    StringBuilder sb = new StringBuilder();
-                    sb.append("level          ");
-                    sb.append(i);
-                    sb.append(" --> ");
-                    sb.append(PowerUI.this.mBatteryLevel);
-                    Slog.d("PowerUI", sb.toString());
-                    Slog.d("PowerUI", "status         " + i2 + " --> " + PowerUI.this.mBatteryStatus);
-                    Slog.d("PowerUI", "plugType       " + i3 + " --> " + PowerUI.this.mPlugType);
-                    Slog.d("PowerUI", "invalidCharger " + i4 + " --> " + PowerUI.this.mInvalidCharger);
-                    Slog.d("PowerUI", "bucket         " + findBatteryLevelBucket + " --> " + findBatteryLevelBucket2);
-                    Slog.d("PowerUI", "plugged        " + z2 + " --> " + z);
+                int access$7002 = powerUI2.findBatteryLevelBucket(powerUI2.mBatteryLevel);
+                if (PowerUI.DEBUG) {
+                    Slog.d(PowerUI.TAG, "buckets   ....." + PowerUI.this.mLowBatteryAlertCloseLevel + " .. " + PowerUI.this.mLowBatteryReminderLevels[0] + " .. " + PowerUI.this.mLowBatteryReminderLevels[1]);
+                    Slog.d(PowerUI.TAG, "level          " + i + " --> " + PowerUI.this.mBatteryLevel);
+                    Slog.d(PowerUI.TAG, "status         " + i2 + " --> " + PowerUI.this.mBatteryStatus);
+                    Slog.d(PowerUI.TAG, "plugType       " + access$500 + " --> " + PowerUI.this.mPlugType);
+                    Slog.d(PowerUI.TAG, "invalidCharger " + access$600 + " --> " + PowerUI.this.mInvalidCharger);
+                    Slog.d(PowerUI.TAG, "bucket         " + access$700 + " --> " + access$7002);
+                    Slog.d(PowerUI.TAG, "plugged        " + z2 + " --> " + z);
                 }
-                WarningsUI warningsUI = PowerUI.this.mWarnings;
-                PowerUI powerUI5 = PowerUI.this;
-                warningsUI.update(powerUI5.mBatteryLevel, findBatteryLevelBucket2, powerUI5.mScreenOffTime);
-                if (i4 != 0 || PowerUI.this.mInvalidCharger == 0) {
-                    if (i4 == 0 || PowerUI.this.mInvalidCharger != 0) {
-                        if (PowerUI.this.mWarnings.isInvalidChargerWarningShowing()) {
-                            if (!z3) {
-                                return;
-                            }
-                            Slog.d("PowerUI", "Bad Charger");
+                PowerUI.this.mWarnings.update(PowerUI.this.mBatteryLevel, access$7002, PowerUI.this.mScreenOffTime);
+                if (access$600 != 0 || PowerUI.this.mInvalidCharger == 0) {
+                    if (access$600 != 0 && PowerUI.this.mInvalidCharger == 0) {
+                        PowerUI.this.mWarnings.dismissInvalidChargerWarning();
+                    } else if (PowerUI.this.mWarnings.isInvalidChargerWarningShowing()) {
+                        if (PowerUI.DEBUG) {
+                            Slog.d(PowerUI.TAG, "Bad Charger");
                             return;
                         }
-                    } else {
-                        PowerUI.this.mWarnings.dismissInvalidChargerWarning();
+                        return;
                     }
                     if (PowerUI.this.mLastShowWarningTask != null) {
                         PowerUI.this.mLastShowWarningTask.cancel(true);
-                        if (z3) {
-                            Slog.d("PowerUI", "cancelled task");
+                        if (PowerUI.DEBUG) {
+                            Slog.d(PowerUI.TAG, "cancelled task");
                         }
                     }
-                    PowerUI.this.mLastShowWarningTask = ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.systemui.power.PowerUI$Receiver$$ExternalSyntheticLambda1
-                        @Override // java.lang.Runnable
-                        public final void run() {
-                            PowerUI.Receiver.this.lambda$onReceive$1(z, findBatteryLevelBucket2);
-                        }
-                    });
+                    Future unused3 = PowerUI.this.mLastShowWarningTask = ThreadUtils.postOnBackgroundThread((Runnable) new PowerUI$Receiver$$ExternalSyntheticLambda1(this, z, access$7002));
                     return;
                 }
-                Slog.d("PowerUI", "showing invalid charger warning");
+                Slog.d(PowerUI.TAG, "showing invalid charger warning");
                 PowerUI.this.mWarnings.showInvalidChargerWarning();
             } else if ("android.intent.action.SCREEN_OFF".equals(action)) {
-                PowerUI.this.mScreenOffTime = SystemClock.elapsedRealtime();
+                long unused4 = PowerUI.this.mScreenOffTime = SystemClock.elapsedRealtime();
             } else if ("android.intent.action.SCREEN_ON".equals(action)) {
-                PowerUI.this.mScreenOffTime = -1L;
+                long unused5 = PowerUI.this.mScreenOffTime = -1;
             } else if ("android.intent.action.USER_SWITCHED".equals(action)) {
                 PowerUI.this.mWarnings.userSwitched();
             } else {
-                Slog.w("PowerUI", "unknown intent: " + intent);
+                Slog.w(PowerUI.TAG, "unknown intent: " + intent);
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onReceive$0() {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onReceive$0$com-android-systemui-power-PowerUI$Receiver  reason: not valid java name */
+        public /* synthetic */ void m2860lambda$onReceive$0$comandroidsystemuipowerPowerUI$Receiver() {
             if (PowerUI.this.mPowerManager.isPowerSaveMode()) {
                 PowerUI.this.mWarnings.dismissLowBatteryWarning();
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onReceive$1(boolean z, int i) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onReceive$1$com-android-systemui-power-PowerUI$Receiver  reason: not valid java name */
+        public /* synthetic */ void m2861lambda$onReceive$1$comandroidsystemuipowerPowerUI$Receiver(boolean z, int i) {
             PowerUI.this.maybeShowBatteryWarningV2(z, i);
         }
     }
 
-    protected void maybeShowBatteryWarningV2(boolean z, int i) {
+    /* access modifiers changed from: protected */
+    public void maybeShowBatteryWarningV2(boolean z, int i) {
         boolean isHybridNotificationEnabled = this.mEnhancedEstimates.isHybridNotificationEnabled();
         boolean isPowerSaveMode = this.mPowerManager.isPowerSaveMode();
         boolean z2 = DEBUG;
         if (z2) {
-            Slog.d("PowerUI", "evaluating which notification to show");
+            Slog.d(TAG, "evaluating which notification to show");
         }
         if (isHybridNotificationEnabled) {
             if (z2) {
-                Slog.d("PowerUI", "using hybrid");
+                Slog.d(TAG, "using hybrid");
             }
             Estimate refreshEstimateIfNeeded = refreshEstimateIfNeeded();
             int i2 = this.mBatteryLevel;
@@ -330,7 +312,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
             this.mCurrentBatteryStateSnapshot = new BatteryStateSnapshot(i2, isPowerSaveMode, z, i, i3, iArr[1], iArr[0], refreshEstimateIfNeeded.getEstimateMillis(), refreshEstimateIfNeeded.getAverageDischargeTime(), this.mEnhancedEstimates.getSevereWarningThreshold(), this.mEnhancedEstimates.getLowWarningThreshold(), refreshEstimateIfNeeded.isBasedOnUsage(), this.mEnhancedEstimates.getLowWarningEnabled());
         } else {
             if (z2) {
-                Slog.d("PowerUI", "using standard");
+                Slog.d(TAG, "using standard");
             }
             int i4 = this.mBatteryLevel;
             int i5 = this.mBatteryStatus;
@@ -338,35 +320,30 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
             this.mCurrentBatteryStateSnapshot = new BatteryStateSnapshot(i4, isPowerSaveMode, z, i, i5, iArr2[1], iArr2[0]);
         }
         this.mWarnings.updateSnapshot(this.mCurrentBatteryStateSnapshot);
-        if (this.mCurrentBatteryStateSnapshot.isHybrid()) {
-            maybeShowHybridWarning(this.mCurrentBatteryStateSnapshot, this.mLastBatteryStateSnapshot);
-        } else {
-            maybeShowBatteryWarning(this.mCurrentBatteryStateSnapshot, this.mLastBatteryStateSnapshot);
-        }
+        maybeShowHybridWarning(this.mCurrentBatteryStateSnapshot, this.mLastBatteryStateSnapshot);
     }
 
-    @VisibleForTesting
-    Estimate refreshEstimateIfNeeded() {
+    /* access modifiers changed from: package-private */
+    public Estimate refreshEstimateIfNeeded() {
         BatteryStateSnapshot batteryStateSnapshot = this.mLastBatteryStateSnapshot;
-        if (batteryStateSnapshot == null || batteryStateSnapshot.getTimeRemainingMillis() == -1 || this.mBatteryLevel != this.mLastBatteryStateSnapshot.getBatteryLevel()) {
-            Estimate estimate = this.mEnhancedEstimates.getEstimate();
-            if (DEBUG) {
-                Slog.d("PowerUI", "updated estimate: " + estimate.getEstimateMillis());
-            }
-            return estimate;
+        if (batteryStateSnapshot != null && batteryStateSnapshot.getTimeRemainingMillis() != -1 && this.mBatteryLevel == this.mLastBatteryStateSnapshot.getBatteryLevel()) {
+            return new Estimate(this.mLastBatteryStateSnapshot.getTimeRemainingMillis(), this.mLastBatteryStateSnapshot.isBasedOnUsage(), this.mLastBatteryStateSnapshot.getAverageTimeToDischargeMillis());
         }
-        return new Estimate(this.mLastBatteryStateSnapshot.getTimeRemainingMillis(), this.mLastBatteryStateSnapshot.isBasedOnUsage(), this.mLastBatteryStateSnapshot.getAverageTimeToDischargeMillis());
+        Estimate estimate = this.mEnhancedEstimates.getEstimate();
+        if (DEBUG) {
+            Slog.d(TAG, "updated estimate: " + estimate.getEstimateMillis());
+        }
+        return estimate;
     }
 
-    @VisibleForTesting
-    void maybeShowHybridWarning(BatteryStateSnapshot batteryStateSnapshot, BatteryStateSnapshot batteryStateSnapshot2) {
-        long timeRemainingMillis = batteryStateSnapshot.getTimeRemainingMillis();
+    /* access modifiers changed from: package-private */
+    public void maybeShowHybridWarning(BatteryStateSnapshot batteryStateSnapshot, BatteryStateSnapshot batteryStateSnapshot2) {
         boolean z = false;
-        if (batteryStateSnapshot.getBatteryLevel() >= 45 && (timeRemainingMillis > SIX_HOURS_MILLIS || timeRemainingMillis == -1)) {
+        if (batteryStateSnapshot.getBatteryLevel() >= 30) {
             this.mLowWarningShownThisChargeCycle = false;
             this.mSevereWarningShownThisChargeCycle = false;
             if (DEBUG) {
-                Slog.d("PowerUI", "Charge cycle reset! Can show warnings again");
+                Slog.d(TAG, "Charge cycle reset! Can show warnings again");
             }
         }
         if (batteryStateSnapshot.getBucket() != batteryStateSnapshot2.getBucket() || batteryStateSnapshot2.getPlugged()) {
@@ -374,64 +351,60 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         }
         if (shouldShowHybridWarning(batteryStateSnapshot)) {
             this.mWarnings.showLowBatteryWarning(z);
-            if ((timeRemainingMillis != -1 && timeRemainingMillis <= batteryStateSnapshot.getSevereThresholdMillis()) || batteryStateSnapshot.getBatteryLevel() <= batteryStateSnapshot.getSevereLevelThreshold()) {
+            if (batteryStateSnapshot.getBatteryLevel() <= batteryStateSnapshot.getSevereLevelThreshold()) {
                 this.mSevereWarningShownThisChargeCycle = true;
                 this.mLowWarningShownThisChargeCycle = true;
-                if (!DEBUG) {
+                if (DEBUG) {
+                    Slog.d(TAG, "Severe warning marked as shown this cycle");
                     return;
                 }
-                Slog.d("PowerUI", "Severe warning marked as shown this cycle");
                 return;
             }
-            Slog.d("PowerUI", "Low warning marked as shown this cycle");
+            Slog.d(TAG, "Low warning marked as shown this cycle");
             this.mLowWarningShownThisChargeCycle = true;
         } else if (shouldDismissHybridWarning(batteryStateSnapshot)) {
             if (DEBUG) {
-                Slog.d("PowerUI", "Dismissing warning");
+                Slog.d(TAG, "Dismissing warning");
             }
             this.mWarnings.dismissLowBatteryWarning();
         } else {
             if (DEBUG) {
-                Slog.d("PowerUI", "Updating warning");
+                Slog.d(TAG, "Updating warning");
             }
             this.mWarnings.updateLowBatteryWarning();
         }
     }
 
-    @VisibleForTesting
-    boolean shouldShowHybridWarning(BatteryStateSnapshot batteryStateSnapshot) {
+    /* access modifiers changed from: package-private */
+    public boolean shouldShowHybridWarning(BatteryStateSnapshot batteryStateSnapshot) {
         boolean z = false;
         boolean z2 = true;
         if (batteryStateSnapshot.getPlugged() || batteryStateSnapshot.getBatteryStatus() == 1) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("can't show warning due to - plugged: ");
-            sb.append(batteryStateSnapshot.getPlugged());
-            sb.append(" status unknown: ");
+            StringBuilder append = new StringBuilder("can't show warning due to - plugged: ").append(batteryStateSnapshot.getPlugged()).append(" status unknown: ");
             if (batteryStateSnapshot.getBatteryStatus() != 1) {
                 z2 = false;
             }
-            sb.append(z2);
-            Slog.d("PowerUI", sb.toString());
+            Slog.d(TAG, append.append(z2).toString());
             return false;
         }
-        long timeRemainingMillis = batteryStateSnapshot.getTimeRemainingMillis();
-        boolean z3 = batteryStateSnapshot.isLowWarningEnabled() && !this.mLowWarningShownThisChargeCycle && !batteryStateSnapshot.isPowerSaver() && ((timeRemainingMillis != -1 && timeRemainingMillis < batteryStateSnapshot.getLowThresholdMillis()) || batteryStateSnapshot.getBatteryLevel() <= batteryStateSnapshot.getLowLevelThreshold());
-        boolean z4 = !this.mSevereWarningShownThisChargeCycle && ((timeRemainingMillis != -1 && timeRemainingMillis < batteryStateSnapshot.getSevereThresholdMillis()) || batteryStateSnapshot.getBatteryLevel() <= batteryStateSnapshot.getSevereLevelThreshold());
+        boolean z3 = !this.mLowWarningShownThisChargeCycle && !batteryStateSnapshot.isPowerSaver() && batteryStateSnapshot.getBatteryLevel() <= batteryStateSnapshot.getLowLevelThreshold();
+        boolean z4 = !this.mSevereWarningShownThisChargeCycle && batteryStateSnapshot.getBatteryLevel() <= batteryStateSnapshot.getSevereLevelThreshold();
         if (z3 || z4) {
             z = true;
         }
         if (DEBUG) {
-            Slog.d("PowerUI", "Enhanced trigger is: " + z + "\nwith battery snapshot: mLowWarningShownThisChargeCycle: " + this.mLowWarningShownThisChargeCycle + " mSevereWarningShownThisChargeCycle: " + this.mSevereWarningShownThisChargeCycle + "\n" + batteryStateSnapshot.toString());
+            Slog.d(TAG, "Enhanced trigger is: " + z + "\nwith battery snapshot: mLowWarningShownThisChargeCycle: " + this.mLowWarningShownThisChargeCycle + " mSevereWarningShownThisChargeCycle: " + this.mSevereWarningShownThisChargeCycle + "\n" + batteryStateSnapshot.toString());
         }
         return z;
     }
 
-    @VisibleForTesting
-    boolean shouldDismissHybridWarning(BatteryStateSnapshot batteryStateSnapshot) {
-        return batteryStateSnapshot.getPlugged() || batteryStateSnapshot.getTimeRemainingMillis() > batteryStateSnapshot.getLowThresholdMillis();
+    /* access modifiers changed from: package-private */
+    public boolean shouldDismissHybridWarning(BatteryStateSnapshot batteryStateSnapshot) {
+        return batteryStateSnapshot.getPlugged() || batteryStateSnapshot.getBatteryLevel() > batteryStateSnapshot.getLowLevelThreshold();
     }
 
-    protected void maybeShowBatteryWarning(BatteryStateSnapshot batteryStateSnapshot, BatteryStateSnapshot batteryStateSnapshot2) {
+    /* access modifiers changed from: protected */
+    public void maybeShowBatteryWarning(BatteryStateSnapshot batteryStateSnapshot, BatteryStateSnapshot batteryStateSnapshot2) {
         boolean z = batteryStateSnapshot.getBucket() != batteryStateSnapshot2.getBucket() || batteryStateSnapshot2.getPlugged();
         if (shouldShowLowBatteryWarning(batteryStateSnapshot, batteryStateSnapshot2)) {
             this.mWarnings.showLowBatteryWarning(z);
@@ -442,28 +415,28 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         }
     }
 
-    @VisibleForTesting
-    boolean shouldShowLowBatteryWarning(BatteryStateSnapshot batteryStateSnapshot, BatteryStateSnapshot batteryStateSnapshot2) {
+    /* access modifiers changed from: package-private */
+    public boolean shouldShowLowBatteryWarning(BatteryStateSnapshot batteryStateSnapshot, BatteryStateSnapshot batteryStateSnapshot2) {
         return !batteryStateSnapshot.getPlugged() && !batteryStateSnapshot.isPowerSaver() && (batteryStateSnapshot.getBucket() < batteryStateSnapshot2.getBucket() || batteryStateSnapshot2.getPlugged()) && batteryStateSnapshot.getBucket() < 0 && batteryStateSnapshot.getBatteryStatus() != 1;
     }
 
-    @VisibleForTesting
-    boolean shouldDismissLowBatteryWarning(BatteryStateSnapshot batteryStateSnapshot, BatteryStateSnapshot batteryStateSnapshot2) {
+    /* access modifiers changed from: package-private */
+    public boolean shouldDismissLowBatteryWarning(BatteryStateSnapshot batteryStateSnapshot, BatteryStateSnapshot batteryStateSnapshot2) {
         return batteryStateSnapshot.isPowerSaver() || batteryStateSnapshot.getPlugged() || (batteryStateSnapshot.getBucket() > batteryStateSnapshot2.getBucket() && batteryStateSnapshot.getBucket() > 0);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void initThermalEventListeners() {
         doSkinThermalEventListenerRegistration();
         doUsbThermalEventListenerRegistration();
     }
 
-    @VisibleForTesting
-    synchronized void doSkinThermalEventListenerRegistration() {
+    /* access modifiers changed from: package-private */
+    public synchronized void doSkinThermalEventListenerRegistration() {
         boolean z;
         boolean z2 = this.mEnableSkinTemperatureWarning;
         boolean z3 = true;
-        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_temperature_warning", this.mContext.getResources().getInteger(R$integer.config_showTemperatureWarning)) != 0;
+        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_temperature_warning", this.mContext.getResources().getInteger(C1893R.integer.config_showTemperatureWarning)) != 0;
         this.mEnableSkinTemperatureWarning = z4;
         if (z4 != z2) {
             try {
@@ -479,7 +452,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
                     z = this.mThermalService.unregisterThermalEventListener(this.mSkinThermalEventListener);
                 }
             } catch (RemoteException e) {
-                Slog.e("PowerUI", "Exception while (un)registering skin thermal event listener.", e);
+                Slog.e(TAG, "Exception while (un)registering skin thermal event listener.", e);
                 z = false;
             }
             if (!z) {
@@ -487,17 +460,17 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
                     z3 = false;
                 }
                 this.mEnableSkinTemperatureWarning = z3;
-                Slog.e("PowerUI", "Failed to register or unregister skin thermal event listener.");
+                Slog.e(TAG, "Failed to register or unregister skin thermal event listener.");
             }
         }
     }
 
-    @VisibleForTesting
-    synchronized void doUsbThermalEventListenerRegistration() {
+    /* access modifiers changed from: package-private */
+    public synchronized void doUsbThermalEventListenerRegistration() {
         boolean z;
         boolean z2 = this.mEnableUsbTemperatureAlarm;
         boolean z3 = true;
-        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_usb_temperature_alarm", this.mContext.getResources().getInteger(R$integer.config_showUsbPortAlarm)) != 0;
+        boolean z4 = Settings.Global.getInt(this.mContext.getContentResolver(), "show_usb_temperature_alarm", this.mContext.getResources().getInteger(C1893R.integer.config_showUsbPortAlarm)) != 0;
         this.mEnableUsbTemperatureAlarm = z4;
         if (z4 != z2) {
             try {
@@ -513,7 +486,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
                     z = this.mThermalService.unregisterThermalEventListener(this.mUsbThermalEventListener);
                 }
             } catch (RemoteException e) {
-                Slog.e("PowerUI", "Exception while (un)registering usb thermal event listener.", e);
+                Slog.e(TAG, "Exception while (un)registering usb thermal event listener.", e);
                 z = false;
             }
             if (!z) {
@@ -521,29 +494,27 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
                     z3 = false;
                 }
                 this.mEnableUsbTemperatureAlarm = z3;
-                Slog.e("PowerUI", "Failed to register or unregister usb thermal event listener.");
+                Slog.e(TAG, "Failed to register or unregister usb thermal event listener.");
             }
         }
     }
 
     private void showWarnOnThermalShutdown() {
         int i = -1;
-        int i2 = this.mContext.getSharedPreferences("powerui_prefs", 0).getInt("boot_count", -1);
+        int i2 = this.mContext.getSharedPreferences(PREFS, 0).getInt(BOOT_COUNT_KEY, -1);
         try {
-            i = Settings.Global.getInt(this.mContext.getContentResolver(), "boot_count");
+            i = Settings.Global.getInt(this.mContext.getContentResolver(), BOOT_COUNT_KEY);
         } catch (Settings.SettingNotFoundException unused) {
-            Slog.e("PowerUI", "Failed to read system boot count from Settings.Global.BOOT_COUNT");
+            Slog.e(TAG, "Failed to read system boot count from Settings.Global.BOOT_COUNT");
         }
         if (i > i2) {
-            this.mContext.getSharedPreferences("powerui_prefs", 0).edit().putInt("boot_count", i).apply();
-            if (this.mPowerManager.getLastShutdownReason() != 4) {
-                return;
+            this.mContext.getSharedPreferences(PREFS, 0).edit().putInt(BOOT_COUNT_KEY, i).apply();
+            if (this.mPowerManager.getLastShutdownReason() == 4) {
+                this.mWarnings.showThermalShutdownWarning();
             }
-            this.mWarnings.showThermalShutdownWarning();
         }
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showInattentiveSleepWarning() {
         if (this.mOverlayView == null) {
             this.mOverlayView = new InattentiveSleepWarningView(this.mContext);
@@ -551,7 +522,6 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         this.mOverlayView.show();
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void dismissInattentiveSleepWarning(boolean z) {
         InattentiveSleepWarningView inattentiveSleepWarningView = this.mOverlayView;
         if (inattentiveSleepWarningView != null) {
@@ -559,8 +529,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         }
     }
 
-    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.print("mLowBatteryAlertCloseLevel=");
         printWriter.println(this.mLowBatteryAlertCloseLevel);
         printWriter.print("mLowBatteryReminderLevels=");
@@ -592,31 +561,16 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         this.mWarnings.dump(printWriter);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
-    /* loaded from: classes.dex */
-    public final class SkinThermalEventListener extends IThermalEventListener.Stub {
+    final class SkinThermalEventListener extends IThermalEventListener.Stub {
         SkinThermalEventListener() {
         }
 
         public void notifyThrottling(Temperature temperature) {
-            int status = temperature.getStatus();
-            if (status >= 5) {
-                if (((StatusBar) PowerUI.this.mStatusBarLazy.get()).isDeviceInVrMode()) {
-                    return;
-                }
-                PowerUI.this.mWarnings.showHighTemperatureWarning();
-                Slog.d("PowerUI", "SkinThermalEventListener: notifyThrottling was called , current skin status = " + status + ", temperature = " + temperature.getValue());
-                return;
-            }
-            PowerUI.this.mWarnings.dismissHighTemperatureWarning();
+            PowerUI.this.mEx.notifyThrottling(temperature);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
-    /* loaded from: classes.dex */
-    public final class UsbThermalEventListener extends IThermalEventListener.Stub {
+    final class UsbThermalEventListener extends IThermalEventListener.Stub {
         UsbThermalEventListener() {
         }
 
@@ -624,7 +578,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
             int status = temperature.getStatus();
             if (status >= 5) {
                 PowerUI.this.mWarnings.showUsbHighTemperatureAlarm();
-                Slog.d("PowerUI", "UsbThermalEventListener: notifyThrottling was called , current usb port status = " + status + ", temperature = " + temperature.getValue());
+                Slog.d(PowerUI.TAG, "UsbThermalEventListener: notifyThrottling was called , current usb port status = " + status + ", temperature = " + temperature.getValue());
             }
         }
     }

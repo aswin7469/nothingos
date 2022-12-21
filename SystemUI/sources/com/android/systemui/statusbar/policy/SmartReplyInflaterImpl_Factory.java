@@ -6,7 +6,7 @@ import com.android.systemui.statusbar.SmartReplyController;
 import com.android.systemui.statusbar.phone.KeyguardDismissUtil;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class SmartReplyInflaterImpl_Factory implements Factory<SmartReplyInflaterImpl> {
     private final Provider<SmartReplyConstants> constantsProvider;
     private final Provider<Context> contextProvider;
@@ -22,10 +22,8 @@ public final class SmartReplyInflaterImpl_Factory implements Factory<SmartReplyI
         this.contextProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SmartReplyInflaterImpl mo1933get() {
-        return newInstance(this.constantsProvider.mo1933get(), this.keyguardDismissUtilProvider.mo1933get(), this.remoteInputManagerProvider.mo1933get(), this.smartReplyControllerProvider.mo1933get(), this.contextProvider.mo1933get());
+    public SmartReplyInflaterImpl get() {
+        return newInstance(this.constantsProvider.get(), this.keyguardDismissUtilProvider.get(), this.remoteInputManagerProvider.get(), this.smartReplyControllerProvider.get(), this.contextProvider.get());
     }
 
     public static SmartReplyInflaterImpl_Factory create(Provider<SmartReplyConstants> provider, Provider<KeyguardDismissUtil> provider2, Provider<NotificationRemoteInputManager> provider3, Provider<SmartReplyController> provider4, Provider<Context> provider5) {

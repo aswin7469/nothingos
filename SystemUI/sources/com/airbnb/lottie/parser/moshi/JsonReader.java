@@ -1,23 +1,22 @@
 package com.airbnb.lottie.parser.moshi;
 
-import java.io.Closeable;
-import java.io.IOException;
+import java.p026io.Closeable;
+import java.p026io.IOException;
 import java.util.Arrays;
 import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.ByteString;
-/* loaded from: classes.dex */
+
 public abstract class JsonReader implements Closeable {
     private static final String[] REPLACEMENT_CHARS = new String[128];
     boolean failOnUnknown;
     boolean lenient;
-    int stackSize;
-    int[] scopes = new int[32];
-    String[] pathNames = new String[32];
     int[] pathIndices = new int[32];
+    String[] pathNames = new String[32];
+    int[] scopes = new int[32];
+    int stackSize;
 
-    /* loaded from: classes.dex */
     public enum Token {
         BEGIN_ARRAY,
         END_ARRAY,
@@ -73,23 +72,28 @@ public abstract class JsonReader implements Closeable {
         strArr[12] = "\\f";
     }
 
-    public static JsonReader of(BufferedSource bufferedSource) {
+    /* renamed from: of */
+    public static JsonReader m136of(BufferedSource bufferedSource) {
         return new JsonUtf8Reader(bufferedSource);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    JsonReader() {
+    }
+
+    /* access modifiers changed from: package-private */
     public final void pushScope(int i) {
         int i2 = this.stackSize;
         int[] iArr = this.scopes;
         if (i2 == iArr.length) {
-            if (i2 == 256) {
+            if (i2 != 256) {
+                this.scopes = Arrays.copyOf(iArr, iArr.length * 2);
+                String[] strArr = this.pathNames;
+                this.pathNames = (String[]) Arrays.copyOf((T[]) strArr, strArr.length * 2);
+                int[] iArr2 = this.pathIndices;
+                this.pathIndices = Arrays.copyOf(iArr2, iArr2.length * 2);
+            } else {
                 throw new JsonDataException("Nesting too deep at " + getPath());
             }
-            this.scopes = Arrays.copyOf(iArr, iArr.length * 2);
-            String[] strArr = this.pathNames;
-            this.pathNames = (String[]) Arrays.copyOf(strArr, strArr.length * 2);
-            int[] iArr2 = this.pathIndices;
-            this.pathIndices = Arrays.copyOf(iArr2, iArr2.length * 2);
         }
         int[] iArr3 = this.scopes;
         int i3 = this.stackSize;
@@ -97,7 +101,7 @@ public abstract class JsonReader implements Closeable {
         iArr3[i3] = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final JsonEncodingException syntaxError(String str) throws JsonEncodingException {
         throw new JsonEncodingException(str + " at path " + getPath());
     }
@@ -106,7 +110,6 @@ public abstract class JsonReader implements Closeable {
         return JsonScope.getPath(this.stackSize, this.scopes, this.pathNames, this.pathIndices);
     }
 
-    /* loaded from: classes.dex */
     public static final class Options {
         final okio.Options doubleQuoteSuffix;
         final String[] strings;
@@ -116,7 +119,8 @@ public abstract class JsonReader implements Closeable {
             this.doubleQuoteSuffix = options;
         }
 
-        public static Options of(String... strArr) {
+        /* renamed from: of */
+        public static Options m137of(String... strArr) {
             try {
                 ByteString[] byteStringArr = new ByteString[strArr.length];
                 Buffer buffer = new Buffer();
@@ -125,22 +129,18 @@ public abstract class JsonReader implements Closeable {
                     buffer.readByte();
                     byteStringArr[i] = buffer.readByteString();
                 }
-                return new Options((String[]) strArr.clone(), okio.Options.of(byteStringArr));
+                return new Options((String[]) strArr.clone(), okio.Options.m1817of(byteStringArr));
             } catch (IOException e) {
-                throw new AssertionError(e);
+                throw new AssertionError((Object) e);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:8:0x002b  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* access modifiers changed from: private */
     public static void string(BufferedSink bufferedSink, String str) throws IOException {
         String str2;
         String[] strArr = REPLACEMENT_CHARS;
-        bufferedSink.mo1953writeByte(34);
+        bufferedSink.writeByte(34);
         int length = str.length();
         int i = 0;
         for (int i2 = 0; i2 < length; i2++) {
@@ -149,26 +149,20 @@ public abstract class JsonReader implements Closeable {
                 str2 = strArr[charAt];
                 if (str2 == null) {
                 }
-                if (i < i2) {
-                    bufferedSink.mo1955writeUtf8(str, i, i2);
-                }
-                bufferedSink.mo1954writeUtf8(str2);
-                i = i2 + 1;
-            } else {
-                if (charAt == 8232) {
-                    str2 = "\\u2028";
-                } else if (charAt == 8233) {
-                    str2 = "\\u2029";
-                }
-                if (i < i2) {
-                }
-                bufferedSink.mo1954writeUtf8(str2);
-                i = i2 + 1;
+            } else if (charAt == 8232) {
+                str2 = "\\u2028";
+            } else if (charAt == 8233) {
+                str2 = "\\u2029";
             }
+            if (i < i2) {
+                bufferedSink.writeUtf8(str, i, i2);
+            }
+            bufferedSink.writeUtf8(str2);
+            i = i2 + 1;
         }
         if (i < length) {
-            bufferedSink.mo1955writeUtf8(str, i, length);
+            bufferedSink.writeUtf8(str, i, length);
         }
-        bufferedSink.mo1953writeByte(34);
+        bufferedSink.writeByte(34);
     }
 }

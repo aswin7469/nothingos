@@ -2,7 +2,7 @@ package com.airbnb.lottie.model;
 
 import com.airbnb.lottie.model.content.ShapeGroup;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class FontCharacter {
     private final char character;
     private final String fontFamily;
@@ -28,8 +28,18 @@ public class FontCharacter {
         return this.shapes;
     }
 
+    /* access modifiers changed from: package-private */
+    public double getSize() {
+        return this.size;
+    }
+
     public double getWidth() {
         return this.width;
+    }
+
+    /* access modifiers changed from: package-private */
+    public String getStyle() {
+        return this.style;
     }
 
     public int hashCode() {

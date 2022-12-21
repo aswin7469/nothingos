@@ -1,15 +1,21 @@
 package com.android.systemui.screenshot;
 
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.screenshot.ScreenshotController;
 import com.android.systemui.screenshot.ScrollCaptureController;
 import java.util.concurrent.atomic.AtomicReference;
-/* loaded from: classes.dex */
+
+@SysUISingleton
 public class LongScreenshotData {
     private final AtomicReference<ScrollCaptureController.LongScreenshot> mLongScreenshot = new AtomicReference<>();
     private final AtomicReference<ScreenshotController.TransitionDestination> mTransitionDestinationCallback = new AtomicReference<>();
 
     public void setLongScreenshot(ScrollCaptureController.LongScreenshot longScreenshot) {
         this.mLongScreenshot.set(longScreenshot);
+    }
+
+    public boolean hasLongScreenshot() {
+        return this.mLongScreenshot.get() != null;
     }
 
     public ScrollCaptureController.LongScreenshot takeLongScreenshot() {

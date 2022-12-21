@@ -9,25 +9,33 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import androidx.preference.ListPreference;
 import androidx.preference.ListPreferenceDialogFragment;
-/* loaded from: classes2.dex */
+
 public class CustomListPreference extends ListPreference {
-    protected boolean isAutoClosePreference() {
+    /* access modifiers changed from: protected */
+    public CharSequence getConfirmationMessage(String str) {
+        return null;
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean isAutoClosePreference() {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onDialogClosed(boolean z) {
     }
 
-    protected Dialog onDialogCreated(DialogFragment dialogFragment, Dialog dialog) {
+    /* access modifiers changed from: protected */
+    public Dialog onDialogCreated(DialogFragment dialogFragment, Dialog dialog) {
         return dialog;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onDialogStateRestored(DialogFragment dialogFragment, Dialog dialog, Bundle bundle) {
     }
 
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
+    /* access modifiers changed from: protected */
+    public void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
     }
 
     public CustomListPreference(Context context, AttributeSet attributeSet) {
@@ -38,8 +46,8 @@ public class CustomListPreference extends ListPreference {
         super(context, attributeSet, i, i2);
     }
 
-    /* loaded from: classes2.dex */
     public static class CustomListPreferenceDialogFragment extends ListPreferenceDialogFragment {
+        private static final String KEY_CLICKED_ENTRY_INDEX = "settings.CustomListPrefDialog.KEY_CLICKED_ENTRY_INDEX";
         private int mClickedDialogEntryIndex;
 
         public static ListPreferenceDialogFragment newInstance(String str) {
@@ -54,15 +62,13 @@ public class CustomListPreference extends ListPreference {
             return (CustomListPreference) getPreference();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.preference.ListPreferenceDialogFragment, androidx.preference.PreferenceDialogFragment
+        /* access modifiers changed from: protected */
         public void onPrepareDialogBuilder(AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
             this.mClickedDialogEntryIndex = getCustomizablePreference().findIndexOfValue(getCustomizablePreference().getValue());
             getCustomizablePreference().onPrepareDialogBuilder(builder, getOnItemClickListener());
             if (!getCustomizablePreference().isAutoClosePreference()) {
-                builder.setPositiveButton(17039370, new DialogInterface.OnClickListener() { // from class: com.android.systemui.tuner.CustomListPreference.CustomListPreferenceDialogFragment.1
-                    @Override // android.content.DialogInterface.OnClickListener
+                builder.setPositiveButton(17039370, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         CustomListPreferenceDialogFragment.this.onItemConfirmed();
                     }
@@ -70,30 +76,27 @@ public class CustomListPreference extends ListPreference {
             }
         }
 
-        @Override // androidx.preference.PreferenceDialogFragment, android.app.DialogFragment
         public Dialog onCreateDialog(Bundle bundle) {
             Dialog onCreateDialog = super.onCreateDialog(bundle);
             if (bundle != null) {
-                this.mClickedDialogEntryIndex = bundle.getInt("settings.CustomListPrefDialog.KEY_CLICKED_ENTRY_INDEX", this.mClickedDialogEntryIndex);
+                this.mClickedDialogEntryIndex = bundle.getInt(KEY_CLICKED_ENTRY_INDEX, this.mClickedDialogEntryIndex);
             }
             return getCustomizablePreference().onDialogCreated(this, onCreateDialog);
         }
 
-        @Override // androidx.preference.ListPreferenceDialogFragment, androidx.preference.PreferenceDialogFragment, android.app.DialogFragment, android.app.Fragment
         public void onSaveInstanceState(Bundle bundle) {
             super.onSaveInstanceState(bundle);
-            bundle.putInt("settings.CustomListPrefDialog.KEY_CLICKED_ENTRY_INDEX", this.mClickedDialogEntryIndex);
+            bundle.putInt(KEY_CLICKED_ENTRY_INDEX, this.mClickedDialogEntryIndex);
         }
 
-        @Override // android.app.DialogFragment, android.app.Fragment
         public void onActivityCreated(Bundle bundle) {
             super.onActivityCreated(bundle);
             getCustomizablePreference().onDialogStateRestored(this, getDialog(), bundle);
         }
 
-        protected DialogInterface.OnClickListener getOnItemClickListener() {
-            return new DialogInterface.OnClickListener() { // from class: com.android.systemui.tuner.CustomListPreference.CustomListPreferenceDialogFragment.2
-                @Override // android.content.DialogInterface.OnClickListener
+        /* access modifiers changed from: protected */
+        public DialogInterface.OnClickListener getOnItemClickListener() {
+            return new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
                     CustomListPreferenceDialogFragment.this.setClickedDialogEntryIndex(i);
                     if (CustomListPreferenceDialogFragment.this.getCustomizablePreference().isAutoClosePreference()) {
@@ -103,7 +106,8 @@ public class CustomListPreference extends ListPreference {
             };
         }
 
-        protected void setClickedDialogEntryIndex(int i) {
+        /* access modifiers changed from: protected */
+        public void setClickedDialogEntryIndex(int i) {
             this.mClickedDialogEntryIndex = i;
         }
 
@@ -115,20 +119,19 @@ public class CustomListPreference extends ListPreference {
             return customizablePreference.getEntryValues()[this.mClickedDialogEntryIndex].toString();
         }
 
-        protected void onItemConfirmed() {
+        /* access modifiers changed from: protected */
+        public void onItemConfirmed() {
             onClick(getDialog(), -1);
             getDialog().dismiss();
         }
 
-        @Override // androidx.preference.ListPreferenceDialogFragment, androidx.preference.PreferenceDialogFragment
         public void onDialogClosed(boolean z) {
             getCustomizablePreference().onDialogClosed(z);
             CustomListPreference customizablePreference = getCustomizablePreference();
             String value = getValue();
-            if (!z || value == null || !customizablePreference.callChangeListener(value)) {
-                return;
+            if (z && value != null && customizablePreference.callChangeListener(value)) {
+                customizablePreference.setValue(value);
             }
-            customizablePreference.setValue(value);
         }
     }
 }

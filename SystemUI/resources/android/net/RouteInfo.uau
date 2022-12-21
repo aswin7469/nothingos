@@ -1,0 +1,9 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/RouteInfo;->mGateway:Ljava/net/InetAddress;,packages/modules/Connectivity/framework/src/android/net/RouteInfo.java,78,5,78,25,
+Landroid/net/RouteInfo;->mIsHost:Z,packages/modules/Connectivity/framework/src/android/net/RouteInfo.java,123,5,123,88,maxTargetSdk=28&trackingBug=115609023L
+Landroid/net/RouteInfo;-><init>(Landroid/net/IpPrefix;Ljava/net/InetAddress;Ljava/lang/String;)V,packages/modules/Connectivity/framework/src/android/net/RouteInfo.java,247,5,247,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/RouteInfo;-><init>(Landroid/net/LinkAddress;Ljava/net/InetAddress;Ljava/lang/String;)V,packages/modules/Connectivity/framework/src/android/net/RouteInfo.java,256,5,256,25,
+Landroid/net/RouteInfo;-><init>(Landroid/net/LinkAddress;Ljava/net/InetAddress;)V,packages/modules/Connectivity/framework/src/android/net/RouteInfo.java,288,5,288,25,
+Landroid/net/RouteInfo;-><init>(Ljava/net/InetAddress;)V,packages/modules/Connectivity/framework/src/android/net/RouteInfo.java,300,5,300,25,
+Landroid/net/RouteInfo;->isHost()Z,packages/modules/Connectivity/framework/src/android/net/RouteInfo.java,352,5,352,88,maxTargetSdk=28&trackingBug=115609023L
+Landroid/net/RouteInfo;->selectBestRoute(Ljava/util/Collection;Ljava/net/InetAddress;)Landroid/net/RouteInfo;,packages/modules/Connectivity/framework/src/android/net/RouteInfo.java,513,5,513,88,maxTargetSdk=30&trackingBug=170729553L

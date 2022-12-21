@@ -1,5 +1,5 @@
 package androidx.mediarouter.app;
-/* loaded from: classes.dex */
+
 public class MediaRouteDialogFactory {
     private static final MediaRouteDialogFactory sDefault = new MediaRouteDialogFactory();
 

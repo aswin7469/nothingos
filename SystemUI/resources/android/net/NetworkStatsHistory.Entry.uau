@@ -1,0 +1,7 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/NetworkStatsHistory$Entry;->bucketDuration:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,131,9,131,92,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStatsHistory$Entry;->bucketStart:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,134,9,134,92,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStatsHistory$Entry;->rxBytes:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,139,9,139,29,
+Landroid/net/NetworkStatsHistory$Entry;->rxPackets:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,142,9,142,92,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStatsHistory$Entry;->txBytes:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,145,9,145,29,
+Landroid/net/NetworkStatsHistory$Entry;->txPackets:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,148,9,148,92,maxTargetSdk=30&trackingBug=170729553L

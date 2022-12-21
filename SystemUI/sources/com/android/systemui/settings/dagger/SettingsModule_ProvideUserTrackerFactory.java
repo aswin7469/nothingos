@@ -8,7 +8,7 @@ import com.android.systemui.settings.UserTracker;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class SettingsModule_ProvideUserTrackerFactory implements Factory<UserTracker> {
     private final Provider<Context> contextProvider;
     private final Provider<DumpManager> dumpManagerProvider;
@@ -22,10 +22,8 @@ public final class SettingsModule_ProvideUserTrackerFactory implements Factory<U
         this.handlerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public UserTracker mo1933get() {
-        return provideUserTracker(this.contextProvider.mo1933get(), this.userManagerProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.handlerProvider.mo1933get());
+    public UserTracker get() {
+        return provideUserTracker(this.contextProvider.get(), this.userManagerProvider.get(), this.dumpManagerProvider.get(), this.handlerProvider.get());
     }
 
     public static SettingsModule_ProvideUserTrackerFactory create(Provider<Context> provider, Provider<UserManager> provider2, Provider<DumpManager> provider3, Provider<Handler> provider4) {

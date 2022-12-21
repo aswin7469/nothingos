@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt" android:ordering="together">
-    <objectAnimator android:interpolator="@anim/res_0x7f01004c_lock_lock_rounded__5__0" android:duration="400" android:startOffset="0" android:propertyName="translateXY" android:pathData="M 16,25C 16,25.35416665673256 16,25 16,25" android:propertyXName="translateX" android:propertyYName="translateY"/>
-    <objectAnimator android:interpolator="@anim/res_0x7f01004d_lock_lock_rounded__5__1" android:duration="117" android:startOffset="400" android:propertyName="translateXY" android:pathData="M 16,25C 16,25.35416665673256 16,27.125 16,27.125" android:propertyXName="translateX" android:propertyYName="translateY"/>
-    <objectAnimator android:interpolator="@anim/res_0x7f01004e_lock_lock_rounded__5__2" android:duration="117" android:startOffset="517" android:propertyName="translateXY" android:pathData="M 16,27.125C 16,27.125 16,25.35416665673256 16,25" android:propertyXName="translateX" android:propertyYName="translateY"/>
+<set xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt" android:ordering="together">
+    <objectAnimator android:interpolator="@anim/$lock_lock_rounded__6" android:duration="450" android:startOffset="0" android:valueFrom="1" android:valueTo="1" android:valueType="floatType" android:propertyName="scaleX"/>
+    <objectAnimator android:interpolator="@anim/$lock_lock_rounded__7" android:duration="450" android:startOffset="0" android:valueFrom="1" android:valueTo="1" android:valueType="floatType" android:propertyName="scaleY"/>
+    <objectAnimator android:interpolator="@anim/$lock_lock_rounded__8" android:duration="83" android:startOffset="450" android:valueFrom="1" android:valueTo="1.12" android:valueType="floatType" android:propertyName="scaleX"/>
+    <objectAnimator android:interpolator="@anim/$lock_lock_rounded__9" android:duration="83" android:startOffset="450" android:valueFrom="1" android:valueTo="1.12" android:valueType="floatType" android:propertyName="scaleY"/>
+    <objectAnimator android:interpolator="@anim/$lock_lock_rounded__10" android:duration="100" android:startOffset="533" android:valueFrom="1.12" android:valueTo="1" android:valueType="floatType" android:propertyName="scaleX"/>
+    <objectAnimator android:interpolator="@anim/$lock_lock_rounded__11" android:duration="100" android:startOffset="533" android:valueFrom="1.12" android:valueTo="1" android:valueType="floatType" android:propertyName="scaleY"/>
 </set>

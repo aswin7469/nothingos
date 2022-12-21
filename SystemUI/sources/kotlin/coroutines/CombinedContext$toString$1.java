@@ -1,12 +1,13 @@
 package kotlin.coroutines;
 
+import kotlin.Metadata;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000\u0010\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u00012\u0006\u0010\u0003\u001a\u00020\u0004H\n¢\u0006\u0002\b\u0005"}, mo64987d2 = {"<anonymous>", "", "acc", "element", "Lkotlin/coroutines/CoroutineContext$Element;", "invoke"}, mo64988k = 3, mo64989mv = {1, 7, 1}, mo64991xi = 48)
 /* compiled from: CoroutineContextImpl.kt */
-/* loaded from: classes2.dex */
 final class CombinedContext$toString$1 extends Lambda implements Function2<String, CoroutineContext.Element, String> {
     public static final CombinedContext$toString$1 INSTANCE = new CombinedContext$toString$1();
 
@@ -14,15 +15,9 @@ final class CombinedContext$toString$1 extends Lambda implements Function2<Strin
         super(2);
     }
 
-    @Override // kotlin.jvm.functions.Function2
-    @NotNull
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final String mo1950invoke(@NotNull String acc, @NotNull CoroutineContext.Element element) {
-        Intrinsics.checkNotNullParameter(acc, "acc");
+    public final String invoke(String str, CoroutineContext.Element element) {
+        Intrinsics.checkNotNullParameter(str, "acc");
         Intrinsics.checkNotNullParameter(element, "element");
-        if (acc.length() == 0) {
-            return element.toString();
-        }
-        return acc + ", " + element;
+        return str.length() == 0 ? element.toString() : str + ", " + element;
     }
 }

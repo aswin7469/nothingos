@@ -1,27 +1,32 @@
 package com.airbnb.lottie.parser;
 
 import android.graphics.Path;
+import android.icu.text.DateFormat;
 import com.airbnb.lottie.LottieComposition;
+import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.animatable.AnimatableGradientColorValue;
 import com.airbnb.lottie.model.animatable.AnimatableIntegerValue;
 import com.airbnb.lottie.model.animatable.AnimatablePointValue;
 import com.airbnb.lottie.model.content.GradientFill;
 import com.airbnb.lottie.model.content.GradientType;
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class GradientFillParser {
-    private static final JsonReader.Options NAMES = JsonReader.Options.of("nm", "g", "o", "t", "s", "e", "r", "hd");
-    private static final JsonReader.Options GRADIENT_NAMES = JsonReader.Options.of("p", "k");
+import com.airbnb.lottie.value.Keyframe;
+import java.p026io.IOException;
+import java.util.Collections;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static GradientFill parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+class GradientFillParser {
+    private static final JsonReader.Options GRADIENT_NAMES = JsonReader.Options.m137of("p", "k");
+    private static final JsonReader.Options NAMES = JsonReader.Options.m137of("nm", "g", "o", "t", DateFormat.SECOND, "e", "r", "hd");
+
+    private GradientFillParser() {
+    }
+
+    static GradientFill parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+        AnimatableIntegerValue animatableIntegerValue = null;
         Path.FillType fillType = Path.FillType.WINDING;
         String str = null;
         GradientType gradientType = null;
         AnimatableGradientColorValue animatableGradientColorValue = null;
-        AnimatableIntegerValue animatableIntegerValue = null;
         AnimatablePointValue animatablePointValue = null;
         AnimatablePointValue animatablePointValue2 = null;
         boolean z = false;
@@ -31,17 +36,17 @@ public class GradientFillParser {
                     str = jsonReader.nextString();
                     break;
                 case 1:
-                    int i = -1;
                     jsonReader.beginObject();
+                    int i = -1;
                     while (jsonReader.hasNext()) {
                         int selectName = jsonReader.selectName(GRADIENT_NAMES);
                         if (selectName == 0) {
                             i = jsonReader.nextInt();
-                        } else if (selectName == 1) {
-                            animatableGradientColorValue = AnimatableValueParser.parseGradientColor(jsonReader, lottieComposition, i);
-                        } else {
+                        } else if (selectName != 1) {
                             jsonReader.skipName();
                             jsonReader.skipValue();
+                        } else {
+                            animatableGradientColorValue = AnimatableValueParser.parseGradientColor(jsonReader, lottieComposition, i);
                         }
                     }
                     jsonReader.endObject();
@@ -70,6 +75,6 @@ public class GradientFillParser {
                     break;
             }
         }
-        return new GradientFill(str, gradientType, fillType, animatableGradientColorValue, animatableIntegerValue, animatablePointValue, animatablePointValue2, null, null, z);
+        return new GradientFill(str, gradientType, fillType, animatableGradientColorValue, animatableIntegerValue == null ? new AnimatableIntegerValue(Collections.singletonList(new Keyframe(100))) : animatableIntegerValue, animatablePointValue, animatablePointValue2, (AnimatableFloatValue) null, (AnimatableFloatValue) null, z);
     }
 }

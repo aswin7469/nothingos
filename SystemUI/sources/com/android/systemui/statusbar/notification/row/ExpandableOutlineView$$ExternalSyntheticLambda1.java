@@ -1,15 +1,10 @@
 package com.android.systemui.statusbar.notification.row;
 
-import java.util.function.BiConsumer;
-/* loaded from: classes.dex */
-public final /* synthetic */ class ExpandableOutlineView$$ExternalSyntheticLambda1 implements BiConsumer {
-    public static final /* synthetic */ ExpandableOutlineView$$ExternalSyntheticLambda1 INSTANCE = new ExpandableOutlineView$$ExternalSyntheticLambda1();
+import java.util.function.Function;
 
-    private /* synthetic */ ExpandableOutlineView$$ExternalSyntheticLambda1() {
-    }
-
-    @Override // java.util.function.BiConsumer
-    public final void accept(Object obj, Object obj2) {
-        ((ExpandableOutlineView) obj).setBottomRoundnessInternal(((Float) obj2).floatValue());
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class ExpandableOutlineView$$ExternalSyntheticLambda1 implements Function {
+    public final Object apply(Object obj) {
+        return Float.valueOf(((ExpandableOutlineView) obj).getCurrentTopRoundness());
     }
 }

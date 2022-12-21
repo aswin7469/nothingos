@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,21 +15,23 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatDialog;
-import androidx.mediarouter.R$id;
-import androidx.mediarouter.R$integer;
-import androidx.mediarouter.R$layout;
-import androidx.mediarouter.R$string;
+import androidx.mediarouter.C1159R;
 import androidx.mediarouter.media.MediaRouteSelector;
 import androidx.mediarouter.media.MediaRouter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import java.io.IOException;
+import java.p026io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class MediaRouteDynamicChooserDialog extends AppCompatDialog {
+    private static final int ITEM_TYPE_HEADER = 1;
+    private static final int ITEM_TYPE_NONE = 0;
+    private static final int ITEM_TYPE_ROUTE = 2;
+    private static final int MSG_UPDATE_ROUTES = 1;
+    private static final String TAG = "MediaRouteChooserDialog";
     private RecyclerAdapter mAdapter;
     private boolean mAttachedToWindow;
     private final MediaRouterCallback mCallback;
@@ -49,52 +50,61 @@ public class MediaRouteDynamicChooserDialog extends AppCompatDialog {
         this(context, 0);
     }
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public MediaRouteDynamicChooserDialog(Context context, int theme) {
-        super(r2, MediaRouterThemeHelper.createThemedDialogStyle(r2));
-        Context createThemedDialogContext = MediaRouterThemeHelper.createThemedDialogContext(context, theme, false);
-        this.mSelector = MediaRouteSelector.EMPTY;
-        this.mHandler = new Handler() { // from class: androidx.mediarouter.app.MediaRouteDynamicChooserDialog.1
-            @Override // android.os.Handler
-            public void handleMessage(Message message) {
-                if (message.what != 1) {
-                    return;
-                }
-                MediaRouteDynamicChooserDialog.this.updateRoutes((List) message.obj);
-            }
-        };
-        Context context2 = getContext();
-        this.mRouter = MediaRouter.getInstance(context2);
-        this.mCallback = new MediaRouterCallback();
-        this.mContext = context2;
-        this.mUpdateRoutesDelayMs = context2.getResources().getInteger(R$integer.mr_update_routes_delay_ms);
+    /* JADX WARNING: Illegal instructions before constructor call */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public MediaRouteDynamicChooserDialog(android.content.Context r2, int r3) {
+        /*
+            r1 = this;
+            r0 = 0
+            android.content.Context r2 = androidx.mediarouter.app.MediaRouterThemeHelper.createThemedDialogContext(r2, r3, r0)
+            int r3 = androidx.mediarouter.app.MediaRouterThemeHelper.createThemedDialogStyle(r2)
+            r1.<init>(r2, r3)
+            androidx.mediarouter.media.MediaRouteSelector r2 = androidx.mediarouter.media.MediaRouteSelector.EMPTY
+            r1.mSelector = r2
+            androidx.mediarouter.app.MediaRouteDynamicChooserDialog$1 r2 = new androidx.mediarouter.app.MediaRouteDynamicChooserDialog$1
+            r2.<init>()
+            r1.mHandler = r2
+            android.content.Context r2 = r1.getContext()
+            androidx.mediarouter.media.MediaRouter r3 = androidx.mediarouter.media.MediaRouter.getInstance(r2)
+            r1.mRouter = r3
+            androidx.mediarouter.app.MediaRouteDynamicChooserDialog$MediaRouterCallback r3 = new androidx.mediarouter.app.MediaRouteDynamicChooserDialog$MediaRouterCallback
+            r3.<init>()
+            r1.mCallback = r3
+            r1.mContext = r2
+            android.content.res.Resources r2 = r2.getResources()
+            int r3 = androidx.mediarouter.C1159R.integer.mr_update_routes_delay_ms
+            int r2 = r2.getInteger(r3)
+            long r2 = (long) r2
+            r1.mUpdateRoutesDelayMs = r2
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.mediarouter.app.MediaRouteDynamicChooserDialog.<init>(android.content.Context, int):void");
     }
 
-    public void setRouteSelector(MediaRouteSelector selector) {
-        if (selector == null) {
+    public MediaRouteSelector getRouteSelector() {
+        return this.mSelector;
+    }
+
+    public void setRouteSelector(MediaRouteSelector mediaRouteSelector) {
+        if (mediaRouteSelector == null) {
             throw new IllegalArgumentException("selector must not be null");
+        } else if (!this.mSelector.equals(mediaRouteSelector)) {
+            this.mSelector = mediaRouteSelector;
+            if (this.mAttachedToWindow) {
+                this.mRouter.removeCallback(this.mCallback);
+                this.mRouter.addCallback(mediaRouteSelector, this.mCallback, 1);
+            }
+            refreshRoutes();
         }
-        if (this.mSelector.equals(selector)) {
-            return;
-        }
-        this.mSelector = selector;
-        if (this.mAttachedToWindow) {
-            this.mRouter.removeCallback(this.mCallback);
-            this.mRouter.addCallback(selector, this.mCallback, 1);
-        }
-        refreshRoutes();
     }
 
-    public void onFilterRoutes(List<MediaRouter.RouteInfo> routes) {
-        int size = routes.size();
+    public void onFilterRoutes(List<MediaRouter.RouteInfo> list) {
+        int size = list.size();
         while (true) {
             int i = size - 1;
             if (size > 0) {
-                if (!onFilterRoute(routes.get(i))) {
-                    routes.remove(i);
+                if (!onFilterRoute(list.get(i))) {
+                    list.remove(i);
                 }
                 size = i;
             } else {
@@ -103,39 +113,36 @@ public class MediaRouteDynamicChooserDialog extends AppCompatDialog {
         }
     }
 
-    public boolean onFilterRoute(MediaRouter.RouteInfo route) {
-        return !route.isDefaultOrBluetooth() && route.isEnabled() && route.matchesSelector(this.mSelector);
+    public boolean onFilterRoute(MediaRouter.RouteInfo routeInfo) {
+        return !routeInfo.isDefaultOrBluetooth() && routeInfo.isEnabled() && routeInfo.matchesSelector(this.mSelector);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.appcompat.app.AppCompatDialog, android.app.Dialog
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R$layout.mr_picker_dialog);
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        setContentView(C1159R.layout.mr_picker_dialog);
         MediaRouterThemeHelper.setDialogBackgroundColor(this.mContext, this);
         this.mRoutes = new ArrayList();
-        ImageButton imageButton = (ImageButton) findViewById(R$id.mr_picker_close_button);
+        ImageButton imageButton = (ImageButton) findViewById(C1159R.C1162id.mr_picker_close_button);
         this.mCloseButton = imageButton;
-        imageButton.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteDynamicChooserDialog.2
-            @Override // android.view.View.OnClickListener
-            public void onClick(View v) {
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 MediaRouteDynamicChooserDialog.this.dismiss();
             }
         });
         this.mAdapter = new RecyclerAdapter();
-        RecyclerView recyclerView = (RecyclerView) findViewById(R$id.mr_picker_list);
+        RecyclerView recyclerView = (RecyclerView) findViewById(C1159R.C1162id.mr_picker_list);
         this.mRecyclerView = recyclerView;
         recyclerView.setAdapter(this.mAdapter);
         this.mRecyclerView.setLayoutManager(new LinearLayoutManager(this.mContext));
         updateLayout();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateLayout() {
         getWindow().setLayout(MediaRouteDialogHelper.getDialogWidthForDynamicGroup(this.mContext), MediaRouteDialogHelper.getDialogHeight(this.mContext));
     }
 
-    @Override // android.app.Dialog, android.view.Window.Callback
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mAttachedToWindow = true;
@@ -143,7 +150,6 @@ public class MediaRouteDynamicChooserDialog extends AppCompatDialog {
         refreshRoutes();
     }
 
-    @Override // android.app.Dialog, android.view.Window.Callback
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mAttachedToWindow = false;
@@ -166,57 +172,48 @@ public class MediaRouteDynamicChooserDialog extends AppCompatDialog {
         }
     }
 
-    void updateRoutes(List<MediaRouter.RouteInfo> routes) {
+    /* access modifiers changed from: package-private */
+    public void updateRoutes(List<MediaRouter.RouteInfo> list) {
         this.mLastUpdateTime = SystemClock.uptimeMillis();
         this.mRoutes.clear();
-        this.mRoutes.addAll(routes);
+        this.mRoutes.addAll(list);
         this.mAdapter.rebuildItems();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class MediaRouterCallback extends MediaRouter.Callback {
+    private final class MediaRouterCallback extends MediaRouter.Callback {
         MediaRouterCallback() {
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteAdded(MediaRouter router, MediaRouter.RouteInfo info) {
+        public void onRouteAdded(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteDynamicChooserDialog.this.refreshRoutes();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteRemoved(MediaRouter router, MediaRouter.RouteInfo info) {
+        public void onRouteRemoved(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteDynamicChooserDialog.this.refreshRoutes();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteChanged(MediaRouter router, MediaRouter.RouteInfo info) {
+        public void onRouteChanged(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteDynamicChooserDialog.this.refreshRoutes();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo route) {
+        public void onRouteSelected(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteDynamicChooserDialog.this.dismiss();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static final class RouteComparator implements Comparator<MediaRouter.RouteInfo> {
+    static final class RouteComparator implements Comparator<MediaRouter.RouteInfo> {
         public static final RouteComparator sInstance = new RouteComparator();
 
         RouteComparator() {
         }
 
-        @Override // java.util.Comparator
-        public int compare(MediaRouter.RouteInfo lhs, MediaRouter.RouteInfo rhs) {
-            return lhs.getName().compareToIgnoreCase(rhs.getName());
+        public int compare(MediaRouter.RouteInfo routeInfo, MediaRouter.RouteInfo routeInfo2) {
+            return routeInfo.getName().compareToIgnoreCase(routeInfo2.getName());
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final class RecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final String TAG = "RecyclerAdapter";
         private final Drawable mDefaultIcon;
         private final LayoutInflater mInflater;
         private final ArrayList<Item> mItems = new ArrayList<>();
@@ -233,99 +230,94 @@ public class MediaRouteDynamicChooserDialog extends AppCompatDialog {
             rebuildItems();
         }
 
-        void rebuildItems() {
+        /* access modifiers changed from: package-private */
+        public void rebuildItems() {
             this.mItems.clear();
-            this.mItems.add(new Item(MediaRouteDynamicChooserDialog.this.mContext.getString(R$string.mr_chooser_title)));
-            for (MediaRouter.RouteInfo routeInfo : MediaRouteDynamicChooserDialog.this.mRoutes) {
-                this.mItems.add(new Item(routeInfo));
+            this.mItems.add(new Item(MediaRouteDynamicChooserDialog.this.mContext.getString(C1159R.string.mr_chooser_title)));
+            for (MediaRouter.RouteInfo item : MediaRouteDynamicChooserDialog.this.mRoutes) {
+                this.mItems.add(new Item(item));
             }
             notifyDataSetChanged();
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        /* renamed from: onCreateViewHolder */
-        public RecyclerView.ViewHolder mo1838onCreateViewHolder(ViewGroup parent, int viewType) {
-            if (viewType != 1) {
-                if (viewType == 2) {
-                    return new RouteViewHolder(this.mInflater.inflate(R$layout.mr_picker_route_item, parent, false));
-                }
-                Log.w("RecyclerAdapter", "Cannot create ViewHolder because of wrong view type");
-                return null;
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            if (i == 1) {
+                return new HeaderViewHolder(this.mInflater.inflate(C1159R.layout.mr_picker_header_item, viewGroup, false));
             }
-            return new HeaderViewHolder(this.mInflater.inflate(R$layout.mr_picker_header_item, parent, false));
+            if (i == 2) {
+                return new RouteViewHolder(this.mInflater.inflate(C1159R.layout.mr_picker_route_item, viewGroup, false));
+            }
+            Log.w(TAG, "Cannot create ViewHolder because of wrong view type");
+            return null;
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            int itemViewType = getItemViewType(position);
-            Item item = getItem(position);
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
+            int itemViewType = getItemViewType(i);
+            Item item = getItem(i);
             if (itemViewType == 1) {
-                ((HeaderViewHolder) holder).bindHeaderView(item);
-            } else if (itemViewType == 2) {
-                ((RouteViewHolder) holder).bindRouteView(item);
+                ((HeaderViewHolder) viewHolder).bindHeaderView(item);
+            } else if (itemViewType != 2) {
+                Log.w(TAG, "Cannot bind item to ViewHolder because of wrong view type");
             } else {
-                Log.w("RecyclerAdapter", "Cannot bind item to ViewHolder because of wrong view type");
+                ((RouteViewHolder) viewHolder).bindRouteView(item);
             }
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
         public int getItemCount() {
             return this.mItems.size();
         }
 
-        Drawable getIconDrawable(MediaRouter.RouteInfo route) {
-            Uri iconUri = route.getIconUri();
+        /* access modifiers changed from: package-private */
+        public Drawable getIconDrawable(MediaRouter.RouteInfo routeInfo) {
+            Uri iconUri = routeInfo.getIconUri();
             if (iconUri != null) {
                 try {
-                    Drawable createFromStream = Drawable.createFromStream(MediaRouteDynamicChooserDialog.this.mContext.getContentResolver().openInputStream(iconUri), null);
+                    Drawable createFromStream = Drawable.createFromStream(MediaRouteDynamicChooserDialog.this.mContext.getContentResolver().openInputStream(iconUri), (String) null);
                     if (createFromStream != null) {
                         return createFromStream;
                     }
                 } catch (IOException e) {
-                    Log.w("RecyclerAdapter", "Failed to load " + iconUri, e);
+                    Log.w(TAG, "Failed to load " + iconUri, e);
                 }
             }
-            return getDefaultIconDrawable(route);
+            return getDefaultIconDrawable(routeInfo);
         }
 
-        private Drawable getDefaultIconDrawable(MediaRouter.RouteInfo route) {
-            int deviceType = route.getDeviceType();
-            if (deviceType != 1) {
-                if (deviceType == 2) {
-                    return this.mSpeakerIcon;
-                }
-                if (route.isGroup()) {
-                    return this.mSpeakerGroupIcon;
-                }
-                return this.mDefaultIcon;
+        private Drawable getDefaultIconDrawable(MediaRouter.RouteInfo routeInfo) {
+            int deviceType = routeInfo.getDeviceType();
+            if (deviceType == 1) {
+                return this.mTvIcon;
             }
-            return this.mTvIcon;
+            if (deviceType == 2) {
+                return this.mSpeakerIcon;
+            }
+            if (routeInfo.isGroup()) {
+                return this.mSpeakerGroupIcon;
+            }
+            return this.mDefaultIcon;
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        public int getItemViewType(int position) {
-            return this.mItems.get(position).getType();
+        public int getItemViewType(int i) {
+            return this.mItems.get(i).getType();
         }
 
-        public Item getItem(int position) {
-            return this.mItems.get(position);
+        public Item getItem(int i) {
+            return this.mItems.get(i);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* loaded from: classes.dex */
-        public class Item {
+        private class Item {
             private final Object mData;
             private final int mType;
 
-            Item(Object data) {
-                this.mData = data;
-                if (data instanceof String) {
+            Item(Object obj) {
+                this.mData = obj;
+                if (obj instanceof String) {
                     this.mType = 1;
-                } else if (data instanceof MediaRouter.RouteInfo) {
+                } else if (obj instanceof MediaRouter.RouteInfo) {
                     this.mType = 2;
                 } else {
                     this.mType = 0;
-                    Log.w("RecyclerAdapter", "Wrong type of data passed to Item constructor");
+                    Log.w(RecyclerAdapter.TAG, "Wrong type of data passed to Item constructor");
                 }
             }
 
@@ -338,13 +330,12 @@ public class MediaRouteDynamicChooserDialog extends AppCompatDialog {
             }
         }
 
-        /* loaded from: classes.dex */
         private class HeaderViewHolder extends RecyclerView.ViewHolder {
             TextView mTextView;
 
-            HeaderViewHolder(View itemView) {
-                super(itemView);
-                this.mTextView = (TextView) itemView.findViewById(R$id.mr_picker_header_name);
+            HeaderViewHolder(View view) {
+                super(view);
+                this.mTextView = (TextView) view.findViewById(C1159R.C1162id.mr_picker_header_name);
             }
 
             public void bindHeaderView(Item item) {
@@ -352,34 +343,30 @@ public class MediaRouteDynamicChooserDialog extends AppCompatDialog {
             }
         }
 
-        /* loaded from: classes.dex */
         private class RouteViewHolder extends RecyclerView.ViewHolder {
             final ImageView mImageView;
             final View mItemView;
             final ProgressBar mProgressBar;
             final TextView mTextView;
 
-            RouteViewHolder(View itemView) {
-                super(itemView);
-                this.mItemView = itemView;
-                this.mImageView = (ImageView) itemView.findViewById(R$id.mr_picker_route_icon);
-                ProgressBar progressBar = (ProgressBar) itemView.findViewById(R$id.mr_picker_route_progress_bar);
+            RouteViewHolder(View view) {
+                super(view);
+                this.mItemView = view;
+                this.mImageView = (ImageView) view.findViewById(C1159R.C1162id.mr_picker_route_icon);
+                ProgressBar progressBar = (ProgressBar) view.findViewById(C1159R.C1162id.mr_picker_route_progress_bar);
                 this.mProgressBar = progressBar;
-                this.mTextView = (TextView) itemView.findViewById(R$id.mr_picker_route_name);
+                this.mTextView = (TextView) view.findViewById(C1159R.C1162id.mr_picker_route_name);
                 MediaRouterThemeHelper.setIndeterminateProgressBarColor(MediaRouteDynamicChooserDialog.this.mContext, progressBar);
             }
 
-            public void bindRouteView(final Item item) {
+            public void bindRouteView(Item item) {
                 final MediaRouter.RouteInfo routeInfo = (MediaRouter.RouteInfo) item.getData();
                 this.mItemView.setVisibility(0);
                 this.mProgressBar.setVisibility(4);
-                this.mItemView.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteDynamicChooserDialog.RecyclerAdapter.RouteViewHolder.1
-                    @Override // android.view.View.OnClickListener
+                this.mItemView.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
-                        MediaRouteDynamicChooserDialog mediaRouteDynamicChooserDialog = MediaRouteDynamicChooserDialog.this;
-                        MediaRouter.RouteInfo routeInfo2 = routeInfo;
-                        mediaRouteDynamicChooserDialog.mSelectingRoute = routeInfo2;
-                        routeInfo2.select();
+                        MediaRouteDynamicChooserDialog.this.mSelectingRoute = routeInfo;
+                        routeInfo.select();
                         RouteViewHolder.this.mImageView.setVisibility(4);
                         RouteViewHolder.this.mProgressBar.setVisibility(0);
                     }

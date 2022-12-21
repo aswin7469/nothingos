@@ -1,27 +1,27 @@
 package com.android.systemui.plugins;
 
 import com.android.systemui.shared.plugins.PluginManager;
+import dagger.Lazy;
+import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class PluginDependencyProvider_Factory implements Factory<PluginDependencyProvider> {
-    private final Provider<PluginManager> managerProvider;
+    private final Provider<PluginManager> managerLazyProvider;
 
     public PluginDependencyProvider_Factory(Provider<PluginManager> provider) {
-        this.managerProvider = provider;
+        this.managerLazyProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PluginDependencyProvider mo1933get() {
-        return newInstance(this.managerProvider.mo1933get());
+    public PluginDependencyProvider get() {
+        return newInstance(DoubleCheck.lazy(this.managerLazyProvider));
     }
 
     public static PluginDependencyProvider_Factory create(Provider<PluginManager> provider) {
         return new PluginDependencyProvider_Factory(provider);
     }
 
-    public static PluginDependencyProvider newInstance(PluginManager pluginManager) {
-        return new PluginDependencyProvider(pluginManager);
+    public static PluginDependencyProvider newInstance(Lazy<PluginManager> lazy) {
+        return new PluginDependencyProvider(lazy);
     }
 }

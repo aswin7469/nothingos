@@ -1,7 +1,9 @@
 package com.android.systemui.accessibility.floatingmenu;
-/* loaded from: classes.dex */
+
 public interface IAccessibilityFloatingMenu {
     void hide();
+
+    boolean isShowing();
 
     void show();
 }

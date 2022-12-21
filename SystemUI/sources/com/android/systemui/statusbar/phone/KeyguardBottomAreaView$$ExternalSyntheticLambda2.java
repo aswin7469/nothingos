@@ -1,18 +1,17 @@
 package com.android.systemui.statusbar.phone;
 
-import com.android.systemui.plugins.IntentButtonProvider;
-import com.android.systemui.statusbar.policy.ExtensionController;
-/* loaded from: classes.dex */
-public final /* synthetic */ class KeyguardBottomAreaView$$ExternalSyntheticLambda2 implements ExtensionController.PluginConverter {
-    public static final /* synthetic */ KeyguardBottomAreaView$$ExternalSyntheticLambda2 INSTANCE = new KeyguardBottomAreaView$$ExternalSyntheticLambda2();
+import com.android.systemui.controls.management.ControlsListingController;
+import java.util.function.Consumer;
 
-    private /* synthetic */ KeyguardBottomAreaView$$ExternalSyntheticLambda2() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class KeyguardBottomAreaView$$ExternalSyntheticLambda2 implements Consumer {
+    public final /* synthetic */ KeyguardBottomAreaView f$0;
+
+    public /* synthetic */ KeyguardBottomAreaView$$ExternalSyntheticLambda2(KeyguardBottomAreaView keyguardBottomAreaView) {
+        this.f$0 = keyguardBottomAreaView;
     }
 
-    @Override // com.android.systemui.statusbar.policy.ExtensionController.PluginConverter
-    public final Object getInterfaceFromPlugin(Object obj) {
-        IntentButtonProvider.IntentButton intentButton;
-        intentButton = ((IntentButtonProvider) obj).getIntentButton();
-        return intentButton;
+    public final void accept(Object obj) {
+        this.f$0.mo44134xc522bc4((ControlsListingController) obj);
     }
 }

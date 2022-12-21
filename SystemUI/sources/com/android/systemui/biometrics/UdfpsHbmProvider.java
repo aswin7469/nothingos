@@ -1,7 +1,5 @@
 package com.android.systemui.biometrics;
 
-import android.view.Surface;
-/* loaded from: classes.dex */
 public interface UdfpsHbmProvider {
     void disableHbm();
 
@@ -9,7 +7,7 @@ public interface UdfpsHbmProvider {
 
     void enableHbm();
 
-    void enableHbm(int i, Surface surface, Runnable runnable);
+    void enableHbm(boolean z, Runnable runnable);
 
     boolean isHbmEnabled();
 }

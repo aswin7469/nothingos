@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.UserHandle;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
+
 public abstract class CurrentUserTracker {
     private Consumer<Integer> mCallback;
     private final UserReceiver mUserReceiver;
@@ -22,14 +22,8 @@ public abstract class CurrentUserTracker {
         this(UserReceiver.getInstance(broadcastDispatcher));
     }
 
-    @VisibleForTesting
     CurrentUserTracker(UserReceiver userReceiver) {
-        this.mCallback = new Consumer() { // from class: com.android.systemui.settings.CurrentUserTracker$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                CurrentUserTracker.this.onUserSwitched(((Integer) obj).intValue());
-            }
-        };
+        this.mCallback = new CurrentUserTracker$$ExternalSyntheticLambda0(this);
         this.mUserReceiver = userReceiver;
     }
 
@@ -45,17 +39,13 @@ public abstract class CurrentUserTracker {
         this.mUserReceiver.removeTracker(this.mCallback);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
-    /* loaded from: classes.dex */
-    public static class UserReceiver extends BroadcastReceiver {
+    static class UserReceiver extends BroadcastReceiver {
         private static UserReceiver sInstance;
         private final BroadcastDispatcher mBroadcastDispatcher;
         private List<Consumer<Integer>> mCallbacks = new ArrayList();
         private int mCurrentUserId;
         private boolean mReceiverRegistered;
 
-        @VisibleForTesting
         UserReceiver(BroadcastDispatcher broadcastDispatcher) {
             this.mBroadcastDispatcher = broadcastDispatcher;
         }
@@ -67,7 +57,6 @@ public abstract class CurrentUserTracker {
             return sInstance;
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.USER_SWITCHED".equals(intent.getAction())) {
                 notifyUserSwitched(intent.getIntExtra("android.intent.extra.user_handle", 0));
@@ -78,27 +67,26 @@ public abstract class CurrentUserTracker {
             return this.mCurrentUserId;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void addTracker(Consumer<Integer> consumer) {
             if (!this.mCallbacks.contains(consumer)) {
                 this.mCallbacks.add(consumer);
             }
             if (!this.mReceiverRegistered) {
                 this.mCurrentUserId = ActivityManager.getCurrentUser();
-                this.mBroadcastDispatcher.registerReceiver(this, new IntentFilter("android.intent.action.USER_SWITCHED"), null, UserHandle.ALL);
+                this.mBroadcastDispatcher.registerReceiver(this, new IntentFilter("android.intent.action.USER_SWITCHED"), (Executor) null, UserHandle.ALL);
                 this.mReceiverRegistered = true;
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void removeTracker(Consumer<Integer> consumer) {
             if (this.mCallbacks.contains(consumer)) {
-                this.mCallbacks.remove(consumer);
-                if (this.mCallbacks.size() != 0 || !this.mReceiverRegistered) {
-                    return;
+                this.mCallbacks.remove((Object) consumer);
+                if (this.mCallbacks.size() == 0 && this.mReceiverRegistered) {
+                    this.mBroadcastDispatcher.unregisterReceiver(this);
+                    this.mReceiverRegistered = false;
                 }
-                this.mBroadcastDispatcher.unregisterReceiver(this);
-                this.mReceiverRegistered = false;
             }
         }
 

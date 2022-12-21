@@ -19,41 +19,42 @@ import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.systemui.accessibility.AccessibilityButtonModeObserver;
 import com.android.systemui.accessibility.AccessibilityButtonTargetsObserver;
 import com.android.systemui.accessibility.floatingmenu.AccessibilityFloatingMenuController;
+import com.android.systemui.animation.DialogLaunchAnimator;
 import com.android.systemui.appops.AppOpsController;
 import com.android.systemui.assist.AssistManager;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
+import com.android.systemui.dagger.qualifiers.Background;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.dump.DumpManager;
+import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.fragments.FragmentService;
+import com.android.systemui.hdmi.HdmiCecSetMenuLanguageHelper;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.media.dialog.MediaOutputDialogFactory;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.navigationbar.NavigationBarController;
-import com.android.systemui.navigationbar.NavigationBarOverlayController;
 import com.android.systemui.navigationbar.NavigationModeController;
 import com.android.systemui.navigationbar.gestural.EdgeBackGestureHandler;
+import com.android.systemui.p012qs.ReduceBrightColorsController;
+import com.android.systemui.p012qs.tiles.dialog.InternetDialogFactory;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.DarkIconDispatcher;
-import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.PluginDependencyProvider;
 import com.android.systemui.plugins.VolumeDialogController;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.power.EnhancedEstimates;
 import com.android.systemui.power.PowerUI;
 import com.android.systemui.privacy.PrivacyItemController;
-import com.android.systemui.qs.ReduceBrightColorsController;
-import com.android.systemui.qs.tiles.dialog.InternetDialogFactory;
 import com.android.systemui.recents.OverviewProxyService;
-import com.android.systemui.recents.Recents;
 import com.android.systemui.screenrecord.RecordingController;
 import com.android.systemui.shared.plugins.PluginManager;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.DevicePolicyManagerWrapper;
 import com.android.systemui.shared.system.PackageManagerWrapper;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.FeatureFlags;
 import com.android.systemui.statusbar.NotificationListener;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.NotificationMediaManager;
@@ -68,8 +69,12 @@ import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationFilter;
 import com.android.systemui.statusbar.notification.collection.legacy.NotificationGroupManagerLegacy;
 import com.android.systemui.statusbar.notification.collection.legacy.VisualStabilityManager;
+import com.android.systemui.statusbar.notification.collection.render.GroupExpansionManager;
+import com.android.systemui.statusbar.notification.collection.render.GroupMembershipManager;
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.android.systemui.statusbar.notification.row.NotificationGutsManager;
+import com.android.systemui.statusbar.notification.stack.AmbientState;
+import com.android.systemui.statusbar.notification.stack.NotificationSectionsManager;
 import com.android.systemui.statusbar.phone.AutoHideController;
 import com.android.systemui.statusbar.phone.DozeParameters;
 import com.android.systemui.statusbar.phone.KeyguardDismissUtil;
@@ -77,11 +82,11 @@ import com.android.systemui.statusbar.phone.LightBarController;
 import com.android.systemui.statusbar.phone.LockscreenGestureLogger;
 import com.android.systemui.statusbar.phone.ManagedProfileController;
 import com.android.systemui.statusbar.phone.NotificationGroupAlertTransferHelper;
+import com.android.systemui.statusbar.phone.ScreenOffAnimationController;
 import com.android.systemui.statusbar.phone.ShadeController;
-import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarContentInsetsProvider;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
-import com.android.systemui.statusbar.phone.StatusBarWindowController;
+import com.android.systemui.statusbar.phone.SystemUIDialogManager;
 import com.android.systemui.statusbar.policy.AccessibilityController;
 import com.android.systemui.statusbar.policy.AccessibilityManagerWrapper;
 import com.android.systemui.statusbar.policy.BatteryController;
@@ -95,7 +100,6 @@ import com.android.systemui.statusbar.policy.FlashlightController;
 import com.android.systemui.statusbar.policy.HotspotController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.LocationController;
-import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.NextAlarmController;
 import com.android.systemui.statusbar.policy.RemoteInputQuickSettingsDisabler;
 import com.android.systemui.statusbar.policy.RotationLockController;
@@ -105,6 +109,7 @@ import com.android.systemui.statusbar.policy.SmartReplyConstants;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.android.systemui.statusbar.policy.ZenModeController;
+import com.android.systemui.statusbar.window.StatusBarWindowController;
 import com.android.systemui.telephony.TelephonyListenerManager;
 import com.android.systemui.tracing.ProtoTracer;
 import com.android.systemui.tuner.TunablePadding;
@@ -114,21 +119,409 @@ import com.android.systemui.util.leak.GarbageMonitor;
 import com.android.systemui.util.leak.LeakDetector;
 import com.android.systemui.util.leak.LeakReporter;
 import com.android.systemui.util.sensors.AsyncSensorManager;
-import com.nothingos.headsup.NothingOSHeadsupManager;
-import com.nothingos.keyguard.NTColorController;
-import com.nothingos.keyguard.weather.KeyguardWeatherController;
-import com.nothingos.systemui.doze.AODController;
-import com.nothingos.systemui.doze.LiftWakeGestureController;
-import com.nothingos.systemui.facerecognition.FaceRecognitionController;
-import com.nothingos.systemui.qs.QSStatusBarController;
-import com.nothingos.systemui.statusbar.policy.BatteryShareController;
-import com.nothingos.systemui.statusbar.policy.GlyphsController;
-import com.nothingos.systemui.statusbar.policy.NfcController;
-import com.nothingos.systemui.statusbar.policy.TeslaInfoController;
 import dagger.Lazy;
+import dagger.MembersInjector;
+import dagger.internal.DoubleCheck;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
-public final class Dependency_MembersInjector {
+import javax.inject.Named;
+import javax.inject.Provider;
+
+public final class Dependency_MembersInjector implements MembersInjector<Dependency> {
+    private final Provider<AccessibilityButtonTargetsObserver> mAccessibilityButtonListControllerProvider;
+    private final Provider<AccessibilityButtonModeObserver> mAccessibilityButtonModeObserverProvider;
+    private final Provider<AccessibilityController> mAccessibilityControllerProvider;
+    private final Provider<AccessibilityFloatingMenuController> mAccessibilityFloatingMenuControllerProvider;
+    private final Provider<AccessibilityManagerWrapper> mAccessibilityManagerWrapperProvider;
+    private final Provider<ActivityManagerWrapper> mActivityManagerWrapperProvider;
+    private final Provider<ActivityStarter> mActivityStarterProvider;
+    private final Provider<AlarmManager> mAlarmManagerProvider;
+    private final Provider<AmbientState> mAmbientStateLazyProvider;
+    private final Provider<AppOpsController> mAppOpsControllerProvider;
+    private final Provider<AssistManager> mAssistManagerProvider;
+    private final Provider<AsyncSensorManager> mAsyncSensorManagerProvider;
+    private final Provider<AutoHideController> mAutoHideControllerProvider;
+    private final Provider<Executor> mBackgroundExecutorProvider;
+    private final Provider<BatteryController> mBatteryControllerProvider;
+    private final Provider<Handler> mBgHandlerProvider;
+    private final Provider<Looper> mBgLooperProvider;
+    private final Provider<BluetoothController> mBluetoothControllerProvider;
+    private final Provider<BroadcastDispatcher> mBroadcastDispatcherProvider;
+    private final Provider<CastController> mCastControllerProvider;
+    private final Provider<ClockManager> mClockManagerProvider;
+    private final Provider<CommandQueue> mCommandQueueProvider;
+    private final Provider<ConfigurationController> mConfigurationControllerProvider;
+    private final Provider<StatusBarContentInsetsProvider> mContentInsetsProviderLazyProvider;
+    private final Provider<DarkIconDispatcher> mDarkIconDispatcherProvider;
+    private final Provider<DataSaverController> mDataSaverControllerProvider;
+    private final Provider<DeviceConfigProxy> mDeviceConfigProxyProvider;
+    private final Provider<DevicePolicyManagerWrapper> mDevicePolicyManagerWrapperProvider;
+    private final Provider<DeviceProvisionedController> mDeviceProvisionedControllerProvider;
+    private final Provider<DialogLaunchAnimator> mDialogLaunchAnimatorLazyProvider;
+    private final Provider<DisplayMetrics> mDisplayMetricsProvider;
+    private final Provider<DockManager> mDockManagerProvider;
+    private final Provider<DozeParameters> mDozeParametersProvider;
+    private final Provider<DumpManager> mDumpManagerProvider;
+    private final Provider<EdgeBackGestureHandler.Factory> mEdgeBackGestureHandlerFactoryLazyProvider;
+    private final Provider<EnhancedEstimates> mEnhancedEstimatesProvider;
+    private final Provider<ExtensionController> mExtensionControllerProvider;
+    private final Provider<FeatureFlags> mFeatureFlagsLazyProvider;
+    private final Provider<FlashlightController> mFlashlightControllerProvider;
+    private final Provider<ForegroundServiceController> mForegroundServiceControllerProvider;
+    private final Provider<ForegroundServiceNotificationListener> mForegroundServiceNotificationListenerProvider;
+    private final Provider<FragmentService> mFragmentServiceProvider;
+    private final Provider<GarbageMonitor> mGarbageMonitorProvider;
+    private final Provider<GroupExpansionManager> mGroupExpansionManagerLazyProvider;
+    private final Provider<GroupMembershipManager> mGroupMembershipManagerLazyProvider;
+    private final Provider<HdmiCecSetMenuLanguageHelper> mHdmiCecSetMenuLanguageHelperProvider;
+    private final Provider<HotspotController> mHotspotControllerProvider;
+    private final Provider<INotificationManager> mINotificationManagerProvider;
+    private final Provider<IStatusBarService> mIStatusBarServiceProvider;
+    private final Provider<IWindowManager> mIWindowManagerProvider;
+    private final Provider<InternetDialogFactory> mInternetDialogFactoryProvider;
+    private final Provider<KeyguardDismissUtil> mKeyguardDismissUtilProvider;
+    private final Provider<NotificationEntryManager.KeyguardEnvironment> mKeyguardEnvironmentProvider;
+    private final Provider<KeyguardStateController> mKeyguardMonitorProvider;
+    private final Provider<KeyguardSecurityModel> mKeyguardSecurityModelProvider;
+    private final Provider<KeyguardUpdateMonitor> mKeyguardUpdateMonitorProvider;
+    private final Provider<LeakDetector> mLeakDetectorProvider;
+    private final Provider<String> mLeakReportEmailProvider;
+    private final Provider<LeakReporter> mLeakReporterProvider;
+    private final Provider<LightBarController> mLightBarControllerProvider;
+    private final Provider<LocalBluetoothManager> mLocalBluetoothManagerProvider;
+    private final Provider<LocationController> mLocationControllerProvider;
+    private final Provider<LockscreenGestureLogger> mLockscreenGestureLoggerProvider;
+    private final Provider<Executor> mMainExecutorProvider;
+    private final Provider<Handler> mMainHandlerProvider;
+    private final Provider<Looper> mMainLooperProvider;
+    private final Provider<ManagedProfileController> mManagedProfileControllerProvider;
+    private final Provider<MediaOutputDialogFactory> mMediaOutputDialogFactoryProvider;
+    private final Provider<MetricsLogger> mMetricsLoggerProvider;
+    private final Provider<NavigationModeController> mNavBarModeControllerProvider;
+    private final Provider<NavigationBarController> mNavigationBarControllerProvider;
+    private final Provider<NextAlarmController> mNextAlarmControllerProvider;
+    private final Provider<NightDisplayListener> mNightDisplayListenerProvider;
+    private final Provider<NotificationEntryManager> mNotificationEntryManagerProvider;
+    private final Provider<NotificationFilter> mNotificationFilterProvider;
+    private final Provider<NotificationGroupAlertTransferHelper> mNotificationGroupAlertTransferHelperProvider;
+    private final Provider<NotificationGroupManagerLegacy> mNotificationGroupManagerProvider;
+    private final Provider<NotificationGutsManager> mNotificationGutsManagerProvider;
+    private final Provider<NotificationListener> mNotificationListenerProvider;
+    private final Provider<NotificationLockscreenUserManager> mNotificationLockscreenUserManagerProvider;
+    private final Provider<NotificationLogger> mNotificationLoggerProvider;
+    private final Provider<NotificationMediaManager> mNotificationMediaManagerProvider;
+    private final Provider<NotificationRemoteInputManager.Callback> mNotificationRemoteInputManagerCallbackProvider;
+    private final Provider<NotificationRemoteInputManager> mNotificationRemoteInputManagerProvider;
+    private final Provider<NotificationSectionsManager> mNotificationSectionsManagerLazyProvider;
+    private final Provider<NotificationShadeWindowController> mNotificationShadeWindowControllerProvider;
+    private final Provider<NotificationViewHierarchyManager> mNotificationViewHierarchyManagerProvider;
+    private final Provider<OverviewProxyService> mOverviewProxyServiceProvider;
+    private final Provider<PackageManagerWrapper> mPackageManagerWrapperProvider;
+    private final Provider<PluginDependencyProvider> mPluginDependencyProvider;
+    private final Provider<PluginManager> mPluginManagerProvider;
+    private final Provider<PrivacyDotViewController> mPrivacyDotViewControllerLazyProvider;
+    private final Provider<PrivacyItemController> mPrivacyItemControllerProvider;
+    private final Provider<ProtoTracer> mProtoTracerProvider;
+    private final Provider<RecordingController> mRecordingControllerProvider;
+    private final Provider<ReduceBrightColorsController> mReduceBrightColorsControllerProvider;
+    private final Provider<RemoteInputQuickSettingsDisabler> mRemoteInputQuickSettingsDisablerProvider;
+    private final Provider<RotationLockController> mRotationLockControllerProvider;
+    private final Provider<ScreenLifecycle> mScreenLifecycleProvider;
+    private final Provider<ScreenOffAnimationController> mScreenOffAnimationControllerProvider;
+    private final Provider<SecurityController> mSecurityControllerProvider;
+    private final Provider<SensorPrivacyController> mSensorPrivacyControllerProvider;
+    private final Provider<SensorPrivacyManager> mSensorPrivacyManagerProvider;
+    private final Provider<ShadeController> mShadeControllerProvider;
+    private final Provider<SmartReplyConstants> mSmartReplyConstantsProvider;
+    private final Provider<SmartReplyController> mSmartReplyControllerProvider;
+    private final Provider<StatusBarIconController> mStatusBarIconControllerProvider;
+    private final Provider<StatusBarStateController> mStatusBarStateControllerProvider;
+    private final Provider<SysUiState> mSysUiStateFlagsContainerProvider;
+    private final Provider<SystemStatusAnimationScheduler> mSystemStatusAnimationSchedulerLazyProvider;
+    private final Provider<SystemUIDialogManager> mSystemUIDialogManagerLazyProvider;
+    private final Provider<SysuiColorExtractor> mSysuiColorExtractorProvider;
+    private final Provider<TelephonyListenerManager> mTelephonyListenerManagerProvider;
+    private final Provider<StatusBarWindowController> mTempStatusBarWindowControllerProvider;
+    private final Provider<Handler> mTimeTickHandlerProvider;
+    private final Provider<TunablePadding.TunablePaddingService> mTunablePaddingServiceProvider;
+    private final Provider<TunerService> mTunerServiceProvider;
+    private final Provider<UiEventLogger> mUiEventLoggerProvider;
+    private final Provider<UiOffloadThread> mUiOffloadThreadProvider;
+    private final Provider<UserInfoController> mUserInfoControllerProvider;
+    private final Provider<UserSwitcherController> mUserSwitcherControllerProvider;
+    private final Provider<VibratorHelper> mVibratorHelperProvider;
+    private final Provider<VisualStabilityManager> mVisualStabilityManagerProvider;
+    private final Provider<VolumeDialogController> mVolumeDialogControllerProvider;
+    private final Provider<WakefulnessLifecycle> mWakefulnessLifecycleProvider;
+    private final Provider<IWallpaperManager> mWallpaperManagerProvider;
+    private final Provider<PowerUI.WarningsUI> mWarningsUIProvider;
+    private final Provider<ZenModeController> mZenModeControllerProvider;
+
+    public Dependency_MembersInjector(Provider<DumpManager> provider, Provider<ActivityStarter> provider2, Provider<BroadcastDispatcher> provider3, Provider<AsyncSensorManager> provider4, Provider<BluetoothController> provider5, Provider<LocationController> provider6, Provider<RotationLockController> provider7, Provider<ZenModeController> provider8, Provider<HdmiCecSetMenuLanguageHelper> provider9, Provider<HotspotController> provider10, Provider<CastController> provider11, Provider<FlashlightController> provider12, Provider<UserSwitcherController> provider13, Provider<UserInfoController> provider14, Provider<KeyguardStateController> provider15, Provider<KeyguardUpdateMonitor> provider16, Provider<BatteryController> provider17, Provider<NightDisplayListener> provider18, Provider<ReduceBrightColorsController> provider19, Provider<ManagedProfileController> provider20, Provider<NextAlarmController> provider21, Provider<DataSaverController> provider22, Provider<AccessibilityController> provider23, Provider<DeviceProvisionedController> provider24, Provider<PluginManager> provider25, Provider<AssistManager> provider26, Provider<SecurityController> provider27, Provider<LeakDetector> provider28, Provider<LeakReporter> provider29, Provider<GarbageMonitor> provider30, Provider<TunerService> provider31, Provider<NotificationShadeWindowController> provider32, Provider<StatusBarWindowController> provider33, Provider<DarkIconDispatcher> provider34, Provider<ConfigurationController> provider35, Provider<StatusBarIconController> provider36, Provider<ScreenLifecycle> provider37, Provider<WakefulnessLifecycle> provider38, Provider<FragmentService> provider39, Provider<ExtensionController> provider40, Provider<PluginDependencyProvider> provider41, Provider<LocalBluetoothManager> provider42, Provider<VolumeDialogController> provider43, Provider<MetricsLogger> provider44, Provider<AccessibilityManagerWrapper> provider45, Provider<SysuiColorExtractor> provider46, Provider<TunablePadding.TunablePaddingService> provider47, Provider<ForegroundServiceController> provider48, Provider<UiOffloadThread> provider49, Provider<PowerUI.WarningsUI> provider50, Provider<LightBarController> provider51, Provider<IWindowManager> provider52, Provider<OverviewProxyService> provider53, Provider<NavigationModeController> provider54, Provider<AccessibilityButtonModeObserver> provider55, Provider<AccessibilityButtonTargetsObserver> provider56, Provider<EnhancedEstimates> provider57, Provider<VibratorHelper> provider58, Provider<IStatusBarService> provider59, Provider<DisplayMetrics> provider60, Provider<LockscreenGestureLogger> provider61, Provider<NotificationEntryManager.KeyguardEnvironment> provider62, Provider<ShadeController> provider63, Provider<NotificationRemoteInputManager.Callback> provider64, Provider<AppOpsController> provider65, Provider<NavigationBarController> provider66, Provider<AccessibilityFloatingMenuController> provider67, Provider<StatusBarStateController> provider68, Provider<NotificationLockscreenUserManager> provider69, Provider<NotificationGroupAlertTransferHelper> provider70, Provider<NotificationGroupManagerLegacy> provider71, Provider<VisualStabilityManager> provider72, Provider<NotificationGutsManager> provider73, Provider<NotificationMediaManager> provider74, Provider<NotificationRemoteInputManager> provider75, Provider<SmartReplyConstants> provider76, Provider<NotificationListener> provider77, Provider<NotificationLogger> provider78, Provider<NotificationViewHierarchyManager> provider79, Provider<NotificationFilter> provider80, Provider<KeyguardDismissUtil> provider81, Provider<SmartReplyController> provider82, Provider<RemoteInputQuickSettingsDisabler> provider83, Provider<NotificationEntryManager> provider84, Provider<SensorPrivacyManager> provider85, Provider<AutoHideController> provider86, Provider<ForegroundServiceNotificationListener> provider87, Provider<PrivacyItemController> provider88, Provider<Looper> provider89, Provider<Handler> provider90, Provider<Looper> provider91, Provider<Handler> provider92, Provider<Handler> provider93, Provider<String> provider94, Provider<Executor> provider95, Provider<Executor> provider96, Provider<ClockManager> provider97, Provider<ActivityManagerWrapper> provider98, Provider<DevicePolicyManagerWrapper> provider99, Provider<PackageManagerWrapper> provider100, Provider<SensorPrivacyController> provider101, Provider<DockManager> provider102, Provider<INotificationManager> provider103, Provider<SysUiState> provider104, Provider<AlarmManager> provider105, Provider<KeyguardSecurityModel> provider106, Provider<DozeParameters> provider107, Provider<IWallpaperManager> provider108, Provider<CommandQueue> provider109, Provider<RecordingController> provider110, Provider<ProtoTracer> provider111, Provider<MediaOutputDialogFactory> provider112, Provider<DeviceConfigProxy> provider113, Provider<TelephonyListenerManager> provider114, Provider<SystemStatusAnimationScheduler> provider115, Provider<PrivacyDotViewController> provider116, Provider<EdgeBackGestureHandler.Factory> provider117, Provider<UiEventLogger> provider118, Provider<StatusBarContentInsetsProvider> provider119, Provider<InternetDialogFactory> provider120, Provider<FeatureFlags> provider121, Provider<NotificationSectionsManager> provider122, Provider<ScreenOffAnimationController> provider123, Provider<AmbientState> provider124, Provider<GroupMembershipManager> provider125, Provider<GroupExpansionManager> provider126, Provider<SystemUIDialogManager> provider127, Provider<DialogLaunchAnimator> provider128) {
+        this.mDumpManagerProvider = provider;
+        this.mActivityStarterProvider = provider2;
+        this.mBroadcastDispatcherProvider = provider3;
+        this.mAsyncSensorManagerProvider = provider4;
+        this.mBluetoothControllerProvider = provider5;
+        this.mLocationControllerProvider = provider6;
+        this.mRotationLockControllerProvider = provider7;
+        this.mZenModeControllerProvider = provider8;
+        this.mHdmiCecSetMenuLanguageHelperProvider = provider9;
+        this.mHotspotControllerProvider = provider10;
+        this.mCastControllerProvider = provider11;
+        this.mFlashlightControllerProvider = provider12;
+        this.mUserSwitcherControllerProvider = provider13;
+        this.mUserInfoControllerProvider = provider14;
+        this.mKeyguardMonitorProvider = provider15;
+        this.mKeyguardUpdateMonitorProvider = provider16;
+        this.mBatteryControllerProvider = provider17;
+        this.mNightDisplayListenerProvider = provider18;
+        this.mReduceBrightColorsControllerProvider = provider19;
+        this.mManagedProfileControllerProvider = provider20;
+        this.mNextAlarmControllerProvider = provider21;
+        this.mDataSaverControllerProvider = provider22;
+        this.mAccessibilityControllerProvider = provider23;
+        this.mDeviceProvisionedControllerProvider = provider24;
+        this.mPluginManagerProvider = provider25;
+        this.mAssistManagerProvider = provider26;
+        this.mSecurityControllerProvider = provider27;
+        this.mLeakDetectorProvider = provider28;
+        this.mLeakReporterProvider = provider29;
+        this.mGarbageMonitorProvider = provider30;
+        this.mTunerServiceProvider = provider31;
+        this.mNotificationShadeWindowControllerProvider = provider32;
+        this.mTempStatusBarWindowControllerProvider = provider33;
+        this.mDarkIconDispatcherProvider = provider34;
+        this.mConfigurationControllerProvider = provider35;
+        this.mStatusBarIconControllerProvider = provider36;
+        this.mScreenLifecycleProvider = provider37;
+        this.mWakefulnessLifecycleProvider = provider38;
+        this.mFragmentServiceProvider = provider39;
+        this.mExtensionControllerProvider = provider40;
+        this.mPluginDependencyProvider = provider41;
+        this.mLocalBluetoothManagerProvider = provider42;
+        this.mVolumeDialogControllerProvider = provider43;
+        this.mMetricsLoggerProvider = provider44;
+        this.mAccessibilityManagerWrapperProvider = provider45;
+        this.mSysuiColorExtractorProvider = provider46;
+        this.mTunablePaddingServiceProvider = provider47;
+        this.mForegroundServiceControllerProvider = provider48;
+        this.mUiOffloadThreadProvider = provider49;
+        this.mWarningsUIProvider = provider50;
+        this.mLightBarControllerProvider = provider51;
+        this.mIWindowManagerProvider = provider52;
+        this.mOverviewProxyServiceProvider = provider53;
+        this.mNavBarModeControllerProvider = provider54;
+        this.mAccessibilityButtonModeObserverProvider = provider55;
+        this.mAccessibilityButtonListControllerProvider = provider56;
+        this.mEnhancedEstimatesProvider = provider57;
+        this.mVibratorHelperProvider = provider58;
+        this.mIStatusBarServiceProvider = provider59;
+        this.mDisplayMetricsProvider = provider60;
+        this.mLockscreenGestureLoggerProvider = provider61;
+        this.mKeyguardEnvironmentProvider = provider62;
+        this.mShadeControllerProvider = provider63;
+        this.mNotificationRemoteInputManagerCallbackProvider = provider64;
+        this.mAppOpsControllerProvider = provider65;
+        this.mNavigationBarControllerProvider = provider66;
+        this.mAccessibilityFloatingMenuControllerProvider = provider67;
+        this.mStatusBarStateControllerProvider = provider68;
+        this.mNotificationLockscreenUserManagerProvider = provider69;
+        this.mNotificationGroupAlertTransferHelperProvider = provider70;
+        this.mNotificationGroupManagerProvider = provider71;
+        this.mVisualStabilityManagerProvider = provider72;
+        this.mNotificationGutsManagerProvider = provider73;
+        this.mNotificationMediaManagerProvider = provider74;
+        this.mNotificationRemoteInputManagerProvider = provider75;
+        this.mSmartReplyConstantsProvider = provider76;
+        this.mNotificationListenerProvider = provider77;
+        this.mNotificationLoggerProvider = provider78;
+        this.mNotificationViewHierarchyManagerProvider = provider79;
+        this.mNotificationFilterProvider = provider80;
+        this.mKeyguardDismissUtilProvider = provider81;
+        this.mSmartReplyControllerProvider = provider82;
+        this.mRemoteInputQuickSettingsDisablerProvider = provider83;
+        this.mNotificationEntryManagerProvider = provider84;
+        this.mSensorPrivacyManagerProvider = provider85;
+        this.mAutoHideControllerProvider = provider86;
+        this.mForegroundServiceNotificationListenerProvider = provider87;
+        this.mPrivacyItemControllerProvider = provider88;
+        this.mBgLooperProvider = provider89;
+        this.mBgHandlerProvider = provider90;
+        this.mMainLooperProvider = provider91;
+        this.mMainHandlerProvider = provider92;
+        this.mTimeTickHandlerProvider = provider93;
+        this.mLeakReportEmailProvider = provider94;
+        this.mMainExecutorProvider = provider95;
+        this.mBackgroundExecutorProvider = provider96;
+        this.mClockManagerProvider = provider97;
+        this.mActivityManagerWrapperProvider = provider98;
+        this.mDevicePolicyManagerWrapperProvider = provider99;
+        this.mPackageManagerWrapperProvider = provider100;
+        this.mSensorPrivacyControllerProvider = provider101;
+        this.mDockManagerProvider = provider102;
+        this.mINotificationManagerProvider = provider103;
+        this.mSysUiStateFlagsContainerProvider = provider104;
+        this.mAlarmManagerProvider = provider105;
+        this.mKeyguardSecurityModelProvider = provider106;
+        this.mDozeParametersProvider = provider107;
+        this.mWallpaperManagerProvider = provider108;
+        this.mCommandQueueProvider = provider109;
+        this.mRecordingControllerProvider = provider110;
+        this.mProtoTracerProvider = provider111;
+        this.mMediaOutputDialogFactoryProvider = provider112;
+        this.mDeviceConfigProxyProvider = provider113;
+        this.mTelephonyListenerManagerProvider = provider114;
+        this.mSystemStatusAnimationSchedulerLazyProvider = provider115;
+        this.mPrivacyDotViewControllerLazyProvider = provider116;
+        this.mEdgeBackGestureHandlerFactoryLazyProvider = provider117;
+        this.mUiEventLoggerProvider = provider118;
+        this.mContentInsetsProviderLazyProvider = provider119;
+        this.mInternetDialogFactoryProvider = provider120;
+        this.mFeatureFlagsLazyProvider = provider121;
+        this.mNotificationSectionsManagerLazyProvider = provider122;
+        this.mScreenOffAnimationControllerProvider = provider123;
+        this.mAmbientStateLazyProvider = provider124;
+        this.mGroupMembershipManagerLazyProvider = provider125;
+        this.mGroupExpansionManagerLazyProvider = provider126;
+        this.mSystemUIDialogManagerLazyProvider = provider127;
+        this.mDialogLaunchAnimatorLazyProvider = provider128;
+    }
+
+    public static MembersInjector<Dependency> create(Provider<DumpManager> provider, Provider<ActivityStarter> provider2, Provider<BroadcastDispatcher> provider3, Provider<AsyncSensorManager> provider4, Provider<BluetoothController> provider5, Provider<LocationController> provider6, Provider<RotationLockController> provider7, Provider<ZenModeController> provider8, Provider<HdmiCecSetMenuLanguageHelper> provider9, Provider<HotspotController> provider10, Provider<CastController> provider11, Provider<FlashlightController> provider12, Provider<UserSwitcherController> provider13, Provider<UserInfoController> provider14, Provider<KeyguardStateController> provider15, Provider<KeyguardUpdateMonitor> provider16, Provider<BatteryController> provider17, Provider<NightDisplayListener> provider18, Provider<ReduceBrightColorsController> provider19, Provider<ManagedProfileController> provider20, Provider<NextAlarmController> provider21, Provider<DataSaverController> provider22, Provider<AccessibilityController> provider23, Provider<DeviceProvisionedController> provider24, Provider<PluginManager> provider25, Provider<AssistManager> provider26, Provider<SecurityController> provider27, Provider<LeakDetector> provider28, Provider<LeakReporter> provider29, Provider<GarbageMonitor> provider30, Provider<TunerService> provider31, Provider<NotificationShadeWindowController> provider32, Provider<StatusBarWindowController> provider33, Provider<DarkIconDispatcher> provider34, Provider<ConfigurationController> provider35, Provider<StatusBarIconController> provider36, Provider<ScreenLifecycle> provider37, Provider<WakefulnessLifecycle> provider38, Provider<FragmentService> provider39, Provider<ExtensionController> provider40, Provider<PluginDependencyProvider> provider41, Provider<LocalBluetoothManager> provider42, Provider<VolumeDialogController> provider43, Provider<MetricsLogger> provider44, Provider<AccessibilityManagerWrapper> provider45, Provider<SysuiColorExtractor> provider46, Provider<TunablePadding.TunablePaddingService> provider47, Provider<ForegroundServiceController> provider48, Provider<UiOffloadThread> provider49, Provider<PowerUI.WarningsUI> provider50, Provider<LightBarController> provider51, Provider<IWindowManager> provider52, Provider<OverviewProxyService> provider53, Provider<NavigationModeController> provider54, Provider<AccessibilityButtonModeObserver> provider55, Provider<AccessibilityButtonTargetsObserver> provider56, Provider<EnhancedEstimates> provider57, Provider<VibratorHelper> provider58, Provider<IStatusBarService> provider59, Provider<DisplayMetrics> provider60, Provider<LockscreenGestureLogger> provider61, Provider<NotificationEntryManager.KeyguardEnvironment> provider62, Provider<ShadeController> provider63, Provider<NotificationRemoteInputManager.Callback> provider64, Provider<AppOpsController> provider65, Provider<NavigationBarController> provider66, Provider<AccessibilityFloatingMenuController> provider67, Provider<StatusBarStateController> provider68, Provider<NotificationLockscreenUserManager> provider69, Provider<NotificationGroupAlertTransferHelper> provider70, Provider<NotificationGroupManagerLegacy> provider71, Provider<VisualStabilityManager> provider72, Provider<NotificationGutsManager> provider73, Provider<NotificationMediaManager> provider74, Provider<NotificationRemoteInputManager> provider75, Provider<SmartReplyConstants> provider76, Provider<NotificationListener> provider77, Provider<NotificationLogger> provider78, Provider<NotificationViewHierarchyManager> provider79, Provider<NotificationFilter> provider80, Provider<KeyguardDismissUtil> provider81, Provider<SmartReplyController> provider82, Provider<RemoteInputQuickSettingsDisabler> provider83, Provider<NotificationEntryManager> provider84, Provider<SensorPrivacyManager> provider85, Provider<AutoHideController> provider86, Provider<ForegroundServiceNotificationListener> provider87, Provider<PrivacyItemController> provider88, Provider<Looper> provider89, Provider<Handler> provider90, Provider<Looper> provider91, Provider<Handler> provider92, Provider<Handler> provider93, Provider<String> provider94, Provider<Executor> provider95, Provider<Executor> provider96, Provider<ClockManager> provider97, Provider<ActivityManagerWrapper> provider98, Provider<DevicePolicyManagerWrapper> provider99, Provider<PackageManagerWrapper> provider100, Provider<SensorPrivacyController> provider101, Provider<DockManager> provider102, Provider<INotificationManager> provider103, Provider<SysUiState> provider104, Provider<AlarmManager> provider105, Provider<KeyguardSecurityModel> provider106, Provider<DozeParameters> provider107, Provider<IWallpaperManager> provider108, Provider<CommandQueue> provider109, Provider<RecordingController> provider110, Provider<ProtoTracer> provider111, Provider<MediaOutputDialogFactory> provider112, Provider<DeviceConfigProxy> provider113, Provider<TelephonyListenerManager> provider114, Provider<SystemStatusAnimationScheduler> provider115, Provider<PrivacyDotViewController> provider116, Provider<EdgeBackGestureHandler.Factory> provider117, Provider<UiEventLogger> provider118, Provider<StatusBarContentInsetsProvider> provider119, Provider<InternetDialogFactory> provider120, Provider<FeatureFlags> provider121, Provider<NotificationSectionsManager> provider122, Provider<ScreenOffAnimationController> provider123, Provider<AmbientState> provider124, Provider<GroupMembershipManager> provider125, Provider<GroupExpansionManager> provider126, Provider<SystemUIDialogManager> provider127, Provider<DialogLaunchAnimator> provider128) {
+        return new Dependency_MembersInjector(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18, provider19, provider20, provider21, provider22, provider23, provider24, provider25, provider26, provider27, provider28, provider29, provider30, provider31, provider32, provider33, provider34, provider35, provider36, provider37, provider38, provider39, provider40, provider41, provider42, provider43, provider44, provider45, provider46, provider47, provider48, provider49, provider50, provider51, provider52, provider53, provider54, provider55, provider56, provider57, provider58, provider59, provider60, provider61, provider62, provider63, provider64, provider65, provider66, provider67, provider68, provider69, provider70, provider71, provider72, provider73, provider74, provider75, provider76, provider77, provider78, provider79, provider80, provider81, provider82, provider83, provider84, provider85, provider86, provider87, provider88, provider89, provider90, provider91, provider92, provider93, provider94, provider95, provider96, provider97, provider98, provider99, provider100, provider101, provider102, provider103, provider104, provider105, provider106, provider107, provider108, provider109, provider110, provider111, provider112, provider113, provider114, provider115, provider116, provider117, provider118, provider119, provider120, provider121, provider122, provider123, provider124, provider125, provider126, provider127, provider128);
+    }
+
+    public void injectMembers(Dependency dependency) {
+        injectMDumpManager(dependency, this.mDumpManagerProvider.get());
+        injectMActivityStarter(dependency, DoubleCheck.lazy(this.mActivityStarterProvider));
+        injectMBroadcastDispatcher(dependency, DoubleCheck.lazy(this.mBroadcastDispatcherProvider));
+        injectMAsyncSensorManager(dependency, DoubleCheck.lazy(this.mAsyncSensorManagerProvider));
+        injectMBluetoothController(dependency, DoubleCheck.lazy(this.mBluetoothControllerProvider));
+        injectMLocationController(dependency, DoubleCheck.lazy(this.mLocationControllerProvider));
+        injectMRotationLockController(dependency, DoubleCheck.lazy(this.mRotationLockControllerProvider));
+        injectMZenModeController(dependency, DoubleCheck.lazy(this.mZenModeControllerProvider));
+        injectMHdmiCecSetMenuLanguageHelper(dependency, DoubleCheck.lazy(this.mHdmiCecSetMenuLanguageHelperProvider));
+        injectMHotspotController(dependency, DoubleCheck.lazy(this.mHotspotControllerProvider));
+        injectMCastController(dependency, DoubleCheck.lazy(this.mCastControllerProvider));
+        injectMFlashlightController(dependency, DoubleCheck.lazy(this.mFlashlightControllerProvider));
+        injectMUserSwitcherController(dependency, DoubleCheck.lazy(this.mUserSwitcherControllerProvider));
+        injectMUserInfoController(dependency, DoubleCheck.lazy(this.mUserInfoControllerProvider));
+        injectMKeyguardMonitor(dependency, DoubleCheck.lazy(this.mKeyguardMonitorProvider));
+        injectMKeyguardUpdateMonitor(dependency, DoubleCheck.lazy(this.mKeyguardUpdateMonitorProvider));
+        injectMBatteryController(dependency, DoubleCheck.lazy(this.mBatteryControllerProvider));
+        injectMNightDisplayListener(dependency, DoubleCheck.lazy(this.mNightDisplayListenerProvider));
+        injectMReduceBrightColorsController(dependency, DoubleCheck.lazy(this.mReduceBrightColorsControllerProvider));
+        injectMManagedProfileController(dependency, DoubleCheck.lazy(this.mManagedProfileControllerProvider));
+        injectMNextAlarmController(dependency, DoubleCheck.lazy(this.mNextAlarmControllerProvider));
+        injectMDataSaverController(dependency, DoubleCheck.lazy(this.mDataSaverControllerProvider));
+        injectMAccessibilityController(dependency, DoubleCheck.lazy(this.mAccessibilityControllerProvider));
+        injectMDeviceProvisionedController(dependency, DoubleCheck.lazy(this.mDeviceProvisionedControllerProvider));
+        injectMPluginManager(dependency, DoubleCheck.lazy(this.mPluginManagerProvider));
+        injectMAssistManager(dependency, DoubleCheck.lazy(this.mAssistManagerProvider));
+        injectMSecurityController(dependency, DoubleCheck.lazy(this.mSecurityControllerProvider));
+        injectMLeakDetector(dependency, DoubleCheck.lazy(this.mLeakDetectorProvider));
+        injectMLeakReporter(dependency, DoubleCheck.lazy(this.mLeakReporterProvider));
+        injectMGarbageMonitor(dependency, DoubleCheck.lazy(this.mGarbageMonitorProvider));
+        injectMTunerService(dependency, DoubleCheck.lazy(this.mTunerServiceProvider));
+        injectMNotificationShadeWindowController(dependency, DoubleCheck.lazy(this.mNotificationShadeWindowControllerProvider));
+        injectMTempStatusBarWindowController(dependency, DoubleCheck.lazy(this.mTempStatusBarWindowControllerProvider));
+        injectMDarkIconDispatcher(dependency, DoubleCheck.lazy(this.mDarkIconDispatcherProvider));
+        injectMConfigurationController(dependency, DoubleCheck.lazy(this.mConfigurationControllerProvider));
+        injectMStatusBarIconController(dependency, DoubleCheck.lazy(this.mStatusBarIconControllerProvider));
+        injectMScreenLifecycle(dependency, DoubleCheck.lazy(this.mScreenLifecycleProvider));
+        injectMWakefulnessLifecycle(dependency, DoubleCheck.lazy(this.mWakefulnessLifecycleProvider));
+        injectMFragmentService(dependency, DoubleCheck.lazy(this.mFragmentServiceProvider));
+        injectMExtensionController(dependency, DoubleCheck.lazy(this.mExtensionControllerProvider));
+        injectMPluginDependencyProvider(dependency, DoubleCheck.lazy(this.mPluginDependencyProvider));
+        injectMLocalBluetoothManager(dependency, DoubleCheck.lazy(this.mLocalBluetoothManagerProvider));
+        injectMVolumeDialogController(dependency, DoubleCheck.lazy(this.mVolumeDialogControllerProvider));
+        injectMMetricsLogger(dependency, DoubleCheck.lazy(this.mMetricsLoggerProvider));
+        injectMAccessibilityManagerWrapper(dependency, DoubleCheck.lazy(this.mAccessibilityManagerWrapperProvider));
+        injectMSysuiColorExtractor(dependency, DoubleCheck.lazy(this.mSysuiColorExtractorProvider));
+        injectMTunablePaddingService(dependency, DoubleCheck.lazy(this.mTunablePaddingServiceProvider));
+        injectMForegroundServiceController(dependency, DoubleCheck.lazy(this.mForegroundServiceControllerProvider));
+        injectMUiOffloadThread(dependency, DoubleCheck.lazy(this.mUiOffloadThreadProvider));
+        injectMWarningsUI(dependency, DoubleCheck.lazy(this.mWarningsUIProvider));
+        injectMLightBarController(dependency, DoubleCheck.lazy(this.mLightBarControllerProvider));
+        injectMIWindowManager(dependency, DoubleCheck.lazy(this.mIWindowManagerProvider));
+        injectMOverviewProxyService(dependency, DoubleCheck.lazy(this.mOverviewProxyServiceProvider));
+        injectMNavBarModeController(dependency, DoubleCheck.lazy(this.mNavBarModeControllerProvider));
+        injectMAccessibilityButtonModeObserver(dependency, DoubleCheck.lazy(this.mAccessibilityButtonModeObserverProvider));
+        injectMAccessibilityButtonListController(dependency, DoubleCheck.lazy(this.mAccessibilityButtonListControllerProvider));
+        injectMEnhancedEstimates(dependency, DoubleCheck.lazy(this.mEnhancedEstimatesProvider));
+        injectMVibratorHelper(dependency, DoubleCheck.lazy(this.mVibratorHelperProvider));
+        injectMIStatusBarService(dependency, DoubleCheck.lazy(this.mIStatusBarServiceProvider));
+        injectMDisplayMetrics(dependency, DoubleCheck.lazy(this.mDisplayMetricsProvider));
+        injectMLockscreenGestureLogger(dependency, DoubleCheck.lazy(this.mLockscreenGestureLoggerProvider));
+        injectMKeyguardEnvironment(dependency, DoubleCheck.lazy(this.mKeyguardEnvironmentProvider));
+        injectMShadeController(dependency, DoubleCheck.lazy(this.mShadeControllerProvider));
+        injectMNotificationRemoteInputManagerCallback(dependency, DoubleCheck.lazy(this.mNotificationRemoteInputManagerCallbackProvider));
+        injectMAppOpsController(dependency, DoubleCheck.lazy(this.mAppOpsControllerProvider));
+        injectMNavigationBarController(dependency, DoubleCheck.lazy(this.mNavigationBarControllerProvider));
+        injectMAccessibilityFloatingMenuController(dependency, DoubleCheck.lazy(this.mAccessibilityFloatingMenuControllerProvider));
+        injectMStatusBarStateController(dependency, DoubleCheck.lazy(this.mStatusBarStateControllerProvider));
+        injectMNotificationLockscreenUserManager(dependency, DoubleCheck.lazy(this.mNotificationLockscreenUserManagerProvider));
+        injectMNotificationGroupAlertTransferHelper(dependency, DoubleCheck.lazy(this.mNotificationGroupAlertTransferHelperProvider));
+        injectMNotificationGroupManager(dependency, DoubleCheck.lazy(this.mNotificationGroupManagerProvider));
+        injectMVisualStabilityManager(dependency, DoubleCheck.lazy(this.mVisualStabilityManagerProvider));
+        injectMNotificationGutsManager(dependency, DoubleCheck.lazy(this.mNotificationGutsManagerProvider));
+        injectMNotificationMediaManager(dependency, DoubleCheck.lazy(this.mNotificationMediaManagerProvider));
+        injectMNotificationRemoteInputManager(dependency, DoubleCheck.lazy(this.mNotificationRemoteInputManagerProvider));
+        injectMSmartReplyConstants(dependency, DoubleCheck.lazy(this.mSmartReplyConstantsProvider));
+        injectMNotificationListener(dependency, DoubleCheck.lazy(this.mNotificationListenerProvider));
+        injectMNotificationLogger(dependency, DoubleCheck.lazy(this.mNotificationLoggerProvider));
+        injectMNotificationViewHierarchyManager(dependency, DoubleCheck.lazy(this.mNotificationViewHierarchyManagerProvider));
+        injectMNotificationFilter(dependency, DoubleCheck.lazy(this.mNotificationFilterProvider));
+        injectMKeyguardDismissUtil(dependency, DoubleCheck.lazy(this.mKeyguardDismissUtilProvider));
+        injectMSmartReplyController(dependency, DoubleCheck.lazy(this.mSmartReplyControllerProvider));
+        injectMRemoteInputQuickSettingsDisabler(dependency, DoubleCheck.lazy(this.mRemoteInputQuickSettingsDisablerProvider));
+        injectMNotificationEntryManager(dependency, DoubleCheck.lazy(this.mNotificationEntryManagerProvider));
+        injectMSensorPrivacyManager(dependency, DoubleCheck.lazy(this.mSensorPrivacyManagerProvider));
+        injectMAutoHideController(dependency, DoubleCheck.lazy(this.mAutoHideControllerProvider));
+        injectMForegroundServiceNotificationListener(dependency, DoubleCheck.lazy(this.mForegroundServiceNotificationListenerProvider));
+        injectMPrivacyItemController(dependency, DoubleCheck.lazy(this.mPrivacyItemControllerProvider));
+        injectMBgLooper(dependency, DoubleCheck.lazy(this.mBgLooperProvider));
+        injectMBgHandler(dependency, DoubleCheck.lazy(this.mBgHandlerProvider));
+        injectMMainLooper(dependency, DoubleCheck.lazy(this.mMainLooperProvider));
+        injectMMainHandler(dependency, DoubleCheck.lazy(this.mMainHandlerProvider));
+        injectMTimeTickHandler(dependency, DoubleCheck.lazy(this.mTimeTickHandlerProvider));
+        injectMLeakReportEmail(dependency, DoubleCheck.lazy(this.mLeakReportEmailProvider));
+        injectMMainExecutor(dependency, DoubleCheck.lazy(this.mMainExecutorProvider));
+        injectMBackgroundExecutor(dependency, DoubleCheck.lazy(this.mBackgroundExecutorProvider));
+        injectMClockManager(dependency, DoubleCheck.lazy(this.mClockManagerProvider));
+        injectMActivityManagerWrapper(dependency, DoubleCheck.lazy(this.mActivityManagerWrapperProvider));
+        injectMDevicePolicyManagerWrapper(dependency, DoubleCheck.lazy(this.mDevicePolicyManagerWrapperProvider));
+        injectMPackageManagerWrapper(dependency, DoubleCheck.lazy(this.mPackageManagerWrapperProvider));
+        injectMSensorPrivacyController(dependency, DoubleCheck.lazy(this.mSensorPrivacyControllerProvider));
+        injectMDockManager(dependency, DoubleCheck.lazy(this.mDockManagerProvider));
+        injectMINotificationManager(dependency, DoubleCheck.lazy(this.mINotificationManagerProvider));
+        injectMSysUiStateFlagsContainer(dependency, DoubleCheck.lazy(this.mSysUiStateFlagsContainerProvider));
+        injectMAlarmManager(dependency, DoubleCheck.lazy(this.mAlarmManagerProvider));
+        injectMKeyguardSecurityModel(dependency, DoubleCheck.lazy(this.mKeyguardSecurityModelProvider));
+        injectMDozeParameters(dependency, DoubleCheck.lazy(this.mDozeParametersProvider));
+        injectMWallpaperManager(dependency, DoubleCheck.lazy(this.mWallpaperManagerProvider));
+        injectMCommandQueue(dependency, DoubleCheck.lazy(this.mCommandQueueProvider));
+        injectMRecordingController(dependency, DoubleCheck.lazy(this.mRecordingControllerProvider));
+        injectMProtoTracer(dependency, DoubleCheck.lazy(this.mProtoTracerProvider));
+        injectMMediaOutputDialogFactory(dependency, DoubleCheck.lazy(this.mMediaOutputDialogFactoryProvider));
+        injectMDeviceConfigProxy(dependency, DoubleCheck.lazy(this.mDeviceConfigProxyProvider));
+        injectMTelephonyListenerManager(dependency, DoubleCheck.lazy(this.mTelephonyListenerManagerProvider));
+        injectMSystemStatusAnimationSchedulerLazy(dependency, DoubleCheck.lazy(this.mSystemStatusAnimationSchedulerLazyProvider));
+        injectMPrivacyDotViewControllerLazy(dependency, DoubleCheck.lazy(this.mPrivacyDotViewControllerLazyProvider));
+        injectMEdgeBackGestureHandlerFactoryLazy(dependency, DoubleCheck.lazy(this.mEdgeBackGestureHandlerFactoryLazyProvider));
+        injectMUiEventLogger(dependency, DoubleCheck.lazy(this.mUiEventLoggerProvider));
+        injectMContentInsetsProviderLazy(dependency, DoubleCheck.lazy(this.mContentInsetsProviderLazyProvider));
+        injectMInternetDialogFactory(dependency, DoubleCheck.lazy(this.mInternetDialogFactoryProvider));
+        injectMFeatureFlagsLazy(dependency, DoubleCheck.lazy(this.mFeatureFlagsLazyProvider));
+        injectMNotificationSectionsManagerLazy(dependency, DoubleCheck.lazy(this.mNotificationSectionsManagerLazyProvider));
+        injectMScreenOffAnimationController(dependency, DoubleCheck.lazy(this.mScreenOffAnimationControllerProvider));
+        injectMAmbientStateLazy(dependency, DoubleCheck.lazy(this.mAmbientStateLazyProvider));
+        injectMGroupMembershipManagerLazy(dependency, DoubleCheck.lazy(this.mGroupMembershipManagerLazyProvider));
+        injectMGroupExpansionManagerLazy(dependency, DoubleCheck.lazy(this.mGroupExpansionManagerLazyProvider));
+        injectMSystemUIDialogManagerLazy(dependency, DoubleCheck.lazy(this.mSystemUIDialogManagerLazyProvider));
+        injectMDialogLaunchAnimatorLazy(dependency, DoubleCheck.lazy(this.mDialogLaunchAnimatorLazyProvider));
+    }
+
     public static void injectMDumpManager(Dependency dependency, DumpManager dumpManager) {
         dependency.mDumpManager = dumpManager;
     }
@@ -157,12 +550,12 @@ public final class Dependency_MembersInjector {
         dependency.mRotationLockController = lazy;
     }
 
-    public static void injectMNetworkController(Dependency dependency, Lazy<NetworkController> lazy) {
-        dependency.mNetworkController = lazy;
-    }
-
     public static void injectMZenModeController(Dependency dependency, Lazy<ZenModeController> lazy) {
         dependency.mZenModeController = lazy;
+    }
+
+    public static void injectMHdmiCecSetMenuLanguageHelper(Dependency dependency, Lazy<HdmiCecSetMenuLanguageHelper> lazy) {
+        dependency.mHdmiCecSetMenuLanguageHelper = lazy;
     }
 
     public static void injectMHotspotController(Dependency dependency, Lazy<HotspotController> lazy) {
@@ -481,34 +874,42 @@ public final class Dependency_MembersInjector {
         dependency.mPrivacyItemController = lazy;
     }
 
+    @Background
     public static void injectMBgLooper(Dependency dependency, Lazy<Looper> lazy) {
         dependency.mBgLooper = lazy;
     }
 
+    @Background
     public static void injectMBgHandler(Dependency dependency, Lazy<Handler> lazy) {
         dependency.mBgHandler = lazy;
     }
 
+    @Main
     public static void injectMMainLooper(Dependency dependency, Lazy<Looper> lazy) {
         dependency.mMainLooper = lazy;
     }
 
+    @Main
     public static void injectMMainHandler(Dependency dependency, Lazy<Handler> lazy) {
         dependency.mMainHandler = lazy;
     }
 
+    @Named("time_tick_handler")
     public static void injectMTimeTickHandler(Dependency dependency, Lazy<Handler> lazy) {
         dependency.mTimeTickHandler = lazy;
     }
 
+    @Named("leak_report_email")
     public static void injectMLeakReportEmail(Dependency dependency, Lazy<String> lazy) {
         dependency.mLeakReportEmail = lazy;
     }
 
+    @Main
     public static void injectMMainExecutor(Dependency dependency, Lazy<Executor> lazy) {
         dependency.mMainExecutor = lazy;
     }
 
+    @Background
     public static void injectMBackgroundExecutor(Dependency dependency, Lazy<Executor> lazy) {
         dependency.mBackgroundExecutor = lazy;
     }
@@ -565,14 +966,6 @@ public final class Dependency_MembersInjector {
         dependency.mCommandQueue = lazy;
     }
 
-    public static void injectMRecents(Dependency dependency, Lazy<Recents> lazy) {
-        dependency.mRecents = lazy;
-    }
-
-    public static void injectMStatusBar(Dependency dependency, Lazy<StatusBar> lazy) {
-        dependency.mStatusBar = lazy;
-    }
-
     public static void injectMRecordingController(Dependency dependency, Lazy<RecordingController> lazy) {
         dependency.mRecordingController = lazy;
     }
@@ -587,10 +980,6 @@ public final class Dependency_MembersInjector {
 
     public static void injectMDeviceConfigProxy(Dependency dependency, Lazy<DeviceConfigProxy> lazy) {
         dependency.mDeviceConfigProxy = lazy;
-    }
-
-    public static void injectMNavbarButtonsControllerLazy(Dependency dependency, Lazy<NavigationBarOverlayController> lazy) {
-        dependency.mNavbarButtonsControllerLazy = lazy;
     }
 
     public static void injectMTelephonyListenerManager(Dependency dependency, Lazy<TelephonyListenerManager> lazy) {
@@ -613,10 +1002,6 @@ public final class Dependency_MembersInjector {
         dependency.mUiEventLogger = lazy;
     }
 
-    public static void injectMFeatureFlagsLazy(Dependency dependency, Lazy<FeatureFlags> lazy) {
-        dependency.mFeatureFlagsLazy = lazy;
-    }
-
     public static void injectMContentInsetsProviderLazy(Dependency dependency, Lazy<StatusBarContentInsetsProvider> lazy) {
         dependency.mContentInsetsProviderLazy = lazy;
     }
@@ -625,51 +1010,35 @@ public final class Dependency_MembersInjector {
         dependency.mInternetDialogFactory = lazy;
     }
 
-    public static void injectMFalsingManager(Dependency dependency, Lazy<FalsingManager> lazy) {
-        dependency.mFalsingManager = lazy;
+    public static void injectMFeatureFlagsLazy(Dependency dependency, Lazy<FeatureFlags> lazy) {
+        dependency.mFeatureFlagsLazy = lazy;
     }
 
-    public static void injectMNothingOSHeadsupManager(Dependency dependency, Lazy<NothingOSHeadsupManager> lazy) {
-        dependency.mNothingOSHeadsupManager = lazy;
+    public static void injectMNotificationSectionsManagerLazy(Dependency dependency, Lazy<NotificationSectionsManager> lazy) {
+        dependency.mNotificationSectionsManagerLazy = lazy;
     }
 
-    public static void injectMAODController(Dependency dependency, Lazy<AODController> lazy) {
-        dependency.mAODController = lazy;
+    public static void injectMScreenOffAnimationController(Dependency dependency, Lazy<ScreenOffAnimationController> lazy) {
+        dependency.mScreenOffAnimationController = lazy;
     }
 
-    public static void injectMLiftWakeGestureController(Dependency dependency, Lazy<LiftWakeGestureController> lazy) {
-        dependency.mLiftWakeGestureController = lazy;
+    public static void injectMAmbientStateLazy(Dependency dependency, Lazy<AmbientState> lazy) {
+        dependency.mAmbientStateLazy = lazy;
     }
 
-    public static void injectMFaceRecognitionController(Dependency dependency, Lazy<FaceRecognitionController> lazy) {
-        dependency.mFaceRecognitionController = lazy;
+    public static void injectMGroupMembershipManagerLazy(Dependency dependency, Lazy<GroupMembershipManager> lazy) {
+        dependency.mGroupMembershipManagerLazy = lazy;
     }
 
-    public static void injectMQSStatusBarController(Dependency dependency, Lazy<QSStatusBarController> lazy) {
-        dependency.mQSStatusBarController = lazy;
+    public static void injectMGroupExpansionManagerLazy(Dependency dependency, Lazy<GroupExpansionManager> lazy) {
+        dependency.mGroupExpansionManagerLazy = lazy;
     }
 
-    public static void injectMKeyguardWeatherController(Dependency dependency, Lazy<KeyguardWeatherController> lazy) {
-        dependency.mKeyguardWeatherController = lazy;
+    public static void injectMSystemUIDialogManagerLazy(Dependency dependency, Lazy<SystemUIDialogManager> lazy) {
+        dependency.mSystemUIDialogManagerLazy = lazy;
     }
 
-    public static void injectMGlyphsController(Dependency dependency, Lazy<GlyphsController> lazy) {
-        dependency.mGlyphsController = lazy;
-    }
-
-    public static void injectMBatteryShareController(Dependency dependency, Lazy<BatteryShareController> lazy) {
-        dependency.mBatteryShareController = lazy;
-    }
-
-    public static void injectMNfcController(Dependency dependency, Lazy<NfcController> lazy) {
-        dependency.mNfcController = lazy;
-    }
-
-    public static void injectMNTColorController(Dependency dependency, Lazy<NTColorController> lazy) {
-        dependency.mNTColorController = lazy;
-    }
-
-    public static void injectMTeslaInfoController(Dependency dependency, Lazy<TeslaInfoController> lazy) {
-        dependency.mTeslaInfoController = lazy;
+    public static void injectMDialogLaunchAnimatorLazy(Dependency dependency, Lazy<DialogLaunchAnimator> lazy) {
+        dependency.mDialogLaunchAnimatorLazy = lazy;
     }
 }

@@ -3,8 +3,11 @@ package com.android.systemui.util;
 import android.app.AlarmManager;
 import android.os.Handler;
 import android.os.SystemClock;
-/* loaded from: classes2.dex */
+
 public class AlarmTimeout implements AlarmManager.OnAlarmListener {
+    public static final int MODE_CRASH_IF_SCHEDULED = 0;
+    public static final int MODE_IGNORE_IF_SCHEDULED = 1;
+    public static final int MODE_RESCHEDULE_IF_SCHEDULED = 2;
     private final AlarmManager mAlarmManager;
     private final Handler mHandler;
     private final AlarmManager.OnAlarmListener mListener;
@@ -21,12 +24,10 @@ public class AlarmTimeout implements AlarmManager.OnAlarmListener {
     public boolean schedule(long j, int i) {
         if (i != 0) {
             if (i != 1) {
-                if (i == 2) {
-                    if (this.mScheduled) {
-                        cancel();
-                    }
-                } else {
+                if (i != 2) {
                     throw new IllegalArgumentException("Illegal mode: " + i);
+                } else if (this.mScheduled) {
+                    cancel();
                 }
             } else if (this.mScheduled) {
                 return false;
@@ -50,12 +51,10 @@ public class AlarmTimeout implements AlarmManager.OnAlarmListener {
         }
     }
 
-    @Override // android.app.AlarmManager.OnAlarmListener
     public void onAlarm() {
-        if (!this.mScheduled) {
-            return;
+        if (this.mScheduled) {
+            this.mScheduled = false;
+            this.mListener.onAlarm();
         }
-        this.mScheduled = false;
-        this.mListener.onAlarm();
     }
 }

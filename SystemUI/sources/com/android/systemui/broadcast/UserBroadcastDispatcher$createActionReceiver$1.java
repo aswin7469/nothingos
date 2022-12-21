@@ -1,51 +1,38 @@
 package com.android.systemui.broadcast;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.os.UserHandle;
-import com.android.systemui.broadcast.logging.BroadcastDispatcherLogger;
+import kotlin.Metadata;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
-import org.jetbrains.annotations.NotNull;
-/* JADX INFO: Access modifiers changed from: package-private */
+
+@Metadata(mo64986d1 = {"\u0000\u0012\n\u0000\n\u0002\u0010\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u00020\u0001*\u00020\u00022\u0006\u0010\u0003\u001a\u00020\u0004H\n¢\u0006\u0002\b\u0005"}, mo64987d2 = {"<anonymous>", "", "Landroid/content/BroadcastReceiver;", "it", "Landroid/content/IntentFilter;", "invoke"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: UserBroadcastDispatcher.kt */
-/* loaded from: classes.dex */
-public final class UserBroadcastDispatcher$createActionReceiver$1 extends Lambda implements Function2<BroadcastReceiver, IntentFilter, Unit> {
+final class UserBroadcastDispatcher$createActionReceiver$1 extends Lambda implements Function2<BroadcastReceiver, IntentFilter, Unit> {
+    final /* synthetic */ int $flags;
+    final /* synthetic */ String $permission;
     final /* synthetic */ UserBroadcastDispatcher this$0;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public UserBroadcastDispatcher$createActionReceiver$1(UserBroadcastDispatcher userBroadcastDispatcher) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    UserBroadcastDispatcher$createActionReceiver$1(UserBroadcastDispatcher userBroadcastDispatcher, String str, int i) {
         super(2);
         this.this$0 = userBroadcastDispatcher;
+        this.$permission = str;
+        this.$flags = i;
     }
 
-    @Override // kotlin.jvm.functions.Function2
-    /* renamed from: invoke */
-    public /* bridge */ /* synthetic */ Unit mo1950invoke(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
-        invoke2(broadcastReceiver, intentFilter);
+    public /* bridge */ /* synthetic */ Object invoke(Object obj, Object obj2) {
+        invoke((BroadcastReceiver) obj, (IntentFilter) obj2);
         return Unit.INSTANCE;
     }
 
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final void invoke2(@NotNull BroadcastReceiver $receiver, @NotNull IntentFilter it) {
-        Context context;
-        int i;
-        UserBroadcastDispatcher$bgHandler$1 userBroadcastDispatcher$bgHandler$1;
-        BroadcastDispatcherLogger broadcastDispatcherLogger;
-        int i2;
-        Intrinsics.checkNotNullParameter($receiver, "$this$$receiver");
-        Intrinsics.checkNotNullParameter(it, "it");
-        context = this.this$0.context;
-        i = this.this$0.userId;
-        UserHandle of = UserHandle.of(i);
-        userBroadcastDispatcher$bgHandler$1 = this.this$0.bgHandler;
-        context.registerReceiverAsUser($receiver, of, it, null, userBroadcastDispatcher$bgHandler$1);
-        broadcastDispatcherLogger = this.this$0.logger;
-        i2 = this.this$0.userId;
-        broadcastDispatcherLogger.logContextReceiverRegistered(i2, it);
+    public final void invoke(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, "$this$$receiver");
+        Intrinsics.checkNotNullParameter(intentFilter, "it");
+        this.this$0.context.registerReceiverAsUser(broadcastReceiver, UserHandle.of(this.this$0.userId), intentFilter, this.$permission, this.this$0.bgHandler, this.$flags);
+        this.this$0.logger.logContextReceiverRegistered(this.this$0.userId, this.$flags, intentFilter);
     }
 }

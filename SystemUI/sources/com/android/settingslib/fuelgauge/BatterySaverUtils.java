@@ -4,15 +4,27 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PowerManager;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.KeyValueListParser;
 import android.util.Slog;
-/* loaded from: classes.dex */
-public class BatterySaverUtils {
 
-    /* loaded from: classes.dex */
+public class BatterySaverUtils {
+    public static final String ACTION_SHOW_AUTO_SAVER_SUGGESTION = "PNW.autoSaverSuggestion";
+    public static final String ACTION_SHOW_START_SAVER_CONFIRMATION = "PNW.startSaverConfirmation";
+    private static final boolean DEBUG = false;
+    public static final String EXTRA_CONFIRM_TEXT_ONLY = "extra_confirm_only";
+    public static final String EXTRA_POWER_SAVE_MODE_TRIGGER = "extra_power_save_mode_trigger";
+    public static final String EXTRA_POWER_SAVE_MODE_TRIGGER_LEVEL = "extra_power_save_mode_trigger_level";
+    private static final String SYSUI_PACKAGE = "com.android.systemui";
+    private static final String TAG = "BatterySaverUtils";
+
+    private BatterySaverUtils() {
+    }
+
     private static class Parameters {
+        private static final int AUTO_SAVER_SUGGESTION_END_NTH = 8;
+        private static final int AUTO_SAVER_SUGGESTION_START_NTH = 4;
         public final int endNth;
         private final Context mContext;
         public final int startNth;
@@ -24,49 +36,87 @@ public class BatterySaverUtils {
             try {
                 keyValueListParser.setString(string);
             } catch (IllegalArgumentException unused) {
-                Slog.wtf("BatterySaverUtils", "Bad constants: " + string);
+                Slog.wtf(BatterySaverUtils.TAG, "Bad constants: " + string);
             }
             this.startNth = keyValueListParser.getInt("start_nth", 4);
             this.endNth = keyValueListParser.getInt("end_nth", 8);
         }
     }
 
-    public static synchronized boolean setPowerSaveMode(Context context, boolean z, boolean z2) {
-        synchronized (BatterySaverUtils.class) {
-            ContentResolver contentResolver = context.getContentResolver();
-            Bundle bundle = new Bundle(1);
-            bundle.putBoolean("extra_confirm_only", false);
-            if (!z || !z2 || !maybeShowBatterySaverConfirmation(context, bundle)) {
-                if (z && !z2) {
-                    setBatterySaverConfirmationAcknowledged(context);
-                }
-                if (!((PowerManager) context.getSystemService(PowerManager.class)).setPowerSaveModeEnabled(z)) {
-                    return false;
-                }
-                if (z) {
-                    int i = Settings.Secure.getInt(contentResolver, "low_power_manual_activation_count", 0) + 1;
-                    Settings.Secure.putInt(contentResolver, "low_power_manual_activation_count", i);
-                    Parameters parameters = new Parameters(context);
-                    if (i >= parameters.startNth && i <= parameters.endNth && Settings.Global.getInt(contentResolver, "low_power_trigger_level", 0) == 0 && Settings.Secure.getInt(contentResolver, "suppress_auto_battery_saver_suggestion", 0) == 0) {
-                        showAutoBatterySaverSuggestion(context, bundle);
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:27:0x0064, code lost:
+        return true;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static synchronized boolean setPowerSaveMode(android.content.Context r6, boolean r7, boolean r8) {
+        /*
+            java.lang.Class<com.android.settingslib.fuelgauge.BatterySaverUtils> r0 = com.android.settingslib.fuelgauge.BatterySaverUtils.class
+            monitor-enter(r0)
+            android.content.ContentResolver r1 = r6.getContentResolver()     // Catch:{ all -> 0x0067 }
+            android.os.Bundle r2 = new android.os.Bundle     // Catch:{ all -> 0x0067 }
+            r3 = 1
+            r2.<init>(r3)     // Catch:{ all -> 0x0067 }
+            java.lang.String r4 = "extra_confirm_only"
+            r5 = 0
+            r2.putBoolean(r4, r5)     // Catch:{ all -> 0x0067 }
+            if (r7 == 0) goto L_0x001f
+            if (r8 == 0) goto L_0x001f
+            boolean r4 = maybeShowBatterySaverConfirmation(r6, r2)     // Catch:{ all -> 0x0067 }
+            if (r4 == 0) goto L_0x001f
+            monitor-exit(r0)
+            return r5
+        L_0x001f:
+            if (r7 == 0) goto L_0x0026
+            if (r8 != 0) goto L_0x0026
+            setBatterySaverConfirmationAcknowledged(r6)     // Catch:{ all -> 0x0067 }
+        L_0x0026:
+            java.lang.Class<android.os.PowerManager> r8 = android.os.PowerManager.class
+            java.lang.Object r8 = r6.getSystemService(r8)     // Catch:{ all -> 0x0067 }
+            android.os.PowerManager r8 = (android.os.PowerManager) r8     // Catch:{ all -> 0x0067 }
+            boolean r8 = r8.setPowerSaveModeEnabled(r7)     // Catch:{ all -> 0x0067 }
+            if (r8 == 0) goto L_0x0065
+            if (r7 == 0) goto L_0x0063
+            java.lang.String r7 = "low_power_manual_activation_count"
+            int r7 = android.provider.Settings.Secure.getInt(r1, r7, r5)     // Catch:{ all -> 0x0067 }
+            int r7 = r7 + r3
+            java.lang.String r8 = "low_power_manual_activation_count"
+            android.provider.Settings.Secure.putInt(r1, r8, r7)     // Catch:{ all -> 0x0067 }
+            com.android.settingslib.fuelgauge.BatterySaverUtils$Parameters r8 = new com.android.settingslib.fuelgauge.BatterySaverUtils$Parameters     // Catch:{ all -> 0x0067 }
+            r8.<init>(r6)     // Catch:{ all -> 0x0067 }
+            int r4 = r8.startNth     // Catch:{ all -> 0x0067 }
+            if (r7 < r4) goto L_0x0063
+            int r8 = r8.endNth     // Catch:{ all -> 0x0067 }
+            if (r7 > r8) goto L_0x0063
+            java.lang.String r7 = "low_power_trigger_level"
+            int r7 = android.provider.Settings.Global.getInt(r1, r7, r5)     // Catch:{ all -> 0x0067 }
+            if (r7 != 0) goto L_0x0063
+            java.lang.String r7 = "suppress_auto_battery_saver_suggestion"
+            int r7 = android.provider.Settings.Secure.getInt(r1, r7, r5)     // Catch:{ all -> 0x0067 }
+            if (r7 != 0) goto L_0x0063
+            showAutoBatterySaverSuggestion(r6, r2)     // Catch:{ all -> 0x0067 }
+        L_0x0063:
+            monitor-exit(r0)
+            return r3
+        L_0x0065:
+            monitor-exit(r0)
+            return r5
+        L_0x0067:
+            r6 = move-exception
+            monitor-exit(r0)
+            throw r6
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.settingslib.fuelgauge.BatterySaverUtils.setPowerSaveMode(android.content.Context, boolean, boolean):boolean");
     }
 
     public static boolean maybeShowBatterySaverConfirmation(Context context, Bundle bundle) {
         if (Settings.Secure.getInt(context.getContentResolver(), "low_power_warning_acknowledged", 0) != 0) {
             return false;
         }
-        context.sendBroadcast(getSystemUiBroadcast("PNW.startSaverConfirmation", bundle));
+        context.sendBroadcast(getSystemUiBroadcast(ACTION_SHOW_START_SAVER_CONFIRMATION, bundle));
         return true;
     }
 
     private static void showAutoBatterySaverSuggestion(Context context, Bundle bundle) {
-        context.sendBroadcast(getSystemUiBroadcast("PNW.autoSaverSuggestion", bundle));
+        context.sendBroadcast(getSystemUiBroadcast(ACTION_SHOW_AUTO_SAVER_SUGGESTION, bundle));
     }
 
     private static Intent getSystemUiBroadcast(String str, Bundle bundle) {
@@ -83,5 +133,28 @@ public class BatterySaverUtils {
 
     public static void suppressAutoBatterySaver(Context context) {
         Settings.Secure.putInt(context.getContentResolver(), "suppress_auto_battery_saver_suggestion", 1);
+    }
+
+    public static void setAutoBatterySaverTriggerLevel(Context context, int i) {
+        if (i > 0) {
+            suppressAutoBatterySaver(context);
+        }
+        Settings.Global.putInt(context.getContentResolver(), "low_power_trigger_level", i);
+    }
+
+    public static void ensureAutoBatterySaver(Context context, int i) {
+        if (Settings.Global.getInt(context.getContentResolver(), "low_power_trigger_level", 0) == 0) {
+            setAutoBatterySaverTriggerLevel(context, i);
+        }
+    }
+
+    public static void revertScheduleToNoneIfNeeded(Context context) {
+        ContentResolver contentResolver = context.getContentResolver();
+        int i = Settings.Global.getInt(contentResolver, "automatic_power_save_mode", 0);
+        boolean z = !TextUtils.isEmpty(context.getString(17039887));
+        if (i == 1 && !z) {
+            Settings.Global.putInt(contentResolver, "low_power_trigger_level", 0);
+            Settings.Global.putInt(contentResolver, "automatic_power_save_mode", 0);
+        }
     }
 }

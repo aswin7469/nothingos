@@ -16,6 +16,10 @@
         <item quantity="one">បានបញ្ចូល​ការគ្រប់គ្រង %s។</item>
         <item quantity="other">បានបញ្ចូល​ការគ្រប់គ្រង %s។</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">កម្មវិធី %s កំពុងដំណើរការ</item>
+        <item quantity="other">កម្មវិធី %s កំពុងដំណើរការ</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">បញ្ចូលកូដ PIN របស់ស៊ីម។ អ្នក​នៅសល់​ការព្យាយាម %d ដង​ទៀត មុន​ពេល​ដែលអ្នក​ត្រូវទាក់ទង​ទៅ​ក្រុមហ៊ុន​សេវា​ទូរសព្ទ​របស់អ្នក​ដើម្បី​ដោះសោ​ឧបករណ៍​របស់អ្នក។</item>
         <item quantity="other">បញ្ចូល​កូដ PIN របស់ស៊ីម។ អ្នកនៅ​សល់ការ​ព្យាយាម %d ដងទៀត។</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">កូដ PUK របស់​ស៊ីម​មិន​ត្រឹមត្រូវ​ទេ ប្រសិន​បើ​អ្នក​បញ្ចូល​កូដខុស %d ដងទៀត ស៊ីមនឹង​មិន​អាច​ប្រើ​បាន​ជា​អចិន្ត្រៃយ៍។</item>
         <item quantity="other">កូដ PUK របស់​ស៊ីម​មិន​ត្រឹមត្រូវ​ទេ ប្រសិន​បើ​អ្នក​បញ្ចូល​កូដខុស %d ដងទៀត ស៊ីមនឹង​មិន​អាច​ប្រើ​បាន​ជា​អចិន្ត្រៃយ៍។</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">ឧបករណ៍​បាន​ជាប់​សោ​អស់រយៈ​ពេល %d ម៉ោង​ហើយ។ សូម​បញ្ជាក់​ពាក្យ​សម្ងាត់។</item>
-        <item quantity="other">ឧបករណ៍​បាន​ជាប់​សោ​អស់រយៈ​ពេល %d ម៉ោង​ហើយ។ សូម​បញ្ជាក់​ពាក្យ​សម្ងាត់។</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">ឧបករណ៍​បាន​ជាប់​សោ​អស់រយៈ​ពេល %d ម៉ោង​ហើយ។ សូម​បញ្ជាក់​លំនាំ។</item>
-        <item quantity="other">ឧបករណ៍​បាន​ជាប់​សោ​អស់រយៈ​ពេល %d ម៉ោង​ហើយ។ សូម​បញ្ជាក់​លំនាំ។</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">ឧបករណ៍​បាន​ជាប់​សោ​អស់រយៈ​ពេល %d ម៉ោង​ហើយ។ សូម​បញ្ជាក់​កូដ PIN ។</item>
-        <item quantity="other">ឧបករណ៍​បាន​ជាប់​សោ​អស់រយៈ​ពេល %d ម៉ោង​ហើយ។ សូម​បញ្ជាក់​កូដ PIN ។</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">ព្យាយាមម្តងទៀតក្នុងរយៈពេល 1 វិនាទី។</item>
-        <item quantity="other">ព្យាយាមម្តងទៀតក្នុងរយៈពេល %d វិនាទី។</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">ការជូនដំណឹងថ្មី %d</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">អាច​បង្កើត​អ្នក​ប្រើប្រាស់​បាន​​តែម្នាក់ប៉ុណ្ណោះ។</item>
         <item quantity="other">អ្នកអាចបញ្ចូល​អ្នក​ប្រើប្រាស់បាន​រហូតដល់ %d នាក់។</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">ឧបករណ៍ %1$d បានភ្ជាប់</item>
-        <item quantity="other">ឧបករណ៍ %1$d បានភ្ជាប់</item>
     </plurals>
 </resources>

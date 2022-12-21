@@ -1,6 +1,5 @@
 package androidx.core.app;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -11,46 +10,98 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.ReportFragment;
-/* loaded from: classes.dex */
+
 public class ComponentActivity extends Activity implements LifecycleOwner, KeyEventDispatcher.Component {
-    private SimpleArrayMap<Class<?>, ?> mExtraDataMap = new SimpleArrayMap<>();
+    private SimpleArrayMap<Class<? extends ExtraData>, ExtraData> mExtraDataMap = new SimpleArrayMap<>();
     private LifecycleRegistry mLifecycleRegistry = new LifecycleRegistry(this);
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.app.Activity
-    @SuppressLint({"RestrictedApi"})
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    @Deprecated
+    public static class ExtraData {
+    }
+
+    @Deprecated
+    public void putExtraData(ExtraData extraData) {
+        this.mExtraDataMap.put(extraData.getClass(), extraData);
+    }
+
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         ReportFragment.injectIfNeededIn(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.app.Activity
-    public void onSaveInstanceState(Bundle outState) {
+    /* access modifiers changed from: protected */
+    public void onSaveInstanceState(Bundle bundle) {
         this.mLifecycleRegistry.markState(Lifecycle.State.CREATED);
-        super.onSaveInstanceState(outState);
+        super.onSaveInstanceState(bundle);
     }
 
-    @Override // androidx.core.view.KeyEventDispatcher.Component
-    public boolean superDispatchKeyEvent(KeyEvent event) {
-        return super.dispatchKeyEvent(event);
+    @Deprecated
+    public <T extends ExtraData> T getExtraData(Class<T> cls) {
+        return (ExtraData) this.mExtraDataMap.get(cls);
     }
 
-    @Override // android.app.Activity, android.view.Window.Callback
-    public boolean dispatchKeyShortcutEvent(KeyEvent event) {
+    public Lifecycle getLifecycle() {
+        return this.mLifecycleRegistry;
+    }
+
+    public boolean superDispatchKeyEvent(KeyEvent keyEvent) {
+        return super.dispatchKeyEvent(keyEvent);
+    }
+
+    public boolean dispatchKeyShortcutEvent(KeyEvent keyEvent) {
         View decorView = getWindow().getDecorView();
-        if (decorView == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decorView, event)) {
-            return super.dispatchKeyShortcutEvent(event);
+        if (decorView == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decorView, keyEvent)) {
+            return super.dispatchKeyShortcutEvent(keyEvent);
         }
         return true;
     }
 
-    @Override // android.app.Activity, android.view.Window.Callback
-    public boolean dispatchKeyEvent(KeyEvent event) {
+    public boolean dispatchKeyEvent(KeyEvent keyEvent) {
         View decorView = getWindow().getDecorView();
-        if (decorView == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decorView, event)) {
-            return KeyEventDispatcher.dispatchKeyEvent(this, decorView, this, event);
+        if (decorView == null || !KeyEventDispatcher.dispatchBeforeHierarchy(decorView, keyEvent)) {
+            return KeyEventDispatcher.dispatchKeyEvent(this, decorView, this, keyEvent);
         }
         return true;
+    }
+
+    /* access modifiers changed from: protected */
+    public final boolean shouldDumpInternalState(String[] strArr) {
+        return !shouldSkipDump(strArr);
+    }
+
+    private static boolean shouldSkipDump(String[] strArr) {
+        if (strArr != null && strArr.length > 0) {
+            String str = strArr[0];
+            str.hashCode();
+            char c = 65535;
+            switch (str.hashCode()) {
+                case -645125871:
+                    if (str.equals("--translation")) {
+                        c = 0;
+                        break;
+                    }
+                    break;
+                case 1159329357:
+                    if (str.equals("--contentcapture")) {
+                        c = 1;
+                        break;
+                    }
+                    break;
+                case 1455016274:
+                    if (str.equals("--autofill")) {
+                        c = 2;
+                        break;
+                    }
+                    break;
+            }
+            switch (c) {
+                case 0:
+                case 1:
+                case 2:
+                    return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,13 +1,12 @@
 package com.android.systemui.plugins;
 
 import com.android.systemui.plugins.annotations.ProvidesInterface;
-@ProvidesInterface(action = SensorManagerPlugin.ACTION, version = 1)
-/* loaded from: classes.dex */
+
+@ProvidesInterface(action = "com.android.systemui.action.PLUGIN_SENSOR_MANAGER", version = 1)
 public interface SensorManagerPlugin extends Plugin {
     public static final String ACTION = "com.android.systemui.action.PLUGIN_SENSOR_MANAGER";
     public static final int VERSION = 1;
 
-    /* loaded from: classes.dex */
     public interface SensorEventListener {
         void onSensorChanged(SensorEvent sensorEvent);
     }
@@ -16,7 +15,6 @@ public interface SensorManagerPlugin extends Plugin {
 
     void unregisterListener(Sensor sensor, SensorEventListener sensorEventListener);
 
-    /* loaded from: classes.dex */
     public static class Sensor {
         public static final int TYPE_SKIP_STATUS = 4;
         public static final int TYPE_SWIPE = 3;
@@ -37,14 +35,13 @@ public interface SensorManagerPlugin extends Plugin {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class SensorEvent {
         Sensor mSensor;
         float[] mValues;
         int mVendorType;
 
         public SensorEvent(Sensor sensor, int i) {
-            this(sensor, i, null);
+            this(sensor, i, (float[]) null);
         }
 
         public SensorEvent(Sensor sensor, int i, float[] fArr) {

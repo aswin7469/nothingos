@@ -2,11 +2,15 @@ package com.android.systemui;
 
 import com.android.systemui.Dependency;
 import dagger.Lazy;
-/* loaded from: classes.dex */
+
+/* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class Dependency$$ExternalSyntheticLambda0 implements Dependency.LazyDependencyCreator {
     public final /* synthetic */ Lazy f$0;
 
-    @Override // com.android.systemui.Dependency.LazyDependencyCreator
+    public /* synthetic */ Dependency$$ExternalSyntheticLambda0(Lazy lazy) {
+        this.f$0 = lazy;
+    }
+
     public final Object createDependency() {
         return this.f$0.get();
     }

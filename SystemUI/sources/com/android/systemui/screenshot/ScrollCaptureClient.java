@@ -15,57 +15,63 @@ import android.view.IScrollCaptureResponseListener;
 import android.view.IWindowManager;
 import android.view.ScrollCaptureResponse;
 import androidx.concurrent.futures.CallbackToFutureAdapter;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.screenshot.ScrollCaptureClient;
+import com.android.systemui.dagger.qualifiers.Background;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.google.common.util.concurrent.ListenableFuture;
 import java.util.Objects;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+import sun.util.locale.LanguageTag;
+
 public class ScrollCaptureClient {
-    @VisibleForTesting
     static final int MATCH_ANY_TASK = -1;
-    private static final String TAG = LogConfig.logTag(ScrollCaptureClient.class);
+    private static final int MAX_TILES = 30;
+    /* access modifiers changed from: private */
+    public static final String TAG = LogConfig.logTag(ScrollCaptureClient.class);
+    private static final int TILES_PER_PAGE = 2;
+    private static final int TILE_SIZE_PX_MAX = 4194304;
     private final Executor mBgExecutor;
     private IBinder mHostWindowToken;
     private final IWindowManager mWindowManagerService;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface Session {
+    interface Session {
         ListenableFuture<Void> end();
 
         int getMaxTiles();
 
         int getPageHeight();
 
+        int getPageWidth();
+
         int getTargetHeight();
 
         int getTileHeight();
+
+        Rect getWindowBounds();
 
         void release();
 
         ListenableFuture<CaptureResult> requestTile(int i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class CaptureResult {
+    static class CaptureResult {
         public final Rect captured;
         public final Image image;
         public final Rect requested;
 
-        CaptureResult(Image image, Rect rect, Rect rect2) {
-            this.image = image;
+        CaptureResult(Image image2, Rect rect, Rect rect2) {
+            this.image = image2;
             this.requested = rect;
             this.captured = rect2;
         }
 
         public String toString() {
-            return "CaptureResult{requested=" + this.requested + " (" + this.requested.width() + "x" + this.requested.height() + "), captured=" + this.captured + " (" + this.captured.width() + "x" + this.captured.height() + "), image=" + this.image + '}';
+            return "CaptureResult{requested=" + this.requested + " (" + this.requested.width() + LanguageTag.PRIVATEUSE + this.requested.height() + "), captured=" + this.captured + " (" + this.captured.width() + LanguageTag.PRIVATEUSE + this.captured.height() + "), image=" + this.image + '}';
         }
     }
 
-    public ScrollCaptureClient(IWindowManager iWindowManager, Executor executor, Context context) {
+    @Inject
+    public ScrollCaptureClient(IWindowManager iWindowManager, @Background Executor executor, Context context) {
         Objects.requireNonNull(context.getDisplay(), "context must be associated with a Display!");
         this.mBgExecutor = executor;
         this.mWindowManagerService = iWindowManager;
@@ -79,21 +85,15 @@ public class ScrollCaptureClient {
         return request(i, -1);
     }
 
-    public ListenableFuture<ScrollCaptureResponse> request(final int i, final int i2) {
-        return CallbackToFutureAdapter.getFuture(new CallbackToFutureAdapter.Resolver() { // from class: com.android.systemui.screenshot.ScrollCaptureClient$$ExternalSyntheticLambda0
-            @Override // androidx.concurrent.futures.CallbackToFutureAdapter.Resolver
-            public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-                Object lambda$request$0;
-                lambda$request$0 = ScrollCaptureClient.this.lambda$request$0(i, i2, completer);
-                return lambda$request$0;
-            }
-        });
+    public ListenableFuture<ScrollCaptureResponse> request(int i, int i2) {
+        return CallbackToFutureAdapter.getFuture(new ScrollCaptureClient$$ExternalSyntheticLambda0(this, i, i2));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ Object lambda$request$0(int i, int i2, final CallbackToFutureAdapter.Completer completer) throws Exception {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$request$0$com-android-systemui-screenshot-ScrollCaptureClient */
+    public /* synthetic */ Object mo37563xf116bb57(int i, int i2, final CallbackToFutureAdapter.Completer completer) throws Exception {
         try {
-            this.mWindowManagerService.requestScrollCapture(i, this.mHostWindowToken, i2, new IScrollCaptureResponseListener.Stub() { // from class: com.android.systemui.screenshot.ScrollCaptureClient.1
+            this.mWindowManagerService.requestScrollCapture(i, this.mHostWindowToken, i2, new IScrollCaptureResponseListener.Stub() {
                 public void onScrollCaptureResponse(ScrollCaptureResponse scrollCaptureResponse) {
                     completer.set(scrollCaptureResponse);
                 }
@@ -101,23 +101,17 @@ public class ScrollCaptureClient {
         } catch (RemoteException e) {
             completer.setException(e);
         }
-        return "ScrollCaptureClient#request(displayId=" + i + ", taskId=" + i2 + ")";
+        return "ScrollCaptureClient#request(displayId=" + i + ", taskId=" + i2 + NavigationBarInflaterView.KEY_CODE_END;
     }
 
-    public ListenableFuture<Session> start(final ScrollCaptureResponse scrollCaptureResponse, final float f) {
-        final IScrollCaptureConnection connection = scrollCaptureResponse.getConnection();
-        return CallbackToFutureAdapter.getFuture(new CallbackToFutureAdapter.Resolver() { // from class: com.android.systemui.screenshot.ScrollCaptureClient$$ExternalSyntheticLambda1
-            @Override // androidx.concurrent.futures.CallbackToFutureAdapter.Resolver
-            public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-                Object lambda$start$1;
-                lambda$start$1 = ScrollCaptureClient.this.lambda$start$1(connection, scrollCaptureResponse, f, completer);
-                return lambda$start$1;
-            }
-        });
+    public ListenableFuture<Session> start(ScrollCaptureResponse scrollCaptureResponse, float f) {
+        Log.d(TAG, "start maxPages" + f);
+        return CallbackToFutureAdapter.getFuture(new ScrollCaptureClient$$ExternalSyntheticLambda1(this, scrollCaptureResponse.getConnection(), scrollCaptureResponse, f));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ Object lambda$start$1(IScrollCaptureConnection iScrollCaptureConnection, ScrollCaptureResponse scrollCaptureResponse, float f, CallbackToFutureAdapter.Completer completer) throws Exception {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$start$1$com-android-systemui-screenshot-ScrollCaptureClient */
+    public /* synthetic */ Object mo37564xc725f2b(IScrollCaptureConnection iScrollCaptureConnection, ScrollCaptureResponse scrollCaptureResponse, float f, CallbackToFutureAdapter.Completer completer) throws Exception {
         if (iScrollCaptureConnection == null || !iScrollCaptureConnection.asBinder().isBinderAlive()) {
             completer.setException(new DeadObjectException("No active connection!"));
             return "";
@@ -126,9 +120,7 @@ public class ScrollCaptureClient {
         return "IScrollCaptureCallbacks#onCaptureStarted";
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class SessionWrapper extends IScrollCaptureCallbacks.Stub implements Session, IBinder.DeathRecipient, ImageReader.OnImageAvailableListener {
+    private static class SessionWrapper extends IScrollCaptureCallbacks.Stub implements Session, IBinder.DeathRecipient, ImageReader.OnImageAvailableListener {
         private final Executor mBgExecutor;
         private final Rect mBoundsInWindow;
         private ICancellationSignal mCancellationSignal;
@@ -147,30 +139,25 @@ public class ScrollCaptureClient {
         private final int mTileWidth;
         private final Rect mWindowBounds;
 
-        @Override // com.android.systemui.screenshot.ScrollCaptureClient.Session
         public int getMaxTiles() {
             return 30;
         }
 
         private SessionWrapper(IScrollCaptureConnection iScrollCaptureConnection, Rect rect, Rect rect2, float f, Executor executor) throws RemoteException {
             this.mLock = new Object();
-            Objects.requireNonNull(iScrollCaptureConnection);
-            IScrollCaptureConnection iScrollCaptureConnection2 = iScrollCaptureConnection;
+            IScrollCaptureConnection iScrollCaptureConnection2 = (IScrollCaptureConnection) Objects.requireNonNull(iScrollCaptureConnection);
             this.mConnection = iScrollCaptureConnection2;
             iScrollCaptureConnection2.asBinder().linkToDeath(this, 0);
-            Objects.requireNonNull(rect);
-            this.mWindowBounds = rect;
-            Objects.requireNonNull(rect2);
-            Rect rect3 = rect2;
+            this.mWindowBounds = (Rect) Objects.requireNonNull(rect);
+            Rect rect3 = (Rect) Objects.requireNonNull(rect2);
             this.mBoundsInWindow = rect3;
             int min = Math.min(4194304, (rect3.width() * rect3.height()) / 2);
             this.mTileWidth = rect3.width();
             this.mTileHeight = min / rect3.width();
-            this.mTargetHeight = (int) (rect3.height() * f);
+            this.mTargetHeight = (int) (((float) rect3.height()) * f);
             this.mBgExecutor = executor;
         }
 
-        @Override // android.os.IBinder.DeathRecipient
         public void binderDied() {
             Log.d(ScrollCaptureClient.TAG, "binderDied! The target process just crashed :-(");
             this.mConnection = null;
@@ -188,29 +175,27 @@ public class ScrollCaptureClient {
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void start(CallbackToFutureAdapter.Completer<Session> completer) {
-            ImageReader newInstance = ImageReader.newInstance(this.mTileWidth, this.mTileHeight, 1, 30, 256L);
+            ImageReader newInstance = ImageReader.newInstance(this.mTileWidth, this.mTileHeight, 1, 30, 256);
             this.mReader = newInstance;
             this.mStartCompleter = completer;
             newInstance.setOnImageAvailableListenerWithExecutor(this, this.mBgExecutor);
             try {
                 this.mCancellationSignal = this.mConnection.startCapture(this.mReader.getSurface(), this);
-                completer.addCancellationListener(new Runnable() { // from class: com.android.systemui.screenshot.ScrollCaptureClient$SessionWrapper$$ExternalSyntheticLambda3
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        ScrollCaptureClient.SessionWrapper.this.lambda$start$0();
-                    }
-                }, SaveImageInBackgroundTask$$ExternalSyntheticLambda0.INSTANCE);
+                Log.d(ScrollCaptureClient.TAG, "startCapture");
+                completer.addCancellationListener(new ScrollCaptureClient$SessionWrapper$$ExternalSyntheticLambda3(this), new SaveImageInBackgroundTask$$ExternalSyntheticLambda1());
                 this.mStarted = true;
             } catch (RemoteException e) {
+                Log.d(ScrollCaptureClient.TAG, "start reader.close()");
                 this.mReader.close();
                 completer.setException(e);
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$start$0() {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$start$0$com-android-systemui-screenshot-ScrollCaptureClient$SessionWrapper */
+        public /* synthetic */ void mo37584xd9936b77() {
             try {
                 this.mCancellationSignal.cancel();
             } catch (RemoteException unused) {
@@ -222,21 +207,14 @@ public class ScrollCaptureClient {
             this.mStartCompleter.set(this);
         }
 
-        @Override // com.android.systemui.screenshot.ScrollCaptureClient.Session
         public ListenableFuture<CaptureResult> requestTile(int i) {
             this.mRequestRect = new Rect(0, i, this.mTileWidth, this.mTileHeight + i);
-            return CallbackToFutureAdapter.getFuture(new CallbackToFutureAdapter.Resolver() { // from class: com.android.systemui.screenshot.ScrollCaptureClient$SessionWrapper$$ExternalSyntheticLambda0
-                @Override // androidx.concurrent.futures.CallbackToFutureAdapter.Resolver
-                public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-                    Object lambda$requestTile$2;
-                    lambda$requestTile$2 = ScrollCaptureClient.SessionWrapper.this.lambda$requestTile$2(completer);
-                    return lambda$requestTile$2;
-                }
-            });
+            return CallbackToFutureAdapter.getFuture(new ScrollCaptureClient$SessionWrapper$$ExternalSyntheticLambda0(this));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ Object lambda$requestTile$2(CallbackToFutureAdapter.Completer completer) throws Exception {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$requestTile$2$com-android-systemui-screenshot-ScrollCaptureClient$SessionWrapper */
+        public /* synthetic */ Object mo37583x975269da(CallbackToFutureAdapter.Completer completer) throws Exception {
             IScrollCaptureConnection iScrollCaptureConnection = this.mConnection;
             if (iScrollCaptureConnection == null || !iScrollCaptureConnection.asBinder().isBinderAlive()) {
                 completer.setException(new DeadObjectException("Connection is closed!"));
@@ -245,12 +223,7 @@ public class ScrollCaptureClient {
             try {
                 this.mTileRequestCompleter = completer;
                 this.mCancellationSignal = this.mConnection.requestImage(this.mRequestRect);
-                completer.addCancellationListener(new Runnable() { // from class: com.android.systemui.screenshot.ScrollCaptureClient$SessionWrapper$$ExternalSyntheticLambda2
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        ScrollCaptureClient.SessionWrapper.this.lambda$requestTile$1();
-                    }
-                }, SaveImageInBackgroundTask$$ExternalSyntheticLambda0.INSTANCE);
+                completer.addCancellationListener(new ScrollCaptureClient$SessionWrapper$$ExternalSyntheticLambda2(this), new SaveImageInBackgroundTask$$ExternalSyntheticLambda1());
                 return "IScrollCaptureCallbacks#onImageRequestCompleted";
             } catch (RemoteException e) {
                 completer.setException(e);
@@ -258,8 +231,9 @@ public class ScrollCaptureClient {
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$requestTile$1() {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$requestTile$1$com-android-systemui-screenshot-ScrollCaptureClient$SessionWrapper */
+        public /* synthetic */ void mo37582xfae46d7b() {
             try {
                 this.mCancellationSignal.cancel();
             } catch (RemoteException unused) {
@@ -267,6 +241,7 @@ public class ScrollCaptureClient {
         }
 
         public void onImageRequestCompleted(int i, Rect rect) {
+            Log.d(ScrollCaptureClient.TAG, "onImageRequestCompleted");
             synchronized (this.mLock) {
                 this.mCapturedArea = rect;
                 if (this.mCapturedImage != null || rect == null || rect.isEmpty()) {
@@ -275,7 +250,6 @@ public class ScrollCaptureClient {
             }
         }
 
-        @Override // android.media.ImageReader.OnImageAvailableListener
         public void onImageAvailable(ImageReader imageReader) {
             synchronized (this.mLock) {
                 this.mCapturedImage = this.mReader.acquireLatestImage();
@@ -286,6 +260,7 @@ public class ScrollCaptureClient {
         }
 
         private void completeCaptureRequest() {
+            Log.d(ScrollCaptureClient.TAG, "completeCaptureRequest");
             CaptureResult captureResult = new CaptureResult(this.mCapturedImage, this.mRequestRect, this.mCapturedArea);
             this.mCapturedImage = null;
             this.mRequestRect = null;
@@ -293,21 +268,14 @@ public class ScrollCaptureClient {
             this.mTileRequestCompleter.set(captureResult);
         }
 
-        @Override // com.android.systemui.screenshot.ScrollCaptureClient.Session
         public ListenableFuture<Void> end() {
             Log.d(ScrollCaptureClient.TAG, "end()");
-            return CallbackToFutureAdapter.getFuture(new CallbackToFutureAdapter.Resolver() { // from class: com.android.systemui.screenshot.ScrollCaptureClient$SessionWrapper$$ExternalSyntheticLambda1
-                @Override // androidx.concurrent.futures.CallbackToFutureAdapter.Resolver
-                public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-                    Object lambda$end$3;
-                    lambda$end$3 = ScrollCaptureClient.SessionWrapper.this.lambda$end$3(completer);
-                    return lambda$end$3;
-                }
-            });
+            return CallbackToFutureAdapter.getFuture(new ScrollCaptureClient$SessionWrapper$$ExternalSyntheticLambda1(this));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ Object lambda$end$3(CallbackToFutureAdapter.Completer completer) throws Exception {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$end$3$com-android-systemui-screenshot-ScrollCaptureClient$SessionWrapper */
+        public /* synthetic */ Object mo37581xd5f9e2fb(CallbackToFutureAdapter.Completer completer) throws Exception {
             if (!this.mStarted) {
                 try {
                     this.mConnection.asBinder().unlinkToDeath(this, 0);
@@ -328,12 +296,13 @@ public class ScrollCaptureClient {
             }
         }
 
-        @Override // com.android.systemui.screenshot.ScrollCaptureClient.Session
         public void release() {
+            Log.d(ScrollCaptureClient.TAG, "mReader.close()");
             this.mReader.close();
         }
 
         public void onCaptureEnded() {
+            Log.d(ScrollCaptureClient.TAG, "onCaptureEnded ");
             try {
                 this.mConnection.close();
             } catch (RemoteException unused) {
@@ -342,17 +311,26 @@ public class ScrollCaptureClient {
             this.mEndCompleter.set(null);
         }
 
-        @Override // com.android.systemui.screenshot.ScrollCaptureClient.Session
         public int getPageHeight() {
             return this.mBoundsInWindow.height();
         }
 
-        @Override // com.android.systemui.screenshot.ScrollCaptureClient.Session
+        public int getPageWidth() {
+            return this.mBoundsInWindow.width();
+        }
+
         public int getTileHeight() {
             return this.mTileHeight;
         }
 
-        @Override // com.android.systemui.screenshot.ScrollCaptureClient.Session
+        public Rect getWindowBounds() {
+            return new Rect(this.mWindowBounds);
+        }
+
+        public Rect getBoundsInWindow() {
+            return new Rect(this.mBoundsInWindow);
+        }
+
         public int getTargetHeight() {
             return this.mTargetHeight;
         }

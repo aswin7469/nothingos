@@ -1,11 +1,9 @@
 package com.android.systemui.util.time;
 
 import dagger.internal.Factory;
-/* loaded from: classes2.dex */
+
 public final class SystemClockImpl_Factory implements Factory<SystemClockImpl> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SystemClockImpl mo1933get() {
+    public SystemClockImpl get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class SystemClockImpl_Factory implements Factory<SystemClockImpl> {
         return new SystemClockImpl();
     }
 
-    /* loaded from: classes2.dex */
     private static final class InstanceHolder {
-        private static final SystemClockImpl_Factory INSTANCE = new SystemClockImpl_Factory();
+        /* access modifiers changed from: private */
+        public static final SystemClockImpl_Factory INSTANCE = new SystemClockImpl_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

@@ -1,16 +1,20 @@
 package com.android.systemui.statusbar.notification.collection.provider;
 
 import android.app.Notification;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.collection.ListEntry;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.render.GroupMembershipManager;
 import com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifier;
 import java.util.List;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class HighPriorityProvider {
     private final GroupMembershipManager mGroupMembershipManager;
     private final PeopleNotificationIdentifier mPeopleNotificationIdentifier;
 
+    @Inject
     public HighPriorityProvider(PeopleNotificationIdentifier peopleNotificationIdentifier, GroupMembershipManager groupMembershipManager) {
         this.mPeopleNotificationIdentifier = peopleNotificationIdentifier;
         this.mGroupMembershipManager = groupMembershipManager;
@@ -21,14 +25,17 @@ public class HighPriorityProvider {
         if (listEntry == null || (representativeEntry = listEntry.getRepresentativeEntry()) == null) {
             return false;
         }
-        return representativeEntry.getRanking().getImportance() >= 3 || hasHighPriorityCharacteristics(representativeEntry) || hasHighPriorityChild(listEntry);
+        if (representativeEntry.getRanking().getImportance() >= 3 || hasHighPriorityCharacteristics(representativeEntry) || hasHighPriorityChild(listEntry)) {
+            return true;
+        }
+        return false;
     }
 
     private boolean hasHighPriorityChild(ListEntry listEntry) {
         List<NotificationEntry> children;
         if ((!(listEntry instanceof NotificationEntry) || this.mGroupMembershipManager.isGroupSummary((NotificationEntry) listEntry)) && (children = this.mGroupMembershipManager.getChildren(listEntry)) != null) {
-            for (NotificationEntry notificationEntry : children) {
-                if (notificationEntry != listEntry && isHighPriority(notificationEntry)) {
+            for (NotificationEntry next : children) {
+                if (next != listEntry && isHighPriority(next)) {
                     return true;
                 }
             }
@@ -37,7 +44,7 @@ public class HighPriorityProvider {
     }
 
     private boolean hasHighPriorityCharacteristics(NotificationEntry notificationEntry) {
-        return !hasUserSetImportance(notificationEntry) && (notificationEntry.getSbn().getNotification().hasMediaSession() || isPeopleNotification(notificationEntry) || isMessagingStyle(notificationEntry));
+        return !hasUserSetImportance(notificationEntry) && (notificationEntry.getSbn().getNotification().isMediaNotification() || isPeopleNotification(notificationEntry) || isMessagingStyle(notificationEntry));
     }
 
     private boolean isMessagingStyle(NotificationEntry notificationEntry) {

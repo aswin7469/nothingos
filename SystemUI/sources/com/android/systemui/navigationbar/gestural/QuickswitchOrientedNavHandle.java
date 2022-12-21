@@ -3,8 +3,8 @@ package com.android.systemui.navigationbar.gestural;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import com.android.systemui.R$dimen;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+
 public class QuickswitchOrientedNavHandle extends NavigationHandle {
     private int mDeltaRotation;
     private final RectF mTmpBoundsRectF = new RectF();
@@ -12,50 +12,52 @@ public class QuickswitchOrientedNavHandle extends NavigationHandle {
 
     public QuickswitchOrientedNavHandle(Context context) {
         super(context);
-        this.mWidth = context.getResources().getDimensionPixelSize(R$dimen.navigation_home_handle_width);
+        this.mWidth = context.getResources().getDimensionPixelSize(C1893R.dimen.navigation_home_handle_width);
     }
 
     public void setDeltaRotation(int i) {
         this.mDeltaRotation = i;
     }
 
-    @Override // com.android.systemui.navigationbar.gestural.NavigationHandle, android.view.View
-    protected void onDraw(Canvas canvas) {
-        RectF computeHomeHandleBounds = computeHomeHandleBounds();
-        int i = this.mRadius;
-        canvas.drawRoundRect(computeHomeHandleBounds, i, i, this.mPaint);
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
+        canvas.drawRoundRect(computeHomeHandleBounds(), this.mRadius, this.mRadius, this.mPaint);
     }
 
     public RectF computeHomeHandleBounds() {
-        int i;
-        int i2;
-        int i3;
-        int i4;
-        int i5 = this.mRadius * 2;
-        int i6 = getLocationOnScreen()[1];
-        int i7 = this.mDeltaRotation;
-        if (i7 == 1) {
-            int i8 = this.mBottom;
-            i = i8 + i5;
-            int i9 = this.mWidth;
-            int height = ((getHeight() / 2) - (i9 / 2)) - (i6 / 2);
-            i2 = height;
-            i3 = height + i9;
-            i4 = i8;
-        } else if (i7 != 3) {
-            int i10 = this.mRadius * 2;
-            i4 = (getWidth() / 2) - (this.mWidth / 2);
-            i2 = (getHeight() - this.mBottom) - i10;
-            i = (getWidth() / 2) + (this.mWidth / 2);
-            i3 = i10 + i2;
+        float f;
+        float f2;
+        float f3;
+        float f4;
+        float f5;
+        float f6 = this.mRadius * 2.0f;
+        int i = getLocationOnScreen()[1];
+        int i2 = this.mDeltaRotation;
+        if (i2 == 1) {
+            float f7 = this.mBottom;
+            f = f7 + f6;
+            int i3 = this.mWidth;
+            float height = ((((float) getHeight()) / 2.0f) - (((float) i3) / 2.0f)) - (((float) i) / 2.0f);
+            f5 = ((float) i3) + height;
+            f3 = f7;
+            f2 = height;
+        } else if (i2 != 3) {
+            float f8 = this.mRadius * 2.0f;
+            f3 = (((float) getWidth()) / 2.0f) - (((float) this.mWidth) / 2.0f);
+            f2 = (((float) getHeight()) - this.mBottom) - f8;
+            f = (((float) getWidth()) / 2.0f) + (((float) this.mWidth) / 2.0f);
+            f4 = f8 + f2;
+            this.mTmpBoundsRectF.set(f3, f2, f, f4);
+            return this.mTmpBoundsRectF;
         } else {
-            i = getWidth() - this.mBottom;
-            int i11 = this.mWidth;
-            i2 = ((getHeight() / 2) - (i11 / 2)) - (i6 / 2);
-            i4 = i - i5;
-            i3 = i2 + i11;
+            f = ((float) getWidth()) - this.mBottom;
+            int i4 = this.mWidth;
+            f2 = ((((float) getHeight()) / 2.0f) - (((float) i4) / 2.0f)) - (((float) i) / 2.0f);
+            f5 = ((float) i4) + f2;
+            f3 = f - f6;
         }
-        this.mTmpBoundsRectF.set(i4, i2, i, i3);
+        f4 = f5;
+        this.mTmpBoundsRectF.set(f3, f2, f, f4);
         return this.mTmpBoundsRectF;
     }
 }

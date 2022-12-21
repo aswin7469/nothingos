@@ -5,20 +5,18 @@ import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.RemoteInput;
-import android.app.RemoteInputHistoryItem;
 import android.content.Context;
 import android.content.pm.UserInfo;
-import android.net.Uri;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.os.UserManager;
+import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.ArraySet;
+import android.util.IndentingPrintWriter;
 import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
@@ -27,95 +25,54 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.RemoteViews;
 import android.widget.TextView;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dumpable;
-import com.android.systemui.R$id;
+import com.android.systemui.dagger.qualifiers.Main;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLifetimeExtender;
-import com.android.systemui.statusbar.NotificationRemoteInputManager;
 import com.android.systemui.statusbar.RemoteInputController;
-import com.android.systemui.statusbar.SmartReplyController;
+import com.android.systemui.statusbar.notification.NotifPipelineFlags;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.collection.render.NotificationVisibilityProvider;
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
 import com.android.systemui.statusbar.policy.RemoteInputUriController;
 import com.android.systemui.statusbar.policy.RemoteInputView;
+import com.android.systemui.util.DumpUtilsKt;
 import dagger.Lazy;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
-/* loaded from: classes.dex */
+
 public class NotificationRemoteInputManager implements Dumpable {
+    private static final boolean DEBUG = false;
     public static final boolean ENABLE_REMOTE_INPUT = SystemProperties.getBoolean("debug.enable_remote_input", true);
     public static boolean FORCE_REMOTE_INPUT_HISTORY = SystemProperties.getBoolean("debug.force_remoteinput_history", true);
+    private static final String TAG = "NotifRemoteInputManager";
+    protected IStatusBarService mBarService;
     protected Callback mCallback;
-    private final NotificationClickNotifier mClickNotifier;
+    /* access modifiers changed from: private */
+    public final Lazy<Optional<CentralSurfaces>> mCentralSurfacesOptionalLazy;
+    /* access modifiers changed from: private */
+    public final NotificationClickNotifier mClickNotifier;
     protected final Context mContext;
-    private final NotificationEntryManager mEntryManager;
-    private final KeyguardManager mKeyguardManager;
-    private final NotificationLockscreenUserManager mLockscreenUserManager;
-    private final ActionClickLogger mLogger;
-    private final Handler mMainHandler;
-    protected NotificationLifetimeExtender.NotificationSafeToRemoveCallback mNotificationLifetimeFinishedCallback;
-    protected RemoteInputController mRemoteInputController;
-    private final RemoteInputUriController mRemoteInputUriController;
-    private final SmartReplyController mSmartReplyController;
-    private final Lazy<StatusBar> mStatusBarLazy;
-    private final StatusBarStateController mStatusBarStateController;
-    private final UserManager mUserManager;
-    protected final ArraySet<String> mKeysKeptForRemoteInputHistory = new ArraySet<>();
-    protected final ArraySet<NotificationEntry> mEntriesKeptForRemoteInputActive = new ArraySet<>();
-    protected final ArrayList<NotificationLifetimeExtender> mLifetimeExtenders = new ArrayList<>();
-    private final RemoteViews.InteractionHandler mInteractionHandler = new AnonymousClass1();
-    protected IStatusBarService mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
-
-    /* loaded from: classes.dex */
-    public interface AuthBypassPredicate {
-        boolean canSendRemoteInputWithoutBouncer();
-    }
-
-    /* loaded from: classes.dex */
-    public interface BouncerChecker {
-        boolean showBouncerIfNecessary();
-    }
-
-    /* loaded from: classes.dex */
-    public interface Callback {
-        boolean handleRemoteViewClick(View view, PendingIntent pendingIntent, boolean z, ClickHandler clickHandler);
-
-        void onLockedRemoteInput(ExpandableNotificationRow expandableNotificationRow, View view);
-
-        void onLockedWorkRemoteInput(int i, ExpandableNotificationRow expandableNotificationRow, View view);
-
-        void onMakeExpandedVisibleForRemoteInput(ExpandableNotificationRow expandableNotificationRow, View view, boolean z, Runnable runnable);
-
-        boolean shouldHandleRemoteInput(View view, PendingIntent pendingIntent);
-    }
-
-    /* loaded from: classes.dex */
-    public interface ClickHandler {
-        boolean handleClick();
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.statusbar.NotificationRemoteInputManager$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass1 implements RemoteViews.InteractionHandler {
-        AnonymousClass1() {
-        }
-
-        public boolean onInteraction(final View view, final PendingIntent pendingIntent, final RemoteViews.RemoteResponse remoteResponse) {
-            ((StatusBar) NotificationRemoteInputManager.this.mStatusBarLazy.get()).wakeUpIfDozing(SystemClock.uptimeMillis(), view, "NOTIFICATION_CLICK");
-            final NotificationEntry notificationForParent = getNotificationForParent(view.getParent());
+    private final List<RemoteInputController.Callback> mControllerCallbacks = new ArrayList();
+    /* access modifiers changed from: private */
+    public final NotificationEntryManager mEntryManager;
+    private final RemoteViews.InteractionHandler mInteractionHandler = new RemoteViews.InteractionHandler() {
+        public boolean onInteraction(View view, PendingIntent pendingIntent, RemoteViews.RemoteResponse remoteResponse) {
+            boolean z;
+            ((Optional) NotificationRemoteInputManager.this.mCentralSurfacesOptionalLazy.get()).ifPresent(new NotificationRemoteInputManager$1$$ExternalSyntheticLambda0(view));
+            NotificationEntry notificationForParent = getNotificationForParent(view.getParent());
             NotificationRemoteInputManager.this.mLogger.logInitialClick(notificationForParent, pendingIntent);
             if (handleRemoteInput(view, pendingIntent)) {
                 NotificationRemoteInputManager.this.mLogger.logRemoteInputWasHandled(notificationForParent);
@@ -127,18 +84,18 @@ public class NotificationRemoteInputManager implements Dumpable {
             } catch (RemoteException unused) {
             }
             Notification.Action actionFromView = getActionFromView(view, notificationForParent, pendingIntent);
-            return NotificationRemoteInputManager.this.mCallback.handleRemoteViewClick(view, pendingIntent, actionFromView == null ? false : actionFromView.isAuthenticationRequired(), new ClickHandler() { // from class: com.android.systemui.statusbar.NotificationRemoteInputManager$1$$ExternalSyntheticLambda0
-                @Override // com.android.systemui.statusbar.NotificationRemoteInputManager.ClickHandler
-                public final boolean handleClick() {
-                    boolean lambda$onInteraction$0;
-                    lambda$onInteraction$0 = NotificationRemoteInputManager.AnonymousClass1.this.lambda$onInteraction$0(remoteResponse, view, notificationForParent, pendingIntent);
-                    return lambda$onInteraction$0;
-                }
-            });
+            Callback callback = NotificationRemoteInputManager.this.mCallback;
+            if (actionFromView == null) {
+                z = false;
+            } else {
+                z = actionFromView.isAuthenticationRequired();
+            }
+            return callback.handleRemoteViewClick(view, pendingIntent, z, new NotificationRemoteInputManager$1$$ExternalSyntheticLambda1(this, remoteResponse, view, notificationForParent, pendingIntent));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ boolean lambda$onInteraction$0(RemoteViews.RemoteResponse remoteResponse, View view, NotificationEntry notificationEntry, PendingIntent pendingIntent) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onInteraction$1$com-android-systemui-statusbar-NotificationRemoteInputManager$1 */
+        public /* synthetic */ boolean mo38825x7b0670ac(RemoteViews.RemoteResponse remoteResponse, View view, NotificationEntry notificationEntry, PendingIntent pendingIntent) {
             Pair launchOptions = remoteResponse.getLaunchOptions(view);
             NotificationRemoteInputManager.this.mLogger.logStartingIntentWithDefaultHandler(notificationEntry, pendingIntent);
             boolean startPendingIntent = RemoteViews.startPendingIntent(view, pendingIntent, launchOptions);
@@ -149,36 +106,34 @@ public class NotificationRemoteInputManager implements Dumpable {
         }
 
         private Notification.Action getActionFromView(View view, NotificationEntry notificationEntry, PendingIntent pendingIntent) {
-            Integer num = (Integer) view.getTag(16909234);
+            Integer num = (Integer) view.getTag(16909280);
             if (num == null) {
                 return null;
             }
             if (notificationEntry == null) {
-                Log.w("NotifRemoteInputManager", "Couldn't determine notification for click.");
+                Log.w(NotificationRemoteInputManager.TAG, "Couldn't determine notification for click.");
                 return null;
             }
             StatusBarNotification sbn = notificationEntry.getSbn();
             Notification.Action[] actionArr = sbn.getNotification().actions;
             if (actionArr == null || num.intValue() >= actionArr.length) {
-                Log.w("NotifRemoteInputManager", "statusBarNotification.getNotification().actions is null or invalid");
+                Log.w(NotificationRemoteInputManager.TAG, "statusBarNotification.getNotification().actions is null or invalid");
                 return null;
             }
             Notification.Action action = sbn.getNotification().actions[num.intValue()];
             if (Objects.equals(action.actionIntent, pendingIntent)) {
                 return action;
             }
-            Log.w("NotifRemoteInputManager", "actionIntent does not match");
+            Log.w(NotificationRemoteInputManager.TAG, "actionIntent does not match");
             return null;
         }
 
         private void logActionClick(View view, NotificationEntry notificationEntry, PendingIntent pendingIntent) {
             Notification.Action actionFromView = getActionFromView(view, notificationEntry, pendingIntent);
-            if (actionFromView == null) {
-                return;
+            if (actionFromView != null) {
+                ViewParent parent = view.getParent();
+                NotificationRemoteInputManager.this.mClickNotifier.onNotificationActionClick(notificationEntry.getSbn().getKey(), (view.getId() != 16908718 || parent == null || !(parent instanceof ViewGroup)) ? -1 : ((ViewGroup) parent).indexOfChild(view), actionFromView, NotificationRemoteInputManager.this.mVisibilityProvider.obtain(notificationEntry, true), false);
             }
-            ViewParent parent = view.getParent();
-            String key = notificationEntry.getSbn().getKey();
-            NotificationRemoteInputManager.this.mClickNotifier.onNotificationActionClick(key, (view.getId() != 16908697 || parent == null || !(parent instanceof ViewGroup)) ? -1 : ((ViewGroup) parent).indexOfChild(view), actionFromView, NotificationVisibility.obtain(key, notificationEntry.getRanking().getRank(), NotificationRemoteInputManager.this.mEntryManager.getActiveNotificationsCount(), true, NotificationLogger.getNotificationLocation(notificationEntry)), false);
         }
 
         private NotificationEntry getNotificationForParent(ViewParent viewParent) {
@@ -195,7 +150,7 @@ public class NotificationRemoteInputManager implements Dumpable {
             if (NotificationRemoteInputManager.this.mCallback.shouldHandleRemoteInput(view, pendingIntent)) {
                 return true;
             }
-            Object tag = view.getTag(16909355);
+            Object tag = view.getTag(16909401);
             RemoteInput[] remoteInputArr = tag instanceof RemoteInput[] ? (RemoteInput[]) tag : null;
             if (remoteInputArr == null) {
                 return false;
@@ -206,113 +161,191 @@ public class NotificationRemoteInputManager implements Dumpable {
                     remoteInput = remoteInput2;
                 }
             }
-            if (remoteInput != null) {
-                return NotificationRemoteInputManager.this.activateRemoteInput(view, remoteInputArr, remoteInput, pendingIntent, null);
+            if (remoteInput == null) {
+                return false;
             }
-            return false;
+            return NotificationRemoteInputManager.this.activateRemoteInput(view, remoteInputArr, remoteInput, pendingIntent, (NotificationEntry.EditedSuggestionInfo) null);
         }
+    };
+    private final KeyguardManager mKeyguardManager;
+    private final NotificationLockscreenUserManager mLockscreenUserManager;
+    /* access modifiers changed from: private */
+    public final ActionClickLogger mLogger;
+    /* access modifiers changed from: private */
+    public final Handler mMainHandler;
+    protected final NotifPipelineFlags mNotifPipelineFlags;
+    /* access modifiers changed from: private */
+    public final RemoteInputNotificationRebuilder mRebuilder;
+    protected RemoteInputController mRemoteInputController;
+    /* access modifiers changed from: private */
+    public RemoteInputListener mRemoteInputListener;
+    private final RemoteInputUriController mRemoteInputUriController;
+    /* access modifiers changed from: private */
+    public final SmartReplyController mSmartReplyController;
+    private final StatusBarStateController mStatusBarStateController;
+    private final UserManager mUserManager;
+    /* access modifiers changed from: private */
+    public final NotificationVisibilityProvider mVisibilityProvider;
+
+    public interface AuthBypassPredicate {
+        boolean canSendRemoteInputWithoutBouncer();
     }
 
-    public NotificationRemoteInputManager(Context context, NotificationLockscreenUserManager notificationLockscreenUserManager, SmartReplyController smartReplyController, NotificationEntryManager notificationEntryManager, Lazy<StatusBar> lazy, StatusBarStateController statusBarStateController, Handler handler, RemoteInputUriController remoteInputUriController, NotificationClickNotifier notificationClickNotifier, ActionClickLogger actionClickLogger) {
+    public interface BouncerChecker {
+        boolean showBouncerIfNecessary();
+    }
+
+    public interface Callback {
+        boolean handleRemoteViewClick(View view, PendingIntent pendingIntent, boolean z, ClickHandler clickHandler);
+
+        void onLockedRemoteInput(ExpandableNotificationRow expandableNotificationRow, View view);
+
+        void onLockedWorkRemoteInput(int i, ExpandableNotificationRow expandableNotificationRow, View view);
+
+        void onMakeExpandedVisibleForRemoteInput(ExpandableNotificationRow expandableNotificationRow, View view, boolean z, Runnable runnable);
+
+        boolean shouldHandleRemoteInput(View view, PendingIntent pendingIntent);
+    }
+
+    public interface ClickHandler {
+        boolean handleClick();
+    }
+
+    public interface RemoteInputListener {
+        boolean isNotificationKeptForRemoteInputHistory(String str);
+
+        void onPanelCollapsed();
+
+        void onRemoteInputSent(NotificationEntry notificationEntry);
+
+        void releaseNotificationIfKeptForRemoteInputHistory(NotificationEntry notificationEntry);
+
+        void setRemoteInputController(RemoteInputController remoteInputController);
+    }
+
+    public NotificationRemoteInputManager(Context context, NotifPipelineFlags notifPipelineFlags, NotificationLockscreenUserManager notificationLockscreenUserManager, SmartReplyController smartReplyController, NotificationVisibilityProvider notificationVisibilityProvider, NotificationEntryManager notificationEntryManager, RemoteInputNotificationRebuilder remoteInputNotificationRebuilder, Lazy<Optional<CentralSurfaces>> lazy, StatusBarStateController statusBarStateController, @Main Handler handler, RemoteInputUriController remoteInputUriController, NotificationClickNotifier notificationClickNotifier, ActionClickLogger actionClickLogger, DumpManager dumpManager) {
         this.mContext = context;
+        this.mNotifPipelineFlags = notifPipelineFlags;
         this.mLockscreenUserManager = notificationLockscreenUserManager;
         this.mSmartReplyController = smartReplyController;
+        this.mVisibilityProvider = notificationVisibilityProvider;
         this.mEntryManager = notificationEntryManager;
-        this.mStatusBarLazy = lazy;
+        this.mCentralSurfacesOptionalLazy = lazy;
         this.mMainHandler = handler;
         this.mLogger = actionClickLogger;
+        this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
         this.mUserManager = (UserManager) context.getSystemService("user");
-        addLifetimeExtenders();
+        this.mRebuilder = remoteInputNotificationRebuilder;
+        if (!notifPipelineFlags.isNewPipelineEnabled()) {
+            this.mRemoteInputListener = createLegacyRemoteInputLifetimeExtender(handler, notificationEntryManager, smartReplyController);
+        }
         this.mKeyguardManager = (KeyguardManager) context.getSystemService(KeyguardManager.class);
         this.mStatusBarStateController = statusBarStateController;
         this.mRemoteInputUriController = remoteInputUriController;
         this.mClickNotifier = notificationClickNotifier;
-        notificationEntryManager.addNotificationEntryListener(new NotificationEntryListener() { // from class: com.android.systemui.statusbar.NotificationRemoteInputManager.2
-            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
+        dumpManager.registerDumpable(this);
+        notificationEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
             public void onPreEntryUpdated(NotificationEntry notificationEntry) {
                 NotificationRemoteInputManager.this.mSmartReplyController.stopSending(notificationEntry);
             }
 
-            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
                 NotificationRemoteInputManager.this.mSmartReplyController.stopSending(notificationEntry);
-                if (!z || notificationEntry == null) {
-                    return;
+                if (z && notificationEntry != null) {
+                    NotificationRemoteInputManager.this.onPerformRemoveNotification(notificationEntry, notificationEntry.getKey());
                 }
-                NotificationRemoteInputManager.this.onPerformRemoveNotification(notificationEntry, notificationEntry.getKey());
             }
         });
+    }
+
+    public void setRemoteInputListener(RemoteInputListener remoteInputListener) {
+        if (!this.mNotifPipelineFlags.isNewPipelineEnabled()) {
+            return;
+        }
+        if (this.mRemoteInputListener == null) {
+            this.mRemoteInputListener = remoteInputListener;
+            RemoteInputController remoteInputController = this.mRemoteInputController;
+            if (remoteInputController != null) {
+                remoteInputListener.setRemoteInputController(remoteInputController);
+                return;
+            }
+            return;
+        }
+        throw new IllegalStateException("mRemoteInputListener is already set");
+    }
+
+    /* access modifiers changed from: protected */
+    public LegacyRemoteInputLifetimeExtender createLegacyRemoteInputLifetimeExtender(Handler handler, NotificationEntryManager notificationEntryManager, SmartReplyController smartReplyController) {
+        return new LegacyRemoteInputLifetimeExtender();
     }
 
     public void setUpWithCallback(Callback callback, RemoteInputController.Delegate delegate) {
         this.mCallback = callback;
         RemoteInputController remoteInputController = new RemoteInputController(delegate, this.mRemoteInputUriController);
         this.mRemoteInputController = remoteInputController;
-        remoteInputController.addCallback(new AnonymousClass3());
-        this.mSmartReplyController.setCallback(new SmartReplyController.Callback() { // from class: com.android.systemui.statusbar.NotificationRemoteInputManager$$ExternalSyntheticLambda1
-            @Override // com.android.systemui.statusbar.SmartReplyController.Callback
-            public final void onSmartReplySent(NotificationEntry notificationEntry, CharSequence charSequence) {
-                NotificationRemoteInputManager.this.lambda$setUpWithCallback$0(notificationEntry, charSequence);
+        RemoteInputListener remoteInputListener = this.mRemoteInputListener;
+        if (remoteInputListener != null) {
+            remoteInputListener.setRemoteInputController(remoteInputController);
+        }
+        for (RemoteInputController.Callback addCallback : this.mControllerCallbacks) {
+            this.mRemoteInputController.addCallback(addCallback);
+        }
+        this.mControllerCallbacks.clear();
+        this.mRemoteInputController.addCallback(new RemoteInputController.Callback() {
+            public void onRemoteInputSent(NotificationEntry notificationEntry) {
+                if (NotificationRemoteInputManager.this.mRemoteInputListener != null) {
+                    NotificationRemoteInputManager.this.mRemoteInputListener.onRemoteInputSent(notificationEntry);
+                }
+                try {
+                    NotificationRemoteInputManager.this.mBarService.onNotificationDirectReplied(notificationEntry.getSbn().getKey());
+                    if (notificationEntry.editedSuggestionInfo != null) {
+                        NotificationRemoteInputManager.this.mBarService.onNotificationSmartReplySent(notificationEntry.getSbn().getKey(), notificationEntry.editedSuggestionInfo.index, notificationEntry.editedSuggestionInfo.originalText, NotificationLogger.getNotificationLocation(notificationEntry).toMetricsEventEnum(), !TextUtils.equals(notificationEntry.remoteInputText, notificationEntry.editedSuggestionInfo.originalText));
+                    }
+                } catch (RemoteException unused) {
+                }
             }
         });
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.statusbar.NotificationRemoteInputManager$3  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass3 implements RemoteInputController.Callback {
-        AnonymousClass3() {
-        }
-
-        @Override // com.android.systemui.statusbar.RemoteInputController.Callback
-        public void onRemoteInputSent(final NotificationEntry notificationEntry) {
-            if (NotificationRemoteInputManager.FORCE_REMOTE_INPUT_HISTORY && NotificationRemoteInputManager.this.isNotificationKeptForRemoteInputHistory(notificationEntry.getKey())) {
-                NotificationRemoteInputManager.this.mNotificationLifetimeFinishedCallback.onSafeToRemove(notificationEntry.getKey());
-            } else if (NotificationRemoteInputManager.this.mEntriesKeptForRemoteInputActive.contains(notificationEntry)) {
-                NotificationRemoteInputManager.this.mMainHandler.postDelayed(new Runnable() { // from class: com.android.systemui.statusbar.NotificationRemoteInputManager$3$$ExternalSyntheticLambda0
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        NotificationRemoteInputManager.AnonymousClass3.this.lambda$onRemoteInputSent$0(notificationEntry);
-                    }
-                }, 200L);
-            }
-            try {
-                NotificationRemoteInputManager.this.mBarService.onNotificationDirectReplied(notificationEntry.getSbn().getKey());
-                NotificationEntry.EditedSuggestionInfo editedSuggestionInfo = notificationEntry.editedSuggestionInfo;
-                if (editedSuggestionInfo == null) {
-                    return;
-                }
-                boolean z = !TextUtils.equals(notificationEntry.remoteInputText, editedSuggestionInfo.originalText);
-                IStatusBarService iStatusBarService = NotificationRemoteInputManager.this.mBarService;
-                String key = notificationEntry.getSbn().getKey();
-                NotificationEntry.EditedSuggestionInfo editedSuggestionInfo2 = notificationEntry.editedSuggestionInfo;
-                iStatusBarService.onNotificationSmartReplySent(key, editedSuggestionInfo2.index, editedSuggestionInfo2.originalText, NotificationLogger.getNotificationLocation(notificationEntry).toMetricsEventEnum(), z);
-            } catch (RemoteException unused) {
-            }
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onRemoteInputSent$0(NotificationEntry notificationEntry) {
-            if (NotificationRemoteInputManager.this.mEntriesKeptForRemoteInputActive.remove(notificationEntry)) {
-                NotificationRemoteInputManager.this.mNotificationLifetimeFinishedCallback.onSafeToRemove(notificationEntry.getKey());
-            }
+        if (!this.mNotifPipelineFlags.isNewPipelineEnabled()) {
+            this.mSmartReplyController.setCallback(new NotificationRemoteInputManager$$ExternalSyntheticLambda0(this));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setUpWithCallback$0(NotificationEntry notificationEntry, CharSequence charSequence) {
-        this.mEntryManager.updateNotification(rebuildNotificationWithRemoteInputInserted(notificationEntry, charSequence, true, null, null), null);
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setUpWithCallback$0$com-android-systemui-statusbar-NotificationRemoteInputManager */
+    public /* synthetic */ void mo38817x7995d1d3(NotificationEntry notificationEntry, CharSequence charSequence) {
+        this.mEntryManager.updateNotification(this.mRebuilder.rebuildForSendingSmartReply(notificationEntry, charSequence), (NotificationListenerService.RankingMap) null);
+    }
+
+    public void addControllerCallback(RemoteInputController.Callback callback) {
+        RemoteInputController remoteInputController = this.mRemoteInputController;
+        if (remoteInputController != null) {
+            remoteInputController.addCallback(callback);
+        } else {
+            this.mControllerCallbacks.add(callback);
+        }
+    }
+
+    public void removeControllerCallback(RemoteInputController.Callback callback) {
+        RemoteInputController remoteInputController = this.mRemoteInputController;
+        if (remoteInputController != null) {
+            remoteInputController.removeCallback(callback);
+        } else {
+            this.mControllerCallbacks.remove((Object) callback);
+        }
     }
 
     public boolean activateRemoteInput(View view, RemoteInput[] remoteInputArr, RemoteInput remoteInput, PendingIntent pendingIntent, NotificationEntry.EditedSuggestionInfo editedSuggestionInfo) {
-        return lambda$activateRemoteInput$1(view, remoteInputArr, remoteInput, pendingIntent, editedSuggestionInfo, null, null);
+        return mo38815x794a631d(view, remoteInputArr, remoteInput, pendingIntent, editedSuggestionInfo, (String) null, (AuthBypassPredicate) null);
     }
 
     /* renamed from: activateRemoteInput */
-    public boolean lambda$activateRemoteInput$1(final View view, final RemoteInput[] remoteInputArr, final RemoteInput remoteInput, final PendingIntent pendingIntent, final NotificationEntry.EditedSuggestionInfo editedSuggestionInfo, final String str, final AuthBypassPredicate authBypassPredicate) {
+    public boolean mo38815x794a631d(View view, RemoteInput[] remoteInputArr, RemoteInput remoteInput, PendingIntent pendingIntent, NotificationEntry.EditedSuggestionInfo editedSuggestionInfo, String str, AuthBypassPredicate authBypassPredicate) {
         RemoteInputView remoteInputView;
         RemoteInputView remoteInputView2;
         ExpandableNotificationRow expandableNotificationRow;
+        View view2 = view;
+        PendingIntent pendingIntent2 = pendingIntent;
+        String str2 = str;
         ViewParent parent = view.getParent();
         while (true) {
             remoteInputView = null;
@@ -322,10 +355,10 @@ public class NotificationRemoteInputManager implements Dumpable {
                 break;
             }
             if (parent instanceof View) {
-                View view2 = (View) parent;
-                if (view2.isRootNamespace()) {
-                    remoteInputView2 = findRemoteInputView(view2);
-                    expandableNotificationRow = (ExpandableNotificationRow) view2.getTag(R$id.row_tag_for_content_view);
+                View view3 = (View) parent;
+                if (view3.isRootNamespace()) {
+                    remoteInputView2 = findRemoteInputView(view3);
+                    expandableNotificationRow = (ExpandableNotificationRow) view3.getTag(C1893R.C1897id.row_tag_for_content_view);
                     break;
                 }
             }
@@ -336,7 +369,7 @@ public class NotificationRemoteInputManager implements Dumpable {
         }
         expandableNotificationRow.setUserExpanded(true);
         boolean z = authBypassPredicate != null;
-        if (!z && showBouncerForRemoteInput(view, pendingIntent, expandableNotificationRow)) {
+        if (!z && showBouncerForRemoteInput(view2, pendingIntent2, expandableNotificationRow)) {
             return true;
         }
         if (remoteInputView2 == null || remoteInputView2.isAttachedToWindow()) {
@@ -345,54 +378,43 @@ public class NotificationRemoteInputManager implements Dumpable {
         if (remoteInputView == null && (remoteInputView = findRemoteInputView(expandableNotificationRow.getPrivateLayout().getExpandedChild())) == null) {
             return false;
         }
-        RemoteInputView remoteInputView3 = remoteInputView;
-        if (remoteInputView3 == expandableNotificationRow.getPrivateLayout().getExpandedRemoteInput() && !expandableNotificationRow.getPrivateLayout().getExpandedChild().isShown()) {
-            this.mCallback.onMakeExpandedVisibleForRemoteInput(expandableNotificationRow, view, z, new Runnable() { // from class: com.android.systemui.statusbar.NotificationRemoteInputManager$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    NotificationRemoteInputManager.this.lambda$activateRemoteInput$1(view, remoteInputArr, remoteInput, pendingIntent, editedSuggestionInfo, str, authBypassPredicate);
-                }
-            });
+        if (remoteInputView == expandableNotificationRow.getPrivateLayout().getExpandedRemoteInput() && !expandableNotificationRow.getPrivateLayout().getExpandedChild().isShown()) {
+            this.mCallback.onMakeExpandedVisibleForRemoteInput(expandableNotificationRow, view2, z, new NotificationRemoteInputManager$$ExternalSyntheticLambda1(this, view, remoteInputArr, remoteInput, pendingIntent, editedSuggestionInfo, str, authBypassPredicate));
             return true;
-        } else if (!remoteInputView3.isAttachedToWindow()) {
+        } else if (!remoteInputView.isAttachedToWindow()) {
             return false;
         } else {
             int width = view.getWidth();
-            if (view instanceof TextView) {
-                TextView textView = (TextView) view;
+            if (view2 instanceof TextView) {
+                TextView textView = (TextView) view2;
                 if (textView.getLayout() != null) {
                     width = Math.min(width, ((int) textView.getLayout().getLineWidth(0)) + textView.getCompoundPaddingLeft() + textView.getCompoundPaddingRight());
                 }
             }
             int left = view.getLeft() + (width / 2);
             int top = view.getTop() + (view.getHeight() / 2);
-            int width2 = remoteInputView3.getWidth();
-            int height = remoteInputView3.getHeight() - top;
+            int width2 = remoteInputView.getWidth();
+            int height = remoteInputView.getHeight() - top;
             int i = width2 - left;
-            remoteInputView3.setRevealParameters(left, top, Math.max(Math.max(left + top, left + height), Math.max(i + top, i + height)));
-            remoteInputView3.setPendingIntent(pendingIntent);
-            remoteInputView3.setRemoteInput(remoteInputArr, remoteInput, editedSuggestionInfo);
-            remoteInputView3.focusAnimated();
-            if (str != null) {
-                remoteInputView3.setEditTextContent(str);
+            remoteInputView.getController().setRevealParams(new RemoteInputView.RevealParams(left, top, Math.max(Math.max(left + top, left + height), Math.max(i + top, i + height))));
+            remoteInputView.getController().setPendingIntent(pendingIntent2);
+            remoteInputView.getController().setRemoteInput(remoteInput);
+            remoteInputView.getController().setRemoteInputs(remoteInputArr);
+            remoteInputView.getController().setEditedSuggestionInfo(editedSuggestionInfo);
+            remoteInputView.focusAnimated();
+            if (str2 != null) {
+                remoteInputView.setEditTextContent(str2);
             }
             if (z) {
-                final ExpandableNotificationRow expandableNotificationRow2 = expandableNotificationRow;
-                remoteInputView3.setBouncerChecker(new BouncerChecker() { // from class: com.android.systemui.statusbar.NotificationRemoteInputManager$$ExternalSyntheticLambda0
-                    @Override // com.android.systemui.statusbar.NotificationRemoteInputManager.BouncerChecker
-                    public final boolean showBouncerIfNecessary() {
-                        boolean lambda$activateRemoteInput$2;
-                        lambda$activateRemoteInput$2 = NotificationRemoteInputManager.this.lambda$activateRemoteInput$2(authBypassPredicate, view, pendingIntent, expandableNotificationRow2);
-                        return lambda$activateRemoteInput$2;
-                    }
-                });
+                remoteInputView.getController().setBouncerChecker(new NotificationRemoteInputManager$$ExternalSyntheticLambda2(this, authBypassPredicate, view, pendingIntent, expandableNotificationRow));
             }
             return true;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$activateRemoteInput$2(AuthBypassPredicate authBypassPredicate, View view, PendingIntent pendingIntent, ExpandableNotificationRow expandableNotificationRow) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$activateRemoteInput$2$com-android-systemui-statusbar-NotificationRemoteInputManager */
+    public /* synthetic */ boolean mo38816x6cd9e75e(AuthBypassPredicate authBypassPredicate, View view, PendingIntent pendingIntent, ExpandableNotificationRow expandableNotificationRow) {
         return !authBypassPredicate.canSendRemoteInputWithoutBouncer() && showBouncerForRemoteInput(view, pendingIntent, expandableNotificationRow);
     }
 
@@ -404,19 +426,19 @@ public class NotificationRemoteInputManager implements Dumpable {
         int identifier = pendingIntent.getCreatorUserHandle().getIdentifier();
         boolean z = this.mUserManager.getUserInfo(identifier).isManagedProfile() && this.mKeyguardManager.isDeviceLocked(identifier);
         boolean z2 = z && (profileParent = this.mUserManager.getProfileParent(identifier)) != null && this.mKeyguardManager.isDeviceLocked(profileParent.id);
-        if (!this.mLockscreenUserManager.isLockscreenPublicMode(identifier) && this.mStatusBarStateController.getState() != 1) {
-            if (!z) {
-                return false;
+        if (this.mLockscreenUserManager.isLockscreenPublicMode(identifier) || this.mStatusBarStateController.getState() == 1) {
+            if (!z || z2) {
+                this.mCallback.onLockedRemoteInput(expandableNotificationRow, view);
+            } else {
+                this.mCallback.onLockedWorkRemoteInput(identifier, expandableNotificationRow, view);
             }
+            return true;
+        } else if (!z) {
+            return false;
+        } else {
             this.mCallback.onLockedWorkRemoteInput(identifier, expandableNotificationRow, view);
             return true;
         }
-        if (z && !z2) {
-            this.mCallback.onLockedWorkRemoteInput(identifier, expandableNotificationRow, view);
-        } else {
-            this.mCallback.onLockedRemoteInput(expandableNotificationRow, view);
-        }
-        return true;
     }
 
     private RemoteInputView findRemoteInputView(View view) {
@@ -426,75 +448,50 @@ public class NotificationRemoteInputManager implements Dumpable {
         return (RemoteInputView) view.findViewWithTag(RemoteInputView.VIEW_TAG);
     }
 
-    protected void addLifetimeExtenders() {
-        this.mLifetimeExtenders.add(new RemoteInputHistoryExtender());
-        this.mLifetimeExtenders.add(new SmartReplyHistoryExtender());
-        this.mLifetimeExtenders.add(new RemoteInputActiveExtender());
-    }
-
     public ArrayList<NotificationLifetimeExtender> getLifetimeExtenders() {
-        return this.mLifetimeExtenders;
+        return ((LegacyRemoteInputLifetimeExtender) this.mRemoteInputListener).mLifetimeExtenders;
     }
 
-    public RemoteInputController getController() {
-        return this.mRemoteInputController;
+    /* access modifiers changed from: package-private */
+    public void onPerformRemoveNotification(NotificationEntry notificationEntry, String str) {
+        ((LegacyRemoteInputLifetimeExtender) this.mRemoteInputListener).mKeysKeptForRemoteInputHistory.remove(str);
+        cleanUpRemoteInputForUserRemoval(notificationEntry);
     }
 
-    @VisibleForTesting
-    void onPerformRemoveNotification(NotificationEntry notificationEntry, String str) {
-        if (this.mKeysKeptForRemoteInputHistory.contains(str)) {
-            this.mKeysKeptForRemoteInputHistory.remove(str);
-        }
-        if (this.mRemoteInputController.isRemoteInputActive(notificationEntry)) {
+    public void cleanUpRemoteInputForUserRemoval(NotificationEntry notificationEntry) {
+        if (isRemoteInputActive(notificationEntry)) {
             notificationEntry.mRemoteEditImeVisible = false;
-            this.mRemoteInputController.removeRemoteInput(notificationEntry, null);
+            this.mRemoteInputController.removeRemoteInput(notificationEntry, (Object) null);
         }
     }
 
     public void onPanelCollapsed() {
-        for (int i = 0; i < this.mEntriesKeptForRemoteInputActive.size(); i++) {
-            NotificationEntry valueAt = this.mEntriesKeptForRemoteInputActive.valueAt(i);
-            this.mRemoteInputController.removeRemoteInput(valueAt, null);
-            NotificationLifetimeExtender.NotificationSafeToRemoveCallback notificationSafeToRemoveCallback = this.mNotificationLifetimeFinishedCallback;
-            if (notificationSafeToRemoveCallback != null) {
-                notificationSafeToRemoveCallback.onSafeToRemove(valueAt.getKey());
-            }
+        RemoteInputListener remoteInputListener = this.mRemoteInputListener;
+        if (remoteInputListener != null) {
+            remoteInputListener.onPanelCollapsed();
         }
-        this.mEntriesKeptForRemoteInputActive.clear();
     }
 
     public boolean isNotificationKeptForRemoteInputHistory(String str) {
-        return this.mKeysKeptForRemoteInputHistory.contains(str);
+        RemoteInputListener remoteInputListener = this.mRemoteInputListener;
+        return remoteInputListener != null && remoteInputListener.isNotificationKeptForRemoteInputHistory(str);
     }
 
     public boolean shouldKeepForRemoteInputHistory(NotificationEntry notificationEntry) {
         if (!FORCE_REMOTE_INPUT_HISTORY) {
             return false;
         }
-        return this.mRemoteInputController.isSpinning(notificationEntry.getKey()) || notificationEntry.hasJustSentRemoteInput();
+        if (isSpinning(notificationEntry.getKey()) || notificationEntry.hasJustSentRemoteInput()) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void releaseNotificationIfKeptForRemoteInputHistory(NotificationEntry notificationEntry) {
-        if (notificationEntry == null) {
-            return;
-        }
-        final String key = notificationEntry.getKey();
-        if (!isNotificationKeptForRemoteInputHistory(key)) {
-            return;
-        }
-        this.mMainHandler.postDelayed(new Runnable() { // from class: com.android.systemui.statusbar.NotificationRemoteInputManager$$ExternalSyntheticLambda3
-            @Override // java.lang.Runnable
-            public final void run() {
-                NotificationRemoteInputManager.this.lambda$releaseNotificationIfKeptForRemoteInputHistory$3(key);
-            }
-        }, 200L);
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$releaseNotificationIfKeptForRemoteInputHistory$3(String str) {
-        if (isNotificationKeptForRemoteInputHistory(str)) {
-            this.mNotificationLifetimeFinishedCallback.onSafeToRemove(str);
+        RemoteInputListener remoteInputListener;
+        if (notificationEntry != null && (remoteInputListener = this.mRemoteInputListener) != null) {
+            remoteInputListener.releaseNotificationIfKeptForRemoteInputHistory(notificationEntry);
         }
     }
 
@@ -506,56 +503,25 @@ public class NotificationRemoteInputManager implements Dumpable {
     }
 
     public void checkRemoteInputOutside(MotionEvent motionEvent) {
-        if (motionEvent.getAction() == 4 && motionEvent.getX() == 0.0f && motionEvent.getY() == 0.0f && this.mRemoteInputController.isRemoteInputActive()) {
-            this.mRemoteInputController.closeRemoteInputs();
+        if (motionEvent.getAction() == 4 && motionEvent.getX() == 0.0f && motionEvent.getY() == 0.0f && isRemoteInputActive()) {
+            closeRemoteInputs();
         }
     }
 
-    @VisibleForTesting
-    StatusBarNotification rebuildNotificationForCanceledSmartReplies(NotificationEntry notificationEntry) {
-        return rebuildNotificationWithRemoteInputInserted(notificationEntry, null, false, null, null);
-    }
-
-    @VisibleForTesting
-    StatusBarNotification rebuildNotificationWithRemoteInputInserted(NotificationEntry notificationEntry, CharSequence charSequence, boolean z, String str, Uri uri) {
-        RemoteInputHistoryItem remoteInputHistoryItem;
-        StatusBarNotification sbn = notificationEntry.getSbn();
-        Notification.Builder recoverBuilder = Notification.Builder.recoverBuilder(this.mContext, sbn.getNotification().clone());
-        if (charSequence != null || uri != null) {
-            if (uri != null) {
-                remoteInputHistoryItem = new RemoteInputHistoryItem(str, uri, charSequence);
-            } else {
-                remoteInputHistoryItem = new RemoteInputHistoryItem(charSequence);
-            }
-            Parcelable[] parcelableArray = sbn.getNotification().extras.getParcelableArray("android.remoteInputHistoryItems");
-            recoverBuilder.setRemoteInputHistory(parcelableArray != null ? (RemoteInputHistoryItem[]) Stream.concat(Stream.of(remoteInputHistoryItem), Arrays.stream(parcelableArray).map(NotificationRemoteInputManager$$ExternalSyntheticLambda4.INSTANCE)).toArray(NotificationRemoteInputManager$$ExternalSyntheticLambda5.INSTANCE) : new RemoteInputHistoryItem[]{remoteInputHistoryItem});
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        IndentingPrintWriter asIndenting = DumpUtilsKt.asIndenting(printWriter);
+        if (this.mRemoteInputController != null) {
+            asIndenting.println("mRemoteInputController: " + this.mRemoteInputController);
+            asIndenting.increaseIndent();
+            this.mRemoteInputController.dump(asIndenting);
+            asIndenting.decreaseIndent();
         }
-        recoverBuilder.setShowRemoteInputSpinner(z);
-        recoverBuilder.setHideSmartReplies(true);
-        Notification build = recoverBuilder.build();
-        build.contentView = sbn.getNotification().contentView;
-        build.bigContentView = sbn.getNotification().bigContentView;
-        build.headsUpContentView = sbn.getNotification().headsUpContentView;
-        return new StatusBarNotification(sbn.getPackageName(), sbn.getOpPkg(), sbn.getId(), sbn.getTag(), sbn.getUid(), sbn.getInitialPid(), build, sbn.getUser(), sbn.getOverrideGroupKey(), sbn.getPostTime());
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ RemoteInputHistoryItem lambda$rebuildNotificationWithRemoteInputInserted$4(Parcelable parcelable) {
-        return (RemoteInputHistoryItem) parcelable;
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ RemoteInputHistoryItem[] lambda$rebuildNotificationWithRemoteInputInserted$5(int i) {
-        return new RemoteInputHistoryItem[i];
-    }
-
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        printWriter.println("NotificationRemoteInputManager state:");
-        printWriter.print("  mKeysKeptForRemoteInputHistory: ");
-        printWriter.println(this.mKeysKeptForRemoteInputHistory);
-        printWriter.print("  mEntriesKeptForRemoteInputActive: ");
-        printWriter.println(this.mEntriesKeptForRemoteInputActive);
+        if (this.mRemoteInputListener instanceof Dumpable) {
+            asIndenting.println("mRemoteInputListener: " + this.mRemoteInputListener.getClass().getSimpleName());
+            asIndenting.increaseIndent();
+            ((Dumpable) this.mRemoteInputListener).dump(asIndenting, strArr);
+            asIndenting.decreaseIndent();
+        }
     }
 
     public void bindRow(ExpandableNotificationRow expandableNotificationRow) {
@@ -566,121 +532,203 @@ public class NotificationRemoteInputManager implements Dumpable {
         return this.mInteractionHandler;
     }
 
-    @VisibleForTesting
-    public Set<NotificationEntry> getEntriesKeptForRemoteInputActive() {
-        return this.mEntriesKeptForRemoteInputActive;
+    public boolean isRemoteInputActive() {
+        RemoteInputController remoteInputController = this.mRemoteInputController;
+        return remoteInputController != null && remoteInputController.isRemoteInputActive();
     }
 
-    /* loaded from: classes.dex */
-    protected abstract class RemoteInputExtender implements NotificationLifetimeExtender {
-        protected RemoteInputExtender() {
-        }
-
-        @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
-        public void setCallback(NotificationLifetimeExtender.NotificationSafeToRemoveCallback notificationSafeToRemoveCallback) {
-            NotificationRemoteInputManager notificationRemoteInputManager = NotificationRemoteInputManager.this;
-            if (notificationRemoteInputManager.mNotificationLifetimeFinishedCallback == null) {
-                notificationRemoteInputManager.mNotificationLifetimeFinishedCallback = notificationSafeToRemoveCallback;
-            }
-        }
+    public boolean isRemoteInputActive(NotificationEntry notificationEntry) {
+        RemoteInputController remoteInputController = this.mRemoteInputController;
+        return remoteInputController != null && remoteInputController.isRemoteInputActive(notificationEntry);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public class RemoteInputHistoryExtender extends RemoteInputExtender {
-        protected RemoteInputHistoryExtender() {
-            super();
-        }
+    public boolean isSpinning(String str) {
+        RemoteInputController remoteInputController = this.mRemoteInputController;
+        return remoteInputController != null && remoteInputController.isSpinning(str);
+    }
 
-        @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
-        public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
-            return NotificationRemoteInputManager.this.shouldKeepForRemoteInputHistory(notificationEntry);
-        }
-
-        @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
-        public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
-            if (z) {
-                CharSequence charSequence = notificationEntry.remoteInputText;
-                if (TextUtils.isEmpty(charSequence)) {
-                    charSequence = notificationEntry.remoteInputTextWhenReset;
-                }
-                String str = notificationEntry.remoteInputMimeType;
-                Uri uri = notificationEntry.remoteInputUri;
-                StatusBarNotification rebuildNotificationWithRemoteInputInserted = NotificationRemoteInputManager.this.rebuildNotificationWithRemoteInputInserted(notificationEntry, charSequence, false, str, uri);
-                notificationEntry.onRemoteInputInserted();
-                if (rebuildNotificationWithRemoteInputInserted == null) {
-                    return;
-                }
-                NotificationRemoteInputManager.this.mEntryManager.updateNotification(rebuildNotificationWithRemoteInputInserted, null);
-                if (notificationEntry.isRemoved()) {
-                    return;
-                }
-                if (Log.isLoggable("NotifRemoteInputManager", 3)) {
-                    Log.d("NotifRemoteInputManager", "Keeping notification around after sending remote input " + notificationEntry.getKey());
-                }
-                NotificationRemoteInputManager.this.mKeysKeptForRemoteInputHistory.add(notificationEntry.getKey());
-                return;
-            }
-            NotificationRemoteInputManager.this.mKeysKeptForRemoteInputHistory.remove(notificationEntry.getKey());
+    public void closeRemoteInputs() {
+        RemoteInputController remoteInputController = this.mRemoteInputController;
+        if (remoteInputController != null) {
+            remoteInputController.closeRemoteInputs();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public class SmartReplyHistoryExtender extends RemoteInputExtender {
-        protected SmartReplyHistoryExtender() {
-            super();
+    protected class LegacyRemoteInputLifetimeExtender implements RemoteInputListener, Dumpable {
+        private static final int REMOTE_INPUT_KEPT_ENTRY_AUTO_CANCEL_DELAY = 200;
+        protected final ArraySet<NotificationEntry> mEntriesKeptForRemoteInputActive = new ArraySet<>();
+        protected final ArraySet<String> mKeysKeptForRemoteInputHistory = new ArraySet<>();
+        protected final ArrayList<NotificationLifetimeExtender> mLifetimeExtenders = new ArrayList<>();
+        protected NotificationLifetimeExtender.NotificationSafeToRemoveCallback mNotificationLifetimeFinishedCallback;
+        private RemoteInputController mRemoteInputController;
+
+        LegacyRemoteInputLifetimeExtender() {
+            addLifetimeExtenders();
         }
 
-        @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
-        public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
-            return NotificationRemoteInputManager.this.shouldKeepForSmartReplyHistory(notificationEntry);
+        /* access modifiers changed from: protected */
+        public void addLifetimeExtenders() {
+            this.mLifetimeExtenders.add(new RemoteInputHistoryExtender());
+            this.mLifetimeExtenders.add(new SmartReplyHistoryExtender());
+            this.mLifetimeExtenders.add(new RemoteInputActiveExtender());
         }
 
-        @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
-        public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
-            if (z) {
-                StatusBarNotification rebuildNotificationForCanceledSmartReplies = NotificationRemoteInputManager.this.rebuildNotificationForCanceledSmartReplies(notificationEntry);
-                if (rebuildNotificationForCanceledSmartReplies == null) {
+        public void setRemoteInputController(RemoteInputController remoteInputController) {
+            this.mRemoteInputController = remoteInputController;
+        }
+
+        public void onRemoteInputSent(NotificationEntry notificationEntry) {
+            if (NotificationRemoteInputManager.FORCE_REMOTE_INPUT_HISTORY && isNotificationKeptForRemoteInputHistory(notificationEntry.getKey())) {
+                this.mNotificationLifetimeFinishedCallback.onSafeToRemove(notificationEntry.getKey());
+            } else if (this.mEntriesKeptForRemoteInputActive.contains(notificationEntry)) {
+                NotificationRemoteInputManager.this.mMainHandler.postDelayed(new C2577x9a54ce8a(this, notificationEntry), 200);
+            }
+        }
+
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onRemoteInputSent$0$com-android-systemui-statusbar-NotificationRemoteInputManager$LegacyRemoteInputLifetimeExtender */
+        public /* synthetic */ void mo38839x9dd93c8f(NotificationEntry notificationEntry) {
+            if (this.mEntriesKeptForRemoteInputActive.remove(notificationEntry)) {
+                this.mNotificationLifetimeFinishedCallback.onSafeToRemove(notificationEntry.getKey());
+            }
+        }
+
+        public void onPanelCollapsed() {
+            for (int i = 0; i < this.mEntriesKeptForRemoteInputActive.size(); i++) {
+                NotificationEntry valueAt = this.mEntriesKeptForRemoteInputActive.valueAt(i);
+                RemoteInputController remoteInputController = this.mRemoteInputController;
+                if (remoteInputController != null) {
+                    remoteInputController.removeRemoteInput(valueAt, (Object) null);
+                }
+                NotificationLifetimeExtender.NotificationSafeToRemoveCallback notificationSafeToRemoveCallback = this.mNotificationLifetimeFinishedCallback;
+                if (notificationSafeToRemoveCallback != null) {
+                    notificationSafeToRemoveCallback.onSafeToRemove(valueAt.getKey());
+                }
+            }
+            this.mEntriesKeptForRemoteInputActive.clear();
+        }
+
+        public boolean isNotificationKeptForRemoteInputHistory(String str) {
+            return this.mKeysKeptForRemoteInputHistory.contains(str);
+        }
+
+        public void releaseNotificationIfKeptForRemoteInputHistory(NotificationEntry notificationEntry) {
+            String key = notificationEntry.getKey();
+            if (isNotificationKeptForRemoteInputHistory(key)) {
+                NotificationRemoteInputManager.this.mMainHandler.postDelayed(new C2578x9a54ce8b(this, key), 200);
+            }
+        }
+
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$releaseNotificationIfKeptForRemoteInputHistory$1$com-android-systemui-statusbar-NotificationRemoteInputManager$LegacyRemoteInputLifetimeExtender */
+        public /* synthetic */ void mo38840xaac6da19(String str) {
+            if (isNotificationKeptForRemoteInputHistory(str)) {
+                this.mNotificationLifetimeFinishedCallback.onSafeToRemove(str);
+            }
+        }
+
+        public Set<NotificationEntry> getEntriesKeptForRemoteInputActive() {
+            return this.mEntriesKeptForRemoteInputActive;
+        }
+
+        public void dump(PrintWriter printWriter, String[] strArr) {
+            printWriter.println("LegacyRemoteInputLifetimeExtender:");
+            printWriter.print("  mKeysKeptForRemoteInputHistory: ");
+            printWriter.println((Object) this.mKeysKeptForRemoteInputHistory);
+            printWriter.print("  mEntriesKeptForRemoteInputActive: ");
+            printWriter.println((Object) this.mEntriesKeptForRemoteInputActive);
+        }
+
+        protected abstract class RemoteInputExtender implements NotificationLifetimeExtender {
+            protected RemoteInputExtender() {
+            }
+
+            public void setCallback(NotificationLifetimeExtender.NotificationSafeToRemoveCallback notificationSafeToRemoveCallback) {
+                if (LegacyRemoteInputLifetimeExtender.this.mNotificationLifetimeFinishedCallback == null) {
+                    LegacyRemoteInputLifetimeExtender.this.mNotificationLifetimeFinishedCallback = notificationSafeToRemoveCallback;
+                }
+            }
+        }
+
+        protected class RemoteInputHistoryExtender extends RemoteInputExtender {
+            protected RemoteInputHistoryExtender() {
+                super();
+            }
+
+            public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
+                return NotificationRemoteInputManager.this.shouldKeepForRemoteInputHistory(notificationEntry);
+            }
+
+            public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
+                if (z) {
+                    StatusBarNotification rebuildForRemoteInputReply = NotificationRemoteInputManager.this.mRebuilder.rebuildForRemoteInputReply(notificationEntry);
+                    notificationEntry.onRemoteInputInserted();
+                    if (rebuildForRemoteInputReply != null) {
+                        NotificationRemoteInputManager.this.mEntryManager.updateNotification(rebuildForRemoteInputReply, (NotificationListenerService.RankingMap) null);
+                        if (!notificationEntry.isRemoved()) {
+                            if (Log.isLoggable(NotificationRemoteInputManager.TAG, 3)) {
+                                Log.d(NotificationRemoteInputManager.TAG, "Keeping notification around after sending remote input " + notificationEntry.getKey());
+                            }
+                            LegacyRemoteInputLifetimeExtender.this.mKeysKeptForRemoteInputHistory.add(notificationEntry.getKey());
+                            return;
+                        }
+                        return;
+                    }
                     return;
                 }
-                NotificationRemoteInputManager.this.mEntryManager.updateNotification(rebuildNotificationForCanceledSmartReplies, null);
-                if (notificationEntry.isRemoved()) {
+                LegacyRemoteInputLifetimeExtender.this.mKeysKeptForRemoteInputHistory.remove(notificationEntry.getKey());
+            }
+        }
+
+        protected class SmartReplyHistoryExtender extends RemoteInputExtender {
+            protected SmartReplyHistoryExtender() {
+                super();
+            }
+
+            public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
+                return NotificationRemoteInputManager.this.shouldKeepForSmartReplyHistory(notificationEntry);
+            }
+
+            public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
+                if (z) {
+                    StatusBarNotification rebuildForCanceledSmartReplies = NotificationRemoteInputManager.this.mRebuilder.rebuildForCanceledSmartReplies(notificationEntry);
+                    if (rebuildForCanceledSmartReplies != null) {
+                        NotificationRemoteInputManager.this.mEntryManager.updateNotification(rebuildForCanceledSmartReplies, (NotificationListenerService.RankingMap) null);
+                        if (!notificationEntry.isRemoved()) {
+                            if (Log.isLoggable(NotificationRemoteInputManager.TAG, 3)) {
+                                Log.d(NotificationRemoteInputManager.TAG, "Keeping notification around after sending smart reply " + notificationEntry.getKey());
+                            }
+                            LegacyRemoteInputLifetimeExtender.this.mKeysKeptForRemoteInputHistory.add(notificationEntry.getKey());
+                            return;
+                        }
+                        return;
+                    }
                     return;
                 }
-                if (Log.isLoggable("NotifRemoteInputManager", 3)) {
-                    Log.d("NotifRemoteInputManager", "Keeping notification around after sending smart reply " + notificationEntry.getKey());
-                }
-                NotificationRemoteInputManager.this.mKeysKeptForRemoteInputHistory.add(notificationEntry.getKey());
-                return;
+                LegacyRemoteInputLifetimeExtender.this.mKeysKeptForRemoteInputHistory.remove(notificationEntry.getKey());
+                NotificationRemoteInputManager.this.mSmartReplyController.stopSending(notificationEntry);
             }
-            NotificationRemoteInputManager.this.mKeysKeptForRemoteInputHistory.remove(notificationEntry.getKey());
-            NotificationRemoteInputManager.this.mSmartReplyController.stopSending(notificationEntry);
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public class RemoteInputActiveExtender extends RemoteInputExtender {
-        protected RemoteInputActiveExtender() {
-            super();
         }
 
-        @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
-        public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
-            return NotificationRemoteInputManager.this.mRemoteInputController.isRemoteInputActive(notificationEntry);
-        }
-
-        @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
-        public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
-            if (z) {
-                if (Log.isLoggable("NotifRemoteInputManager", 3)) {
-                    Log.d("NotifRemoteInputManager", "Keeping notification around while remote input active " + notificationEntry.getKey());
-                }
-                NotificationRemoteInputManager.this.mEntriesKeptForRemoteInputActive.add(notificationEntry);
-                return;
+        protected class RemoteInputActiveExtender extends RemoteInputExtender {
+            protected RemoteInputActiveExtender() {
+                super();
             }
-            NotificationRemoteInputManager.this.mEntriesKeptForRemoteInputActive.remove(notificationEntry);
+
+            public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
+                return NotificationRemoteInputManager.this.isRemoteInputActive(notificationEntry);
+            }
+
+            public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
+                if (z) {
+                    if (Log.isLoggable(NotificationRemoteInputManager.TAG, 3)) {
+                        Log.d(NotificationRemoteInputManager.TAG, "Keeping notification around while remote input active " + notificationEntry.getKey());
+                    }
+                    LegacyRemoteInputLifetimeExtender.this.mEntriesKeptForRemoteInputActive.add(notificationEntry);
+                    return;
+                }
+                LegacyRemoteInputLifetimeExtender.this.mEntriesKeptForRemoteInputActive.remove(notificationEntry);
+            }
         }
     }
 }

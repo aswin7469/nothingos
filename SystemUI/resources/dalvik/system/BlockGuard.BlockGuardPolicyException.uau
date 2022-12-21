@@ -1,0 +1,5 @@
+signature,file,startline,startcol,endline,endcol,properties
+Ldalvik/system/BlockGuard$BlockGuardPolicyException;->mPolicyState:I,libcore/dalvik/src/main/java/dalvik/system/BlockGuard.java,149,9,149,29,
+Ldalvik/system/BlockGuard$BlockGuardPolicyException;->mPolicyViolated:I,libcore/dalvik/src/main/java/dalvik/system/BlockGuard.java,151,9,151,29,
+Ldalvik/system/BlockGuard$BlockGuardPolicyException;->mMessage:Ljava/lang/String;,libcore/dalvik/src/main/java/dalvik/system/BlockGuard.java,153,9,153,29,
+Ldalvik/system/BlockGuard$BlockGuardPolicyException;-><init>(IILjava/lang/String;)V,libcore/dalvik/src/main/java/dalvik/system/BlockGuard.java,160,9,160,29,

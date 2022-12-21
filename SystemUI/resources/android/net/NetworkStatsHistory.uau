@@ -1,0 +1,12 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/NetworkStatsHistory;-><init>(J)V,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,282,5,282,25,
+Landroid/net/NetworkStatsHistory;-><init>(Landroid/os/Parcel;)V,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,313,5,313,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStatsHistory;->size()I,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,402,5,402,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStatsHistory;->getStart()J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,413,5,413,25,
+Landroid/net/NetworkStatsHistory;->getEnd()J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,423,5,423,25,
+Landroid/net/NetworkStatsHistory;->getIndexBefore(J)I,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,445,5,445,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStatsHistory;->getValues(ILandroid/net/NetworkStatsHistory$Entry;)Landroid/net/NetworkStatsHistory$Entry;,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,475,5,475,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStatsHistory;->recordEntireHistory(Landroid/net/NetworkStatsHistory;)V,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,601,5,601,25,
+Landroid/net/NetworkStatsHistory;->getValues(JJLandroid/net/NetworkStatsHistory$Entry;)Landroid/net/NetworkStatsHistory$Entry;,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,753,5,753,25,
+Landroid/net/NetworkStatsHistory;->getValues(JJJLandroid/net/NetworkStatsHistory$Entry;)Landroid/net/NetworkStatsHistory$Entry;,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,768,5,768,25,
+Landroid/net/NetworkStatsHistory;->CREATOR:Landroid/os/Parcelable$Creator;,packages/modules/Connectivity/framework-t/src/android/net/NetworkStatsHistory.java,995,5,995,25,

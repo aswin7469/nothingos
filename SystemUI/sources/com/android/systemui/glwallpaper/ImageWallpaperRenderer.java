@@ -7,14 +7,16 @@ import android.graphics.Rect;
 import android.opengl.GLES20;
 import android.util.Log;
 import android.util.Size;
-import com.android.systemui.R$raw;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import com.android.systemui.C1893R;
+import java.p026io.FileDescriptor;
+import java.p026io.PrintWriter;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public class ImageWallpaperRenderer {
-    private static final String TAG = "ImageWallpaperRenderer";
+
+public class ImageWallpaperRenderer implements GLWallpaperRenderer {
+    private static final boolean DEBUG = false;
+    /* access modifiers changed from: private */
+    public static final String TAG = "ImageWallpaperRenderer";
     private Consumer<Bitmap> mOnBitmapUpdated;
     private final ImageGLProgram mProgram;
     private final Rect mSurfaceSize = new Rect();
@@ -39,23 +41,23 @@ public class ImageWallpaperRenderer {
         this.mOnBitmapUpdated = consumer;
     }
 
+    public void use(Consumer<Bitmap> consumer) {
+        this.mTexture.use(consumer);
+    }
+
     public boolean isWcgContent() {
         return this.mTexture.isWcgContent();
     }
 
     public void onSurfaceCreated() {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        this.mProgram.useGLProgram(R$raw.image_wallpaper_vertex_shader, R$raw.image_wallpaper_fragment_shader);
-        this.mTexture.use(new Consumer() { // from class: com.android.systemui.glwallpaper.ImageWallpaperRenderer$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ImageWallpaperRenderer.this.lambda$onSurfaceCreated$0((Bitmap) obj);
-            }
-        });
+        this.mProgram.useGLProgram(C1893R.raw.image_wallpaper_vertex_shader, C1893R.raw.image_wallpaper_fragment_shader);
+        this.mTexture.use(new ImageWallpaperRenderer$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onSurfaceCreated$0(Bitmap bitmap) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onSurfaceCreated$0$com-android-systemui-glwallpaper-ImageWallpaperRenderer */
+    public /* synthetic */ void mo33070x4ff2f7f9(Bitmap bitmap) {
         if (bitmap == null) {
             Log.w(TAG, "reload texture failed!");
         } else {
@@ -86,16 +88,14 @@ public class ImageWallpaperRenderer {
     public void dump(String str, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.print(str);
         printWriter.print("mSurfaceSize=");
-        printWriter.print(this.mSurfaceSize);
+        printWriter.print((Object) this.mSurfaceSize);
         printWriter.print(str);
         printWriter.print("mWcgContent=");
         printWriter.print(isWcgContent());
         this.mWallpaper.dump(str, fileDescriptor, printWriter, strArr);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class WallpaperTexture {
+    static class WallpaperTexture {
         private Bitmap mBitmap;
         private final Rect mDimensions;
         private final AtomicInteger mRefCount;
@@ -114,15 +114,15 @@ public class ImageWallpaperRenderer {
             this.mRefCount.incrementAndGet();
             synchronized (this.mRefCount) {
                 if (this.mBitmap == null) {
-                    this.mBitmap = this.mWallpaperManager.getBitmap(false);
+                    this.mBitmap = this.mWallpaperManager.getBitmapAsUser(-2, false);
                     this.mWcgContent = this.mWallpaperManager.wallpaperSupportsWcg(1);
                     this.mWallpaperManager.forgetLoadedWallpaper();
                     Bitmap bitmap2 = this.mBitmap;
-                    if (bitmap2 == null) {
-                        Log.w(ImageWallpaperRenderer.TAG, "Can't get bitmap");
-                    } else {
+                    if (bitmap2 != null) {
                         this.mDimensions.set(0, 0, bitmap2.getWidth(), this.mBitmap.getHeight());
                         this.mTextureUsed = true;
+                    } else {
+                        Log.w(ImageWallpaperRenderer.TAG, "Can't get bitmap");
                     }
                 }
             }
@@ -137,7 +137,7 @@ public class ImageWallpaperRenderer {
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public boolean isWcgContent() {
             return this.mWcgContent;
         }
@@ -147,7 +147,7 @@ public class ImageWallpaperRenderer {
             return bitmap != null ? Integer.toHexString(bitmap.hashCode()) : "null";
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public Rect getTextureDimensions() {
             if (!this.mTextureUsed) {
                 this.mDimensions.set(this.mWallpaperManager.peekBitmapDimensions());

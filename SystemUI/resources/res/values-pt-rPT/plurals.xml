@@ -16,6 +16,10 @@
         <item quantity="one">%s controlo adicionado.</item>
         <item quantity="other">%s controlos adicionados.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s app está ativa</item>
+        <item quantity="other">%s apps estão ativas</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">Introduza o PIN do cartão SIM. Tem mais %d tentativa antes de ser necessário contactar o operador para desbloquear o dispositivo.</item>
         <item quantity="other">Introduza o PIN do cartão SIM. Tem mais %d tentativas.</item>
@@ -28,25 +32,13 @@
         <item quantity="one">Código PIN do cartão SIM incorreto. Tem mais %d tentativa antes de precisar de contactar o seu operador para desbloquear o dispositivo.</item>
         <item quantity="other">Código PIN do cartão SIM incorreto. Tem mais %d tentativas.</item>
     </plurals>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">Código PIN do SIM%d incorreto, possui %d tentativas restantes antes de ter de contactar a sua operadora para desbloquear o seu dispositivo.</item>
+        <item quantity="other">Código PIN do SIM%d incorreto, possui %d tentativas restantes.</item>
+    </plurals>
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">Código PUK do cartão SIM incorreto. Tem mais %d tentativa antes de o cartão SIM ficar permanentemente inutilizável.</item>
         <item quantity="other">Código PUK do cartão SIM incorreto. Tem mais %d tentativas antes de o cartão SIM ficar permanentemente inutilizável.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">O dispositivo não é desbloqueado há %d hora. Confirme a palavra-passe.</item>
-        <item quantity="other">O dispositivo não é desbloqueado há %d horas. Confirme a palavra-passe.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">O dispositivo não é desbloqueado há %d hora. Confirme o padrão.</item>
-        <item quantity="other">O dispositivo não é desbloqueado há %d horas. Confirme o padrão.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">O dispositivo não é desbloqueado há %d hora. Confirme o PIN.</item>
-        <item quantity="other">O dispositivo não é desbloqueado há %d horas. Confirme o PIN.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">Tente novamente dentro de 1 segundo.</item>
-        <item quantity="other">Tente novamente dentro de %d segundos.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d nova notificação</item>
@@ -71,9 +63,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">Apenas é possível criar um utilizador.</item>
         <item quantity="other">Pode adicionar até %d utilizadores.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d dispositivo ligado</item>
-        <item quantity="other">%1$d dispositivos ligados</item>
     </plurals>
 </resources>

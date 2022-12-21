@@ -9,10 +9,11 @@ import android.util.AttributeSet;
 import androidx.preference.SwitchPreference;
 import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.Dependency;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.tuner.TunerService;
 import java.util.Set;
-/* loaded from: classes2.dex */
+
 public class StatusBarSwitch extends SwitchPreference implements TunerService.Tunable {
     private Set<String> mHideList;
 
@@ -20,30 +21,25 @@ public class StatusBarSwitch extends SwitchPreference implements TunerService.Tu
         super(context, attributeSet);
     }
 
-    @Override // androidx.preference.Preference
     public void onAttached() {
         super.onAttached();
-        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "icon_blacklist");
+        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, StatusBarIconController.ICON_HIDE_LIST);
     }
 
-    @Override // androidx.preference.Preference
     public void onDetached() {
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
         super.onDetached();
     }
 
-    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
-        if (!"icon_blacklist".equals(str)) {
-            return;
+        if (StatusBarIconController.ICON_HIDE_LIST.equals(str)) {
+            ArraySet<String> iconHideList = StatusBarIconController.getIconHideList(getContext(), str2);
+            this.mHideList = iconHideList;
+            setChecked(!iconHideList.contains(getKey()));
         }
-        ArraySet<String> iconHideList = StatusBarIconController.getIconHideList(getContext(), str2);
-        this.mHideList = iconHideList;
-        setChecked(!iconHideList.contains(getKey()));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public boolean persistBoolean(boolean z) {
         if (!z) {
             if (this.mHideList.contains(getKey())) {
@@ -63,6 +59,6 @@ public class StatusBarSwitch extends SwitchPreference implements TunerService.Tu
     }
 
     private void setList(Set<String> set) {
-        Settings.Secure.putStringForUser(getContext().getContentResolver(), "icon_blacklist", TextUtils.join(",", set), ActivityManager.getCurrentUser());
+        Settings.Secure.putStringForUser(getContext().getContentResolver(), StatusBarIconController.ICON_HIDE_LIST, TextUtils.join(NavigationBarInflaterView.BUTTON_SEPARATOR, set), ActivityManager.getCurrentUser());
     }
 }

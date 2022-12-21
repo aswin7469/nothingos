@@ -17,6 +17,8 @@
         <item>3 תהליכים לכל היותר</item>
         <item>4 תהליכים לכל היותר</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -67,6 +69,8 @@
         <item>48.0 קילו-הרץ</item>
         <item>88.2 קילו-הרץ</item>
         <item>96.0 קילו-הרץ</item>
+        <item>176.4 קילו-הרץ</item>
+        <item>192.0 קילו-הרץ</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>שימוש בבחירת המערכת (ברירת המחדל)</item>
@@ -74,6 +78,8 @@
         <item>48.0 קילו-הרץ</item>
         <item>88.2 קילו-הרץ</item>
         <item>96.0 קילו-הרץ</item>
+        <item>176.4 קילו-הרץ</item>
+        <item>192.0 קילו-הרץ</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>שימוש בבחירת המערכת (ברירת המחדל)</item>
@@ -84,6 +90,10 @@
         <item>LDAC</item>
         <item>אודיו Qualcomm® aptX™ Adaptive</item>
         <item>אודיו Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>שימוש בבחירת המערכת (ברירת המחדל)</item>
@@ -94,6 +104,10 @@
         <item>LDAC</item>
         <item>אודיו Qualcomm® aptX™ Adaptive</item>
         <item>אודיו Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -264,6 +278,11 @@
         <item>כבוי</item>
         <item>פועל</item>
     </array>
+    <array name="tile_states_color_correction">
+        <item>לא זמין</item>
+        <item>כבוי</item>
+        <item>פועל</item>
+    </array>
     <array name="tile_states_controls">
         <item>לא זמין</item>
         <item>כבוי</item>
@@ -310,6 +329,16 @@
         <item>פועל</item>
     </array>
     <array name="tile_states_night">
+        <item>לא זמין</item>
+        <item>כבוי</item>
+        <item>פועל</item>
+    </array>
+    <array name="tile_states_onehanded">
+        <item>לא זמין</item>
+        <item>כבוי</item>
+        <item>פועל</item>
+    </array>
+    <array name="tile_states_qr_code_scanner">
         <item>לא זמין</item>
         <item>כבוי</item>
         <item>פועל</item>
@@ -378,6 +407,12 @@
         <item>מהיר במיוחד</item>
         <item>יותר מהיר ממהיר במיוחד</item>
         <item>הכי מהיר</item>
+    </array>
+    <array name="udfps_accessibility_touch_hints">
+        <item>הזזה שמאלה</item>
+        <item>הזזה למטה</item>
+        <item>הזזה ימינה</item>
+        <item>הזזה למעלה</item>
     </array>
     <array name="usb_configuration_titles">
         <item>בטעינה</item>

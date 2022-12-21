@@ -1,164 +1,114 @@
 package com.android.systemui.navigationbar;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
-import android.os.SystemProperties;
+import android.os.Trace;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
-import android.view.accessibility.AccessibilityManager;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.internal.logging.MetricsLogger;
-import com.android.internal.logging.UiEventLogger;
 import com.android.internal.statusbar.RegisterStatusBarResult;
+import com.android.p019wm.shell.back.BackAnimation;
+import com.android.p019wm.shell.pip.Pip;
 import com.android.settingslib.applications.InterestingConfigChanges;
 import com.android.systemui.Dumpable;
-import com.android.systemui.accessibility.AccessibilityButtonModeObserver;
-import com.android.systemui.accessibility.SystemActions;
-import com.android.systemui.assist.AssistManager;
-import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.model.SysUiState;
+import com.android.systemui.navigationbar.NavigationBarComponent;
 import com.android.systemui.navigationbar.NavigationModeController;
-import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.recents.OverviewProxyService;
-import com.android.systemui.recents.Recents;
-import com.android.systemui.settings.UserTracker;
+import com.android.systemui.shared.recents.utilities.Utilities;
+import com.android.systemui.shared.system.QuickStepContract;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.NotificationRemoteInputManager;
-import com.android.systemui.statusbar.NotificationShadeDepthController;
-import com.android.systemui.statusbar.phone.ShadeController;
-import com.android.systemui.statusbar.phone.StatusBar;
-import com.android.systemui.statusbar.policy.AccessibilityManagerWrapper;
+import com.android.systemui.statusbar.phone.AutoHideController;
+import com.android.systemui.statusbar.phone.LightBarController;
+import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.ConfigurationController;
-import com.android.systemui.statusbar.policy.DeviceProvisionedController;
-import com.android.wm.shell.legacysplitscreen.LegacySplitScreen;
-import com.android.wm.shell.pip.Pip;
-import dagger.Lazy;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.navigationbar.NavigationBarControllerEx;
+import java.p026io.PrintWriter;
 import java.util.Optional;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class NavigationBarController implements CommandQueue.Callbacks, ConfigurationController.ConfigurationListener, NavigationModeController.ModeChangedListener, Dumpable {
     private static final String TAG = "NavigationBarController";
-    private final AccessibilityButtonModeObserver mAccessibilityButtonModeObserver;
-    private final AccessibilityManager mAccessibilityManager;
-    private final AccessibilityManagerWrapper mAccessibilityManagerWrapper;
-    private final Lazy<AssistManager> mAssistManagerLazy;
-    private final BroadcastDispatcher mBroadcastDispatcher;
-    private final CommandQueue mCommandQueue;
     private final InterestingConfigChanges mConfigChanges;
     private final Context mContext;
-    private final DeviceProvisionedController mDeviceProvisionedController;
     private final DisplayManager mDisplayManager;
     private final Handler mHandler;
-    private boolean mIsTablet;
-    private final MetricsLogger mMetricsLogger;
-    private final NavigationBarOverlayController mNavBarOverlayController;
+    boolean mIsTablet;
     private int mNavMode;
-    @VisibleForTesting
+    private final NavigationBarComponent.Factory mNavigationBarComponentFactory;
     SparseArray<NavigationBar> mNavigationBars = new SparseArray<>();
-    private final NavigationModeController mNavigationModeController;
-    private final NotificationRemoteInputManager mNotificationRemoteInputManager;
-    private final NotificationShadeDepthController mNotificationShadeDepthController;
-    private final OverviewProxyService mOverviewProxyService;
-    private final Optional<Pip> mPipOptional;
-    private final Optional<Recents> mRecentsOptional;
-    private final ShadeController mShadeController;
-    private final Optional<LegacySplitScreen> mSplitScreenOptional;
-    private final Lazy<StatusBar> mStatusBarLazy;
-    private final StatusBarStateController mStatusBarStateController;
-    private final SysUiState mSysUiFlagsContainer;
-    private final SystemActions mSystemActions;
+    private final StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
     private final TaskbarDelegate mTaskbarDelegate;
-    private final UiEventLogger mUiEventLogger;
-    private final UserTracker mUserTracker;
-    private final WindowManager mWindowManager;
 
-    public NavigationBarController(Context context, WindowManager windowManager, Lazy<AssistManager> lazy, AccessibilityManager accessibilityManager, AccessibilityManagerWrapper accessibilityManagerWrapper, DeviceProvisionedController deviceProvisionedController, MetricsLogger metricsLogger, OverviewProxyService overviewProxyService, NavigationModeController navigationModeController, AccessibilityButtonModeObserver accessibilityButtonModeObserver, StatusBarStateController statusBarStateController, SysUiState sysUiState, BroadcastDispatcher broadcastDispatcher, CommandQueue commandQueue, Optional<Pip> optional, Optional<LegacySplitScreen> optional2, Optional<Recents> optional3, Lazy<StatusBar> lazy2, ShadeController shadeController, NotificationRemoteInputManager notificationRemoteInputManager, NotificationShadeDepthController notificationShadeDepthController, SystemActions systemActions, Handler handler, UiEventLogger uiEventLogger, NavigationBarOverlayController navigationBarOverlayController, ConfigurationController configurationController, UserTracker userTracker) {
+    @Inject
+    public NavigationBarController(Context context, OverviewProxyService overviewProxyService, NavigationModeController navigationModeController, SysUiState sysUiState, CommandQueue commandQueue, @Main Handler handler, ConfigurationController configurationController, NavBarHelper navBarHelper, TaskbarDelegate taskbarDelegate, NavigationBarComponent.Factory factory, StatusBarKeyguardViewManager statusBarKeyguardViewManager, DumpManager dumpManager, AutoHideController autoHideController, LightBarController lightBarController, Optional<Pip> optional, Optional<BackAnimation> optional2) {
+        Context context2 = context;
+        Handler handler2 = handler;
         InterestingConfigChanges interestingConfigChanges = new InterestingConfigChanges(1073742592);
         this.mConfigChanges = interestingConfigChanges;
-        this.mContext = context;
-        this.mWindowManager = windowManager;
-        this.mAssistManagerLazy = lazy;
-        this.mAccessibilityManager = accessibilityManager;
-        this.mAccessibilityManagerWrapper = accessibilityManagerWrapper;
-        this.mDeviceProvisionedController = deviceProvisionedController;
-        this.mMetricsLogger = metricsLogger;
-        this.mOverviewProxyService = overviewProxyService;
-        this.mNavigationModeController = navigationModeController;
-        this.mAccessibilityButtonModeObserver = accessibilityButtonModeObserver;
-        this.mStatusBarStateController = statusBarStateController;
-        this.mSysUiFlagsContainer = sysUiState;
-        this.mBroadcastDispatcher = broadcastDispatcher;
-        this.mCommandQueue = commandQueue;
-        this.mPipOptional = optional;
-        this.mSplitScreenOptional = optional2;
-        this.mRecentsOptional = optional3;
-        this.mStatusBarLazy = lazy2;
-        this.mShadeController = shadeController;
-        this.mNotificationRemoteInputManager = notificationRemoteInputManager;
-        this.mNotificationShadeDepthController = notificationShadeDepthController;
-        this.mSystemActions = systemActions;
-        this.mUiEventLogger = uiEventLogger;
-        this.mHandler = handler;
-        this.mDisplayManager = (DisplayManager) context.getSystemService(DisplayManager.class);
+        this.mContext = context2;
+        this.mHandler = handler2;
+        this.mNavigationBarComponentFactory = factory;
+        this.mDisplayManager = (DisplayManager) context2.getSystemService(DisplayManager.class);
         commandQueue.addCallback((CommandQueue.Callbacks) this);
         configurationController.addCallback(this);
         interestingConfigChanges.applyNewConfig(context.getResources());
-        this.mNavBarOverlayController = navigationBarOverlayController;
         this.mNavMode = navigationModeController.addListener(this);
-        navigationModeController.addListener(this);
-        this.mTaskbarDelegate = new TaskbarDelegate(overviewProxyService);
-        this.mIsTablet = isTablet(context.getResources().getConfiguration());
-        this.mUserTracker = userTracker;
+        TaskbarDelegate taskbarDelegate2 = taskbarDelegate;
+        this.mTaskbarDelegate = taskbarDelegate2;
+        this.mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
+        taskbarDelegate2.setDependencies(commandQueue, overviewProxyService, navBarHelper, navigationModeController, sysUiState, dumpManager, autoHideController, lightBarController, optional, optional2.orElse(null));
+        this.mIsTablet = Utilities.isTablet(context);
+        dumpManager.registerDumpable(this);
+        ((NavigationBarControllerEx) NTDependencyEx.get(NavigationBarControllerEx.class)).registerNavBarCombinationObserver(context2, handler2, this.mNavigationBars);
     }
 
-    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(Configuration configuration) {
         boolean z = this.mIsTablet;
-        boolean isTablet = isTablet(configuration);
+        boolean isTablet = Utilities.isTablet(this.mContext);
         this.mIsTablet = isTablet;
         int i = 0;
-        if (!(isTablet != z) || !updateNavbarForTaskbar()) {
-            if (this.mConfigChanges.applyNewConfig(this.mContext.getResources())) {
-                while (i < this.mNavigationBars.size()) {
-                    recreateNavigationBar(this.mNavigationBars.keyAt(i));
-                    i++;
-                }
-                return;
-            }
-            while (i < this.mNavigationBars.size()) {
-                this.mNavigationBars.valueAt(i).onConfigurationChanged(configuration);
-                i++;
-            }
-        }
-    }
-
-    @Override // com.android.systemui.navigationbar.NavigationModeController.ModeChangedListener
-    public void onNavigationModeChanged(int i) {
-        final int i2 = this.mNavMode;
-        if (i2 == i) {
+        if ((isTablet != z) && updateNavbarForTaskbar()) {
             return;
         }
-        this.mNavMode = i;
-        this.mHandler.post(new Runnable() { // from class: com.android.systemui.navigationbar.NavigationBarController$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                NavigationBarController.this.lambda$onNavigationModeChanged$0(i2);
+        if (this.mConfigChanges.applyNewConfig(this.mContext.getResources())) {
+            while (i < this.mNavigationBars.size()) {
+                recreateNavigationBar(this.mNavigationBars.keyAt(i));
+                i++;
             }
-        });
+            return;
+        }
+        while (i < this.mNavigationBars.size()) {
+            this.mNavigationBars.valueAt(i).onConfigurationChanged(configuration);
+            i++;
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onNavigationModeChanged$0(int i) {
+    public void onNavigationModeChanged(int i) {
+        int i2 = this.mNavMode;
+        if (i2 != i) {
+            this.mNavMode = i;
+            updateAccessibilityButtonModeIfNeeded();
+            this.mHandler.post(new NavigationBarController$$ExternalSyntheticLambda0(this, i2));
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onNavigationModeChanged$0$com-android-systemui-navigationbar-NavigationBarController */
+    public /* synthetic */ void mo34703xf469dbe4(int i) {
         if (i != this.mNavMode) {
             updateNavbarForTaskbar();
         }
@@ -170,40 +120,52 @@ public class NavigationBarController implements CommandQueue.Callbacks, Configur
         }
     }
 
-    public boolean updateNavbarForTaskbar() {
-        if (!isThreeButtonTaskbarFlagEnabled()) {
-            return false;
-        }
-        if (this.mIsTablet && this.mNavMode == 0) {
-            removeNavigationBar(this.mContext.getDisplayId());
-            this.mCommandQueue.addCallback((CommandQueue.Callbacks) this.mTaskbarDelegate);
-            return true;
-        } else if (this.mNavigationBars.get(this.mContext.getDisplayId()) != null) {
-            return true;
-        } else {
-            createNavigationBar(this.mContext.getDisplay(), null, null);
-            this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this.mTaskbarDelegate);
-            return true;
+    private void updateAccessibilityButtonModeIfNeeded() {
+        ContentResolver contentResolver = this.mContext.getContentResolver();
+        int intForUser = Settings.Secure.getIntForUser(contentResolver, "accessibility_button_mode", 0, -2);
+        if (intForUser != 1) {
+            if (QuickStepContract.isGesturalMode(this.mNavMode) && intForUser == 0) {
+                Settings.Secure.putIntForUser(contentResolver, "accessibility_button_mode", 2, -2);
+            } else if (!QuickStepContract.isGesturalMode(this.mNavMode) && intForUser == 2) {
+                Settings.Secure.putIntForUser(contentResolver, "accessibility_button_mode", 0, -2);
+            }
         }
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
+    private boolean updateNavbarForTaskbar() {
+        boolean initializeTaskbarIfNecessary = initializeTaskbarIfNecessary();
+        if (!initializeTaskbarIfNecessary && this.mNavigationBars.get(this.mContext.getDisplayId()) == null) {
+            createNavigationBar(this.mContext.getDisplay(), (Bundle) null, (RegisterStatusBarResult) null);
+        }
+        return initializeTaskbarIfNecessary;
+    }
+
+    private boolean initializeTaskbarIfNecessary() {
+        if (this.mIsTablet) {
+            Trace.beginSection("NavigationBarController#initializeTaskbarIfNecessary");
+            removeNavigationBar(this.mContext.getDisplayId());
+            this.mTaskbarDelegate.init(this.mContext.getDisplayId());
+            Trace.endSection();
+        } else {
+            this.mTaskbarDelegate.destroy();
+        }
+        return this.mIsTablet;
+    }
+
     public void onDisplayRemoved(int i) {
         removeNavigationBar(i);
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onDisplayReady(int i) {
         Display display = this.mDisplayManager.getDisplay(i);
-        this.mIsTablet = isTablet(this.mContext.getResources().getConfiguration());
-        createNavigationBar(display, null, null);
+        this.mIsTablet = Utilities.isTablet(this.mContext);
+        createNavigationBar(display, (Bundle) null, (RegisterStatusBarResult) null);
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void setNavigationBarLumaSamplingEnabled(int i, boolean z) {
-        NavigationBarView navigationBarView = getNavigationBarView(i);
-        if (navigationBarView != null) {
-            navigationBarView.setNavigationBarLumaSamplingEnabled(z);
+        NavigationBar navigationBar = getNavigationBar(i);
+        if (navigationBar != null) {
+            navigationBar.setNavigationBarLumaSamplingEnabled(z);
         }
     }
 
@@ -214,61 +176,57 @@ public class NavigationBarController implements CommandQueue.Callbacks, Configur
             navigationBar.onSaveInstanceState(bundle);
         }
         removeNavigationBar(i);
-        createNavigationBar(this.mDisplayManager.getDisplay(i), bundle, null);
+        createNavigationBar(this.mDisplayManager.getDisplay(i), bundle, (RegisterStatusBarResult) null);
     }
 
     public void createNavigationBars(boolean z, RegisterStatusBarResult registerStatusBarResult) {
-        Display[] displays;
-        if (updateNavbarForTaskbar()) {
-            return;
-        }
+        updateAccessibilityButtonModeIfNeeded();
+        boolean z2 = z && !initializeTaskbarIfNecessary();
         for (Display display : this.mDisplayManager.getDisplays()) {
-            if (z || display.getDisplayId() != 0) {
-                createNavigationBar(display, null, registerStatusBarResult);
+            if (z2 || display.getDisplayId() != 0) {
+                createNavigationBar(display, (Bundle) null, registerStatusBarResult);
             }
         }
     }
 
-    @VisibleForTesting
-    void createNavigationBar(final Display display, Bundle bundle, final RegisterStatusBarResult registerStatusBarResult) {
-        Context createDisplayContext;
-        if (display != null && !isThreeButtonTaskbarEnabled()) {
+    /* access modifiers changed from: package-private */
+    public void createNavigationBar(final Display display, Bundle bundle, final RegisterStatusBarResult registerStatusBarResult) {
+        Context context;
+        if (display != null) {
             int displayId = display.getDisplayId();
             boolean z = displayId == 0;
-            try {
-                if (!WindowManagerGlobal.getWindowManagerService().hasNavigationBar(displayId)) {
-                    return;
-                }
-                if (z) {
-                    createDisplayContext = this.mContext;
-                } else {
-                    createDisplayContext = this.mContext.createDisplayContext(display);
-                }
-                final NavigationBar navigationBar = new NavigationBar(createDisplayContext, this.mWindowManager, this.mAssistManagerLazy, this.mAccessibilityManager, this.mAccessibilityManagerWrapper, this.mDeviceProvisionedController, this.mMetricsLogger, this.mOverviewProxyService, this.mNavigationModeController, this.mAccessibilityButtonModeObserver, this.mStatusBarStateController, this.mSysUiFlagsContainer, this.mBroadcastDispatcher, this.mCommandQueue, this.mPipOptional, this.mSplitScreenOptional, this.mRecentsOptional, this.mStatusBarLazy, this.mShadeController, this.mNotificationRemoteInputManager, this.mNotificationShadeDepthController, this.mSystemActions, this.mHandler, this.mNavBarOverlayController, this.mUiEventLogger, this.mUserTracker);
-                this.mNavigationBars.put(displayId, navigationBar);
-                navigationBar.createView(bundle).addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() { // from class: com.android.systemui.navigationbar.NavigationBarController.1
-                    @Override // android.view.View.OnAttachStateChangeListener
-                    public void onViewAttachedToWindow(View view) {
-                        if (registerStatusBarResult != null) {
-                            NavigationBar navigationBar2 = navigationBar;
-                            int displayId2 = display.getDisplayId();
-                            RegisterStatusBarResult registerStatusBarResult2 = registerStatusBarResult;
-                            navigationBar2.setImeWindowStatus(displayId2, registerStatusBarResult2.mImeToken, registerStatusBarResult2.mImeWindowVis, registerStatusBarResult2.mImeBackDisposition, registerStatusBarResult2.mShowImeSwitcher);
+            if (!this.mIsTablet || !z) {
+                try {
+                    if (WindowManagerGlobal.getWindowManagerService().hasNavigationBar(displayId)) {
+                        if (z) {
+                            context = this.mContext;
+                        } else {
+                            context = this.mContext.createDisplayContext(display);
                         }
-                    }
+                        final NavigationBar navigationBar = this.mNavigationBarComponentFactory.create(context, bundle).getNavigationBar();
+                        navigationBar.init();
+                        this.mNavigationBars.put(displayId, navigationBar);
+                        navigationBar.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                            public void onViewAttachedToWindow(View view) {
+                                if (registerStatusBarResult != null) {
+                                    navigationBar.setImeWindowStatus(display.getDisplayId(), registerStatusBarResult.mImeToken, registerStatusBarResult.mImeWindowVis, registerStatusBarResult.mImeBackDisposition, registerStatusBarResult.mShowImeSwitcher);
+                                }
+                            }
 
-                    @Override // android.view.View.OnAttachStateChangeListener
-                    public void onViewDetachedFromWindow(View view) {
-                        view.removeOnAttachStateChangeListener(this);
+                            public void onViewDetachedFromWindow(View view) {
+                                view.removeOnAttachStateChangeListener(this);
+                            }
+                        });
                     }
-                });
-            } catch (RemoteException unused) {
-                Log.w(TAG, "Cannot get WindowManager.");
+                } catch (RemoteException unused) {
+                    Log.w(TAG, "Cannot get WindowManager.");
+                }
             }
         }
     }
 
-    void removeNavigationBar(int i) {
+    /* access modifiers changed from: package-private */
+    public void removeNavigationBar(int i) {
         NavigationBar navigationBar = this.mNavigationBars.get(i);
         if (navigationBar != null) {
             navigationBar.destroyView();
@@ -311,33 +269,53 @@ public class NavigationBarController implements CommandQueue.Callbacks, Configur
         }
     }
 
+    public NavigationBarView getDefaultNavigationBarView() {
+        return getNavigationBarView(0);
+    }
+
     public NavigationBarView getNavigationBarView(int i) {
-        NavigationBar navigationBar = this.mNavigationBars.get(i);
+        NavigationBar navigationBar = getNavigationBar(i);
         if (navigationBar == null) {
             return null;
         }
         return navigationBar.getView();
     }
 
+    private NavigationBar getNavigationBar(int i) {
+        return this.mNavigationBars.get(i);
+    }
+
+    public void showPinningEnterExitToast(int i, boolean z) {
+        NavigationBarView navigationBarView = getNavigationBarView(i);
+        if (navigationBarView != null) {
+            navigationBarView.showPinningEnterExitToast(z);
+        } else if (i == 0 && this.mTaskbarDelegate.isInitialized()) {
+            this.mTaskbarDelegate.showPinningEnterExitToast(z);
+        }
+    }
+
+    public void showPinningEscapeToast(int i) {
+        NavigationBarView navigationBarView = getNavigationBarView(i);
+        if (navigationBarView != null) {
+            navigationBarView.showPinningEscapeToast();
+        } else if (i == 0 && this.mTaskbarDelegate.isInitialized()) {
+            this.mTaskbarDelegate.showPinningEscapeToast();
+        }
+    }
+
+    public boolean isOverviewEnabled(int i) {
+        NavigationBarView navigationBarView = getNavigationBarView(i);
+        if (navigationBarView != null) {
+            return navigationBarView.isOverviewEnabled();
+        }
+        return this.mTaskbarDelegate.isOverviewEnabled();
+    }
+
     public NavigationBar getDefaultNavigationBar() {
         return this.mNavigationBars.get(0);
     }
 
-    private boolean isThreeButtonTaskbarEnabled() {
-        return this.mIsTablet && this.mNavMode == 0 && isThreeButtonTaskbarFlagEnabled();
-    }
-
-    private boolean isThreeButtonTaskbarFlagEnabled() {
-        return SystemProperties.getBoolean("persist.debug.taskbar_three_button", false);
-    }
-
-    private boolean isTablet(Configuration configuration) {
-        float f = Resources.getSystem().getDisplayMetrics().density;
-        return ((float) Math.min((int) (((float) configuration.screenWidthDp) * f), (int) (f * ((float) configuration.screenHeightDp)))) / (((float) this.mContext.getResources().getDisplayMetrics().densityDpi) / 160.0f) >= 600.0f;
-    }
-
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         for (int i = 0; i < this.mNavigationBars.size(); i++) {
             if (i > 0) {
                 printWriter.println();

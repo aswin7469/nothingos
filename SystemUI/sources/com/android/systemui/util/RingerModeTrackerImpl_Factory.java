@@ -5,7 +5,7 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class RingerModeTrackerImpl_Factory implements Factory<RingerModeTrackerImpl> {
     private final Provider<AudioManager> audioManagerProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
@@ -17,10 +17,8 @@ public final class RingerModeTrackerImpl_Factory implements Factory<RingerModeTr
         this.executorProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public RingerModeTrackerImpl mo1933get() {
-        return newInstance(this.audioManagerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.executorProvider.mo1933get());
+    public RingerModeTrackerImpl get() {
+        return newInstance(this.audioManagerProvider.get(), this.broadcastDispatcherProvider.get(), this.executorProvider.get());
     }
 
     public static RingerModeTrackerImpl_Factory create(Provider<AudioManager> provider, Provider<BroadcastDispatcher> provider2, Provider<Executor> provider3) {

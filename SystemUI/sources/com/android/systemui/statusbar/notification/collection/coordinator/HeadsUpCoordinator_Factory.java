@@ -5,35 +5,41 @@ import com.android.systemui.statusbar.notification.collection.render.NodeControl
 import com.android.systemui.statusbar.notification.interruption.HeadsUpViewBinder;
 import com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
+import com.android.systemui.util.concurrency.DelayableExecutor;
+import com.android.systemui.util.time.SystemClock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class HeadsUpCoordinator_Factory implements Factory<HeadsUpCoordinator> {
-    private final Provider<HeadsUpManager> headsUpManagerProvider;
-    private final Provider<HeadsUpViewBinder> headsUpViewBinderProvider;
-    private final Provider<NodeController> incomingHeaderControllerProvider;
-    private final Provider<NotificationInterruptStateProvider> notificationInterruptStateProvider;
-    private final Provider<NotificationRemoteInputManager> remoteInputManagerProvider;
+    private final Provider<DelayableExecutor> mExecutorProvider;
+    private final Provider<HeadsUpManager> mHeadsUpManagerProvider;
+    private final Provider<HeadsUpViewBinder> mHeadsUpViewBinderProvider;
+    private final Provider<NodeController> mIncomingHeaderControllerProvider;
+    private final Provider<HeadsUpCoordinatorLogger> mLoggerProvider;
+    private final Provider<NotificationInterruptStateProvider> mNotificationInterruptStateProvider;
+    private final Provider<NotificationRemoteInputManager> mRemoteInputManagerProvider;
+    private final Provider<SystemClock> mSystemClockProvider;
 
-    public HeadsUpCoordinator_Factory(Provider<HeadsUpManager> provider, Provider<HeadsUpViewBinder> provider2, Provider<NotificationInterruptStateProvider> provider3, Provider<NotificationRemoteInputManager> provider4, Provider<NodeController> provider5) {
-        this.headsUpManagerProvider = provider;
-        this.headsUpViewBinderProvider = provider2;
-        this.notificationInterruptStateProvider = provider3;
-        this.remoteInputManagerProvider = provider4;
-        this.incomingHeaderControllerProvider = provider5;
+    public HeadsUpCoordinator_Factory(Provider<HeadsUpCoordinatorLogger> provider, Provider<SystemClock> provider2, Provider<HeadsUpManager> provider3, Provider<HeadsUpViewBinder> provider4, Provider<NotificationInterruptStateProvider> provider5, Provider<NotificationRemoteInputManager> provider6, Provider<NodeController> provider7, Provider<DelayableExecutor> provider8) {
+        this.mLoggerProvider = provider;
+        this.mSystemClockProvider = provider2;
+        this.mHeadsUpManagerProvider = provider3;
+        this.mHeadsUpViewBinderProvider = provider4;
+        this.mNotificationInterruptStateProvider = provider5;
+        this.mRemoteInputManagerProvider = provider6;
+        this.mIncomingHeaderControllerProvider = provider7;
+        this.mExecutorProvider = provider8;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public HeadsUpCoordinator mo1933get() {
-        return newInstance(this.headsUpManagerProvider.mo1933get(), this.headsUpViewBinderProvider.mo1933get(), this.notificationInterruptStateProvider.mo1933get(), this.remoteInputManagerProvider.mo1933get(), this.incomingHeaderControllerProvider.mo1933get());
+    public HeadsUpCoordinator get() {
+        return newInstance(this.mLoggerProvider.get(), this.mSystemClockProvider.get(), this.mHeadsUpManagerProvider.get(), this.mHeadsUpViewBinderProvider.get(), this.mNotificationInterruptStateProvider.get(), this.mRemoteInputManagerProvider.get(), this.mIncomingHeaderControllerProvider.get(), this.mExecutorProvider.get());
     }
 
-    public static HeadsUpCoordinator_Factory create(Provider<HeadsUpManager> provider, Provider<HeadsUpViewBinder> provider2, Provider<NotificationInterruptStateProvider> provider3, Provider<NotificationRemoteInputManager> provider4, Provider<NodeController> provider5) {
-        return new HeadsUpCoordinator_Factory(provider, provider2, provider3, provider4, provider5);
+    public static HeadsUpCoordinator_Factory create(Provider<HeadsUpCoordinatorLogger> provider, Provider<SystemClock> provider2, Provider<HeadsUpManager> provider3, Provider<HeadsUpViewBinder> provider4, Provider<NotificationInterruptStateProvider> provider5, Provider<NotificationRemoteInputManager> provider6, Provider<NodeController> provider7, Provider<DelayableExecutor> provider8) {
+        return new HeadsUpCoordinator_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8);
     }
 
-    public static HeadsUpCoordinator newInstance(HeadsUpManager headsUpManager, HeadsUpViewBinder headsUpViewBinder, NotificationInterruptStateProvider notificationInterruptStateProvider, NotificationRemoteInputManager notificationRemoteInputManager, NodeController nodeController) {
-        return new HeadsUpCoordinator(headsUpManager, headsUpViewBinder, notificationInterruptStateProvider, notificationRemoteInputManager, nodeController);
+    public static HeadsUpCoordinator newInstance(HeadsUpCoordinatorLogger headsUpCoordinatorLogger, SystemClock systemClock, HeadsUpManager headsUpManager, HeadsUpViewBinder headsUpViewBinder, NotificationInterruptStateProvider notificationInterruptStateProvider, NotificationRemoteInputManager notificationRemoteInputManager, NodeController nodeController, DelayableExecutor delayableExecutor) {
+        return new HeadsUpCoordinator(headsUpCoordinatorLogger, systemClock, headsUpManager, headsUpViewBinder, notificationInterruptStateProvider, notificationRemoteInputManager, nodeController, delayableExecutor);
     }
 }

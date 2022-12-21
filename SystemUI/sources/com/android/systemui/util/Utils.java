@@ -4,16 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.provider.Settings;
-import android.view.ContextThemeWrapper;
-import com.android.systemui.R$bool;
+import android.view.DisplayCutout;
+import com.android.internal.policy.SystemBarUtils;
+import com.android.systemui.C1893R;
 import com.android.systemui.shared.system.QuickStepContract;
-import com.android.systemui.statusbar.FeatureFlags;
 import java.util.List;
 import java.util.function.Consumer;
-/* loaded from: classes2.dex */
+
 public class Utils {
+    private static Boolean sUseQsMediaPlayer;
+
     public static <T> void safeForeach(List<T> list, Consumer<T> consumer) {
         for (int size = list.size() - 1; size >= 0; size--) {
             T t = list.get(size);
@@ -38,28 +39,37 @@ public class Utils {
     }
 
     public static boolean useQsMediaPlayer(Context context) {
-        return Settings.Global.getInt(context.getContentResolver(), "qs_media_controls", 1) > 0;
+        if (sUseQsMediaPlayer == null) {
+            boolean z = true;
+            if (Settings.Global.getInt(context.getContentResolver(), "qs_media_controls", 1) <= 0) {
+                z = false;
+            }
+            sUseQsMediaPlayer = Boolean.valueOf(z);
+        }
+        return sUseQsMediaPlayer.booleanValue();
     }
 
     public static boolean useMediaResumption(Context context) {
-        return useQsMediaPlayer(context) && Settings.Secure.getInt(context.getContentResolver(), "qs_media_resumption", 1) > 0;
-    }
-
-    public static boolean allowMediaRecommendations(Context context) {
-        return useQsMediaPlayer(context) && Settings.Secure.getInt(context.getContentResolver(), "qs_media_recommend", 1) > 0;
-    }
-
-    public static boolean shouldUseSplitNotificationShade(FeatureFlags featureFlags, Resources resources) {
-        return featureFlags.isTwoColumnNotificationShadeEnabled() && resources.getBoolean(R$bool.config_use_split_notification_shade);
-    }
-
-    public static int getPrivateAttrColorIfUnset(ContextThemeWrapper contextThemeWrapper, TypedArray typedArray, int i, int i2, int i3) {
-        if (typedArray.hasValue(i)) {
-            return typedArray.getColor(i, i2);
+        int i = Settings.Secure.getInt(context.getContentResolver(), "qs_media_resumption", 1);
+        if (!useQsMediaPlayer(context) || i <= 0) {
+            return false;
         }
-        TypedArray obtainStyledAttributes = contextThemeWrapper.obtainStyledAttributes(new int[]{i3});
-        int color = obtainStyledAttributes.getColor(0, i2);
-        obtainStyledAttributes.recycle();
-        return color;
+        return true;
+    }
+
+    public static boolean useCollapsedMediaInLandscape(Resources resources) {
+        return resources.getBoolean(C1893R.bool.config_quickSettingsMediaLandscapeCollapsed);
+    }
+
+    public static int getStatusBarHeaderHeightKeyguard(Context context) {
+        int i;
+        int statusBarHeight = SystemBarUtils.getStatusBarHeight(context);
+        DisplayCutout cutout = context.getDisplay().getCutout();
+        if (cutout == null) {
+            i = 0;
+        } else {
+            i = cutout.getWaterfallInsets().top;
+        }
+        return Math.max(statusBarHeight, context.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_header_height_keyguard) + i);
     }
 }

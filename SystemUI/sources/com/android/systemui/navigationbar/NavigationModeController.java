@@ -7,83 +7,98 @@ import android.content.IntentFilter;
 import android.content.om.IOverlayManager;
 import android.content.pm.PackageManager;
 import android.content.res.ApkAssets;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
+import androidx.slice.core.SliceHints;
 import com.android.systemui.Dumpable;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.UiBackground;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.navigationbar.NavigationModeControllerEx;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
-public class NavigationModeController implements Dumpable {
-    private static final String TAG = "NavigationModeController";
-    private final Context mContext;
-    private Context mCurrentUserContext;
-    private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedCallback;
-    private final Executor mUiBgExecutor;
-    private ArrayList<ModeChangedListener> mListeners = new ArrayList<>();
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.systemui.navigationbar.NavigationModeController.2
-        @Override // android.content.BroadcastReceiver
-        public void onReceive(Context context, Intent intent) {
-            Log.d(NavigationModeController.TAG, "ACTION_OVERLAY_CHANGED");
-            NavigationModeController.this.updateCurrentInteractionMode(true);
-        }
-    };
-    private final IOverlayManager mOverlayManager = IOverlayManager.Stub.asInterface(ServiceManager.getService("overlay"));
+import javax.inject.Inject;
 
-    /* loaded from: classes.dex */
+@SysUISingleton
+public class NavigationModeController implements Dumpable {
+    private static final boolean DEBUG = true;
+    /* access modifiers changed from: private */
+    public static final String TAG = "NavigationModeController";
+    private final Context mContext;
+    /* access modifiers changed from: private */
+    public Context mCurrentUserContext;
+    private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedCallback;
+    /* access modifiers changed from: private */
+    public NavigationModeControllerEx mEx;
+    private ArrayList<ModeChangedListener> mListeners = new ArrayList<>();
+    /* access modifiers changed from: private */
+    public final IOverlayManager mOverlayManager;
+    private BroadcastReceiver mReceiver;
+    private final Executor mUiBgExecutor;
+
     public interface ModeChangedListener {
         void onNavigationModeChanged(int i);
     }
 
-    public NavigationModeController(Context context, DeviceProvisionedController deviceProvisionedController, ConfigurationController configurationController, Executor executor) {
-        DeviceProvisionedController.DeviceProvisionedListener deviceProvisionedListener = new DeviceProvisionedController.DeviceProvisionedListener() { // from class: com.android.systemui.navigationbar.NavigationModeController.1
-            @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
+    @Inject
+    public NavigationModeController(Context context, DeviceProvisionedController deviceProvisionedController, ConfigurationController configurationController, @UiBackground Executor executor, DumpManager dumpManager) {
+        C22611 r0 = new DeviceProvisionedController.DeviceProvisionedListener() {
             public void onUserSwitched() {
-                String str = NavigationModeController.TAG;
-                Log.d(str, "onUserSwitched: " + ActivityManagerWrapper.getInstance().getCurrentUserId());
-                NavigationModeController.this.reloadNavOverlay();
+                Log.d(NavigationModeController.TAG, "onUserSwitched: " + ActivityManagerWrapper.getInstance().getCurrentUserId());
+                NavigationModeController.this.updateCurrentInteractionMode(true);
+                NavigationModeControllerEx access$400 = NavigationModeController.this.mEx;
+                Context access$100 = NavigationModeController.this.mCurrentUserContext;
+                IOverlayManager access$200 = NavigationModeController.this.mOverlayManager;
+                NavigationModeController navigationModeController = NavigationModeController.this;
+                access$400.updateNavModeOverlay(access$100, access$200, navigationModeController.getCurrentInteractionMode(navigationModeController.mCurrentUserContext));
+            }
+        };
+        this.mDeviceProvisionedCallback = r0;
+        this.mReceiver = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                Log.d(NavigationModeController.TAG, "ACTION_OVERLAY_CHANGED");
                 NavigationModeController.this.updateCurrentInteractionMode(true);
             }
         };
-        this.mDeviceProvisionedCallback = deviceProvisionedListener;
         this.mContext = context;
         this.mCurrentUserContext = context;
+        IOverlayManager asInterface = IOverlayManager.Stub.asInterface(ServiceManager.getService(SliceHints.HINT_OVERLAY));
+        this.mOverlayManager = asInterface;
         this.mUiBgExecutor = executor;
-        deviceProvisionedController.addCallback(deviceProvisionedListener);
+        dumpManager.registerDumpable(getClass().getSimpleName(), this);
+        deviceProvisionedController.addCallback(r0);
         IntentFilter intentFilter = new IntentFilter("android.intent.action.OVERLAY_CHANGED");
         intentFilter.addDataScheme("package");
         intentFilter.addDataSchemeSpecificPart("android", 0);
-        context.registerReceiverAsUser(this.mReceiver, UserHandle.ALL, intentFilter, null, null);
-        configurationController.addCallback(new ConfigurationController.ConfigurationListener() { // from class: com.android.systemui.navigationbar.NavigationModeController.3
-            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
-            public void onOverlayChanged() {
+        context.registerReceiverAsUser(this.mReceiver, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
+        configurationController.addCallback(new ConfigurationController.ConfigurationListener() {
+            public void onThemeChanged() {
                 Log.d(NavigationModeController.TAG, "onOverlayChanged");
                 NavigationModeController.this.updateCurrentInteractionMode(true);
             }
         });
         updateCurrentInteractionMode(false);
-        reloadNavOverlay();
+        NavigationModeControllerEx navigationModeControllerEx = (NavigationModeControllerEx) NTDependencyEx.get(NavigationModeControllerEx.class);
+        this.mEx = navigationModeControllerEx;
+        Context context2 = this.mCurrentUserContext;
+        navigationModeControllerEx.updateNavModeOverlay(context2, asInterface, getCurrentInteractionMode(context2));
     }
 
     public void updateCurrentInteractionMode(boolean z) {
         Context currentUserContext = getCurrentUserContext();
         this.mCurrentUserContext = currentUserContext;
-        final int currentInteractionMode = getCurrentInteractionMode(currentUserContext);
-        this.mUiBgExecutor.execute(new Runnable() { // from class: com.android.systemui.navigationbar.NavigationModeController$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                NavigationModeController.this.lambda$updateCurrentInteractionMode$0(currentInteractionMode);
-            }
-        });
-        String str = TAG;
-        Log.d(str, "updateCurrentInteractionMode: mode=" + currentInteractionMode);
+        int currentInteractionMode = getCurrentInteractionMode(currentUserContext);
+        this.mUiBgExecutor.execute(new NavigationModeController$$ExternalSyntheticLambda0(this, currentInteractionMode));
+        Log.d(TAG, "updateCurrentInteractionMode: mode=" + currentInteractionMode);
         dumpAssetPaths(this.mCurrentUserContext);
         if (z) {
             for (int i = 0; i < this.mListeners.size(); i++) {
@@ -92,8 +107,9 @@ public class NavigationModeController implements Dumpable {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateCurrentInteractionMode$0(int i) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateCurrentInteractionMode$0$com-android-systemui-navigationbar-NavigationModeController */
+    public /* synthetic */ void mo34846x24e40a4b(int i) {
         Settings.Secure.putString(this.mCurrentUserContext.getContentResolver(), "navigation_mode", String.valueOf(i));
     }
 
@@ -103,20 +119,23 @@ public class NavigationModeController implements Dumpable {
     }
 
     public void removeListener(ModeChangedListener modeChangedListener) {
-        this.mListeners.remove(modeChangedListener);
+        this.mListeners.remove((Object) modeChangedListener);
     }
 
-    private int getCurrentInteractionMode(Context context) {
-        int integer = context.getResources().getInteger(17694868);
-        String str = TAG;
-        Log.d(str, "getCurrentInteractionMode: mode=" + integer + " contextUser=" + context.getUserId());
+    public boolean getImeDrawsImeNavBar() {
+        return this.mCurrentUserContext.getResources().getBoolean(17891683);
+    }
+
+    /* access modifiers changed from: private */
+    public int getCurrentInteractionMode(Context context) {
+        int integer = context.getResources().getInteger(17694882);
+        Log.d(TAG, "getCurrentInteractionMode: mode=" + integer + " contextUser=" + context.getUserId());
         return integer;
     }
 
     public Context getCurrentUserContext() {
         int currentUserId = ActivityManagerWrapper.getInstance().getCurrentUserId();
-        String str = TAG;
-        Log.d(str, "getCurrentUserContext: contextUser=" + this.mContext.getUserId() + " currentUser=" + currentUserId);
+        Log.d(TAG, "getCurrentUserContext: contextUser=" + this.mContext.getUserId() + " currentUser=" + currentUserId);
         if (this.mContext.getUserId() == currentUserId) {
             return this.mContext;
         }
@@ -129,13 +148,12 @@ public class NavigationModeController implements Dumpable {
         }
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         String str;
         printWriter.println("NavigationModeController:");
         printWriter.println("  mode=" + getCurrentInteractionMode(this.mCurrentUserContext));
         try {
-            str = String.join(", ", this.mOverlayManager.getDefaultOverlayPackages());
+            str = String.join((CharSequence) ", ", (CharSequence[]) this.mOverlayManager.getDefaultOverlayPackages());
         } catch (RemoteException unused) {
             str = "failed_to_fetch";
         }
@@ -144,27 +162,13 @@ public class NavigationModeController implements Dumpable {
     }
 
     private void dumpAssetPaths(Context context) {
-        ApkAssets[] apkAssets;
         String str = TAG;
         Log.d(str, "  contextUser=" + this.mCurrentUserContext.getUserId());
         Log.d(str, "  assetPaths=");
-        for (ApkAssets apkAssets2 : context.getResources().getAssets().getApkAssets()) {
-            Log.d(TAG, "    " + apkAssets2.getDebugName());
-        }
-    }
-
-    public void reloadNavOverlay() {
-        Context currentUserContext = getCurrentUserContext();
-        this.mCurrentUserContext = currentUserContext;
-        if (getCurrentInteractionMode(currentUserContext) == 2 && this.mOverlayManager != null) {
-            int userId = this.mCurrentUserContext.getUserId();
-            try {
-                this.mOverlayManager.setEnabledExclusiveInCategory("com.android.internal.systemui.navbar.threebutton", userId);
-                this.mOverlayManager.setEnabledExclusiveInCategory("com.android.internal.systemui.navbar.gestural", userId);
-            } catch (RemoteException unused) {
-                String str = TAG;
-                Log.e(str, "Failed to reload nav overlay for user " + userId);
-            }
+        ApkAssets[] apkAssets = context.getResources().getAssets().getApkAssets();
+        int length = apkAssets.length;
+        for (int i = 0; i < length; i++) {
+            Log.d(TAG, "    " + apkAssets[i].getDebugName());
         }
     }
 }

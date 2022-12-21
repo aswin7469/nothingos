@@ -11,7 +11,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class PrivacyDialogController_Factory implements Factory<PrivacyDialogController> {
     private final Provider<ActivityStarter> activityStarterProvider;
     private final Provider<AppOpsController> appOpsControllerProvider;
@@ -39,10 +39,8 @@ public final class PrivacyDialogController_Factory implements Factory<PrivacyDia
         this.uiEventLoggerProvider = provider11;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PrivacyDialogController mo1933get() {
-        return newInstance(this.permissionManagerProvider.mo1933get(), this.packageManagerProvider.mo1933get(), this.privacyItemControllerProvider.mo1933get(), this.userTrackerProvider.mo1933get(), this.activityStarterProvider.mo1933get(), this.backgroundExecutorProvider.mo1933get(), this.uiExecutorProvider.mo1933get(), this.privacyLoggerProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.appOpsControllerProvider.mo1933get(), this.uiEventLoggerProvider.mo1933get());
+    public PrivacyDialogController get() {
+        return newInstance(this.permissionManagerProvider.get(), this.packageManagerProvider.get(), this.privacyItemControllerProvider.get(), this.userTrackerProvider.get(), this.activityStarterProvider.get(), this.backgroundExecutorProvider.get(), this.uiExecutorProvider.get(), this.privacyLoggerProvider.get(), this.keyguardStateControllerProvider.get(), this.appOpsControllerProvider.get(), this.uiEventLoggerProvider.get());
     }
 
     public static PrivacyDialogController_Factory create(Provider<PermissionManager> provider, Provider<PackageManager> provider2, Provider<PrivacyItemController> provider3, Provider<UserTracker> provider4, Provider<ActivityStarter> provider5, Provider<Executor> provider6, Provider<Executor> provider7, Provider<PrivacyLogger> provider8, Provider<KeyguardStateController> provider9, Provider<AppOpsController> provider10, Provider<UiEventLogger> provider11) {

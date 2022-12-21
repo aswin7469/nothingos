@@ -1,0 +1,5 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/TrafficStats;->getStatsService()Landroid/net/INetworkStatsService;,packages/modules/Connectivity/framework-t/src/android/net/TrafficStats.java,178,5,178,88,maxTargetSdk=28&trackingBug=130143562L
+Landroid/net/TrafficStats;->getMobileTcpRxPackets()J,packages/modules/Connectivity/framework-t/src/android/net/TrafficStats.java,684,5,684,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/TrafficStats;->getMobileTcpTxPackets()J,packages/modules/Connectivity/framework-t/src/android/net/TrafficStats.java,700,5,700,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/TrafficStats;->getMobileIfaces()[Ljava/lang/String;,packages/modules/Connectivity/framework-t/src/android/net/TrafficStats.java,1126,5,1126,88,maxTargetSdk=28&trackingBug=130143562L

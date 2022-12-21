@@ -1,9 +1,6 @@
 package androidx.slice;
 
 import android.app.PendingIntent;
-import android.app.slice.Slice;
-import android.app.slice.SliceManager;
-import android.app.slice.SliceSpec;
 import android.content.ComponentName;
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -13,211 +10,113 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.Process;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import androidx.core.app.CoreComponentFactory;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
-import androidx.slice.SliceConvert;
-import androidx.slice.SliceProvider;
 import androidx.slice.compat.CompatPermissionManager;
 import androidx.slice.compat.SliceProviderCompat;
-import androidx.slice.core.R$drawable;
-import androidx.slice.core.R$string;
+import androidx.slice.compat.SliceProviderWrapperContainer;
+import androidx.slice.core.C1335R;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public abstract class SliceProvider extends ContentProvider implements CoreComponentFactory.CompatWrapped {
+    private static final boolean DEBUG = false;
+    private static final String TAG = "SliceProvider";
     private static Clock sClock;
     private static Set<SliceSpec> sSpecs;
     private String[] mAuthorities;
     private String mAuthority;
+    private final String[] mAutoGrantPermissions;
     private SliceProviderCompat mCompat;
+    private final Object mCompatLock;
+    private Context mContext;
     private List<Uri> mPinnedSliceUris;
-    private Context mContext = null;
-    private final Object mCompatLock = new Object();
-    private final Object mPinnedSliceUrisLock = new Object();
-    private final String[] mAutoGrantPermissions = new String[0];
+    private final Object mPinnedSliceUrisLock;
 
-    @Override // android.content.ContentProvider
-    public final int bulkInsert(Uri uri, ContentValues[] values) {
+    public final int bulkInsert(Uri uri, ContentValues[] contentValuesArr) {
         return 0;
     }
 
-    @Override // android.content.ContentProvider
-    public final Uri canonicalize(Uri url) {
+    public Bundle call(String str, String str2, Bundle bundle) {
         return null;
     }
 
-    @Override // android.content.ContentProvider
-    public final int delete(Uri uri, String selection, String[] selectionArgs) {
+    public final Uri canonicalize(Uri uri) {
+        return null;
+    }
+
+    public final int delete(Uri uri, String str, String[] strArr) {
         return 0;
     }
 
-    @Override // android.content.ContentProvider
-    public final Uri insert(Uri uri, ContentValues values) {
+    public final String getType(Uri uri) {
+        return "vnd.android.slice";
+    }
+
+    public final Uri insert(Uri uri, ContentValues contentValues) {
         return null;
     }
 
-    public abstract Slice onBindSlice(Uri sliceUri);
+    public abstract Slice onBindSlice(Uri uri);
 
-    public PendingIntent onCreatePermissionRequest(Uri sliceUri, String callingPackage) {
+    public PendingIntent onCreatePermissionRequest(Uri uri, String str) {
         return null;
     }
 
     public abstract boolean onCreateSliceProvider();
 
-    public void onSlicePinned(Uri sliceUri) {
+    public void onSlicePinned(Uri uri) {
     }
 
-    public void onSliceUnpinned(Uri sliceUri) {
+    public void onSliceUnpinned(Uri uri) {
     }
 
-    @Override // android.content.ContentProvider
-    public final Cursor query(Uri uri, String[] projection, Bundle queryArgs, CancellationSignal cancellationSignal) {
+    public final Cursor query(Uri uri, String[] strArr, Bundle bundle, CancellationSignal cancellationSignal) {
         return null;
     }
 
-    @Override // android.content.ContentProvider
-    public final Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public final Cursor query(Uri uri, String[] strArr, String str, String[] strArr2, String str2) {
         return null;
     }
 
-    @Override // android.content.ContentProvider
-    public final Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder, CancellationSignal cancellationSignal) {
+    public final Cursor query(Uri uri, String[] strArr, String str, String[] strArr2, String str2, CancellationSignal cancellationSignal) {
         return null;
     }
 
-    @Override // android.content.ContentProvider
-    public final int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public final int update(Uri uri, ContentValues contentValues, String str, String[] strArr) {
         return 0;
     }
 
-    @Override // androidx.core.app.CoreComponentFactory.CompatWrapped
-    public Object getWrapper() {
-        if (Build.VERSION.SDK_INT >= 28) {
-            final String[] strArr = this.mAutoGrantPermissions;
-            return new android.app.slice.SliceProvider(this, strArr) { // from class: androidx.slice.compat.SliceProviderWrapperContainer$SliceProviderWrapper
-                private String[] mAutoGrantPermissions;
-                private SliceManager mSliceManager;
-                private SliceProvider mSliceProvider;
-
-                @Override // android.content.ContentProvider
-                public boolean onCreate() {
-                    return true;
-                }
-
-                {
-                    super(strArr);
-                    this.mAutoGrantPermissions = (strArr == null || strArr.length == 0) ? null : autoGrantPermissions;
-                    this.mSliceProvider = this;
-                }
-
-                @Override // android.app.slice.SliceProvider, android.content.ContentProvider
-                public void attachInfo(Context context, ProviderInfo info) {
-                    this.mSliceProvider.attachInfo(context, info);
-                    super.attachInfo(context, info);
-                    this.mSliceManager = (SliceManager) context.getSystemService(SliceManager.class);
-                }
-
-                @Override // android.app.slice.SliceProvider
-                public PendingIntent onCreatePermissionRequest(Uri sliceUri) {
-                    if (this.mAutoGrantPermissions != null) {
-                        checkPermissions(sliceUri);
-                    }
-                    PendingIntent onCreatePermissionRequest = this.mSliceProvider.onCreatePermissionRequest(sliceUri, getCallingPackage());
-                    return onCreatePermissionRequest != null ? onCreatePermissionRequest : super.onCreatePermissionRequest(sliceUri);
-                }
-
-                @Override // android.app.slice.SliceProvider, android.content.ContentProvider
-                public Bundle call(String method, String arg, Bundle extras) {
-                    Intent intent;
-                    if (this.mAutoGrantPermissions != null) {
-                        Uri uri = null;
-                        if ("bind_slice".equals(method)) {
-                            if (extras != null) {
-                                uri = (Uri) extras.getParcelable("slice_uri");
-                            }
-                        } else if ("map_slice".equals(method) && (intent = (Intent) extras.getParcelable("slice_intent")) != null) {
-                            uri = onMapIntentToUri(intent);
-                        }
-                        if (uri != null && this.mSliceManager.checkSlicePermission(uri, Binder.getCallingPid(), Binder.getCallingUid()) != 0) {
-                            checkPermissions(uri);
-                        }
-                    }
-                    if ("androidx.remotecallback.method.PROVIDER_CALLBACK".equals(method)) {
-                        return this.mSliceProvider.call(method, arg, extras);
-                    }
-                    return super.call(method, arg, extras);
-                }
-
-                private void checkPermissions(Uri uri) {
-                    String[] strArr2;
-                    if (uri != null) {
-                        for (String str : this.mAutoGrantPermissions) {
-                            if (getContext().checkCallingPermission(str) == 0) {
-                                this.mSliceManager.grantSlicePermission(str, uri);
-                                getContext().getContentResolver().notifyChange(uri, null);
-                                return;
-                            }
-                        }
-                    }
-                }
-
-                @Override // android.app.slice.SliceProvider
-                public Slice onBindSlice(Uri sliceUri, Set<SliceSpec> supportedVersions) {
-                    SliceProvider.setSpecs(SliceConvert.wrap(supportedVersions));
-                    try {
-                        return SliceConvert.unwrap(this.mSliceProvider.onBindSlice(sliceUri));
-                    } catch (Exception e) {
-                        Log.wtf("SliceProviderWrapper", "Slice with URI " + sliceUri.toString() + " is invalid.", e);
-                        return null;
-                    } finally {
-                        SliceProvider.setSpecs(null);
-                    }
-                }
-
-                @Override // android.app.slice.SliceProvider
-                public void onSlicePinned(Uri sliceUri) {
-                    this.mSliceProvider.onSlicePinned(sliceUri);
-                    this.mSliceProvider.handleSlicePinned(sliceUri);
-                }
-
-                @Override // android.app.slice.SliceProvider
-                public void onSliceUnpinned(Uri sliceUri) {
-                    this.mSliceProvider.onSliceUnpinned(sliceUri);
-                    this.mSliceProvider.handleSliceUnpinned(sliceUri);
-                }
-
-                @Override // android.app.slice.SliceProvider
-                public Collection<Uri> onGetSliceDescendants(Uri uri) {
-                    return this.mSliceProvider.onGetSliceDescendants(uri);
-                }
-
-                @Override // android.app.slice.SliceProvider
-                public Uri onMapIntentToUri(Intent intent) {
-                    return this.mSliceProvider.onMapIntentToUri(intent);
-                }
-            };
-        }
-        return null;
+    public SliceProvider(String... strArr) {
+        this.mContext = null;
+        this.mCompatLock = new Object();
+        this.mPinnedSliceUrisLock = new Object();
+        this.mAutoGrantPermissions = strArr;
     }
 
-    @Override // android.content.ContentProvider
+    public SliceProvider() {
+        this.mContext = null;
+        this.mCompatLock = new Object();
+        this.mPinnedSliceUrisLock = new Object();
+        this.mAutoGrantPermissions = new String[0];
+    }
+
+    public Object getWrapper() {
+        return new SliceProviderWrapperContainer.SliceProviderWrapper(this, this.mAutoGrantPermissions);
+    }
+
     public final boolean onCreate() {
-        if (Build.VERSION.SDK_INT < 19) {
-            return false;
-        }
         return onCreateSliceProvider();
     }
 
@@ -230,62 +129,44 @@ public abstract class SliceProvider extends ContentProvider implements CoreCompo
         return this.mCompat;
     }
 
-    protected CompatPermissionManager onCreatePermissionManager(String[] autoGrantPermissions) {
-        Context context = getContext();
-        return new CompatPermissionManager(context, "slice_perms_" + getClass().getName(), Process.myUid(), autoGrantPermissions);
+    /* access modifiers changed from: protected */
+    public CompatPermissionManager onCreatePermissionManager(String[] strArr) {
+        return new CompatPermissionManager(getContext(), SliceProviderCompat.PERMS_PREFIX + getClass().getName(), Process.myUid(), strArr);
     }
 
-    @Override // android.content.ContentProvider
-    public final String getType(Uri uri) {
-        if (Build.VERSION.SDK_INT < 19) {
-            return null;
-        }
-        return "vnd.android.slice";
-    }
-
-    @Override // android.content.ContentProvider
-    public void attachInfo(Context context, ProviderInfo info) {
-        super.attachInfo(context, info);
+    public void attachInfo(Context context, ProviderInfo providerInfo) {
+        super.attachInfo(context, providerInfo);
         if (this.mContext == null) {
             this.mContext = context;
-            if (info == null) {
-                return;
+            if (providerInfo != null) {
+                setAuthorities(providerInfo.authority);
             }
-            setAuthorities(info.authority);
         }
     }
 
-    @Override // android.content.ContentProvider
-    public Bundle call(String method, String arg, Bundle extras) {
-        int i = Build.VERSION.SDK_INT;
-        if (i < 19 || i >= 28 || extras == null) {
-            return null;
+    private void setAuthorities(String str) {
+        if (str == null) {
+            return;
         }
-        return getSliceProviderCompat().call(method, arg, extras);
+        if (str.indexOf(59) == -1) {
+            this.mAuthority = str;
+            this.mAuthorities = null;
+            return;
+        }
+        this.mAuthority = null;
+        this.mAuthorities = str.split(NavigationBarInflaterView.GRAVITY_SEPARATOR);
     }
 
-    private void setAuthorities(String authorities) {
-        if (authorities != null) {
-            if (authorities.indexOf(59) == -1) {
-                this.mAuthority = authorities;
-                this.mAuthorities = null;
-                return;
-            }
-            this.mAuthority = null;
-            this.mAuthorities = authorities.split(";");
-        }
-    }
-
-    private boolean matchesOurAuthorities(String authority) {
-        String str = this.mAuthority;
-        if (str != null) {
-            return str.equals(authority);
+    private boolean matchesOurAuthorities(String str) {
+        String str2 = this.mAuthority;
+        if (str2 != null) {
+            return str2.equals(str);
         }
         String[] strArr = this.mAuthorities;
         if (strArr != null) {
             int length = strArr.length;
             for (int i = 0; i < length; i++) {
-                if (this.mAuthorities[i].equals(authority)) {
+                if (this.mAuthorities[i].equals(str)) {
                     return true;
                 }
             }
@@ -293,50 +174,50 @@ public abstract class SliceProvider extends ContentProvider implements CoreCompo
         return false;
     }
 
-    public Slice createPermissionSlice(Uri sliceUri, String callingPackage) {
+    public Slice createPermissionSlice(Uri uri, String str) {
         Context context = getContext();
-        PendingIntent onCreatePermissionRequest = onCreatePermissionRequest(sliceUri, callingPackage);
+        PendingIntent onCreatePermissionRequest = onCreatePermissionRequest(uri, str);
         if (onCreatePermissionRequest == null) {
-            onCreatePermissionRequest = createPermissionIntent(context, sliceUri, callingPackage);
+            onCreatePermissionRequest = createPermissionIntent(context, uri, str);
         }
-        Slice.Builder builder = new Slice.Builder(sliceUri);
-        Slice.Builder addAction = new Slice.Builder(builder).addIcon(IconCompat.createWithResource(context, R$drawable.abc_ic_permission), (String) null, new String[0]).addHints(Arrays.asList("title", "shortcut")).addAction(onCreatePermissionRequest, new Slice.Builder(builder).build(), null);
+        Slice.Builder builder = new Slice.Builder(uri);
+        Slice.Builder addAction = new Slice.Builder(builder).addIcon(IconCompat.createWithResource(context, C1335R.C1337drawable.abc_ic_permission), (String) null, new String[0]).addHints((List<String>) Arrays.asList("title", "shortcut")).addAction(onCreatePermissionRequest, new Slice.Builder(builder).build(), (String) null);
         TypedValue typedValue = new TypedValue();
         new ContextThemeWrapper(context, 16974123).getTheme().resolveAttribute(16843829, typedValue, true);
-        builder.addSubSlice(new Slice.Builder(sliceUri.buildUpon().appendPath("permission").build()).addIcon(IconCompat.createWithResource(context, R$drawable.abc_ic_arrow_forward), (String) null, new String[0]).addText(getPermissionString(context, callingPackage), (String) null, new String[0]).addInt(typedValue.data, "color", new String[0]).addSubSlice(addAction.build(), null).build(), null);
-        return builder.addHints(Arrays.asList("permission_request")).build();
+        builder.addSubSlice(new Slice.Builder(uri.buildUpon().appendPath("permission").build()).addIcon(IconCompat.createWithResource(context, C1335R.C1337drawable.abc_ic_arrow_forward), (String) null, new String[0]).addText(getPermissionString(context, str), (String) null, new String[0]).addInt(typedValue.data, "color", new String[0]).addSubSlice(addAction.build(), (String) null).build(), (String) null);
+        return builder.addHints((List<String>) Arrays.asList("permission_request")).build();
     }
 
-    private static PendingIntent createPermissionIntent(Context context, Uri sliceUri, String callingPackage) {
+    private static PendingIntent createPermissionIntent(Context context, Uri uri, String str) {
         Intent intent = new Intent();
         intent.setComponent(new ComponentName(context.getPackageName(), "androidx.slice.compat.SlicePermissionActivity"));
-        intent.putExtra("slice_uri", sliceUri);
-        intent.putExtra("pkg", callingPackage);
-        intent.putExtra("provider_pkg", context.getPackageName());
-        intent.setData(sliceUri.buildUpon().appendQueryParameter("package", callingPackage).build());
+        intent.putExtra(SliceProviderCompat.EXTRA_BIND_URI, uri);
+        intent.putExtra(SliceProviderCompat.EXTRA_PKG, str);
+        intent.putExtra(SliceProviderCompat.EXTRA_PROVIDER_PKG, context.getPackageName());
+        intent.setData(uri.buildUpon().appendQueryParameter("package", str).build());
         return PendingIntent.getActivity(context, 0, intent, 0);
     }
 
-    private static CharSequence getPermissionString(Context context, String callingPackage) {
+    private static CharSequence getPermissionString(Context context, String str) {
         PackageManager packageManager = context.getPackageManager();
         try {
-            return context.getString(R$string.abc_slices_permission_request, packageManager.getApplicationInfo(callingPackage, 0).loadLabel(packageManager), context.getApplicationInfo().loadLabel(packageManager));
+            return context.getString(C1335R.string.abc_slices_permission_request, new Object[]{packageManager.getApplicationInfo(str, 0).loadLabel(packageManager), context.getApplicationInfo().loadLabel(packageManager)});
         } catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException("Unknown calling app", e);
         }
     }
 
-    public void handleSlicePinned(Uri sliceUri) {
+    public void handleSlicePinned(Uri uri) {
         List<Uri> pinnedSlices = getPinnedSlices();
-        if (!pinnedSlices.contains(sliceUri)) {
-            pinnedSlices.add(sliceUri);
+        if (!pinnedSlices.contains(uri)) {
+            pinnedSlices.add(uri);
         }
     }
 
-    public void handleSliceUnpinned(Uri sliceUri) {
+    public void handleSliceUnpinned(Uri uri) {
         List<Uri> pinnedSlices = getPinnedSlices();
-        if (pinnedSlices.contains(sliceUri)) {
-            pinnedSlices.remove(sliceUri);
+        if (pinnedSlices.contains(uri)) {
+            pinnedSlices.remove((Object) uri);
         }
     }
 
@@ -357,32 +238,36 @@ public abstract class SliceProvider extends ContentProvider implements CoreCompo
         return this.mPinnedSliceUris;
     }
 
-    public void validateIncomingAuthority(String authority) throws SecurityException {
-        String str;
-        if (!matchesOurAuthorities(getAuthorityWithoutUserId(authority))) {
-            String str2 = "The authority " + authority + " does not match the one of the contentProvider: ";
+    public void validateIncomingAuthority(String str) throws SecurityException {
+        String str2;
+        if (!matchesOurAuthorities(getAuthorityWithoutUserId(str))) {
+            String str3 = "The authority " + str + " does not match the one of the contentProvider: ";
             if (this.mAuthority != null) {
-                str = str2 + this.mAuthority;
+                str2 = str3 + this.mAuthority;
             } else {
-                str = str2 + Arrays.toString(this.mAuthorities);
+                str2 = str3 + Arrays.toString((Object[]) this.mAuthorities);
             }
-            throw new SecurityException(str);
+            throw new SecurityException(str2);
         }
     }
 
-    private static String getAuthorityWithoutUserId(String auth) {
-        if (auth == null) {
+    private static String getAuthorityWithoutUserId(String str) {
+        if (str == null) {
             return null;
         }
-        return auth.substring(auth.lastIndexOf(64) + 1);
+        return str.substring(str.lastIndexOf(64) + 1);
     }
 
-    public static void setSpecs(Set<SliceSpec> specs) {
-        sSpecs = specs;
+    public static void setSpecs(Set<SliceSpec> set) {
+        sSpecs = set;
     }
 
     public static Set<SliceSpec> getCurrentSpecs() {
         return sSpecs;
+    }
+
+    public static void setClock(Clock clock) {
+        sClock = clock;
     }
 
     public static Clock getClock() {

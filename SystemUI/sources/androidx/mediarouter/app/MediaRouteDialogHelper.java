@@ -1,6 +1,7 @@
 package androidx.mediarouter.app;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -10,76 +11,79 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import androidx.mediarouter.R$bool;
-import androidx.mediarouter.R$dimen;
+import androidx.mediarouter.C1159R;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class MediaRouteDialogHelper {
+
+final class MediaRouteDialogHelper {
     public static int getDialogWidth(Context context) {
+        int i;
         float fraction;
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         boolean z = displayMetrics.widthPixels < displayMetrics.heightPixels;
         TypedValue typedValue = new TypedValue();
-        context.getResources().getValue(z ? R$dimen.mr_dialog_fixed_width_minor : R$dimen.mr_dialog_fixed_width_major, typedValue, true);
-        int i = typedValue.type;
-        if (i == 5) {
+        Resources resources = context.getResources();
+        if (z) {
+            i = C1159R.dimen.mr_dialog_fixed_width_minor;
+        } else {
+            i = C1159R.dimen.mr_dialog_fixed_width_major;
+        }
+        resources.getValue(i, typedValue, true);
+        if (typedValue.type == 5) {
             fraction = typedValue.getDimension(displayMetrics);
-        } else if (i != 6) {
+        } else if (typedValue.type != 6) {
             return -2;
         } else {
-            int i2 = displayMetrics.widthPixels;
-            fraction = typedValue.getFraction(i2, i2);
+            fraction = typedValue.getFraction((float) displayMetrics.widthPixels, (float) displayMetrics.widthPixels);
         }
         return (int) fraction;
     }
 
     public static int getDialogWidthForDynamicGroup(Context context) {
-        if (!context.getResources().getBoolean(R$bool.is_tablet)) {
+        if (!context.getResources().getBoolean(C1159R.bool.is_tablet)) {
             return -1;
         }
         return getDialogWidth(context);
     }
 
     public static int getDialogHeight(Context context) {
-        return !context.getResources().getBoolean(R$bool.is_tablet) ? -1 : -2;
+        return !context.getResources().getBoolean(C1159R.bool.is_tablet) ? -1 : -2;
     }
 
-    public static <E> boolean listUnorderedEquals(List<E> list1, List<E> list2) {
-        return new HashSet(list1).equals(new HashSet(list2));
+    public static <E> boolean listUnorderedEquals(List<E> list, List<E> list2) {
+        return new HashSet(list).equals(new HashSet(list2));
     }
 
-    public static <E> Set<E> getItemsAdded(List<E> before, List<E> after) {
-        HashSet hashSet = new HashSet(after);
-        hashSet.removeAll(before);
+    public static <E> Set<E> getItemsAdded(List<E> list, List<E> list2) {
+        HashSet hashSet = new HashSet(list2);
+        hashSet.removeAll(list);
         return hashSet;
     }
 
-    public static <E> Set<E> getItemsRemoved(List<E> before, List<E> after) {
-        HashSet hashSet = new HashSet(before);
-        hashSet.removeAll(after);
+    public static <E> Set<E> getItemsRemoved(List<E> list, List<E> list2) {
+        HashSet hashSet = new HashSet(list);
+        hashSet.removeAll(list2);
         return hashSet;
     }
 
-    public static <E> HashMap<E, Rect> getItemBoundMap(ListView listView, ArrayAdapter<E> adapter) {
+    public static <E> HashMap<E, Rect> getItemBoundMap(ListView listView, ArrayAdapter<E> arrayAdapter) {
         HashMap<E, Rect> hashMap = new HashMap<>();
         int firstVisiblePosition = listView.getFirstVisiblePosition();
         for (int i = 0; i < listView.getChildCount(); i++) {
-            E item = adapter.getItem(firstVisiblePosition + i);
+            E item = arrayAdapter.getItem(firstVisiblePosition + i);
             View childAt = listView.getChildAt(i);
             hashMap.put(item, new Rect(childAt.getLeft(), childAt.getTop(), childAt.getRight(), childAt.getBottom()));
         }
         return hashMap;
     }
 
-    public static <E> HashMap<E, BitmapDrawable> getItemBitmapMap(Context context, ListView listView, ArrayAdapter<E> adapter) {
+    public static <E> HashMap<E, BitmapDrawable> getItemBitmapMap(Context context, ListView listView, ArrayAdapter<E> arrayAdapter) {
         HashMap<E, BitmapDrawable> hashMap = new HashMap<>();
         int firstVisiblePosition = listView.getFirstVisiblePosition();
         for (int i = 0; i < listView.getChildCount(); i++) {
-            hashMap.put(adapter.getItem(firstVisiblePosition + i), getViewBitmap(context, listView.getChildAt(i)));
+            hashMap.put(arrayAdapter.getItem(firstVisiblePosition + i), getViewBitmap(context, listView.getChildAt(i)));
         }
         return hashMap;
     }
@@ -88,5 +92,8 @@ public final class MediaRouteDialogHelper {
         Bitmap createBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
         view.draw(new Canvas(createBitmap));
         return new BitmapDrawable(context.getResources(), createBitmap);
+    }
+
+    private MediaRouteDialogHelper() {
     }
 }

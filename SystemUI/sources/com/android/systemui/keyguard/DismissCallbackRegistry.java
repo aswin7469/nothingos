@@ -1,15 +1,20 @@
 package com.android.systemui.keyguard;
 
 import com.android.internal.policy.IKeyguardDismissCallback;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.UiBackground;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class DismissCallbackRegistry {
     private final ArrayList<DismissCallbackWrapper> mDismissCallbacks = new ArrayList<>();
     private final Executor mUiBgExecutor;
 
-    public DismissCallbackRegistry(Executor executor) {
+    @Inject
+    public DismissCallbackRegistry(@UiBackground Executor executor) {
         this.mUiBgExecutor = executor;
     }
 
@@ -19,30 +24,20 @@ public class DismissCallbackRegistry {
 
     public void notifyDismissCancelled() {
         for (int size = this.mDismissCallbacks.size() - 1; size >= 0; size--) {
-            final DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
+            DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
             Executor executor = this.mUiBgExecutor;
             Objects.requireNonNull(dismissCallbackWrapper);
-            executor.execute(new Runnable() { // from class: com.android.systemui.keyguard.DismissCallbackRegistry$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DismissCallbackWrapper.this.notifyDismissCancelled();
-                }
-            });
+            executor.execute(new DismissCallbackRegistry$$ExternalSyntheticLambda1(dismissCallbackWrapper));
         }
         this.mDismissCallbacks.clear();
     }
 
     public void notifyDismissSucceeded() {
         for (int size = this.mDismissCallbacks.size() - 1; size >= 0; size--) {
-            final DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
+            DismissCallbackWrapper dismissCallbackWrapper = this.mDismissCallbacks.get(size);
             Executor executor = this.mUiBgExecutor;
             Objects.requireNonNull(dismissCallbackWrapper);
-            executor.execute(new Runnable() { // from class: com.android.systemui.keyguard.DismissCallbackRegistry$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    DismissCallbackWrapper.this.notifyDismissSucceeded();
-                }
-            });
+            executor.execute(new DismissCallbackRegistry$$ExternalSyntheticLambda0(dismissCallbackWrapper));
         }
         this.mDismissCallbacks.clear();
     }

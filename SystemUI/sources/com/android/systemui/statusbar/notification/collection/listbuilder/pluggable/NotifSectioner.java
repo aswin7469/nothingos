@@ -2,16 +2,30 @@ package com.android.systemui.statusbar.notification.collection.listbuilder.plugg
 
 import com.android.systemui.statusbar.notification.collection.ListEntry;
 import com.android.systemui.statusbar.notification.collection.render.NodeController;
-/* loaded from: classes.dex */
+import java.util.List;
+
 public abstract class NotifSectioner extends Pluggable<NotifSectioner> {
+    private final int mBucket;
+
+    public NotifComparator getComparator() {
+        return null;
+    }
+
     public NodeController getHeaderNodeController() {
         return null;
     }
 
     public abstract boolean isInSection(ListEntry listEntry);
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public NotifSectioner(String str) {
+    public void onEntriesUpdated(List<ListEntry> list) {
+    }
+
+    protected NotifSectioner(String str, int i) {
         super(str);
+        this.mBucket = i;
+    }
+
+    public final int getBucket() {
+        return this.mBucket;
     }
 }

@@ -1,26 +1,63 @@
 package com.android.systemui.volume;
 
-import android.media.AudioSystem;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
+import androidx.core.app.NotificationCompat;
+import androidx.core.p004os.EnvironmentCompat;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.logging.UiEventLoggerImpl;
 import com.android.systemui.plugins.VolumeDialogController;
-import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public class Events {
-    public static Callback sCallback;
-    private static final String TAG = Util.logTag(Events.class);
+    public static final String[] DISMISS_REASONS = {EnvironmentCompat.MEDIA_UNKNOWN, "touch_outside", "volume_controller", "timeout", "screen_off", "settings_clicked", "done_clicked", "a11y_stream_changed", "output_chooser", "usb_temperature_below_threshold"};
+    public static final int DISMISS_REASON_DONE_CLICKED = 6;
+    public static final int DISMISS_REASON_OUTPUT_CHOOSER = 8;
+    public static final int DISMISS_REASON_SCREEN_OFF = 4;
+    public static final int DISMISS_REASON_SETTINGS_CLICKED = 5;
+    public static final int DISMISS_REASON_TIMEOUT = 3;
+    public static final int DISMISS_REASON_TOUCH_OUTSIDE = 1;
+    public static final int DISMISS_REASON_UNKNOWN = 0;
+    public static final int DISMISS_REASON_USB_OVERHEAD_ALARM_CHANGED = 9;
+    public static final int DISMISS_REASON_VOLUME_CONTROLLER = 2;
+    public static final int DISMISS_STREAM_GONE = 7;
+    public static final int EVENT_ACTIVE_STREAM_CHANGED = 2;
+    public static final int EVENT_COLLECTION_STARTED = 5;
+    public static final int EVENT_COLLECTION_STOPPED = 6;
+    public static final int EVENT_DISMISS_DIALOG = 1;
+    public static final int EVENT_DISMISS_USB_OVERHEAT_ALARM = 20;
+    public static final int EVENT_EXPAND = 3;
+    public static final int EVENT_EXTERNAL_RINGER_MODE_CHANGED = 12;
+    public static final int EVENT_ICON_CLICK = 7;
+    public static final int EVENT_INTERNAL_RINGER_MODE_CHANGED = 11;
+    public static final int EVENT_KEY = 4;
+    public static final int EVENT_LEVEL_CHANGED = 10;
+    public static final int EVENT_MUTE_CHANGED = 15;
+    public static final int EVENT_ODI_CAPTIONS_CLICK = 21;
+    public static final int EVENT_ODI_CAPTIONS_TOOLTIP_CLICK = 22;
+    public static final int EVENT_RINGER_TOGGLE = 18;
+    public static final int EVENT_SETTINGS_CLICK = 8;
+    public static final int EVENT_SHOW_DIALOG = 0;
+    public static final int EVENT_SHOW_USB_OVERHEAT_ALARM = 19;
+    public static final int EVENT_SUPPRESSOR_CHANGED = 14;
     private static final String[] EVENT_TAGS = {"show_dialog", "dismiss_dialog", "active_stream_changed", "expand", "key", "collection_started", "collection_stopped", "icon_click", "settings_click", "touch_level_changed", "level_changed", "internal_ringer_mode_changed", "external_ringer_mode_changed", "zen_mode_changed", "suppressor_changed", "mute_changed", "touch_level_done", "zen_mode_config_changed", "ringer_toggle", "show_usb_overheat_alarm", "dismiss_usb_overheat_alarm", "odi_captions_click", "odi_captions_tooltip_click"};
-    public static final String[] DISMISS_REASONS = {"unknown", "touch_outside", "volume_controller", "timeout", "screen_off", "settings_clicked", "done_clicked", "a11y_stream_changed", "output_chooser", "usb_temperature_below_threshold"};
-    public static final String[] SHOW_REASONS = {"unknown", "volume_changed", "remote_volume_changed", "usb_temperature_above_threshold"};
-    @VisibleForTesting
+    public static final int EVENT_TOUCH_LEVEL_CHANGED = 9;
+    public static final int EVENT_TOUCH_LEVEL_DONE = 16;
+    public static final int EVENT_ZEN_CONFIG_CHANGED = 17;
+    public static final int EVENT_ZEN_MODE_CHANGED = 13;
+    public static final int ICON_STATE_MUTE = 2;
+    public static final int ICON_STATE_UNKNOWN = 0;
+    public static final int ICON_STATE_UNMUTE = 1;
+    public static final int ICON_STATE_VIBRATE = 3;
+    public static final String[] SHOW_REASONS = {EnvironmentCompat.MEDIA_UNKNOWN, "volume_changed", "remote_volume_changed", "usb_temperature_above_threshold"};
+    public static final int SHOW_REASON_REMOTE_VOLUME_CHANGED = 2;
+    public static final int SHOW_REASON_UNKNOWN = 0;
+    public static final int SHOW_REASON_USB_OVERHEAD_ALARM_CHANGED = 3;
+    public static final int SHOW_REASON_VOLUME_CHANGED = 1;
+    private static final String TAG = Util.logTag(Events.class);
+    public static Callback sCallback;
     static MetricsLogger sLegacyLogger = new MetricsLogger();
-    @VisibleForTesting
     static UiEventLogger sUiEventLogger = new UiEventLoggerImpl();
 
-    /* loaded from: classes2.dex */
     public interface Callback {
         void writeEvent(long j, int i, Object[] objArr);
 
@@ -28,15 +65,13 @@ public class Events {
     }
 
     private static String ringerModeToString(int i) {
-        return i != 0 ? i != 1 ? i != 2 ? "unknown" : "normal" : "vibrate" : "silent";
+        return i != 0 ? i != 1 ? i != 2 ? EnvironmentCompat.MEDIA_UNKNOWN : "normal" : "vibrate" : NotificationCompat.GROUP_KEY_SILENT;
     }
 
     private static String zenModeToString(int i) {
-        return i != 0 ? i != 1 ? i != 2 ? i != 3 ? "unknown" : "alarms" : "no_interruptions" : "important_interruptions" : "off";
+        return i != 0 ? i != 1 ? i != 2 ? i != 3 ? EnvironmentCompat.MEDIA_UNKNOWN : "alarms" : "no_interruptions" : "important_interruptions" : "off";
     }
 
-    @VisibleForTesting
-    /* loaded from: classes2.dex */
     public enum VolumeDialogOpenEvent implements UiEventLogger.UiEventEnum {
         INVALID(0),
         VOLUME_DIALOG_SHOW_VOLUME_CHANGED(128),
@@ -45,7 +80,7 @@ public class Events {
         
         private final int mId;
 
-        VolumeDialogOpenEvent(int i) {
+        private VolumeDialogOpenEvent(int i) {
             this.mId = i;
         }
 
@@ -54,21 +89,19 @@ public class Events {
         }
 
         static VolumeDialogOpenEvent fromReasons(int i) {
-            if (i != 1) {
-                if (i == 2) {
-                    return VOLUME_DIALOG_SHOW_REMOTE_VOLUME_CHANGED;
-                }
-                if (i == 3) {
-                    return VOLUME_DIALOG_SHOW_USB_TEMP_ALARM_CHANGED;
-                }
+            if (i == 1) {
+                return VOLUME_DIALOG_SHOW_VOLUME_CHANGED;
+            }
+            if (i == 2) {
+                return VOLUME_DIALOG_SHOW_REMOTE_VOLUME_CHANGED;
+            }
+            if (i != 3) {
                 return INVALID;
             }
-            return VOLUME_DIALOG_SHOW_VOLUME_CHANGED;
+            return VOLUME_DIALOG_SHOW_USB_TEMP_ALARM_CHANGED;
         }
     }
 
-    @VisibleForTesting
-    /* loaded from: classes2.dex */
     public enum VolumeDialogCloseEvent implements UiEventLogger.UiEventEnum {
         INVALID(0),
         VOLUME_DIALOG_DISMISS_TOUCH_OUTSIDE(134),
@@ -81,7 +114,7 @@ public class Events {
         
         private final int mId;
 
-        VolumeDialogCloseEvent(int i) {
+        private VolumeDialogCloseEvent(int i) {
             this.mId = i;
         }
 
@@ -90,33 +123,31 @@ public class Events {
         }
 
         static VolumeDialogCloseEvent fromReason(int i) {
-            if (i != 1) {
-                if (i == 2) {
-                    return VOLUME_DIALOG_DISMISS_SYSTEM;
-                }
-                if (i == 3) {
-                    return VOLUME_DIALOG_DISMISS_TIMEOUT;
-                }
-                if (i == 4) {
-                    return VOLUME_DIALOG_DISMISS_SCREEN_OFF;
-                }
-                if (i == 5) {
-                    return VOLUME_DIALOG_DISMISS_SETTINGS;
-                }
-                if (i == 7) {
-                    return VOLUME_DIALOG_DISMISS_STREAM_GONE;
-                }
-                if (i == 9) {
-                    return VOLUME_DIALOG_DISMISS_USB_TEMP_ALARM_CHANGED;
-                }
+            if (i == 1) {
+                return VOLUME_DIALOG_DISMISS_TOUCH_OUTSIDE;
+            }
+            if (i == 2) {
+                return VOLUME_DIALOG_DISMISS_SYSTEM;
+            }
+            if (i == 3) {
+                return VOLUME_DIALOG_DISMISS_TIMEOUT;
+            }
+            if (i == 4) {
+                return VOLUME_DIALOG_DISMISS_SCREEN_OFF;
+            }
+            if (i == 5) {
+                return VOLUME_DIALOG_DISMISS_SETTINGS;
+            }
+            if (i == 7) {
+                return VOLUME_DIALOG_DISMISS_STREAM_GONE;
+            }
+            if (i != 9) {
                 return INVALID;
             }
-            return VOLUME_DIALOG_DISMISS_TOUCH_OUTSIDE;
+            return VOLUME_DIALOG_DISMISS_USB_TEMP_ALARM_CHANGED;
         }
     }
 
-    @VisibleForTesting
-    /* loaded from: classes2.dex */
     public enum VolumeDialogEvent implements UiEventLogger.UiEventEnum {
         INVALID(0),
         VOLUME_DIALOG_SETTINGS_CLICK(143),
@@ -138,7 +169,7 @@ public class Events {
         
         private final int mId;
 
-        VolumeDialogEvent(int i) {
+        private VolumeDialogEvent(int i) {
             this.mId = i;
         }
 
@@ -147,16 +178,16 @@ public class Events {
         }
 
         static VolumeDialogEvent fromIconState(int i) {
-            if (i != 1) {
-                if (i == 2) {
-                    return VOLUME_DIALOG_MUTE_STREAM;
-                }
-                if (i == 3) {
-                    return VOLUME_DIALOG_TO_VIBRATE_STREAM;
-                }
+            if (i == 1) {
+                return VOLUME_DIALOG_UNMUTE_STREAM;
+            }
+            if (i == 2) {
+                return VOLUME_DIALOG_MUTE_STREAM;
+            }
+            if (i != 3) {
                 return INVALID;
             }
-            return VOLUME_DIALOG_UNMUTE_STREAM;
+            return VOLUME_DIALOG_TO_VIBRATE_STREAM;
         }
 
         static VolumeDialogEvent fromSliderLevel(int i) {
@@ -168,21 +199,19 @@ public class Events {
         }
 
         static VolumeDialogEvent fromRingerMode(int i) {
-            if (i != 0) {
-                if (i == 1) {
-                    return RINGER_MODE_VIBRATE;
-                }
-                if (i == 2) {
-                    return RINGER_MODE_NORMAL;
-                }
+            if (i == 0) {
+                return RINGER_MODE_SILENT;
+            }
+            if (i == 1) {
+                return RINGER_MODE_VIBRATE;
+            }
+            if (i != 2) {
                 return INVALID;
             }
-            return RINGER_MODE_SILENT;
+            return RINGER_MODE_NORMAL;
         }
     }
 
-    @VisibleForTesting
-    /* loaded from: classes2.dex */
     public enum ZenModeEvent implements UiEventLogger.UiEventEnum {
         INVALID(0),
         ZEN_MODE_OFF(335),
@@ -192,7 +221,7 @@ public class Events {
         
         private final int mId;
 
-        ZenModeEvent(int i) {
+        private ZenModeEvent(int i) {
             this.mId = i;
         }
 
@@ -201,19 +230,19 @@ public class Events {
         }
 
         static ZenModeEvent fromZenMode(int i) {
-            if (i != 0) {
-                if (i == 1) {
-                    return ZEN_MODE_IMPORTANT_ONLY;
-                }
-                if (i == 2) {
-                    return ZEN_MODE_NO_INTERRUPTIONS;
-                }
-                if (i == 3) {
-                    return ZEN_MODE_ALARMS_ONLY;
-                }
+            if (i == 0) {
+                return ZEN_MODE_OFF;
+            }
+            if (i == 1) {
+                return ZEN_MODE_IMPORTANT_ONLY;
+            }
+            if (i == 2) {
+                return ZEN_MODE_NO_INTERRUPTIONS;
+            }
+            if (i != 3) {
                 return INVALID;
             }
-            return ZEN_MODE_OFF;
+            return ZEN_MODE_ALARMS_ONLY;
         }
     }
 
@@ -226,160 +255,324 @@ public class Events {
         }
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Removed duplicated region for block: B:32:0x013c  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static String logEvent(int i, Object... objArr) {
-        String[] strArr = EVENT_TAGS;
-        if (i >= strArr.length) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder("writeEvent ");
-        sb.append(strArr[i]);
-        if (objArr == null || objArr.length == 0) {
-            if (i == 8) {
-                sLegacyLogger.action(1386);
-                sUiEventLogger.log(VolumeDialogEvent.VOLUME_DIALOG_SETTINGS_CLICK);
+    /* JADX WARNING: Code restructure failed: missing block: B:25:0x0130, code lost:
+        r0.append(ringerModeToString(r8[0].intValue()));
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:27:0x0142, code lost:
+        if (r8.length <= 1) goto L_0x027b;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:28:0x0144, code lost:
+        r0.append(android.media.AudioSystem.streamToString(r8[0].intValue())).append(' ').append(r8[1]);
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:46:0x027f, code lost:
+        return r0.toString();
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static java.lang.String logEvent(int r7, java.lang.Object... r8) {
+        /*
+            java.lang.String[] r0 = EVENT_TAGS
+            int r1 = r0.length
+            if (r7 < r1) goto L_0x0008
+            java.lang.String r7 = ""
+            return r7
+        L_0x0008:
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            java.lang.String r2 = "writeEvent "
+            r1.<init>((java.lang.String) r2)
+            r0 = r0[r7]
+            java.lang.StringBuilder r0 = r1.append((java.lang.String) r0)
+            if (r8 == 0) goto L_0x0280
+            int r1 = r8.length
+            if (r1 != 0) goto L_0x001d
+            goto L_0x0280
+        L_0x001d:
+            java.lang.String r1 = " "
+            r0.append((java.lang.String) r1)
+            r1 = 1457(0x5b1, float:2.042E-42)
+            r2 = 207(0xcf, float:2.9E-43)
+            java.lang.String r3 = " keyguard="
+            r4 = 32
+            r5 = 0
+            r6 = 1
+            switch(r7) {
+                case 0: goto L_0x023f;
+                case 1: goto L_0x021d;
+                case 2: goto L_0x01fb;
+                case 3: goto L_0x01d7;
+                case 4: goto L_0x019f;
+                case 5: goto L_0x002f;
+                case 6: goto L_0x002f;
+                case 7: goto L_0x015f;
+                case 8: goto L_0x002f;
+                case 9: goto L_0x0141;
+                case 10: goto L_0x0141;
+                case 11: goto L_0x0130;
+                case 12: goto L_0x0121;
+                case 13: goto L_0x0103;
+                case 14: goto L_0x00ef;
+                case 15: goto L_0x0141;
+                case 16: goto L_0x00cf;
+                case 17: goto L_0x002f;
+                case 18: goto L_0x00a6;
+                case 19: goto L_0x006f;
+                case 20: goto L_0x0038;
+                default: goto L_0x002f;
             }
-            return sb.toString();
-        }
-        sb.append(" ");
-        switch (i) {
-            case 0:
-                sLegacyLogger.visible(207);
-                if (objArr.length > 1) {
-                    Integer num = (Integer) objArr[0];
-                    Boolean bool = (Boolean) objArr[1];
-                    sLegacyLogger.histogram("volume_from_keyguard", bool.booleanValue() ? 1 : 0);
-                    sUiEventLogger.log(VolumeDialogOpenEvent.fromReasons(num.intValue()));
-                    sb.append(SHOW_REASONS[num.intValue()]);
-                    sb.append(" keyguard=");
-                    sb.append(bool);
-                    break;
-                }
-                break;
-            case 1:
-                sLegacyLogger.hidden(207);
-                Integer num2 = (Integer) objArr[0];
-                sUiEventLogger.log(VolumeDialogCloseEvent.fromReason(num2.intValue()));
-                sb.append(DISMISS_REASONS[num2.intValue()]);
-                break;
-            case 2:
-                Integer num3 = (Integer) objArr[0];
-                sLegacyLogger.action(210, num3.intValue());
-                sUiEventLogger.log(VolumeDialogEvent.VOLUME_DIALOG_ACTIVE_STREAM_CHANGED);
-                sb.append(AudioSystem.streamToString(num3.intValue()));
-                break;
-            case 3:
-                Boolean bool2 = (Boolean) objArr[0];
-                sLegacyLogger.visibility(208, bool2.booleanValue());
-                sUiEventLogger.log(bool2.booleanValue() ? VolumeDialogEvent.VOLUME_DIALOG_EXPAND_DETAILS : VolumeDialogEvent.VOLUME_DIALOG_COLLAPSE_DETAILS);
-                sb.append(bool2);
-                break;
-            case 4:
-                if (objArr.length > 1) {
-                    Integer num4 = (Integer) objArr[0];
-                    sLegacyLogger.action(211, num4.intValue());
-                    Integer num5 = (Integer) objArr[1];
-                    sUiEventLogger.log(VolumeDialogEvent.fromKeyLevel(num5.intValue()));
-                    sb.append(AudioSystem.streamToString(num4.intValue()));
-                    sb.append(' ');
-                    sb.append(num5);
-                    break;
-                }
-                break;
-            case 5:
-            case 6:
-            case 8:
-            case 17:
-            default:
-                sb.append(Arrays.asList(objArr));
-                break;
-            case 7:
-                if (objArr.length > 1) {
-                    Integer num6 = (Integer) objArr[0];
-                    sLegacyLogger.action(212, num6.intValue());
-                    Integer num7 = (Integer) objArr[1];
-                    sUiEventLogger.log(VolumeDialogEvent.fromIconState(num7.intValue()));
-                    sb.append(AudioSystem.streamToString(num6.intValue()));
-                    sb.append(' ');
-                    sb.append(iconStateToString(num7.intValue()));
-                    break;
-                }
-                break;
-            case 9:
-            case 10:
-            case 15:
-                if (objArr.length > 1) {
-                    sb.append(AudioSystem.streamToString(((Integer) objArr[0]).intValue()));
-                    sb.append(' ');
-                    sb.append(objArr[1]);
-                    break;
-                }
-                break;
-            case 11:
-                sb.append(ringerModeToString(((Integer) objArr[0]).intValue()));
-                break;
-            case 12:
-                sLegacyLogger.action(213, ((Integer) objArr[0]).intValue());
-                sb.append(ringerModeToString(((Integer) objArr[0]).intValue()));
-                break;
-            case 13:
-                Integer num8 = (Integer) objArr[0];
-                sb.append(zenModeToString(num8.intValue()));
-                sUiEventLogger.log(ZenModeEvent.fromZenMode(num8.intValue()));
-                break;
-            case 14:
-                if (objArr.length > 1) {
-                    sb.append(objArr[0]);
-                    sb.append(' ');
-                    sb.append(objArr[1]);
-                    break;
-                }
-                break;
-            case 16:
-                if (objArr.length > 1) {
-                    Integer num9 = (Integer) objArr[1];
-                    sLegacyLogger.action(209, num9.intValue());
-                    sUiEventLogger.log(VolumeDialogEvent.fromSliderLevel(num9.intValue()));
-                }
-                if (objArr.length > 1) {
-                }
-                break;
-            case 18:
-                Integer num10 = (Integer) objArr[0];
-                sLegacyLogger.action(1385, num10.intValue());
-                sUiEventLogger.log(VolumeDialogEvent.fromRingerMode(num10.intValue()));
-                sb.append(ringerModeToString(num10.intValue()));
-                break;
-            case 19:
-                sLegacyLogger.visible(1457);
-                sUiEventLogger.log(VolumeDialogEvent.USB_OVERHEAT_ALARM);
-                if (objArr.length > 1) {
-                    Boolean bool3 = (Boolean) objArr[1];
-                    sLegacyLogger.histogram("show_usb_overheat_alarm", bool3.booleanValue() ? 1 : 0);
-                    sb.append(SHOW_REASONS[((Integer) objArr[0]).intValue()]);
-                    sb.append(" keyguard=");
-                    sb.append(bool3);
-                    break;
-                }
-                break;
-            case 20:
-                sLegacyLogger.hidden(1457);
-                sUiEventLogger.log(VolumeDialogEvent.USB_OVERHEAT_ALARM_DISMISSED);
-                if (objArr.length > 1) {
-                    Boolean bool4 = (Boolean) objArr[1];
-                    sLegacyLogger.histogram("dismiss_usb_overheat_alarm", bool4.booleanValue() ? 1 : 0);
-                    sb.append(DISMISS_REASONS[((Integer) objArr[0]).intValue()]);
-                    sb.append(" keyguard=");
-                    sb.append(bool4);
-                    break;
-                }
-                break;
-        }
-        return sb.toString();
+        L_0x002f:
+            java.util.List r7 = java.util.Arrays.asList(r8)
+            r0.append((java.lang.Object) r7)
+            goto L_0x027b
+        L_0x0038:
+            com.android.internal.logging.MetricsLogger r7 = sLegacyLogger
+            r7.hidden(r1)
+            com.android.internal.logging.UiEventLogger r7 = sUiEventLogger
+            com.android.systemui.volume.Events$VolumeDialogEvent r1 = com.android.systemui.volume.Events.VolumeDialogEvent.USB_OVERHEAT_ALARM_DISMISSED
+            r7.log(r1)
+            int r7 = r8.length
+            if (r7 <= r6) goto L_0x027b
+            r7 = r8[r6]
+            java.lang.Boolean r7 = (java.lang.Boolean) r7
+            com.android.internal.logging.MetricsLogger r1 = sLegacyLogger
+            boolean r2 = r7.booleanValue()
+            java.lang.String r4 = "dismiss_usb_overheat_alarm"
+            r1.histogram(r4, r2)
+            r8 = r8[r5]
+            java.lang.Integer r8 = (java.lang.Integer) r8
+            java.lang.String[] r1 = DISMISS_REASONS
+            int r8 = r8.intValue()
+            r8 = r1[r8]
+            java.lang.StringBuilder r8 = r0.append((java.lang.String) r8)
+            java.lang.StringBuilder r8 = r8.append((java.lang.String) r3)
+            r8.append((java.lang.Object) r7)
+            goto L_0x027b
+        L_0x006f:
+            com.android.internal.logging.MetricsLogger r7 = sLegacyLogger
+            r7.visible(r1)
+            com.android.internal.logging.UiEventLogger r7 = sUiEventLogger
+            com.android.systemui.volume.Events$VolumeDialogEvent r1 = com.android.systemui.volume.Events.VolumeDialogEvent.USB_OVERHEAT_ALARM
+            r7.log(r1)
+            int r7 = r8.length
+            if (r7 <= r6) goto L_0x027b
+            r7 = r8[r6]
+            java.lang.Boolean r7 = (java.lang.Boolean) r7
+            com.android.internal.logging.MetricsLogger r1 = sLegacyLogger
+            boolean r2 = r7.booleanValue()
+            java.lang.String r4 = "show_usb_overheat_alarm"
+            r1.histogram(r4, r2)
+            r8 = r8[r5]
+            java.lang.Integer r8 = (java.lang.Integer) r8
+            java.lang.String[] r1 = SHOW_REASONS
+            int r8 = r8.intValue()
+            r8 = r1[r8]
+            java.lang.StringBuilder r8 = r0.append((java.lang.String) r8)
+            java.lang.StringBuilder r8 = r8.append((java.lang.String) r3)
+            r8.append((java.lang.Object) r7)
+            goto L_0x027b
+        L_0x00a6:
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            com.android.internal.logging.MetricsLogger r8 = sLegacyLogger
+            r1 = 1385(0x569, float:1.941E-42)
+            int r2 = r7.intValue()
+            r8.action(r1, r2)
+            com.android.internal.logging.UiEventLogger r8 = sUiEventLogger
+            int r1 = r7.intValue()
+            com.android.systemui.volume.Events$VolumeDialogEvent r1 = com.android.systemui.volume.Events.VolumeDialogEvent.fromRingerMode(r1)
+            r8.log(r1)
+            int r7 = r7.intValue()
+            java.lang.String r7 = ringerModeToString(r7)
+            r0.append((java.lang.String) r7)
+            goto L_0x027b
+        L_0x00cf:
+            int r7 = r8.length
+            if (r7 <= r6) goto L_0x0141
+            r7 = r8[r6]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            com.android.internal.logging.MetricsLogger r1 = sLegacyLogger
+            r2 = 209(0xd1, float:2.93E-43)
+            int r3 = r7.intValue()
+            r1.action(r2, r3)
+            com.android.internal.logging.UiEventLogger r1 = sUiEventLogger
+            int r7 = r7.intValue()
+            com.android.systemui.volume.Events$VolumeDialogEvent r7 = com.android.systemui.volume.Events.VolumeDialogEvent.fromSliderLevel(r7)
+            r1.log(r7)
+            goto L_0x0141
+        L_0x00ef:
+            int r7 = r8.length
+            if (r7 <= r6) goto L_0x027b
+            r7 = r8[r5]
+            java.lang.StringBuilder r7 = r0.append((java.lang.Object) r7)
+            java.lang.StringBuilder r7 = r7.append((char) r4)
+            r8 = r8[r6]
+            r7.append((java.lang.Object) r8)
+            goto L_0x027b
+        L_0x0103:
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            int r8 = r7.intValue()
+            java.lang.String r8 = zenModeToString(r8)
+            r0.append((java.lang.String) r8)
+            com.android.internal.logging.UiEventLogger r8 = sUiEventLogger
+            int r7 = r7.intValue()
+            com.android.systemui.volume.Events$ZenModeEvent r7 = com.android.systemui.volume.Events.ZenModeEvent.fromZenMode(r7)
+            r8.log(r7)
+            goto L_0x027b
+        L_0x0121:
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            com.android.internal.logging.MetricsLogger r1 = sLegacyLogger
+            r2 = 213(0xd5, float:2.98E-43)
+            int r7 = r7.intValue()
+            r1.action(r2, r7)
+        L_0x0130:
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            int r7 = r7.intValue()
+            java.lang.String r7 = ringerModeToString(r7)
+            r0.append((java.lang.String) r7)
+            goto L_0x027b
+        L_0x0141:
+            int r7 = r8.length
+            if (r7 <= r6) goto L_0x027b
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            int r7 = r7.intValue()
+            java.lang.String r7 = android.media.AudioSystem.streamToString(r7)
+            java.lang.StringBuilder r7 = r0.append((java.lang.String) r7)
+            java.lang.StringBuilder r7 = r7.append((char) r4)
+            r8 = r8[r6]
+            r7.append((java.lang.Object) r8)
+            goto L_0x027b
+        L_0x015f:
+            int r7 = r8.length
+            if (r7 <= r6) goto L_0x027b
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            com.android.internal.logging.MetricsLogger r1 = sLegacyLogger
+            r2 = 212(0xd4, float:2.97E-43)
+            int r3 = r7.intValue()
+            r1.action(r2, r3)
+            r8 = r8[r6]
+            java.lang.Integer r8 = (java.lang.Integer) r8
+            com.android.internal.logging.UiEventLogger r1 = sUiEventLogger
+            int r2 = r8.intValue()
+            com.android.systemui.volume.Events$VolumeDialogEvent r2 = com.android.systemui.volume.Events.VolumeDialogEvent.fromIconState(r2)
+            r1.log(r2)
+            int r7 = r7.intValue()
+            java.lang.String r7 = android.media.AudioSystem.streamToString(r7)
+            java.lang.StringBuilder r7 = r0.append((java.lang.String) r7)
+            java.lang.StringBuilder r7 = r7.append((char) r4)
+            int r8 = r8.intValue()
+            java.lang.String r8 = iconStateToString(r8)
+            r7.append((java.lang.String) r8)
+            goto L_0x027b
+        L_0x019f:
+            int r7 = r8.length
+            if (r7 <= r6) goto L_0x027b
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            com.android.internal.logging.MetricsLogger r1 = sLegacyLogger
+            r2 = 211(0xd3, float:2.96E-43)
+            int r3 = r7.intValue()
+            r1.action(r2, r3)
+            r8 = r8[r6]
+            java.lang.Integer r8 = (java.lang.Integer) r8
+            com.android.internal.logging.UiEventLogger r1 = sUiEventLogger
+            int r2 = r8.intValue()
+            com.android.systemui.volume.Events$VolumeDialogEvent r2 = com.android.systemui.volume.Events.VolumeDialogEvent.fromKeyLevel(r2)
+            r1.log(r2)
+            int r7 = r7.intValue()
+            java.lang.String r7 = android.media.AudioSystem.streamToString(r7)
+            java.lang.StringBuilder r7 = r0.append((java.lang.String) r7)
+            java.lang.StringBuilder r7 = r7.append((char) r4)
+            r7.append((java.lang.Object) r8)
+            goto L_0x027b
+        L_0x01d7:
+            r7 = r8[r5]
+            java.lang.Boolean r7 = (java.lang.Boolean) r7
+            com.android.internal.logging.MetricsLogger r8 = sLegacyLogger
+            r1 = 208(0xd0, float:2.91E-43)
+            boolean r2 = r7.booleanValue()
+            r8.visibility(r1, r2)
+            com.android.internal.logging.UiEventLogger r8 = sUiEventLogger
+            boolean r1 = r7.booleanValue()
+            if (r1 == 0) goto L_0x01f1
+            com.android.systemui.volume.Events$VolumeDialogEvent r1 = com.android.systemui.volume.Events.VolumeDialogEvent.VOLUME_DIALOG_EXPAND_DETAILS
+            goto L_0x01f3
+        L_0x01f1:
+            com.android.systemui.volume.Events$VolumeDialogEvent r1 = com.android.systemui.volume.Events.VolumeDialogEvent.VOLUME_DIALOG_COLLAPSE_DETAILS
+        L_0x01f3:
+            r8.log(r1)
+            r0.append((java.lang.Object) r7)
+            goto L_0x027b
+        L_0x01fb:
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            com.android.internal.logging.MetricsLogger r8 = sLegacyLogger
+            r1 = 210(0xd2, float:2.94E-43)
+            int r2 = r7.intValue()
+            r8.action(r1, r2)
+            com.android.internal.logging.UiEventLogger r8 = sUiEventLogger
+            com.android.systemui.volume.Events$VolumeDialogEvent r1 = com.android.systemui.volume.Events.VolumeDialogEvent.VOLUME_DIALOG_ACTIVE_STREAM_CHANGED
+            r8.log(r1)
+            int r7 = r7.intValue()
+            java.lang.String r7 = android.media.AudioSystem.streamToString(r7)
+            r0.append((java.lang.String) r7)
+            goto L_0x027b
+        L_0x021d:
+            com.android.internal.logging.MetricsLogger r7 = sLegacyLogger
+            r7.hidden(r2)
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            com.android.internal.logging.UiEventLogger r8 = sUiEventLogger
+            int r1 = r7.intValue()
+            com.android.systemui.volume.Events$VolumeDialogCloseEvent r1 = com.android.systemui.volume.Events.VolumeDialogCloseEvent.fromReason(r1)
+            r8.log(r1)
+            java.lang.String[] r8 = DISMISS_REASONS
+            int r7 = r7.intValue()
+            r7 = r8[r7]
+            r0.append((java.lang.String) r7)
+            goto L_0x027b
+        L_0x023f:
+            com.android.internal.logging.MetricsLogger r7 = sLegacyLogger
+            r7.visible(r2)
+            int r7 = r8.length
+            if (r7 <= r6) goto L_0x027b
+            r7 = r8[r5]
+            java.lang.Integer r7 = (java.lang.Integer) r7
+            r8 = r8[r6]
+            java.lang.Boolean r8 = (java.lang.Boolean) r8
+            com.android.internal.logging.MetricsLogger r1 = sLegacyLogger
+            boolean r2 = r8.booleanValue()
+            java.lang.String r4 = "volume_from_keyguard"
+            r1.histogram(r4, r2)
+            com.android.internal.logging.UiEventLogger r1 = sUiEventLogger
+            int r2 = r7.intValue()
+            com.android.systemui.volume.Events$VolumeDialogOpenEvent r2 = com.android.systemui.volume.Events.VolumeDialogOpenEvent.fromReasons(r2)
+            r1.log(r2)
+            java.lang.String[] r1 = SHOW_REASONS
+            int r7 = r7.intValue()
+            r7 = r1[r7]
+            java.lang.StringBuilder r7 = r0.append((java.lang.String) r7)
+            java.lang.StringBuilder r7 = r7.append((java.lang.String) r3)
+            r7.append((java.lang.Object) r8)
+        L_0x027b:
+            java.lang.String r7 = r0.toString()
+            return r7
+        L_0x0280:
+            r8 = 8
+            if (r7 != r8) goto L_0x0292
+            com.android.internal.logging.MetricsLogger r7 = sLegacyLogger
+            r8 = 1386(0x56a, float:1.942E-42)
+            r7.action(r8)
+            com.android.internal.logging.UiEventLogger r7 = sUiEventLogger
+            com.android.systemui.volume.Events$VolumeDialogEvent r8 = com.android.systemui.volume.Events.VolumeDialogEvent.VOLUME_DIALOG_SETTINGS_CLICK
+            r7.log(r8)
+        L_0x0292:
+            java.lang.String r7 = r0.toString()
+            return r7
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.volume.Events.logEvent(int, java.lang.Object[]):java.lang.String");
     }
 
     public static void writeState(long j, VolumeDialogController.State state) {
@@ -390,15 +583,12 @@ public class Events {
     }
 
     private static String iconStateToString(int i) {
-        if (i != 1) {
-            if (i == 2) {
-                return "mute";
-            }
-            if (i == 3) {
-                return "vibrate";
-            }
-            return "unknown_state_" + i;
+        if (i == 1) {
+            return "unmute";
         }
-        return "unmute";
+        if (i != 2) {
+            return i != 3 ? "unknown_state_" + i : "vibrate";
+        }
+        return "mute";
     }
 }

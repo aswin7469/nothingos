@@ -6,61 +6,86 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.biometrics.BiometricSourceType;
 import android.os.Build;
-import android.os.PowerManager;
-import android.os.SystemClock;
-import com.android.internal.util.LatencyTracker;
+import android.provider.DeviceConfig;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.statusbar.phone.BiometricUnlockController;
-/* loaded from: classes.dex */
-public class LatencyTester extends SystemUI {
+import com.android.systemui.util.DeviceConfigProxy;
+import com.android.systemui.util.concurrency.DelayableExecutor;
+import java.p026io.PrintWriter;
+import javax.inject.Inject;
+
+@SysUISingleton
+public class LatencyTester extends CoreStartable {
+    private static final String ACTION_FACE_WAKE = "com.android.systemui.latency.ACTION_FACE_WAKE";
+    private static final String ACTION_FINGERPRINT_WAKE = "com.android.systemui.latency.ACTION_FINGERPRINT_WAKE";
+    private static final boolean DEFAULT_ENABLED = Build.IS_ENG;
     private final BiometricUnlockController mBiometricUnlockController;
     private final BroadcastDispatcher mBroadcastDispatcher;
-    private final PowerManager mPowerManager;
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (LatencyTester.ACTION_FINGERPRINT_WAKE.equals(action)) {
+                LatencyTester.this.fakeWakeAndUnlock(BiometricSourceType.FINGERPRINT);
+            } else if (LatencyTester.ACTION_FACE_WAKE.equals(action)) {
+                LatencyTester.this.fakeWakeAndUnlock(BiometricSourceType.FACE);
+            }
+        }
+    };
+    private final DeviceConfigProxy mDeviceConfigProxy;
+    private boolean mEnabled;
 
-    public LatencyTester(Context context, BiometricUnlockController biometricUnlockController, PowerManager powerManager, BroadcastDispatcher broadcastDispatcher) {
+    @Inject
+    public LatencyTester(Context context, BiometricUnlockController biometricUnlockController, BroadcastDispatcher broadcastDispatcher, DeviceConfigProxy deviceConfigProxy, @Main DelayableExecutor delayableExecutor) {
         super(context);
         this.mBiometricUnlockController = biometricUnlockController;
-        this.mPowerManager = powerManager;
         this.mBroadcastDispatcher = broadcastDispatcher;
+        this.mDeviceConfigProxy = deviceConfigProxy;
+        updateEnabled();
+        deviceConfigProxy.addOnPropertiesChangedListener("latency_tracker", delayableExecutor, new LatencyTester$$ExternalSyntheticLambda0(this));
     }
 
-    @Override // com.android.systemui.SystemUI
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-LatencyTester  reason: not valid java name */
+    public /* synthetic */ void m2521lambda$new$0$comandroidsystemuiLatencyTester(DeviceConfig.Properties properties) {
+        updateEnabled();
+    }
+
     public void start() {
-        if (!Build.IS_DEBUGGABLE) {
+        registerForBroadcasts(this.mEnabled);
+    }
+
+    /* access modifiers changed from: private */
+    public void fakeWakeAndUnlock(BiometricSourceType biometricSourceType) {
+        if (this.mEnabled) {
+            this.mBiometricUnlockController.onBiometricAcquired(biometricSourceType, 0);
+            this.mBiometricUnlockController.onBiometricAuthenticated(KeyguardUpdateMonitor.getCurrentUser(), biometricSourceType, true);
+        }
+    }
+
+    private void registerForBroadcasts(boolean z) {
+        if (z) {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(ACTION_FINGERPRINT_WAKE);
+            intentFilter.addAction(ACTION_FACE_WAKE);
+            this.mBroadcastDispatcher.registerReceiver(this.mBroadcastReceiver, intentFilter);
             return;
         }
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("com.android.systemui.latency.ACTION_FINGERPRINT_WAKE");
-        intentFilter.addAction("com.android.systemui.latency.ACTION_FACE_WAKE");
-        intentFilter.addAction("com.android.systemui.latency.ACTION_TURN_ON_SCREEN");
-        this.mBroadcastDispatcher.registerReceiver(new BroadcastReceiver() { // from class: com.android.systemui.LatencyTester.1
-            @Override // android.content.BroadcastReceiver
-            public void onReceive(Context context, Intent intent) {
-                String action = intent.getAction();
-                if ("com.android.systemui.latency.ACTION_FINGERPRINT_WAKE".equals(action)) {
-                    LatencyTester.this.fakeWakeAndUnlock(BiometricSourceType.FINGERPRINT);
-                } else if ("com.android.systemui.latency.ACTION_FACE_WAKE".equals(action)) {
-                    LatencyTester.this.fakeWakeAndUnlock(BiometricSourceType.FACE);
-                } else if (!"com.android.systemui.latency.ACTION_TURN_ON_SCREEN".equals(action)) {
-                } else {
-                    LatencyTester.this.fakeTurnOnScreen();
-                }
-            }
-        }, intentFilter);
+        this.mBroadcastDispatcher.unregisterReceiver(this.mBroadcastReceiver);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void fakeTurnOnScreen() {
-        if (LatencyTracker.isEnabled(this.mContext)) {
-            LatencyTracker.getInstance(this.mContext).onActionStart(5);
+    private void updateEnabled() {
+        boolean z = this.mEnabled;
+        boolean z2 = Build.IS_DEBUGGABLE && this.mDeviceConfigProxy.getBoolean("latency_tracker", "enabled", DEFAULT_ENABLED);
+        this.mEnabled = z2;
+        if (z2 != z) {
+            registerForBroadcasts(z2);
         }
-        this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), 0, "android.policy:LATENCY_TESTS");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void fakeWakeAndUnlock(BiometricSourceType biometricSourceType) {
-        this.mBiometricUnlockController.onBiometricAcquired(biometricSourceType);
-        this.mBiometricUnlockController.onBiometricAuthenticated(KeyguardUpdateMonitor.getCurrentUser(), biometricSourceType, true);
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        printWriter.println("mEnabled=" + this.mEnabled);
     }
 }

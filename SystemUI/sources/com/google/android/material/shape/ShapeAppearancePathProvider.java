@@ -4,29 +4,21 @@ import android.graphics.Matrix;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.os.Build;
-/* loaded from: classes2.dex */
+
 public class ShapeAppearancePathProvider {
+    private final Path boundsPath = new Path();
+    private final Path cornerPath = new Path();
     private final ShapePath[] cornerPaths = new ShapePath[4];
     private final Matrix[] cornerTransforms = new Matrix[4];
+    private boolean edgeIntersectionCheckEnabled = true;
+    private final Path edgePath = new Path();
     private final Matrix[] edgeTransforms = new Matrix[4];
-    private final PointF pointF = new PointF();
     private final Path overlappedEdgePath = new Path();
-    private final Path boundsPath = new Path();
-    private final ShapePath shapePath = new ShapePath();
+    private final PointF pointF = new PointF();
     private final float[] scratch = new float[2];
     private final float[] scratch2 = new float[2];
-    private final Path edgePath = new Path();
-    private final Path cornerPath = new Path();
-    private boolean edgeIntersectionCheckEnabled = true;
+    private final ShapePath shapePath = new ShapePath();
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class Lazy {
-        static final ShapeAppearancePathProvider INSTANCE = new ShapeAppearancePathProvider();
-    }
-
-    /* loaded from: classes2.dex */
     public interface PathListener {
         void onCornerPathCreated(ShapePath shapePath, Matrix matrix, int i);
 
@@ -34,7 +26,14 @@ public class ShapeAppearancePathProvider {
     }
 
     private float angleOfEdge(int i) {
-        return (i + 1) * 90;
+        return (float) ((i + 1) * 90);
+    }
+
+    private static class Lazy {
+        static final ShapeAppearancePathProvider INSTANCE = new ShapeAppearancePathProvider();
+
+        private Lazy() {
+        }
     }
 
     public ShapeAppearancePathProvider() {
@@ -50,7 +49,7 @@ public class ShapeAppearancePathProvider {
     }
 
     public void calculatePath(ShapeAppearanceModel shapeAppearanceModel, float f, RectF rectF, Path path) {
-        calculatePath(shapeAppearanceModel, f, rectF, null, path);
+        calculatePath(shapeAppearanceModel, f, rectF, (PathListener) null, path);
     }
 
     public void calculatePath(ShapeAppearanceModel shapeAppearanceModel, float f, RectF rectF, PathListener pathListener, Path path) {
@@ -69,10 +68,9 @@ public class ShapeAppearancePathProvider {
         }
         path.close();
         this.overlappedEdgePath.close();
-        if (Build.VERSION.SDK_INT < 19 || this.overlappedEdgePath.isEmpty()) {
-            return;
+        if (!this.overlappedEdgePath.isEmpty()) {
+            path.op(this.overlappedEdgePath, Path.Op.UNION);
         }
-        path.op(this.overlappedEdgePath, Path.Op.UNION);
     }
 
     private void setCornerPathAndTransform(ShapeAppearancePathSpec shapeAppearancePathSpec, int i) {
@@ -80,9 +78,7 @@ public class ShapeAppearancePathProvider {
         float angleOfEdge = angleOfEdge(i);
         this.cornerTransforms[i].reset();
         getCoordinatesOfCorner(i, shapeAppearancePathSpec.bounds, this.pointF);
-        Matrix matrix = this.cornerTransforms[i];
-        PointF pointF = this.pointF;
-        matrix.setTranslate(pointF.x, pointF.y);
+        this.cornerTransforms[i].setTranslate(this.pointF.x, this.pointF.y);
         this.cornerTransforms[i].preRotate(angleOfEdge);
     }
 
@@ -112,9 +108,8 @@ public class ShapeAppearancePathProvider {
             path2.lineTo(fArr2[0], fArr2[1]);
         }
         this.cornerPaths[i].applyToPath(this.cornerTransforms[i], shapeAppearancePathSpec.path);
-        PathListener pathListener = shapeAppearancePathSpec.pathListener;
-        if (pathListener != null) {
-            pathListener.onCornerPathCreated(this.cornerPaths[i], this.cornerTransforms[i], i);
+        if (shapeAppearancePathSpec.pathListener != null) {
+            shapeAppearancePathSpec.pathListener.onCornerPathCreated(this.cornerPaths[i], this.cornerTransforms[i], i);
         }
     }
 
@@ -129,14 +124,16 @@ public class ShapeAppearancePathProvider {
         float[] fArr = this.scratch;
         float f = fArr[0];
         float[] fArr2 = this.scratch2;
-        float max = Math.max(((float) Math.hypot(f - fArr2[0], fArr[1] - fArr2[1])) - 0.001f, 0.0f);
+        float max = Math.max(((float) Math.hypot((double) (f - fArr2[0]), (double) (fArr[1] - fArr2[1]))) - 0.001f, 0.0f);
         float edgeCenterForIndex = getEdgeCenterForIndex(shapeAppearancePathSpec.bounds, i);
         this.shapePath.reset(0.0f, 0.0f);
         EdgeTreatment edgeTreatmentForIndex = getEdgeTreatmentForIndex(i, shapeAppearancePathSpec.shapeAppearanceModel);
         edgeTreatmentForIndex.getEdgePath(max, edgeCenterForIndex, shapeAppearancePathSpec.interpolation, this.shapePath);
         this.edgePath.reset();
         this.shapePath.applyToPath(this.edgeTransforms[i], this.edgePath);
-        if (this.edgeIntersectionCheckEnabled && Build.VERSION.SDK_INT >= 19 && (edgeTreatmentForIndex.forceIntersection() || pathOverlapsCorner(this.edgePath, i) || pathOverlapsCorner(this.edgePath, i2))) {
+        if (!this.edgeIntersectionCheckEnabled || (!edgeTreatmentForIndex.forceIntersection() && !pathOverlapsCorner(this.edgePath, i) && !pathOverlapsCorner(this.edgePath, i2))) {
+            this.shapePath.applyToPath(this.edgeTransforms[i], shapeAppearancePathSpec.path);
+        } else {
             Path path = this.edgePath;
             path.op(path, this.boundsPath, Path.Op.DIFFERENCE);
             this.scratch[0] = this.shapePath.getStartX();
@@ -146,12 +143,9 @@ public class ShapeAppearancePathProvider {
             float[] fArr3 = this.scratch;
             path2.moveTo(fArr3[0], fArr3[1]);
             this.shapePath.applyToPath(this.edgeTransforms[i], this.overlappedEdgePath);
-        } else {
-            this.shapePath.applyToPath(this.edgeTransforms[i], shapeAppearancePathSpec.path);
         }
-        PathListener pathListener = shapeAppearancePathSpec.pathListener;
-        if (pathListener != null) {
-            pathListener.onEdgePathCreated(this.shapePath, this.edgeTransforms[i], i);
+        if (shapeAppearancePathSpec.pathListener != null) {
+            shapeAppearancePathSpec.pathListener.onEdgePathCreated(this.shapePath, this.edgeTransforms[i], i);
         }
     }
 
@@ -163,18 +157,19 @@ public class ShapeAppearancePathProvider {
         this.cornerPath.computeBounds(rectF, true);
         path.op(this.cornerPath, Path.Op.INTERSECT);
         path.computeBounds(rectF, true);
-        if (rectF.isEmpty()) {
-            return rectF.width() > 1.0f && rectF.height() > 1.0f;
+        if (!rectF.isEmpty()) {
+            return true;
+        }
+        if (rectF.width() <= 1.0f || rectF.height() <= 1.0f) {
+            return false;
         }
         return true;
     }
 
     private float getEdgeCenterForIndex(RectF rectF, int i) {
-        float[] fArr = this.scratch;
-        ShapePath[] shapePathArr = this.cornerPaths;
-        fArr[0] = shapePathArr[i].endX;
-        fArr[1] = shapePathArr[i].endY;
-        this.cornerTransforms[i].mapPoints(fArr);
+        this.scratch[0] = this.cornerPaths[i].endX;
+        this.scratch[1] = this.cornerPaths[i].endY;
+        this.cornerTransforms[i].mapPoints(this.scratch);
         if (i == 1 || i == 3) {
             return Math.abs(rectF.centerX() - this.scratch[0]);
         }
@@ -182,71 +177,74 @@ public class ShapeAppearancePathProvider {
     }
 
     private CornerTreatment getCornerTreatmentForIndex(int i, ShapeAppearanceModel shapeAppearanceModel) {
-        if (i != 1) {
-            if (i == 2) {
-                return shapeAppearanceModel.getBottomLeftCorner();
-            }
-            if (i == 3) {
-                return shapeAppearanceModel.getTopLeftCorner();
-            }
+        if (i == 1) {
+            return shapeAppearanceModel.getBottomRightCorner();
+        }
+        if (i == 2) {
+            return shapeAppearanceModel.getBottomLeftCorner();
+        }
+        if (i != 3) {
             return shapeAppearanceModel.getTopRightCorner();
         }
-        return shapeAppearanceModel.getBottomRightCorner();
+        return shapeAppearanceModel.getTopLeftCorner();
     }
 
     private CornerSize getCornerSizeForIndex(int i, ShapeAppearanceModel shapeAppearanceModel) {
-        if (i != 1) {
-            if (i == 2) {
-                return shapeAppearanceModel.getBottomLeftCornerSize();
-            }
-            if (i == 3) {
-                return shapeAppearanceModel.getTopLeftCornerSize();
-            }
+        if (i == 1) {
+            return shapeAppearanceModel.getBottomRightCornerSize();
+        }
+        if (i == 2) {
+            return shapeAppearanceModel.getBottomLeftCornerSize();
+        }
+        if (i != 3) {
             return shapeAppearanceModel.getTopRightCornerSize();
         }
-        return shapeAppearanceModel.getBottomRightCornerSize();
+        return shapeAppearanceModel.getTopLeftCornerSize();
     }
 
     private EdgeTreatment getEdgeTreatmentForIndex(int i, ShapeAppearanceModel shapeAppearanceModel) {
-        if (i != 1) {
-            if (i == 2) {
-                return shapeAppearanceModel.getLeftEdge();
-            }
-            if (i == 3) {
-                return shapeAppearanceModel.getTopEdge();
-            }
+        if (i == 1) {
+            return shapeAppearanceModel.getBottomEdge();
+        }
+        if (i == 2) {
+            return shapeAppearanceModel.getLeftEdge();
+        }
+        if (i != 3) {
             return shapeAppearanceModel.getRightEdge();
         }
-        return shapeAppearanceModel.getBottomEdge();
+        return shapeAppearanceModel.getTopEdge();
     }
 
-    private void getCoordinatesOfCorner(int i, RectF rectF, PointF pointF) {
+    private void getCoordinatesOfCorner(int i, RectF rectF, PointF pointF2) {
         if (i == 1) {
-            pointF.set(rectF.right, rectF.bottom);
+            pointF2.set(rectF.right, rectF.bottom);
         } else if (i == 2) {
-            pointF.set(rectF.left, rectF.bottom);
-        } else if (i == 3) {
-            pointF.set(rectF.left, rectF.top);
+            pointF2.set(rectF.left, rectF.bottom);
+        } else if (i != 3) {
+            pointF2.set(rectF.right, rectF.top);
         } else {
-            pointF.set(rectF.right, rectF.top);
+            pointF2.set(rectF.left, rectF.top);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static final class ShapeAppearancePathSpec {
+    /* access modifiers changed from: package-private */
+    public void setEdgeIntersectionCheckEnable(boolean z) {
+        this.edgeIntersectionCheckEnabled = z;
+    }
+
+    static final class ShapeAppearancePathSpec {
         public final RectF bounds;
         public final float interpolation;
         public final Path path;
         public final PathListener pathListener;
         public final ShapeAppearanceModel shapeAppearanceModel;
 
-        ShapeAppearancePathSpec(ShapeAppearanceModel shapeAppearanceModel, float f, RectF rectF, PathListener pathListener, Path path) {
-            this.pathListener = pathListener;
-            this.shapeAppearanceModel = shapeAppearanceModel;
+        ShapeAppearancePathSpec(ShapeAppearanceModel shapeAppearanceModel2, float f, RectF rectF, PathListener pathListener2, Path path2) {
+            this.pathListener = pathListener2;
+            this.shapeAppearanceModel = shapeAppearanceModel2;
             this.interpolation = f;
             this.bounds = rectF;
-            this.path = path;
+            this.path = path2;
         }
     }
 }

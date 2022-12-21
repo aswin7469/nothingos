@@ -5,7 +5,7 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dump.DumpManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class NextAlarmControllerImpl_Factory implements Factory<NextAlarmControllerImpl> {
     private final Provider<AlarmManager> alarmManagerProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
@@ -17,10 +17,8 @@ public final class NextAlarmControllerImpl_Factory implements Factory<NextAlarmC
         this.dumpManagerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NextAlarmControllerImpl mo1933get() {
-        return newInstance(this.alarmManagerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.dumpManagerProvider.mo1933get());
+    public NextAlarmControllerImpl get() {
+        return newInstance(this.alarmManagerProvider.get(), this.broadcastDispatcherProvider.get(), this.dumpManagerProvider.get());
     }
 
     public static NextAlarmControllerImpl_Factory create(Provider<AlarmManager> provider, Provider<BroadcastDispatcher> provider2, Provider<DumpManager> provider3) {

@@ -13,121 +13,106 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.TextView;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
+import androidx.core.app.NotificationChannelCompat;
+import com.android.systemui.C1893R;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.row.ChannelEditorDialog;
 import com.android.systemui.statusbar.notification.row.NotificationInfo;
+import com.google.android.setupcompat.internal.FocusChangedMetricHelper;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import kotlin.Unit;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.collections.CollectionsKt;
-import kotlin.comparisons.ComparisonsKt__ComparisonsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@SysUISingleton
+@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010%\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\r\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0010\u0002\n\u0002\b\b\n\u0002\u0010 \n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\"\n\u0002\b\f\b\u0007\u0018\u00002\u00020\u0001B\u001f\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007¢\u0006\u0002\u0010\bJ\b\u00107\u001a\u000208H\u0007J\u0010\u00109\u001a\u0002082\u0006\u0010:\u001a\u00020\u000eH\u0002J\u0006\u0010;\u001a\u00020\u000eJ\b\u0010<\u001a\u000208H\u0002J\b\u0010=\u001a\u00020\u000eH\u0002J\u0006\u0010>\u001a\u000208J\b\u0010?\u001a\u000208H\u0002J\u000e\u0010@\u001a\b\u0012\u0004\u0012\u00020\u00160AH\u0002J\u001c\u0010B\u001a\b\u0012\u0004\u0012\u00020\u001e0C2\f\u0010D\u001a\b\u0012\u0004\u0012\u00020\u00160CH\u0002J\u0010\u0010E\u001a\u00020!2\b\u0010F\u001a\u0004\u0018\u00010\fJ\b\u0010G\u001a\u00020\u000eH\u0002J\b\u0010H\u001a\u000208H\u0002J\u0010\u0010I\u001a\u0002082\u0006\u0010J\u001a\u00020KH\u0007J\u0016\u0010L\u001a\u0002082\f\u0010M\u001a\b\u0012\u0004\u0012\u00020\u001e0NH\u0002J>\u0010O\u001a\u0002082\u0006\u0010\u000b\u001a\u00020\f2\u0006\u0010/\u001a\u00020\f2\u0006\u0010P\u001a\u00020\u00122\f\u0010M\u001a\b\u0012\u0004\u0012\u00020\u001e0N2\u0006\u0010\t\u001a\u00020\n2\b\u0010-\u001a\u0004\u0018\u00010.J\u0016\u0010Q\u001a\u0002082\u0006\u0010R\u001a\u00020\u001e2\u0006\u0010S\u001a\u00020\u0012J\u000e\u0010T\u001a\u0002082\u0006\u0010U\u001a\u00020\u000eJ\b\u0010V\u001a\u000208H\u0002J\u0018\u0010W\u001a\u0002082\u0006\u0010R\u001a\u00020\u001e2\u0006\u0010X\u001a\u00020\u0012H\u0002J\u0006\u0010Y\u001a\u000208R\u0010\u0010\t\u001a\u0004\u0018\u00010\nX\u000e¢\u0006\u0002\n\u0000R\u0010\u0010\u000b\u001a\u0004\u0018\u00010\fX\u000e¢\u0006\u0002\n\u0000R\u0012\u0010\r\u001a\u0004\u0018\u00010\u000eX\u000e¢\u0006\u0004\n\u0002\u0010\u000fR\u000e\u0010\u0010\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u0012\u0010\u0011\u001a\u0004\u0018\u00010\u0012X\u000e¢\u0006\u0004\n\u0002\u0010\u0013R\u0014\u0010\u0014\u001a\b\u0012\u0004\u0012\u00020\u00160\u0015X\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u0017\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0018\u0010\u0019R\u000e\u0010\u001a\u001a\u00020\u001bX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u001a\u0010\u001c\u001a\u000e\u0012\u0004\u0012\u00020\u001e\u0012\u0004\u0012\u00020\u00120\u001dX\u0004¢\u0006\u0002\n\u0000R8\u0010\u001f\u001a\u001e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020!0 j\u000e\u0012\u0004\u0012\u00020\f\u0012\u0004\u0012\u00020!`\"8\u0000X\u0004¢\u0006\u000e\n\u0000\u0012\u0004\b#\u0010$\u001a\u0004\b%\u0010&R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001c\u0010'\u001a\u0004\u0018\u00010(X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b)\u0010*\"\u0004\b+\u0010,R\u0010\u0010-\u001a\u0004\u0018\u00010.X\u000e¢\u0006\u0002\n\u0000R\u0010\u0010/\u001a\u0004\u0018\u00010\fX\u000e¢\u0006\u0002\n\u0000R\"\u00100\u001a\b\u0012\u0004\u0012\u00020\u001e0\u00158\u0000X\u0004¢\u0006\u000e\n\u0000\u0012\u0004\b1\u0010$\u001a\u0004\b2\u00103R\u000e\u00104\u001a\u00020\u000eX\u000e¢\u0006\u0002\n\u0000R\u0014\u00105\u001a\b\u0012\u0004\u0012\u00020\u001e0\u0015X\u0004¢\u0006\u0002\n\u0000R\u000e\u00106\u001a\u00020\u0012XD¢\u0006\u0002\n\u0000¨\u0006Z"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialogController;", "", "c", "Landroid/content/Context;", "noMan", "Landroid/app/INotificationManager;", "dialogBuilder", "Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialog$Builder;", "(Landroid/content/Context;Landroid/app/INotificationManager;Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialog$Builder;)V", "appIcon", "Landroid/graphics/drawable/Drawable;", "appName", "", "appNotificationsCurrentlyEnabled", "", "Ljava/lang/Boolean;", "appNotificationsEnabled", "appUid", "", "Ljava/lang/Integer;", "channelGroupList", "", "Landroid/app/NotificationChannelGroup;", "context", "getContext", "()Landroid/content/Context;", "dialog", "Lcom/android/systemui/statusbar/notification/row/ChannelEditorDialog;", "edits", "", "Landroid/app/NotificationChannel;", "groupNameLookup", "Ljava/util/HashMap;", "", "Lkotlin/collections/HashMap;", "getGroupNameLookup$SystemUI_nothingRelease$annotations", "()V", "getGroupNameLookup$SystemUI_nothingRelease", "()Ljava/util/HashMap;", "onFinishListener", "Lcom/android/systemui/statusbar/notification/row/OnChannelEditorDialogFinishedListener;", "getOnFinishListener", "()Lcom/android/systemui/statusbar/notification/row/OnChannelEditorDialogFinishedListener;", "setOnFinishListener", "(Lcom/android/systemui/statusbar/notification/row/OnChannelEditorDialogFinishedListener;)V", "onSettingsClickListener", "Lcom/android/systemui/statusbar/notification/row/NotificationInfo$OnSettingsClickListener;", "packageName", "paddedChannels", "getPaddedChannels$SystemUI_nothingRelease$annotations", "getPaddedChannels$SystemUI_nothingRelease", "()Ljava/util/List;", "prepared", "providedChannels", "wmFlags", "apply", "", "applyAppNotificationsOn", "b", "areAppNotificationsEnabled", "buildGroupNameLookup", "checkAreAppNotificationsOn", "close", "done", "fetchNotificationChannelGroups", "", "getDisplayableChannels", "Lkotlin/sequences/Sequence;", "groupList", "groupNameForId", "groupId", "hasChanges", "initDialog", "launchSettings", "sender", "Landroid/view/View;", "padToFourChannels", "channels", "", "prepareDialogForApp", "uid", "proposeEditForChannel", "channel", "edit", "proposeSetAppNotificationsEnabled", "enabled", "resetState", "setChannelImportance", "importance", "show", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ChannelEditorDialogController.kt */
-/* loaded from: classes.dex */
 public final class ChannelEditorDialogController {
-    @Nullable
     private Drawable appIcon;
-    @Nullable
     private String appName;
-    @Nullable
     private Boolean appNotificationsCurrentlyEnabled;
-    @Nullable
+    private boolean appNotificationsEnabled = true;
     private Integer appUid;
-    @NotNull
+    private final List<NotificationChannelGroup> channelGroupList = new ArrayList();
     private final Context context;
     private ChannelEditorDialog dialog;
-    @NotNull
     private final ChannelEditorDialog.Builder dialogBuilder;
-    @NotNull
-    private final INotificationManager noMan;
-    @Nullable
-    private OnChannelEditorDialogFinishedListener onFinishListener;
-    @Nullable
-    private NotificationInfo.OnSettingsClickListener onSettingsClickListener;
-    @Nullable
-    private String packageName;
-    private boolean prepared;
-    @NotNull
-    private final List<NotificationChannel> paddedChannels = new ArrayList();
-    @NotNull
-    private final List<NotificationChannel> providedChannels = new ArrayList();
-    @NotNull
     private final Map<NotificationChannel, Integer> edits = new LinkedHashMap();
-    private boolean appNotificationsEnabled = true;
-    @NotNull
     private final HashMap<String, CharSequence> groupNameLookup = new HashMap<>();
-    @NotNull
-    private final List<NotificationChannelGroup> channelGroupList = new ArrayList();
+    private final INotificationManager noMan;
+    private OnChannelEditorDialogFinishedListener onFinishListener;
+    private NotificationInfo.OnSettingsClickListener onSettingsClickListener;
+    private String packageName;
+    private final List<NotificationChannel> paddedChannels = new ArrayList();
+    private boolean prepared;
+    private final List<NotificationChannel> providedChannels = new ArrayList();
     private final int wmFlags = -2130444288;
 
-    @VisibleForTesting
-    public static /* synthetic */ void getGroupNameLookup$frameworks__base__packages__SystemUI__android_common__SystemUI_core$annotations() {
+    public static /* synthetic */ void getGroupNameLookup$SystemUI_nothingRelease$annotations() {
     }
 
-    @VisibleForTesting
-    public static /* synthetic */ void getPaddedChannels$frameworks__base__packages__SystemUI__android_common__SystemUI_core$annotations() {
+    public static /* synthetic */ void getPaddedChannels$SystemUI_nothingRelease$annotations() {
     }
 
-    public ChannelEditorDialogController(@NotNull Context c, @NotNull INotificationManager noMan, @NotNull ChannelEditorDialog.Builder dialogBuilder) {
-        Intrinsics.checkNotNullParameter(c, "c");
-        Intrinsics.checkNotNullParameter(noMan, "noMan");
-        Intrinsics.checkNotNullParameter(dialogBuilder, "dialogBuilder");
-        this.noMan = noMan;
-        this.dialogBuilder = dialogBuilder;
-        Context applicationContext = c.getApplicationContext();
+    @Inject
+    public ChannelEditorDialogController(Context context2, INotificationManager iNotificationManager, ChannelEditorDialog.Builder builder) {
+        Intrinsics.checkNotNullParameter(context2, "c");
+        Intrinsics.checkNotNullParameter(iNotificationManager, "noMan");
+        Intrinsics.checkNotNullParameter(builder, "dialogBuilder");
+        this.noMan = iNotificationManager;
+        this.dialogBuilder = builder;
+        Context applicationContext = context2.getApplicationContext();
         Intrinsics.checkNotNullExpressionValue(applicationContext, "c.applicationContext");
         this.context = applicationContext;
     }
 
-    @Nullable
+    public final Context getContext() {
+        return this.context;
+    }
+
     public final OnChannelEditorDialogFinishedListener getOnFinishListener() {
         return this.onFinishListener;
     }
 
-    public final void setOnFinishListener(@Nullable OnChannelEditorDialogFinishedListener onChannelEditorDialogFinishedListener) {
+    public final void setOnFinishListener(OnChannelEditorDialogFinishedListener onChannelEditorDialogFinishedListener) {
         this.onFinishListener = onChannelEditorDialogFinishedListener;
     }
 
-    @NotNull
-    public final List<NotificationChannel> getPaddedChannels$frameworks__base__packages__SystemUI__android_common__SystemUI_core() {
+    public final List<NotificationChannel> getPaddedChannels$SystemUI_nothingRelease() {
         return this.paddedChannels;
     }
 
-    @NotNull
-    public final HashMap<String, CharSequence> getGroupNameLookup$frameworks__base__packages__SystemUI__android_common__SystemUI_core() {
+    public final HashMap<String, CharSequence> getGroupNameLookup$SystemUI_nothingRelease() {
         return this.groupNameLookup;
     }
 
-    public final void prepareDialogForApp(@NotNull String appName, @NotNull String packageName, int i, @NotNull Set<NotificationChannel> channels, @NotNull Drawable appIcon, @Nullable NotificationInfo.OnSettingsClickListener onSettingsClickListener) {
-        Intrinsics.checkNotNullParameter(appName, "appName");
-        Intrinsics.checkNotNullParameter(packageName, "packageName");
-        Intrinsics.checkNotNullParameter(channels, "channels");
-        Intrinsics.checkNotNullParameter(appIcon, "appIcon");
-        this.appName = appName;
-        this.packageName = packageName;
+    public final void prepareDialogForApp(String str, String str2, int i, Set<NotificationChannel> set, Drawable drawable, NotificationInfo.OnSettingsClickListener onSettingsClickListener2) {
+        Intrinsics.checkNotNullParameter(str, "appName");
+        Intrinsics.checkNotNullParameter(str2, FocusChangedMetricHelper.Constants.ExtraKey.PACKAGE_NAME);
+        Intrinsics.checkNotNullParameter(set, "channels");
+        Intrinsics.checkNotNullParameter(drawable, "appIcon");
+        this.appName = str;
+        this.packageName = str2;
         this.appUid = Integer.valueOf(i);
-        this.appIcon = appIcon;
+        this.appIcon = drawable;
         boolean checkAreAppNotificationsOn = checkAreAppNotificationsOn();
         this.appNotificationsEnabled = checkAreAppNotificationsOn;
-        this.onSettingsClickListener = onSettingsClickListener;
+        this.onSettingsClickListener = onSettingsClickListener2;
         this.appNotificationsCurrentlyEnabled = Boolean.valueOf(checkAreAppNotificationsOn);
         this.channelGroupList.clear();
         this.channelGroupList.addAll(fetchNotificationChannelGroups());
         buildGroupNameLookup();
         this.providedChannels.clear();
-        this.providedChannels.addAll(channels);
-        padToFourChannels(channels);
+        this.providedChannels.addAll(set);
+        padToFourChannels(set);
         initDialog();
         this.prepared = true;
     }
@@ -135,12 +120,11 @@ public final class ChannelEditorDialogController {
     private final void buildGroupNameLookup() {
         for (NotificationChannelGroup notificationChannelGroup : this.channelGroupList) {
             if (notificationChannelGroup.getId() != null) {
-                HashMap<String, CharSequence> groupNameLookup$frameworks__base__packages__SystemUI__android_common__SystemUI_core = getGroupNameLookup$frameworks__base__packages__SystemUI__android_common__SystemUI_core();
                 String id = notificationChannelGroup.getId();
                 Intrinsics.checkNotNullExpressionValue(id, "group.id");
                 CharSequence name = notificationChannelGroup.getName();
                 Intrinsics.checkNotNullExpressionValue(name, "group.name");
-                groupNameLookup$frameworks__base__packages__SystemUI__android_common__SystemUI_core.put(id, name);
+                this.groupNameLookup.put(id, name);
             }
         }
     }
@@ -149,65 +133,40 @@ public final class ChannelEditorDialogController {
         this.paddedChannels.clear();
         CollectionsKt.addAll(this.paddedChannels, SequencesKt.take(CollectionsKt.asSequence(set), 4));
         CollectionsKt.addAll(this.paddedChannels, SequencesKt.take(SequencesKt.distinct(SequencesKt.filterNot(getDisplayableChannels(CollectionsKt.asSequence(this.channelGroupList)), new ChannelEditorDialogController$padToFourChannels$1(this))), 4 - this.paddedChannels.size()));
-        if (this.paddedChannels.size() != 1 || !Intrinsics.areEqual("miscellaneous", this.paddedChannels.get(0).getId())) {
-            return;
+        if (this.paddedChannels.size() == 1 && Intrinsics.areEqual((Object) NotificationChannelCompat.DEFAULT_CHANNEL_ID, (Object) this.paddedChannels.get(0).getId())) {
+            this.paddedChannels.clear();
         }
-        this.paddedChannels.clear();
     }
 
     private final Sequence<NotificationChannel> getDisplayableChannels(Sequence<NotificationChannelGroup> sequence) {
-        return SequencesKt.sortedWith(SequencesKt.flatMap(sequence, ChannelEditorDialogController$getDisplayableChannels$channels$1.INSTANCE), new Comparator<T>() { // from class: com.android.systemui.statusbar.notification.row.ChannelEditorDialogController$getDisplayableChannels$$inlined$compareBy$1
-            @Override // java.util.Comparator
-            public final int compare(T t, T t2) {
-                int compareValues;
-                NotificationChannel notificationChannel = (NotificationChannel) t;
-                CharSequence name = notificationChannel.getName();
-                String str = null;
-                String obj = name == null ? null : name.toString();
-                if (obj == null) {
-                    obj = notificationChannel.getId();
-                }
-                NotificationChannel notificationChannel2 = (NotificationChannel) t2;
-                CharSequence name2 = notificationChannel2.getName();
-                if (name2 != null) {
-                    str = name2.toString();
-                }
-                if (str == null) {
-                    str = notificationChannel2.getId();
-                }
-                compareValues = ComparisonsKt__ComparisonsKt.compareValues(obj, str);
-                return compareValues;
-            }
-        });
+        return SequencesKt.sortedWith(SequencesKt.flatMap(sequence, ChannelEditorDialogController$getDisplayableChannels$channels$1.INSTANCE), new C2739x78bbb58a());
     }
 
     public final void show() {
-        if (!this.prepared) {
-            throw new IllegalStateException("Must call prepareDialogForApp() before calling show()");
-        }
-        ChannelEditorDialog channelEditorDialog = this.dialog;
-        if (channelEditorDialog != null) {
+        if (this.prepared) {
+            ChannelEditorDialog channelEditorDialog = this.dialog;
+            if (channelEditorDialog == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("dialog");
+                channelEditorDialog = null;
+            }
             channelEditorDialog.show();
-        } else {
-            Intrinsics.throwUninitializedPropertyAccessException("dialog");
-            throw null;
+            return;
         }
+        throw new IllegalStateException("Must call prepareDialogForApp() before calling show()");
     }
 
     public final void close() {
         done();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void done() {
+    private final void done() {
         resetState();
         ChannelEditorDialog channelEditorDialog = this.dialog;
-        if (channelEditorDialog != null) {
-            channelEditorDialog.dismiss();
-        } else {
+        if (channelEditorDialog == null) {
             Intrinsics.throwUninitializedPropertyAccessException("dialog");
-            throw null;
+            channelEditorDialog = null;
         }
+        channelEditorDialog.dismiss();
     }
 
     private final void resetState() {
@@ -222,37 +181,34 @@ public final class ChannelEditorDialogController {
         this.groupNameLookup.clear();
     }
 
-    @NotNull
-    public final CharSequence groupNameForId(@Nullable String str) {
-        CharSequence charSequence = this.groupNameLookup.get(str);
+    public final CharSequence groupNameForId(String str) {
+        CharSequence charSequence = (CharSequence) this.groupNameLookup.get(str);
         return charSequence == null ? "" : charSequence;
     }
 
-    public final void proposeEditForChannel(@NotNull NotificationChannel channel, int i) {
-        Intrinsics.checkNotNullParameter(channel, "channel");
-        if (channel.getImportance() == i) {
-            this.edits.remove(channel);
+    public final void proposeEditForChannel(NotificationChannel notificationChannel, int i) {
+        Intrinsics.checkNotNullParameter(notificationChannel, "channel");
+        if (notificationChannel.getImportance() == i) {
+            this.edits.remove(notificationChannel);
         } else {
-            this.edits.put(channel, Integer.valueOf(i));
+            this.edits.put(notificationChannel, Integer.valueOf(i));
         }
         ChannelEditorDialog channelEditorDialog = this.dialog;
-        if (channelEditorDialog != null) {
-            channelEditorDialog.updateDoneButtonText(hasChanges());
-        } else {
+        if (channelEditorDialog == null) {
             Intrinsics.throwUninitializedPropertyAccessException("dialog");
-            throw null;
+            channelEditorDialog = null;
         }
+        channelEditorDialog.updateDoneButtonText(hasChanges());
     }
 
     public final void proposeSetAppNotificationsEnabled(boolean z) {
         this.appNotificationsEnabled = z;
         ChannelEditorDialog channelEditorDialog = this.dialog;
-        if (channelEditorDialog != null) {
-            channelEditorDialog.updateDoneButtonText(hasChanges());
-        } else {
+        if (channelEditorDialog == null) {
             Intrinsics.throwUninitializedPropertyAccessException("dialog");
-            throw null;
+            channelEditorDialog = null;
         }
+        channelEditorDialog.updateDoneButtonText(hasChanges());
     }
 
     public final boolean areAppNotificationsEnabled() {
@@ -260,7 +216,7 @@ public final class ChannelEditorDialogController {
     }
 
     private final boolean hasChanges() {
-        return (this.edits.isEmpty() ^ true) || !Intrinsics.areEqual(Boolean.valueOf(this.appNotificationsEnabled), this.appNotificationsCurrentlyEnabled);
+        return (this.edits.isEmpty() ^ true) || !Intrinsics.areEqual((Object) Boolean.valueOf(this.appNotificationsEnabled), (Object) this.appNotificationsCurrentlyEnabled);
     }
 
     private final List<NotificationChannelGroup> fetchNotificationChannelGroups() {
@@ -274,7 +230,10 @@ public final class ChannelEditorDialogController {
             if (!(list instanceof List)) {
                 list = null;
             }
-            return list == null ? CollectionsKt.emptyList() : list;
+            if (list == null) {
+                return CollectionsKt.emptyList();
+            }
+            return list;
         } catch (Exception e) {
             Log.e("ChannelDialogController", "Error fetching channel groups", e);
             return CollectionsKt.emptyList();
@@ -322,126 +281,128 @@ public final class ChannelEditorDialogController {
         }
     }
 
-    @VisibleForTesting
     public final void apply() {
-        for (Map.Entry<NotificationChannel, Integer> entry : this.edits.entrySet()) {
-            NotificationChannel key = entry.getKey();
-            int intValue = entry.getValue().intValue();
-            if (key.getImportance() != intValue) {
-                setChannelImportance(key, intValue);
+        for (Map.Entry next : this.edits.entrySet()) {
+            NotificationChannel notificationChannel = (NotificationChannel) next.getKey();
+            int intValue = ((Number) next.getValue()).intValue();
+            if (notificationChannel.getImportance() != intValue) {
+                setChannelImportance(notificationChannel, intValue);
             }
         }
-        if (!Intrinsics.areEqual(Boolean.valueOf(this.appNotificationsEnabled), this.appNotificationsCurrentlyEnabled)) {
+        if (!Intrinsics.areEqual((Object) Boolean.valueOf(this.appNotificationsEnabled), (Object) this.appNotificationsCurrentlyEnabled)) {
             applyAppNotificationsOn(this.appNotificationsEnabled);
         }
     }
 
-    @VisibleForTesting
-    public final void launchSettings(@NotNull View sender) {
-        Intrinsics.checkNotNullParameter(sender, "sender");
-        NotificationInfo.OnSettingsClickListener onSettingsClickListener = this.onSettingsClickListener;
-        if (onSettingsClickListener == null) {
-            return;
+    public final void launchSettings(View view) {
+        Intrinsics.checkNotNullParameter(view, "sender");
+        NotificationChannel notificationChannel = this.providedChannels.size() == 1 ? this.providedChannels.get(0) : null;
+        NotificationInfo.OnSettingsClickListener onSettingsClickListener2 = this.onSettingsClickListener;
+        if (onSettingsClickListener2 != null) {
+            Integer num = this.appUid;
+            Intrinsics.checkNotNull(num);
+            onSettingsClickListener2.onClick(view, notificationChannel, num.intValue());
         }
-        Integer num = this.appUid;
-        Intrinsics.checkNotNull(num);
-        onSettingsClickListener.onClick(sender, null, num.intValue());
     }
 
     private final void initDialog() {
         this.dialogBuilder.setContext(this.context);
         ChannelEditorDialog build = this.dialogBuilder.build();
         this.dialog = build;
-        if (build != null) {
-            Window window = build.getWindow();
-            if (window != null) {
-                window.requestFeature(1);
-            }
-            ChannelEditorDialog channelEditorDialog = this.dialog;
-            if (channelEditorDialog == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("dialog");
-                throw null;
-            }
-            channelEditorDialog.setTitle(" ");
-            ChannelEditorDialog channelEditorDialog2 = this.dialog;
-            if (channelEditorDialog2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("dialog");
-                throw null;
-            }
-            channelEditorDialog2.setContentView(R$layout.notif_half_shelf);
-            channelEditorDialog2.setCanceledOnTouchOutside(true);
-            channelEditorDialog2.setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.android.systemui.statusbar.notification.row.ChannelEditorDialogController$initDialog$1$1
-                @Override // android.content.DialogInterface.OnDismissListener
-                public final void onDismiss(DialogInterface dialogInterface) {
-                    OnChannelEditorDialogFinishedListener onFinishListener = ChannelEditorDialogController.this.getOnFinishListener();
-                    if (onFinishListener == null) {
-                        return;
-                    }
-                    onFinishListener.onChannelEditorDialogFinished();
-                }
-            });
-            final ChannelEditorListView channelEditorListView = (ChannelEditorListView) channelEditorDialog2.findViewById(R$id.half_shelf_container);
-            if (channelEditorListView != null) {
-                channelEditorListView.setController(this);
-                channelEditorListView.setAppIcon(this.appIcon);
-                channelEditorListView.setAppName(this.appName);
-                channelEditorListView.setChannels(getPaddedChannels$frameworks__base__packages__SystemUI__android_common__SystemUI_core());
-            }
-            channelEditorDialog2.setOnShowListener(new DialogInterface.OnShowListener() { // from class: com.android.systemui.statusbar.notification.row.ChannelEditorDialogController$initDialog$1$3
-                @Override // android.content.DialogInterface.OnShowListener
-                public final void onShow(DialogInterface dialogInterface) {
-                    List<NotificationChannel> list;
-                    list = ChannelEditorDialogController.this.providedChannels;
-                    for (NotificationChannel notificationChannel : list) {
-                        ChannelEditorListView channelEditorListView2 = channelEditorListView;
-                        if (channelEditorListView2 != null) {
-                            channelEditorListView2.highlightChannel(notificationChannel);
-                        }
-                    }
-                }
-            });
-            TextView textView = (TextView) channelEditorDialog2.findViewById(R$id.done_button);
-            if (textView != null) {
-                textView.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.statusbar.notification.row.ChannelEditorDialogController$initDialog$1$4
-                    @Override // android.view.View.OnClickListener
-                    public final void onClick(View view) {
-                        ChannelEditorDialogController.this.apply();
-                        ChannelEditorDialogController.this.done();
-                    }
-                });
-            }
-            TextView textView2 = (TextView) channelEditorDialog2.findViewById(R$id.see_more_button);
-            if (textView2 != null) {
-                textView2.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.statusbar.notification.row.ChannelEditorDialogController$initDialog$1$5
-                    @Override // android.view.View.OnClickListener
-                    public final void onClick(View it) {
-                        ChannelEditorDialogController channelEditorDialogController = ChannelEditorDialogController.this;
-                        Intrinsics.checkNotNullExpressionValue(it, "it");
-                        channelEditorDialogController.launchSettings(it);
-                        ChannelEditorDialogController.this.done();
-                    }
-                });
-            }
-            Window window2 = channelEditorDialog2.getWindow();
-            if (window2 == null) {
-                return;
-            }
+        ChannelEditorDialog channelEditorDialog = null;
+        if (build == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("dialog");
+            build = null;
+        }
+        Window window = build.getWindow();
+        if (window != null) {
+            window.requestFeature(1);
+        }
+        ChannelEditorDialog channelEditorDialog2 = this.dialog;
+        if (channelEditorDialog2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("dialog");
+            channelEditorDialog2 = null;
+        }
+        channelEditorDialog2.setTitle(" ");
+        ChannelEditorDialog channelEditorDialog3 = this.dialog;
+        if (channelEditorDialog3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("dialog");
+        } else {
+            channelEditorDialog = channelEditorDialog3;
+        }
+        channelEditorDialog.setContentView(C1893R.layout.notif_half_shelf);
+        channelEditorDialog.setCanceledOnTouchOutside(true);
+        channelEditorDialog.setOnDismissListener(new ChannelEditorDialogController$$ExternalSyntheticLambda0(this));
+        ChannelEditorListView channelEditorListView = (ChannelEditorListView) channelEditorDialog.findViewById(C1893R.C1897id.half_shelf_container);
+        if (channelEditorListView != null) {
+            Intrinsics.checkNotNullExpressionValue(channelEditorListView, "listView");
+            channelEditorListView.setController(this);
+            channelEditorListView.setAppIcon(this.appIcon);
+            channelEditorListView.setAppName(this.appName);
+            channelEditorListView.setChannels(this.paddedChannels);
+        }
+        channelEditorDialog.setOnShowListener(new ChannelEditorDialogController$$ExternalSyntheticLambda1(this, channelEditorListView));
+        TextView textView = (TextView) channelEditorDialog.findViewById(C1893R.C1897id.done_button);
+        if (textView != null) {
+            textView.setOnClickListener(new ChannelEditorDialogController$$ExternalSyntheticLambda2(this));
+        }
+        TextView textView2 = (TextView) channelEditorDialog.findViewById(C1893R.C1897id.see_more_button);
+        if (textView2 != null) {
+            textView2.setOnClickListener(new ChannelEditorDialogController$$ExternalSyntheticLambda3(this));
+        }
+        Window window2 = channelEditorDialog.getWindow();
+        if (window2 != null) {
+            Intrinsics.checkNotNullExpressionValue(window2, "window");
             window2.setBackgroundDrawable(new ColorDrawable(0));
             window2.addFlags(this.wmFlags);
             window2.setType(2017);
             window2.setWindowAnimations(16973910);
             WindowManager.LayoutParams attributes = window2.getAttributes();
             attributes.format = -3;
-            attributes.setTitle(ChannelEditorDialogController.class.getSimpleName());
+            attributes.setTitle("ChannelEditorDialogController");
             attributes.gravity = 81;
             attributes.setFitInsetsTypes(window2.getAttributes().getFitInsetsTypes() & (~WindowInsets.Type.statusBars()));
             attributes.width = -1;
             attributes.height = -2;
-            Unit unit = Unit.INSTANCE;
             window2.setAttributes(attributes);
-            return;
         }
-        Intrinsics.throwUninitializedPropertyAccessException("dialog");
-        throw null;
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: initDialog$lambda-9$lambda-2  reason: not valid java name */
+    public static final void m3134initDialog$lambda9$lambda2(ChannelEditorDialogController channelEditorDialogController, DialogInterface dialogInterface) {
+        Intrinsics.checkNotNullParameter(channelEditorDialogController, "this$0");
+        OnChannelEditorDialogFinishedListener onChannelEditorDialogFinishedListener = channelEditorDialogController.onFinishListener;
+        if (onChannelEditorDialogFinishedListener != null) {
+            onChannelEditorDialogFinishedListener.onChannelEditorDialogFinished();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: initDialog$lambda-9$lambda-4  reason: not valid java name */
+    public static final void m3135initDialog$lambda9$lambda4(ChannelEditorDialogController channelEditorDialogController, ChannelEditorListView channelEditorListView, DialogInterface dialogInterface) {
+        Intrinsics.checkNotNullParameter(channelEditorDialogController, "this$0");
+        for (NotificationChannel next : channelEditorDialogController.providedChannels) {
+            if (channelEditorListView != null) {
+                channelEditorListView.highlightChannel(next);
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: initDialog$lambda-9$lambda-5  reason: not valid java name */
+    public static final void m3136initDialog$lambda9$lambda5(ChannelEditorDialogController channelEditorDialogController, View view) {
+        Intrinsics.checkNotNullParameter(channelEditorDialogController, "this$0");
+        channelEditorDialogController.apply();
+        channelEditorDialogController.done();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: initDialog$lambda-9$lambda-6  reason: not valid java name */
+    public static final void m3137initDialog$lambda9$lambda6(ChannelEditorDialogController channelEditorDialogController, View view) {
+        Intrinsics.checkNotNullParameter(channelEditorDialogController, "this$0");
+        Intrinsics.checkNotNullExpressionValue(view, "it");
+        channelEditorDialogController.launchSettings(view);
+        channelEditorDialogController.done();
     }
 }

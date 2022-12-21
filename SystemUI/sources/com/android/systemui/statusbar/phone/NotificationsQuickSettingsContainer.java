@@ -6,76 +6,136 @@ import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.view.WindowInsets;
-import android.widget.FrameLayout;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.android.systemui.R$id;
+import androidx.constraintlayout.widget.ConstraintSet;
+import com.android.systemui.C1893R;
 import com.android.systemui.fragments.FragmentHostManager;
-import com.android.systemui.plugins.qs.QS;
+import com.android.systemui.plugins.p011qs.C2301QS;
 import com.android.systemui.statusbar.notification.AboveShelfObserver;
-import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
-import com.nothingos.utils.SystemUIUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.function.ToIntFunction;
-/* loaded from: classes.dex */
+import java.util.function.Consumer;
+
 public class NotificationsQuickSettingsContainer extends ConstraintLayout implements FragmentHostManager.FragmentListener, AboveShelfObserver.HasViewAboveShelfChangedListener {
-    private int mBottomPadding;
-    private boolean mCustomizerAnimating;
-    private boolean mCustomizing;
-    private boolean mDetailShowing;
-    private boolean mHasViewsAboveShelf;
-    private View mKeyguardStatusBar;
-    private boolean mQsExpanded;
-    private FrameLayout mQsFrame;
-    private NotificationStackScrollLayout mStackScroller;
-    private int mStackScrollerMargin;
+    private Consumer<Configuration> mConfigurationChangedListener;
     private ArrayList<View> mDrawingOrderedChildren = new ArrayList<>();
+    private final Comparator<View> mIndexComparator = Comparator.comparingInt(new NotificationsQuickSettingsContainer$$ExternalSyntheticLambda1(this));
+    private Consumer<WindowInsets> mInsetsChangedListener = new NotificationsQuickSettingsContainer$$ExternalSyntheticLambda2();
+    private View mKeyguardStatusBar;
     private ArrayList<View> mLayoutDrawingOrder = new ArrayList<>();
-    private final Comparator<View> mIndexComparator = Comparator.comparingInt(new ToIntFunction() { // from class: com.android.systemui.statusbar.phone.NotificationsQuickSettingsContainer$$ExternalSyntheticLambda0
-        @Override // java.util.function.ToIntFunction
-        public final int applyAsInt(Object obj) {
-            return NotificationsQuickSettingsContainer.this.indexOfChild((View) obj);
-        }
-    });
+    private View mQSContainer;
+    private Consumer<C2301QS> mQSFragmentAttachedListener = new NotificationsQuickSettingsContainer$$ExternalSyntheticLambda3();
+    private View mQSScrollView;
+    private C2301QS mQs;
+    private View mQsFrame;
+    private View mStackScroller;
+
+    static /* synthetic */ void lambda$new$0(WindowInsets windowInsets) {
+    }
+
+    static /* synthetic */ void lambda$new$1(C2301QS qs) {
+    }
+
+    static /* synthetic */ void lambda$removeOnInsetsChangedListener$2(WindowInsets windowInsets) {
+    }
+
+    static /* synthetic */ void lambda$removeQSFragmentAttachedListener$3(C2301QS qs) {
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
 
     public NotificationsQuickSettingsContainer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         super.onFinishInflate();
-        this.mQsFrame = (FrameLayout) findViewById(R$id.qs_frame);
-        NotificationStackScrollLayout notificationStackScrollLayout = (NotificationStackScrollLayout) findViewById(R$id.notification_stack_scroller);
-        this.mStackScroller = notificationStackScrollLayout;
-        this.mStackScrollerMargin = ((ViewGroup.MarginLayoutParams) ((ConstraintLayout.LayoutParams) notificationStackScrollLayout.getLayoutParams())).bottomMargin;
-        this.mKeyguardStatusBar = findViewById(R$id.keyguard_header);
+        this.mQsFrame = findViewById(C1893R.C1897id.qs_frame);
+        this.mStackScroller = findViewById(C1893R.C1897id.notification_stack_scroller);
+        this.mKeyguardStatusBar = findViewById(C1893R.C1897id.keyguard_header);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    public void onFragmentViewCreated(String str, Fragment fragment) {
+        C2301QS qs = (C2301QS) fragment;
+        this.mQs = qs;
+        this.mQSFragmentAttachedListener.accept(qs);
+        this.mQSScrollView = this.mQs.getView().findViewById(C1893R.C1897id.expanded_qs_scroll_view);
+        this.mQSContainer = this.mQs.getView().findViewById(C1893R.C1897id.quick_settings_container);
+    }
+
+    public void onHasViewsAboveShelfChanged(boolean z) {
+        invalidate();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        Consumer<Configuration> consumer = this.mConfigurationChangedListener;
+        if (consumer != null) {
+            consumer.accept(configuration);
+        }
+    }
+
+    public void setConfigurationChangedListener(Consumer<Configuration> consumer) {
+        this.mConfigurationChangedListener = consumer;
+    }
+
+    public void setNotificationsMarginBottom(int i) {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) this.mStackScroller.getLayoutParams();
+        layoutParams.bottomMargin = i;
+        this.mStackScroller.setLayoutParams(layoutParams);
+    }
+
+    public void setQSContainerPaddingBottom(int i) {
+        View view = this.mQSContainer;
+        if (view != null) {
+            view.setPadding(view.getPaddingLeft(), this.mQSContainer.getPaddingTop(), this.mQSContainer.getPaddingRight(), i);
+        }
+    }
+
+    public void setInsetsChangedListener(Consumer<WindowInsets> consumer) {
+        this.mInsetsChangedListener = consumer;
+    }
+
+    public void removeOnInsetsChangedListener() {
+        this.mInsetsChangedListener = new NotificationsQuickSettingsContainer$$ExternalSyntheticLambda0();
+    }
+
+    public void setQSFragmentAttachedListener(Consumer<C2301QS> consumer) {
+        this.mQSFragmentAttachedListener = consumer;
+        C2301QS qs = this.mQs;
+        if (qs != null) {
+            consumer.accept(qs);
+        }
+    }
+
+    public void removeQSFragmentAttachedListener() {
+        this.mQSFragmentAttachedListener = new NotificationsQuickSettingsContainer$$ExternalSyntheticLambda4();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        FragmentHostManager.get(this).addTagListener(QS.TAG, this);
+        FragmentHostManager.get(this).addTagListener(C2301QS.TAG, this);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        FragmentHostManager.get(this).removeTagListener(QS.TAG, this);
+        FragmentHostManager.get(this).removeTagListener(C2301QS.TAG, this);
     }
 
-    @Override // android.view.View
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
-        int stableInsetBottom = windowInsets.getStableInsetBottom();
-        this.mBottomPadding = stableInsetBottom;
-        setPadding(0, 0, 0, stableInsetBottom);
+        this.mInsetsChangedListener.accept(windowInsets);
         return windowInsets;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.constraintlayout.widget.ConstraintLayout, android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void dispatchDraw(Canvas canvas) {
         this.mDrawingOrderedChildren.clear();
         this.mLayoutDrawingOrder.clear();
@@ -95,8 +155,8 @@ public class NotificationsQuickSettingsContainer extends ConstraintLayout implem
         super.dispatchDraw(canvas);
     }
 
-    @Override // android.view.ViewGroup
-    protected boolean drawChild(Canvas canvas, View view, long j) {
+    /* access modifiers changed from: protected */
+    public boolean drawChild(Canvas canvas, View view, long j) {
         int indexOf = this.mLayoutDrawingOrder.indexOf(view);
         if (indexOf >= 0) {
             return super.drawChild(canvas, this.mDrawingOrderedChildren.get(indexOf), j);
@@ -104,61 +164,7 @@ public class NotificationsQuickSettingsContainer extends ConstraintLayout implem
         return super.drawChild(canvas, view, j);
     }
 
-    @Override // com.android.systemui.fragments.FragmentHostManager.FragmentListener
-    public void onFragmentViewCreated(String str, Fragment fragment) {
-        ((QS) fragment).setContainer(this);
-    }
-
-    public void setQsExpanded(boolean z) {
-        if (this.mQsExpanded != z) {
-            this.mQsExpanded = z;
-            invalidate();
-        }
-    }
-
-    public void setCustomizerAnimating(boolean z) {
-        if (this.mCustomizerAnimating != z) {
-            this.mCustomizerAnimating = z;
-            invalidate();
-        }
-    }
-
-    public void setCustomizerShowing(boolean z) {
-        this.mCustomizing = z;
-        updateBottomMargin();
-        this.mStackScroller.setQsCustomizerShowing(z);
-    }
-
-    public void setDetailShowing(boolean z) {
-        this.mDetailShowing = z;
-        updateBottomMargin();
-    }
-
-    private void updateBottomMargin() {
-        if (!SystemUIUtils.getInstance().shouldUseSplitNotificationShade() && (this.mCustomizing || this.mDetailShowing)) {
-            setPadding(0, 0, 0, 0);
-            setBottomMargin(this.mStackScroller, 0);
-            return;
-        }
-        setPadding(0, 0, 0, this.mBottomPadding);
-        setBottomMargin(this.mStackScroller, this.mStackScrollerMargin);
-    }
-
-    private void setBottomMargin(View view, int i) {
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) view.getLayoutParams();
-        ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin = i;
-        view.setLayoutParams(layoutParams);
-    }
-
-    @Override // com.android.systemui.statusbar.notification.AboveShelfObserver.HasViewAboveShelfChangedListener
-    public void onHasViewsAboveShelfChanged(boolean z) {
-        this.mHasViewsAboveShelf = z;
-        invalidate();
-    }
-
-    @Override // android.view.View
-    protected void onConfigurationChanged(Configuration configuration) {
-        super.onConfigurationChanged(configuration);
-        updateBottomMargin();
+    public void applyConstraints(ConstraintSet constraintSet) {
+        constraintSet.applyTo(this);
     }
 }

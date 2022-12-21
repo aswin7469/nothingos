@@ -7,7 +7,7 @@ import com.android.systemui.settings.UserTracker;
 import com.android.systemui.util.leak.LeakDetector;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class TunerServiceImpl_Factory implements Factory<TunerServiceImpl> {
     private final Provider<Context> contextProvider;
     private final Provider<DemoModeController> demoModeControllerProvider;
@@ -23,10 +23,8 @@ public final class TunerServiceImpl_Factory implements Factory<TunerServiceImpl>
         this.userTrackerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public TunerServiceImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.mainHandlerProvider.mo1933get(), this.leakDetectorProvider.mo1933get(), this.demoModeControllerProvider.mo1933get(), this.userTrackerProvider.mo1933get());
+    public TunerServiceImpl get() {
+        return newInstance(this.contextProvider.get(), this.mainHandlerProvider.get(), this.leakDetectorProvider.get(), this.demoModeControllerProvider.get(), this.userTrackerProvider.get());
     }
 
     public static TunerServiceImpl_Factory create(Provider<Context> provider, Provider<Handler> provider2, Provider<LeakDetector> provider3, Provider<DemoModeController> provider4, Provider<UserTracker> provider5) {

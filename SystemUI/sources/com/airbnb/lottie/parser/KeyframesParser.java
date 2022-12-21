@@ -4,16 +4,17 @@ import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.animation.keyframe.PathKeyframe;
 import com.airbnb.lottie.parser.moshi.JsonReader;
 import com.airbnb.lottie.value.Keyframe;
-import java.io.IOException;
+import java.p026io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class KeyframesParser {
-    static JsonReader.Options NAMES = JsonReader.Options.of("k");
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static <T> List<Keyframe<T>> parse(JsonReader jsonReader, LottieComposition lottieComposition, float f, ValueParser<T> valueParser) throws IOException {
+class KeyframesParser {
+    static JsonReader.Options NAMES = JsonReader.Options.m137of("k");
+
+    private KeyframesParser() {
+    }
+
+    static <T> List<Keyframe<T>> parse(JsonReader jsonReader, LottieComposition lottieComposition, float f, ValueParser<T> valueParser, boolean z) throws IOException {
         ArrayList arrayList = new ArrayList();
         if (jsonReader.peek() == JsonReader.Token.STRING) {
             lottieComposition.addWarning("Lottie doesn't support expressions.");
@@ -21,22 +22,20 @@ public class KeyframesParser {
         }
         jsonReader.beginObject();
         while (jsonReader.hasNext()) {
-            if (jsonReader.selectName(NAMES) == 0) {
-                if (jsonReader.peek() == JsonReader.Token.BEGIN_ARRAY) {
-                    jsonReader.beginArray();
-                    if (jsonReader.peek() == JsonReader.Token.NUMBER) {
-                        arrayList.add(KeyframeParser.parse(jsonReader, lottieComposition, f, valueParser, false));
-                    } else {
-                        while (jsonReader.hasNext()) {
-                            arrayList.add(KeyframeParser.parse(jsonReader, lottieComposition, f, valueParser, true));
-                        }
-                    }
-                    jsonReader.endArray();
-                } else {
-                    arrayList.add(KeyframeParser.parse(jsonReader, lottieComposition, f, valueParser, false));
-                }
-            } else {
+            if (jsonReader.selectName(NAMES) != 0) {
                 jsonReader.skipValue();
+            } else if (jsonReader.peek() == JsonReader.Token.BEGIN_ARRAY) {
+                jsonReader.beginArray();
+                if (jsonReader.peek() == JsonReader.Token.NUMBER) {
+                    arrayList.add(KeyframeParser.parse(jsonReader, lottieComposition, f, valueParser, false, z));
+                } else {
+                    while (jsonReader.hasNext()) {
+                        arrayList.add(KeyframeParser.parse(jsonReader, lottieComposition, f, valueParser, true, z));
+                    }
+                }
+                jsonReader.endArray();
+            } else {
+                arrayList.add(KeyframeParser.parse(jsonReader, lottieComposition, f, valueParser, false, z));
             }
         }
         jsonReader.endObject();
@@ -46,7 +45,6 @@ public class KeyframesParser {
 
     public static <T> void setEndFrames(List<? extends Keyframe<T>> list) {
         int i;
-        T t;
         int size = list.size();
         int i2 = 0;
         while (true) {
@@ -54,20 +52,20 @@ public class KeyframesParser {
             if (i2 >= i) {
                 break;
             }
-            Keyframe<T> keyframe = list.get(i2);
+            Keyframe keyframe = (Keyframe) list.get(i2);
             i2++;
-            Keyframe<T> keyframe2 = list.get(i2);
+            Keyframe keyframe2 = (Keyframe) list.get(i2);
             keyframe.endFrame = Float.valueOf(keyframe2.startFrame);
-            if (keyframe.endValue == null && (t = keyframe2.startValue) != null) {
-                keyframe.endValue = t;
+            if (keyframe.endValue == null && keyframe2.startValue != null) {
+                keyframe.endValue = keyframe2.startValue;
                 if (keyframe instanceof PathKeyframe) {
                     ((PathKeyframe) keyframe).createPath();
                 }
             }
         }
-        Keyframe<T> keyframe3 = list.get(i);
+        Keyframe keyframe3 = (Keyframe) list.get(i);
         if ((keyframe3.startValue == null || keyframe3.endValue == null) && list.size() > 1) {
-            list.remove(keyframe3);
+            list.remove((Object) keyframe3);
         }
     }
 }

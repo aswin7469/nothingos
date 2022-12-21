@@ -10,50 +10,49 @@ import com.android.keyguard.EmergencyButtonController;
 import com.android.keyguard.KeyguardInputView;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.classifier.FalsingCollector;
+import com.android.systemui.dagger.qualifiers.Main;
+import com.android.systemui.statusbar.policy.DevicePostureController;
 import com.android.systemui.util.ViewController;
 import com.android.systemui.util.concurrency.DelayableExecutor;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public abstract class KeyguardInputViewController<T extends KeyguardInputView> extends ViewController<T> implements KeyguardSecurityView {
     private final EmergencyButton mEmergencyButton;
     private final EmergencyButtonController mEmergencyButtonController;
     private final KeyguardSecurityCallback mKeyguardSecurityCallback;
-    private KeyguardSecurityCallback mNullCallback = new KeyguardSecurityCallback() { // from class: com.android.keyguard.KeyguardInputViewController.1
-        @Override // com.android.keyguard.KeyguardSecurityCallback
-        public void dismiss(boolean z, int i) {
+    private KeyguardSecurityCallback mNullCallback = new KeyguardSecurityCallback() {
+        public void dismiss(boolean z, int i, KeyguardSecurityModel.SecurityMode securityMode) {
         }
 
-        @Override // com.android.keyguard.KeyguardSecurityCallback
-        public void dismiss(boolean z, int i, boolean z2) {
+        public void dismiss(boolean z, int i, boolean z2, KeyguardSecurityModel.SecurityMode securityMode) {
         }
 
-        @Override // com.android.keyguard.KeyguardSecurityCallback
+        public boolean isVerifyUnlockOnly() {
+            return false;
+        }
+
         public void onUserInput() {
         }
 
-        @Override // com.android.keyguard.KeyguardSecurityCallback
         public void reportUnlockAttempt(int i, boolean z, int i2) {
         }
 
-        @Override // com.android.keyguard.KeyguardSecurityCallback
         public void reset() {
         }
 
-        @Override // com.android.keyguard.KeyguardSecurityCallback
         public void userActivity() {
         }
     };
     private boolean mPaused;
     private final KeyguardSecurityModel.SecurityMode mSecurityMode;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.ViewController
+    /* access modifiers changed from: protected */
     public void onViewAttached() {
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.ViewController
+    /* access modifiers changed from: protected */
     public void onViewDetached() {
     }
 
@@ -66,27 +65,31 @@ public abstract class KeyguardInputViewController<T extends KeyguardInputView> e
     public void showPromptReason(int i) {
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public KeyguardInputViewController(T t, KeyguardSecurityModel.SecurityMode securityMode, KeyguardSecurityCallback keyguardSecurityCallback, EmergencyButtonController emergencyButtonController) {
+    protected KeyguardInputViewController(T t, KeyguardSecurityModel.SecurityMode securityMode, KeyguardSecurityCallback keyguardSecurityCallback, EmergencyButtonController emergencyButtonController) {
         super(t);
+        EmergencyButton emergencyButton;
         this.mSecurityMode = securityMode;
         this.mKeyguardSecurityCallback = keyguardSecurityCallback;
-        this.mEmergencyButton = t == null ? null : (EmergencyButton) t.findViewById(R$id.emergency_call_button);
+        if (t == null) {
+            emergencyButton = null;
+        } else {
+            emergencyButton = (EmergencyButton) t.findViewById(C1893R.C1897id.emergency_call_button);
+        }
+        this.mEmergencyButton = emergencyButton;
         this.mEmergencyButtonController = emergencyButtonController;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.ViewController
+    /* access modifiers changed from: protected */
     public void onInit() {
         this.mEmergencyButtonController.init();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public KeyguardSecurityModel.SecurityMode getSecurityMode() {
         return this.mSecurityMode;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public KeyguardSecurityCallback getKeyguardSecurityCallback() {
         if (this.mPaused) {
             return this.mNullCallback;
@@ -117,16 +120,21 @@ public abstract class KeyguardInputViewController<T extends KeyguardInputView> e
         return ((KeyguardInputView) this.mView).startDisappearAnimation(runnable);
     }
 
+    public CharSequence getTitle() {
+        return ((KeyguardInputView) this.mView).getTitle();
+    }
+
     public int getIndexIn(KeyguardSecurityViewFlipper keyguardSecurityViewFlipper) {
         return keyguardSecurityViewFlipper.indexOfChild(this.mView);
     }
 
-    /* loaded from: classes.dex */
     public static class Factory {
+        private final DevicePostureController mDevicePostureController;
         private final EmergencyButtonController.Factory mEmergencyButtonControllerFactory;
         private final FalsingCollector mFalsingCollector;
         private final InputMethodManager mInputMethodManager;
         private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+        private final KeyguardViewController mKeyguardViewController;
         private final LatencyTracker mLatencyTracker;
         private final LiftToActivateListener mLiftToActivateListener;
         private final LockPatternUtils mLockPatternUtils;
@@ -135,7 +143,8 @@ public abstract class KeyguardInputViewController<T extends KeyguardInputView> e
         private final Resources mResources;
         private final TelephonyManager mTelephonyManager;
 
-        public Factory(KeyguardUpdateMonitor keyguardUpdateMonitor, LockPatternUtils lockPatternUtils, LatencyTracker latencyTracker, KeyguardMessageAreaController.Factory factory, InputMethodManager inputMethodManager, DelayableExecutor delayableExecutor, Resources resources, LiftToActivateListener liftToActivateListener, TelephonyManager telephonyManager, FalsingCollector falsingCollector, EmergencyButtonController.Factory factory2) {
+        @Inject
+        public Factory(KeyguardUpdateMonitor keyguardUpdateMonitor, LockPatternUtils lockPatternUtils, LatencyTracker latencyTracker, KeyguardMessageAreaController.Factory factory, InputMethodManager inputMethodManager, @Main DelayableExecutor delayableExecutor, @Main Resources resources, LiftToActivateListener liftToActivateListener, TelephonyManager telephonyManager, FalsingCollector falsingCollector, EmergencyButtonController.Factory factory2, DevicePostureController devicePostureController, KeyguardViewController keyguardViewController) {
             this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
             this.mLockPatternUtils = lockPatternUtils;
             this.mLatencyTracker = latencyTracker;
@@ -147,26 +156,26 @@ public abstract class KeyguardInputViewController<T extends KeyguardInputView> e
             this.mTelephonyManager = telephonyManager;
             this.mEmergencyButtonControllerFactory = factory2;
             this.mFalsingCollector = falsingCollector;
+            this.mDevicePostureController = devicePostureController;
+            this.mKeyguardViewController = keyguardViewController;
         }
 
         public KeyguardInputViewController create(KeyguardInputView keyguardInputView, KeyguardSecurityModel.SecurityMode securityMode, KeyguardSecurityCallback keyguardSecurityCallback) {
-            EmergencyButtonController create = this.mEmergencyButtonControllerFactory.create((EmergencyButton) keyguardInputView.findViewById(R$id.emergency_call_button));
-            if (keyguardInputView instanceof KeyguardPatternView) {
-                return new KeyguardPatternViewController((KeyguardPatternView) keyguardInputView, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mLatencyTracker, this.mFalsingCollector, create, this.mMessageAreaControllerFactory);
+            KeyguardInputView keyguardInputView2 = keyguardInputView;
+            EmergencyButtonController create = this.mEmergencyButtonControllerFactory.create((EmergencyButton) keyguardInputView2.findViewById(C1893R.C1897id.emergency_call_button));
+            if (keyguardInputView2 instanceof KeyguardPatternView) {
+                return new KeyguardPatternViewController((KeyguardPatternView) keyguardInputView2, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mLatencyTracker, this.mFalsingCollector, create, this.mMessageAreaControllerFactory, this.mDevicePostureController);
+            } else if (keyguardInputView2 instanceof KeyguardPasswordView) {
+                return new KeyguardPasswordViewController((KeyguardPasswordView) keyguardInputView2, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mMessageAreaControllerFactory, this.mLatencyTracker, this.mInputMethodManager, create, this.mMainExecutor, this.mResources, this.mFalsingCollector, this.mKeyguardViewController);
+            } else if (keyguardInputView2 instanceof KeyguardPINView) {
+                return new KeyguardPinViewController((KeyguardPINView) keyguardInputView2, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mMessageAreaControllerFactory, this.mLatencyTracker, this.mLiftToActivateListener, create, this.mFalsingCollector, this.mDevicePostureController);
+            } else if (keyguardInputView2 instanceof KeyguardSimPinView) {
+                return new KeyguardSimPinViewController((KeyguardSimPinView) keyguardInputView2, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mMessageAreaControllerFactory, this.mLatencyTracker, this.mLiftToActivateListener, this.mTelephonyManager, this.mFalsingCollector, create);
+            } else if (keyguardInputView2 instanceof KeyguardSimPukView) {
+                return new KeyguardSimPukViewController((KeyguardSimPukView) keyguardInputView2, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mMessageAreaControllerFactory, this.mLatencyTracker, this.mLiftToActivateListener, this.mTelephonyManager, this.mFalsingCollector, create);
+            } else {
+                throw new RuntimeException("Unable to find controller for " + keyguardInputView2);
             }
-            if (keyguardInputView instanceof KeyguardPasswordView) {
-                return new KeyguardPasswordViewController((KeyguardPasswordView) keyguardInputView, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mMessageAreaControllerFactory, this.mLatencyTracker, this.mInputMethodManager, create, this.mMainExecutor, this.mResources, this.mFalsingCollector);
-            }
-            if (keyguardInputView instanceof KeyguardPINView) {
-                return new KeyguardPinViewController((KeyguardPINView) keyguardInputView, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mMessageAreaControllerFactory, this.mLatencyTracker, this.mLiftToActivateListener, create, this.mFalsingCollector);
-            }
-            if (keyguardInputView instanceof KeyguardSimPinView) {
-                return new KeyguardSimPinViewController((KeyguardSimPinView) keyguardInputView, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mMessageAreaControllerFactory, this.mLatencyTracker, this.mLiftToActivateListener, this.mTelephonyManager, this.mFalsingCollector, create);
-            }
-            if (keyguardInputView instanceof KeyguardSimPukView) {
-                return new KeyguardSimPukViewController((KeyguardSimPukView) keyguardInputView, this.mKeyguardUpdateMonitor, securityMode, this.mLockPatternUtils, keyguardSecurityCallback, this.mMessageAreaControllerFactory, this.mLatencyTracker, this.mLiftToActivateListener, this.mTelephonyManager, this.mFalsingCollector, create);
-            }
-            throw new RuntimeException("Unable to find controller for " + keyguardInputView);
         }
     }
 }

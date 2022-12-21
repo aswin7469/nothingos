@@ -1,6 +1,5 @@
 package androidx.transition;
 
-import android.annotation.SuppressLint;
 import android.graphics.Matrix;
 import android.util.Log;
 import android.view.View;
@@ -8,17 +7,21 @@ import android.view.ViewParent;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class ViewUtilsBase {
+
+class ViewUtilsBase {
+    private static final String TAG = "ViewUtilsBase";
+    private static final int VISIBILITY_MASK = 12;
     private static boolean sSetFrameFetched;
     private static Method sSetFrameMethod;
     private static Field sViewFlagsField;
     private static boolean sViewFlagsFieldFetched;
     private float[] mMatrixValues;
 
+    ViewUtilsBase() {
+    }
+
     public void setTransitionAlpha(View view, float f) {
-        Float f2 = (Float) view.getTag(R$id.save_non_transition_alpha);
+        Float f2 = (Float) view.getTag(C1419R.C1422id.save_non_transition_alpha);
         if (f2 != null) {
             view.setAlpha(f2.floatValue() * f);
         } else {
@@ -27,7 +30,7 @@ public class ViewUtilsBase {
     }
 
     public float getTransitionAlpha(View view) {
-        Float f = (Float) view.getTag(R$id.save_non_transition_alpha);
+        Float f = (Float) view.getTag(C1419R.C1422id.save_non_transition_alpha);
         if (f != null) {
             return view.getAlpha() / f.floatValue();
         }
@@ -35,15 +38,14 @@ public class ViewUtilsBase {
     }
 
     public void saveNonTransitionAlpha(View view) {
-        int i = R$id.save_non_transition_alpha;
-        if (view.getTag(i) == null) {
-            view.setTag(i, Float.valueOf(view.getAlpha()));
+        if (view.getTag(C1419R.C1422id.save_non_transition_alpha) == null) {
+            view.setTag(C1419R.C1422id.save_non_transition_alpha, Float.valueOf(view.getAlpha()));
         }
     }
 
     public void clearNonTransitionAlpha(View view) {
         if (view.getVisibility() == 0) {
-            view.setTag(R$id.save_non_transition_alpha, null);
+            view.setTag(C1419R.C1422id.save_non_transition_alpha, (Object) null);
         }
     }
 
@@ -52,9 +54,9 @@ public class ViewUtilsBase {
         if (parent instanceof View) {
             View view2 = (View) parent;
             transformMatrixToGlobal(view2, matrix);
-            matrix.preTranslate(-view2.getScrollX(), -view2.getScrollY());
+            matrix.preTranslate((float) (-view2.getScrollX()), (float) (-view2.getScrollY()));
         }
-        matrix.preTranslate(view.getLeft(), view.getTop());
+        matrix.preTranslate((float) view.getLeft(), (float) view.getTop());
         Matrix matrix2 = view.getMatrix();
         if (!matrix2.isIdentity()) {
             matrix.preConcat(matrix2);
@@ -66,23 +68,22 @@ public class ViewUtilsBase {
         if (parent instanceof View) {
             View view2 = (View) parent;
             transformMatrixToLocal(view2, matrix);
-            matrix.postTranslate(view2.getScrollX(), view2.getScrollY());
+            matrix.postTranslate((float) view2.getScrollX(), (float) view2.getScrollY());
         }
-        matrix.postTranslate(-view.getLeft(), -view.getTop());
+        matrix.postTranslate((float) (-view.getLeft()), (float) (-view.getTop()));
         Matrix matrix2 = view.getMatrix();
         if (!matrix2.isIdentity()) {
             Matrix matrix3 = new Matrix();
-            if (!matrix2.invert(matrix3)) {
-                return;
+            if (matrix2.invert(matrix3)) {
+                matrix.postConcat(matrix3);
             }
-            matrix.postConcat(matrix3);
         }
     }
 
     public void setAnimationMatrix(View view, Matrix matrix) {
         if (matrix == null || matrix.isIdentity()) {
-            view.setPivotX(view.getWidth() / 2);
-            view.setPivotY(view.getHeight() / 2);
+            view.setPivotX((float) (view.getWidth() / 2));
+            view.setPivotY((float) (view.getHeight() / 2));
             view.setTranslationX(0.0f);
             view.setTranslationY(0.0f);
             view.setScaleX(1.0f);
@@ -97,8 +98,8 @@ public class ViewUtilsBase {
         }
         matrix.getValues(fArr);
         float f = fArr[3];
-        float sqrt = ((float) Math.sqrt(1.0f - (f * f))) * (fArr[0] < 0.0f ? -1 : 1);
-        float degrees = (float) Math.toDegrees(Math.atan2(f, sqrt));
+        float sqrt = ((float) Math.sqrt((double) (1.0f - (f * f)))) * ((float) (fArr[0] < 0.0f ? -1 : 1));
+        float degrees = (float) Math.toDegrees(Math.atan2((double) f, (double) sqrt));
         float f2 = fArr[0] / sqrt;
         float f3 = fArr[4] / sqrt;
         float f4 = fArr[2];
@@ -132,29 +133,28 @@ public class ViewUtilsBase {
                 sViewFlagsField = declaredField;
                 declaredField.setAccessible(true);
             } catch (NoSuchFieldException unused) {
-                Log.i("ViewUtilsBase", "fetchViewFlagsField: ");
+                Log.i(TAG, "fetchViewFlagsField: ");
             }
             sViewFlagsFieldFetched = true;
         }
         Field field = sViewFlagsField;
         if (field != null) {
             try {
-                sViewFlagsField.setInt(view, (field.getInt(view) & (-13)) | i);
+                sViewFlagsField.setInt(view, (field.getInt(view) & -13) | i);
             } catch (IllegalAccessException unused2) {
             }
         }
     }
 
-    @SuppressLint({"PrivateApi", "SoonBlockedPrivateApi"})
     private void fetchSetFrame() {
         if (!sSetFrameFetched) {
+            Class<View> cls = View.class;
             try {
-                Class cls = Integer.TYPE;
-                Method declaredMethod = View.class.getDeclaredMethod("setFrame", cls, cls, cls, cls);
+                Method declaredMethod = cls.getDeclaredMethod("setFrame", Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE);
                 sSetFrameMethod = declaredMethod;
                 declaredMethod.setAccessible(true);
             } catch (NoSuchMethodException e) {
-                Log.i("ViewUtilsBase", "Failed to retrieve setFrame method", e);
+                Log.i(TAG, "Failed to retrieve setFrame method", e);
             }
             sSetFrameFetched = true;
         }

@@ -7,125 +7,143 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
-import org.xmlpull.v1.XmlPullParser;
-/* loaded from: classes.dex */
+import org.xmlpull.p032v1.XmlPullParser;
+
 public class TypedArrayUtils {
-    public static boolean hasAttribute(XmlPullParser parser, String attrName) {
-        return parser.getAttributeValue("http://schemas.android.com/apk/res/android", attrName) != null;
+    private static final String NAMESPACE = "http://schemas.android.com/apk/res/android";
+
+    public static boolean hasAttribute(XmlPullParser xmlPullParser, String str) {
+        return xmlPullParser.getAttributeValue(NAMESPACE, str) != null;
     }
 
-    public static float getNamedFloat(TypedArray a, XmlPullParser parser, String attrName, int resId, float defaultValue) {
-        return !hasAttribute(parser, attrName) ? defaultValue : a.getFloat(resId, defaultValue);
+    public static float getNamedFloat(TypedArray typedArray, XmlPullParser xmlPullParser, String str, int i, float f) {
+        if (!hasAttribute(xmlPullParser, str)) {
+            return f;
+        }
+        return typedArray.getFloat(i, f);
     }
 
-    public static boolean getNamedBoolean(TypedArray a, XmlPullParser parser, String attrName, int resId, boolean defaultValue) {
-        return !hasAttribute(parser, attrName) ? defaultValue : a.getBoolean(resId, defaultValue);
+    public static boolean getNamedBoolean(TypedArray typedArray, XmlPullParser xmlPullParser, String str, int i, boolean z) {
+        if (!hasAttribute(xmlPullParser, str)) {
+            return z;
+        }
+        return typedArray.getBoolean(i, z);
     }
 
-    public static int getNamedInt(TypedArray a, XmlPullParser parser, String attrName, int resId, int defaultValue) {
-        return !hasAttribute(parser, attrName) ? defaultValue : a.getInt(resId, defaultValue);
+    public static int getNamedInt(TypedArray typedArray, XmlPullParser xmlPullParser, String str, int i, int i2) {
+        if (!hasAttribute(xmlPullParser, str)) {
+            return i2;
+        }
+        return typedArray.getInt(i, i2);
     }
 
-    public static int getNamedColor(TypedArray a, XmlPullParser parser, String attrName, int resId, int defaultValue) {
-        return !hasAttribute(parser, attrName) ? defaultValue : a.getColor(resId, defaultValue);
+    public static int getNamedColor(TypedArray typedArray, XmlPullParser xmlPullParser, String str, int i, int i2) {
+        if (!hasAttribute(xmlPullParser, str)) {
+            return i2;
+        }
+        return typedArray.getColor(i, i2);
     }
 
-    public static ComplexColorCompat getNamedComplexColor(TypedArray a, XmlPullParser parser, Resources.Theme theme, String attrName, int resId, int defaultValue) {
-        if (hasAttribute(parser, attrName)) {
+    public static ComplexColorCompat getNamedComplexColor(TypedArray typedArray, XmlPullParser xmlPullParser, Resources.Theme theme, String str, int i, int i2) {
+        if (hasAttribute(xmlPullParser, str)) {
             TypedValue typedValue = new TypedValue();
-            a.getValue(resId, typedValue);
-            int i = typedValue.type;
-            if (i >= 28 && i <= 31) {
+            typedArray.getValue(i, typedValue);
+            if (typedValue.type >= 28 && typedValue.type <= 31) {
                 return ComplexColorCompat.from(typedValue.data);
             }
-            ComplexColorCompat inflate = ComplexColorCompat.inflate(a.getResources(), a.getResourceId(resId, 0), theme);
+            ComplexColorCompat inflate = ComplexColorCompat.inflate(typedArray.getResources(), typedArray.getResourceId(i, 0), theme);
             if (inflate != null) {
                 return inflate;
             }
         }
-        return ComplexColorCompat.from(defaultValue);
+        return ComplexColorCompat.from(i2);
     }
 
-    public static ColorStateList getNamedColorStateList(TypedArray a, XmlPullParser parser, Resources.Theme theme, String attrName, int resId) {
-        if (hasAttribute(parser, attrName)) {
-            TypedValue typedValue = new TypedValue();
-            a.getValue(resId, typedValue);
-            int i = typedValue.type;
-            if (i != 2) {
-                if (i >= 28 && i <= 31) {
-                    return getNamedColorStateListFromInt(typedValue);
-                }
-                return ColorStateListInflaterCompat.inflate(a.getResources(), a.getResourceId(resId, 0), theme);
-            }
-            throw new UnsupportedOperationException("Failed to resolve attribute at index " + resId + ": " + typedValue);
-        }
-        return null;
-    }
-
-    private static ColorStateList getNamedColorStateListFromInt(TypedValue value) {
-        return ColorStateList.valueOf(value.data);
-    }
-
-    public static int getNamedResourceId(TypedArray a, XmlPullParser parser, String attrName, int resId, int defaultValue) {
-        return !hasAttribute(parser, attrName) ? defaultValue : a.getResourceId(resId, defaultValue);
-    }
-
-    public static String getNamedString(TypedArray a, XmlPullParser parser, String attrName, int resId) {
-        if (!hasAttribute(parser, attrName)) {
+    public static ColorStateList getNamedColorStateList(TypedArray typedArray, XmlPullParser xmlPullParser, Resources.Theme theme, String str, int i) {
+        if (!hasAttribute(xmlPullParser, str)) {
             return null;
         }
-        return a.getString(resId);
-    }
-
-    public static TypedValue peekNamedValue(TypedArray a, XmlPullParser parser, String attrName, int resId) {
-        if (!hasAttribute(parser, attrName)) {
-            return null;
-        }
-        return a.peekValue(resId);
-    }
-
-    public static TypedArray obtainAttributes(Resources res, Resources.Theme theme, AttributeSet set, int[] attrs) {
-        if (theme == null) {
-            return res.obtainAttributes(set, attrs);
-        }
-        return theme.obtainStyledAttributes(set, attrs, 0, 0);
-    }
-
-    public static boolean getBoolean(TypedArray a, int index, int fallbackIndex, boolean defaultValue) {
-        return a.getBoolean(index, a.getBoolean(fallbackIndex, defaultValue));
-    }
-
-    public static Drawable getDrawable(TypedArray a, int index, int fallbackIndex) {
-        Drawable drawable = a.getDrawable(index);
-        return drawable == null ? a.getDrawable(fallbackIndex) : drawable;
-    }
-
-    public static int getInt(TypedArray a, int index, int fallbackIndex, int defaultValue) {
-        return a.getInt(index, a.getInt(fallbackIndex, defaultValue));
-    }
-
-    public static int getResourceId(TypedArray a, int index, int fallbackIndex, int defaultValue) {
-        return a.getResourceId(index, a.getResourceId(fallbackIndex, defaultValue));
-    }
-
-    public static String getString(TypedArray a, int index, int fallbackIndex) {
-        String string = a.getString(index);
-        return string == null ? a.getString(fallbackIndex) : string;
-    }
-
-    public static CharSequence getText(TypedArray a, int index, int fallbackIndex) {
-        CharSequence text = a.getText(index);
-        return text == null ? a.getText(fallbackIndex) : text;
-    }
-
-    public static CharSequence[] getTextArray(TypedArray a, int index, int fallbackIndex) {
-        CharSequence[] textArray = a.getTextArray(index);
-        return textArray == null ? a.getTextArray(fallbackIndex) : textArray;
-    }
-
-    public static int getAttr(Context context, int attr, int fallbackAttr) {
         TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(attr, typedValue, true);
-        return typedValue.resourceId != 0 ? attr : fallbackAttr;
+        typedArray.getValue(i, typedValue);
+        if (typedValue.type == 2) {
+            throw new UnsupportedOperationException("Failed to resolve attribute at index " + i + ": " + typedValue);
+        } else if (typedValue.type < 28 || typedValue.type > 31) {
+            return ColorStateListInflaterCompat.inflate(typedArray.getResources(), typedArray.getResourceId(i, 0), theme);
+        } else {
+            return getNamedColorStateListFromInt(typedValue);
+        }
+    }
+
+    private static ColorStateList getNamedColorStateListFromInt(TypedValue typedValue) {
+        return ColorStateList.valueOf(typedValue.data);
+    }
+
+    public static int getNamedResourceId(TypedArray typedArray, XmlPullParser xmlPullParser, String str, int i, int i2) {
+        if (!hasAttribute(xmlPullParser, str)) {
+            return i2;
+        }
+        return typedArray.getResourceId(i, i2);
+    }
+
+    public static String getNamedString(TypedArray typedArray, XmlPullParser xmlPullParser, String str, int i) {
+        if (!hasAttribute(xmlPullParser, str)) {
+            return null;
+        }
+        return typedArray.getString(i);
+    }
+
+    public static TypedValue peekNamedValue(TypedArray typedArray, XmlPullParser xmlPullParser, String str, int i) {
+        if (!hasAttribute(xmlPullParser, str)) {
+            return null;
+        }
+        return typedArray.peekValue(i);
+    }
+
+    public static TypedArray obtainAttributes(Resources resources, Resources.Theme theme, AttributeSet attributeSet, int[] iArr) {
+        if (theme == null) {
+            return resources.obtainAttributes(attributeSet, iArr);
+        }
+        return theme.obtainStyledAttributes(attributeSet, iArr, 0, 0);
+    }
+
+    public static boolean getBoolean(TypedArray typedArray, int i, int i2, boolean z) {
+        return typedArray.getBoolean(i, typedArray.getBoolean(i2, z));
+    }
+
+    public static Drawable getDrawable(TypedArray typedArray, int i, int i2) {
+        Drawable drawable = typedArray.getDrawable(i);
+        return drawable == null ? typedArray.getDrawable(i2) : drawable;
+    }
+
+    public static int getInt(TypedArray typedArray, int i, int i2, int i3) {
+        return typedArray.getInt(i, typedArray.getInt(i2, i3));
+    }
+
+    public static int getResourceId(TypedArray typedArray, int i, int i2, int i3) {
+        return typedArray.getResourceId(i, typedArray.getResourceId(i2, i3));
+    }
+
+    public static String getString(TypedArray typedArray, int i, int i2) {
+        String string = typedArray.getString(i);
+        return string == null ? typedArray.getString(i2) : string;
+    }
+
+    public static CharSequence getText(TypedArray typedArray, int i, int i2) {
+        CharSequence text = typedArray.getText(i);
+        return text == null ? typedArray.getText(i2) : text;
+    }
+
+    public static CharSequence[] getTextArray(TypedArray typedArray, int i, int i2) {
+        CharSequence[] textArray = typedArray.getTextArray(i);
+        return textArray == null ? typedArray.getTextArray(i2) : textArray;
+    }
+
+    public static int getAttr(Context context, int i, int i2) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(i, typedValue, true);
+        return typedValue.resourceId != 0 ? i : i2;
+    }
+
+    private TypedArrayUtils() {
     }
 }

@@ -5,7 +5,7 @@ import com.android.systemui.util.concurrency.Execution;
 import com.android.systemui.util.sensors.ThresholdSensorImpl;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class ThresholdSensorImpl_Builder_Factory implements Factory<ThresholdSensorImpl.Builder> {
     private final Provider<Execution> executionProvider;
     private final Provider<Resources> resourcesProvider;
@@ -17,10 +17,8 @@ public final class ThresholdSensorImpl_Builder_Factory implements Factory<Thresh
         this.executionProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ThresholdSensorImpl.Builder mo1933get() {
-        return newInstance(this.resourcesProvider.mo1933get(), this.sensorManagerProvider.mo1933get(), this.executionProvider.mo1933get());
+    public ThresholdSensorImpl.Builder get() {
+        return newInstance(this.resourcesProvider.get(), this.sensorManagerProvider.get(), this.executionProvider.get());
     }
 
     public static ThresholdSensorImpl_Builder_Factory create(Provider<Resources> provider, Provider<AsyncSensorManager> provider2, Provider<Execution> provider3) {

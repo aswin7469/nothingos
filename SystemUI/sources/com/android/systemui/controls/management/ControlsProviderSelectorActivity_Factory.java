@@ -2,11 +2,11 @@ package com.android.systemui.controls.management;
 
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.controller.ControlsController;
-import com.android.systemui.controls.ui.ControlsUiController;
+import com.android.systemui.controls.p010ui.ControlsUiController;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ControlsProviderSelectorActivity_Factory implements Factory<ControlsProviderSelectorActivity> {
     private final Provider<Executor> backExecutorProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
@@ -24,10 +24,8 @@ public final class ControlsProviderSelectorActivity_Factory implements Factory<C
         this.uiControllerProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ControlsProviderSelectorActivity mo1933get() {
-        return newInstance(this.executorProvider.mo1933get(), this.backExecutorProvider.mo1933get(), this.listingControllerProvider.mo1933get(), this.controlsControllerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.uiControllerProvider.mo1933get());
+    public ControlsProviderSelectorActivity get() {
+        return newInstance(this.executorProvider.get(), this.backExecutorProvider.get(), this.listingControllerProvider.get(), this.controlsControllerProvider.get(), this.broadcastDispatcherProvider.get(), this.uiControllerProvider.get());
     }
 
     public static ControlsProviderSelectorActivity_Factory create(Provider<Executor> provider, Provider<Executor> provider2, Provider<ControlsListingController> provider3, Provider<ControlsController> provider4, Provider<BroadcastDispatcher> provider5, Provider<ControlsUiController> provider6) {

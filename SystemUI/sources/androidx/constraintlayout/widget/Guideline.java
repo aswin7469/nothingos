@@ -4,13 +4,12 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
-/* loaded from: classes.dex */
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 public class Guideline extends View {
-    @Override // android.view.View
     public void draw(Canvas canvas) {
     }
 
-    @Override // android.view.View
     public void setVisibility(int i) {
     }
 
@@ -34,8 +33,26 @@ public class Guideline extends View {
         super.setVisibility(8);
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         setMeasuredDimension(0, 0);
+    }
+
+    public void setGuidelineBegin(int i) {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getLayoutParams();
+        layoutParams.guideBegin = i;
+        setLayoutParams(layoutParams);
+    }
+
+    public void setGuidelineEnd(int i) {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getLayoutParams();
+        layoutParams.guideEnd = i;
+        setLayoutParams(layoutParams);
+    }
+
+    public void setGuidelinePercent(float f) {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) getLayoutParams();
+        layoutParams.guidePercent = f;
+        setLayoutParams(layoutParams);
     }
 }

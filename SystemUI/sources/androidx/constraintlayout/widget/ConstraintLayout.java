@@ -1,69 +1,91 @@
 package androidx.constraintlayout.widget;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.constraintlayout.solver.widgets.ConstraintAnchor;
-import androidx.constraintlayout.solver.widgets.ConstraintWidget;
-import androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer;
-import androidx.constraintlayout.solver.widgets.analyzer.BasicMeasure;
+import androidx.constraintlayout.core.Metrics;
+import androidx.constraintlayout.core.widgets.ConstraintAnchor;
+import androidx.constraintlayout.core.widgets.ConstraintWidget;
+import androidx.constraintlayout.core.widgets.ConstraintWidgetContainer;
+import androidx.constraintlayout.core.widgets.Guideline;
+import androidx.constraintlayout.core.widgets.Optimizer;
+import androidx.constraintlayout.core.widgets.VirtualLayout;
+import androidx.constraintlayout.core.widgets.analyzer.BasicMeasure;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
+import com.android.systemui.statusbar.phone.ScrimController;
 import java.util.ArrayList;
 import java.util.HashMap;
-/* loaded from: classes.dex */
-public class ConstraintLayout extends ViewGroup {
-    SparseArray<View> mChildrenByIds = new SparseArray<>();
-    private ArrayList<ConstraintHelper> mConstraintHelpers = new ArrayList<>(4);
-    protected ConstraintWidgetContainer mLayoutWidget = new ConstraintWidgetContainer();
-    private int mMinWidth = 0;
-    private int mMinHeight = 0;
-    private int mMaxWidth = Integer.MAX_VALUE;
-    private int mMaxHeight = Integer.MAX_VALUE;
-    protected boolean mDirtyHierarchy = true;
-    private int mOptimizationLevel = 7;
-    private ConstraintSet mConstraintSet = null;
-    protected ConstraintLayoutStates mConstraintLayoutSpec = null;
-    private int mConstraintSetId = -1;
-    private HashMap<String, Integer> mDesignIds = new HashMap<>();
-    private int mLastMeasureWidth = -1;
-    private int mLastMeasureHeight = -1;
-    int mLastMeasureWidthSize = -1;
-    int mLastMeasureHeightSize = -1;
-    int mLastMeasureWidthMode = 0;
-    int mLastMeasureHeightMode = 0;
-    private SparseArray<ConstraintWidget> mTempMapIdToWidget = new SparseArray<>();
-    Measurer mMeasurer = new Measurer(this);
-    private int mOnMeasureWidthMeasureSpec = 0;
-    private int mOnMeasureHeightMeasureSpec = 0;
 
-    @Override // android.view.ViewGroup
+public class ConstraintLayout extends ViewGroup {
+    private static final boolean DEBUG = false;
+    private static final boolean DEBUG_DRAW_CONSTRAINTS = false;
+    public static final int DESIGN_INFO_ID = 0;
+    private static final boolean MEASURE = false;
+    private static final boolean OPTIMIZE_HEIGHT_CHANGE = false;
+    private static final String TAG = "ConstraintLayout";
+    private static final boolean USE_CONSTRAINTS_HELPER = true;
+    public static final String VERSION = "ConstraintLayout-2.1.0-beta02";
+    private static SharedValues sSharedValues;
+    SparseArray<View> mChildrenByIds = new SparseArray<>();
+    /* access modifiers changed from: private */
+    public ArrayList<ConstraintHelper> mConstraintHelpers = new ArrayList<>(4);
+    protected ConstraintLayoutStates mConstraintLayoutSpec = null;
+    private ConstraintSet mConstraintSet = null;
+    private int mConstraintSetId = -1;
+    private ConstraintsChangedListener mConstraintsChangedListener;
+    private HashMap<String, Integer> mDesignIds = new HashMap<>();
+    protected boolean mDirtyHierarchy = true;
+    private int mLastMeasureHeight = -1;
+    int mLastMeasureHeightMode = 0;
+    int mLastMeasureHeightSize = -1;
+    private int mLastMeasureWidth = -1;
+    int mLastMeasureWidthMode = 0;
+    int mLastMeasureWidthSize = -1;
+    /* access modifiers changed from: protected */
+    public ConstraintWidgetContainer mLayoutWidget = new ConstraintWidgetContainer();
+    private int mMaxHeight = Integer.MAX_VALUE;
+    private int mMaxWidth = Integer.MAX_VALUE;
+    Measurer mMeasurer = new Measurer(this);
+    private Metrics mMetrics;
+    private int mMinHeight = 0;
+    private int mMinWidth = 0;
+    private int mOnMeasureHeightMeasureSpec = 0;
+    private int mOnMeasureWidthMeasureSpec = 0;
+    /* access modifiers changed from: private */
+    public int mOptimizationLevel = 257;
+    private SparseArray<ConstraintWidget> mTempMapIdToWidget = new SparseArray<>();
+
     public boolean shouldDelayChildPressedState() {
         return false;
     }
 
+    public static SharedValues getSharedValues() {
+        if (sSharedValues == null) {
+            sSharedValues = new SharedValues();
+        }
+        return sSharedValues;
+    }
+
     public void setDesignInformation(int i, Object obj, Object obj2) {
-        if (i != 0 || !(obj instanceof String) || !(obj2 instanceof Integer)) {
-            return;
+        if (i == 0 && (obj instanceof String) && (obj2 instanceof Integer)) {
+            if (this.mDesignIds == null) {
+                this.mDesignIds = new HashMap<>();
+            }
+            String str = (String) obj;
+            int indexOf = str.indexOf("/");
+            if (indexOf != -1) {
+                str = str.substring(indexOf + 1);
+            }
+            this.mDesignIds.put(str, Integer.valueOf(((Integer) obj2).intValue()));
         }
-        if (this.mDesignIds == null) {
-            this.mDesignIds = new HashMap<>();
-        }
-        String str = (String) obj;
-        int indexOf = str.indexOf("/");
-        if (indexOf != -1) {
-            str = str.substring(indexOf + 1);
-        }
-        this.mDesignIds.put(str, Integer.valueOf(((Integer) obj2).intValue()));
     }
 
     public Object getDesignInformation(int i, Object obj) {
@@ -72,15 +94,15 @@ public class ConstraintLayout extends ViewGroup {
         }
         String str = (String) obj;
         HashMap<String, Integer> hashMap = this.mDesignIds;
-        if (hashMap != null && hashMap.containsKey(str)) {
-            return this.mDesignIds.get(str);
+        if (hashMap == null || !hashMap.containsKey(str)) {
+            return null;
         }
-        return null;
+        return this.mDesignIds.get(str);
     }
 
     public ConstraintLayout(Context context) {
         super(context);
-        init(null, 0, 0);
+        init((AttributeSet) null, 0, 0);
     }
 
     public ConstraintLayout(Context context, AttributeSet attributeSet) {
@@ -93,373 +115,198 @@ public class ConstraintLayout extends ViewGroup {
         init(attributeSet, i, 0);
     }
 
-    @TargetApi(21)
     public ConstraintLayout(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         init(attributeSet, i, i2);
     }
 
-    @Override // android.view.View
     public void setId(int i) {
         this.mChildrenByIds.remove(getId());
         super.setId(i);
         this.mChildrenByIds.put(getId(), this);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class Measurer implements BasicMeasure.Measurer {
+    class Measurer implements BasicMeasure.Measurer {
         ConstraintLayout layout;
+        int layoutHeightSpec;
+        int layoutWidthSpec;
+        int paddingBottom;
+        int paddingHeight;
+        int paddingTop;
+        int paddingWidth;
+
+        public void captureLayoutInfo(int i, int i2, int i3, int i4, int i5, int i6) {
+            this.paddingTop = i3;
+            this.paddingBottom = i4;
+            this.paddingWidth = i5;
+            this.paddingHeight = i6;
+            this.layoutWidthSpec = i;
+            this.layoutHeightSpec = i2;
+        }
 
         public Measurer(ConstraintLayout constraintLayout) {
             this.layout = constraintLayout;
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:102:0x01d8 A[ADDED_TO_REGION] */
-        /* JADX WARN: Removed duplicated region for block: B:106:0x01e3  */
-        /* JADX WARN: Removed duplicated region for block: B:108:0x01e9  */
-        /* JADX WARN: Removed duplicated region for block: B:111:0x01cb A[ADDED_TO_REGION] */
-        /* JADX WARN: Removed duplicated region for block: B:115:0x01ae  */
-        /* JADX WARN: Removed duplicated region for block: B:116:0x019c  */
-        /* JADX WARN: Removed duplicated region for block: B:117:0x018b  */
-        /* JADX WARN: Removed duplicated region for block: B:123:0x010e  */
-        /* JADX WARN: Removed duplicated region for block: B:124:0x0109  */
-        /* JADX WARN: Removed duplicated region for block: B:139:0x00fb  */
-        /* JADX WARN: Removed duplicated region for block: B:18:0x00a7  */
-        /* JADX WARN: Removed duplicated region for block: B:25:0x0107  */
-        /* JADX WARN: Removed duplicated region for block: B:27:0x010c  */
-        /* JADX WARN: Removed duplicated region for block: B:30:0x0113  */
-        /* JADX WARN: Removed duplicated region for block: B:34:0x011d  */
-        /* JADX WARN: Removed duplicated region for block: B:39:0x0128  */
-        /* JADX WARN: Removed duplicated region for block: B:43:0x0133  */
-        /* JADX WARN: Removed duplicated region for block: B:48:0x014c A[ADDED_TO_REGION] */
-        /* JADX WARN: Removed duplicated region for block: B:56:0x0205  */
-        /* JADX WARN: Removed duplicated region for block: B:59:0x020d  */
-        /* JADX WARN: Removed duplicated region for block: B:64:0x021c  */
-        /* JADX WARN: Removed duplicated region for block: B:66:0x021f  */
-        /* JADX WARN: Removed duplicated region for block: B:74:0x0207  */
-        /* JADX WARN: Removed duplicated region for block: B:77:0x0165  */
-        /* JADX WARN: Removed duplicated region for block: B:82:0x0184  */
-        /* JADX WARN: Removed duplicated region for block: B:84:0x018f  */
-        /* JADX WARN: Removed duplicated region for block: B:87:0x0197  */
-        /* JADX WARN: Removed duplicated region for block: B:90:0x01a1  */
-        /* JADX WARN: Removed duplicated region for block: B:93:0x01a9  */
-        /* JADX WARN: Removed duplicated region for block: B:96:0x01b3  */
-        /* JADX WARN: Removed duplicated region for block: B:99:0x01bb A[ADDED_TO_REGION] */
-        @Override // androidx.constraintlayout.solver.widgets.analyzer.BasicMeasure.Measurer
-        @SuppressLint({"WrongCall"})
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
         public final void measure(ConstraintWidget constraintWidget, BasicMeasure.Measure measure) {
-            int makeMeasureSpec;
-            boolean z;
             int i;
-            int makeMeasureSpec2;
-            boolean z2;
-            boolean z3;
-            boolean z4;
-            boolean z5;
-            View view;
-            LayoutParams layoutParams;
-            int measuredWidth;
-            int measuredHeight;
-            boolean z6;
-            int max;
             int i2;
-            int max2;
             int i3;
             int i4;
             int i5;
             int i6;
             int i7;
-            int baseline;
-            boolean z7;
-            if (constraintWidget == null) {
-                return;
-            }
-            if (constraintWidget.getVisibility() == 8) {
-                measure.measuredWidth = 0;
-                measure.measuredHeight = 0;
-                measure.measuredBaseline = 0;
-                return;
-            }
-            ConstraintWidget.DimensionBehaviour dimensionBehaviour = measure.horizontalBehavior;
-            ConstraintWidget.DimensionBehaviour dimensionBehaviour2 = measure.verticalBehavior;
-            int i8 = measure.horizontalDimension;
-            int i9 = measure.verticalDimension;
-            int paddingTop = this.layout.getPaddingTop() + this.layout.getPaddingBottom();
-            int paddingWidth = this.layout.getPaddingWidth();
-            int[] iArr = AnonymousClass1.$SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour;
-            int i10 = iArr[dimensionBehaviour.ordinal()];
-            if (i10 == 1) {
-                makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(i8, 1073741824);
-            } else {
-                if (i10 == 2) {
-                    makeMeasureSpec = ViewGroup.getChildMeasureSpec(this.layout.mOnMeasureWidthMeasureSpec, paddingWidth, -2);
-                } else if (i10 == 3) {
-                    makeMeasureSpec = ViewGroup.getChildMeasureSpec(this.layout.mOnMeasureWidthMeasureSpec, paddingWidth + constraintWidget.getHorizontalMargin(), -1);
-                } else if (i10 != 4) {
-                    makeMeasureSpec = 0;
-                } else {
-                    makeMeasureSpec = ViewGroup.getChildMeasureSpec(this.layout.mOnMeasureWidthMeasureSpec, paddingWidth, -2);
-                    boolean z8 = constraintWidget.mMatchConstraintDefaultWidth == 1;
-                    if (measure.useDeprecated && (!z8 || (z8 && constraintWidget.wrapMeasure[0] != constraintWidget.getWidth()))) {
-                        makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(constraintWidget.getWidth(), 1073741824);
-                    }
-                }
-                z = true;
-                i = iArr[dimensionBehaviour2.ordinal()];
-                if (i != 1) {
-                    makeMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(i9, 1073741824);
-                } else {
-                    if (i == 2) {
-                        makeMeasureSpec2 = ViewGroup.getChildMeasureSpec(this.layout.mOnMeasureHeightMeasureSpec, paddingTop, -2);
-                    } else if (i == 3) {
-                        makeMeasureSpec2 = ViewGroup.getChildMeasureSpec(this.layout.mOnMeasureHeightMeasureSpec, paddingTop + constraintWidget.getVerticalMargin(), -1);
-                    } else if (i != 4) {
-                        makeMeasureSpec2 = 0;
+            ConstraintWidget constraintWidget2 = constraintWidget;
+            BasicMeasure.Measure measure2 = measure;
+            if (constraintWidget2 != null) {
+                if (constraintWidget.getVisibility() == 8 && !constraintWidget.isInPlaceholder()) {
+                    measure2.measuredWidth = 0;
+                    measure2.measuredHeight = 0;
+                    measure2.measuredBaseline = 0;
+                } else if (constraintWidget.getParent() != null) {
+                    ConstraintWidget.DimensionBehaviour dimensionBehaviour = measure2.horizontalBehavior;
+                    ConstraintWidget.DimensionBehaviour dimensionBehaviour2 = measure2.verticalBehavior;
+                    int i8 = measure2.horizontalDimension;
+                    int i9 = measure2.verticalDimension;
+                    int i10 = this.paddingTop + this.paddingBottom;
+                    int i11 = this.paddingWidth;
+                    View view = (View) constraintWidget.getCompanionWidget();
+                    int i12 = C04821.f109x6d00e4a2[dimensionBehaviour.ordinal()];
+                    if (i12 == 1) {
+                        i = View.MeasureSpec.makeMeasureSpec(i8, 1073741824);
+                    } else if (i12 == 2) {
+                        i = ViewGroup.getChildMeasureSpec(this.layoutWidthSpec, i11, -2);
+                    } else if (i12 == 3) {
+                        i = ViewGroup.getChildMeasureSpec(this.layoutWidthSpec, i11 + constraintWidget.getHorizontalMargin(), -1);
+                    } else if (i12 != 4) {
+                        i = 0;
                     } else {
-                        makeMeasureSpec2 = ViewGroup.getChildMeasureSpec(this.layout.mOnMeasureHeightMeasureSpec, paddingTop, -2);
-                        boolean z9 = constraintWidget.mMatchConstraintDefaultHeight == 1;
-                        if (measure.useDeprecated && (!z9 || (z9 && constraintWidget.wrapMeasure[1] != constraintWidget.getHeight()))) {
-                            makeMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(constraintWidget.getHeight(), 1073741824);
+                        i = ViewGroup.getChildMeasureSpec(this.layoutWidthSpec, i11, -2);
+                        boolean z = constraintWidget2.mMatchConstraintDefaultWidth == 1;
+                        if (measure2.measureStrategy == BasicMeasure.Measure.TRY_GIVEN_DIMENSIONS || measure2.measureStrategy == BasicMeasure.Measure.USE_GIVEN_DIMENSIONS) {
+                            if (measure2.measureStrategy == BasicMeasure.Measure.USE_GIVEN_DIMENSIONS || !z || (z && (view.getMeasuredHeight() == constraintWidget.getHeight())) || (view instanceof Placeholder) || constraintWidget.isResolvedHorizontally()) {
+                                i = View.MeasureSpec.makeMeasureSpec(constraintWidget.getWidth(), 1073741824);
+                            }
                         }
                     }
-                    z2 = true;
-                    ConstraintWidget.DimensionBehaviour dimensionBehaviour3 = ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT;
-                    boolean z10 = dimensionBehaviour == dimensionBehaviour3;
-                    boolean z11 = dimensionBehaviour2 == dimensionBehaviour3;
-                    ConstraintWidget.DimensionBehaviour dimensionBehaviour4 = ConstraintWidget.DimensionBehaviour.MATCH_PARENT;
-                    boolean z12 = dimensionBehaviour2 != dimensionBehaviour4 || dimensionBehaviour2 == ConstraintWidget.DimensionBehaviour.FIXED;
-                    z3 = dimensionBehaviour != dimensionBehaviour4 || dimensionBehaviour == ConstraintWidget.DimensionBehaviour.FIXED;
-                    z4 = !z10 && constraintWidget.mDimensionRatio > 0.0f;
-                    z5 = !z11 && constraintWidget.mDimensionRatio > 0.0f;
-                    view = (View) constraintWidget.getCompanionWidget();
-                    layoutParams = (LayoutParams) view.getLayoutParams();
-                    if (!measure.useDeprecated || !z10 || constraintWidget.mMatchConstraintDefaultWidth != 0 || !z11 || constraintWidget.mMatchConstraintDefaultHeight != 0) {
-                        if (!(view instanceof VirtualLayout) && (constraintWidget instanceof androidx.constraintlayout.solver.widgets.VirtualLayout)) {
-                            ((VirtualLayout) view).onMeasure((androidx.constraintlayout.solver.widgets.VirtualLayout) constraintWidget, makeMeasureSpec, makeMeasureSpec2);
-                        } else {
-                            view.measure(makeMeasureSpec, makeMeasureSpec2);
-                        }
-                        measuredWidth = view.getMeasuredWidth();
-                        measuredHeight = view.getMeasuredHeight();
-                        int baseline2 = view.getBaseline();
-                        if (z) {
-                            z6 = false;
-                            constraintWidget.wrapMeasure[0] = measuredWidth;
-                        } else {
-                            z6 = false;
-                        }
-                        if (z2) {
-                            constraintWidget.wrapMeasure[1] = measuredHeight;
-                        }
-                        int i11 = constraintWidget.mMatchConstraintMinWidth;
-                        max = i11 > 0 ? Math.max(i11, measuredWidth) : measuredWidth;
-                        i2 = constraintWidget.mMatchConstraintMaxWidth;
-                        if (i2 > 0) {
-                            max = Math.min(i2, max);
-                        }
-                        int i12 = constraintWidget.mMatchConstraintMinHeight;
-                        max2 = i12 > 0 ? Math.max(i12, measuredHeight) : measuredHeight;
-                        i3 = constraintWidget.mMatchConstraintMaxHeight;
-                        if (i3 > 0) {
-                            max2 = Math.min(i3, max2);
-                        }
-                        if (!z4 && z12) {
-                            int i13 = max2;
-                            i5 = (int) ((max2 * constraintWidget.mDimensionRatio) + 0.5f);
-                            i4 = i13;
-                        } else {
-                            i4 = (z5 || !z3) ? max2 : (int) ((max / constraintWidget.mDimensionRatio) + 0.5f);
-                            i5 = max;
-                        }
-                        if (measuredWidth == i5 || measuredHeight != i4) {
-                            if (measuredWidth != i5) {
-                                makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(i5, 1073741824);
-                            }
-                            if (measuredHeight != i4) {
-                                makeMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(i4, 1073741824);
-                            }
-                            view.measure(makeMeasureSpec, makeMeasureSpec2);
-                            int measuredWidth2 = view.getMeasuredWidth();
-                            i6 = -1;
-                            i4 = view.getMeasuredHeight();
-                            i7 = measuredWidth2;
-                            baseline = view.getBaseline();
-                        } else {
-                            i7 = i5;
-                            baseline = baseline2;
-                            i6 = -1;
-                        }
+                    int i13 = C04821.f109x6d00e4a2[dimensionBehaviour2.ordinal()];
+                    if (i13 == 1) {
+                        i2 = View.MeasureSpec.makeMeasureSpec(i9, 1073741824);
+                    } else if (i13 == 2) {
+                        i2 = ViewGroup.getChildMeasureSpec(this.layoutHeightSpec, i10, -2);
+                    } else if (i13 == 3) {
+                        i2 = ViewGroup.getChildMeasureSpec(this.layoutHeightSpec, i10 + constraintWidget.getVerticalMargin(), -1);
+                    } else if (i13 != 4) {
+                        i2 = 0;
                     } else {
-                        i7 = 0;
-                        i4 = 0;
-                        i6 = -1;
-                        baseline = 0;
-                        z6 = false;
+                        i2 = ViewGroup.getChildMeasureSpec(this.layoutHeightSpec, i10, -2);
+                        boolean z2 = constraintWidget2.mMatchConstraintDefaultHeight == 1;
+                        if (measure2.measureStrategy == BasicMeasure.Measure.TRY_GIVEN_DIMENSIONS || measure2.measureStrategy == BasicMeasure.Measure.USE_GIVEN_DIMENSIONS) {
+                            if (measure2.measureStrategy == BasicMeasure.Measure.USE_GIVEN_DIMENSIONS || !z2 || (z2 && (view.getMeasuredWidth() == constraintWidget.getWidth())) || (view instanceof Placeholder) || constraintWidget.isResolvedVertically()) {
+                                i2 = View.MeasureSpec.makeMeasureSpec(constraintWidget.getHeight(), 1073741824);
+                            }
+                        }
                     }
-                    z7 = baseline != i6 ? true : z6;
-                    measure.measuredNeedsSolverPass = (i7 == measure.horizontalDimension || i4 != measure.verticalDimension) ? true : z6;
-                    if (layoutParams.needsBaseline) {
-                        z7 = true;
+                    ConstraintWidgetContainer constraintWidgetContainer = (ConstraintWidgetContainer) constraintWidget.getParent();
+                    if (constraintWidgetContainer != null && Optimizer.enabled(ConstraintLayout.this.mOptimizationLevel, 256) && view.getMeasuredWidth() == constraintWidget.getWidth() && view.getMeasuredWidth() < constraintWidgetContainer.getWidth() && view.getMeasuredHeight() == constraintWidget.getHeight() && view.getMeasuredHeight() < constraintWidgetContainer.getHeight() && view.getBaseline() == constraintWidget.getBaselineDistance() && !constraintWidget.isMeasureRequested()) {
+                        if (isSimilarSpec(constraintWidget.getLastHorizontalMeasureSpec(), i, constraintWidget.getWidth()) && isSimilarSpec(constraintWidget.getLastVerticalMeasureSpec(), i2, constraintWidget.getHeight())) {
+                            measure2.measuredWidth = constraintWidget.getWidth();
+                            measure2.measuredHeight = constraintWidget.getHeight();
+                            measure2.measuredBaseline = constraintWidget.getBaselineDistance();
+                            return;
+                        }
                     }
-                    if (z7 && baseline != -1 && constraintWidget.getBaselineDistance() != baseline) {
-                        measure.measuredNeedsSolverPass = true;
+                    boolean z3 = dimensionBehaviour == ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT;
+                    boolean z4 = dimensionBehaviour2 == ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT;
+                    boolean z5 = dimensionBehaviour2 == ConstraintWidget.DimensionBehaviour.MATCH_PARENT || dimensionBehaviour2 == ConstraintWidget.DimensionBehaviour.FIXED;
+                    boolean z6 = dimensionBehaviour == ConstraintWidget.DimensionBehaviour.MATCH_PARENT || dimensionBehaviour == ConstraintWidget.DimensionBehaviour.FIXED;
+                    boolean z7 = z3 && constraintWidget2.mDimensionRatio > 0.0f;
+                    boolean z8 = z4 && constraintWidget2.mDimensionRatio > 0.0f;
+                    if (view != null) {
+                        LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
+                        if (measure2.measureStrategy == BasicMeasure.Measure.TRY_GIVEN_DIMENSIONS || measure2.measureStrategy == BasicMeasure.Measure.USE_GIVEN_DIMENSIONS || !z3 || constraintWidget2.mMatchConstraintDefaultWidth != 0 || !z4 || constraintWidget2.mMatchConstraintDefaultHeight != 0) {
+                            if (!(view instanceof VirtualLayout) || !(constraintWidget2 instanceof VirtualLayout)) {
+                                view.measure(i, i2);
+                            } else {
+                                ((VirtualLayout) view).onMeasure((VirtualLayout) constraintWidget2, i, i2);
+                            }
+                            constraintWidget2.setLastMeasureSpec(i, i2);
+                            int measuredWidth = view.getMeasuredWidth();
+                            int measuredHeight = view.getMeasuredHeight();
+                            i5 = view.getBaseline();
+                            i4 = constraintWidget2.mMatchConstraintMinWidth > 0 ? Math.max(constraintWidget2.mMatchConstraintMinWidth, measuredWidth) : measuredWidth;
+                            if (constraintWidget2.mMatchConstraintMaxWidth > 0) {
+                                i4 = Math.min(constraintWidget2.mMatchConstraintMaxWidth, i4);
+                            }
+                            if (constraintWidget2.mMatchConstraintMinHeight > 0) {
+                                i3 = Math.max(constraintWidget2.mMatchConstraintMinHeight, measuredHeight);
+                                i7 = i2;
+                            } else {
+                                i7 = i2;
+                                i3 = measuredHeight;
+                            }
+                            if (constraintWidget2.mMatchConstraintMaxHeight > 0) {
+                                i3 = Math.min(constraintWidget2.mMatchConstraintMaxHeight, i3);
+                            }
+                            if (!Optimizer.enabled(ConstraintLayout.this.mOptimizationLevel, 1)) {
+                                if (z7 && z5) {
+                                    i4 = (int) ((((float) i3) * constraintWidget2.mDimensionRatio) + 0.5f);
+                                } else if (z8 && z6) {
+                                    i3 = (int) ((((float) i4) / constraintWidget2.mDimensionRatio) + 0.5f);
+                                }
+                            }
+                            if (!(measuredWidth == i4 && measuredHeight == i3)) {
+                                if (measuredWidth != i4) {
+                                    i = View.MeasureSpec.makeMeasureSpec(i4, 1073741824);
+                                }
+                                int makeMeasureSpec = measuredHeight != i3 ? View.MeasureSpec.makeMeasureSpec(i3, 1073741824) : i7;
+                                view.measure(i, makeMeasureSpec);
+                                constraintWidget2.setLastMeasureSpec(i, makeMeasureSpec);
+                                i4 = view.getMeasuredWidth();
+                                i3 = view.getMeasuredHeight();
+                                i5 = view.getBaseline();
+                            }
+                            i6 = -1;
+                        } else {
+                            i6 = -1;
+                            i5 = 0;
+                            i4 = 0;
+                            i3 = 0;
+                        }
+                        boolean z9 = i5 != i6;
+                        measure2.measuredNeedsSolverPass = (i4 == measure2.horizontalDimension && i3 == measure2.verticalDimension) ? false : true;
+                        if (layoutParams.needsBaseline) {
+                            z9 = true;
+                        }
+                        if (!(!z9 || i5 == -1 || constraintWidget.getBaselineDistance() == i5)) {
+                            measure2.measuredNeedsSolverPass = true;
+                        }
+                        measure2.measuredWidth = i4;
+                        measure2.measuredHeight = i3;
+                        measure2.measuredHasBaseline = z9;
+                        measure2.measuredBaseline = i5;
                     }
-                    measure.measuredWidth = i7;
-                    measure.measuredHeight = i4;
-                    measure.measuredHasBaseline = z7;
-                    measure.measuredBaseline = baseline;
                 }
-                z2 = false;
-                ConstraintWidget.DimensionBehaviour dimensionBehaviour32 = ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT;
-                if (dimensionBehaviour == dimensionBehaviour32) {
-                }
-                if (dimensionBehaviour2 == dimensionBehaviour32) {
-                }
-                ConstraintWidget.DimensionBehaviour dimensionBehaviour42 = ConstraintWidget.DimensionBehaviour.MATCH_PARENT;
-                if (dimensionBehaviour2 != dimensionBehaviour42) {
-                }
-                if (dimensionBehaviour != dimensionBehaviour42) {
-                }
-                if (!z10) {
-                }
-                if (!z11) {
-                }
-                view = (View) constraintWidget.getCompanionWidget();
-                layoutParams = (LayoutParams) view.getLayoutParams();
-                if (!measure.useDeprecated) {
-                }
-                if (!(view instanceof VirtualLayout)) {
-                }
-                view.measure(makeMeasureSpec, makeMeasureSpec2);
-                measuredWidth = view.getMeasuredWidth();
-                measuredHeight = view.getMeasuredHeight();
-                int baseline22 = view.getBaseline();
-                if (z) {
-                }
-                if (z2) {
-                }
-                int i112 = constraintWidget.mMatchConstraintMinWidth;
-                if (i112 > 0) {
-                }
-                i2 = constraintWidget.mMatchConstraintMaxWidth;
-                if (i2 > 0) {
-                }
-                int i122 = constraintWidget.mMatchConstraintMinHeight;
-                if (i122 > 0) {
-                }
-                i3 = constraintWidget.mMatchConstraintMaxHeight;
-                if (i3 > 0) {
-                }
-                if (!z4) {
-                }
-                if (z5) {
-                }
-                i5 = max;
-                if (measuredWidth == i5) {
-                }
-                if (measuredWidth != i5) {
-                }
-                if (measuredHeight != i4) {
-                }
-                view.measure(makeMeasureSpec, makeMeasureSpec2);
-                int measuredWidth22 = view.getMeasuredWidth();
-                i6 = -1;
-                i4 = view.getMeasuredHeight();
-                i7 = measuredWidth22;
-                baseline = view.getBaseline();
-                if (baseline != i6) {
-                }
-                measure.measuredNeedsSolverPass = (i7 == measure.horizontalDimension || i4 != measure.verticalDimension) ? true : z6;
-                if (layoutParams.needsBaseline) {
-                }
-                if (z7) {
-                    measure.measuredNeedsSolverPass = true;
-                }
-                measure.measuredWidth = i7;
-                measure.measuredHeight = i4;
-                measure.measuredHasBaseline = z7;
-                measure.measuredBaseline = baseline;
             }
-            z = false;
-            i = iArr[dimensionBehaviour2.ordinal()];
-            if (i != 1) {
-            }
-            z2 = false;
-            ConstraintWidget.DimensionBehaviour dimensionBehaviour322 = ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT;
-            if (dimensionBehaviour == dimensionBehaviour322) {
-            }
-            if (dimensionBehaviour2 == dimensionBehaviour322) {
-            }
-            ConstraintWidget.DimensionBehaviour dimensionBehaviour422 = ConstraintWidget.DimensionBehaviour.MATCH_PARENT;
-            if (dimensionBehaviour2 != dimensionBehaviour422) {
-            }
-            if (dimensionBehaviour != dimensionBehaviour422) {
-            }
-            if (!z10) {
-            }
-            if (!z11) {
-            }
-            view = (View) constraintWidget.getCompanionWidget();
-            layoutParams = (LayoutParams) view.getLayoutParams();
-            if (!measure.useDeprecated) {
-            }
-            if (!(view instanceof VirtualLayout)) {
-            }
-            view.measure(makeMeasureSpec, makeMeasureSpec2);
-            measuredWidth = view.getMeasuredWidth();
-            measuredHeight = view.getMeasuredHeight();
-            int baseline222 = view.getBaseline();
-            if (z) {
-            }
-            if (z2) {
-            }
-            int i1122 = constraintWidget.mMatchConstraintMinWidth;
-            if (i1122 > 0) {
-            }
-            i2 = constraintWidget.mMatchConstraintMaxWidth;
-            if (i2 > 0) {
-            }
-            int i1222 = constraintWidget.mMatchConstraintMinHeight;
-            if (i1222 > 0) {
-            }
-            i3 = constraintWidget.mMatchConstraintMaxHeight;
-            if (i3 > 0) {
-            }
-            if (!z4) {
-            }
-            if (z5) {
-            }
-            i5 = max;
-            if (measuredWidth == i5) {
-            }
-            if (measuredWidth != i5) {
-            }
-            if (measuredHeight != i4) {
-            }
-            view.measure(makeMeasureSpec, makeMeasureSpec2);
-            int measuredWidth222 = view.getMeasuredWidth();
-            i6 = -1;
-            i4 = view.getMeasuredHeight();
-            i7 = measuredWidth222;
-            baseline = view.getBaseline();
-            if (baseline != i6) {
-            }
-            measure.measuredNeedsSolverPass = (i7 == measure.horizontalDimension || i4 != measure.verticalDimension) ? true : z6;
-            if (layoutParams.needsBaseline) {
-            }
-            if (z7) {
-            }
-            measure.measuredWidth = i7;
-            measure.measuredHeight = i4;
-            measure.measuredHasBaseline = z7;
-            measure.measuredBaseline = baseline;
         }
 
-        @Override // androidx.constraintlayout.solver.widgets.analyzer.BasicMeasure.Measurer
+        private boolean isSimilarSpec(int i, int i2, int i3) {
+            if (i == i2) {
+                return true;
+            }
+            int mode = View.MeasureSpec.getMode(i);
+            View.MeasureSpec.getSize(i);
+            int mode2 = View.MeasureSpec.getMode(i2);
+            int size = View.MeasureSpec.getSize(i2);
+            if (mode2 != 1073741824) {
+                return false;
+            }
+            if ((mode == Integer.MIN_VALUE || mode == 0) && i3 == size) {
+                return true;
+            }
+            return false;
+        }
+
         public final void didMeasures() {
             int childCount = this.layout.getChildCount();
             for (int i = 0; i < childCount; i++) {
@@ -477,30 +324,49 @@ public class ConstraintLayout extends ViewGroup {
         }
     }
 
-    /* renamed from: androidx.constraintlayout.widget.ConstraintLayout$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    static /* synthetic */ class AnonymousClass1 {
-        static final /* synthetic */ int[] $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour;
+    /* renamed from: androidx.constraintlayout.widget.ConstraintLayout$1 */
+    static /* synthetic */ class C04821 {
 
+        /* renamed from: $SwitchMap$androidx$constraintlayout$core$widgets$ConstraintWidget$DimensionBehaviour */
+        static final /* synthetic */ int[] f109x6d00e4a2;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
         static {
-            int[] iArr = new int[ConstraintWidget.DimensionBehaviour.values().length];
-            $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour = iArr;
-            try {
-                iArr[ConstraintWidget.DimensionBehaviour.FIXED.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour[ConstraintWidget.DimensionBehaviour.WRAP_CONTENT.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour[ConstraintWidget.DimensionBehaviour.MATCH_PARENT.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$androidx$constraintlayout$solver$widgets$ConstraintWidget$DimensionBehaviour[ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
+            /*
+                androidx.constraintlayout.core.widgets.ConstraintWidget$DimensionBehaviour[] r0 = androidx.constraintlayout.core.widgets.ConstraintWidget.DimensionBehaviour.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                f109x6d00e4a2 = r0
+                androidx.constraintlayout.core.widgets.ConstraintWidget$DimensionBehaviour r1 = androidx.constraintlayout.core.widgets.ConstraintWidget.DimensionBehaviour.FIXED     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = f109x6d00e4a2     // Catch:{ NoSuchFieldError -> 0x001d }
+                androidx.constraintlayout.core.widgets.ConstraintWidget$DimensionBehaviour r1 = androidx.constraintlayout.core.widgets.ConstraintWidget.DimensionBehaviour.WRAP_CONTENT     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = f109x6d00e4a2     // Catch:{ NoSuchFieldError -> 0x0028 }
+                androidx.constraintlayout.core.widgets.ConstraintWidget$DimensionBehaviour r1 = androidx.constraintlayout.core.widgets.ConstraintWidget.DimensionBehaviour.MATCH_PARENT     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = f109x6d00e4a2     // Catch:{ NoSuchFieldError -> 0x0033 }
+                androidx.constraintlayout.core.widgets.ConstraintWidget$DimensionBehaviour r1 = androidx.constraintlayout.core.widgets.ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.widget.ConstraintLayout.C04821.<clinit>():void");
         }
     }
 
@@ -510,21 +376,21 @@ public class ConstraintLayout extends ViewGroup {
         this.mChildrenByIds.put(getId(), this);
         this.mConstraintSet = null;
         if (attributeSet != null) {
-            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, R$styleable.ConstraintLayout_Layout, i, i2);
+            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C0483R.styleable.ConstraintLayout_Layout, i, i2);
             int indexCount = obtainStyledAttributes.getIndexCount();
             for (int i3 = 0; i3 < indexCount; i3++) {
                 int index = obtainStyledAttributes.getIndex(i3);
-                if (index == R$styleable.ConstraintLayout_Layout_android_minWidth) {
+                if (index == C0483R.styleable.ConstraintLayout_Layout_android_minWidth) {
                     this.mMinWidth = obtainStyledAttributes.getDimensionPixelOffset(index, this.mMinWidth);
-                } else if (index == R$styleable.ConstraintLayout_Layout_android_minHeight) {
+                } else if (index == C0483R.styleable.ConstraintLayout_Layout_android_minHeight) {
                     this.mMinHeight = obtainStyledAttributes.getDimensionPixelOffset(index, this.mMinHeight);
-                } else if (index == R$styleable.ConstraintLayout_Layout_android_maxWidth) {
+                } else if (index == C0483R.styleable.ConstraintLayout_Layout_android_maxWidth) {
                     this.mMaxWidth = obtainStyledAttributes.getDimensionPixelOffset(index, this.mMaxWidth);
-                } else if (index == R$styleable.ConstraintLayout_Layout_android_maxHeight) {
+                } else if (index == C0483R.styleable.ConstraintLayout_Layout_android_maxHeight) {
                     this.mMaxHeight = obtainStyledAttributes.getDimensionPixelOffset(index, this.mMaxHeight);
-                } else if (index == R$styleable.ConstraintLayout_Layout_layout_optimizationLevel) {
+                } else if (index == C0483R.styleable.ConstraintLayout_Layout_layout_optimizationLevel) {
                     this.mOptimizationLevel = obtainStyledAttributes.getInt(index, this.mOptimizationLevel);
-                } else if (index == R$styleable.ConstraintLayout_Layout_layoutDescription) {
+                } else if (index == C0483R.styleable.ConstraintLayout_Layout_layoutDescription) {
                     int resourceId = obtainStyledAttributes.getResourceId(index, 0);
                     if (resourceId != 0) {
                         try {
@@ -533,7 +399,7 @@ public class ConstraintLayout extends ViewGroup {
                             this.mConstraintLayoutSpec = null;
                         }
                     }
-                } else if (index == R$styleable.ConstraintLayout_Layout_constraintSet) {
+                } else if (index == C0483R.styleable.ConstraintLayout_Layout_constraintSet) {
                     int resourceId2 = obtainStyledAttributes.getResourceId(index, 0);
                     try {
                         ConstraintSet constraintSet = new ConstraintSet();
@@ -550,38 +416,19 @@ public class ConstraintLayout extends ViewGroup {
         this.mLayoutWidget.setOptimizationLevel(this.mOptimizationLevel);
     }
 
-    protected void parseLayoutDescription(int i) {
+    /* access modifiers changed from: protected */
+    public void parseLayoutDescription(int i) {
         this.mConstraintLayoutSpec = new ConstraintLayoutStates(getContext(), this, i);
     }
 
-    @Override // android.view.ViewGroup
-    public void addView(View view, int i, ViewGroup.LayoutParams layoutParams) {
-        super.addView(view, i, layoutParams);
-        if (Build.VERSION.SDK_INT < 14) {
-            onViewAdded(view);
-        }
-    }
-
-    @Override // android.view.ViewGroup, android.view.ViewManager
-    public void removeView(View view) {
-        super.removeView(view);
-        if (Build.VERSION.SDK_INT < 14) {
-            onViewRemoved(view);
-        }
-    }
-
-    @Override // android.view.ViewGroup
     public void onViewAdded(View view) {
-        if (Build.VERSION.SDK_INT >= 14) {
-            super.onViewAdded(view);
-        }
+        super.onViewAdded(view);
         ConstraintWidget viewWidget = getViewWidget(view);
-        if ((view instanceof Guideline) && !(viewWidget instanceof androidx.constraintlayout.solver.widgets.Guideline)) {
+        if ((view instanceof Guideline) && !(viewWidget instanceof Guideline)) {
             LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-            androidx.constraintlayout.solver.widgets.Guideline guideline = new androidx.constraintlayout.solver.widgets.Guideline();
-            layoutParams.widget = guideline;
+            layoutParams.widget = new Guideline();
             layoutParams.isGuideline = true;
-            guideline.setOrientation(layoutParams.orientation);
+            ((Guideline) layoutParams.widget).setOrientation(layoutParams.orientation);
         }
         if (view instanceof ConstraintHelper) {
             ConstraintHelper constraintHelper = (ConstraintHelper) view;
@@ -595,15 +442,56 @@ public class ConstraintLayout extends ViewGroup {
         this.mDirtyHierarchy = true;
     }
 
-    @Override // android.view.ViewGroup
     public void onViewRemoved(View view) {
-        if (Build.VERSION.SDK_INT >= 14) {
-            super.onViewRemoved(view);
-        }
+        super.onViewRemoved(view);
         this.mChildrenByIds.remove(view.getId());
         this.mLayoutWidget.remove(getViewWidget(view));
-        this.mConstraintHelpers.remove(view);
+        this.mConstraintHelpers.remove((Object) view);
         this.mDirtyHierarchy = true;
+    }
+
+    public void setMinWidth(int i) {
+        if (i != this.mMinWidth) {
+            this.mMinWidth = i;
+            requestLayout();
+        }
+    }
+
+    public void setMinHeight(int i) {
+        if (i != this.mMinHeight) {
+            this.mMinHeight = i;
+            requestLayout();
+        }
+    }
+
+    public int getMinWidth() {
+        return this.mMinWidth;
+    }
+
+    public int getMinHeight() {
+        return this.mMinHeight;
+    }
+
+    public void setMaxWidth(int i) {
+        if (i != this.mMaxWidth) {
+            this.mMaxWidth = i;
+            requestLayout();
+        }
+    }
+
+    public void setMaxHeight(int i) {
+        if (i != this.mMaxHeight) {
+            this.mMaxHeight = i;
+            requestLayout();
+        }
+    }
+
+    public int getMaxWidth() {
+        return this.mMaxWidth;
+    }
+
+    public int getMaxHeight() {
+        return this.mMaxHeight;
     }
 
     private boolean updateHierarchy() {
@@ -686,279 +574,170 @@ public class ConstraintLayout extends ViewGroup {
             View childAt5 = getChildAt(i7);
             ConstraintWidget viewWidget2 = getViewWidget(childAt5);
             if (viewWidget2 != null) {
-                LayoutParams layoutParams = (LayoutParams) childAt5.getLayoutParams();
                 this.mLayoutWidget.add(viewWidget2);
-                applyConstraintsFromLayoutParams(isInEditMode, childAt5, viewWidget2, layoutParams, this.mTempMapIdToWidget);
+                applyConstraintsFromLayoutParams(isInEditMode, childAt5, viewWidget2, (LayoutParams) childAt5.getLayoutParams(), this.mTempMapIdToWidget);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* JADX WARN: Removed duplicated region for block: B:44:0x00bc  */
-    /* JADX WARN: Removed duplicated region for block: B:55:0x0212  */
-    /* JADX WARN: Removed duplicated region for block: B:63:0x025a  */
-    /* JADX WARN: Removed duplicated region for block: B:71:0x02a2  */
-    /* JADX WARN: Removed duplicated region for block: B:76:0x028b  */
-    /* JADX WARN: Removed duplicated region for block: B:81:0x0243  */
-    /* JADX WARN: Removed duplicated region for block: B:84:0x00cd  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* access modifiers changed from: protected */
     public void applyConstraintsFromLayoutParams(boolean z, View view, ConstraintWidget constraintWidget, LayoutParams layoutParams, SparseArray<ConstraintWidget> sparseArray) {
-        int i;
-        int i2;
-        int i3;
-        float f;
-        int i4;
-        float f2;
         ConstraintWidget constraintWidget2;
         ConstraintWidget constraintWidget3;
         ConstraintWidget constraintWidget4;
         ConstraintWidget constraintWidget5;
-        String str;
-        int i5;
+        View view2 = view;
+        ConstraintWidget constraintWidget6 = constraintWidget;
+        LayoutParams layoutParams2 = layoutParams;
+        SparseArray<ConstraintWidget> sparseArray2 = sparseArray;
         layoutParams.validate();
-        layoutParams.helped = false;
-        constraintWidget.setVisibility(view.getVisibility());
-        if (layoutParams.isInPlaceholder) {
-            constraintWidget.setInPlaceholder(true);
-            constraintWidget.setVisibility(8);
+        layoutParams2.helped = false;
+        constraintWidget6.setVisibility(view.getVisibility());
+        if (layoutParams2.isInPlaceholder) {
+            constraintWidget6.setInPlaceholder(true);
+            constraintWidget6.setVisibility(8);
         }
-        constraintWidget.setCompanionWidget(view);
-        if (view instanceof ConstraintHelper) {
-            ((ConstraintHelper) view).resolveRtl(constraintWidget, this.mLayoutWidget.isRtl());
+        constraintWidget6.setCompanionWidget(view2);
+        if (view2 instanceof ConstraintHelper) {
+            ((ConstraintHelper) view2).resolveRtl(constraintWidget6, this.mLayoutWidget.isRtl());
         }
-        if (layoutParams.isGuideline) {
-            androidx.constraintlayout.solver.widgets.Guideline guideline = (androidx.constraintlayout.solver.widgets.Guideline) constraintWidget;
-            int i6 = layoutParams.resolvedGuideBegin;
-            int i7 = layoutParams.resolvedGuideEnd;
-            float f3 = layoutParams.resolvedGuidePercent;
-            if (Build.VERSION.SDK_INT < 17) {
-                i6 = layoutParams.guideBegin;
-                i7 = layoutParams.guideEnd;
-                f3 = layoutParams.guidePercent;
+        if (layoutParams2.isGuideline) {
+            Guideline guideline = (Guideline) constraintWidget6;
+            int i = layoutParams2.resolvedGuideBegin;
+            int i2 = layoutParams2.resolvedGuideEnd;
+            float f = layoutParams2.resolvedGuidePercent;
+            if (f != -1.0f) {
+                guideline.setGuidePercent(f);
+            } else if (i != -1) {
+                guideline.setGuideBegin(i);
+            } else if (i2 != -1) {
+                guideline.setGuideEnd(i2);
             }
-            if (f3 != -1.0f) {
-                guideline.setGuidePercent(f3);
-                return;
-            } else if (i6 != -1) {
-                guideline.setGuideBegin(i6);
-                return;
-            } else if (i7 == -1) {
-                return;
-            } else {
-                guideline.setGuideEnd(i7);
-                return;
-            }
-        }
-        int i8 = layoutParams.resolvedLeftToLeft;
-        int i9 = layoutParams.resolvedLeftToRight;
-        int i10 = layoutParams.resolvedRightToLeft;
-        int i11 = layoutParams.resolvedRightToRight;
-        int i12 = layoutParams.resolveGoneLeftMargin;
-        int i13 = layoutParams.resolveGoneRightMargin;
-        float f4 = layoutParams.resolvedHorizontalBias;
-        if (Build.VERSION.SDK_INT < 17) {
-            i8 = layoutParams.leftToLeft;
-            int i14 = layoutParams.leftToRight;
-            int i15 = layoutParams.rightToLeft;
-            i11 = layoutParams.rightToRight;
-            int i16 = layoutParams.goneLeftMargin;
-            int i17 = layoutParams.goneRightMargin;
-            f4 = layoutParams.horizontalBias;
-            if (i8 == -1 && i14 == -1) {
-                int i18 = layoutParams.startToStart;
-                if (i18 != -1) {
-                    i8 = i18;
-                } else {
-                    int i19 = layoutParams.startToEnd;
-                    if (i19 != -1) {
-                        i14 = i19;
-                    }
-                }
-            }
-            if (i15 == -1 && i11 == -1) {
-                i2 = layoutParams.endToStart;
-                if (i2 == -1) {
-                    int i20 = layoutParams.endToEnd;
-                    if (i20 != -1) {
-                        i = i17;
-                        f = f4;
-                        i12 = i16;
-                        i3 = i20;
-                        i9 = i14;
-                        i2 = i15;
-                        i4 = layoutParams.circleConstraint;
-                        if (i4 == -1) {
-                            ConstraintWidget constraintWidget6 = sparseArray.get(i4);
-                            if (constraintWidget6 != null) {
-                                constraintWidget.connectCircularConstraint(constraintWidget6, layoutParams.circleAngle, layoutParams.circleRadius);
-                            }
-                        } else {
-                            if (i8 != -1) {
-                                ConstraintWidget constraintWidget7 = sparseArray.get(i8);
-                                if (constraintWidget7 != null) {
-                                    ConstraintAnchor.Type type = ConstraintAnchor.Type.LEFT;
-                                    f2 = f;
-                                    constraintWidget.immediateConnect(type, constraintWidget7, type, ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin, i12);
-                                } else {
-                                    f2 = f;
-                                }
-                            } else {
-                                f2 = f;
-                                if (i9 != -1 && (constraintWidget2 = sparseArray.get(i9)) != null) {
-                                    constraintWidget.immediateConnect(ConstraintAnchor.Type.LEFT, constraintWidget2, ConstraintAnchor.Type.RIGHT, ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin, i12);
-                                }
-                            }
-                            if (i2 != -1) {
-                                ConstraintWidget constraintWidget8 = sparseArray.get(i2);
-                                if (constraintWidget8 != null) {
-                                    constraintWidget.immediateConnect(ConstraintAnchor.Type.RIGHT, constraintWidget8, ConstraintAnchor.Type.LEFT, ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin, i);
-                                }
-                            } else if (i3 != -1 && (constraintWidget3 = sparseArray.get(i3)) != null) {
-                                ConstraintAnchor.Type type2 = ConstraintAnchor.Type.RIGHT;
-                                constraintWidget.immediateConnect(type2, constraintWidget3, type2, ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin, i);
-                            }
-                            int i21 = layoutParams.topToTop;
-                            if (i21 != -1) {
-                                ConstraintWidget constraintWidget9 = sparseArray.get(i21);
-                                if (constraintWidget9 != null) {
-                                    ConstraintAnchor.Type type3 = ConstraintAnchor.Type.TOP;
-                                    constraintWidget.immediateConnect(type3, constraintWidget9, type3, ((ViewGroup.MarginLayoutParams) layoutParams).topMargin, layoutParams.goneTopMargin);
-                                }
-                            } else {
-                                int i22 = layoutParams.topToBottom;
-                                if (i22 != -1 && (constraintWidget4 = sparseArray.get(i22)) != null) {
-                                    constraintWidget.immediateConnect(ConstraintAnchor.Type.TOP, constraintWidget4, ConstraintAnchor.Type.BOTTOM, ((ViewGroup.MarginLayoutParams) layoutParams).topMargin, layoutParams.goneTopMargin);
-                                }
-                            }
-                            int i23 = layoutParams.bottomToTop;
-                            if (i23 != -1) {
-                                ConstraintWidget constraintWidget10 = sparseArray.get(i23);
-                                if (constraintWidget10 != null) {
-                                    constraintWidget.immediateConnect(ConstraintAnchor.Type.BOTTOM, constraintWidget10, ConstraintAnchor.Type.TOP, ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin, layoutParams.goneBottomMargin);
-                                }
-                            } else {
-                                int i24 = layoutParams.bottomToBottom;
-                                if (i24 != -1 && (constraintWidget5 = sparseArray.get(i24)) != null) {
-                                    ConstraintAnchor.Type type4 = ConstraintAnchor.Type.BOTTOM;
-                                    constraintWidget.immediateConnect(type4, constraintWidget5, type4, ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin, layoutParams.goneBottomMargin);
-                                }
-                            }
-                            int i25 = layoutParams.baselineToBaseline;
-                            if (i25 != -1) {
-                                View view2 = this.mChildrenByIds.get(i25);
-                                ConstraintWidget constraintWidget11 = sparseArray.get(layoutParams.baselineToBaseline);
-                                if (constraintWidget11 != null && view2 != null && (view2.getLayoutParams() instanceof LayoutParams)) {
-                                    LayoutParams layoutParams2 = (LayoutParams) view2.getLayoutParams();
-                                    layoutParams.needsBaseline = true;
-                                    layoutParams2.needsBaseline = true;
-                                    ConstraintAnchor.Type type5 = ConstraintAnchor.Type.BASELINE;
-                                    constraintWidget.getAnchor(type5).connect(constraintWidget11.getAnchor(type5), 0, -1, true);
-                                    constraintWidget.setHasBaseline(true);
-                                    layoutParams2.widget.setHasBaseline(true);
-                                    constraintWidget.getAnchor(ConstraintAnchor.Type.TOP).reset();
-                                    constraintWidget.getAnchor(ConstraintAnchor.Type.BOTTOM).reset();
-                                }
-                            }
-                            float f5 = f2;
-                            if (f5 >= 0.0f) {
-                                constraintWidget.setHorizontalBiasPercent(f5);
-                            }
-                            float f6 = layoutParams.verticalBias;
-                            if (f6 >= 0.0f) {
-                                constraintWidget.setVerticalBiasPercent(f6);
-                            }
-                        }
-                        if (z && ((i5 = layoutParams.editorAbsoluteX) != -1 || layoutParams.editorAbsoluteY != -1)) {
-                            constraintWidget.setOrigin(i5, layoutParams.editorAbsoluteY);
-                        }
-                        if (layoutParams.horizontalDimensionFixed) {
-                            if (((ViewGroup.MarginLayoutParams) layoutParams).width == -1) {
-                                if (layoutParams.constrainedWidth) {
-                                    constraintWidget.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT);
-                                } else {
-                                    constraintWidget.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_PARENT);
-                                }
-                                constraintWidget.getAnchor(ConstraintAnchor.Type.LEFT).mMargin = ((ViewGroup.MarginLayoutParams) layoutParams).leftMargin;
-                                constraintWidget.getAnchor(ConstraintAnchor.Type.RIGHT).mMargin = ((ViewGroup.MarginLayoutParams) layoutParams).rightMargin;
-                            } else {
-                                constraintWidget.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT);
-                                constraintWidget.setWidth(0);
-                            }
-                        } else {
-                            constraintWidget.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.FIXED);
-                            constraintWidget.setWidth(((ViewGroup.MarginLayoutParams) layoutParams).width);
-                            if (((ViewGroup.MarginLayoutParams) layoutParams).width == -2) {
-                                constraintWidget.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.WRAP_CONTENT);
-                            }
-                        }
-                        if (layoutParams.verticalDimensionFixed) {
-                            if (((ViewGroup.MarginLayoutParams) layoutParams).height == -1) {
-                                if (layoutParams.constrainedHeight) {
-                                    constraintWidget.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT);
-                                } else {
-                                    constraintWidget.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_PARENT);
-                                }
-                                constraintWidget.getAnchor(ConstraintAnchor.Type.TOP).mMargin = ((ViewGroup.MarginLayoutParams) layoutParams).topMargin;
-                                constraintWidget.getAnchor(ConstraintAnchor.Type.BOTTOM).mMargin = ((ViewGroup.MarginLayoutParams) layoutParams).bottomMargin;
-                            } else {
-                                constraintWidget.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT);
-                                constraintWidget.setHeight(0);
-                            }
-                        } else {
-                            constraintWidget.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.FIXED);
-                            constraintWidget.setHeight(((ViewGroup.MarginLayoutParams) layoutParams).height);
-                            if (((ViewGroup.MarginLayoutParams) layoutParams).height == -2) {
-                                constraintWidget.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.WRAP_CONTENT);
-                            }
-                        }
-                        str = layoutParams.dimensionRatio;
-                        if (str != null) {
-                            constraintWidget.setDimensionRatio(str);
-                        }
-                        constraintWidget.setHorizontalWeight(layoutParams.horizontalWeight);
-                        constraintWidget.setVerticalWeight(layoutParams.verticalWeight);
-                        constraintWidget.setHorizontalChainStyle(layoutParams.horizontalChainStyle);
-                        constraintWidget.setVerticalChainStyle(layoutParams.verticalChainStyle);
-                        constraintWidget.setHorizontalMatchStyle(layoutParams.matchConstraintDefaultWidth, layoutParams.matchConstraintMinWidth, layoutParams.matchConstraintMaxWidth, layoutParams.matchConstraintPercentWidth);
-                        constraintWidget.setVerticalMatchStyle(layoutParams.matchConstraintDefaultHeight, layoutParams.matchConstraintMinHeight, layoutParams.matchConstraintMaxHeight, layoutParams.matchConstraintPercentHeight);
-                    }
-                }
-                i = i17;
-                i12 = i16;
-                i9 = i14;
-            }
-            i2 = i15;
-            i = i17;
-            i12 = i16;
-            i9 = i14;
         } else {
-            i = i13;
-            i2 = i10;
+            int i3 = layoutParams2.resolvedLeftToLeft;
+            int i4 = layoutParams2.resolvedLeftToRight;
+            int i5 = layoutParams2.resolvedRightToLeft;
+            int i6 = layoutParams2.resolvedRightToRight;
+            int i7 = layoutParams2.resolveGoneLeftMargin;
+            int i8 = layoutParams2.resolveGoneRightMargin;
+            float f2 = layoutParams2.resolvedHorizontalBias;
+            if (layoutParams2.circleConstraint != -1) {
+                ConstraintWidget constraintWidget7 = sparseArray2.get(layoutParams2.circleConstraint);
+                if (constraintWidget7 != null) {
+                    constraintWidget6.connectCircularConstraint(constraintWidget7, layoutParams2.circleAngle, layoutParams2.circleRadius);
+                }
+            } else {
+                if (i3 != -1) {
+                    ConstraintWidget constraintWidget8 = sparseArray2.get(i3);
+                    if (constraintWidget8 != null) {
+                        constraintWidget.immediateConnect(ConstraintAnchor.Type.LEFT, constraintWidget8, ConstraintAnchor.Type.LEFT, layoutParams2.leftMargin, i7);
+                    }
+                } else if (!(i4 == -1 || (constraintWidget5 = sparseArray2.get(i4)) == null)) {
+                    constraintWidget.immediateConnect(ConstraintAnchor.Type.LEFT, constraintWidget5, ConstraintAnchor.Type.RIGHT, layoutParams2.leftMargin, i7);
+                }
+                if (i5 != -1) {
+                    ConstraintWidget constraintWidget9 = sparseArray2.get(i5);
+                    if (constraintWidget9 != null) {
+                        constraintWidget.immediateConnect(ConstraintAnchor.Type.RIGHT, constraintWidget9, ConstraintAnchor.Type.LEFT, layoutParams2.rightMargin, i8);
+                    }
+                } else if (!(i6 == -1 || (constraintWidget4 = sparseArray2.get(i6)) == null)) {
+                    constraintWidget.immediateConnect(ConstraintAnchor.Type.RIGHT, constraintWidget4, ConstraintAnchor.Type.RIGHT, layoutParams2.rightMargin, i8);
+                }
+                if (layoutParams2.topToTop != -1) {
+                    ConstraintWidget constraintWidget10 = sparseArray2.get(layoutParams2.topToTop);
+                    if (constraintWidget10 != null) {
+                        constraintWidget.immediateConnect(ConstraintAnchor.Type.TOP, constraintWidget10, ConstraintAnchor.Type.TOP, layoutParams2.topMargin, layoutParams2.goneTopMargin);
+                    }
+                } else if (!(layoutParams2.topToBottom == -1 || (constraintWidget3 = sparseArray2.get(layoutParams2.topToBottom)) == null)) {
+                    constraintWidget.immediateConnect(ConstraintAnchor.Type.TOP, constraintWidget3, ConstraintAnchor.Type.BOTTOM, layoutParams2.topMargin, layoutParams2.goneTopMargin);
+                }
+                if (layoutParams2.bottomToTop != -1) {
+                    ConstraintWidget constraintWidget11 = sparseArray2.get(layoutParams2.bottomToTop);
+                    if (constraintWidget11 != null) {
+                        constraintWidget.immediateConnect(ConstraintAnchor.Type.BOTTOM, constraintWidget11, ConstraintAnchor.Type.TOP, layoutParams2.bottomMargin, layoutParams2.goneBottomMargin);
+                    }
+                } else if (!(layoutParams2.bottomToBottom == -1 || (constraintWidget2 = sparseArray2.get(layoutParams2.bottomToBottom)) == null)) {
+                    constraintWidget.immediateConnect(ConstraintAnchor.Type.BOTTOM, constraintWidget2, ConstraintAnchor.Type.BOTTOM, layoutParams2.bottomMargin, layoutParams2.goneBottomMargin);
+                }
+                if (layoutParams2.baselineToBaseline != -1) {
+                    setWidgetBaseline(constraintWidget, layoutParams, sparseArray, layoutParams2.baselineToBaseline, ConstraintAnchor.Type.BASELINE);
+                } else if (layoutParams2.baselineToTop != -1) {
+                    setWidgetBaseline(constraintWidget, layoutParams, sparseArray, layoutParams2.baselineToTop, ConstraintAnchor.Type.TOP);
+                } else if (layoutParams2.baselineToBottom != -1) {
+                    setWidgetBaseline(constraintWidget, layoutParams, sparseArray, layoutParams2.baselineToBottom, ConstraintAnchor.Type.BOTTOM);
+                }
+                if (f2 >= 0.0f) {
+                    constraintWidget6.setHorizontalBiasPercent(f2);
+                }
+                if (layoutParams2.verticalBias >= 0.0f) {
+                    constraintWidget6.setVerticalBiasPercent(layoutParams2.verticalBias);
+                }
+            }
+            if (z && !(layoutParams2.editorAbsoluteX == -1 && layoutParams2.editorAbsoluteY == -1)) {
+                constraintWidget6.setOrigin(layoutParams2.editorAbsoluteX, layoutParams2.editorAbsoluteY);
+            }
+            if (layoutParams2.horizontalDimensionFixed) {
+                constraintWidget6.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.FIXED);
+                constraintWidget6.setWidth(layoutParams2.width);
+                if (layoutParams2.width == -2) {
+                    constraintWidget6.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.WRAP_CONTENT);
+                }
+            } else if (layoutParams2.width == -1) {
+                if (layoutParams2.constrainedWidth) {
+                    constraintWidget6.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT);
+                } else {
+                    constraintWidget6.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_PARENT);
+                }
+                constraintWidget6.getAnchor(ConstraintAnchor.Type.LEFT).mMargin = layoutParams2.leftMargin;
+                constraintWidget6.getAnchor(ConstraintAnchor.Type.RIGHT).mMargin = layoutParams2.rightMargin;
+            } else {
+                constraintWidget6.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT);
+                constraintWidget6.setWidth(0);
+            }
+            if (layoutParams2.verticalDimensionFixed) {
+                constraintWidget6.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.FIXED);
+                constraintWidget6.setHeight(layoutParams2.height);
+                if (layoutParams2.height == -2) {
+                    constraintWidget6.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.WRAP_CONTENT);
+                }
+            } else if (layoutParams2.height == -1) {
+                if (layoutParams2.constrainedHeight) {
+                    constraintWidget6.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT);
+                } else {
+                    constraintWidget6.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_PARENT);
+                }
+                constraintWidget6.getAnchor(ConstraintAnchor.Type.TOP).mMargin = layoutParams2.topMargin;
+                constraintWidget6.getAnchor(ConstraintAnchor.Type.BOTTOM).mMargin = layoutParams2.bottomMargin;
+            } else {
+                constraintWidget6.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.MATCH_CONSTRAINT);
+                constraintWidget6.setHeight(0);
+            }
+            constraintWidget6.setDimensionRatio(layoutParams2.dimensionRatio);
+            constraintWidget6.setHorizontalWeight(layoutParams2.horizontalWeight);
+            constraintWidget6.setVerticalWeight(layoutParams2.verticalWeight);
+            constraintWidget6.setHorizontalChainStyle(layoutParams2.horizontalChainStyle);
+            constraintWidget6.setVerticalChainStyle(layoutParams2.verticalChainStyle);
+            constraintWidget6.setWrapBehaviorInParent(layoutParams2.wrapBehaviorInParent);
+            constraintWidget6.setHorizontalMatchStyle(layoutParams2.matchConstraintDefaultWidth, layoutParams2.matchConstraintMinWidth, layoutParams2.matchConstraintMaxWidth, layoutParams2.matchConstraintPercentWidth);
+            constraintWidget6.setVerticalMatchStyle(layoutParams2.matchConstraintDefaultHeight, layoutParams2.matchConstraintMinHeight, layoutParams2.matchConstraintMaxHeight, layoutParams2.matchConstraintPercentHeight);
         }
-        float f7 = f4;
-        i3 = i11;
-        f = f7;
-        i4 = layoutParams.circleConstraint;
-        if (i4 == -1) {
+    }
+
+    private void setWidgetBaseline(ConstraintWidget constraintWidget, LayoutParams layoutParams, SparseArray<ConstraintWidget> sparseArray, int i, ConstraintAnchor.Type type) {
+        View view = this.mChildrenByIds.get(i);
+        ConstraintWidget constraintWidget2 = sparseArray.get(i);
+        if (constraintWidget2 != null && view != null && (view.getLayoutParams() instanceof LayoutParams)) {
+            layoutParams.needsBaseline = true;
+            if (type == ConstraintAnchor.Type.BASELINE) {
+                LayoutParams layoutParams2 = (LayoutParams) view.getLayoutParams();
+                layoutParams2.needsBaseline = true;
+                layoutParams2.widget.setHasBaseline(true);
+            }
+            constraintWidget.getAnchor(ConstraintAnchor.Type.BASELINE).connect(constraintWidget2.getAnchor(type), layoutParams.baselineMargin, layoutParams.goneBaselineMargin, true);
+            constraintWidget.setHasBaseline(true);
+            constraintWidget.getAnchor(ConstraintAnchor.Type.TOP).reset();
+            constraintWidget.getAnchor(ConstraintAnchor.Type.BOTTOM).reset();
         }
-        if (z) {
-            constraintWidget.setOrigin(i5, layoutParams.editorAbsoluteY);
-        }
-        if (layoutParams.horizontalDimensionFixed) {
-        }
-        if (layoutParams.verticalDimensionFixed) {
-        }
-        str = layoutParams.dimensionRatio;
-        if (str != null) {
-        }
-        constraintWidget.setHorizontalWeight(layoutParams.horizontalWeight);
-        constraintWidget.setVerticalWeight(layoutParams.verticalWeight);
-        constraintWidget.setHorizontalChainStyle(layoutParams.horizontalChainStyle);
-        constraintWidget.setVerticalChainStyle(layoutParams.verticalChainStyle);
-        constraintWidget.setHorizontalMatchStyle(layoutParams.matchConstraintDefaultWidth, layoutParams.matchConstraintMinWidth, layoutParams.matchConstraintMaxWidth, layoutParams.matchConstraintPercentWidth);
-        constraintWidget.setVerticalMatchStyle(layoutParams.matchConstraintDefaultHeight, layoutParams.matchConstraintMinHeight, layoutParams.matchConstraintMaxHeight, layoutParams.matchConstraintPercentHeight);
     }
 
     private final ConstraintWidget getTargetWidget(int i) {
@@ -972,79 +751,98 @@ public class ConstraintLayout extends ViewGroup {
         if (view == this) {
             return this.mLayoutWidget;
         }
-        if (view != null) {
-            return ((LayoutParams) view.getLayoutParams()).widget;
+        if (view == null) {
+            return null;
         }
-        return null;
+        return ((LayoutParams) view.getLayoutParams()).widget;
     }
 
     public final ConstraintWidget getViewWidget(View view) {
         if (view == this) {
             return this.mLayoutWidget;
         }
-        if (view != null) {
+        if (view == null) {
+            return null;
+        }
+        if (view.getLayoutParams() instanceof LayoutParams) {
+            return ((LayoutParams) view.getLayoutParams()).widget;
+        }
+        view.setLayoutParams(generateLayoutParams(view.getLayoutParams()));
+        if (view.getLayoutParams() instanceof LayoutParams) {
             return ((LayoutParams) view.getLayoutParams()).widget;
         }
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    public void fillMetrics(Metrics metrics) {
+        this.mMetrics = metrics;
+        this.mLayoutWidget.fillMetrics(metrics);
+    }
+
+    /* access modifiers changed from: protected */
     public void resolveSystem(ConstraintWidgetContainer constraintWidgetContainer, int i, int i2, int i3) {
-        int paddingLeft;
         int mode = View.MeasureSpec.getMode(i2);
         int size = View.MeasureSpec.getSize(i2);
         int mode2 = View.MeasureSpec.getMode(i3);
         int size2 = View.MeasureSpec.getSize(i3);
-        int paddingTop = getPaddingTop();
-        int paddingBottom = getPaddingBottom() + paddingTop;
+        int max = Math.max(0, getPaddingTop());
+        int max2 = Math.max(0, getPaddingBottom());
+        int i4 = max + max2;
         int paddingWidth = getPaddingWidth();
-        if (Build.VERSION.SDK_INT >= 17) {
-            paddingLeft = getPaddingStart();
-            int paddingEnd = getPaddingEnd();
-            if (paddingLeft > 0 || paddingEnd > 0) {
-                if (isRtl()) {
-                    paddingLeft = paddingEnd;
-                }
-            } else {
-                paddingLeft = getPaddingLeft();
-            }
-        } else {
-            paddingLeft = getPaddingLeft();
+        this.mMeasurer.captureLayoutInfo(i2, i3, max, max2, paddingWidth, i4);
+        int max3 = Math.max(0, getPaddingStart());
+        int max4 = Math.max(0, getPaddingEnd());
+        if (max3 <= 0 && max4 <= 0) {
+            max4 = Math.max(0, getPaddingLeft());
+        } else if (!isRtl()) {
+            max4 = max3;
         }
-        int i4 = size - paddingWidth;
-        int i5 = size2 - paddingBottom;
-        setSelfDimensionBehaviour(constraintWidgetContainer, mode, i4, mode2, i5);
-        constraintWidgetContainer.measure(i, mode, i4, mode2, i5, this.mLastMeasureWidth, this.mLastMeasureHeight, paddingLeft, paddingTop);
+        int i5 = size2 - i4;
+        int i6 = mode;
+        int i7 = size - paddingWidth;
+        int i8 = mode2;
+        int i9 = i5;
+        setSelfDimensionBehaviour(constraintWidgetContainer, i6, i7, i8, i9);
+        constraintWidgetContainer.measure(i, i6, i7, i8, i9, this.mLastMeasureWidth, this.mLastMeasureHeight, max4, max);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void resolveMeasuredDimension(int i, int i2, int i3, int i4, boolean z, boolean z2) {
-        int paddingTop = getPaddingTop() + getPaddingBottom();
-        int paddingWidth = i3 + getPaddingWidth();
-        int i5 = i4 + paddingTop;
-        if (Build.VERSION.SDK_INT >= 11) {
-            int resolveSizeAndState = ViewGroup.resolveSizeAndState(paddingWidth, i, 0);
-            int min = Math.min(this.mMaxWidth, resolveSizeAndState & 16777215);
-            int min2 = Math.min(this.mMaxHeight, ViewGroup.resolveSizeAndState(i5, i2, 0) & 16777215);
-            if (z) {
-                min |= 16777216;
+        int i5 = this.mMeasurer.paddingHeight;
+        int resolveSizeAndState = resolveSizeAndState(i3 + this.mMeasurer.paddingWidth, i, 0);
+        int min = Math.min(this.mMaxWidth, resolveSizeAndState & 16777215);
+        int min2 = Math.min(this.mMaxHeight, resolveSizeAndState(i4 + i5, i2, 0) & 16777215);
+        if (z) {
+            min |= 16777216;
+        }
+        if (z2) {
+            min2 |= 16777216;
+        }
+        setMeasuredDimension(min, min2);
+        this.mLastMeasureWidth = min;
+        this.mLastMeasureHeight = min2;
+    }
+
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
+        if (!this.mDirtyHierarchy) {
+            int childCount = getChildCount();
+            int i3 = 0;
+            while (true) {
+                if (i3 >= childCount) {
+                    break;
+                } else if (getChildAt(i3).isLayoutRequested()) {
+                    this.mDirtyHierarchy = true;
+                    break;
+                } else {
+                    i3++;
+                }
             }
-            if (z2) {
-                min2 |= 16777216;
-            }
-            setMeasuredDimension(min, min2);
-            this.mLastMeasureWidth = min;
-            this.mLastMeasureHeight = min2;
+        }
+        if (!this.mDirtyHierarchy && this.mOnMeasureWidthMeasureSpec == i && this.mOnMeasureHeightMeasureSpec == i2) {
+            resolveMeasuredDimension(i, i2, this.mLayoutWidget.getWidth(), this.mLayoutWidget.getHeight(), this.mLayoutWidget.isWidthMeasuredTooSmall(), this.mLayoutWidget.isHeightMeasuredTooSmall());
             return;
         }
-        setMeasuredDimension(paddingWidth, i5);
-        this.mLastMeasureWidth = paddingWidth;
-        this.mLastMeasureHeight = i5;
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.View
-    public void onMeasure(int i, int i2) {
         this.mOnMeasureWidthMeasureSpec = i;
         this.mOnMeasureHeightMeasureSpec = i2;
         this.mLayoutWidget.setRtl(isRtl());
@@ -1058,53 +856,51 @@ public class ConstraintLayout extends ViewGroup {
         resolveMeasuredDimension(i, i2, this.mLayoutWidget.getWidth(), this.mLayoutWidget.getHeight(), this.mLayoutWidget.isWidthMeasuredTooSmall(), this.mLayoutWidget.isHeightMeasuredTooSmall());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean isRtl() {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return ((getContext().getApplicationInfo().flags & 4194304) != 0) && 1 == getLayoutDirection();
+        if (!((getContext().getApplicationInfo().flags & 4194304) != 0) || 1 != getLayoutDirection()) {
+            return false;
         }
-        return false;
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public int getPaddingWidth() {
-        int paddingLeft = getPaddingLeft() + getPaddingRight();
-        int paddingStart = Build.VERSION.SDK_INT >= 17 ? getPaddingStart() + getPaddingEnd() : 0;
-        return paddingStart > 0 ? paddingStart : paddingLeft;
+    private int getPaddingWidth() {
+        int max = Math.max(0, getPaddingLeft()) + Math.max(0, getPaddingRight());
+        int max2 = Math.max(0, getPaddingStart()) + Math.max(0, getPaddingEnd());
+        return max2 > 0 ? max2 : max;
     }
 
-    protected void setSelfDimensionBehaviour(ConstraintWidgetContainer constraintWidgetContainer, int i, int i2, int i3, int i4) {
-        ConstraintWidget.DimensionBehaviour dimensionBehaviour;
-        int paddingTop = getPaddingTop() + getPaddingBottom();
-        int paddingWidth = getPaddingWidth();
+    /* access modifiers changed from: protected */
+    public void setSelfDimensionBehaviour(ConstraintWidgetContainer constraintWidgetContainer, int i, int i2, int i3, int i4) {
+        int i5 = this.mMeasurer.paddingHeight;
+        int i6 = this.mMeasurer.paddingWidth;
+        ConstraintWidget.DimensionBehaviour dimensionBehaviour = ConstraintWidget.DimensionBehaviour.FIXED;
         ConstraintWidget.DimensionBehaviour dimensionBehaviour2 = ConstraintWidget.DimensionBehaviour.FIXED;
         int childCount = getChildCount();
-        if (i == Integer.MIN_VALUE) {
-            dimensionBehaviour = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
-            if (childCount == 0) {
-                i2 = Math.max(0, this.mMinWidth);
+        if (i != Integer.MIN_VALUE) {
+            if (i == 0) {
+                dimensionBehaviour = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
+                if (childCount == 0) {
+                    i2 = Math.max(0, this.mMinWidth);
+                }
+            } else if (i == 1073741824) {
+                i2 = Math.min(this.mMaxWidth - i6, i2);
             }
-        } else if (i == 0) {
-            dimensionBehaviour = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
-            if (childCount == 0) {
-                i2 = Math.max(0, this.mMinWidth);
-            }
-            i2 = 0;
-        } else if (i != 1073741824) {
-            dimensionBehaviour = dimensionBehaviour2;
             i2 = 0;
         } else {
-            i2 = Math.min(this.mMaxWidth - paddingWidth, i2);
-            dimensionBehaviour = dimensionBehaviour2;
-        }
-        if (i3 == Integer.MIN_VALUE) {
-            dimensionBehaviour2 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
+            dimensionBehaviour = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
             if (childCount == 0) {
-                i4 = Math.max(0, this.mMinHeight);
+                i2 = Math.max(0, this.mMinWidth);
             }
-        } else if (i3 != 0) {
-            if (i3 == 1073741824) {
-                i4 = Math.min(this.mMaxHeight - paddingTop, i4);
+        }
+        if (i3 != Integer.MIN_VALUE) {
+            if (i3 == 0) {
+                dimensionBehaviour2 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
+                if (childCount == 0) {
+                    i4 = Math.max(0, this.mMinHeight);
+                }
+            } else if (i3 == 1073741824) {
+                i4 = Math.min(this.mMaxHeight - i5, i4);
             }
             i4 = 0;
         } else {
@@ -1112,27 +908,32 @@ public class ConstraintLayout extends ViewGroup {
             if (childCount == 0) {
                 i4 = Math.max(0, this.mMinHeight);
             }
-            i4 = 0;
         }
-        if (i2 != constraintWidgetContainer.getWidth() || i4 != constraintWidgetContainer.getHeight()) {
+        if (!(i2 == constraintWidgetContainer.getWidth() && i4 == constraintWidgetContainer.getHeight())) {
             constraintWidgetContainer.invalidateMeasures();
         }
         constraintWidgetContainer.setX(0);
         constraintWidgetContainer.setY(0);
-        constraintWidgetContainer.setMaxWidth(this.mMaxWidth - paddingWidth);
-        constraintWidgetContainer.setMaxHeight(this.mMaxHeight - paddingTop);
+        constraintWidgetContainer.setMaxWidth(this.mMaxWidth - i6);
+        constraintWidgetContainer.setMaxHeight(this.mMaxHeight - i5);
         constraintWidgetContainer.setMinWidth(0);
         constraintWidgetContainer.setMinHeight(0);
         constraintWidgetContainer.setHorizontalDimensionBehaviour(dimensionBehaviour);
         constraintWidgetContainer.setWidth(i2);
         constraintWidgetContainer.setVerticalDimensionBehaviour(dimensionBehaviour2);
         constraintWidgetContainer.setHeight(i4);
-        constraintWidgetContainer.setMinWidth(this.mMinWidth - paddingWidth);
-        constraintWidgetContainer.setMinHeight(this.mMinHeight - paddingTop);
+        constraintWidgetContainer.setMinWidth(this.mMinWidth - i6);
+        constraintWidgetContainer.setMinHeight(this.mMinHeight - i5);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup, android.view.View
+    public void setState(int i, int i2, int i3) {
+        ConstraintLayoutStates constraintLayoutStates = this.mConstraintLayoutSpec;
+        if (constraintLayoutStates != null) {
+            constraintLayoutStates.updateConstraints(i, (float) i2, (float) i3);
+        }
+    }
+
+    /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         View content;
         int childCount = getChildCount();
@@ -1161,28 +962,31 @@ public class ConstraintLayout extends ViewGroup {
         }
     }
 
+    public void setOptimizationLevel(int i) {
+        this.mOptimizationLevel = i;
+        this.mLayoutWidget.setOptimizationLevel(i);
+    }
+
     public int getOptimizationLevel() {
         return this.mLayoutWidget.getOptimizationLevel();
     }
 
-    @Override // android.view.ViewGroup
     public LayoutParams generateLayoutParams(AttributeSet attributeSet) {
         return new LayoutParams(getContext(), attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup
+    /* access modifiers changed from: protected */
     public LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(-2, -2);
     }
 
-    @Override // android.view.ViewGroup
-    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+    /* access modifiers changed from: protected */
+    public ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return new LayoutParams(layoutParams);
     }
 
-    @Override // android.view.ViewGroup
-    protected boolean checkLayoutParams(ViewGroup.LayoutParams layoutParams) {
+    /* access modifiers changed from: protected */
+    public boolean checkLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return layoutParams instanceof LayoutParams;
     }
 
@@ -1194,8 +998,7 @@ public class ConstraintLayout extends ViewGroup {
         return this.mChildrenByIds.get(i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void dispatchDraw(Canvas canvas) {
         Object tag;
         int size;
@@ -1207,256 +1010,403 @@ public class ConstraintLayout extends ViewGroup {
         }
         super.dispatchDraw(canvas);
         if (isInEditMode()) {
+            float width = (float) getWidth();
+            float height = (float) getHeight();
             int childCount = getChildCount();
-            float width = getWidth();
-            float height = getHeight();
             for (int i2 = 0; i2 < childCount; i2++) {
                 View childAt = getChildAt(i2);
-                if (childAt.getVisibility() != 8 && (tag = childAt.getTag()) != null && (tag instanceof String)) {
-                    String[] split = ((String) tag).split(",");
+                if (!(childAt.getVisibility() == 8 || (tag = childAt.getTag()) == null || !(tag instanceof String))) {
+                    String[] split = ((String) tag).split(NavigationBarInflaterView.BUTTON_SEPARATOR);
                     if (split.length == 4) {
                         int parseInt = Integer.parseInt(split[0]);
                         int parseInt2 = Integer.parseInt(split[1]);
                         int parseInt3 = Integer.parseInt(split[2]);
-                        int i3 = (int) ((parseInt / 1080.0f) * width);
-                        int i4 = (int) ((parseInt2 / 1920.0f) * height);
+                        int i3 = (int) ((((float) parseInt) / 1080.0f) * width);
+                        int i4 = (int) ((((float) parseInt2) / 1920.0f) * height);
                         Paint paint = new Paint();
                         paint.setColor(-65536);
-                        float f = i3;
-                        float f2 = i4;
-                        float f3 = i3 + ((int) ((parseInt3 / 1080.0f) * width));
-                        canvas.drawLine(f, f2, f3, f2, paint);
-                        float parseInt4 = i4 + ((int) ((Integer.parseInt(split[3]) / 1920.0f) * height));
-                        canvas.drawLine(f3, f2, f3, parseInt4, paint);
-                        canvas.drawLine(f3, parseInt4, f, parseInt4, paint);
-                        canvas.drawLine(f, parseInt4, f, f2, paint);
-                        paint.setColor(-16711936);
-                        canvas.drawLine(f, f2, f3, parseInt4, paint);
-                        canvas.drawLine(f, parseInt4, f3, f2, paint);
+                        float f = (float) i3;
+                        float f2 = (float) i4;
+                        float f3 = (float) (i3 + ((int) ((((float) parseInt3) / 1080.0f) * width)));
+                        Canvas canvas2 = canvas;
+                        float f4 = f2;
+                        float f5 = f2;
+                        float f6 = f3;
+                        float f7 = f;
+                        Paint paint2 = paint;
+                        canvas2.drawLine(f, f4, f6, f5, paint);
+                        float parseInt4 = (float) (i4 + ((int) ((((float) Integer.parseInt(split[3])) / 1920.0f) * height)));
+                        float f8 = f3;
+                        float f9 = parseInt4;
+                        canvas2.drawLine(f8, f5, f6, f9, paint);
+                        float f10 = parseInt4;
+                        float f11 = f7;
+                        canvas2.drawLine(f8, f10, f11, f9, paint);
+                        float f12 = f7;
+                        canvas2.drawLine(f12, f10, f11, f5, paint);
+                        paint.setColor(ScrimController.DEBUG_FRONT_TINT);
+                        float f13 = f3;
+                        Paint paint3 = paint;
+                        canvas2.drawLine(f12, f5, f13, parseInt4, paint);
+                        canvas2.drawLine(f12, parseInt4, f13, f5, paint);
                     }
                 }
             }
         }
     }
 
-    /* loaded from: classes.dex */
+    public void setOnConstraintsChanged(ConstraintsChangedListener constraintsChangedListener) {
+        this.mConstraintsChangedListener = constraintsChangedListener;
+        ConstraintLayoutStates constraintLayoutStates = this.mConstraintLayoutSpec;
+        if (constraintLayoutStates != null) {
+            constraintLayoutStates.setOnConstraintsChanged(constraintsChangedListener);
+        }
+    }
+
+    public void loadLayoutDescription(int i) {
+        if (i != 0) {
+            try {
+                this.mConstraintLayoutSpec = new ConstraintLayoutStates(getContext(), this, i);
+            } catch (Resources.NotFoundException unused) {
+                this.mConstraintLayoutSpec = null;
+            }
+        } else {
+            this.mConstraintLayoutSpec = null;
+        }
+    }
+
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
-        public int baselineToBaseline;
-        public int bottomToBottom;
-        public int bottomToTop;
-        public float circleAngle;
-        public int circleConstraint;
-        public int circleRadius;
-        public boolean constrainedHeight;
-        public boolean constrainedWidth;
-        public String constraintTag;
-        public String dimensionRatio;
-        int dimensionRatioSide;
-        float dimensionRatioValue;
-        public int editorAbsoluteX;
-        public int editorAbsoluteY;
-        public int endToEnd;
-        public int endToStart;
-        public int goneBottomMargin;
-        public int goneEndMargin;
-        public int goneLeftMargin;
-        public int goneRightMargin;
-        public int goneStartMargin;
-        public int goneTopMargin;
-        public int guideBegin;
-        public int guideEnd;
-        public float guidePercent;
-        public boolean helped;
-        public float horizontalBias;
-        public int horizontalChainStyle;
-        boolean horizontalDimensionFixed;
-        public float horizontalWeight;
-        boolean isGuideline;
-        boolean isHelper;
-        boolean isInPlaceholder;
-        boolean isVirtualGroup;
-        public int leftToLeft;
-        public int leftToRight;
-        public int matchConstraintDefaultHeight;
-        public int matchConstraintDefaultWidth;
-        public int matchConstraintMaxHeight;
-        public int matchConstraintMaxWidth;
-        public int matchConstraintMinHeight;
-        public int matchConstraintMinWidth;
-        public float matchConstraintPercentHeight;
-        public float matchConstraintPercentWidth;
-        boolean needsBaseline;
-        public int orientation;
-        int resolveGoneLeftMargin;
-        int resolveGoneRightMargin;
+        public static final int BASELINE = 5;
+        public static final int BOTTOM = 4;
+        public static final int CHAIN_PACKED = 2;
+        public static final int CHAIN_SPREAD = 0;
+        public static final int CHAIN_SPREAD_INSIDE = 1;
+        public static final int CIRCLE = 8;
+        public static final int END = 7;
+        public static final int HORIZONTAL = 0;
+        public static final int LEFT = 1;
+        public static final int MATCH_CONSTRAINT = 0;
+        public static final int MATCH_CONSTRAINT_PERCENT = 2;
+        public static final int MATCH_CONSTRAINT_SPREAD = 0;
+        public static final int MATCH_CONSTRAINT_WRAP = 1;
+        public static final int PARENT_ID = 0;
+        public static final int RIGHT = 2;
+        public static final int START = 6;
+        public static final int TOP = 3;
+        public static final int UNSET = -1;
+        public static final int VERTICAL = 1;
+        public static final int WRAP_BEHAVIOR_HORIZONTAL_ONLY = 1;
+        public static final int WRAP_BEHAVIOR_INCLUDED = 0;
+        public static final int WRAP_BEHAVIOR_SKIPPED = 3;
+        public static final int WRAP_BEHAVIOR_VERTICAL_ONLY = 2;
+        public int baselineMargin = 0;
+        public int baselineToBaseline = -1;
+        public int baselineToBottom = -1;
+        public int baselineToTop = -1;
+        public int bottomToBottom = -1;
+        public int bottomToTop = -1;
+        public float circleAngle = 0.0f;
+        public int circleConstraint = -1;
+        public int circleRadius = 0;
+        public boolean constrainedHeight = false;
+        public boolean constrainedWidth = false;
+        public String constraintTag = null;
+        public String dimensionRatio = null;
+        int dimensionRatioSide = 1;
+        float dimensionRatioValue = 0.0f;
+        public int editorAbsoluteX = -1;
+        public int editorAbsoluteY = -1;
+        public int endToEnd = -1;
+        public int endToStart = -1;
+        public int goneBaselineMargin = -1;
+        public int goneBottomMargin = -1;
+        public int goneEndMargin = -1;
+        public int goneLeftMargin = -1;
+        public int goneRightMargin = -1;
+        public int goneStartMargin = -1;
+        public int goneTopMargin = -1;
+        public int guideBegin = -1;
+        public int guideEnd = -1;
+        public float guidePercent = -1.0f;
+        boolean heightSet = true;
+        public boolean helped = false;
+        public float horizontalBias = 0.5f;
+        public int horizontalChainStyle = 0;
+        boolean horizontalDimensionFixed = true;
+        public float horizontalWeight = -1.0f;
+        boolean isGuideline = false;
+        boolean isHelper = false;
+        boolean isInPlaceholder = false;
+        boolean isVirtualGroup = false;
+        public int leftToLeft = -1;
+        public int leftToRight = -1;
+        public int matchConstraintDefaultHeight = 0;
+        public int matchConstraintDefaultWidth = 0;
+        public int matchConstraintMaxHeight = 0;
+        public int matchConstraintMaxWidth = 0;
+        public int matchConstraintMinHeight = 0;
+        public int matchConstraintMinWidth = 0;
+        public float matchConstraintPercentHeight = 1.0f;
+        public float matchConstraintPercentWidth = 1.0f;
+        boolean needsBaseline = false;
+        public int orientation = -1;
+        int resolveGoneLeftMargin = -1;
+        int resolveGoneRightMargin = -1;
         int resolvedGuideBegin;
         int resolvedGuideEnd;
         float resolvedGuidePercent;
-        float resolvedHorizontalBias;
-        int resolvedLeftToLeft;
-        int resolvedLeftToRight;
-        int resolvedRightToLeft;
-        int resolvedRightToRight;
-        public int rightToLeft;
-        public int rightToRight;
-        public int startToEnd;
-        public int startToStart;
-        public int topToBottom;
-        public int topToTop;
-        public float verticalBias;
-        public int verticalChainStyle;
-        boolean verticalDimensionFixed;
-        public float verticalWeight;
-        ConstraintWidget widget;
+        float resolvedHorizontalBias = 0.5f;
+        int resolvedLeftToLeft = -1;
+        int resolvedLeftToRight = -1;
+        int resolvedRightToLeft = -1;
+        int resolvedRightToRight = -1;
+        public int rightToLeft = -1;
+        public int rightToRight = -1;
+        public int startToEnd = -1;
+        public int startToStart = -1;
+        public int topToBottom = -1;
+        public int topToTop = -1;
+        public float verticalBias = 0.5f;
+        public int verticalChainStyle = 0;
+        boolean verticalDimensionFixed = true;
+        public float verticalWeight = -1.0f;
+        ConstraintWidget widget = new ConstraintWidget();
+        boolean widthSet = true;
+        public int wrapBehaviorInParent = 0;
 
         public ConstraintWidget getConstraintWidget() {
             return this.widget;
         }
 
-        /* loaded from: classes.dex */
+        public void setWidgetDebugName(String str) {
+            this.widget.setDebugName(str);
+        }
+
+        public void reset() {
+            ConstraintWidget constraintWidget = this.widget;
+            if (constraintWidget != null) {
+                constraintWidget.reset();
+            }
+        }
+
+        public LayoutParams(LayoutParams layoutParams) {
+            super(layoutParams);
+            this.guideBegin = layoutParams.guideBegin;
+            this.guideEnd = layoutParams.guideEnd;
+            this.guidePercent = layoutParams.guidePercent;
+            this.leftToLeft = layoutParams.leftToLeft;
+            this.leftToRight = layoutParams.leftToRight;
+            this.rightToLeft = layoutParams.rightToLeft;
+            this.rightToRight = layoutParams.rightToRight;
+            this.topToTop = layoutParams.topToTop;
+            this.topToBottom = layoutParams.topToBottom;
+            this.bottomToTop = layoutParams.bottomToTop;
+            this.bottomToBottom = layoutParams.bottomToBottom;
+            this.baselineToBaseline = layoutParams.baselineToBaseline;
+            this.baselineToTop = layoutParams.baselineToTop;
+            this.baselineToBottom = layoutParams.baselineToBottom;
+            this.circleConstraint = layoutParams.circleConstraint;
+            this.circleRadius = layoutParams.circleRadius;
+            this.circleAngle = layoutParams.circleAngle;
+            this.startToEnd = layoutParams.startToEnd;
+            this.startToStart = layoutParams.startToStart;
+            this.endToStart = layoutParams.endToStart;
+            this.endToEnd = layoutParams.endToEnd;
+            this.goneLeftMargin = layoutParams.goneLeftMargin;
+            this.goneTopMargin = layoutParams.goneTopMargin;
+            this.goneRightMargin = layoutParams.goneRightMargin;
+            this.goneBottomMargin = layoutParams.goneBottomMargin;
+            this.goneStartMargin = layoutParams.goneStartMargin;
+            this.goneEndMargin = layoutParams.goneEndMargin;
+            this.goneBaselineMargin = layoutParams.goneBaselineMargin;
+            this.baselineMargin = layoutParams.baselineMargin;
+            this.horizontalBias = layoutParams.horizontalBias;
+            this.verticalBias = layoutParams.verticalBias;
+            this.dimensionRatio = layoutParams.dimensionRatio;
+            this.dimensionRatioValue = layoutParams.dimensionRatioValue;
+            this.dimensionRatioSide = layoutParams.dimensionRatioSide;
+            this.horizontalWeight = layoutParams.horizontalWeight;
+            this.verticalWeight = layoutParams.verticalWeight;
+            this.horizontalChainStyle = layoutParams.horizontalChainStyle;
+            this.verticalChainStyle = layoutParams.verticalChainStyle;
+            this.constrainedWidth = layoutParams.constrainedWidth;
+            this.constrainedHeight = layoutParams.constrainedHeight;
+            this.matchConstraintDefaultWidth = layoutParams.matchConstraintDefaultWidth;
+            this.matchConstraintDefaultHeight = layoutParams.matchConstraintDefaultHeight;
+            this.matchConstraintMinWidth = layoutParams.matchConstraintMinWidth;
+            this.matchConstraintMaxWidth = layoutParams.matchConstraintMaxWidth;
+            this.matchConstraintMinHeight = layoutParams.matchConstraintMinHeight;
+            this.matchConstraintMaxHeight = layoutParams.matchConstraintMaxHeight;
+            this.matchConstraintPercentWidth = layoutParams.matchConstraintPercentWidth;
+            this.matchConstraintPercentHeight = layoutParams.matchConstraintPercentHeight;
+            this.editorAbsoluteX = layoutParams.editorAbsoluteX;
+            this.editorAbsoluteY = layoutParams.editorAbsoluteY;
+            this.orientation = layoutParams.orientation;
+            this.horizontalDimensionFixed = layoutParams.horizontalDimensionFixed;
+            this.verticalDimensionFixed = layoutParams.verticalDimensionFixed;
+            this.needsBaseline = layoutParams.needsBaseline;
+            this.isGuideline = layoutParams.isGuideline;
+            this.resolvedLeftToLeft = layoutParams.resolvedLeftToLeft;
+            this.resolvedLeftToRight = layoutParams.resolvedLeftToRight;
+            this.resolvedRightToLeft = layoutParams.resolvedRightToLeft;
+            this.resolvedRightToRight = layoutParams.resolvedRightToRight;
+            this.resolveGoneLeftMargin = layoutParams.resolveGoneLeftMargin;
+            this.resolveGoneRightMargin = layoutParams.resolveGoneRightMargin;
+            this.resolvedHorizontalBias = layoutParams.resolvedHorizontalBias;
+            this.constraintTag = layoutParams.constraintTag;
+            this.wrapBehaviorInParent = layoutParams.wrapBehaviorInParent;
+            this.widget = layoutParams.widget;
+            this.widthSet = layoutParams.widthSet;
+            this.heightSet = layoutParams.heightSet;
+        }
+
         private static class Table {
+            public static final int ANDROID_ORIENTATION = 1;
+            public static final int LAYOUT_CONSTRAINED_HEIGHT = 28;
+            public static final int LAYOUT_CONSTRAINED_WIDTH = 27;
+            public static final int LAYOUT_CONSTRAINT_BASELINE_CREATOR = 43;
+            public static final int LAYOUT_CONSTRAINT_BASELINE_TO_BASELINE_OF = 16;
+            public static final int LAYOUT_CONSTRAINT_BASELINE_TO_BOTTOM_OF = 53;
+            public static final int LAYOUT_CONSTRAINT_BASELINE_TO_TOP_OF = 52;
+            public static final int LAYOUT_CONSTRAINT_BOTTOM_CREATOR = 42;
+            public static final int LAYOUT_CONSTRAINT_BOTTOM_TO_BOTTOM_OF = 15;
+            public static final int LAYOUT_CONSTRAINT_BOTTOM_TO_TOP_OF = 14;
+            public static final int LAYOUT_CONSTRAINT_CIRCLE = 2;
+            public static final int LAYOUT_CONSTRAINT_CIRCLE_ANGLE = 4;
+            public static final int LAYOUT_CONSTRAINT_CIRCLE_RADIUS = 3;
+            public static final int LAYOUT_CONSTRAINT_DIMENSION_RATIO = 44;
+            public static final int LAYOUT_CONSTRAINT_END_TO_END_OF = 20;
+            public static final int LAYOUT_CONSTRAINT_END_TO_START_OF = 19;
+            public static final int LAYOUT_CONSTRAINT_GUIDE_BEGIN = 5;
+            public static final int LAYOUT_CONSTRAINT_GUIDE_END = 6;
+            public static final int LAYOUT_CONSTRAINT_GUIDE_PERCENT = 7;
+            public static final int LAYOUT_CONSTRAINT_HEIGHT = 65;
+            public static final int LAYOUT_CONSTRAINT_HEIGHT_DEFAULT = 32;
+            public static final int LAYOUT_CONSTRAINT_HEIGHT_MAX = 37;
+            public static final int LAYOUT_CONSTRAINT_HEIGHT_MIN = 36;
+            public static final int LAYOUT_CONSTRAINT_HEIGHT_PERCENT = 38;
+            public static final int LAYOUT_CONSTRAINT_HORIZONTAL_BIAS = 29;
+            public static final int LAYOUT_CONSTRAINT_HORIZONTAL_CHAINSTYLE = 47;
+            public static final int LAYOUT_CONSTRAINT_HORIZONTAL_WEIGHT = 45;
+            public static final int LAYOUT_CONSTRAINT_LEFT_CREATOR = 39;
+            public static final int LAYOUT_CONSTRAINT_LEFT_TO_LEFT_OF = 8;
+            public static final int LAYOUT_CONSTRAINT_LEFT_TO_RIGHT_OF = 9;
+            public static final int LAYOUT_CONSTRAINT_RIGHT_CREATOR = 41;
+            public static final int LAYOUT_CONSTRAINT_RIGHT_TO_LEFT_OF = 10;
+            public static final int LAYOUT_CONSTRAINT_RIGHT_TO_RIGHT_OF = 11;
+            public static final int LAYOUT_CONSTRAINT_START_TO_END_OF = 17;
+            public static final int LAYOUT_CONSTRAINT_START_TO_START_OF = 18;
+            public static final int LAYOUT_CONSTRAINT_TAG = 51;
+            public static final int LAYOUT_CONSTRAINT_TOP_CREATOR = 40;
+            public static final int LAYOUT_CONSTRAINT_TOP_TO_BOTTOM_OF = 13;
+            public static final int LAYOUT_CONSTRAINT_TOP_TO_TOP_OF = 12;
+            public static final int LAYOUT_CONSTRAINT_VERTICAL_BIAS = 30;
+            public static final int LAYOUT_CONSTRAINT_VERTICAL_CHAINSTYLE = 48;
+            public static final int LAYOUT_CONSTRAINT_VERTICAL_WEIGHT = 46;
+            public static final int LAYOUT_CONSTRAINT_WIDTH = 64;
+            public static final int LAYOUT_CONSTRAINT_WIDTH_DEFAULT = 31;
+            public static final int LAYOUT_CONSTRAINT_WIDTH_MAX = 34;
+            public static final int LAYOUT_CONSTRAINT_WIDTH_MIN = 33;
+            public static final int LAYOUT_CONSTRAINT_WIDTH_PERCENT = 35;
+            public static final int LAYOUT_EDITOR_ABSOLUTEX = 49;
+            public static final int LAYOUT_EDITOR_ABSOLUTEY = 50;
+            public static final int LAYOUT_GONE_MARGIN_BASELINE = 55;
+            public static final int LAYOUT_GONE_MARGIN_BOTTOM = 24;
+            public static final int LAYOUT_GONE_MARGIN_END = 26;
+            public static final int LAYOUT_GONE_MARGIN_LEFT = 21;
+            public static final int LAYOUT_GONE_MARGIN_RIGHT = 23;
+            public static final int LAYOUT_GONE_MARGIN_START = 25;
+            public static final int LAYOUT_GONE_MARGIN_TOP = 22;
+            public static final int LAYOUT_MARGIN_BASELINE = 54;
+            public static final int LAYOUT_WRAP_BEHAVIOR_IN_PARENT = 66;
+            public static final int UNUSED = 0;
             public static final SparseIntArray map;
+
+            private Table() {
+            }
 
             static {
                 SparseIntArray sparseIntArray = new SparseIntArray();
                 map = sparseIntArray;
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintLeft_toLeftOf, 8);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintLeft_toRightOf, 9);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintRight_toLeftOf, 10);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintRight_toRightOf, 11);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintTop_toTopOf, 12);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintTop_toBottomOf, 13);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintBottom_toTopOf, 14);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintBottom_toBottomOf, 15);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintBaseline_toBaselineOf, 16);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintCircle, 2);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintCircleRadius, 3);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintCircleAngle, 4);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_editor_absoluteX, 49);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_editor_absoluteY, 50);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintGuide_begin, 5);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintGuide_end, 6);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintGuide_percent, 7);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_android_orientation, 1);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintStart_toEndOf, 17);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintStart_toStartOf, 18);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintEnd_toStartOf, 19);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintEnd_toEndOf, 20);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_goneMarginLeft, 21);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_goneMarginTop, 22);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_goneMarginRight, 23);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_goneMarginBottom, 24);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_goneMarginStart, 25);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_goneMarginEnd, 26);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintHorizontal_bias, 29);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintVertical_bias, 30);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintDimensionRatio, 44);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintHorizontal_weight, 45);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintVertical_weight, 46);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintHorizontal_chainStyle, 47);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintVertical_chainStyle, 48);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constrainedWidth, 27);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constrainedHeight, 28);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintWidth_default, 31);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintHeight_default, 32);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintWidth_min, 33);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintWidth_max, 34);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintWidth_percent, 35);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintHeight_min, 36);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintHeight_max, 37);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintHeight_percent, 38);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintLeft_creator, 39);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintTop_creator, 40);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintRight_creator, 41);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintBottom_creator, 42);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintBaseline_creator, 43);
-                sparseIntArray.append(R$styleable.ConstraintLayout_Layout_layout_constraintTag, 51);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintWidth, 64);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintHeight, 65);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintLeft_toLeftOf, 8);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintLeft_toRightOf, 9);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintRight_toLeftOf, 10);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintRight_toRightOf, 11);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintTop_toTopOf, 12);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintTop_toBottomOf, 13);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintBottom_toTopOf, 14);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintBottom_toBottomOf, 15);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintBaseline_toBaselineOf, 16);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintBaseline_toTopOf, 52);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintBaseline_toBottomOf, 53);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintCircle, 2);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintCircleRadius, 3);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintCircleAngle, 4);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_editor_absoluteX, 49);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_editor_absoluteY, 50);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintGuide_begin, 5);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintGuide_end, 6);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintGuide_percent, 7);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_android_orientation, 1);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintStart_toEndOf, 17);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintStart_toStartOf, 18);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintEnd_toStartOf, 19);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintEnd_toEndOf, 20);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_goneMarginLeft, 21);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_goneMarginTop, 22);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_goneMarginRight, 23);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_goneMarginBottom, 24);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_goneMarginStart, 25);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_goneMarginEnd, 26);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_goneMarginBaseline, 55);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_marginBaseline, 54);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintHorizontal_bias, 29);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintVertical_bias, 30);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintDimensionRatio, 44);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintHorizontal_weight, 45);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintVertical_weight, 46);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintHorizontal_chainStyle, 47);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintVertical_chainStyle, 48);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constrainedWidth, 27);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constrainedHeight, 28);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintWidth_default, 31);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintHeight_default, 32);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintWidth_min, 33);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintWidth_max, 34);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintWidth_percent, 35);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintHeight_min, 36);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintHeight_max, 37);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintHeight_percent, 38);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintLeft_creator, 39);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintTop_creator, 40);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintRight_creator, 41);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintBottom_creator, 42);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintBaseline_creator, 43);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_constraintTag, 51);
+                sparseIntArray.append(C0483R.styleable.ConstraintLayout_Layout_layout_wrapBehaviorInParent, 66);
             }
         }
 
         public LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            int i;
-            this.guideBegin = -1;
-            this.guideEnd = -1;
-            this.guidePercent = -1.0f;
-            this.leftToLeft = -1;
-            this.leftToRight = -1;
-            this.rightToLeft = -1;
-            this.rightToRight = -1;
-            this.topToTop = -1;
-            this.topToBottom = -1;
-            this.bottomToTop = -1;
-            this.bottomToBottom = -1;
-            this.baselineToBaseline = -1;
-            this.circleConstraint = -1;
-            this.circleRadius = 0;
-            this.circleAngle = 0.0f;
-            this.startToEnd = -1;
-            this.startToStart = -1;
-            this.endToStart = -1;
-            this.endToEnd = -1;
-            this.goneLeftMargin = -1;
-            this.goneTopMargin = -1;
-            this.goneRightMargin = -1;
-            this.goneBottomMargin = -1;
-            this.goneStartMargin = -1;
-            this.goneEndMargin = -1;
-            this.horizontalBias = 0.5f;
-            this.verticalBias = 0.5f;
-            this.dimensionRatio = null;
-            this.dimensionRatioValue = 0.0f;
-            this.dimensionRatioSide = 1;
-            this.horizontalWeight = -1.0f;
-            this.verticalWeight = -1.0f;
-            this.horizontalChainStyle = 0;
-            this.verticalChainStyle = 0;
-            this.matchConstraintDefaultWidth = 0;
-            this.matchConstraintDefaultHeight = 0;
-            this.matchConstraintMinWidth = 0;
-            this.matchConstraintMinHeight = 0;
-            this.matchConstraintMaxWidth = 0;
-            this.matchConstraintMaxHeight = 0;
-            this.matchConstraintPercentWidth = 1.0f;
-            this.matchConstraintPercentHeight = 1.0f;
-            this.editorAbsoluteX = -1;
-            this.editorAbsoluteY = -1;
-            this.orientation = -1;
-            this.constrainedWidth = false;
-            this.constrainedHeight = false;
-            this.constraintTag = null;
-            this.horizontalDimensionFixed = true;
-            this.verticalDimensionFixed = true;
-            this.needsBaseline = false;
-            this.isGuideline = false;
-            this.isHelper = false;
-            this.isInPlaceholder = false;
-            this.isVirtualGroup = false;
-            this.resolvedLeftToLeft = -1;
-            this.resolvedLeftToRight = -1;
-            this.resolvedRightToLeft = -1;
-            this.resolvedRightToRight = -1;
-            this.resolveGoneLeftMargin = -1;
-            this.resolveGoneRightMargin = -1;
-            this.resolvedHorizontalBias = 0.5f;
-            this.widget = new ConstraintWidget();
-            this.helped = false;
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.ConstraintLayout_Layout);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0483R.styleable.ConstraintLayout_Layout);
             int indexCount = obtainStyledAttributes.getIndexCount();
-            for (int i2 = 0; i2 < indexCount; i2++) {
-                int index = obtainStyledAttributes.getIndex(i2);
-                int i3 = Table.map.get(index);
-                switch (i3) {
+            for (int i = 0; i < indexCount; i++) {
+                int index = obtainStyledAttributes.getIndex(i);
+                int i2 = Table.map.get(index);
+                switch (i2) {
                     case 1:
                         this.orientation = obtainStyledAttributes.getInt(index, this.orientation);
                         break;
                     case 2:
                         int resourceId = obtainStyledAttributes.getResourceId(index, this.circleConstraint);
                         this.circleConstraint = resourceId;
-                        if (resourceId == -1) {
-                            this.circleConstraint = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId != -1) {
                             break;
                         } else {
+                            this.circleConstraint = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 3:
@@ -1465,10 +1415,10 @@ public class ConstraintLayout extends ViewGroup {
                     case 4:
                         float f = obtainStyledAttributes.getFloat(index, this.circleAngle) % 360.0f;
                         this.circleAngle = f;
-                        if (f < 0.0f) {
-                            this.circleAngle = (360.0f - f) % 360.0f;
+                        if (f >= 0.0f) {
                             break;
                         } else {
+                            this.circleAngle = (360.0f - f) % 360.0f;
                             break;
                         }
                     case 5:
@@ -1483,118 +1433,118 @@ public class ConstraintLayout extends ViewGroup {
                     case 8:
                         int resourceId2 = obtainStyledAttributes.getResourceId(index, this.leftToLeft);
                         this.leftToLeft = resourceId2;
-                        if (resourceId2 == -1) {
-                            this.leftToLeft = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId2 != -1) {
                             break;
                         } else {
+                            this.leftToLeft = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 9:
                         int resourceId3 = obtainStyledAttributes.getResourceId(index, this.leftToRight);
                         this.leftToRight = resourceId3;
-                        if (resourceId3 == -1) {
-                            this.leftToRight = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId3 != -1) {
                             break;
                         } else {
+                            this.leftToRight = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 10:
                         int resourceId4 = obtainStyledAttributes.getResourceId(index, this.rightToLeft);
                         this.rightToLeft = resourceId4;
-                        if (resourceId4 == -1) {
-                            this.rightToLeft = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId4 != -1) {
                             break;
                         } else {
+                            this.rightToLeft = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 11:
                         int resourceId5 = obtainStyledAttributes.getResourceId(index, this.rightToRight);
                         this.rightToRight = resourceId5;
-                        if (resourceId5 == -1) {
-                            this.rightToRight = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId5 != -1) {
                             break;
                         } else {
+                            this.rightToRight = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 12:
                         int resourceId6 = obtainStyledAttributes.getResourceId(index, this.topToTop);
                         this.topToTop = resourceId6;
-                        if (resourceId6 == -1) {
-                            this.topToTop = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId6 != -1) {
                             break;
                         } else {
+                            this.topToTop = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 13:
                         int resourceId7 = obtainStyledAttributes.getResourceId(index, this.topToBottom);
                         this.topToBottom = resourceId7;
-                        if (resourceId7 == -1) {
-                            this.topToBottom = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId7 != -1) {
                             break;
                         } else {
+                            this.topToBottom = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 14:
                         int resourceId8 = obtainStyledAttributes.getResourceId(index, this.bottomToTop);
                         this.bottomToTop = resourceId8;
-                        if (resourceId8 == -1) {
-                            this.bottomToTop = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId8 != -1) {
                             break;
                         } else {
+                            this.bottomToTop = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 15:
                         int resourceId9 = obtainStyledAttributes.getResourceId(index, this.bottomToBottom);
                         this.bottomToBottom = resourceId9;
-                        if (resourceId9 == -1) {
-                            this.bottomToBottom = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId9 != -1) {
                             break;
                         } else {
+                            this.bottomToBottom = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 16:
                         int resourceId10 = obtainStyledAttributes.getResourceId(index, this.baselineToBaseline);
                         this.baselineToBaseline = resourceId10;
-                        if (resourceId10 == -1) {
-                            this.baselineToBaseline = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId10 != -1) {
                             break;
                         } else {
+                            this.baselineToBaseline = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 17:
                         int resourceId11 = obtainStyledAttributes.getResourceId(index, this.startToEnd);
                         this.startToEnd = resourceId11;
-                        if (resourceId11 == -1) {
-                            this.startToEnd = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId11 != -1) {
                             break;
                         } else {
+                            this.startToEnd = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 18:
                         int resourceId12 = obtainStyledAttributes.getResourceId(index, this.startToStart);
                         this.startToStart = resourceId12;
-                        if (resourceId12 == -1) {
-                            this.startToStart = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId12 != -1) {
                             break;
                         } else {
+                            this.startToStart = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 19:
                         int resourceId13 = obtainStyledAttributes.getResourceId(index, this.endToStart);
                         this.endToStart = resourceId13;
-                        if (resourceId13 == -1) {
-                            this.endToStart = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId13 != -1) {
                             break;
                         } else {
+                            this.endToStart = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 20:
                         int resourceId14 = obtainStyledAttributes.getResourceId(index, this.endToEnd);
                         this.endToEnd = resourceId14;
-                        if (resourceId14 == -1) {
-                            this.endToEnd = obtainStyledAttributes.getInt(index, -1);
+                        if (resourceId14 != -1) {
                             break;
                         } else {
+                            this.endToEnd = obtainStyledAttributes.getInt(index, -1);
                             break;
                         }
                     case 21:
@@ -1628,21 +1578,21 @@ public class ConstraintLayout extends ViewGroup {
                         this.verticalBias = obtainStyledAttributes.getFloat(index, this.verticalBias);
                         break;
                     case 31:
-                        int i4 = obtainStyledAttributes.getInt(index, 0);
-                        this.matchConstraintDefaultWidth = i4;
-                        if (i4 == 1) {
-                            Log.e("ConstraintLayout", "layout_constraintWidth_default=\"wrap\" is deprecated.\nUse layout_width=\"WRAP_CONTENT\" and layout_constrainedWidth=\"true\" instead.");
+                        int i3 = obtainStyledAttributes.getInt(index, 0);
+                        this.matchConstraintDefaultWidth = i3;
+                        if (i3 != 1) {
                             break;
                         } else {
+                            Log.e(ConstraintLayout.TAG, "layout_constraintWidth_default=\"wrap\" is deprecated.\nUse layout_width=\"WRAP_CONTENT\" and layout_constrainedWidth=\"true\" instead.");
                             break;
                         }
                     case 32:
-                        int i5 = obtainStyledAttributes.getInt(index, 0);
-                        this.matchConstraintDefaultHeight = i5;
-                        if (i5 == 1) {
-                            Log.e("ConstraintLayout", "layout_constraintHeight_default=\"wrap\" is deprecated.\nUse layout_height=\"WRAP_CONTENT\" and layout_constrainedHeight=\"true\" instead.");
+                        int i4 = obtainStyledAttributes.getInt(index, 0);
+                        this.matchConstraintDefaultHeight = i4;
+                        if (i4 != 1) {
                             break;
                         } else {
+                            Log.e(ConstraintLayout.TAG, "layout_constraintHeight_default=\"wrap\" is deprecated.\nUse layout_height=\"WRAP_CONTENT\" and layout_constrainedHeight=\"true\" instead.");
                             break;
                         }
                     case 33:
@@ -1650,10 +1600,10 @@ public class ConstraintLayout extends ViewGroup {
                             this.matchConstraintMinWidth = obtainStyledAttributes.getDimensionPixelSize(index, this.matchConstraintMinWidth);
                             break;
                         } catch (Exception unused) {
-                            if (obtainStyledAttributes.getInt(index, this.matchConstraintMinWidth) == -2) {
-                                this.matchConstraintMinWidth = -2;
+                            if (obtainStyledAttributes.getInt(index, this.matchConstraintMinWidth) != -2) {
                                 break;
                             } else {
+                                this.matchConstraintMinWidth = -2;
                                 break;
                             }
                         }
@@ -1662,10 +1612,10 @@ public class ConstraintLayout extends ViewGroup {
                             this.matchConstraintMaxWidth = obtainStyledAttributes.getDimensionPixelSize(index, this.matchConstraintMaxWidth);
                             break;
                         } catch (Exception unused2) {
-                            if (obtainStyledAttributes.getInt(index, this.matchConstraintMaxWidth) == -2) {
-                                this.matchConstraintMaxWidth = -2;
+                            if (obtainStyledAttributes.getInt(index, this.matchConstraintMaxWidth) != -2) {
                                 break;
                             } else {
+                                this.matchConstraintMaxWidth = -2;
                                 break;
                             }
                         }
@@ -1678,10 +1628,10 @@ public class ConstraintLayout extends ViewGroup {
                             this.matchConstraintMinHeight = obtainStyledAttributes.getDimensionPixelSize(index, this.matchConstraintMinHeight);
                             break;
                         } catch (Exception unused3) {
-                            if (obtainStyledAttributes.getInt(index, this.matchConstraintMinHeight) == -2) {
-                                this.matchConstraintMinHeight = -2;
+                            if (obtainStyledAttributes.getInt(index, this.matchConstraintMinHeight) != -2) {
                                 break;
                             } else {
+                                this.matchConstraintMinHeight = -2;
                                 break;
                             }
                         }
@@ -1690,10 +1640,10 @@ public class ConstraintLayout extends ViewGroup {
                             this.matchConstraintMaxHeight = obtainStyledAttributes.getDimensionPixelSize(index, this.matchConstraintMaxHeight);
                             break;
                         } catch (Exception unused4) {
-                            if (obtainStyledAttributes.getInt(index, this.matchConstraintMaxHeight) == -2) {
-                                this.matchConstraintMaxHeight = -2;
+                            if (obtainStyledAttributes.getInt(index, this.matchConstraintMaxHeight) != -2) {
                                 break;
                             } else {
+                                this.matchConstraintMaxHeight = -2;
                                 break;
                             }
                         }
@@ -1702,81 +1652,69 @@ public class ConstraintLayout extends ViewGroup {
                         this.matchConstraintDefaultHeight = 2;
                         break;
                     default:
-                        switch (i3) {
+                        switch (i2) {
                             case 44:
-                                String string = obtainStyledAttributes.getString(index);
-                                this.dimensionRatio = string;
-                                this.dimensionRatioValue = Float.NaN;
-                                this.dimensionRatioSide = -1;
-                                if (string != null) {
-                                    int length = string.length();
-                                    int indexOf = this.dimensionRatio.indexOf(44);
-                                    if (indexOf <= 0 || indexOf >= length - 1) {
-                                        i = 0;
-                                    } else {
-                                        String substring = this.dimensionRatio.substring(0, indexOf);
-                                        if (substring.equalsIgnoreCase("W")) {
-                                            this.dimensionRatioSide = 0;
-                                        } else if (substring.equalsIgnoreCase("H")) {
-                                            this.dimensionRatioSide = 1;
-                                        }
-                                        i = indexOf + 1;
-                                    }
-                                    int indexOf2 = this.dimensionRatio.indexOf(58);
-                                    if (indexOf2 >= 0 && indexOf2 < length - 1) {
-                                        String substring2 = this.dimensionRatio.substring(i, indexOf2);
-                                        String substring3 = this.dimensionRatio.substring(indexOf2 + 1);
-                                        if (substring2.length() > 0 && substring3.length() > 0) {
-                                            try {
-                                                float parseFloat = Float.parseFloat(substring2);
-                                                float parseFloat2 = Float.parseFloat(substring3);
-                                                if (parseFloat > 0.0f && parseFloat2 > 0.0f) {
-                                                    if (this.dimensionRatioSide == 1) {
-                                                        this.dimensionRatioValue = Math.abs(parseFloat2 / parseFloat);
-                                                        break;
-                                                    } else {
-                                                        this.dimensionRatioValue = Math.abs(parseFloat / parseFloat2);
-                                                        break;
-                                                    }
-                                                }
-                                            } catch (NumberFormatException unused5) {
-                                                break;
-                                            }
-                                        }
-                                    } else {
-                                        String substring4 = this.dimensionRatio.substring(i);
-                                        if (substring4.length() > 0) {
-                                            this.dimensionRatioValue = Float.parseFloat(substring4);
-                                            break;
-                                        } else {
-                                            break;
-                                        }
-                                    }
-                                } else {
-                                    continue;
-                                }
+                                ConstraintSet.parseDimensionRatioString(this, obtainStyledAttributes.getString(index));
                                 break;
                             case 45:
                                 this.horizontalWeight = obtainStyledAttributes.getFloat(index, this.horizontalWeight);
-                                continue;
+                                break;
                             case 46:
                                 this.verticalWeight = obtainStyledAttributes.getFloat(index, this.verticalWeight);
-                                continue;
+                                break;
                             case 47:
                                 this.horizontalChainStyle = obtainStyledAttributes.getInt(index, 0);
-                                continue;
+                                break;
                             case 48:
                                 this.verticalChainStyle = obtainStyledAttributes.getInt(index, 0);
-                                continue;
+                                break;
                             case 49:
                                 this.editorAbsoluteX = obtainStyledAttributes.getDimensionPixelOffset(index, this.editorAbsoluteX);
-                                continue;
+                                break;
                             case 50:
                                 this.editorAbsoluteY = obtainStyledAttributes.getDimensionPixelOffset(index, this.editorAbsoluteY);
-                                continue;
+                                break;
                             case 51:
                                 this.constraintTag = obtainStyledAttributes.getString(index);
-                                continue;
+                                break;
+                            case 52:
+                                int resourceId15 = obtainStyledAttributes.getResourceId(index, this.baselineToTop);
+                                this.baselineToTop = resourceId15;
+                                if (resourceId15 != -1) {
+                                    break;
+                                } else {
+                                    this.baselineToTop = obtainStyledAttributes.getInt(index, -1);
+                                    break;
+                                }
+                            case 53:
+                                int resourceId16 = obtainStyledAttributes.getResourceId(index, this.baselineToBottom);
+                                this.baselineToBottom = resourceId16;
+                                if (resourceId16 != -1) {
+                                    break;
+                                } else {
+                                    this.baselineToBottom = obtainStyledAttributes.getInt(index, -1);
+                                    break;
+                                }
+                            case 54:
+                                this.baselineMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.baselineMargin);
+                                break;
+                            case 55:
+                                this.goneBaselineMargin = obtainStyledAttributes.getDimensionPixelSize(index, this.goneBaselineMargin);
+                                break;
+                            default:
+                                switch (i2) {
+                                    case 64:
+                                        ConstraintSet.parseDimensionConstraints(this, obtainStyledAttributes, index, 0);
+                                        this.widthSet = true;
+                                        break;
+                                    case 65:
+                                        ConstraintSet.parseDimensionConstraints(this, obtainStyledAttributes, index, 1);
+                                        this.heightSet = true;
+                                        break;
+                                    case 66:
+                                        this.wrapBehaviorInParent = obtainStyledAttributes.getInt(index, this.wrapBehaviorInParent);
+                                        break;
+                                }
                         }
                 }
             }
@@ -1788,376 +1726,221 @@ public class ConstraintLayout extends ViewGroup {
             this.isGuideline = false;
             this.horizontalDimensionFixed = true;
             this.verticalDimensionFixed = true;
-            int i = ((ViewGroup.MarginLayoutParams) this).width;
-            if (i == -2 && this.constrainedWidth) {
+            if (this.width == -2 && this.constrainedWidth) {
                 this.horizontalDimensionFixed = false;
                 if (this.matchConstraintDefaultWidth == 0) {
                     this.matchConstraintDefaultWidth = 1;
                 }
             }
-            int i2 = ((ViewGroup.MarginLayoutParams) this).height;
-            if (i2 == -2 && this.constrainedHeight) {
+            if (this.height == -2 && this.constrainedHeight) {
                 this.verticalDimensionFixed = false;
                 if (this.matchConstraintDefaultHeight == 0) {
                     this.matchConstraintDefaultHeight = 1;
                 }
             }
-            if (i == 0 || i == -1) {
+            if (this.width == 0 || this.width == -1) {
                 this.horizontalDimensionFixed = false;
-                if (i == 0 && this.matchConstraintDefaultWidth == 1) {
-                    ((ViewGroup.MarginLayoutParams) this).width = -2;
+                if (this.width == 0 && this.matchConstraintDefaultWidth == 1) {
+                    this.width = -2;
                     this.constrainedWidth = true;
                 }
             }
-            if (i2 == 0 || i2 == -1) {
+            if (this.height == 0 || this.height == -1) {
                 this.verticalDimensionFixed = false;
-                if (i2 == 0 && this.matchConstraintDefaultHeight == 1) {
-                    ((ViewGroup.MarginLayoutParams) this).height = -2;
+                if (this.height == 0 && this.matchConstraintDefaultHeight == 1) {
+                    this.height = -2;
                     this.constrainedHeight = true;
                 }
             }
-            if (this.guidePercent == -1.0f && this.guideBegin == -1 && this.guideEnd == -1) {
-                return;
+            if (this.guidePercent != -1.0f || this.guideBegin != -1 || this.guideEnd != -1) {
+                this.isGuideline = true;
+                this.horizontalDimensionFixed = true;
+                this.verticalDimensionFixed = true;
+                if (!(this.widget instanceof Guideline)) {
+                    this.widget = new Guideline();
+                }
+                ((Guideline) this.widget).setOrientation(this.orientation);
             }
-            this.isGuideline = true;
-            this.horizontalDimensionFixed = true;
-            this.verticalDimensionFixed = true;
-            if (!(this.widget instanceof androidx.constraintlayout.solver.widgets.Guideline)) {
-                this.widget = new androidx.constraintlayout.solver.widgets.Guideline();
-            }
-            ((androidx.constraintlayout.solver.widgets.Guideline) this.widget).setOrientation(this.orientation);
         }
 
         public LayoutParams(int i, int i2) {
             super(i, i2);
-            this.guideBegin = -1;
-            this.guideEnd = -1;
-            this.guidePercent = -1.0f;
-            this.leftToLeft = -1;
-            this.leftToRight = -1;
-            this.rightToLeft = -1;
-            this.rightToRight = -1;
-            this.topToTop = -1;
-            this.topToBottom = -1;
-            this.bottomToTop = -1;
-            this.bottomToBottom = -1;
-            this.baselineToBaseline = -1;
-            this.circleConstraint = -1;
-            this.circleRadius = 0;
-            this.circleAngle = 0.0f;
-            this.startToEnd = -1;
-            this.startToStart = -1;
-            this.endToStart = -1;
-            this.endToEnd = -1;
-            this.goneLeftMargin = -1;
-            this.goneTopMargin = -1;
-            this.goneRightMargin = -1;
-            this.goneBottomMargin = -1;
-            this.goneStartMargin = -1;
-            this.goneEndMargin = -1;
-            this.horizontalBias = 0.5f;
-            this.verticalBias = 0.5f;
-            this.dimensionRatio = null;
-            this.dimensionRatioValue = 0.0f;
-            this.dimensionRatioSide = 1;
-            this.horizontalWeight = -1.0f;
-            this.verticalWeight = -1.0f;
-            this.horizontalChainStyle = 0;
-            this.verticalChainStyle = 0;
-            this.matchConstraintDefaultWidth = 0;
-            this.matchConstraintDefaultHeight = 0;
-            this.matchConstraintMinWidth = 0;
-            this.matchConstraintMinHeight = 0;
-            this.matchConstraintMaxWidth = 0;
-            this.matchConstraintMaxHeight = 0;
-            this.matchConstraintPercentWidth = 1.0f;
-            this.matchConstraintPercentHeight = 1.0f;
-            this.editorAbsoluteX = -1;
-            this.editorAbsoluteY = -1;
-            this.orientation = -1;
-            this.constrainedWidth = false;
-            this.constrainedHeight = false;
-            this.constraintTag = null;
-            this.horizontalDimensionFixed = true;
-            this.verticalDimensionFixed = true;
-            this.needsBaseline = false;
-            this.isGuideline = false;
-            this.isHelper = false;
-            this.isInPlaceholder = false;
-            this.isVirtualGroup = false;
-            this.resolvedLeftToLeft = -1;
-            this.resolvedLeftToRight = -1;
-            this.resolvedRightToLeft = -1;
-            this.resolvedRightToRight = -1;
-            this.resolveGoneLeftMargin = -1;
-            this.resolveGoneRightMargin = -1;
-            this.resolvedHorizontalBias = 0.5f;
-            this.widget = new ConstraintWidget();
-            this.helped = false;
         }
 
         public LayoutParams(ViewGroup.LayoutParams layoutParams) {
             super(layoutParams);
-            this.guideBegin = -1;
-            this.guideEnd = -1;
-            this.guidePercent = -1.0f;
-            this.leftToLeft = -1;
-            this.leftToRight = -1;
-            this.rightToLeft = -1;
-            this.rightToRight = -1;
-            this.topToTop = -1;
-            this.topToBottom = -1;
-            this.bottomToTop = -1;
-            this.bottomToBottom = -1;
-            this.baselineToBaseline = -1;
-            this.circleConstraint = -1;
-            this.circleRadius = 0;
-            this.circleAngle = 0.0f;
-            this.startToEnd = -1;
-            this.startToStart = -1;
-            this.endToStart = -1;
-            this.endToEnd = -1;
-            this.goneLeftMargin = -1;
-            this.goneTopMargin = -1;
-            this.goneRightMargin = -1;
-            this.goneBottomMargin = -1;
-            this.goneStartMargin = -1;
-            this.goneEndMargin = -1;
-            this.horizontalBias = 0.5f;
-            this.verticalBias = 0.5f;
-            this.dimensionRatio = null;
-            this.dimensionRatioValue = 0.0f;
-            this.dimensionRatioSide = 1;
-            this.horizontalWeight = -1.0f;
-            this.verticalWeight = -1.0f;
-            this.horizontalChainStyle = 0;
-            this.verticalChainStyle = 0;
-            this.matchConstraintDefaultWidth = 0;
-            this.matchConstraintDefaultHeight = 0;
-            this.matchConstraintMinWidth = 0;
-            this.matchConstraintMinHeight = 0;
-            this.matchConstraintMaxWidth = 0;
-            this.matchConstraintMaxHeight = 0;
-            this.matchConstraintPercentWidth = 1.0f;
-            this.matchConstraintPercentHeight = 1.0f;
-            this.editorAbsoluteX = -1;
-            this.editorAbsoluteY = -1;
-            this.orientation = -1;
-            this.constrainedWidth = false;
-            this.constrainedHeight = false;
-            this.constraintTag = null;
-            this.horizontalDimensionFixed = true;
-            this.verticalDimensionFixed = true;
-            this.needsBaseline = false;
-            this.isGuideline = false;
-            this.isHelper = false;
-            this.isInPlaceholder = false;
-            this.isVirtualGroup = false;
-            this.resolvedLeftToLeft = -1;
-            this.resolvedLeftToRight = -1;
-            this.resolvedRightToLeft = -1;
-            this.resolvedRightToRight = -1;
-            this.resolveGoneLeftMargin = -1;
-            this.resolveGoneRightMargin = -1;
-            this.resolvedHorizontalBias = 0.5f;
-            this.widget = new ConstraintWidget();
-            this.helped = false;
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:14:0x0052  */
-        /* JADX WARN: Removed duplicated region for block: B:17:0x0059  */
-        /* JADX WARN: Removed duplicated region for block: B:20:0x0060  */
-        /* JADX WARN: Removed duplicated region for block: B:23:0x0066  */
-        /* JADX WARN: Removed duplicated region for block: B:26:0x006c  */
-        /* JADX WARN: Removed duplicated region for block: B:33:0x007e  */
-        /* JADX WARN: Removed duplicated region for block: B:34:0x0086  */
-        /* JADX WARN: Removed duplicated region for block: B:85:0x0098  */
-        /* JADX WARN: Removed duplicated region for block: B:8:0x003f  */
-        @Override // android.view.ViewGroup.MarginLayoutParams, android.view.ViewGroup.LayoutParams
-        @TargetApi(17)
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public void resolveLayoutDirection(int i) {
-            boolean z;
-            int i2;
-            int i3;
-            int i4;
-            int i5;
-            int i6 = ((ViewGroup.MarginLayoutParams) this).leftMargin;
-            int i7 = ((ViewGroup.MarginLayoutParams) this).rightMargin;
-            boolean z2 = false;
-            if (Build.VERSION.SDK_INT >= 17) {
-                super.resolveLayoutDirection(i);
-                if (1 == getLayoutDirection()) {
-                    z = true;
-                    this.resolvedRightToLeft = -1;
-                    this.resolvedRightToRight = -1;
-                    this.resolvedLeftToLeft = -1;
-                    this.resolvedLeftToRight = -1;
-                    this.resolveGoneLeftMargin = -1;
-                    this.resolveGoneRightMargin = -1;
-                    this.resolveGoneLeftMargin = this.goneLeftMargin;
-                    this.resolveGoneRightMargin = this.goneRightMargin;
-                    float f = this.horizontalBias;
-                    this.resolvedHorizontalBias = f;
-                    int i8 = this.guideBegin;
-                    this.resolvedGuideBegin = i8;
-                    int i9 = this.guideEnd;
-                    this.resolvedGuideEnd = i9;
-                    float f2 = this.guidePercent;
-                    this.resolvedGuidePercent = f2;
-                    if (!z) {
-                        int i10 = this.startToEnd;
-                        if (i10 != -1) {
-                            this.resolvedRightToLeft = i10;
-                        } else {
-                            int i11 = this.startToStart;
-                            if (i11 != -1) {
-                                this.resolvedRightToRight = i11;
-                            }
-                            i2 = this.endToStart;
-                            if (i2 != -1) {
-                                this.resolvedLeftToRight = i2;
-                                z2 = true;
-                            }
-                            i3 = this.endToEnd;
-                            if (i3 != -1) {
-                                this.resolvedLeftToLeft = i3;
-                                z2 = true;
-                            }
-                            i4 = this.goneStartMargin;
-                            if (i4 != -1) {
-                                this.resolveGoneRightMargin = i4;
-                            }
-                            i5 = this.goneEndMargin;
-                            if (i5 != -1) {
-                                this.resolveGoneLeftMargin = i5;
-                            }
-                            if (z2) {
-                                this.resolvedHorizontalBias = 1.0f - f;
-                            }
-                            if (this.isGuideline && this.orientation == 1) {
-                                if (f2 == -1.0f) {
-                                    this.resolvedGuidePercent = 1.0f - f2;
-                                    this.resolvedGuideBegin = -1;
-                                    this.resolvedGuideEnd = -1;
-                                } else if (i8 != -1) {
-                                    this.resolvedGuideEnd = i8;
-                                    this.resolvedGuideBegin = -1;
-                                    this.resolvedGuidePercent = -1.0f;
-                                } else if (i9 != -1) {
-                                    this.resolvedGuideBegin = i9;
-                                    this.resolvedGuideEnd = -1;
-                                    this.resolvedGuidePercent = -1.0f;
-                                }
-                            }
-                        }
-                        z2 = true;
-                        i2 = this.endToStart;
-                        if (i2 != -1) {
-                        }
-                        i3 = this.endToEnd;
-                        if (i3 != -1) {
-                        }
-                        i4 = this.goneStartMargin;
-                        if (i4 != -1) {
-                        }
-                        i5 = this.goneEndMargin;
-                        if (i5 != -1) {
-                        }
-                        if (z2) {
-                        }
-                        if (this.isGuideline) {
-                            if (f2 == -1.0f) {
-                            }
-                        }
-                    } else {
-                        int i12 = this.startToEnd;
-                        if (i12 != -1) {
-                            this.resolvedLeftToRight = i12;
-                        }
-                        int i13 = this.startToStart;
-                        if (i13 != -1) {
-                            this.resolvedLeftToLeft = i13;
-                        }
-                        int i14 = this.endToStart;
-                        if (i14 != -1) {
-                            this.resolvedRightToLeft = i14;
-                        }
-                        int i15 = this.endToEnd;
-                        if (i15 != -1) {
-                            this.resolvedRightToRight = i15;
-                        }
-                        int i16 = this.goneStartMargin;
-                        if (i16 != -1) {
-                            this.resolveGoneLeftMargin = i16;
-                        }
-                        int i17 = this.goneEndMargin;
-                        if (i17 != -1) {
-                            this.resolveGoneRightMargin = i17;
-                        }
-                    }
-                    if (this.endToStart == -1 || this.endToEnd != -1 || this.startToStart != -1 || this.startToEnd != -1) {
-                        return;
-                    }
-                    int i18 = this.rightToLeft;
-                    if (i18 != -1) {
-                        this.resolvedRightToLeft = i18;
-                        if (((ViewGroup.MarginLayoutParams) this).rightMargin <= 0 && i7 > 0) {
-                            ((ViewGroup.MarginLayoutParams) this).rightMargin = i7;
-                        }
-                    } else {
-                        int i19 = this.rightToRight;
-                        if (i19 != -1) {
-                            this.resolvedRightToRight = i19;
-                            if (((ViewGroup.MarginLayoutParams) this).rightMargin <= 0 && i7 > 0) {
-                                ((ViewGroup.MarginLayoutParams) this).rightMargin = i7;
-                            }
-                        }
-                    }
-                    int i20 = this.leftToLeft;
-                    if (i20 != -1) {
-                        this.resolvedLeftToLeft = i20;
-                        if (((ViewGroup.MarginLayoutParams) this).leftMargin > 0 || i6 <= 0) {
-                            return;
-                        }
-                        ((ViewGroup.MarginLayoutParams) this).leftMargin = i6;
-                        return;
-                    }
-                    int i21 = this.leftToRight;
-                    if (i21 == -1) {
-                        return;
-                    }
-                    this.resolvedLeftToRight = i21;
-                    if (((ViewGroup.MarginLayoutParams) this).leftMargin > 0 || i6 <= 0) {
-                        return;
-                    }
-                    ((ViewGroup.MarginLayoutParams) this).leftMargin = i6;
-                    return;
-                }
-            }
-            z = false;
-            this.resolvedRightToLeft = -1;
-            this.resolvedRightToRight = -1;
-            this.resolvedLeftToLeft = -1;
-            this.resolvedLeftToRight = -1;
-            this.resolveGoneLeftMargin = -1;
-            this.resolveGoneRightMargin = -1;
-            this.resolveGoneLeftMargin = this.goneLeftMargin;
-            this.resolveGoneRightMargin = this.goneRightMargin;
-            float f3 = this.horizontalBias;
-            this.resolvedHorizontalBias = f3;
-            int i82 = this.guideBegin;
-            this.resolvedGuideBegin = i82;
-            int i92 = this.guideEnd;
-            this.resolvedGuideEnd = i92;
-            float f22 = this.guidePercent;
-            this.resolvedGuidePercent = f22;
-            if (!z) {
-            }
-            if (this.endToStart == -1) {
-            }
+        /* JADX WARNING: Removed duplicated region for block: B:15:0x0048  */
+        /* JADX WARNING: Removed duplicated region for block: B:18:0x004f  */
+        /* JADX WARNING: Removed duplicated region for block: B:21:0x0056  */
+        /* JADX WARNING: Removed duplicated region for block: B:24:0x005c  */
+        /* JADX WARNING: Removed duplicated region for block: B:27:0x0062  */
+        /* JADX WARNING: Removed duplicated region for block: B:34:0x0074  */
+        /* JADX WARNING: Removed duplicated region for block: B:35:0x007c  */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public void resolveLayoutDirection(int r10) {
+            /*
+                r9 = this;
+                int r0 = r9.leftMargin
+                int r1 = r9.rightMargin
+                super.resolveLayoutDirection(r10)
+                int r10 = r9.getLayoutDirection()
+                r2 = 0
+                r3 = 1
+                if (r3 != r10) goto L_0x0011
+                r10 = r3
+                goto L_0x0012
+            L_0x0011:
+                r10 = r2
+            L_0x0012:
+                r4 = -1
+                r9.resolvedRightToLeft = r4
+                r9.resolvedRightToRight = r4
+                r9.resolvedLeftToLeft = r4
+                r9.resolvedLeftToRight = r4
+                int r5 = r9.goneLeftMargin
+                r9.resolveGoneLeftMargin = r5
+                int r5 = r9.goneRightMargin
+                r9.resolveGoneRightMargin = r5
+                float r5 = r9.horizontalBias
+                r9.resolvedHorizontalBias = r5
+                int r6 = r9.guideBegin
+                r9.resolvedGuideBegin = r6
+                int r7 = r9.guideEnd
+                r9.resolvedGuideEnd = r7
+                float r8 = r9.guidePercent
+                r9.resolvedGuidePercent = r8
+                if (r10 == 0) goto L_0x008e
+                int r10 = r9.startToEnd
+                if (r10 == r4) goto L_0x003d
+                r9.resolvedRightToLeft = r10
+            L_0x003b:
+                r2 = r3
+                goto L_0x0044
+            L_0x003d:
+                int r10 = r9.startToStart
+                if (r10 == r4) goto L_0x0044
+                r9.resolvedRightToRight = r10
+                goto L_0x003b
+            L_0x0044:
+                int r10 = r9.endToStart
+                if (r10 == r4) goto L_0x004b
+                r9.resolvedLeftToRight = r10
+                r2 = r3
+            L_0x004b:
+                int r10 = r9.endToEnd
+                if (r10 == r4) goto L_0x0052
+                r9.resolvedLeftToLeft = r10
+                r2 = r3
+            L_0x0052:
+                int r10 = r9.goneStartMargin
+                if (r10 == r4) goto L_0x0058
+                r9.resolveGoneRightMargin = r10
+            L_0x0058:
+                int r10 = r9.goneEndMargin
+                if (r10 == r4) goto L_0x005e
+                r9.resolveGoneLeftMargin = r10
+            L_0x005e:
+                r10 = 1065353216(0x3f800000, float:1.0)
+                if (r2 == 0) goto L_0x0066
+                float r2 = r10 - r5
+                r9.resolvedHorizontalBias = r2
+            L_0x0066:
+                boolean r2 = r9.isGuideline
+                if (r2 == 0) goto L_0x00b2
+                int r2 = r9.orientation
+                if (r2 != r3) goto L_0x00b2
+                r2 = -1082130432(0xffffffffbf800000, float:-1.0)
+                int r3 = (r8 > r2 ? 1 : (r8 == r2 ? 0 : -1))
+                if (r3 == 0) goto L_0x007c
+                float r10 = r10 - r8
+                r9.resolvedGuidePercent = r10
+                r9.resolvedGuideBegin = r4
+                r9.resolvedGuideEnd = r4
+                goto L_0x00b2
+            L_0x007c:
+                if (r6 == r4) goto L_0x0085
+                r9.resolvedGuideEnd = r6
+                r9.resolvedGuideBegin = r4
+                r9.resolvedGuidePercent = r2
+                goto L_0x00b2
+            L_0x0085:
+                if (r7 == r4) goto L_0x00b2
+                r9.resolvedGuideBegin = r7
+                r9.resolvedGuideEnd = r4
+                r9.resolvedGuidePercent = r2
+                goto L_0x00b2
+            L_0x008e:
+                int r10 = r9.startToEnd
+                if (r10 == r4) goto L_0x0094
+                r9.resolvedLeftToRight = r10
+            L_0x0094:
+                int r10 = r9.startToStart
+                if (r10 == r4) goto L_0x009a
+                r9.resolvedLeftToLeft = r10
+            L_0x009a:
+                int r10 = r9.endToStart
+                if (r10 == r4) goto L_0x00a0
+                r9.resolvedRightToLeft = r10
+            L_0x00a0:
+                int r10 = r9.endToEnd
+                if (r10 == r4) goto L_0x00a6
+                r9.resolvedRightToRight = r10
+            L_0x00a6:
+                int r10 = r9.goneStartMargin
+                if (r10 == r4) goto L_0x00ac
+                r9.resolveGoneLeftMargin = r10
+            L_0x00ac:
+                int r10 = r9.goneEndMargin
+                if (r10 == r4) goto L_0x00b2
+                r9.resolveGoneRightMargin = r10
+            L_0x00b2:
+                int r10 = r9.endToStart
+                if (r10 != r4) goto L_0x00fc
+                int r10 = r9.endToEnd
+                if (r10 != r4) goto L_0x00fc
+                int r10 = r9.startToStart
+                if (r10 != r4) goto L_0x00fc
+                int r10 = r9.startToEnd
+                if (r10 != r4) goto L_0x00fc
+                int r10 = r9.rightToLeft
+                if (r10 == r4) goto L_0x00d1
+                r9.resolvedRightToLeft = r10
+                int r10 = r9.rightMargin
+                if (r10 > 0) goto L_0x00df
+                if (r1 <= 0) goto L_0x00df
+                r9.rightMargin = r1
+                goto L_0x00df
+            L_0x00d1:
+                int r10 = r9.rightToRight
+                if (r10 == r4) goto L_0x00df
+                r9.resolvedRightToRight = r10
+                int r10 = r9.rightMargin
+                if (r10 > 0) goto L_0x00df
+                if (r1 <= 0) goto L_0x00df
+                r9.rightMargin = r1
+            L_0x00df:
+                int r10 = r9.leftToLeft
+                if (r10 == r4) goto L_0x00ee
+                r9.resolvedLeftToLeft = r10
+                int r10 = r9.leftMargin
+                if (r10 > 0) goto L_0x00fc
+                if (r0 <= 0) goto L_0x00fc
+                r9.leftMargin = r0
+                goto L_0x00fc
+            L_0x00ee:
+                int r10 = r9.leftToRight
+                if (r10 == r4) goto L_0x00fc
+                r9.resolvedLeftToRight = r10
+                int r10 = r9.leftMargin
+                if (r10 > 0) goto L_0x00fc
+                if (r0 <= 0) goto L_0x00fc
+                r9.leftMargin = r0
+            L_0x00fc:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.widget.ConstraintLayout.LayoutParams.resolveLayoutDirection(int):void");
         }
 
         public String getConstraintTag() {
@@ -2165,13 +1948,11 @@ public class ConstraintLayout extends ViewGroup {
         }
     }
 
-    @Override // android.view.View, android.view.ViewParent
     public void requestLayout() {
         markHierarchyDirty();
         super.requestLayout();
     }
 
-    @Override // android.view.View
     public void forceLayout() {
         markHierarchyDirty();
         super.forceLayout();

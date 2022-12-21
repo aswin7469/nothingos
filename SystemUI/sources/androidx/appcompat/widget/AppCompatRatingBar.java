@@ -5,13 +5,17 @@ import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.RatingBar;
-import androidx.appcompat.R$attr;
-/* loaded from: classes.dex */
+import androidx.appcompat.C0329R;
+
 public class AppCompatRatingBar extends RatingBar {
     private final AppCompatProgressBarHelper mAppCompatProgressBarHelper;
 
+    public AppCompatRatingBar(Context context) {
+        this(context, (AttributeSet) null);
+    }
+
     public AppCompatRatingBar(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, R$attr.ratingBarStyle);
+        this(context, attributeSet, C0329R.attr.ratingBarStyle);
     }
 
     public AppCompatRatingBar(Context context, AttributeSet attributeSet, int i) {
@@ -22,8 +26,8 @@ public class AppCompatRatingBar extends RatingBar {
         appCompatProgressBarHelper.loadFromAttributes(attributeSet, i);
     }
 
-    @Override // android.widget.RatingBar, android.widget.AbsSeekBar, android.widget.ProgressBar, android.view.View
-    protected synchronized void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public synchronized void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         Bitmap sampleTile = this.mAppCompatProgressBarHelper.getSampleTile();
         if (sampleTile != null) {

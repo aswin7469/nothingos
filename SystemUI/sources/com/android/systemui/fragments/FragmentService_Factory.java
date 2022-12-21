@@ -1,30 +1,31 @@
 package com.android.systemui.fragments;
 
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.fragments.FragmentService;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FragmentService_Factory implements Factory<FragmentService> {
     private final Provider<ConfigurationController> configurationControllerProvider;
+    private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<FragmentService.FragmentCreator.Factory> fragmentCreatorFactoryProvider;
 
-    public FragmentService_Factory(Provider<FragmentService.FragmentCreator.Factory> provider, Provider<ConfigurationController> provider2) {
+    public FragmentService_Factory(Provider<FragmentService.FragmentCreator.Factory> provider, Provider<ConfigurationController> provider2, Provider<DumpManager> provider3) {
         this.fragmentCreatorFactoryProvider = provider;
         this.configurationControllerProvider = provider2;
+        this.dumpManagerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public FragmentService mo1933get() {
-        return newInstance(this.fragmentCreatorFactoryProvider.mo1933get(), this.configurationControllerProvider.mo1933get());
+    public FragmentService get() {
+        return newInstance(this.fragmentCreatorFactoryProvider.get(), this.configurationControllerProvider.get(), this.dumpManagerProvider.get());
     }
 
-    public static FragmentService_Factory create(Provider<FragmentService.FragmentCreator.Factory> provider, Provider<ConfigurationController> provider2) {
-        return new FragmentService_Factory(provider, provider2);
+    public static FragmentService_Factory create(Provider<FragmentService.FragmentCreator.Factory> provider, Provider<ConfigurationController> provider2, Provider<DumpManager> provider3) {
+        return new FragmentService_Factory(provider, provider2, provider3);
     }
 
-    public static FragmentService newInstance(FragmentService.FragmentCreator.Factory factory, ConfigurationController configurationController) {
-        return new FragmentService(factory, configurationController);
+    public static FragmentService newInstance(FragmentService.FragmentCreator.Factory factory, ConfigurationController configurationController, DumpManager dumpManager) {
+        return new FragmentService(factory, configurationController, dumpManager);
     }
 }

@@ -3,42 +3,37 @@ package com.android.settingslib.net;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.content.Context;
-import android.net.INetworkStatsService;
 import android.net.NetworkPolicy;
 import android.net.NetworkPolicyManager;
 import android.net.NetworkTemplate;
-import android.os.RemoteException;
-import android.os.ServiceManager;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.Range;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.ArrayUtils;
 import java.time.ZonedDateTime;
 import java.util.Formatter;
 import java.util.Iterator;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class DataUsageController {
-    private static final boolean DEBUG = Log.isLoggable("DataUsageController", 3);
+    private static final boolean DEBUG = Log.isLoggable(TAG, 3);
+    private static final long MB_IN_BYTES = 1048576;
     private static final StringBuilder PERIOD_BUILDER;
     private static final Formatter PERIOD_FORMATTER;
+    private static final String TAG = "DataUsageController";
     private Callback mCallback;
     private final Context mContext;
     private NetworkNameProvider mNetworkController;
     private final NetworkStatsManager mNetworkStatsManager;
     private final NetworkPolicyManager mPolicyManager;
-    private final INetworkStatsService mStatsService = INetworkStatsService.Stub.asInterface(ServiceManager.getService("netstats"));
     private int mSubscriptionId = -1;
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onMobileDataEnabled(boolean z);
     }
 
-    /* loaded from: classes.dex */
     public static class DataUsageInfo {
         public String carrier;
         public long cycleEnd;
@@ -50,7 +45,6 @@ public class DataUsageController {
         public long warningLevel;
     }
 
-    /* loaded from: classes.dex */
     public interface NetworkNameProvider {
         String getMobileDataNetworkName();
     }
@@ -58,7 +52,7 @@ public class DataUsageController {
     static {
         StringBuilder sb = new StringBuilder(50);
         PERIOD_BUILDER = sb;
-        PERIOD_FORMATTER = new Formatter(sb, Locale.getDefault());
+        PERIOD_FORMATTER = new Formatter((Appendable) sb, Locale.getDefault());
     }
 
     public DataUsageController(Context context) {
@@ -71,8 +65,12 @@ public class DataUsageController {
         this.mNetworkController = networkNameProvider;
     }
 
+    public void setSubscriptionId(int i) {
+        this.mSubscriptionId = i;
+    }
+
     public long getDefaultWarningLevel() {
-        return this.mContext.getResources().getInteger(17694963) * 1048576;
+        return ((long) this.mContext.getResources().getInteger(17694978)) * 1048576;
     }
 
     public void setCallback(Callback callback) {
@@ -80,12 +78,16 @@ public class DataUsageController {
     }
 
     private DataUsageInfo warn(String str) {
-        Log.w("DataUsageController", "Failed to get data usage, " + str);
+        Log.w(TAG, "Failed to get data usage, " + str);
         return null;
     }
 
     public DataUsageInfo getDataUsageInfo() {
         return getDataUsageInfo(DataUsageUtils.getMobileTemplate(this.mContext, this.mSubscriptionId));
+    }
+
+    public DataUsageInfo getWifiDataUsageInfo() {
+        return getDataUsageInfo(new NetworkTemplate.Builder(4).build());
     }
 
     public DataUsageInfo getDataUsageInfo(NetworkTemplate networkTemplate) {
@@ -113,14 +115,9 @@ public class DataUsageController {
         dataUsageInfo.cycleStart = j;
         dataUsageInfo.cycleEnd = currentTimeMillis;
         if (findNetworkPolicy != null) {
-            long j3 = findNetworkPolicy.limitBytes;
-            if (j3 <= 0) {
-                j3 = 0;
-            }
-            dataUsageInfo.limitLevel = j3;
-            long j4 = findNetworkPolicy.warningBytes;
-            if (j4 > 0) {
-                j2 = j4;
+            dataUsageInfo.limitLevel = findNetworkPolicy.limitBytes > 0 ? findNetworkPolicy.limitBytes : 0;
+            if (findNetworkPolicy.warningBytes > 0) {
+                j2 = findNetworkPolicy.warningBytes;
             }
             dataUsageInfo.warningLevel = j2;
         } else {
@@ -133,17 +130,21 @@ public class DataUsageController {
         return dataUsageInfo;
     }
 
+    public long getHistoricalUsageLevel(NetworkTemplate networkTemplate) {
+        return getUsageLevel(networkTemplate, 0, System.currentTimeMillis());
+    }
+
     private long getUsageLevel(NetworkTemplate networkTemplate, long j, long j2) {
         try {
             NetworkStats.Bucket querySummaryForDevice = this.mNetworkStatsManager.querySummaryForDevice(networkTemplate, j, j2);
             if (querySummaryForDevice != null) {
                 return querySummaryForDevice.getRxBytes() + querySummaryForDevice.getTxBytes();
             }
-            Log.w("DataUsageController", "Failed to get data usage, no entry data");
-            return -1L;
-        } catch (RemoteException unused) {
-            Log.w("DataUsageController", "Failed to get data usage, remote call failed");
-            return -1L;
+            Log.w(TAG, "Failed to get data usage, no entry data");
+            return -1;
+        } catch (RuntimeException unused) {
+            Log.w(TAG, "Failed to get data usage, remote call failed");
+            return -1;
         }
     }
 
@@ -161,7 +162,13 @@ public class DataUsageController {
         return null;
     }
 
-    @VisibleForTesting
+    private static String statsBucketToString(NetworkStats.Bucket bucket) {
+        if (bucket == null) {
+            return null;
+        }
+        return "Entry[bucketDuration=" + (bucket.getEndTimeStamp() - bucket.getStartTimeStamp()) + ",bucketStart=" + bucket.getStartTimeStamp() + ",rxBytes=" + bucket.getRxBytes() + ",rxPackets=" + bucket.getRxPackets() + ",txBytes=" + bucket.getTxBytes() + ",txPackets=" + bucket.getTxPackets() + ']';
+    }
+
     public TelephonyManager getTelephonyManager() {
         int i = this.mSubscriptionId;
         if (!SubscriptionManager.isValidSubscriptionId(i)) {
@@ -177,7 +184,7 @@ public class DataUsageController {
     }
 
     public void setMobileDataEnabled(boolean z) {
-        Log.d("DataUsageController", "setMobileDataEnabled: enabled=" + z);
+        Log.d(TAG, "setMobileDataEnabled: enabled=" + z);
         getTelephonyManager().setDataEnabled(z);
         Callback callback = this.mCallback;
         if (callback != null) {
@@ -193,12 +200,27 @@ public class DataUsageController {
         return getTelephonyManager().isDataEnabled();
     }
 
+    static int getNetworkType(NetworkTemplate networkTemplate) {
+        if (networkTemplate == null) {
+            return -1;
+        }
+        int matchRule = networkTemplate.getMatchRule();
+        if (matchRule != 4) {
+            return matchRule != 5 ? 0 : 9;
+        }
+        return 1;
+    }
+
+    private String getActiveSubscriberId() {
+        return getTelephonyManager().getSubscriberId();
+    }
+
     private String formatDateRange(long j, long j2) {
         String formatter;
         StringBuilder sb = PERIOD_BUILDER;
         synchronized (sb) {
             sb.setLength(0);
-            formatter = DateUtils.formatDateRange(this.mContext, PERIOD_FORMATTER, j, j2, 65552, null).toString();
+            formatter = DateUtils.formatDateRange(this.mContext, PERIOD_FORMATTER, j, j2, 65552, (String) null).toString();
         }
         return formatter;
     }

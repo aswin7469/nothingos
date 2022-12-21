@@ -1,4 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt" android:ordering="together">
-    <objectAnimator android:interpolator="@drawable/res_0x7f08009f_fingerprint_dialog_fp_to_error__4__0" android:duration="167" android:startOffset="0" android:valueFrom="0" android:valueTo="1" android:valueType="floatType" android:propertyName="trimPathStart"/>
-</set>
+<pathInterpolator xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:pathData="M 0.0,0.0 c0.333,0 0.667,1 1.0,1.0"/>

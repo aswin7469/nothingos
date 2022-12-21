@@ -1,9 +1,21 @@
 package com.android.systemui.statusbar;
 
+import android.view.InsetsVisibilities;
 import android.view.View;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
-/* loaded from: classes.dex */
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public interface SysuiStatusBarStateController extends StatusBarStateController {
+    public static final int RANK_SHELF = 3;
+    public static final int RANK_STACK_SCROLLER = 2;
+    public static final int RANK_STATUS_BAR = 0;
+    public static final int RANK_STATUS_BAR_WINDOW_CONTROLLER = 1;
+
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SbStateListenerRank {
+    }
+
     @Deprecated
     void addCallback(StatusBarStateController.StateListener stateListener, int i);
 
@@ -21,7 +33,7 @@ public interface SysuiStatusBarStateController extends StatusBarStateController 
 
     void setAndInstrumentDozeAmount(View view, float f, boolean z);
 
-    void setFullscreenState(boolean z);
+    void setDozeAmount(float f, boolean z);
 
     boolean setIsDozing(boolean z);
 
@@ -35,19 +47,20 @@ public interface SysuiStatusBarStateController extends StatusBarStateController 
 
     boolean setState(int i, boolean z);
 
+    void setSystemBarAttributes(int i, int i2, InsetsVisibilities insetsVisibilities, String str);
+
     void setUpcomingState(int i);
 
-    default boolean setState(int i) {
+    boolean setState(int i) {
         return setState(i, false);
     }
 
-    /* loaded from: classes.dex */
     public static class RankedListener {
         final StatusBarStateController.StateListener mListener;
-        final int mRank;
+        /* access modifiers changed from: package-private */
+        public final int mRank;
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        public RankedListener(StatusBarStateController.StateListener stateListener, int i) {
+        RankedListener(StatusBarStateController.StateListener stateListener, int i) {
             this.mListener = stateListener;
             this.mRank = i;
         }

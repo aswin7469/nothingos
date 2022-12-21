@@ -7,10 +7,10 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.phone.DozeParameters;
-import com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController;
+import com.android.systemui.statusbar.phone.ScreenOffAnimationController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class KeyguardUserSwitcherController_Factory implements Factory<KeyguardUserSwitcherController> {
     private final Provider<Context> contextProvider;
     private final Provider<DozeParameters> dozeParametersProvider;
@@ -20,11 +20,11 @@ public final class KeyguardUserSwitcherController_Factory implements Factory<Key
     private final Provider<LayoutInflater> layoutInflaterProvider;
     private final Provider<Resources> resourcesProvider;
     private final Provider<ScreenLifecycle> screenLifecycleProvider;
+    private final Provider<ScreenOffAnimationController> screenOffAnimationControllerProvider;
     private final Provider<SysuiStatusBarStateController> statusBarStateControllerProvider;
-    private final Provider<UnlockedScreenOffAnimationController> unlockedScreenOffAnimationControllerProvider;
     private final Provider<UserSwitcherController> userSwitcherControllerProvider;
 
-    public KeyguardUserSwitcherController_Factory(Provider<KeyguardUserSwitcherView> provider, Provider<Context> provider2, Provider<Resources> provider3, Provider<LayoutInflater> provider4, Provider<ScreenLifecycle> provider5, Provider<UserSwitcherController> provider6, Provider<KeyguardStateController> provider7, Provider<SysuiStatusBarStateController> provider8, Provider<KeyguardUpdateMonitor> provider9, Provider<DozeParameters> provider10, Provider<UnlockedScreenOffAnimationController> provider11) {
+    public KeyguardUserSwitcherController_Factory(Provider<KeyguardUserSwitcherView> provider, Provider<Context> provider2, Provider<Resources> provider3, Provider<LayoutInflater> provider4, Provider<ScreenLifecycle> provider5, Provider<UserSwitcherController> provider6, Provider<KeyguardStateController> provider7, Provider<SysuiStatusBarStateController> provider8, Provider<KeyguardUpdateMonitor> provider9, Provider<DozeParameters> provider10, Provider<ScreenOffAnimationController> provider11) {
         this.keyguardUserSwitcherViewProvider = provider;
         this.contextProvider = provider2;
         this.resourcesProvider = provider3;
@@ -35,20 +35,18 @@ public final class KeyguardUserSwitcherController_Factory implements Factory<Key
         this.statusBarStateControllerProvider = provider8;
         this.keyguardUpdateMonitorProvider = provider9;
         this.dozeParametersProvider = provider10;
-        this.unlockedScreenOffAnimationControllerProvider = provider11;
+        this.screenOffAnimationControllerProvider = provider11;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardUserSwitcherController mo1933get() {
-        return newInstance(this.keyguardUserSwitcherViewProvider.mo1933get(), this.contextProvider.mo1933get(), this.resourcesProvider.mo1933get(), this.layoutInflaterProvider.mo1933get(), this.screenLifecycleProvider.mo1933get(), this.userSwitcherControllerProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.keyguardUpdateMonitorProvider.mo1933get(), this.dozeParametersProvider.mo1933get(), this.unlockedScreenOffAnimationControllerProvider.mo1933get());
+    public KeyguardUserSwitcherController get() {
+        return newInstance(this.keyguardUserSwitcherViewProvider.get(), this.contextProvider.get(), this.resourcesProvider.get(), this.layoutInflaterProvider.get(), this.screenLifecycleProvider.get(), this.userSwitcherControllerProvider.get(), this.keyguardStateControllerProvider.get(), this.statusBarStateControllerProvider.get(), this.keyguardUpdateMonitorProvider.get(), this.dozeParametersProvider.get(), this.screenOffAnimationControllerProvider.get());
     }
 
-    public static KeyguardUserSwitcherController_Factory create(Provider<KeyguardUserSwitcherView> provider, Provider<Context> provider2, Provider<Resources> provider3, Provider<LayoutInflater> provider4, Provider<ScreenLifecycle> provider5, Provider<UserSwitcherController> provider6, Provider<KeyguardStateController> provider7, Provider<SysuiStatusBarStateController> provider8, Provider<KeyguardUpdateMonitor> provider9, Provider<DozeParameters> provider10, Provider<UnlockedScreenOffAnimationController> provider11) {
+    public static KeyguardUserSwitcherController_Factory create(Provider<KeyguardUserSwitcherView> provider, Provider<Context> provider2, Provider<Resources> provider3, Provider<LayoutInflater> provider4, Provider<ScreenLifecycle> provider5, Provider<UserSwitcherController> provider6, Provider<KeyguardStateController> provider7, Provider<SysuiStatusBarStateController> provider8, Provider<KeyguardUpdateMonitor> provider9, Provider<DozeParameters> provider10, Provider<ScreenOffAnimationController> provider11) {
         return new KeyguardUserSwitcherController_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11);
     }
 
-    public static KeyguardUserSwitcherController newInstance(KeyguardUserSwitcherView keyguardUserSwitcherView, Context context, Resources resources, LayoutInflater layoutInflater, ScreenLifecycle screenLifecycle, UserSwitcherController userSwitcherController, KeyguardStateController keyguardStateController, SysuiStatusBarStateController sysuiStatusBarStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, DozeParameters dozeParameters, UnlockedScreenOffAnimationController unlockedScreenOffAnimationController) {
-        return new KeyguardUserSwitcherController(keyguardUserSwitcherView, context, resources, layoutInflater, screenLifecycle, userSwitcherController, keyguardStateController, sysuiStatusBarStateController, keyguardUpdateMonitor, dozeParameters, unlockedScreenOffAnimationController);
+    public static KeyguardUserSwitcherController newInstance(KeyguardUserSwitcherView keyguardUserSwitcherView, Context context, Resources resources, LayoutInflater layoutInflater, ScreenLifecycle screenLifecycle, UserSwitcherController userSwitcherController, KeyguardStateController keyguardStateController, SysuiStatusBarStateController sysuiStatusBarStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, DozeParameters dozeParameters, ScreenOffAnimationController screenOffAnimationController) {
+        return new KeyguardUserSwitcherController(keyguardUserSwitcherView, context, resources, layoutInflater, screenLifecycle, userSwitcherController, keyguardStateController, sysuiStatusBarStateController, keyguardUpdateMonitor, dozeParameters, screenOffAnimationController);
     }
 }

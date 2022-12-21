@@ -1,11 +1,9 @@
 package com.android.systemui.statusbar.notification.row;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class NotifInflationErrorManager_Factory implements Factory<NotifInflationErrorManager> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotifInflationErrorManager mo1933get() {
+    public NotifInflationErrorManager get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class NotifInflationErrorManager_Factory implements Factory<NotifIn
         return new NotifInflationErrorManager();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final NotifInflationErrorManager_Factory INSTANCE = new NotifInflationErrorManager_Factory();
+        /* access modifiers changed from: private */
+        public static final NotifInflationErrorManager_Factory INSTANCE = new NotifInflationErrorManager_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

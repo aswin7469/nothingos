@@ -17,6 +17,8 @@
         <item>Com a màxim 3 processos</item>
         <item>Com a màxim 4 processos</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -67,6 +69,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Utilitza la selecció del sistema (predeterminada)</item>
@@ -74,6 +78,8 @@
         <item>48,0 kHz</item>
         <item>88,2 kHz</item>
         <item>96,0 kHz</item>
+        <item>176,4 kHz</item>
+        <item>192,0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Utilitza la selecció del sistema (predeterminada)</item>
@@ -84,6 +90,10 @@
         <item>LDAC</item>
         <item>Àudio Qualcomm® aptX™ Adaptive</item>
         <item>Àudio Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Utilitza la selecció del sistema (predeterminada)</item>
@@ -94,6 +104,10 @@
         <item>LDAC</item>
         <item>Àudio Qualcomm® aptX™ Adaptive</item>
         <item>Àudio Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -264,6 +278,11 @@
         <item>Desactivat</item>
         <item>Activat</item>
     </array>
+    <array name="tile_states_color_correction">
+        <item>No disponible</item>
+        <item>Desactivat</item>
+        <item>Activada</item>
+    </array>
     <array name="tile_states_controls">
         <item>No disponible</item>
         <item>Desactivat</item>
@@ -310,6 +329,16 @@
         <item>Activat</item>
     </array>
     <array name="tile_states_night">
+        <item>No disponible</item>
+        <item>Desactivat</item>
+        <item>Activat</item>
+    </array>
+    <array name="tile_states_onehanded">
+        <item>No disponible</item>
+        <item>Desactivat</item>
+        <item>Activat</item>
+    </array>
+    <array name="tile_states_qr_code_scanner">
         <item>No disponible</item>
         <item>Desactivat</item>
         <item>Activat</item>
@@ -379,6 +408,12 @@
         <item>Molt veloç</item>
         <item>Màxima</item>
     </array>
+    <array name="udfps_accessibility_touch_hints">
+        <item>Mou cap a l&apos;esquerra</item>
+        <item>Mou cap avall</item>
+        <item>Mou cap a la dreta</item>
+        <item>Mou cap amunt</item>
+    </array>
     <array name="usb_configuration_titles">
         <item>S&apos;està carregant</item>
         <item>MTP (protocol de transferència de fitxers multimèdia)</item>
@@ -421,7 +456,7 @@
         <item>S&apos;està connectant…</item>
         <item>S&apos;està autenticant…</item>
         <item>S&apos;està obtenint l&apos;adreça IP…</item>
-        <item>Connectada</item>
+        <item>Connectat</item>
         <item>Suspesa</item>
         <item>S&apos;està desconnectant…</item>
         <item>Desconnectada</item>

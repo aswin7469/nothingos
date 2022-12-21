@@ -1,5 +1,5 @@
 package com.google.gson.internal;
-/* loaded from: classes2.dex */
+
 public final class JavaVersion {
     private static final int majorJavaVersion = determineMajorJavaVersion();
 
@@ -50,5 +50,8 @@ public final class JavaVersion {
 
     public static boolean isJava9OrLater() {
         return majorJavaVersion >= 9;
+    }
+
+    private JavaVersion() {
     }
 }

@@ -1,30 +1,31 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
-import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.dump.DumpManager;
+import com.android.systemui.statusbar.phone.LightBarTransitionsController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DarkIconDispatcherImpl_Factory implements Factory<DarkIconDispatcherImpl> {
-    private final Provider<CommandQueue> commandQueueProvider;
     private final Provider<Context> contextProvider;
+    private final Provider<DumpManager> dumpManagerProvider;
+    private final Provider<LightBarTransitionsController.Factory> lightBarTransitionsControllerFactoryProvider;
 
-    public DarkIconDispatcherImpl_Factory(Provider<Context> provider, Provider<CommandQueue> provider2) {
+    public DarkIconDispatcherImpl_Factory(Provider<Context> provider, Provider<LightBarTransitionsController.Factory> provider2, Provider<DumpManager> provider3) {
         this.contextProvider = provider;
-        this.commandQueueProvider = provider2;
+        this.lightBarTransitionsControllerFactoryProvider = provider2;
+        this.dumpManagerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DarkIconDispatcherImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.commandQueueProvider.mo1933get());
+    public DarkIconDispatcherImpl get() {
+        return newInstance(this.contextProvider.get(), this.lightBarTransitionsControllerFactoryProvider.get(), this.dumpManagerProvider.get());
     }
 
-    public static DarkIconDispatcherImpl_Factory create(Provider<Context> provider, Provider<CommandQueue> provider2) {
-        return new DarkIconDispatcherImpl_Factory(provider, provider2);
+    public static DarkIconDispatcherImpl_Factory create(Provider<Context> provider, Provider<LightBarTransitionsController.Factory> provider2, Provider<DumpManager> provider3) {
+        return new DarkIconDispatcherImpl_Factory(provider, provider2, provider3);
     }
 
-    public static DarkIconDispatcherImpl newInstance(Context context, CommandQueue commandQueue) {
-        return new DarkIconDispatcherImpl(context, commandQueue);
+    public static DarkIconDispatcherImpl newInstance(Context context, LightBarTransitionsController.Factory factory, DumpManager dumpManager) {
+        return new DarkIconDispatcherImpl(context, factory, dumpManager);
     }
 }

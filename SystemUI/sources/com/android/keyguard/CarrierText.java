@@ -7,34 +7,35 @@ import android.text.method.SingleLineTransformationMethod;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.R$styleable;
+import com.android.systemui.C1893R;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class CarrierText extends TextView {
     private final boolean mShowAirplaneMode;
     private final boolean mShowMissingSim;
 
     public CarrierText(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
+    /* JADX INFO: finally extract failed */
     public CarrierText(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, R$styleable.CarrierText, 0, 0);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, C1893R.styleable.CarrierText, 0, 0);
         try {
-            boolean z = obtainStyledAttributes.getBoolean(R$styleable.CarrierText_allCaps, false);
-            this.mShowAirplaneMode = obtainStyledAttributes.getBoolean(R$styleable.CarrierText_showAirplaneMode, false);
-            this.mShowMissingSim = obtainStyledAttributes.getBoolean(R$styleable.CarrierText_showMissingSim, false);
+            boolean z = obtainStyledAttributes.getBoolean(0, false);
+            this.mShowAirplaneMode = obtainStyledAttributes.getBoolean(1, false);
+            this.mShowMissingSim = obtainStyledAttributes.getBoolean(2, false);
             obtainStyledAttributes.recycle();
-            setTransformationMethod(new CarrierTextTransformationMethod(((TextView) this).mContext, z));
+            setTransformationMethod(new CarrierTextTransformationMethod(this.mContext, z));
         } catch (Throwable th) {
             obtainStyledAttributes.recycle();
             throw th;
         }
     }
 
-    @Override // android.widget.TextView, android.view.View
-    protected void onVisibilityChanged(View view, int i) {
+    /* access modifiers changed from: protected */
+    public void onVisibilityChanged(View view, int i) {
         super.onVisibilityChanged(view, i);
         if (i == 0) {
             setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -51,7 +52,6 @@ public class CarrierText extends TextView {
         return this.mShowMissingSim;
     }
 
-    /* loaded from: classes.dex */
     private static class CarrierTextTransformationMethod extends SingleLineTransformationMethod {
         private final boolean mAllCaps;
         private final Locale mLocale;
@@ -61,7 +61,6 @@ public class CarrierText extends TextView {
             this.mAllCaps = z;
         }
 
-        @Override // android.text.method.ReplacementTransformationMethod, android.text.method.TransformationMethod
         public CharSequence getTransformation(CharSequence charSequence, View view) {
             CharSequence transformation = super.getTransformation(charSequence, view);
             return (!this.mAllCaps || transformation == null) ? transformation : transformation.toString().toUpperCase(this.mLocale);

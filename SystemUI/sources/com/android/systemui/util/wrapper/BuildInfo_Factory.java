@@ -1,11 +1,9 @@
 package com.android.systemui.util.wrapper;
 
 import dagger.internal.Factory;
-/* loaded from: classes2.dex */
+
 public final class BuildInfo_Factory implements Factory<BuildInfo> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public BuildInfo mo1933get() {
+    public BuildInfo get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class BuildInfo_Factory implements Factory<BuildInfo> {
         return new BuildInfo();
     }
 
-    /* loaded from: classes2.dex */
     private static final class InstanceHolder {
-        private static final BuildInfo_Factory INSTANCE = new BuildInfo_Factory();
+        /* access modifiers changed from: private */
+        public static final BuildInfo_Factory INSTANCE = new BuildInfo_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

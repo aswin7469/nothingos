@@ -5,69 +5,77 @@ import android.util.ArraySet;
 import android.util.SparseBooleanArray;
 import com.android.systemui.statusbar.policy.IndividualSensorPrivacyController;
 import java.util.Set;
-/* loaded from: classes2.dex */
+
 public class IndividualSensorPrivacyControllerImpl implements IndividualSensorPrivacyController {
     private static final int[] SENSORS = {2, 1};
-    private final SensorPrivacyManager mSensorPrivacyManager;
-    private final SparseBooleanArray mState = new SparseBooleanArray();
     private final Set<IndividualSensorPrivacyController.Callback> mCallbacks = new ArraySet();
+    private final SparseBooleanArray mHardwareToggleState = new SparseBooleanArray();
+    private Boolean mRequiresAuthentication;
+    private final SensorPrivacyManager mSensorPrivacyManager;
+    private final SparseBooleanArray mSoftwareToggleState = new SparseBooleanArray();
 
     public IndividualSensorPrivacyControllerImpl(SensorPrivacyManager sensorPrivacyManager) {
         this.mSensorPrivacyManager = sensorPrivacyManager;
     }
 
-    @Override // com.android.systemui.statusbar.policy.IndividualSensorPrivacyController
     public void init() {
-        int[] iArr;
-        for (final int i : SENSORS) {
-            this.mSensorPrivacyManager.addSensorPrivacyListener(i, new SensorPrivacyManager.OnSensorPrivacyChangedListener() { // from class: com.android.systemui.statusbar.policy.IndividualSensorPrivacyControllerImpl$$ExternalSyntheticLambda0
-                public final void onSensorPrivacyChanged(int i2, boolean z) {
-                    IndividualSensorPrivacyControllerImpl.this.lambda$init$0(i, i2, z);
-                }
-            });
-            this.mState.put(i, this.mSensorPrivacyManager.isSensorPrivacyEnabled(i));
+        this.mSensorPrivacyManager.addSensorPrivacyListener(new SensorPrivacyManager.OnSensorPrivacyChangedListener() {
+            public void onSensorPrivacyChanged(int i, boolean z) {
+            }
+
+            public void onSensorPrivacyChanged(SensorPrivacyManager.OnSensorPrivacyChangedListener.SensorPrivacyChangedParams sensorPrivacyChangedParams) {
+                IndividualSensorPrivacyControllerImpl.this.onSensorPrivacyChanged(sensorPrivacyChangedParams.getSensor(), sensorPrivacyChangedParams.getToggleType(), sensorPrivacyChangedParams.isEnabled());
+            }
+        });
+        for (int i : SENSORS) {
+            boolean isSensorPrivacyEnabled = this.mSensorPrivacyManager.isSensorPrivacyEnabled(1, i);
+            boolean isSensorPrivacyEnabled2 = this.mSensorPrivacyManager.isSensorPrivacyEnabled(2, i);
+            this.mSoftwareToggleState.put(i, isSensorPrivacyEnabled);
+            this.mHardwareToggleState.put(i, isSensorPrivacyEnabled2);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$init$0(int i, int i2, boolean z) {
-        onSensorPrivacyChanged(i, z);
-    }
-
-    @Override // com.android.systemui.statusbar.policy.IndividualSensorPrivacyController
     public boolean supportsSensorToggle(int i) {
         return this.mSensorPrivacyManager.supportsSensorToggle(i);
     }
 
-    @Override // com.android.systemui.statusbar.policy.IndividualSensorPrivacyController
     public boolean isSensorBlocked(int i) {
-        return this.mState.get(i, false);
+        return this.mSoftwareToggleState.get(i, false) || this.mHardwareToggleState.get(i, false);
     }
 
-    @Override // com.android.systemui.statusbar.policy.IndividualSensorPrivacyController
+    public boolean isSensorBlockedByHardwareToggle(int i) {
+        return this.mHardwareToggleState.get(i, false);
+    }
+
     public void setSensorBlocked(int i, int i2, boolean z) {
         this.mSensorPrivacyManager.setSensorPrivacyForProfileGroup(i, i2, z);
     }
 
-    @Override // com.android.systemui.statusbar.policy.IndividualSensorPrivacyController
     public void suppressSensorPrivacyReminders(int i, boolean z) {
         this.mSensorPrivacyManager.suppressSensorPrivacyReminders(i, z);
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
+    public boolean requiresAuthentication() {
+        return this.mSensorPrivacyManager.requiresAuthentication();
+    }
+
     public void addCallback(IndividualSensorPrivacyController.Callback callback) {
         this.mCallbacks.add(callback);
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void removeCallback(IndividualSensorPrivacyController.Callback callback) {
         this.mCallbacks.remove(callback);
     }
 
-    private void onSensorPrivacyChanged(int i, boolean z) {
-        this.mState.put(i, z);
-        for (IndividualSensorPrivacyController.Callback callback : this.mCallbacks) {
-            callback.onSensorBlockedChanged(i, z);
+    /* access modifiers changed from: private */
+    public void onSensorPrivacyChanged(int i, int i2, boolean z) {
+        if (i2 == 1) {
+            this.mSoftwareToggleState.put(i, z);
+        } else if (i2 == 2) {
+            this.mHardwareToggleState.put(i, z);
+        }
+        for (IndividualSensorPrivacyController.Callback onSensorBlockedChanged : this.mCallbacks) {
+            onSensorBlockedChanged.onSensorBlockedChanged(i, isSensorBlocked(i));
         }
     }
 }

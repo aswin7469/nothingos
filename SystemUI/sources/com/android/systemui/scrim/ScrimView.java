@@ -11,18 +11,16 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.core.graphics.ColorUtils;
-import com.android.internal.annotations.GuardedBy;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.colorextraction.ColorExtractor;
-import com.android.systemui.screenshot.SaveImageInBackgroundTask$$ExternalSyntheticLambda0;
+import com.android.systemui.screenshot.SaveImageInBackgroundTask$$ExternalSyntheticLambda1;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+
 public class ScrimView extends View {
+    private boolean mBlendWithMainColor;
     private Runnable mChangeRunnable;
     private Executor mChangeRunnableExecutor;
     private PorterDuffColorFilter mColorFilter;
     private final Object mColorLock;
-    @GuardedBy({"mColorLock"})
     private final ColorExtractor.GradientColors mColors;
     private Drawable mDrawable;
     private Rect mDrawableBounds;
@@ -32,17 +30,17 @@ public class ScrimView extends View {
     private final ColorExtractor.GradientColors mTmpColors;
     private float mViewAlpha;
 
-    protected boolean canReceivePointerEvents() {
+    /* access modifiers changed from: protected */
+    public boolean canReceivePointerEvents() {
         return false;
     }
 
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
     }
 
     public ScrimView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public ScrimView(Context context, AttributeSet attributeSet) {
@@ -58,22 +56,19 @@ public class ScrimView extends View {
         this.mColorLock = new Object();
         this.mTmpColors = new ColorExtractor.GradientColors();
         this.mViewAlpha = 1.0f;
+        this.mBlendWithMainColor = true;
         ScrimDrawable scrimDrawable = new ScrimDrawable();
         this.mDrawable = scrimDrawable;
         scrimDrawable.setCallback(this);
         this.mColors = new ColorExtractor.GradientColors();
         this.mExecutorLooper = Looper.myLooper();
-        this.mExecutor = SaveImageInBackgroundTask$$ExternalSyntheticLambda0.INSTANCE;
-        executeOnExecutor(new Runnable() { // from class: com.android.systemui.scrim.ScrimView$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                ScrimView.this.lambda$new$0();
-            }
-        });
+        this.mExecutor = new SaveImageInBackgroundTask$$ExternalSyntheticLambda1();
+        executeOnExecutor(new ScrimView$$ExternalSyntheticLambda2(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-scrim-ScrimView  reason: not valid java name */
+    public /* synthetic */ void m3005lambda$new$0$comandroidsystemuiscrimScrimView() {
         updateColorWithTint(false);
     }
 
@@ -82,25 +77,21 @@ public class ScrimView extends View {
         this.mExecutorLooper = looper;
     }
 
-    @Override // android.view.View
-    protected void onDraw(Canvas canvas) {
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
         if (this.mDrawable.getAlpha() > 0) {
             this.mDrawable.draw(canvas);
         }
     }
 
-    @VisibleForTesting
-    void setDrawable(final Drawable drawable) {
-        executeOnExecutor(new Runnable() { // from class: com.android.systemui.scrim.ScrimView$$ExternalSyntheticLambda3
-            @Override // java.lang.Runnable
-            public final void run() {
-                ScrimView.this.lambda$setDrawable$1(drawable);
-            }
-        });
+    /* access modifiers changed from: package-private */
+    public void setDrawable(Drawable drawable) {
+        executeOnExecutor(new ScrimView$$ExternalSyntheticLambda3(this, drawable));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setDrawable$1(Drawable drawable) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setDrawable$1$com-android-systemui-scrim-ScrimView  reason: not valid java name */
+    public /* synthetic */ void m3008lambda$setDrawable$1$comandroidsystemuiscrimScrimView(Drawable drawable) {
         this.mDrawable = drawable;
         drawable.setCallback(this);
         this.mDrawable.setBounds(getLeft(), getTop(), getRight(), getBottom());
@@ -108,7 +99,6 @@ public class ScrimView extends View {
         invalidate();
     }
 
-    @Override // android.view.View, android.graphics.drawable.Drawable.Callback
     public void invalidateDrawable(Drawable drawable) {
         super.invalidateDrawable(drawable);
         if (drawable == this.mDrawable) {
@@ -116,59 +106,52 @@ public class ScrimView extends View {
         }
     }
 
-    @Override // android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         Rect rect = this.mDrawableBounds;
         if (rect != null) {
             this.mDrawable.setBounds(rect);
-        } else if (!z) {
-        } else {
+        } else if (z) {
             this.mDrawable.setBounds(i, i2, i3, i4);
             invalidate();
         }
     }
 
-    @Override // android.view.View
-    public void setClickable(final boolean z) {
-        executeOnExecutor(new Runnable() { // from class: com.android.systemui.scrim.ScrimView$$ExternalSyntheticLambda5
-            @Override // java.lang.Runnable
-            public final void run() {
-                ScrimView.this.lambda$setClickable$2(z);
-            }
-        });
+    public void setClickable(boolean z) {
+        executeOnExecutor(new ScrimView$$ExternalSyntheticLambda5(this, z));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setClickable$2(boolean z) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setClickable$2$com-android-systemui-scrim-ScrimView  reason: not valid java name */
+    public /* synthetic */ void m3006lambda$setClickable$2$comandroidsystemuiscrimScrimView(boolean z) {
         super.setClickable(z);
     }
 
-    public void setColors(final ColorExtractor.GradientColors gradientColors, final boolean z) {
-        if (gradientColors == null) {
-            throw new IllegalArgumentException("Colors cannot be null");
-        }
-        executeOnExecutor(new Runnable() { // from class: com.android.systemui.scrim.ScrimView$$ExternalSyntheticLambda4
-            @Override // java.lang.Runnable
-            public final void run() {
-                ScrimView.this.lambda$setColors$3(gradientColors, z);
-            }
-        });
+    public void setColors(ColorExtractor.GradientColors gradientColors) {
+        setColors(gradientColors, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setColors$3(ColorExtractor.GradientColors gradientColors, boolean z) {
+    public void setColors(ColorExtractor.GradientColors gradientColors, boolean z) {
+        if (gradientColors != null) {
+            executeOnExecutor(new ScrimView$$ExternalSyntheticLambda0(this, gradientColors, z));
+            return;
+        }
+        throw new IllegalArgumentException("Colors cannot be null");
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setColors$3$com-android-systemui-scrim-ScrimView  reason: not valid java name */
+    public /* synthetic */ void m3007lambda$setColors$3$comandroidsystemuiscrimScrimView(ColorExtractor.GradientColors gradientColors, boolean z) {
         synchronized (this.mColorLock) {
-            if (this.mColors.equals(gradientColors)) {
-                return;
+            if (!this.mColors.equals(gradientColors)) {
+                this.mColors.set(gradientColors);
+                updateColorWithTint(z);
             }
-            this.mColors.set(gradientColors);
-            updateColorWithTint(z);
         }
     }
 
-    @VisibleForTesting
-    Drawable getDrawable() {
+    public Drawable getDrawable() {
         return this.mDrawable;
     }
 
@@ -183,28 +166,37 @@ public class ScrimView extends View {
         setTint(i, false);
     }
 
-    public void setTint(final int i, final boolean z) {
-        executeOnExecutor(new Runnable() { // from class: com.android.systemui.scrim.ScrimView$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                ScrimView.this.lambda$setTint$4(i, z);
-            }
-        });
+    public void setBlendWithMainColor(boolean z) {
+        this.mBlendWithMainColor = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setTint$4(int i, boolean z) {
-        if (this.mTintColor == i) {
-            return;
+    public boolean shouldBlendWithMainColor() {
+        return this.mBlendWithMainColor;
+    }
+
+    public void setTint(int i, boolean z) {
+        executeOnExecutor(new ScrimView$$ExternalSyntheticLambda4(this, i, z));
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setTint$4$com-android-systemui-scrim-ScrimView  reason: not valid java name */
+    public /* synthetic */ void m3009lambda$setTint$4$comandroidsystemuiscrimScrimView(int i, boolean z) {
+        if (this.mTintColor != i) {
+            this.mTintColor = i;
+            updateColorWithTint(z);
         }
-        this.mTintColor = i;
-        updateColorWithTint(z);
     }
 
     private void updateColorWithTint(boolean z) {
         Drawable drawable = this.mDrawable;
         if (drawable instanceof ScrimDrawable) {
-            ((ScrimDrawable) drawable).setColor(ColorUtils.blendARGB(this.mColors.getMainColor(), this.mTintColor, Color.alpha(this.mTintColor) / 255.0f), z);
+            ScrimDrawable scrimDrawable = (ScrimDrawable) drawable;
+            float alpha = ((float) Color.alpha(this.mTintColor)) / 255.0f;
+            int i = this.mTintColor;
+            if (this.mBlendWithMainColor) {
+                i = ColorUtils.blendARGB(this.mColors.getMainColor(), this.mTintColor, alpha);
+            }
+            scrimDrawable.setColor(i, z);
         } else {
             if (Color.alpha(this.mTintColor) != 0) {
                 PorterDuffColorFilter porterDuffColorFilter = this.mColorFilter;
@@ -229,28 +221,24 @@ public class ScrimView extends View {
         return this.mTintColor;
     }
 
-    public void setViewAlpha(final float f) {
-        if (Float.isNaN(f)) {
-            throw new IllegalArgumentException("alpha cannot be NaN: " + f);
+    public void setViewAlpha(float f) {
+        if (!Float.isNaN(f)) {
+            executeOnExecutor(new ScrimView$$ExternalSyntheticLambda1(this, f));
+            return;
         }
-        executeOnExecutor(new Runnable() { // from class: com.android.systemui.scrim.ScrimView$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                ScrimView.this.lambda$setViewAlpha$5(f);
-            }
-        });
+        throw new IllegalArgumentException("alpha cannot be NaN: " + f);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setViewAlpha$5(float f) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setViewAlpha$5$com-android-systemui-scrim-ScrimView  reason: not valid java name */
+    public /* synthetic */ void m3010lambda$setViewAlpha$5$comandroidsystemuiscrimScrimView(float f) {
         if (f != this.mViewAlpha) {
             this.mViewAlpha = f;
             this.mDrawable.setAlpha((int) (f * 255.0f));
             Runnable runnable = this.mChangeRunnable;
-            if (runnable == null) {
-                return;
+            if (runnable != null) {
+                this.mChangeRunnableExecutor.execute(runnable);
             }
-            this.mChangeRunnableExecutor.execute(runnable);
         }
     }
 
@@ -303,7 +291,7 @@ public class ScrimView extends View {
     public void setCornerRadius(int i) {
         Drawable drawable = this.mDrawable;
         if (drawable instanceof ScrimDrawable) {
-            ((ScrimDrawable) drawable).setRoundedCorners(i);
+            ((ScrimDrawable) drawable).setRoundedCorners((float) i);
         }
     }
 }

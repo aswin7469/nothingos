@@ -10,72 +10,33 @@ import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
+import androidx.media.MediaBrowserServiceCompat;
+import com.android.systemui.shared.system.QuickStepContract;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ResumeMediaBrowser {
-    private MediaBrowserFactory mBrowserFactory;
-    private final Callback mCallback;
-    private ComponentName mComponentName;
-    private final Context mContext;
-    private MediaBrowser mMediaBrowser;
-    private final MediaBrowser.SubscriptionCallback mSubscriptionCallback = new MediaBrowser.SubscriptionCallback() { // from class: com.android.systemui.media.ResumeMediaBrowser.1
-        @Override // android.media.browse.MediaBrowser.SubscriptionCallback
-        public void onChildrenLoaded(String str, List<MediaBrowser.MediaItem> list) {
-            if (list.size() == 0) {
-                Log.d("ResumeMediaBrowser", "No children found for " + ResumeMediaBrowser.this.mComponentName);
-                if (ResumeMediaBrowser.this.mCallback != null) {
-                    ResumeMediaBrowser.this.mCallback.onError();
-                }
-            } else {
-                MediaBrowser.MediaItem mediaItem = list.get(0);
-                MediaDescription description = mediaItem.getDescription();
-                if (mediaItem.isPlayable() && ResumeMediaBrowser.this.mMediaBrowser != null) {
-                    if (ResumeMediaBrowser.this.mCallback != null) {
-                        ResumeMediaBrowser.this.mCallback.addTrack(description, ResumeMediaBrowser.this.mMediaBrowser.getServiceComponent(), ResumeMediaBrowser.this);
-                    }
-                } else {
-                    Log.d("ResumeMediaBrowser", "Child found but not playable for " + ResumeMediaBrowser.this.mComponentName);
-                    if (ResumeMediaBrowser.this.mCallback != null) {
-                        ResumeMediaBrowser.this.mCallback.onError();
-                    }
-                }
-            }
-            ResumeMediaBrowser.this.disconnect();
-        }
-
-        @Override // android.media.browse.MediaBrowser.SubscriptionCallback
-        public void onError(String str) {
-            Log.d("ResumeMediaBrowser", "Subscribe error for " + ResumeMediaBrowser.this.mComponentName + ": " + str);
-            if (ResumeMediaBrowser.this.mCallback != null) {
-                ResumeMediaBrowser.this.mCallback.onError();
-            }
-            ResumeMediaBrowser.this.disconnect();
-        }
-
-        @Override // android.media.browse.MediaBrowser.SubscriptionCallback
-        public void onError(String str, Bundle bundle) {
-            Log.d("ResumeMediaBrowser", "Subscribe error for " + ResumeMediaBrowser.this.mComponentName + ": " + str + ", options: " + bundle);
-            if (ResumeMediaBrowser.this.mCallback != null) {
-                ResumeMediaBrowser.this.mCallback.onError();
-            }
-            ResumeMediaBrowser.this.disconnect();
-        }
-    };
-    private final MediaBrowser.ConnectionCallback mConnectionCallback = new MediaBrowser.ConnectionCallback() { // from class: com.android.systemui.media.ResumeMediaBrowser.2
-        @Override // android.media.browse.MediaBrowser.ConnectionCallback
+    public static final String DELIMITER = ":";
+    public static final int MAX_RESUMPTION_CONTROLS = 5;
+    private static final String TAG = "ResumeMediaBrowser";
+    private final MediaBrowserFactory mBrowserFactory;
+    /* access modifiers changed from: private */
+    public final Callback mCallback;
+    /* access modifiers changed from: private */
+    public final ComponentName mComponentName;
+    private final MediaBrowser.ConnectionCallback mConnectionCallback = new MediaBrowser.ConnectionCallback() {
         public void onConnected() {
-            Log.d("ResumeMediaBrowser", "Service connected for " + ResumeMediaBrowser.this.mComponentName);
-            if (ResumeMediaBrowser.this.mMediaBrowser != null && ResumeMediaBrowser.this.mMediaBrowser.isConnected()) {
+            Log.d(ResumeMediaBrowser.TAG, "Service connected for " + ResumeMediaBrowser.this.mComponentName);
+            ResumeMediaBrowser.this.updateMediaController();
+            if (ResumeMediaBrowser.this.isBrowserConnected()) {
                 String root = ResumeMediaBrowser.this.mMediaBrowser.getRoot();
                 if (!TextUtils.isEmpty(root)) {
                     if (ResumeMediaBrowser.this.mCallback != null) {
                         ResumeMediaBrowser.this.mCallback.onConnected();
                     }
-                    if (ResumeMediaBrowser.this.mMediaBrowser == null) {
+                    if (ResumeMediaBrowser.this.mMediaBrowser != null) {
+                        ResumeMediaBrowser.this.mMediaBrowser.subscribe(root, ResumeMediaBrowser.this.mSubscriptionCallback);
                         return;
                     }
-                    ResumeMediaBrowser.this.mMediaBrowser.subscribe(root, ResumeMediaBrowser.this.mSubscriptionCallback);
                     return;
                 }
             }
@@ -85,18 +46,62 @@ public class ResumeMediaBrowser {
             ResumeMediaBrowser.this.disconnect();
         }
 
-        @Override // android.media.browse.MediaBrowser.ConnectionCallback
         public void onConnectionSuspended() {
-            Log.d("ResumeMediaBrowser", "Connection suspended for " + ResumeMediaBrowser.this.mComponentName);
+            Log.d(ResumeMediaBrowser.TAG, "Connection suspended for " + ResumeMediaBrowser.this.mComponentName);
             if (ResumeMediaBrowser.this.mCallback != null) {
                 ResumeMediaBrowser.this.mCallback.onError();
             }
             ResumeMediaBrowser.this.disconnect();
         }
 
-        @Override // android.media.browse.MediaBrowser.ConnectionCallback
         public void onConnectionFailed() {
-            Log.d("ResumeMediaBrowser", "Connection failed for " + ResumeMediaBrowser.this.mComponentName);
+            Log.d(ResumeMediaBrowser.TAG, "Connection failed for " + ResumeMediaBrowser.this.mComponentName);
+            if (ResumeMediaBrowser.this.mCallback != null) {
+                ResumeMediaBrowser.this.mCallback.onError();
+            }
+            ResumeMediaBrowser.this.disconnect();
+        }
+    };
+    private final Context mContext;
+    /* access modifiers changed from: private */
+    public final ResumeMediaBrowserLogger mLogger;
+    /* access modifiers changed from: private */
+    public MediaBrowser mMediaBrowser;
+    private MediaController mMediaController;
+    private final MediaController.Callback mMediaControllerCallback = new SessionDestroyCallback();
+    /* access modifiers changed from: private */
+    public final MediaBrowser.SubscriptionCallback mSubscriptionCallback = new MediaBrowser.SubscriptionCallback() {
+        public void onChildrenLoaded(String str, List<MediaBrowser.MediaItem> list) {
+            if (list.size() == 0) {
+                Log.d(ResumeMediaBrowser.TAG, "No children found for " + ResumeMediaBrowser.this.mComponentName);
+                if (ResumeMediaBrowser.this.mCallback != null) {
+                    ResumeMediaBrowser.this.mCallback.onError();
+                }
+            } else {
+                MediaBrowser.MediaItem mediaItem = list.get(0);
+                MediaDescription description = mediaItem.getDescription();
+                if (!mediaItem.isPlayable() || ResumeMediaBrowser.this.mMediaBrowser == null) {
+                    Log.d(ResumeMediaBrowser.TAG, "Child found but not playable for " + ResumeMediaBrowser.this.mComponentName);
+                    if (ResumeMediaBrowser.this.mCallback != null) {
+                        ResumeMediaBrowser.this.mCallback.onError();
+                    }
+                } else if (ResumeMediaBrowser.this.mCallback != null) {
+                    ResumeMediaBrowser.this.mCallback.addTrack(description, ResumeMediaBrowser.this.mMediaBrowser.getServiceComponent(), ResumeMediaBrowser.this);
+                }
+            }
+            ResumeMediaBrowser.this.disconnect();
+        }
+
+        public void onError(String str) {
+            Log.d(ResumeMediaBrowser.TAG, "Subscribe error for " + ResumeMediaBrowser.this.mComponentName + ": " + str);
+            if (ResumeMediaBrowser.this.mCallback != null) {
+                ResumeMediaBrowser.this.mCallback.onError();
+            }
+            ResumeMediaBrowser.this.disconnect();
+        }
+
+        public void onError(String str, Bundle bundle) {
+            Log.d(ResumeMediaBrowser.TAG, "Subscribe error for " + ResumeMediaBrowser.this.mComponentName + ": " + str + ", options: " + bundle);
             if (ResumeMediaBrowser.this.mCallback != null) {
                 ResumeMediaBrowser.this.mCallback.onError();
             }
@@ -104,10 +109,8 @@ public class ResumeMediaBrowser {
         }
     };
 
-    /* loaded from: classes.dex */
     public static class Callback {
         public void addTrack(MediaDescription mediaDescription, ComponentName componentName, ResumeMediaBrowser resumeMediaBrowser) {
-            throw null;
         }
 
         public void onConnected() {
@@ -117,41 +120,43 @@ public class ResumeMediaBrowser {
         }
     }
 
-    public ResumeMediaBrowser(Context context, Callback callback, ComponentName componentName, MediaBrowserFactory mediaBrowserFactory) {
+    public ResumeMediaBrowser(Context context, Callback callback, ComponentName componentName, MediaBrowserFactory mediaBrowserFactory, ResumeMediaBrowserLogger resumeMediaBrowserLogger) {
         this.mContext = context;
         this.mCallback = callback;
         this.mComponentName = componentName;
         this.mBrowserFactory = mediaBrowserFactory;
+        this.mLogger = resumeMediaBrowserLogger;
     }
 
     public void findRecentMedia() {
-        Log.d("ResumeMediaBrowser", "Connecting to " + this.mComponentName);
         disconnect();
         Bundle bundle = new Bundle();
-        bundle.putBoolean("android.service.media.extra.RECENT", true);
-        MediaBrowser create = this.mBrowserFactory.create(this.mComponentName, this.mConnectionCallback, bundle);
-        this.mMediaBrowser = create;
-        create.connect();
+        bundle.putBoolean(MediaBrowserServiceCompat.BrowserRoot.EXTRA_RECENT, true);
+        this.mMediaBrowser = this.mBrowserFactory.create(this.mComponentName, this.mConnectionCallback, bundle);
+        updateMediaController();
+        this.mLogger.logConnection(this.mComponentName, "findRecentMedia");
+        this.mMediaBrowser.connect();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void disconnect() {
-        MediaBrowser mediaBrowser = this.mMediaBrowser;
-        if (mediaBrowser != null) {
-            mediaBrowser.disconnect();
+        if (this.mMediaBrowser != null) {
+            this.mLogger.logDisconnect(this.mComponentName);
+            this.mMediaBrowser.disconnect();
         }
         this.mMediaBrowser = null;
+        updateMediaController();
     }
 
     public void restart() {
         disconnect();
         Bundle bundle = new Bundle();
-        bundle.putBoolean("android.service.media.extra.RECENT", true);
-        MediaBrowser create = this.mBrowserFactory.create(this.mComponentName, new MediaBrowser.ConnectionCallback() { // from class: com.android.systemui.media.ResumeMediaBrowser.3
-            @Override // android.media.browse.MediaBrowser.ConnectionCallback
+        bundle.putBoolean(MediaBrowserServiceCompat.BrowserRoot.EXTRA_RECENT, true);
+        this.mMediaBrowser = this.mBrowserFactory.create(this.mComponentName, new MediaBrowser.ConnectionCallback() {
             public void onConnected() {
-                Log.d("ResumeMediaBrowser", "Connected for restart " + ResumeMediaBrowser.this.mMediaBrowser.isConnected());
-                if (ResumeMediaBrowser.this.mMediaBrowser == null || !ResumeMediaBrowser.this.mMediaBrowser.isConnected()) {
+                Log.d(ResumeMediaBrowser.TAG, "Connected for restart " + ResumeMediaBrowser.this.mMediaBrowser.isConnected());
+                ResumeMediaBrowser.this.updateMediaController();
+                if (!ResumeMediaBrowser.this.isBrowserConnected()) {
                     if (ResumeMediaBrowser.this.mCallback != null) {
                         ResumeMediaBrowser.this.mCallback.onError();
                     }
@@ -162,13 +167,11 @@ public class ResumeMediaBrowser {
                 createMediaController.getTransportControls();
                 createMediaController.getTransportControls().prepare();
                 createMediaController.getTransportControls().play();
-                if (ResumeMediaBrowser.this.mCallback == null) {
-                    return;
+                if (ResumeMediaBrowser.this.mCallback != null) {
+                    ResumeMediaBrowser.this.mCallback.onConnected();
                 }
-                ResumeMediaBrowser.this.mCallback.onConnected();
             }
 
-            @Override // android.media.browse.MediaBrowser.ConnectionCallback
             public void onConnectionFailed() {
                 if (ResumeMediaBrowser.this.mCallback != null) {
                     ResumeMediaBrowser.this.mCallback.onError();
@@ -176,7 +179,6 @@ public class ResumeMediaBrowser {
                 ResumeMediaBrowser.this.disconnect();
             }
 
-            @Override // android.media.browse.MediaBrowser.ConnectionCallback
             public void onConnectionSuspended() {
                 if (ResumeMediaBrowser.this.mCallback != null) {
                     ResumeMediaBrowser.this.mCallback.onError();
@@ -184,33 +186,70 @@ public class ResumeMediaBrowser {
                 ResumeMediaBrowser.this.disconnect();
             }
         }, bundle);
-        this.mMediaBrowser = create;
-        create.connect();
+        updateMediaController();
+        this.mLogger.logConnection(this.mComponentName, "restart");
+        this.mMediaBrowser.connect();
     }
 
-    @VisibleForTesting
-    protected MediaController createMediaController(MediaSession.Token token) {
+    /* access modifiers changed from: protected */
+    public MediaController createMediaController(MediaSession.Token token) {
         return new MediaController(this.mContext, token);
     }
 
     public MediaSession.Token getToken() {
-        MediaBrowser mediaBrowser = this.mMediaBrowser;
-        if (mediaBrowser == null || !mediaBrowser.isConnected()) {
+        if (!isBrowserConnected()) {
             return null;
         }
         return this.mMediaBrowser.getSessionToken();
     }
 
     public PendingIntent getAppIntent() {
-        return PendingIntent.getActivity(this.mContext, 0, this.mContext.getPackageManager().getLaunchIntentForPackage(this.mComponentName.getPackageName()), 33554432);
+        return PendingIntent.getActivity(this.mContext, 0, this.mContext.getPackageManager().getLaunchIntentForPackage(this.mComponentName.getPackageName()), QuickStepContract.SYSUI_STATE_VOICE_INTERACTION_WINDOW_SHOWING);
     }
 
     public void testConnection() {
         disconnect();
         Bundle bundle = new Bundle();
-        bundle.putBoolean("android.service.media.extra.RECENT", true);
-        MediaBrowser create = this.mBrowserFactory.create(this.mComponentName, this.mConnectionCallback, bundle);
-        this.mMediaBrowser = create;
-        create.connect();
+        bundle.putBoolean(MediaBrowserServiceCompat.BrowserRoot.EXTRA_RECENT, true);
+        this.mMediaBrowser = this.mBrowserFactory.create(this.mComponentName, this.mConnectionCallback, bundle);
+        updateMediaController();
+        this.mLogger.logConnection(this.mComponentName, "testConnection");
+        this.mMediaBrowser.connect();
+    }
+
+    /* access modifiers changed from: private */
+    public void updateMediaController() {
+        MediaController mediaController = this.mMediaController;
+        MediaSession.Token sessionToken = mediaController != null ? mediaController.getSessionToken() : null;
+        MediaSession.Token token = getToken();
+        if (!((sessionToken == null && token == null) || (sessionToken != null && sessionToken.equals(token)))) {
+            MediaController mediaController2 = this.mMediaController;
+            if (mediaController2 != null) {
+                mediaController2.unregisterCallback(this.mMediaControllerCallback);
+            }
+            if (token != null) {
+                MediaController createMediaController = createMediaController(token);
+                this.mMediaController = createMediaController;
+                createMediaController.registerCallback(this.mMediaControllerCallback);
+                return;
+            }
+            this.mMediaController = null;
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public boolean isBrowserConnected() {
+        MediaBrowser mediaBrowser = this.mMediaBrowser;
+        return mediaBrowser != null && mediaBrowser.isConnected();
+    }
+
+    private class SessionDestroyCallback extends MediaController.Callback {
+        private SessionDestroyCallback() {
+        }
+
+        public void onSessionDestroyed() {
+            ResumeMediaBrowser.this.mLogger.logSessionDestroyed(ResumeMediaBrowser.this.isBrowserConnected(), ResumeMediaBrowser.this.mComponentName);
+            ResumeMediaBrowser.this.disconnect();
+        }
     }
 }

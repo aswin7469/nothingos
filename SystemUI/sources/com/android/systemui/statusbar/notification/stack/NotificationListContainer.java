@@ -3,29 +3,30 @@ package com.android.systemui.statusbar.notification.stack;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
-import com.android.systemui.statusbar.notification.ExpandAnimationParameters;
+import com.android.systemui.statusbar.notification.LaunchAnimationParameters;
+import com.android.systemui.statusbar.notification.NotificationActivityStarter;
 import com.android.systemui.statusbar.notification.VisibilityLocationProvider;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
-/* loaded from: classes.dex */
+
 public interface NotificationListContainer extends ExpandableView.OnHeightChangedListener, VisibilityLocationProvider {
     void addContainerView(View view);
 
     void addContainerViewAt(View view, int i);
 
-    default void applyExpandAnimationParams(ExpandAnimationParameters expandAnimationParameters) {
+    void applyLaunchAnimationParams(LaunchAnimationParameters launchAnimationParameters) {
     }
 
-    default void bindRow(ExpandableNotificationRow expandableNotificationRow) {
+    void bindRow(ExpandableNotificationRow expandableNotificationRow) {
     }
 
     void changeViewPosition(ExpandableView expandableView, int i);
 
     void cleanUpViewStateForEntry(NotificationEntry notificationEntry);
 
-    default boolean containsView(View view) {
+    boolean containsView(View view) {
         return true;
     }
 
@@ -39,7 +40,7 @@ public interface NotificationListContainer extends ExpandableView.OnHeightChange
 
     NotificationSwipeActionHelper getSwipeActionHelper();
 
-    default int getTopClippingStartLocation() {
+    int getTopClippingStartLocation() {
         return 0;
     }
 
@@ -51,7 +52,7 @@ public interface NotificationListContainer extends ExpandableView.OnHeightChange
 
     void notifyGroupChildRemoved(ExpandableView expandableView, ViewGroup viewGroup);
 
-    default void onNotificationViewUpdateFinished() {
+    void onNotificationViewUpdateFinished() {
     }
 
     void removeContainerView(View view);
@@ -62,6 +63,13 @@ public interface NotificationListContainer extends ExpandableView.OnHeightChange
 
     void setChildTransferInProgress(boolean z);
 
-    default void setExpandingNotification(ExpandableNotificationRow expandableNotificationRow) {
+    void setExpandingNotification(ExpandableNotificationRow expandableNotificationRow) {
+    }
+
+    void setMaxDisplayedNotifications(int i);
+
+    void setNotificationActivityStarter(NotificationActivityStarter notificationActivityStarter);
+
+    void setWillExpand(boolean z) {
     }
 }

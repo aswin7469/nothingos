@@ -17,6 +17,8 @@
         <item>උපරිම ලෙස ක්‍රියාවලි 3 කි</item>
         <item>උපරිම ලෙස ක්‍රියාවලි 4 කි</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -67,6 +69,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>පද්ධති තේරීම භාවිත කරන්න (පෙරනිමි)</item>
@@ -74,6 +78,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>පද්ධති තේරීම භාවිත කරන්න (පෙරනිමි)</item>
@@ -84,6 +90,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ශ්‍රව්‍යය</item>
         <item>Qualcomm® aptX™ TWS+ ශ්‍රව්‍යය</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>පද්ධති තේරීම භාවිත කරන්න (පෙරනිමි)</item>
@@ -94,6 +104,10 @@
         <item>LDAC</item>
         <item>Qualcomm® aptX™ Adaptive ශ්‍රව්‍යය</item>
         <item>Qualcomm® aptX™ TWS+ ශ්‍රව්‍යය</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -264,6 +278,11 @@
         <item>අක්‍රියයි</item>
         <item>සක්‍රියයි</item>
     </array>
+    <array name="tile_states_color_correction">
+        <item>නොමැත</item>
+        <item>ක්‍රියාවිරහිතයි</item>
+        <item>ක්‍රියාත්මකයි</item>
+    </array>
     <array name="tile_states_controls">
         <item>නොමැත</item>
         <item>අක්‍රියයි</item>
@@ -313,6 +332,16 @@
         <item>නොමැත</item>
         <item>අක්‍රියයි</item>
         <item>සක්‍රියයි</item>
+    </array>
+    <array name="tile_states_onehanded">
+        <item>නොමැත</item>
+        <item>ක්‍රියාවිරහිතයි</item>
+        <item>ක්‍රියාත්මකයි</item>
+    </array>
+    <array name="tile_states_qr_code_scanner">
+        <item>නොමැත</item>
+        <item>ක්‍රියාවිරහිතයි</item>
+        <item>ක්‍රියාත්මකයි</item>
     </array>
     <array name="tile_states_reduce_brightness">
         <item>නොමැත</item>
@@ -378,6 +407,12 @@
         <item>ශීඝ්‍ර</item>
         <item>ඉතා ශීඝ්‍ර</item>
         <item>ඉතාම වේගවත්</item>
+    </array>
+    <array name="udfps_accessibility_touch_hints">
+        <item>වමට ගෙන යන්න</item>
+        <item>පහළට ගෙන යන්න</item>
+        <item>දකුණට ගෙන යන්න</item>
+        <item>ඉහළට ගෙන යන්න</item>
     </array>
     <array name="usb_configuration_titles">
         <item>ආරෝපණය වෙමින්</item>

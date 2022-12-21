@@ -5,7 +5,7 @@ import com.android.internal.app.AssistUtils;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class AssistModule_ProvideAssistUtilsFactory implements Factory<AssistUtils> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class AssistModule_ProvideAssistUtilsFactory implements Factory<Ass
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AssistUtils mo1933get() {
-        return provideAssistUtils(this.contextProvider.mo1933get());
+    public AssistUtils get() {
+        return provideAssistUtils(this.contextProvider.get());
     }
 
     public static AssistModule_ProvideAssistUtilsFactory create(Provider<Context> provider) {

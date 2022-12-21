@@ -3,7 +3,7 @@ package com.android.systemui.media;
 import android.content.Context;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class MediaBrowserFactory_Factory implements Factory<MediaBrowserFactory> {
     private final Provider<Context> contextProvider;
 
@@ -11,10 +11,8 @@ public final class MediaBrowserFactory_Factory implements Factory<MediaBrowserFa
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaBrowserFactory mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public MediaBrowserFactory get() {
+        return newInstance(this.contextProvider.get());
     }
 
     public static MediaBrowserFactory_Factory create(Provider<Context> provider) {

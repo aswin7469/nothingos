@@ -1,16 +1,19 @@
 package com.android.systemui;
 
+import com.android.systemui.dagger.SysUISingleton;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
+@SysUISingleton
 public class InitController {
-    private boolean mTasksExecuted = false;
     private final ArrayList<Runnable> mTasks = new ArrayList<>();
+    private boolean mTasksExecuted = false;
 
     public void addPostInitTask(Runnable runnable) {
-        if (this.mTasksExecuted) {
-            throw new IllegalStateException("post init tasks have already been executed!");
+        if (!this.mTasksExecuted) {
+            this.mTasks.add(runnable);
+            return;
         }
-        this.mTasks.add(runnable);
+        throw new IllegalStateException("post init tasks have already been executed!");
     }
 
     public void executePostInitTasks() {

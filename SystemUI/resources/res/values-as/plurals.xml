@@ -16,6 +16,10 @@
         <item quantity="one">%s টা নিয়ন্ত্ৰণ যোগ কৰা হ’ল।</item>
         <item quantity="other">%s টা নিয়ন্ত্ৰণ যোগ কৰা হ’ল।</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s টা এপ্‌ সক্ৰিয় হৈ আছে</item>
+        <item quantity="other">%s টা এপ্‌ সক্ৰিয় হৈ আছে</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">ছিমৰ পিন দিয়ক। আপুনি আৰু %dবাৰ প্ৰয়াস কৰিব পাৰে।</item>
         <item quantity="other">ছিমৰ পিন দিয়ক। আপুনি আৰু %dবাৰ প্ৰয়াস কৰিব পাৰে।</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">ছিমৰ ভুল PUK ক&apos;ড, আপুনি আৰু %d বাৰ ভুল ক’ড দিলে আপোনাৰ ছিম চিৰকালৰ বাবে ব্যৱহাৰৰ অনুপযোগী হ’ব।</item>
         <item quantity="other">ছিমৰ ভুল PUK ক&apos;ড, আপুনি আৰু %d বাৰ ভুল ক’ড দিলে আপোনাৰ ছিম চিৰকালৰ বাবে ব্যৱহাৰৰ অনুপযোগী হ’ব।</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">ডিভাইচটো %d ঘণ্টা ধৰি আনলক কৰা হোৱা নাই। পাছৱৰ্ড নিশ্চিত কৰক।</item>
-        <item quantity="other">ডিভাইচটো %d ঘণ্টা ধৰি আনলক কৰা হোৱা নাই। পাছৱৰ্ড নিশ্চিত কৰক।</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">ডিভাইচটো %d ঘণ্টা ধৰি আনলক কৰা হোৱা নাই। আর্হি নিশ্চিত কৰক।</item>
-        <item quantity="other">ডিভাইচটো %d ঘণ্টা ধৰি আনলক কৰা হোৱা নাই। আর্হি নিশ্চিত কৰক।</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">ডিভাইচটো %d ঘণ্টা ধৰি আনলক কৰা হোৱা নাই। পিন নিশ্চিত কৰক।</item>
-        <item quantity="other">ডিভাইচটো %d ঘণ্টা ধৰি আনলক কৰা হোৱা নাই। পিন নিশ্চিত কৰক।</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">%d ছেকেণ্ডত আকৌ চেষ্টা কৰক।</item>
-        <item quantity="other">%d ছেকেণ্ডত আকৌ চেষ্টা কৰক।</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d new notification</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">আপুনি %d জনলৈকে ব্যৱহাৰকাৰী যোগ কৰিব পাৰে।</item>
         <item quantity="other">আপুনি %d জনলৈকে ব্যৱহাৰকাৰী যোগ কৰিব পাৰে।</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$dটা ডিভাইচ সংযোগ হ’ল</item>
-        <item quantity="other">%1$dটা ডিভাইচ সংযোগ হ’ল</item>
     </plurals>
 </resources>

@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.policy;
 import android.content.Context;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class UserInfoControllerImpl_Factory implements Factory<UserInfoControllerImpl> {
     private final Provider<Context> contextProvider;
 
@@ -11,10 +11,8 @@ public final class UserInfoControllerImpl_Factory implements Factory<UserInfoCon
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public UserInfoControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public UserInfoControllerImpl get() {
+        return newInstance(this.contextProvider.get());
     }
 
     public static UserInfoControllerImpl_Factory create(Provider<Context> provider) {

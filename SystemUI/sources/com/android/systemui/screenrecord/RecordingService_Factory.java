@@ -7,7 +7,7 @@ import com.android.systemui.statusbar.phone.KeyguardDismissUtil;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class RecordingService_Factory implements Factory<RecordingService> {
     private final Provider<RecordingController> controllerProvider;
     private final Provider<Executor> executorProvider;
@@ -25,10 +25,8 @@ public final class RecordingService_Factory implements Factory<RecordingService>
         this.keyguardDismissUtilProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public RecordingService mo1933get() {
-        return newInstance(this.controllerProvider.mo1933get(), this.executorProvider.mo1933get(), this.uiEventLoggerProvider.mo1933get(), this.notificationManagerProvider.mo1933get(), this.userContextTrackerProvider.mo1933get(), this.keyguardDismissUtilProvider.mo1933get());
+    public RecordingService get() {
+        return newInstance(this.controllerProvider.get(), this.executorProvider.get(), this.uiEventLoggerProvider.get(), this.notificationManagerProvider.get(), this.userContextTrackerProvider.get(), this.keyguardDismissUtilProvider.get());
     }
 
     public static RecordingService_Factory create(Provider<RecordingController> provider, Provider<Executor> provider2, Provider<UiEventLogger> provider3, Provider<NotificationManager> provider4, Provider<UserContextProvider> provider5, Provider<KeyguardDismissUtil> provider6) {

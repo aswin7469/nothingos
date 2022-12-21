@@ -1,25 +1,23 @@
 package com.android.systemui.statusbar.policy;
-/* loaded from: classes2.dex */
+
 public interface DeviceProvisionedController extends CallbackController<DeviceProvisionedListener> {
+    @Deprecated
     int getCurrentUser();
+
+    boolean isCurrentUserSetup();
 
     boolean isDeviceProvisioned();
 
     boolean isUserSetup(int i);
 
-    default boolean isCurrentUserSetup() {
-        return isUserSetup(getCurrentUser());
-    }
-
-    /* loaded from: classes2.dex */
     public interface DeviceProvisionedListener {
-        default void onDeviceProvisionedChanged() {
+        void onDeviceProvisionedChanged() {
         }
 
-        default void onUserSetupChanged() {
+        void onUserSetupChanged() {
         }
 
-        default void onUserSwitched() {
+        void onUserSwitched() {
             onUserSetupChanged();
         }
     }

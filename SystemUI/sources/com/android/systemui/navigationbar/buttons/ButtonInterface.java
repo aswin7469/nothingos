@@ -1,7 +1,7 @@
 package com.android.systemui.navigationbar.buttons;
 
 import android.graphics.drawable.Drawable;
-/* loaded from: classes.dex */
+
 public interface ButtonInterface {
     void abortCurrentGesture();
 

@@ -4,13 +4,14 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import com.android.internal.policy.IShortcutService;
-/* loaded from: classes.dex */
-public class ShortcutKeyServiceProxy extends IShortcutService.Stub {
-    private Callbacks mCallbacks;
-    private final Object mLock = new Object();
-    private final Handler mHandler = new H();
 
-    /* loaded from: classes.dex */
+public class ShortcutKeyServiceProxy extends IShortcutService.Stub {
+    private static final int MSG_SHORTCUT_RECEIVED = 1;
+    /* access modifiers changed from: private */
+    public Callbacks mCallbacks;
+    private final Handler mHandler = new C2527H();
+    private final Object mLock = new Object();
+
     public interface Callbacks {
         void onShortcutKeyPressed(long j);
     }
@@ -25,17 +26,15 @@ public class ShortcutKeyServiceProxy extends IShortcutService.Stub {
         }
     }
 
-    /* loaded from: classes.dex */
-    private final class H extends Handler {
-        private H() {
+    /* renamed from: com.android.systemui.shortcut.ShortcutKeyServiceProxy$H */
+    private final class C2527H extends Handler {
+        private C2527H() {
         }
 
-        @Override // android.os.Handler
         public void handleMessage(Message message) {
-            if (message.what != 1) {
-                return;
+            if (message.what == 1) {
+                ShortcutKeyServiceProxy.this.mCallbacks.onShortcutKeyPressed(((Long) message.obj).longValue());
             }
-            ShortcutKeyServiceProxy.this.mCallbacks.onShortcutKeyPressed(((Long) message.obj).longValue());
         }
     }
 }

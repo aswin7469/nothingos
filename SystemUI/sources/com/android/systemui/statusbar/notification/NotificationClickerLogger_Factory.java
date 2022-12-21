@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification;
 import com.android.systemui.log.LogBuffer;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationClickerLogger_Factory implements Factory<NotificationClickerLogger> {
     private final Provider<LogBuffer> bufferProvider;
 
@@ -11,10 +11,8 @@ public final class NotificationClickerLogger_Factory implements Factory<Notifica
         this.bufferProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationClickerLogger mo1933get() {
-        return newInstance(this.bufferProvider.mo1933get());
+    public NotificationClickerLogger get() {
+        return newInstance(this.bufferProvider.get());
     }
 
     public static NotificationClickerLogger_Factory create(Provider<LogBuffer> provider) {

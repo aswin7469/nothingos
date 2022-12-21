@@ -1,20 +1,27 @@
 package com.google.gson;
 
+import com.google.gson.internal.bind.JsonTreeReader;
 import com.google.gson.internal.bind.JsonTreeWriter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
-/* loaded from: classes2.dex */
+import java.p026io.IOException;
+import java.p026io.Reader;
+import java.p026io.StringReader;
+import java.p026io.StringWriter;
+import java.p026io.Writer;
+
 public abstract class TypeAdapter<T> {
-    /* renamed from: read */
-    public abstract T mo1911read(JsonReader jsonReader) throws IOException;
+    public abstract T read(JsonReader jsonReader) throws IOException;
 
     public abstract void write(JsonWriter jsonWriter, T t) throws IOException;
 
+    public final void toJson(Writer writer, T t) throws IOException {
+        write(new JsonWriter(writer), t);
+    }
+
     public final TypeAdapter<T> nullSafe() {
-        return new TypeAdapter<T>() { // from class: com.google.gson.TypeAdapter.1
-            @Override // com.google.gson.TypeAdapter
+        return new TypeAdapter<T>() {
             public void write(JsonWriter jsonWriter, T t) throws IOException {
                 if (t == null) {
                     jsonWriter.nullValue();
@@ -23,16 +30,24 @@ public abstract class TypeAdapter<T> {
                 }
             }
 
-            @Override // com.google.gson.TypeAdapter
-            /* renamed from: read */
-            public T mo1911read(JsonReader jsonReader) throws IOException {
-                if (jsonReader.peek() == JsonToken.NULL) {
-                    jsonReader.nextNull();
-                    return null;
+            public T read(JsonReader jsonReader) throws IOException {
+                if (jsonReader.peek() != JsonToken.NULL) {
+                    return TypeAdapter.this.read(jsonReader);
                 }
-                return (T) TypeAdapter.this.mo1911read(jsonReader);
+                jsonReader.nextNull();
+                return null;
             }
         };
+    }
+
+    public final String toJson(T t) {
+        StringWriter stringWriter = new StringWriter();
+        try {
+            toJson(stringWriter, t);
+            return stringWriter.toString();
+        } catch (IOException e) {
+            throw new AssertionError((Object) e);
+        }
     }
 
     public final JsonElement toJsonTree(T t) {
@@ -41,7 +56,23 @@ public abstract class TypeAdapter<T> {
             write(jsonTreeWriter, t);
             return jsonTreeWriter.get();
         } catch (IOException e) {
-            throw new JsonIOException(e);
+            throw new JsonIOException((Throwable) e);
+        }
+    }
+
+    public final T fromJson(Reader reader) throws IOException {
+        return read(new JsonReader(reader));
+    }
+
+    public final T fromJson(String str) throws IOException {
+        return fromJson((Reader) new StringReader(str));
+    }
+
+    public final T fromJsonTree(JsonElement jsonElement) {
+        try {
+            return read(new JsonTreeReader(jsonElement));
+        } catch (IOException e) {
+            throw new JsonIOException((Throwable) e);
         }
     }
 }

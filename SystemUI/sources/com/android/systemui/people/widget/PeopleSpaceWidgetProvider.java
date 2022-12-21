@@ -4,38 +4,40 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.os.Bundle;
-import com.android.internal.annotations.VisibleForTesting;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class PeopleSpaceWidgetProvider extends AppWidgetProvider {
+    private static final boolean DEBUG = false;
+    public static final String EXTRA_NOTIFICATION_KEY = "extra_notification_key";
+    public static final String EXTRA_PACKAGE_NAME = "extra_package_name";
+    public static final String EXTRA_TILE_ID = "extra_tile_id";
+    public static final String EXTRA_USER_HANDLE = "extra_user_handle";
+    private static final String TAG = "PeopleSpaceWidgetPvd";
     public PeopleSpaceWidgetManager mPeopleSpaceWidgetManager;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public PeopleSpaceWidgetProvider(PeopleSpaceWidgetManager peopleSpaceWidgetManager) {
+    @Inject
+    PeopleSpaceWidgetProvider(PeopleSpaceWidgetManager peopleSpaceWidgetManager) {
         this.mPeopleSpaceWidgetManager = peopleSpaceWidgetManager;
     }
 
-    @Override // android.appwidget.AppWidgetProvider
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] iArr) {
         super.onUpdate(context, appWidgetManager, iArr);
         ensurePeopleSpaceWidgetManagerInitialized();
         this.mPeopleSpaceWidgetManager.updateWidgets(iArr);
     }
 
-    @Override // android.appwidget.AppWidgetProvider
     public void onAppWidgetOptionsChanged(Context context, AppWidgetManager appWidgetManager, int i, Bundle bundle) {
         super.onAppWidgetOptionsChanged(context, appWidgetManager, i, bundle);
         ensurePeopleSpaceWidgetManagerInitialized();
         this.mPeopleSpaceWidgetManager.onAppWidgetOptionsChanged(i, bundle);
     }
 
-    @Override // android.appwidget.AppWidgetProvider
     public void onDeleted(Context context, int[] iArr) {
         super.onDeleted(context, iArr);
         ensurePeopleSpaceWidgetManagerInitialized();
         this.mPeopleSpaceWidgetManager.deleteWidgets(iArr);
     }
 
-    @Override // android.appwidget.AppWidgetProvider
     public void onRestored(Context context, int[] iArr, int[] iArr2) {
         super.onRestored(context, iArr, iArr2);
         ensurePeopleSpaceWidgetManagerInitialized();
@@ -46,7 +48,6 @@ public class PeopleSpaceWidgetProvider extends AppWidgetProvider {
         this.mPeopleSpaceWidgetManager.init();
     }
 
-    @VisibleForTesting
     public void setPeopleSpaceWidgetManager(PeopleSpaceWidgetManager peopleSpaceWidgetManager) {
         this.mPeopleSpaceWidgetManager = peopleSpaceWidgetManager;
     }

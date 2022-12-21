@@ -5,39 +5,46 @@ import android.os.RemoteException;
 import android.service.notification.StatusBarNotification;
 import com.android.systemui.statusbar.notification.collection.NotifPipeline;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.collection.coordinator.dagger.CoordinatorScope;
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@CoordinatorScope
 public class DeviceProvisionedCoordinator implements Coordinator {
-    private final DeviceProvisionedController mDeviceProvisionedController;
-    private final IPackageManager mIPackageManager;
-    private final NotifFilter mNotifFilter = new NotifFilter("DeviceProvisionedCoordinator") { // from class: com.android.systemui.statusbar.notification.collection.coordinator.DeviceProvisionedCoordinator.1
-        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
-        public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
-            return !DeviceProvisionedCoordinator.this.mDeviceProvisionedController.isDeviceProvisioned() && !DeviceProvisionedCoordinator.this.showNotificationEvenIfUnprovisioned(notificationEntry.getSbn());
-        }
-    };
-    private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedListener = new DeviceProvisionedController.DeviceProvisionedListener() { // from class: com.android.systemui.statusbar.notification.collection.coordinator.DeviceProvisionedCoordinator.2
-        @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
+    private static final String TAG = "DeviceProvisionedCoordinator";
+    /* access modifiers changed from: private */
+    public final DeviceProvisionedController mDeviceProvisionedController;
+    private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedListener = new DeviceProvisionedController.DeviceProvisionedListener() {
         public void onDeviceProvisionedChanged() {
             DeviceProvisionedCoordinator.this.mNotifFilter.invalidateList();
         }
     };
+    private final IPackageManager mIPackageManager;
+    /* access modifiers changed from: private */
+    public final NotifFilter mNotifFilter = new NotifFilter(TAG) {
+        public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
+            return !DeviceProvisionedCoordinator.this.mDeviceProvisionedController.isDeviceProvisioned() && !DeviceProvisionedCoordinator.this.showNotificationEvenIfUnprovisioned(notificationEntry.getSbn());
+        }
+    };
 
+    @Inject
     public DeviceProvisionedCoordinator(DeviceProvisionedController deviceProvisionedController, IPackageManager iPackageManager) {
         this.mDeviceProvisionedController = deviceProvisionedController;
         this.mIPackageManager = iPackageManager;
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         this.mDeviceProvisionedController.addCallback(this.mDeviceProvisionedListener);
         notifPipeline.addPreGroupFilter(this.mNotifFilter);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean showNotificationEvenIfUnprovisioned(StatusBarNotification statusBarNotification) {
-        return (checkUidPermission("android.permission.NOTIFICATION_DURING_SETUP", statusBarNotification.getUid()) == 0) && statusBarNotification.getNotification().extras.getBoolean("android.allowDuringSetup");
+        if (!(checkUidPermission("android.permission.NOTIFICATION_DURING_SETUP", statusBarNotification.getUid()) == 0) || !statusBarNotification.getNotification().extras.getBoolean("android.allowDuringSetup")) {
+            return false;
+        }
+        return true;
     }
 
     private int checkUidPermission(String str, int i) {

@@ -2,21 +2,34 @@ package androidx.media;
 
 import android.media.AudioAttributes;
 import androidx.media.AudioAttributesImplApi21;
-/* loaded from: classes.dex */
+
 public class AudioAttributesImplApi26 extends AudioAttributesImplApi21 {
     public AudioAttributesImplApi26() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AudioAttributesImplApi26(AudioAttributes audioAttributes) {
+    AudioAttributesImplApi26(AudioAttributes audioAttributes) {
         super(audioAttributes, -1);
     }
 
-    /* loaded from: classes.dex */
+    public int getVolumeControlStream() {
+        return this.mAudioAttributes.getVolumeControlStream();
+    }
+
     static class Builder extends AudioAttributesImplApi21.Builder {
-        @Override // androidx.media.AudioAttributesImplApi21.Builder, androidx.media.AudioAttributesImpl.Builder
+        Builder() {
+        }
+
+        Builder(Object obj) {
+            super(obj);
+        }
+
         public AudioAttributesImpl build() {
             return new AudioAttributesImplApi26(this.mFwkBuilder.build());
+        }
+
+        public Builder setUsage(int i) {
+            this.mFwkBuilder.setUsage(i);
+            return this;
         }
     }
 }

@@ -6,7 +6,7 @@ import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.statusbar.phone.NotificationTapHelper;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ActivatableNotificationViewController_Factory implements Factory<ActivatableNotificationViewController> {
     private final Provider<AccessibilityManager> accessibilityManagerProvider;
     private final Provider<ExpandableOutlineViewController> expandableOutlineViewControllerProvider;
@@ -24,10 +24,8 @@ public final class ActivatableNotificationViewController_Factory implements Fact
         this.falsingCollectorProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ActivatableNotificationViewController mo1933get() {
-        return newInstance(this.viewProvider.mo1933get(), this.notificationTapHelpFactoryProvider.mo1933get(), this.expandableOutlineViewControllerProvider.mo1933get(), this.accessibilityManagerProvider.mo1933get(), this.falsingManagerProvider.mo1933get(), this.falsingCollectorProvider.mo1933get());
+    public ActivatableNotificationViewController get() {
+        return newInstance(this.viewProvider.get(), this.notificationTapHelpFactoryProvider.get(), this.expandableOutlineViewControllerProvider.get(), this.accessibilityManagerProvider.get(), this.falsingManagerProvider.get(), this.falsingCollectorProvider.get());
     }
 
     public static ActivatableNotificationViewController_Factory create(Provider<ActivatableNotificationView> provider, Provider<NotificationTapHelper.Factory> provider2, Provider<ExpandableOutlineViewController> provider3, Provider<AccessibilityManager> provider4, Provider<FalsingManager> provider5, Provider<FalsingCollector> provider6) {

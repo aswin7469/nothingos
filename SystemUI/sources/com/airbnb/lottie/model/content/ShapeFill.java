@@ -7,7 +7,7 @@ import com.airbnb.lottie.animation.content.FillContent;
 import com.airbnb.lottie.model.animatable.AnimatableColorValue;
 import com.airbnb.lottie.model.animatable.AnimatableIntegerValue;
 import com.airbnb.lottie.model.layer.BaseLayer;
-/* loaded from: classes.dex */
+
 public class ShapeFill implements ContentModel {
     private final AnimatableColorValue color;
     private final boolean fillEnabled;
@@ -16,10 +16,10 @@ public class ShapeFill implements ContentModel {
     private final String name;
     private final AnimatableIntegerValue opacity;
 
-    public ShapeFill(String str, boolean z, Path.FillType fillType, AnimatableColorValue animatableColorValue, AnimatableIntegerValue animatableIntegerValue, boolean z2) {
+    public ShapeFill(String str, boolean z, Path.FillType fillType2, AnimatableColorValue animatableColorValue, AnimatableIntegerValue animatableIntegerValue, boolean z2) {
         this.name = str;
         this.fillEnabled = z;
-        this.fillType = fillType;
+        this.fillType = fillType2;
         this.color = animatableColorValue;
         this.opacity = animatableIntegerValue;
         this.hidden = z2;
@@ -45,7 +45,6 @@ public class ShapeFill implements ContentModel {
         return this.hidden;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new FillContent(lottieDrawable, baseLayer, this);
     }

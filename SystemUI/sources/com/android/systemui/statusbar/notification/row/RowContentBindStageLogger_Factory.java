@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.row;
 import com.android.systemui.log.LogBuffer;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class RowContentBindStageLogger_Factory implements Factory<RowContentBindStageLogger> {
     private final Provider<LogBuffer> bufferProvider;
 
@@ -11,10 +11,8 @@ public final class RowContentBindStageLogger_Factory implements Factory<RowConte
         this.bufferProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public RowContentBindStageLogger mo1933get() {
-        return newInstance(this.bufferProvider.mo1933get());
+    public RowContentBindStageLogger get() {
+        return newInstance(this.bufferProvider.get());
     }
 
     public static RowContentBindStageLogger_Factory create(Provider<LogBuffer> provider) {

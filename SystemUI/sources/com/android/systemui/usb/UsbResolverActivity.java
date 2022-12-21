@@ -2,7 +2,7 @@ package com.android.systemui.usb;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.hardware.usb.IUsbManager;
@@ -18,34 +18,41 @@ import android.widget.CheckBox;
 import com.android.internal.app.IntentForwarderActivity;
 import com.android.internal.app.ResolverActivity;
 import com.android.internal.app.chooser.TargetInfo;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import java.util.ArrayList;
 import java.util.Iterator;
-/* loaded from: classes2.dex */
+
 public class UsbResolverActivity extends ResolverActivity {
+    public static final String EXTRA_RESOLVE_INFO = "rinfo";
+    public static final String EXTRA_RESOLVE_INFOS = "rlist";
+    public static final String TAG = "UsbResolverActivity";
     private UsbAccessory mAccessory;
     private UsbDevice mDevice;
     private UsbDisconnectedReceiver mDisconnectedReceiver;
     private ResolveInfo mForwardResolveInfo;
     private Intent mOtherProfileIntent;
 
-    protected boolean shouldShowTabs() {
+    /* access modifiers changed from: protected */
+    public boolean shouldShowTabs() {
         return false;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    protected void onCreate(Bundle bundle) {
+    /* JADX WARNING: type inference failed for: r11v0, types: [com.android.systemui.usb.UsbResolverActivity, android.app.Activity] */
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         boolean z;
+        getWindow().addSystemFlags(524288);
         Intent intent = getIntent();
         Parcelable parcelableExtra = intent.getParcelableExtra("android.intent.extra.INTENT");
         if (!(parcelableExtra instanceof Intent)) {
-            Log.w("UsbResolverActivity", "Target is not an intent: " + parcelableExtra);
+            super_onCreate(bundle);
+            Log.w(TAG, "Target is not an intent: " + parcelableExtra);
             finish();
             return;
         }
         Intent intent2 = (Intent) parcelableExtra;
-        ArrayList arrayList = new ArrayList(intent.getParcelableArrayListExtra("rlist"));
-        ArrayList<? extends Parcelable> arrayList2 = new ArrayList<>();
+        ArrayList arrayList = new ArrayList(intent.getParcelableArrayListExtra(EXTRA_RESOLVE_INFOS));
+        ArrayList arrayList2 = new ArrayList();
         this.mForwardResolveInfo = null;
         Iterator it = arrayList.iterator();
         while (it.hasNext()) {
@@ -66,7 +73,8 @@ public class UsbResolverActivity extends ResolverActivity {
             UsbAccessory usbAccessory = (UsbAccessory) intent2.getParcelableExtra("accessory");
             this.mAccessory = usbAccessory;
             if (usbAccessory == null) {
-                Log.e("UsbResolverActivity", "no device or accessory");
+                super_onCreate(bundle);
+                Log.e(TAG, "no device or accessory");
                 finish();
                 return;
             }
@@ -77,11 +85,12 @@ public class UsbResolverActivity extends ResolverActivity {
             if (arrayList2.size() > 1) {
                 Intent intent3 = new Intent(intent);
                 this.mOtherProfileIntent = intent3;
-                intent3.putParcelableArrayListExtra("rlist", arrayList2);
+                intent3.putParcelableArrayListExtra(EXTRA_RESOLVE_INFOS, arrayList2);
             } else {
-                Intent intent4 = new Intent((Context) this, (Class<?>) UsbConfirmActivity.class);
+                Intent intent4 = new Intent();
                 this.mOtherProfileIntent = intent4;
-                intent4.putExtra("rinfo", (Parcelable) arrayList2.get(0));
+                intent4.setComponent(ComponentName.unflattenFromString(getResources().getString(17040053)));
+                this.mOtherProfileIntent.putExtra(EXTRA_RESOLVE_INFO, (Parcelable) arrayList2.get(0));
                 UsbDevice usbDevice2 = this.mDevice;
                 if (usbDevice2 != null) {
                     this.mOtherProfileIntent.putExtra("device", usbDevice2);
@@ -93,28 +102,30 @@ public class UsbResolverActivity extends ResolverActivity {
             }
         }
         getIntent().putExtra("is_audio_capture_device", z);
-        super.onCreate(bundle, intent2, getResources().getText(17039841), (Intent[]) null, arrayList, true);
-        CheckBox checkBox = (CheckBox) findViewById(16908753);
+        UsbResolverActivity.super.onCreate(bundle, intent2, getResources().getText(17039863), (Intent[]) null, arrayList, true);
+        CheckBox checkBox = (CheckBox) findViewById(16908774);
         if (checkBox == null) {
             return;
         }
         if (this.mDevice == null) {
-            checkBox.setText(R$string.always_use_accessory);
+            checkBox.setText(C1893R.string.always_use_accessory);
         } else {
-            checkBox.setText(R$string.always_use_device);
+            checkBox.setText(C1893R.string.always_use_device);
         }
     }
 
-    protected void onDestroy() {
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
         UsbDisconnectedReceiver usbDisconnectedReceiver = this.mDisconnectedReceiver;
         if (usbDisconnectedReceiver != null) {
             unregisterReceiver(usbDisconnectedReceiver);
         }
-        super.onDestroy();
+        UsbResolverActivity.super.onDestroy();
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    protected boolean onTargetSelected(TargetInfo targetInfo, boolean z) {
+    /* JADX WARNING: type inference failed for: r8v0, types: [com.android.systemui.usb.UsbResolverActivity, android.app.Activity] */
+    /* access modifiers changed from: protected */
+    public boolean onTargetSelected(TargetInfo targetInfo, boolean z) {
         ResolveInfo resolveInfo = targetInfo.getResolveInfo();
         ResolveInfo resolveInfo2 = this.mForwardResolveInfo;
         if (resolveInfo == resolveInfo2) {
@@ -147,10 +158,10 @@ public class UsbResolverActivity extends ResolverActivity {
             try {
                 targetInfo.startAsUser(this, (Bundle) null, UserHandle.of(myUserId));
             } catch (ActivityNotFoundException e) {
-                Log.e("UsbResolverActivity", "startActivity failed", e);
+                Log.e(TAG, "startActivity failed", e);
             }
         } catch (RemoteException e2) {
-            Log.e("UsbResolverActivity", "onIntentSelected failed", e2);
+            Log.e(TAG, "onIntentSelected failed", e2);
         }
         return true;
     }

@@ -2,17 +2,10 @@ package com.android.systemui.people;
 
 import android.app.people.ConversationStatus;
 import java.util.function.Predicate;
-/* loaded from: classes.dex */
+
+/* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class PeopleTileViewHelper$$ExternalSyntheticLambda6 implements Predicate {
-    public static final /* synthetic */ PeopleTileViewHelper$$ExternalSyntheticLambda6 INSTANCE = new PeopleTileViewHelper$$ExternalSyntheticLambda6();
-
-    private /* synthetic */ PeopleTileViewHelper$$ExternalSyntheticLambda6() {
-    }
-
-    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
-        boolean lambda$getBirthdayStatus$6;
-        lambda$getBirthdayStatus$6 = PeopleTileViewHelper.lambda$getBirthdayStatus$6((ConversationStatus) obj);
-        return lambda$getBirthdayStatus$6;
+        return PeopleTileViewHelper.lambda$setCommonRemoteViewsFields$3((ConversationStatus) obj);
     }
 }

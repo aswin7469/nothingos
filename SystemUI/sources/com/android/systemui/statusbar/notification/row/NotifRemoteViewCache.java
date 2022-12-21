@@ -2,7 +2,7 @@ package com.android.systemui.statusbar.notification.row;
 
 import android.widget.RemoteViews;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-/* loaded from: classes.dex */
+
 public interface NotifRemoteViewCache {
     void clearCache(NotificationEntry notificationEntry);
 

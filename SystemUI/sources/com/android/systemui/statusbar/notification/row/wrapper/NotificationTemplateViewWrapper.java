@@ -4,31 +4,28 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Icon;
 import android.service.notification.StatusBarNotification;
 import android.util.ArraySet;
-import android.view.NotificationHeaderView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import androidx.core.app.NotificationCompat;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.internal.widget.NotificationActionListLayout;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$bool;
-import com.android.systemui.R$dimen;
 import com.android.systemui.UiOffloadThread;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.TransformableView;
 import com.android.systemui.statusbar.ViewTransformationHelper;
-import com.android.systemui.statusbar.notification.ImageTransformState;
 import com.android.systemui.statusbar.notification.TransformState;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.HybridNotificationView;
-/* loaded from: classes.dex */
+
 public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapper {
     private NotificationActionListLayout mActions;
     protected View mActionsContainer;
@@ -46,14 +43,13 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
     protected View mSmartReplyContainer;
     private TextView mText;
     private TextView mTitle;
-    private UiOffloadThread mUiOffloadThread;
+    /* access modifiers changed from: private */
+    public UiOffloadThread mUiOffloadThread;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public NotificationTemplateViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
+    protected NotificationTemplateViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
         super(context, view, expandableNotificationRow);
-        this.mAllowHideHeader = context.getResources().getBoolean(R$bool.heads_up_notification_hides_header);
-        this.mTransformationHelper.setCustomTransformation(new ViewTransformationHelper.CustomTransformation() { // from class: com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper.1
-            @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
+        this.mAllowHideHeader = context.getResources().getBoolean(C1893R.bool.heads_up_notification_hides_header);
+        this.mTransformationHelper.setCustomTransformation(new ViewTransformationHelper.CustomTransformation() {
             public boolean transformTo(TransformState transformState, TransformableView transformableView, float f) {
                 if (!(transformableView instanceof HybridNotificationView)) {
                     return false;
@@ -67,13 +63,11 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
                 return true;
             }
 
-            @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
             public boolean customTransformTarget(TransformState transformState, TransformState transformState2) {
                 transformState.setTransformationEndY(getTransformationY(transformState, transformState2));
                 return true;
             }
 
-            @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
             public boolean transformFrom(TransformState transformState, TransformableView transformableView, float f) {
                 if (!(transformableView instanceof HybridNotificationView)) {
                     return false;
@@ -87,56 +81,58 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
                 return true;
             }
 
-            @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
             public boolean initTransformation(TransformState transformState, TransformState transformState2) {
                 transformState.setTransformationStartY(getTransformationY(transformState, transformState2));
                 return true;
             }
 
             private float getTransformationY(TransformState transformState, TransformState transformState2) {
-                return ((transformState2.getLaidOutLocationOnScreen()[1] + transformState2.getTransformedView().getHeight()) - transformState.getLaidOutLocationOnScreen()[1]) * 0.33f;
+                return ((float) ((transformState2.getLaidOutLocationOnScreen()[1] + transformState2.getTransformedView().getHeight()) - transformState.getLaidOutLocationOnScreen()[1])) * 0.33f;
             }
         }, 2);
-        this.mFullHeaderTranslation = context.getResources().getDimensionPixelSize(17105377) - context.getResources().getDimensionPixelSize(17105380);
+        this.mFullHeaderTranslation = context.getResources().getDimensionPixelSize(17105382) - context.getResources().getDimensionPixelSize(17105385);
     }
 
     private void resolveTemplateViews(StatusBarNotification statusBarNotification) {
-        ImageView imageView = (ImageView) this.mView.findViewById(16909385);
+        ImageView imageView = (ImageView) this.mView.findViewById(16909431);
         this.mRightIcon = imageView;
         if (imageView != null) {
-            imageView.setTag(ImageTransformState.ICON_TAG, getRightIcon(statusBarNotification.getNotification()));
-            this.mRightIcon.setTag(TransformState.ALIGN_END_TAG, Boolean.TRUE);
+            imageView.setTag(C1893R.C1897id.image_icon_tag, getRightIcon(statusBarNotification.getNotification()));
+            this.mRightIcon.setTag(C1893R.C1897id.align_transform_end_tag, true);
         }
-        ImageView imageView2 = (ImageView) this.mView.findViewById(16909136);
+        ImageView imageView2 = (ImageView) this.mView.findViewById(16909175);
         this.mLeftIcon = imageView2;
         if (imageView2 != null) {
-            imageView2.setTag(ImageTransformState.ICON_TAG, getLargeIcon(statusBarNotification.getNotification()));
+            imageView2.setTag(C1893R.C1897id.image_icon_tag, getLargeIcon(statusBarNotification.getNotification()));
         }
         this.mTitle = (TextView) this.mView.findViewById(16908310);
-        this.mText = (TextView) this.mView.findViewById(16909531);
+        this.mText = (TextView) this.mView.findViewById(16909579);
         View findViewById = this.mView.findViewById(16908301);
         if (findViewById instanceof ProgressBar) {
             this.mProgressBar = (ProgressBar) findViewById;
         } else {
             this.mProgressBar = null;
         }
-        this.mSmartReplyContainer = this.mView.findViewById(16909465);
-        this.mActionsContainer = this.mView.findViewById(16908723);
-        this.mActions = this.mView.findViewById(16908722);
-        this.mRemoteInputHistory = this.mView.findViewById(16909243);
+        this.mSmartReplyContainer = this.mView.findViewById(16909511);
+        this.mActionsContainer = this.mView.findViewById(16908744);
+        this.mActions = this.mView.findViewById(16908743);
+        this.mRemoteInputHistory = this.mView.findViewById(16909287);
         updatePendingIntentCancellations();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public final Icon getLargeIcon(Notification notification) {
-        Bitmap bitmap;
         Icon largeIcon = notification.getLargeIcon();
-        return (largeIcon != null || (bitmap = notification.largeIcon) == null) ? largeIcon : Icon.createWithBitmap(bitmap);
+        return (largeIcon != null || notification.largeIcon == null) ? largeIcon : Icon.createWithBitmap(notification.largeIcon);
     }
 
-    protected final Icon getRightIcon(Notification notification) {
+    /* access modifiers changed from: protected */
+    public final Icon getRightIcon(Notification notification) {
         Icon pictureIcon;
-        return (!notification.extras.getBoolean("android.showBigPictureWhenCollapsed") || !notification.isStyle(Notification.BigPictureStyle.class) || (pictureIcon = Notification.BigPictureStyle.getPictureIcon(notification.extras)) == null) ? getLargeIcon(notification) : pictureIcon;
+        if (!notification.extras.getBoolean(NotificationCompat.EXTRA_SHOW_BIG_PICTURE_WHEN_COLLAPSED) || !notification.isStyle(Notification.BigPictureStyle.class) || (pictureIcon = Notification.BigPictureStyle.getPictureIcon(notification.extras)) == null) {
+            return getLargeIcon(notification);
+        }
+        return pictureIcon;
     }
 
     private void updatePendingIntentCancellations() {
@@ -144,25 +140,21 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         if (notificationActionListLayout != null) {
             int childCount = notificationActionListLayout.getChildCount();
             for (int i = 0; i < childCount; i++) {
-                final Button button = (Button) this.mActions.getChildAt(i);
-                performOnPendingIntentCancellation(button, new Runnable() { // from class: com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$$ExternalSyntheticLambda3
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        NotificationTemplateViewWrapper.this.lambda$updatePendingIntentCancellations$0(button);
-                    }
-                });
+                Button button = (Button) this.mActions.getChildAt(i);
+                performOnPendingIntentCancellation(button, new NotificationTemplateViewWrapper$$ExternalSyntheticLambda3(this, button));
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updatePendingIntentCancellations$0(Button button) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updatePendingIntentCancellations$0$com-android-systemui-statusbar-notification-row-wrapper-NotificationTemplateViewWrapper */
+    public /* synthetic */ void mo41789xed444a91(Button button) {
         if (button.isEnabled()) {
             button.setEnabled(false);
             ColorStateList textColors = button.getTextColors();
             int[] colors = textColors.getColors();
             int[] iArr = new int[colors.length];
-            float f = this.mView.getResources().getFloat(17105362);
+            float f = this.mView.getResources().getFloat(17105367);
             for (int i = 0; i < colors.length; i++) {
                 iArr[i] = blendColorWithBackground(colors[i], f);
             }
@@ -174,125 +166,102 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         return ContrastColorUtil.compositeColors(Color.argb((int) (f * 255.0f), Color.red(i), Color.green(i), Color.blue(i)), resolveBackgroundColor());
     }
 
-    private void performOnPendingIntentCancellation(View view, final Runnable runnable) {
-        final PendingIntent pendingIntent = (PendingIntent) view.getTag(16909291);
-        if (pendingIntent == null) {
-            return;
-        }
-        if (this.mCancelledPendingIntents.contains(pendingIntent)) {
-            runnable.run();
-            return;
-        }
-        final PendingIntent.CancelListener cancelListener = new PendingIntent.CancelListener() { // from class: com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$$ExternalSyntheticLambda0
-            public final void onCancelled(PendingIntent pendingIntent2) {
-                NotificationTemplateViewWrapper.this.lambda$performOnPendingIntentCancellation$2(pendingIntent, runnable, pendingIntent2);
+    private void performOnPendingIntentCancellation(View view, Runnable runnable) {
+        final PendingIntent pendingIntent = (PendingIntent) view.getTag(16909336);
+        if (pendingIntent != null) {
+            if (this.mCancelledPendingIntents.contains(pendingIntent)) {
+                runnable.run();
+                return;
             }
-        };
-        if (this.mUiOffloadThread == null) {
-            this.mUiOffloadThread = (UiOffloadThread) Dependency.get(UiOffloadThread.class);
-        }
-        if (view.isAttachedToWindow()) {
-            this.mUiOffloadThread.execute(new Runnable() { // from class: com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    pendingIntent.registerCancelListener(cancelListener);
+            final NotificationTemplateViewWrapper$$ExternalSyntheticLambda1 notificationTemplateViewWrapper$$ExternalSyntheticLambda1 = new NotificationTemplateViewWrapper$$ExternalSyntheticLambda1(this, pendingIntent, runnable);
+            if (this.mUiOffloadThread == null) {
+                this.mUiOffloadThread = (UiOffloadThread) Dependency.get(UiOffloadThread.class);
+            }
+            if (view.isAttachedToWindow()) {
+                this.mUiOffloadThread.execute(new NotificationTemplateViewWrapper$$ExternalSyntheticLambda2(pendingIntent, notificationTemplateViewWrapper$$ExternalSyntheticLambda1));
+            }
+            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                public void onViewAttachedToWindow(View view) {
+                    NotificationTemplateViewWrapper.this.mUiOffloadThread.execute(new NotificationTemplateViewWrapper$2$$ExternalSyntheticLambda1(pendingIntent, notificationTemplateViewWrapper$$ExternalSyntheticLambda1));
+                }
+
+                public void onViewDetachedFromWindow(View view) {
+                    NotificationTemplateViewWrapper.this.mUiOffloadThread.execute(new NotificationTemplateViewWrapper$2$$ExternalSyntheticLambda0(pendingIntent, notificationTemplateViewWrapper$$ExternalSyntheticLambda1));
                 }
             });
         }
-        view.addOnAttachStateChangeListener(new AnonymousClass2(pendingIntent, cancelListener));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$performOnPendingIntentCancellation$2(final PendingIntent pendingIntent, final Runnable runnable, PendingIntent pendingIntent2) {
-        this.mView.post(new Runnable() { // from class: com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                NotificationTemplateViewWrapper.this.lambda$performOnPendingIntentCancellation$1(pendingIntent, runnable);
-            }
-        });
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$performOnPendingIntentCancellation$2$com-android-systemui-statusbar-notification-row-wrapper-NotificationTemplateViewWrapper */
+    public /* synthetic */ void mo41788x8c7348a3(PendingIntent pendingIntent, Runnable runnable, PendingIntent pendingIntent2) {
+        this.mView.post(new NotificationTemplateViewWrapper$$ExternalSyntheticLambda0(this, pendingIntent, runnable));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$performOnPendingIntentCancellation$1(PendingIntent pendingIntent, Runnable runnable) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$performOnPendingIntentCancellation$1$com-android-systemui-statusbar-notification-row-wrapper-NotificationTemplateViewWrapper */
+    public /* synthetic */ void mo41787xa36b83a2(PendingIntent pendingIntent, Runnable runnable) {
         this.mCancelledPendingIntents.add(pendingIntent);
         runnable.run();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$2  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass2 implements View.OnAttachStateChangeListener {
-        final /* synthetic */ PendingIntent.CancelListener val$listener;
-        final /* synthetic */ PendingIntent val$pendingIntent;
-
-        AnonymousClass2(PendingIntent pendingIntent, PendingIntent.CancelListener cancelListener) {
-            this.val$pendingIntent = pendingIntent;
-            this.val$listener = cancelListener;
-        }
-
-        @Override // android.view.View.OnAttachStateChangeListener
-        public void onViewAttachedToWindow(View view) {
-            UiOffloadThread uiOffloadThread = NotificationTemplateViewWrapper.this.mUiOffloadThread;
-            final PendingIntent pendingIntent = this.val$pendingIntent;
-            final PendingIntent.CancelListener cancelListener = this.val$listener;
-            uiOffloadThread.execute(new Runnable() { // from class: com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$2$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    pendingIntent.registerCancelListener(cancelListener);
-                }
-            });
-        }
-
-        @Override // android.view.View.OnAttachStateChangeListener
-        public void onViewDetachedFromWindow(View view) {
-            UiOffloadThread uiOffloadThread = NotificationTemplateViewWrapper.this.mUiOffloadThread;
-            final PendingIntent pendingIntent = this.val$pendingIntent;
-            final PendingIntent.CancelListener cancelListener = this.val$listener;
-            uiOffloadThread.execute(new Runnable() { // from class: com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper$2$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    pendingIntent.unregisterCancelListener(cancelListener);
-                }
-            });
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:4:0x0016, code lost:
+        r0 = r2.mRightIcon;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onContentUpdated(com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r3) {
+        /*
+            r2 = this;
+            com.android.systemui.statusbar.notification.collection.NotificationEntry r0 = r3.getEntry()
+            android.service.notification.StatusBarNotification r0 = r0.getSbn()
+            r2.resolveTemplateViews(r0)
+            super.onContentUpdated(r3)
+            boolean r0 = r2.mAllowHideHeader
+            if (r0 == 0) goto L_0x0022
+            android.view.NotificationHeaderView r0 = r2.mNotificationHeader
+            if (r0 == 0) goto L_0x0022
+            android.widget.ImageView r0 = r2.mRightIcon
+            if (r0 == 0) goto L_0x0020
+            int r0 = r0.getVisibility()
+            if (r0 == 0) goto L_0x0022
+        L_0x0020:
+            r0 = 1
+            goto L_0x0023
+        L_0x0022:
+            r0 = 0
+        L_0x0023:
+            r2.mCanHideHeader = r0
+            float r0 = r3.getHeaderVisibleAmount()
+            r1 = 1065353216(0x3f800000, float:1.0)
+            int r0 = (r0 > r1 ? 1 : (r0 == r1 ? 0 : -1))
+            if (r0 == 0) goto L_0x0036
+            float r3 = r3.getHeaderVisibleAmount()
+            r2.setHeaderVisibleAmount(r3)
+        L_0x0036:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper.onContentUpdated(com.android.systemui.statusbar.notification.row.ExpandableNotificationRow):void");
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
-    public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
-        ImageView imageView;
-        resolveTemplateViews(expandableNotificationRow.getEntry().getSbn());
-        super.onContentUpdated(expandableNotificationRow);
-        this.mCanHideHeader = this.mAllowHideHeader && this.mNotificationHeader != null && ((imageView = this.mRightIcon) == null || imageView.getVisibility() != 0);
-        if (expandableNotificationRow.getHeaderVisibleAmount() != 1.0f) {
-            setHeaderVisibleAmount(expandableNotificationRow.getHeaderVisibleAmount());
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper
+    /* access modifiers changed from: protected */
     public void updateTransformedTypes() {
         super.updateTransformedTypes();
-        TextView textView = this.mTitle;
-        if (textView != null) {
-            this.mTransformationHelper.addTransformedView(1, textView);
+        if (this.mTitle != null) {
+            this.mTransformationHelper.addTransformedView(1, this.mTitle);
         }
-        TextView textView2 = this.mText;
-        if (textView2 != null) {
-            this.mTransformationHelper.addTransformedView(2, textView2);
+        if (this.mText != null) {
+            this.mTransformationHelper.addTransformedView(2, this.mText);
         }
-        ImageView imageView = this.mRightIcon;
-        if (imageView != null) {
-            this.mTransformationHelper.addTransformedView(3, imageView);
+        if (this.mRightIcon != null) {
+            this.mTransformationHelper.addTransformedView(3, this.mRightIcon);
         }
-        ProgressBar progressBar = this.mProgressBar;
-        if (progressBar != null) {
-            this.mTransformationHelper.addTransformedView(4, progressBar);
+        if (this.mProgressBar != null) {
+            this.mTransformationHelper.addTransformedView(4, this.mProgressBar);
         }
         addViewsTransformingToSimilar(this.mLeftIcon);
         addTransformedViews(this.mSmartReplyContainer);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void setContentHeight(int i, int i2) {
         super.setContentHeight(i, i2);
         this.mContentHeight = i;
@@ -300,48 +269,46 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         updateActionOffset();
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public boolean shouldClipToRounding(boolean z, boolean z2) {
         View view;
         if (super.shouldClipToRounding(z, z2)) {
             return true;
         }
-        return (!z2 || (view = this.mActionsContainer) == null || view.getVisibility() == 8) ? false : true;
+        if (!z2 || (view = this.mActionsContainer) == null || view.getVisibility() == 8) {
+            return false;
+        }
+        return true;
     }
 
     private void updateActionOffset() {
         if (this.mActionsContainer != null) {
-            this.mActionsContainer.setTranslationY((Math.max(this.mContentHeight, this.mMinHeightHint) - this.mView.getHeight()) - getHeaderTranslation(false));
+            this.mActionsContainer.setTranslationY((float) ((Math.max(this.mContentHeight, this.mMinHeightHint) - this.mView.getHeight()) - getHeaderTranslation(false)));
         }
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public int getHeaderTranslation(boolean z) {
         return (!z || !this.mCanHideHeader) ? (int) this.mHeaderTranslation : this.mFullHeaderTranslation;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void setHeaderVisibleAmount(float f) {
         float f2;
-        NotificationHeaderView notificationHeaderView;
         super.setHeaderVisibleAmount(f);
-        if (!this.mCanHideHeader || (notificationHeaderView = this.mNotificationHeader) == null) {
+        if (!this.mCanHideHeader || this.mNotificationHeader == null) {
             f2 = 0.0f;
         } else {
-            notificationHeaderView.setAlpha(f);
-            f2 = (1.0f - f) * this.mFullHeaderTranslation;
+            this.mNotificationHeader.setAlpha(f);
+            f2 = (1.0f - f) * ((float) this.mFullHeaderTranslation);
         }
         this.mHeaderTranslation = f2;
-        this.mView.setTranslationY(f2);
+        this.mView.setTranslationY(this.mHeaderTranslation);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public int getExtraMeasureHeight() {
         NotificationActionListLayout notificationActionListLayout = this.mActions;
         int extraMeasureHeight = notificationActionListLayout != null ? notificationActionListLayout.getExtraMeasureHeight() : 0;
         View view = this.mRemoteInputHistory;
-        if (view != null && view.getVisibility() != 8) {
-            extraMeasureHeight += this.mRow.getContext().getResources().getDimensionPixelSize(R$dimen.remote_input_history_extra_height);
+        if (!(view == null || view.getVisibility() == 8)) {
+            extraMeasureHeight += this.mRow.getContext().getResources().getDimensionPixelSize(C1893R.dimen.remote_input_history_extra_height);
         }
         return extraMeasureHeight + super.getExtraMeasureHeight();
     }

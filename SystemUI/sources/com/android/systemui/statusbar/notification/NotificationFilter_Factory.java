@@ -5,35 +5,36 @@ import com.android.systemui.media.MediaFeatureFlag;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.collection.provider.DebugModeFilterProvider;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationFilter_Factory implements Factory<NotificationFilter> {
+    private final Provider<DebugModeFilterProvider> debugNotificationFilterProvider;
     private final Provider<ForegroundServiceController> foregroundServiceControllerProvider;
     private final Provider<NotificationEntryManager.KeyguardEnvironment> keyguardEnvironmentProvider;
     private final Provider<MediaFeatureFlag> mediaFeatureFlagProvider;
     private final Provider<StatusBarStateController> statusBarStateControllerProvider;
     private final Provider<NotificationLockscreenUserManager> userManagerProvider;
 
-    public NotificationFilter_Factory(Provider<StatusBarStateController> provider, Provider<NotificationEntryManager.KeyguardEnvironment> provider2, Provider<ForegroundServiceController> provider3, Provider<NotificationLockscreenUserManager> provider4, Provider<MediaFeatureFlag> provider5) {
-        this.statusBarStateControllerProvider = provider;
-        this.keyguardEnvironmentProvider = provider2;
-        this.foregroundServiceControllerProvider = provider3;
-        this.userManagerProvider = provider4;
-        this.mediaFeatureFlagProvider = provider5;
+    public NotificationFilter_Factory(Provider<DebugModeFilterProvider> provider, Provider<StatusBarStateController> provider2, Provider<NotificationEntryManager.KeyguardEnvironment> provider3, Provider<ForegroundServiceController> provider4, Provider<NotificationLockscreenUserManager> provider5, Provider<MediaFeatureFlag> provider6) {
+        this.debugNotificationFilterProvider = provider;
+        this.statusBarStateControllerProvider = provider2;
+        this.keyguardEnvironmentProvider = provider3;
+        this.foregroundServiceControllerProvider = provider4;
+        this.userManagerProvider = provider5;
+        this.mediaFeatureFlagProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationFilter mo1933get() {
-        return newInstance(this.statusBarStateControllerProvider.mo1933get(), this.keyguardEnvironmentProvider.mo1933get(), this.foregroundServiceControllerProvider.mo1933get(), this.userManagerProvider.mo1933get(), this.mediaFeatureFlagProvider.mo1933get());
+    public NotificationFilter get() {
+        return newInstance(this.debugNotificationFilterProvider.get(), this.statusBarStateControllerProvider.get(), this.keyguardEnvironmentProvider.get(), this.foregroundServiceControllerProvider.get(), this.userManagerProvider.get(), this.mediaFeatureFlagProvider.get());
     }
 
-    public static NotificationFilter_Factory create(Provider<StatusBarStateController> provider, Provider<NotificationEntryManager.KeyguardEnvironment> provider2, Provider<ForegroundServiceController> provider3, Provider<NotificationLockscreenUserManager> provider4, Provider<MediaFeatureFlag> provider5) {
-        return new NotificationFilter_Factory(provider, provider2, provider3, provider4, provider5);
+    public static NotificationFilter_Factory create(Provider<DebugModeFilterProvider> provider, Provider<StatusBarStateController> provider2, Provider<NotificationEntryManager.KeyguardEnvironment> provider3, Provider<ForegroundServiceController> provider4, Provider<NotificationLockscreenUserManager> provider5, Provider<MediaFeatureFlag> provider6) {
+        return new NotificationFilter_Factory(provider, provider2, provider3, provider4, provider5, provider6);
     }
 
-    public static NotificationFilter newInstance(StatusBarStateController statusBarStateController, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment, ForegroundServiceController foregroundServiceController, NotificationLockscreenUserManager notificationLockscreenUserManager, MediaFeatureFlag mediaFeatureFlag) {
-        return new NotificationFilter(statusBarStateController, keyguardEnvironment, foregroundServiceController, notificationLockscreenUserManager, mediaFeatureFlag);
+    public static NotificationFilter newInstance(DebugModeFilterProvider debugModeFilterProvider, StatusBarStateController statusBarStateController, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment, ForegroundServiceController foregroundServiceController, NotificationLockscreenUserManager notificationLockscreenUserManager, MediaFeatureFlag mediaFeatureFlag) {
+        return new NotificationFilter(debugModeFilterProvider, statusBarStateController, keyguardEnvironment, foregroundServiceController, notificationLockscreenUserManager, mediaFeatureFlag);
     }
 }

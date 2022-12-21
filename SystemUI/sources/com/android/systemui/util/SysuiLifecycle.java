@@ -4,13 +4,15 @@ import android.view.View;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
-/* loaded from: classes2.dex */
+
 public class SysuiLifecycle {
+    private SysuiLifecycle() {
+    }
+
     public static LifecycleOwner viewAttachLifecycle(View view) {
         return new ViewLifecycle(view);
     }
 
-    /* loaded from: classes2.dex */
     private static class ViewLifecycle implements LifecycleOwner, View.OnAttachStateChangeListener {
         private final LifecycleRegistry mLifecycle;
 
@@ -23,18 +25,14 @@ public class SysuiLifecycle {
             }
         }
 
-        @Override // androidx.lifecycle.LifecycleOwner
-        /* renamed from: getLifecycle */
-        public Lifecycle mo1437getLifecycle() {
+        public Lifecycle getLifecycle() {
             return this.mLifecycle;
         }
 
-        @Override // android.view.View.OnAttachStateChangeListener
         public void onViewAttachedToWindow(View view) {
             this.mLifecycle.markState(Lifecycle.State.RESUMED);
         }
 
-        @Override // android.view.View.OnAttachStateChangeListener
         public void onViewDetachedFromWindow(View view) {
             this.mLifecycle.markState(Lifecycle.State.DESTROYED);
         }

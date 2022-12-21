@@ -5,21 +5,33 @@ import android.net.Uri;
 import androidx.slice.compat.SliceProviderCompat;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 class SliceManagerCompat extends SliceManager {
     private final Context mContext;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public SliceManagerCompat(Context context) {
+    SliceManagerCompat(Context context) {
         this.mContext = context;
     }
 
-    @Override // androidx.slice.SliceManager
     public Set<SliceSpec> getPinnedSpecs(Uri uri) {
         return SliceProviderCompat.getPinnedSpecs(this.mContext, uri);
     }
 
-    @Override // androidx.slice.SliceManager
+    public int checkSlicePermission(Uri uri, int i, int i2) {
+        Context context = this.mContext;
+        return SliceProviderCompat.checkSlicePermission(context, context.getPackageName(), uri, i, i2);
+    }
+
+    public void grantSlicePermission(String str, Uri uri) {
+        Context context = this.mContext;
+        SliceProviderCompat.grantSlicePermission(context, context.getPackageName(), str, uri);
+    }
+
+    public void revokeSlicePermission(String str, Uri uri) {
+        Context context = this.mContext;
+        SliceProviderCompat.revokeSlicePermission(context, context.getPackageName(), str, uri);
+    }
+
     public List<Uri> getPinnedSlices() {
         return SliceProviderCompat.getPinnedSlices(this.mContext);
     }

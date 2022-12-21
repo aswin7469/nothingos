@@ -4,36 +4,33 @@ import android.app.ActivityTaskManager;
 import android.app.AlarmManager;
 import android.app.IActivityManager;
 import android.app.SynchronousUserSwitchObserver;
+import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.net.ConnectivityManager;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.RemoteException;
 import android.os.UserManager;
-import android.provider.Settings;
 import android.service.notification.ZenModeConfig;
 import android.telecom.TelecomManager;
 import android.text.format.DateFormat;
 import android.util.Log;
-import androidx.lifecycle.Observer;
-import com.android.settingslib.bluetooth.CachedBluetoothDevice;
-import com.android.systemui.R$drawable;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
+import com.android.systemui.biometrics.AuthDialog;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dagger.qualifiers.DisplayId;
+import com.android.systemui.dagger.qualifiers.Main;
+import com.android.systemui.dagger.qualifiers.UiBackground;
+import com.android.systemui.p012qs.tiles.RotationLockTile;
 import com.android.systemui.privacy.PrivacyItem;
 import com.android.systemui.privacy.PrivacyItemController;
 import com.android.systemui.privacy.PrivacyType;
 import com.android.systemui.privacy.logging.PrivacyLogger;
-import com.android.systemui.qs.tiles.DndTile;
-import com.android.systemui.qs.tiles.RotationLockTile;
 import com.android.systemui.screenrecord.RecordingController;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.phone.PhoneStatusBarPolicy;
 import com.android.systemui.statusbar.policy.BluetoothController;
 import com.android.systemui.statusbar.policy.CastController;
 import com.android.systemui.statusbar.policy.DataSaverController;
@@ -48,104 +45,53 @@ import com.android.systemui.statusbar.policy.UserInfoController;
 import com.android.systemui.statusbar.policy.ZenModeController;
 import com.android.systemui.util.RingerModeTracker;
 import com.android.systemui.util.time.DateFormatUtil;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import com.nothing.systemui.statusbar.phone.PhoneStatusBarPolicyEx;
+import java.p026io.PrintWriter;
+import java.p026io.StringWriter;
+import java.p026io.Writer;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class PhoneStatusBarPolicy implements BluetoothController.Callback, CommandQueue.Callbacks, RotationLockController.RotationLockControllerCallback, DataSaverController.Listener, ZenModeController.Callback, DeviceProvisionedController.DeviceProvisionedListener, KeyguardStateController.Callback, PrivacyItemController.Callback, LocationController.LocationChangeCallback, RecordingController.RecordingStateChangeCallback {
-    private static final boolean DEBUG = Log.isLoggable("PhoneStatusBarPolicy", 3);
+    /* access modifiers changed from: private */
+    public static final boolean DEBUG = Log.isLoggable(TAG, 3);
     static final int LOCATION_STATUS_ICON_ID = PrivacyType.TYPE_LOCATION.getIconId();
-    private static final String TESLA_MAC_ADDRESS = "4C:FC:AA".toLowerCase();
+    private static final String TAG = "PhoneStatusBarPolicy";
     private final AlarmManager mAlarmManager;
     private BluetoothController mBluetooth;
     private final BroadcastDispatcher mBroadcastDispatcher;
     private final CastController mCast;
+    private final CastController.Callback mCastCallback = new CastController.Callback() {
+        public void onCastDevicesChanged() {
+            PhoneStatusBarPolicy.this.updateCast();
+        }
+    };
     private final CommandQueue mCommandQueue;
-    private ConnectivityManager mConnectivityManager;
-    private Context mContext;
     private boolean mCurrentUserSetup;
     private final DataSaverController mDataSaver;
     private final DateFormatUtil mDateFormatUtil;
+    private final DevicePolicyManager mDevicePolicyManager;
     private final int mDisplayId;
+    PhoneStatusBarPolicyEx mEx;
+    /* access modifiers changed from: private */
+    public final Handler mHandler = new Handler();
     private final HotspotController mHotspot;
-    private final IActivityManager mIActivityManager;
-    private final StatusBarIconController mIconController;
-    private final KeyguardStateController mKeyguardStateController;
-    private final LocationController mLocationController;
-    private boolean mMuteVisible;
-    private AlarmManager.AlarmClockInfo mNextAlarm;
-    private final NextAlarmController mNextAlarmController;
-    private final PrivacyItemController mPrivacyItemController;
-    private final PrivacyLogger mPrivacyLogger;
-    private final DeviceProvisionedController mProvisionedController;
-    private final RecordingController mRecordingController;
-    private final Resources mResources;
-    private final RingerModeTracker mRingerModeTracker;
-    private final RotationLockController mRotationLockController;
-    private final SensorPrivacyController mSensorPrivacyController;
-    private final SharedPreferences mSharedPreferences;
-    private final String mSlotAlarmClock;
-    private final String mSlotBluetooth;
-    private final String mSlotCamera;
-    private final String mSlotCast;
-    private final String mSlotDataSaver;
-    private final String mSlotHeadset;
-    private final String mSlotHotspot;
-    private final String mSlotLocation;
-    private final String mSlotManagedProfile;
-    private final String mSlotMicrophone;
-    private final String mSlotMute;
-    private final String mSlotRotate;
-    private final String mSlotScreenRecord;
-    private final String mSlotSensorsOff;
-    private final String mSlotTty;
-    private final String mSlotVibrate;
-    private final String mSlotZen;
-    private final TelecomManager mTelecomManager;
-    private final Executor mUiBgExecutor;
-    private final UserInfoController mUserInfoController;
-    private final UserManager mUserManager;
-    private boolean mVibrateVisible;
-    private final ZenModeController mZenController;
-    private boolean mZenVisible;
-    private final Handler mHandler = new Handler();
-    private boolean mManagedProfileIconVisible = false;
-    final ConnectivityManager.OnStartTetheringCallback mOnStartTetheringCallback = new ConnectivityManager.OnStartTetheringCallback() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.1
-        public void onTetheringFailed() {
-            super.onTetheringFailed();
-        }
-    };
-    private final SynchronousUserSwitchObserver mUserSwitchListener = new AnonymousClass2();
-    private final HotspotController.Callback mHotspotCallback = new HotspotController.Callback() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.3
-        @Override // com.android.systemui.statusbar.policy.HotspotController.Callback
+    private final HotspotController.Callback mHotspotCallback = new HotspotController.Callback() {
         public void onHotspotChanged(boolean z, int i) {
             PhoneStatusBarPolicy.this.mIconController.setIconVisibility(PhoneStatusBarPolicy.this.mSlotHotspot, z);
         }
 
-        @Override // com.android.systemui.statusbar.policy.HotspotController.Callback
         public void onHotspotChanged(boolean z, int i, int i2) {
             PhoneStatusBarPolicy.this.updateHotspotIcon(i2);
             PhoneStatusBarPolicy.this.mIconController.setIconVisibility(PhoneStatusBarPolicy.this.mSlotHotspot, z);
         }
     };
-    private final CastController.Callback mCastCallback = new CastController.Callback() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.4
-        @Override // com.android.systemui.statusbar.policy.CastController.Callback
-        public void onCastDevicesChanged() {
-            PhoneStatusBarPolicy.this.updateCast();
-        }
-    };
-    private final NextAlarmController.NextAlarmChangeCallback mNextAlarmCallback = new NextAlarmController.NextAlarmChangeCallback() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.5
-        @Override // com.android.systemui.statusbar.policy.NextAlarmController.NextAlarmChangeCallback
-        public void onNextAlarmChanged(AlarmManager.AlarmClockInfo alarmClockInfo) {
-            PhoneStatusBarPolicy.this.mNextAlarm = alarmClockInfo;
-            PhoneStatusBarPolicy.this.updateAlarm();
-        }
-    };
-    private final SensorPrivacyController.OnSensorPrivacyChangedListener mSensorPrivacyListener = new AnonymousClass6();
-    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.7
-        @Override // android.content.BroadcastReceiver
+    private final IActivityManager mIActivityManager;
+    /* access modifiers changed from: private */
+    public final StatusBarIconController mIconController;
+    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             action.hashCode();
@@ -208,17 +154,100 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             }
         }
     };
-    private Runnable mRemoveCastIconRunnable = new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.8
-        @Override // java.lang.Runnable
+    private final KeyguardStateController mKeyguardStateController;
+    private final LocationController mLocationController;
+    private boolean mManagedProfileIconVisible = false;
+    private boolean mMuteVisible;
+    /* access modifiers changed from: private */
+    public AlarmManager.AlarmClockInfo mNextAlarm;
+    private final NextAlarmController.NextAlarmChangeCallback mNextAlarmCallback = new NextAlarmController.NextAlarmChangeCallback() {
+        public void onNextAlarmChanged(AlarmManager.AlarmClockInfo alarmClockInfo) {
+            AlarmManager.AlarmClockInfo unused = PhoneStatusBarPolicy.this.mNextAlarm = alarmClockInfo;
+            PhoneStatusBarPolicy.this.updateAlarm();
+        }
+    };
+    private final NextAlarmController mNextAlarmController;
+    private final PrivacyItemController mPrivacyItemController;
+    private final PrivacyLogger mPrivacyLogger;
+    private final DeviceProvisionedController mProvisionedController;
+    private final RecordingController mRecordingController;
+    private Runnable mRemoveCastIconRunnable = new Runnable() {
         public void run() {
             if (PhoneStatusBarPolicy.DEBUG) {
-                Log.v("PhoneStatusBarPolicy", "updateCast: hiding icon NOW");
+                Log.v(PhoneStatusBarPolicy.TAG, "updateCast: hiding icon NOW");
             }
             PhoneStatusBarPolicy.this.mIconController.setIconVisibility(PhoneStatusBarPolicy.this.mSlotCast, false);
         }
     };
+    private final Resources mResources;
+    private final RingerModeTracker mRingerModeTracker;
+    private final RotationLockController mRotationLockController;
+    private final SensorPrivacyController mSensorPrivacyController;
+    private final SensorPrivacyController.OnSensorPrivacyChangedListener mSensorPrivacyListener = new SensorPrivacyController.OnSensorPrivacyChangedListener() {
+        public void onSensorPrivacyChanged(boolean z) {
+            PhoneStatusBarPolicy.this.mHandler.post(new PhoneStatusBarPolicy$5$$ExternalSyntheticLambda0(this, z));
+        }
 
-    public PhoneStatusBarPolicy(StatusBarIconController statusBarIconController, CommandQueue commandQueue, BroadcastDispatcher broadcastDispatcher, Executor executor, Resources resources, CastController castController, HotspotController hotspotController, BluetoothController bluetoothController, NextAlarmController nextAlarmController, UserInfoController userInfoController, RotationLockController rotationLockController, DataSaverController dataSaverController, ZenModeController zenModeController, DeviceProvisionedController deviceProvisionedController, KeyguardStateController keyguardStateController, LocationController locationController, SensorPrivacyController sensorPrivacyController, IActivityManager iActivityManager, AlarmManager alarmManager, UserManager userManager, RecordingController recordingController, TelecomManager telecomManager, int i, SharedPreferences sharedPreferences, DateFormatUtil dateFormatUtil, RingerModeTracker ringerModeTracker, PrivacyItemController privacyItemController, PrivacyLogger privacyLogger) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onSensorPrivacyChanged$0$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy$5 */
+        public /* synthetic */ void mo44975x5d39614b(boolean z) {
+            PhoneStatusBarPolicy.this.mIconController.setIconVisibility(PhoneStatusBarPolicy.this.mSlotSensorsOff, z);
+        }
+    };
+    private final SharedPreferences mSharedPreferences;
+    private final String mSlotAlarmClock;
+    private final String mSlotBluetooth;
+    private final String mSlotCamera;
+    /* access modifiers changed from: private */
+    public final String mSlotCast;
+    private final String mSlotDataSaver;
+    private final String mSlotHeadset;
+    /* access modifiers changed from: private */
+    public final String mSlotHotspot;
+    private final String mSlotLocation;
+    private final String mSlotManagedProfile;
+    private final String mSlotMicrophone;
+    private final String mSlotMute;
+    private final String mSlotRotate;
+    private final String mSlotScreenRecord;
+    /* access modifiers changed from: private */
+    public final String mSlotSensorsOff;
+    private final String mSlotTty;
+    private final String mSlotVibrate;
+    private final String mSlotZen;
+    private final TelecomManager mTelecomManager;
+    private final Executor mUiBgExecutor;
+    /* access modifiers changed from: private */
+    public final UserInfoController mUserInfoController;
+    private final UserManager mUserManager;
+    private final SynchronousUserSwitchObserver mUserSwitchListener = new SynchronousUserSwitchObserver() {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onUserSwitching$0$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy$1 */
+        public /* synthetic */ void mo44971x87306a4c() {
+            PhoneStatusBarPolicy.this.mUserInfoController.reloadUserInfo();
+        }
+
+        public void onUserSwitching(int i) throws RemoteException {
+            PhoneStatusBarPolicy.this.mHandler.post(new PhoneStatusBarPolicy$1$$ExternalSyntheticLambda0(this));
+        }
+
+        public void onUserSwitchComplete(int i) throws RemoteException {
+            PhoneStatusBarPolicy.this.mHandler.post(new PhoneStatusBarPolicy$1$$ExternalSyntheticLambda1(this));
+        }
+
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onUserSwitchComplete$1$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy$1 */
+        public /* synthetic */ void mo44970x263abe1a() {
+            PhoneStatusBarPolicy.this.updateAlarm();
+            PhoneStatusBarPolicy.this.updateManagedProfile();
+        }
+    };
+    private boolean mVibrateVisible;
+    private final ZenModeController mZenController;
+    private boolean mZenVisible;
+
+    @Inject
+    public PhoneStatusBarPolicy(StatusBarIconController statusBarIconController, CommandQueue commandQueue, BroadcastDispatcher broadcastDispatcher, @UiBackground Executor executor, @Main Resources resources, CastController castController, HotspotController hotspotController, BluetoothController bluetoothController, NextAlarmController nextAlarmController, UserInfoController userInfoController, RotationLockController rotationLockController, DataSaverController dataSaverController, ZenModeController zenModeController, DeviceProvisionedController deviceProvisionedController, KeyguardStateController keyguardStateController, LocationController locationController, SensorPrivacyController sensorPrivacyController, IActivityManager iActivityManager, AlarmManager alarmManager, UserManager userManager, DevicePolicyManager devicePolicyManager, RecordingController recordingController, TelecomManager telecomManager, @DisplayId int i, @Main SharedPreferences sharedPreferences, DateFormatUtil dateFormatUtil, RingerModeTracker ringerModeTracker, PrivacyItemController privacyItemController, PrivacyLogger privacyLogger) {
         this.mIconController = statusBarIconController;
         this.mCommandQueue = commandQueue;
         this.mBroadcastDispatcher = broadcastDispatcher;
@@ -231,6 +260,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         this.mUserInfoController = userInfoController;
         this.mIActivityManager = iActivityManager;
         this.mUserManager = userManager;
+        this.mDevicePolicyManager = devicePolicyManager;
         this.mRotationLockController = rotationLockController;
         this.mDataSaver = dataSaverController;
         this.mZenController = zenModeController;
@@ -244,29 +274,30 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         this.mTelecomManager = telecomManager;
         this.mRingerModeTracker = ringerModeTracker;
         this.mPrivacyLogger = privacyLogger;
-        this.mSlotCast = resources.getString(17041442);
-        this.mSlotHotspot = resources.getString(17041449);
-        this.mSlotBluetooth = resources.getString(17041439);
-        this.mSlotTty = resources.getString(17041467);
-        this.mSlotZen = resources.getString(17041471);
-        this.mSlotMute = resources.getString(17041455);
-        this.mSlotVibrate = resources.getString(17041468);
-        this.mSlotAlarmClock = resources.getString(17041437);
-        this.mSlotManagedProfile = resources.getString(17041452);
-        this.mSlotRotate = resources.getString(17041460);
-        this.mSlotHeadset = resources.getString(17041448);
-        this.mSlotDataSaver = resources.getString(17041446);
-        this.mSlotLocation = resources.getString(17041451);
-        this.mSlotMicrophone = resources.getString(17041453);
-        this.mSlotCamera = resources.getString(17041441);
-        this.mSlotSensorsOff = resources.getString(17041463);
-        this.mSlotScreenRecord = resources.getString(17041461);
+        this.mSlotCast = resources.getString(17041559);
+        this.mSlotHotspot = resources.getString(17041566);
+        this.mSlotBluetooth = resources.getString(17041556);
+        this.mSlotTty = resources.getString(17041584);
+        this.mSlotZen = resources.getString(17041588);
+        this.mSlotMute = resources.getString(17041572);
+        this.mSlotVibrate = resources.getString(17041585);
+        this.mSlotAlarmClock = resources.getString(17041554);
+        this.mSlotManagedProfile = resources.getString(17041569);
+        this.mSlotRotate = resources.getString(17041577);
+        this.mSlotHeadset = resources.getString(17041565);
+        this.mSlotDataSaver = resources.getString(17041563);
+        this.mSlotLocation = resources.getString(17041568);
+        this.mSlotMicrophone = resources.getString(17041570);
+        this.mSlotCamera = resources.getString(17041558);
+        this.mSlotSensorsOff = resources.getString(17041580);
+        this.mSlotScreenRecord = resources.getString(17041578);
         this.mDisplayId = i;
         this.mSharedPreferences = sharedPreferences;
         this.mDateFormatUtil = dateFormatUtil;
     }
 
-    public void init() {
+    public void init(Context context) {
+        this.mEx = new PhoneStatusBarPolicyEx(context);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.HEADSET_PLUG");
         intentFilter.addAction("android.intent.action.SIM_STATE_CHANGED");
@@ -275,51 +306,40 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         intentFilter.addAction("android.intent.action.MANAGED_PROFILE_UNAVAILABLE");
         intentFilter.addAction("android.intent.action.MANAGED_PROFILE_REMOVED");
         this.mBroadcastDispatcher.registerReceiverWithHandler(this.mIntentReceiver, intentFilter, this.mHandler);
-        Observer<? super Integer> observer = new Observer() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$$ExternalSyntheticLambda0
-            @Override // androidx.lifecycle.Observer
-            public final void onChanged(Object obj) {
-                PhoneStatusBarPolicy.this.lambda$init$0((Integer) obj);
-            }
-        };
-        this.mRingerModeTracker.getRingerMode().observeForever(observer);
-        this.mRingerModeTracker.getRingerModeInternal().observeForever(observer);
+        PhoneStatusBarPolicy$$ExternalSyntheticLambda4 phoneStatusBarPolicy$$ExternalSyntheticLambda4 = new PhoneStatusBarPolicy$$ExternalSyntheticLambda4(this);
+        this.mRingerModeTracker.getRingerMode().observeForever(phoneStatusBarPolicy$$ExternalSyntheticLambda4);
+        this.mRingerModeTracker.getRingerModeInternal().observeForever(phoneStatusBarPolicy$$ExternalSyntheticLambda4);
         try {
-            this.mIActivityManager.registerUserSwitchObserver(this.mUserSwitchListener, "PhoneStatusBarPolicy");
+            this.mIActivityManager.registerUserSwitchObserver(this.mUserSwitchListener, TAG);
         } catch (RemoteException unused) {
         }
         updateTTY();
         updateBluetooth();
-        this.mIconController.setIcon(this.mSlotAlarmClock, R$drawable.stat_sys_alarm, null);
+        this.mIconController.setIcon(this.mSlotAlarmClock, C1893R.C1895drawable.stat_sys_alarm, (CharSequence) null);
         this.mIconController.setIconVisibility(this.mSlotAlarmClock, false);
-        this.mIconController.setIcon(this.mSlotZen, R$drawable.stat_sys_dnd, null);
+        this.mIconController.setIcon(this.mSlotZen, C1893R.C1895drawable.stat_sys_dnd, (CharSequence) null);
         this.mIconController.setIconVisibility(this.mSlotZen, false);
-        this.mIconController.setIcon(this.mSlotVibrate, R$drawable.stat_sys_ringer_vibrate, this.mResources.getString(R$string.accessibility_ringer_vibrate));
+        this.mIconController.setIcon(this.mSlotVibrate, C1893R.C1895drawable.stat_sys_ringer_vibrate, this.mResources.getString(C1893R.string.accessibility_ringer_vibrate));
         this.mIconController.setIconVisibility(this.mSlotVibrate, false);
-        this.mIconController.setIcon(this.mSlotMute, R$drawable.stat_sys_ringer_silent, this.mResources.getString(R$string.accessibility_ringer_silent));
+        this.mIconController.setIcon(this.mSlotMute, C1893R.C1895drawable.stat_sys_ringer_silent, this.mResources.getString(C1893R.string.accessibility_ringer_silent));
         this.mIconController.setIconVisibility(this.mSlotMute, false);
         updateVolumeZen();
-        this.mIconController.setIcon(this.mSlotCast, R$drawable.stat_sys_cast, null);
+        this.mIconController.setIcon(this.mSlotCast, C1893R.C1895drawable.stat_sys_cast, (CharSequence) null);
         this.mIconController.setIconVisibility(this.mSlotCast, false);
-        this.mIconController.setIcon(this.mSlotManagedProfile, R$drawable.stat_sys_managed_profile_status, this.mResources.getString(R$string.accessibility_managed_profile));
-        this.mIconController.setIconVisibility(this.mSlotManagedProfile, this.mManagedProfileIconVisible);
-        this.mIconController.setIcon(this.mSlotDataSaver, R$drawable.stat_sys_data_saver, this.mResources.getString(R$string.accessibility_data_saver_on));
+        updateManagedProfile();
+        this.mIconController.setIcon(this.mSlotDataSaver, C1893R.C1895drawable.stat_sys_data_saver, this.mResources.getString(C1893R.string.accessibility_data_saver_on));
         this.mIconController.setIconVisibility(this.mSlotDataSaver, false);
-        Resources resources = this.mResources;
-        PrivacyType privacyType = PrivacyType.TYPE_MICROPHONE;
-        String string = resources.getString(privacyType.getNameId());
-        Resources resources2 = this.mResources;
-        int i = R$string.ongoing_privacy_chip_content_multiple_apps;
-        this.mIconController.setIcon(this.mSlotMicrophone, privacyType.getIconId(), resources2.getString(i, string));
+        String string = this.mResources.getString(PrivacyType.TYPE_MICROPHONE.getNameId());
+        this.mIconController.setIcon(this.mSlotMicrophone, PrivacyType.TYPE_MICROPHONE.getIconId(), this.mResources.getString(C1893R.string.ongoing_privacy_chip_content_multiple_apps, new Object[]{string}));
         this.mIconController.setIconVisibility(this.mSlotMicrophone, false);
-        Resources resources3 = this.mResources;
-        PrivacyType privacyType2 = PrivacyType.TYPE_CAMERA;
-        this.mIconController.setIcon(this.mSlotCamera, privacyType2.getIconId(), this.mResources.getString(i, resources3.getString(privacyType2.getNameId())));
+        String string2 = this.mResources.getString(PrivacyType.TYPE_CAMERA.getNameId());
+        this.mIconController.setIcon(this.mSlotCamera, PrivacyType.TYPE_CAMERA.getIconId(), this.mResources.getString(C1893R.string.ongoing_privacy_chip_content_multiple_apps, new Object[]{string2}));
         this.mIconController.setIconVisibility(this.mSlotCamera, false);
-        this.mIconController.setIcon(this.mSlotLocation, LOCATION_STATUS_ICON_ID, this.mResources.getString(R$string.accessibility_location_active));
+        this.mIconController.setIcon(this.mSlotLocation, LOCATION_STATUS_ICON_ID, this.mResources.getString(C1893R.string.accessibility_location_active));
         this.mIconController.setIconVisibility(this.mSlotLocation, false);
-        this.mIconController.setIcon(this.mSlotSensorsOff, R$drawable.stat_sys_sensors_off, this.mResources.getString(R$string.accessibility_sensors_off_active));
+        this.mIconController.setIcon(this.mSlotSensorsOff, C1893R.C1895drawable.stat_sys_sensors_off, this.mResources.getString(C1893R.string.accessibility_sensors_off_active));
         this.mIconController.setIconVisibility(this.mSlotSensorsOff, this.mSensorPrivacyController.isSensorPrivacyEnabled());
-        this.mIconController.setIcon(this.mSlotScreenRecord, R$drawable.stat_sys_screen_record, null);
+        this.mIconController.setIcon(this.mSlotScreenRecord, C1893R.C1895drawable.stat_sys_screen_record, (CharSequence) null);
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, false);
         this.mRotationLockController.addCallback(this);
         this.mBluetooth.addCallback(this);
@@ -330,39 +350,43 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         this.mNextAlarmController.addCallback(this.mNextAlarmCallback);
         this.mDataSaver.addCallback(this);
         this.mKeyguardStateController.addCallback(this);
-        this.mPrivacyItemController.addCallback(this);
+        this.mPrivacyItemController.addCallback((PrivacyItemController.Callback) this);
         this.mSensorPrivacyController.addCallback(this.mSensorPrivacyListener);
         this.mLocationController.addCallback(this);
         this.mRecordingController.addCallback((RecordingController.RecordingStateChangeCallback) this);
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$init$0(Integer num) {
-        this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                PhoneStatusBarPolicy.this.updateVolumeZen();
-            }
-        });
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$init$0$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
+    public /* synthetic */ void mo44962x439b9625(Integer num) {
+        this.mHandler.post(new PhoneStatusBarPolicy$$ExternalSyntheticLambda5(this));
     }
 
-    @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
+    private String getManagedProfileAccessibilityString() {
+        return this.mDevicePolicyManager.getResources().getString("SystemUi.STATUS_BAR_WORK_ICON_ACCESSIBILITY", new PhoneStatusBarPolicy$$ExternalSyntheticLambda1(this));
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$getManagedProfileAccessibilityString$1$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
+    public /* synthetic */ String mo44961xc8809635() {
+        return this.mResources.getString(C1893R.string.accessibility_managed_profile);
+    }
+
     public void onZenChanged(int i) {
         updateVolumeZen();
     }
 
-    @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
     public void onConfigChanged(ZenModeConfig zenModeConfig) {
         updateVolumeZen();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateAlarm() {
         AlarmManager.AlarmClockInfo nextAlarmClock = this.mAlarmManager.getNextAlarmClock(-2);
         boolean z = true;
         boolean z2 = nextAlarmClock != null && nextAlarmClock.getTriggerTime() > 0;
-        this.mIconController.setIcon(this.mSlotAlarmClock, this.mZenController.getZen() == 2 ? R$drawable.stat_sys_alarm_dim : R$drawable.stat_sys_alarm, buildAlarmContentDescription());
+        this.mIconController.setIcon(this.mSlotAlarmClock, this.mZenController.getZen() == 2 ? C1893R.C1895drawable.stat_sys_alarm_dim : C1893R.C1895drawable.stat_sys_alarm, buildAlarmContentDescription());
         StatusBarIconController statusBarIconController = this.mIconController;
         String str = this.mSlotAlarmClock;
         if (!this.mCurrentUserSetup || !z2) {
@@ -373,148 +397,140 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
 
     private String buildAlarmContentDescription() {
         if (this.mNextAlarm == null) {
-            return this.mResources.getString(R$string.status_bar_alarm);
+            return this.mResources.getString(C1893R.string.status_bar_alarm);
         }
-        return this.mResources.getString(R$string.accessibility_quick_settings_alarm, DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), this.mDateFormatUtil.is24HourFormat() ? "EHm" : "Ehma"), this.mNextAlarm.getTriggerTime()).toString());
+        return this.mResources.getString(C1893R.string.accessibility_quick_settings_alarm, new Object[]{DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), this.mDateFormatUtil.is24HourFormat() ? "EHm" : "Ehma"), this.mNextAlarm.getTriggerTime()).toString()});
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:31:0x0073, code lost:
-        if (r0.intValue() == 0) goto L16;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:17:0x0079  */
-    /* JADX WARN: Removed duplicated region for block: B:20:0x0084  */
-    /* JADX WARN: Removed duplicated region for block: B:23:0x0091  */
-    /* JADX WARN: Removed duplicated region for block: B:26:0x009e  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Removed duplicated region for block: B:26:0x0078  */
+    /* JADX WARNING: Removed duplicated region for block: B:29:0x0083  */
+    /* JADX WARNING: Removed duplicated region for block: B:32:0x0090  */
+    /* JADX WARNING: Removed duplicated region for block: B:35:0x009d  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public final void updateVolumeZen() {
-        boolean z;
-        int i;
-        String string;
-        Integer mo1438getValue;
-        int i2;
-        String string2;
-        int zen = this.mZenController.getZen();
-        boolean z2 = false;
-        boolean z3 = true;
-        if (DndTile.isVisible(this.mSharedPreferences) || DndTile.isCombinedIcon(this.mSharedPreferences)) {
-            z = zen != 0;
-            i = R$drawable.stat_sys_dnd;
-            string = this.mResources.getString(R$string.quick_settings_dnd_label);
-        } else {
-            if (zen == 2) {
-                i2 = R$drawable.stat_sys_dnd;
-                string2 = this.mResources.getString(R$string.interruption_level_none);
-            } else if (zen == 1) {
-                i2 = R$drawable.stat_sys_dnd;
-                string2 = this.mResources.getString(R$string.interruption_level_priority);
-            } else {
-                z = false;
-                string = null;
-                i = 0;
-            }
-            string = string2;
-            i = i2;
-            z = true;
-        }
-        if (!ZenModeConfig.isZenOverridingRinger(zen, this.mZenController.getConsolidatedPolicy()) && (mo1438getValue = this.mRingerModeTracker.getRingerModeInternal().mo1438getValue()) != null) {
-            if (mo1438getValue.intValue() == 1) {
-                z3 = false;
-                z2 = true;
-            }
-            if (z) {
-                this.mIconController.setIcon(this.mSlotZen, i, string);
-            }
-            if (z != this.mZenVisible) {
-                this.mIconController.setIconVisibility(this.mSlotZen, z);
-                this.mZenVisible = z;
-            }
-            if (z2 != this.mVibrateVisible) {
-                this.mIconController.setIconVisibility(this.mSlotVibrate, z2);
-                this.mVibrateVisible = z2;
-            }
-            if (z3 != this.mMuteVisible) {
-                this.mIconController.setIconVisibility(this.mSlotMute, z3);
-                this.mMuteVisible = z3;
-            }
-            updateAlarm();
-        }
-        z3 = false;
-        if (z) {
-        }
-        if (z != this.mZenVisible) {
-        }
-        if (z2 != this.mVibrateVisible) {
-        }
-        if (z3 != this.mMuteVisible) {
-        }
-        updateAlarm();
+        /*
+            r8 = this;
+            com.android.systemui.statusbar.policy.ZenModeController r0 = r8.mZenController
+            int r0 = r0.getZen()
+            android.content.SharedPreferences r1 = r8.mSharedPreferences
+            boolean r1 = com.android.systemui.p012qs.tiles.DndTile.isVisible(r1)
+            r2 = 2131232822(0x7f080836, float:1.8081764E38)
+            r3 = 1
+            r4 = 0
+            if (r1 != 0) goto L_0x003c
+            android.content.SharedPreferences r1 = r8.mSharedPreferences
+            boolean r1 = com.android.systemui.p012qs.tiles.DndTile.isCombinedIcon(r1)
+            if (r1 == 0) goto L_0x001c
+            goto L_0x003c
+        L_0x001c:
+            r1 = 2
+            if (r0 != r1) goto L_0x002b
+            android.content.res.Resources r1 = r8.mResources
+            r5 = 2131952466(0x7f130352, float:1.9541376E38)
+            java.lang.String r1 = r1.getString(r5)
+        L_0x0028:
+            r5 = r1
+            r1 = r3
+            goto L_0x004a
+        L_0x002b:
+            if (r0 != r3) goto L_0x0037
+            android.content.res.Resources r1 = r8.mResources
+            r5 = 2131952469(0x7f130355, float:1.9541382E38)
+            java.lang.String r1 = r1.getString(r5)
+            goto L_0x0028
+        L_0x0037:
+            r1 = 0
+            r5 = r1
+            r1 = r4
+            r2 = r1
+            goto L_0x004a
+        L_0x003c:
+            if (r0 == 0) goto L_0x0040
+            r1 = r3
+            goto L_0x0041
+        L_0x0040:
+            r1 = r4
+        L_0x0041:
+            android.content.res.Resources r5 = r8.mResources
+            r6 = 2131953139(0x7f1305f3, float:1.954274E38)
+            java.lang.String r5 = r5.getString(r6)
+        L_0x004a:
+            com.android.systemui.statusbar.policy.ZenModeController r6 = r8.mZenController
+            android.app.NotificationManager$Policy r6 = r6.getConsolidatedPolicy()
+            boolean r0 = android.service.notification.ZenModeConfig.isZenOverridingRinger(r0, r6)
+            if (r0 != 0) goto L_0x0075
+            com.android.systemui.util.RingerModeTracker r0 = r8.mRingerModeTracker
+            androidx.lifecycle.LiveData r0 = r0.getRingerModeInternal()
+            java.lang.Object r0 = r0.getValue()
+            java.lang.Integer r0 = (java.lang.Integer) r0
+            if (r0 == 0) goto L_0x0075
+            int r6 = r0.intValue()
+            if (r6 != r3) goto L_0x006b
+            goto L_0x0076
+        L_0x006b:
+            int r0 = r0.intValue()
+            if (r0 != 0) goto L_0x0075
+            r7 = r4
+            r4 = r3
+            r3 = r7
+            goto L_0x0076
+        L_0x0075:
+            r3 = r4
+        L_0x0076:
+            if (r1 == 0) goto L_0x007f
+            com.android.systemui.statusbar.phone.StatusBarIconController r0 = r8.mIconController
+            java.lang.String r6 = r8.mSlotZen
+            r0.setIcon(r6, r2, r5)
+        L_0x007f:
+            boolean r0 = r8.mZenVisible
+            if (r1 == r0) goto L_0x008c
+            com.android.systemui.statusbar.phone.StatusBarIconController r0 = r8.mIconController
+            java.lang.String r2 = r8.mSlotZen
+            r0.setIconVisibility(r2, r1)
+            r8.mZenVisible = r1
+        L_0x008c:
+            boolean r0 = r8.mVibrateVisible
+            if (r3 == r0) goto L_0x0099
+            com.android.systemui.statusbar.phone.StatusBarIconController r0 = r8.mIconController
+            java.lang.String r1 = r8.mSlotVibrate
+            r0.setIconVisibility(r1, r3)
+            r8.mVibrateVisible = r3
+        L_0x0099:
+            boolean r0 = r8.mMuteVisible
+            if (r4 == r0) goto L_0x00a6
+            com.android.systemui.statusbar.phone.StatusBarIconController r0 = r8.mIconController
+            java.lang.String r1 = r8.mSlotMute
+            r0.setIconVisibility(r1, r4)
+            r8.mMuteVisible = r4
+        L_0x00a6:
+            r8.updateAlarm()
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.updateVolumeZen():void");
     }
 
-    @Override // com.android.systemui.statusbar.policy.BluetoothController.Callback
     public void onBluetoothDevicesChanged() {
         updateBluetooth();
     }
 
-    @Override // com.android.systemui.statusbar.policy.BluetoothController.Callback
     public void onBluetoothStateChange(boolean z) {
         updateBluetooth();
     }
 
     private final void updateBluetooth() {
         boolean z;
-        int i = R$drawable.stat_sys_data_bluetooth_connected;
-        String string = this.mResources.getString(R$string.accessibility_quick_settings_bluetooth_on);
+        String string = this.mResources.getString(C1893R.string.accessibility_quick_settings_bluetooth_on);
         BluetoothController bluetoothController = this.mBluetooth;
         if (bluetoothController == null || !bluetoothController.isBluetoothConnected() || (!this.mBluetooth.isBluetoothAudioActive() && this.mBluetooth.isBluetoothAudioProfileOnly())) {
             z = false;
         } else {
-            string = this.mResources.getString(R$string.accessibility_bluetooth_connected);
+            string = this.mResources.getString(C1893R.string.accessibility_bluetooth_connected);
             z = this.mBluetooth.isBluetoothEnabled();
         }
-        startOrStopTether();
-        this.mIconController.setIcon(this.mSlotBluetooth, i, string);
+        this.mEx.startOrStopTether(this.mBluetooth);
+        this.mIconController.setIcon(this.mSlotBluetooth, C1893R.C1895drawable.stat_sys_data_bluetooth_connected, string);
         this.mIconController.setIconVisibility(this.mSlotBluetooth, z);
-    }
-
-    public void setupContext(Context context) {
-        this.mContext = context;
-        this.mConnectivityManager = (ConnectivityManager) context.getSystemService("connectivity");
-    }
-
-    void startOrStopTether() {
-        boolean z;
-        BluetoothController bluetoothController = this.mBluetooth;
-        if (bluetoothController == null || !bluetoothController.isBluetoothConnected()) {
-            return;
-        }
-        if (Settings.System.getInt(this.mContext.getContentResolver(), "tesla_hotspot") == 0) {
-            z = true;
-            if (!z || !isTesla()) {
-            }
-            this.mConnectivityManager.startTethering(0, true, this.mOnStartTetheringCallback, new Handler(Looper.getMainLooper()));
-            return;
-        }
-        z = false;
-        if (!z) {
-        }
-    }
-
-    private boolean isTesla() {
-        List<CachedBluetoothDevice> connectedDevices;
-        BluetoothController bluetoothController = this.mBluetooth;
-        if (bluetoothController == null || (connectedDevices = bluetoothController.getConnectedDevices()) == null || connectedDevices.size() <= 0) {
-            return false;
-        }
-        for (CachedBluetoothDevice cachedBluetoothDevice : connectedDevices) {
-            String address = cachedBluetoothDevice.getAddress();
-            if (address != null && address.toLowerCase().startsWith(TESLA_MAC_ADDRESS)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private final void updateTTY() {
@@ -526,93 +542,121 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public final void updateTTY(int i) {
         boolean z = i != 0;
         boolean z2 = DEBUG;
         if (z2) {
-            Log.v("PhoneStatusBarPolicy", "updateTTY: enabled: " + z);
+            Log.v(TAG, "updateTTY: enabled: " + z);
         }
         if (z) {
             if (z2) {
-                Log.v("PhoneStatusBarPolicy", "updateTTY: set TTY on");
+                Log.v(TAG, "updateTTY: set TTY on");
             }
-            this.mIconController.setIcon(this.mSlotTty, R$drawable.stat_sys_tty_mode, this.mResources.getString(R$string.accessibility_tty_enabled));
+            this.mIconController.setIcon(this.mSlotTty, C1893R.C1895drawable.stat_sys_tty_mode, this.mResources.getString(C1893R.string.accessibility_tty_enabled));
             this.mIconController.setIconVisibility(this.mSlotTty, true);
             return;
         }
         if (z2) {
-            Log.v("PhoneStatusBarPolicy", "updateTTY: set TTY off");
+            Log.v(TAG, "updateTTY: set TTY off");
         }
         this.mIconController.setIconVisibility(this.mSlotTty, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:4:0x0011  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x0022 A[SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:3:0x0011  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateCast() {
-        boolean z;
-        for (CastController.CastDevice castDevice : this.mCast.getCastDevices()) {
-            int i = castDevice.state;
-            if (i == 1 || i == 2) {
-                z = true;
-                break;
-            }
-            while (r0.hasNext()) {
-            }
-        }
-        z = false;
-        boolean z2 = DEBUG;
-        if (z2) {
-            Log.v("PhoneStatusBarPolicy", "updateCast: isCasting: " + z);
-        }
-        this.mHandler.removeCallbacks(this.mRemoveCastIconRunnable);
-        if (z && !this.mRecordingController.isRecording()) {
-            this.mIconController.setIcon(this.mSlotCast, R$drawable.stat_sys_cast, this.mResources.getString(R$string.accessibility_casting));
-            this.mIconController.setIconVisibility(this.mSlotCast, true);
-            return;
-        }
-        if (z2) {
-            Log.v("PhoneStatusBarPolicy", "updateCast: hiding icon in 3 sec...");
-        }
-        this.mHandler.postDelayed(this.mRemoveCastIconRunnable, 3000L);
+        /*
+            r6 = this;
+            com.android.systemui.statusbar.policy.CastController r0 = r6.mCast
+            java.util.List r0 = r0.getCastDevices()
+            java.util.Iterator r0 = r0.iterator()
+        L_0x000a:
+            boolean r1 = r0.hasNext()
+            r2 = 1
+            if (r1 == 0) goto L_0x0022
+            java.lang.Object r1 = r0.next()
+            com.android.systemui.statusbar.policy.CastController$CastDevice r1 = (com.android.systemui.statusbar.policy.CastController.CastDevice) r1
+            int r3 = r1.state
+            if (r3 == r2) goto L_0x0020
+            int r1 = r1.state
+            r3 = 2
+            if (r1 != r3) goto L_0x000a
+        L_0x0020:
+            r0 = r2
+            goto L_0x0023
+        L_0x0022:
+            r0 = 0
+        L_0x0023:
+            boolean r1 = DEBUG
+            java.lang.String r3 = "PhoneStatusBarPolicy"
+            if (r1 == 0) goto L_0x003c
+            java.lang.StringBuilder r4 = new java.lang.StringBuilder
+            java.lang.String r5 = "updateCast: isCasting: "
+            r4.<init>((java.lang.String) r5)
+            java.lang.StringBuilder r4 = r4.append((boolean) r0)
+            java.lang.String r4 = r4.toString()
+            android.util.Log.v(r3, r4)
+        L_0x003c:
+            android.os.Handler r4 = r6.mHandler
+            java.lang.Runnable r5 = r6.mRemoveCastIconRunnable
+            r4.removeCallbacks(r5)
+            if (r0 == 0) goto L_0x0068
+            com.android.systemui.screenrecord.RecordingController r0 = r6.mRecordingController
+            boolean r0 = r0.isRecording()
+            if (r0 != 0) goto L_0x0068
+            com.android.systemui.statusbar.phone.StatusBarIconController r0 = r6.mIconController
+            java.lang.String r1 = r6.mSlotCast
+            android.content.res.Resources r3 = r6.mResources
+            r4 = 2131951692(0x7f13004c, float:1.9539806E38)
+            java.lang.String r3 = r3.getString(r4)
+            r4 = 2131232819(0x7f080833, float:1.8081758E38)
+            r0.setIcon(r1, r4, r3)
+            com.android.systemui.statusbar.phone.StatusBarIconController r0 = r6.mIconController
+            java.lang.String r6 = r6.mSlotCast
+            r0.setIconVisibility(r6, r2)
+            goto L_0x0079
+        L_0x0068:
+            if (r1 == 0) goto L_0x0070
+            java.lang.String r0 = "updateCast: hiding icon in 3 sec..."
+            android.util.Log.v(r3, r0)
+        L_0x0070:
+            android.os.Handler r0 = r6.mHandler
+            java.lang.Runnable r6 = r6.mRemoveCastIconRunnable
+            r1 = 3000(0xbb8, double:1.482E-320)
+            r0.postDelayed(r6, r1)
+        L_0x0079:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.updateCast():void");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateManagedProfile() {
-        this.mUiBgExecutor.execute(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$$ExternalSyntheticLambda5
-            @Override // java.lang.Runnable
-            public final void run() {
-                PhoneStatusBarPolicy.this.lambda$updateManagedProfile$2();
-            }
-        });
+        this.mUiBgExecutor.execute(new PhoneStatusBarPolicy$$ExternalSyntheticLambda3(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateManagedProfile$2() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateManagedProfile$3$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
+    public /* synthetic */ void mo44968xda54710b() {
         try {
-            final boolean isManagedProfile = this.mUserManager.isManagedProfile(ActivityTaskManager.getService().getLastResumedActivityUserId());
-            this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$$ExternalSyntheticLambda7
-                @Override // java.lang.Runnable
-                public final void run() {
-                    PhoneStatusBarPolicy.this.lambda$updateManagedProfile$1(isManagedProfile);
-                }
-            });
+            this.mHandler.post(new PhoneStatusBarPolicy$$ExternalSyntheticLambda6(this, this.mUserManager.isManagedProfile(ActivityTaskManager.getService().getLastResumedActivityUserId()), getManagedProfileAccessibilityString()));
         } catch (RemoteException e) {
-            Log.w("PhoneStatusBarPolicy", "updateManagedProfile: ", e);
+            Log.w(TAG, "updateManagedProfile: ", e);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateManagedProfile$1(boolean z) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateManagedProfile$2$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
+    public /* synthetic */ void mo44967xc99ea44a(boolean z, String str) {
         boolean z2;
         if (!z || (this.mKeyguardStateController.isShowing() && !this.mKeyguardStateController.isOccluded())) {
             z2 = false;
         } else {
+            this.mIconController.setIcon(this.mSlotManagedProfile, C1893R.C1895drawable.stat_sys_managed_profile_status, str);
             z2 = true;
-            this.mIconController.setIcon(this.mSlotManagedProfile, R$drawable.stat_sys_managed_profile_status, this.mResources.getString(R$string.accessibility_managed_profile));
         }
         if (this.mManagedProfileIconVisible != z2) {
             this.mIconController.setIconVisibility(this.mSlotManagedProfile, z2);
@@ -620,97 +664,31 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$2  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass2 extends SynchronousUserSwitchObserver {
-        AnonymousClass2() {
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onUserSwitching$0() {
-            PhoneStatusBarPolicy.this.mUserInfoController.reloadUserInfo();
-        }
-
-        public void onUserSwitching(int i) throws RemoteException {
-            PhoneStatusBarPolicy.this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$2$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    PhoneStatusBarPolicy.AnonymousClass2.this.lambda$onUserSwitching$0();
-                }
-            });
-        }
-
-        public void onUserSwitchComplete(int i) throws RemoteException {
-            PhoneStatusBarPolicy.this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$2$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    PhoneStatusBarPolicy.AnonymousClass2.this.lambda$onUserSwitchComplete$1();
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onUserSwitchComplete$1() {
-            PhoneStatusBarPolicy.this.updateAlarm();
-            PhoneStatusBarPolicy.this.updateManagedProfile();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$6  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass6 implements SensorPrivacyController.OnSensorPrivacyChangedListener {
-        AnonymousClass6() {
-        }
-
-        @Override // com.android.systemui.statusbar.policy.SensorPrivacyController.OnSensorPrivacyChangedListener
-        public void onSensorPrivacyChanged(final boolean z) {
-            PhoneStatusBarPolicy.this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$6$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    PhoneStatusBarPolicy.AnonymousClass6.this.lambda$onSensorPrivacyChanged$0(z);
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onSensorPrivacyChanged$0(boolean z) {
-            PhoneStatusBarPolicy.this.mIconController.setIconVisibility(PhoneStatusBarPolicy.this.mSlotSensorsOff, z);
-        }
-    }
-
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void appTransitionStarting(int i, long j, long j2, boolean z) {
         if (this.mDisplayId == i) {
             updateManagedProfile();
         }
     }
 
-    @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
     public void onKeyguardShowingChanged() {
         updateManagedProfile();
     }
 
-    @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
     public void onUserSetupChanged() {
-        DeviceProvisionedController deviceProvisionedController = this.mProvisionedController;
-        boolean isUserSetup = deviceProvisionedController.isUserSetup(deviceProvisionedController.getCurrentUser());
-        if (this.mCurrentUserSetup == isUserSetup) {
-            return;
+        boolean isCurrentUserSetup = this.mProvisionedController.isCurrentUserSetup();
+        if (this.mCurrentUserSetup != isCurrentUserSetup) {
+            this.mCurrentUserSetup = isCurrentUserSetup;
+            updateAlarm();
         }
-        this.mCurrentUserSetup = isUserSetup;
-        updateAlarm();
     }
 
-    @Override // com.android.systemui.statusbar.policy.RotationLockController.RotationLockControllerCallback
     public void onRotationLockStateChanged(boolean z, boolean z2) {
         boolean isCurrentOrientationLockPortrait = RotationLockTile.isCurrentOrientationLockPortrait(this.mRotationLockController, this.mResources);
         if (z) {
             if (isCurrentOrientationLockPortrait) {
-                this.mIconController.setIcon(this.mSlotRotate, R$drawable.stat_sys_rotate_portrait, this.mResources.getString(R$string.accessibility_rotation_lock_on_portrait));
+                this.mIconController.setIcon(this.mSlotRotate, C1893R.C1895drawable.stat_sys_rotate_portrait, this.mResources.getString(C1893R.string.accessibility_rotation_lock_on_portrait));
             } else {
-                this.mIconController.setIcon(this.mSlotRotate, R$drawable.stat_sys_rotate_landscape, this.mResources.getString(R$string.accessibility_rotation_lock_on_landscape));
+                this.mIconController.setIcon(this.mSlotRotate, C1893R.C1895drawable.stat_sys_rotate_landscape, this.mResources.getString(C1893R.string.accessibility_rotation_lock_on_landscape));
             }
             this.mIconController.setIconVisibility(this.mSlotRotate, true);
             return;
@@ -718,31 +696,22 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         this.mIconController.setIconVisibility(this.mSlotRotate, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateHeadsetPlug(Intent intent) {
-        int i;
-        boolean z = intent.getIntExtra("state", 0) != 0;
+        boolean z = intent.getIntExtra(AuthDialog.KEY_BIOMETRIC_STATE, 0) != 0;
         boolean z2 = intent.getIntExtra("microphone", 0) != 0;
         if (z) {
-            Resources resources = this.mResources;
-            if (z2) {
-                i = R$string.accessibility_status_bar_headset;
-            } else {
-                i = R$string.accessibility_status_bar_headphones;
-            }
-            this.mIconController.setIcon(this.mSlotHeadset, z2 ? R$drawable.stat_sys_headset_mic : R$drawable.stat_sys_headset, resources.getString(i));
+            this.mIconController.setIcon(this.mSlotHeadset, z2 ? C1893R.C1895drawable.stat_sys_headset_mic : C1893R.C1895drawable.stat_sys_headset, this.mResources.getString(z2 ? C1893R.string.accessibility_status_bar_headset : C1893R.string.accessibility_status_bar_headphones));
             this.mIconController.setIconVisibility(this.mSlotHeadset, true);
             return;
         }
         this.mIconController.setIconVisibility(this.mSlotHeadset, false);
     }
 
-    @Override // com.android.systemui.statusbar.policy.DataSaverController.Listener
     public void onDataSaverChanged(boolean z) {
         this.mIconController.setIconVisibility(this.mSlotDataSaver, z);
     }
 
-    @Override // com.android.systemui.privacy.PrivacyItemController.Callback
     public void onPrivacyItemsChanged(List<PrivacyItem> list) {
         updatePrivacyItems(list);
     }
@@ -751,50 +720,63 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         boolean z = false;
         boolean z2 = false;
         boolean z3 = false;
-        for (PrivacyItem privacyItem : list) {
-            if (privacyItem == null) {
-                Log.e("PhoneStatusBarPolicy", "updatePrivacyItems - null item found");
+        for (PrivacyItem next : list) {
+            if (next != null) {
+                int i = C30608.$SwitchMap$com$android$systemui$privacy$PrivacyType[next.getPrivacyType().ordinal()];
+                if (i == 1) {
+                    z = true;
+                } else if (i == 2) {
+                    z3 = true;
+                } else if (i == 3) {
+                    z2 = true;
+                }
+            } else {
+                Log.e(TAG, "updatePrivacyItems - null item found");
                 StringWriter stringWriter = new StringWriter();
-                this.mPrivacyItemController.dump(null, new PrintWriter(stringWriter), null);
+                this.mPrivacyItemController.dump(new PrintWriter((Writer) stringWriter), (String[]) null);
                 throw new NullPointerException(stringWriter.toString());
-            }
-            int i = AnonymousClass9.$SwitchMap$com$android$systemui$privacy$PrivacyType[privacyItem.getPrivacyType().ordinal()];
-            if (i == 1) {
-                z = true;
-            } else if (i == 2) {
-                z3 = true;
-            } else if (i == 3) {
-                z2 = true;
             }
         }
         this.mPrivacyLogger.logStatusBarIconsVisible(z, z2, z3);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$9  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass9 {
+    /* renamed from: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$8 */
+    static /* synthetic */ class C30608 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$privacy$PrivacyType;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
         static {
-            int[] iArr = new int[PrivacyType.valuesCustom().length];
-            $SwitchMap$com$android$systemui$privacy$PrivacyType = iArr;
-            try {
-                iArr[PrivacyType.TYPE_CAMERA.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$privacy$PrivacyType[PrivacyType.TYPE_LOCATION.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$privacy$PrivacyType[PrivacyType.TYPE_MICROPHONE.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
+            /*
+                com.android.systemui.privacy.PrivacyType[] r0 = com.android.systemui.privacy.PrivacyType.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$android$systemui$privacy$PrivacyType = r0
+                com.android.systemui.privacy.PrivacyType r1 = com.android.systemui.privacy.PrivacyType.TYPE_CAMERA     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$android$systemui$privacy$PrivacyType     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.systemui.privacy.PrivacyType r1 = com.android.systemui.privacy.PrivacyType.TYPE_LOCATION     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$android$systemui$privacy$PrivacyType     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.systemui.privacy.PrivacyType r1 = com.android.systemui.privacy.PrivacyType.TYPE_MICROPHONE     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy.C30608.<clinit>():void");
         }
     }
 
-    @Override // com.android.systemui.statusbar.policy.LocationController.LocationChangeCallback
     public void onLocationActiveChanged(boolean z) {
         if (!this.mPrivacyItemController.getLocationAvailable()) {
             updateLocationFromController();
@@ -809,102 +791,73 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         }
     }
 
-    @Override // com.android.systemui.screenrecord.RecordingController.RecordingStateChangeCallback
     public void onCountdown(long j) {
         if (DEBUG) {
-            Log.d("PhoneStatusBarPolicy", "screenrecord: countdown " + j);
+            Log.d(TAG, "screenrecord: countdown " + j);
         }
         int floorDiv = (int) Math.floorDiv(j + 500, 1000);
-        int i = R$drawable.stat_sys_screen_record;
-        String num = Integer.toString(floorDiv);
-        if (floorDiv == 1) {
-            i = R$drawable.stat_sys_screen_record_1;
-        } else if (floorDiv == 2) {
-            i = R$drawable.stat_sys_screen_record_2;
-        } else if (floorDiv == 3) {
-            i = R$drawable.stat_sys_screen_record_3;
-        }
-        this.mIconController.setIcon(this.mSlotScreenRecord, i, num);
+        this.mIconController.setIcon(this.mSlotScreenRecord, floorDiv != 1 ? floorDiv != 2 ? floorDiv != 3 ? C1893R.C1895drawable.stat_sys_screen_record : C1893R.C1895drawable.stat_sys_screen_record_3 : C1893R.C1895drawable.stat_sys_screen_record_2 : C1893R.C1895drawable.stat_sys_screen_record_1, Integer.toString(floorDiv));
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, true);
         this.mIconController.setIconAccessibilityLiveRegion(this.mSlotScreenRecord, 2);
     }
 
-    @Override // com.android.systemui.screenrecord.RecordingController.RecordingStateChangeCallback
     public void onCountdownEnd() {
         if (DEBUG) {
-            Log.d("PhoneStatusBarPolicy", "screenrecord: hiding icon during countdown");
+            Log.d(TAG, "screenrecord: hiding icon during countdown");
         }
-        this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                PhoneStatusBarPolicy.this.lambda$onCountdownEnd$3();
-            }
-        });
-        this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$$ExternalSyntheticLambda6
-            @Override // java.lang.Runnable
-            public final void run() {
-                PhoneStatusBarPolicy.this.lambda$onCountdownEnd$4();
-            }
-        });
+        this.mHandler.post(new PhoneStatusBarPolicy$$ExternalSyntheticLambda7(this));
+        this.mHandler.post(new PhoneStatusBarPolicy$$ExternalSyntheticLambda8(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCountdownEnd$3() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onCountdownEnd$4$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
+    public /* synthetic */ void mo44963x6ce8d4c2() {
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCountdownEnd$4() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onCountdownEnd$5$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
+    public /* synthetic */ void mo44964x7d9ea183() {
         this.mIconController.setIconAccessibilityLiveRegion(this.mSlotScreenRecord, 0);
     }
 
-    @Override // com.android.systemui.screenrecord.RecordingController.RecordingStateChangeCallback
     public void onRecordingStart() {
         if (DEBUG) {
-            Log.d("PhoneStatusBarPolicy", "screenrecord: showing icon");
+            Log.d(TAG, "screenrecord: showing icon");
         }
-        this.mIconController.setIcon(this.mSlotScreenRecord, R$drawable.stat_sys_screen_record, this.mResources.getString(R$string.screenrecord_ongoing_screen_only));
-        this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$$ExternalSyntheticLambda3
-            @Override // java.lang.Runnable
-            public final void run() {
-                PhoneStatusBarPolicy.this.lambda$onRecordingStart$5();
-            }
-        });
+        this.mIconController.setIcon(this.mSlotScreenRecord, C1893R.C1895drawable.stat_sys_screen_record, this.mResources.getString(C1893R.string.screenrecord_ongoing_screen_only));
+        this.mHandler.post(new PhoneStatusBarPolicy$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onRecordingStart$5() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onRecordingStart$6$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
+    public /* synthetic */ void mo44966x8cce6cb() {
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, true);
     }
 
-    @Override // com.android.systemui.screenrecord.RecordingController.RecordingStateChangeCallback
     public void onRecordingEnd() {
         if (DEBUG) {
-            Log.d("PhoneStatusBarPolicy", "screenrecord: hiding icon");
+            Log.d(TAG, "screenrecord: hiding icon");
         }
-        this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarPolicy$$ExternalSyntheticLambda4
-            @Override // java.lang.Runnable
-            public final void run() {
-                PhoneStatusBarPolicy.this.lambda$onRecordingEnd$6();
-            }
-        });
+        this.mHandler.post(new PhoneStatusBarPolicy$$ExternalSyntheticLambda2(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onRecordingEnd$6() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onRecordingEnd$7$com-android-systemui-statusbar-phone-PhoneStatusBarPolicy */
+    public /* synthetic */ void mo44965x6ce51b45() {
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateHotspotIcon(int i) {
         if (i == 6) {
-            this.mIconController.setIcon(this.mSlotHotspot, R$drawable.stat_sys_wifi_6_hotspot, this.mResources.getString(R$string.accessibility_status_bar_hotspot));
+            this.mIconController.setIcon(this.mSlotHotspot, C1893R.C1895drawable.stat_sys_wifi_6_hotspot, this.mResources.getString(C1893R.string.accessibility_status_bar_hotspot));
         } else if (i == 5) {
-            this.mIconController.setIcon(this.mSlotHotspot, R$drawable.stat_sys_wifi_5_hotspot, this.mResources.getString(R$string.accessibility_status_bar_hotspot));
+            this.mIconController.setIcon(this.mSlotHotspot, C1893R.C1895drawable.stat_sys_wifi_5_hotspot, this.mResources.getString(C1893R.string.accessibility_status_bar_hotspot));
         } else if (i == 4) {
-            this.mIconController.setIcon(this.mSlotHotspot, R$drawable.stat_sys_wifi_4_hotspot, this.mResources.getString(R$string.accessibility_status_bar_hotspot));
+            this.mIconController.setIcon(this.mSlotHotspot, C1893R.C1895drawable.stat_sys_wifi_4_hotspot, this.mResources.getString(C1893R.string.accessibility_status_bar_hotspot));
         } else {
-            this.mIconController.setIcon(this.mSlotHotspot, R$drawable.stat_sys_hotspot, this.mResources.getString(R$string.accessibility_status_bar_hotspot));
+            this.mIconController.setIcon(this.mSlotHotspot, C1893R.C1895drawable.stat_sys_hotspot, this.mResources.getString(C1893R.string.accessibility_status_bar_hotspot));
         }
     }
 }

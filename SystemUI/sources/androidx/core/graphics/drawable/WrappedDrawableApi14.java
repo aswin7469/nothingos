@@ -8,9 +8,8 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class WrappedDrawableApi14 extends Drawable implements Drawable.Callback, WrappedDrawable, TintAwareDrawable {
+
+class WrappedDrawableApi14 extends Drawable implements Drawable.Callback, WrappedDrawable, TintAwareDrawable {
     static final PorterDuff.Mode DEFAULT_TINT_MODE = PorterDuff.Mode.SRC_IN;
     private boolean mColorFilterSet;
     private int mCurrentColor;
@@ -19,164 +18,164 @@ public class WrappedDrawableApi14 extends Drawable implements Drawable.Callback,
     private boolean mMutated;
     WrappedDrawableState mState;
 
-    protected boolean isCompatTintEnabled() {
+    /* access modifiers changed from: protected */
+    public boolean isCompatTintEnabled() {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public WrappedDrawableApi14(WrappedDrawableState state, Resources res) {
-        this.mState = state;
-        updateLocalState(res);
+    WrappedDrawableApi14(WrappedDrawableState wrappedDrawableState, Resources resources) {
+        this.mState = wrappedDrawableState;
+        updateLocalState(resources);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public WrappedDrawableApi14(Drawable dr) {
+    WrappedDrawableApi14(Drawable drawable) {
         this.mState = mutateConstantState();
-        setWrappedDrawable(dr);
+        setWrappedDrawable(drawable);
     }
 
-    private void updateLocalState(Resources res) {
-        Drawable.ConstantState constantState;
+    private void updateLocalState(Resources resources) {
         WrappedDrawableState wrappedDrawableState = this.mState;
-        if (wrappedDrawableState == null || (constantState = wrappedDrawableState.mDrawableState) == null) {
-            return;
+        if (wrappedDrawableState != null && wrappedDrawableState.mDrawableState != null) {
+            setWrappedDrawable(this.mState.mDrawableState.newDrawable(resources));
         }
-        setWrappedDrawable(constantState.newDrawable(res));
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void jumpToCurrentState() {
         this.mDrawable.jumpToCurrentState();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         this.mDrawable.draw(canvas);
     }
 
-    @Override // android.graphics.drawable.Drawable
-    protected void onBoundsChange(Rect bounds) {
+    /* access modifiers changed from: protected */
+    public void onBoundsChange(Rect rect) {
         Drawable drawable = this.mDrawable;
         if (drawable != null) {
-            drawable.setBounds(bounds);
+            drawable.setBounds(rect);
         }
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void setChangingConfigurations(int configs) {
-        this.mDrawable.setChangingConfigurations(configs);
+    public void setChangingConfigurations(int i) {
+        this.mDrawable.setChangingConfigurations(i);
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getChangingConfigurations() {
         int changingConfigurations = super.getChangingConfigurations();
         WrappedDrawableState wrappedDrawableState = this.mState;
         return this.mDrawable.getChangingConfigurations() | changingConfigurations | (wrappedDrawableState != null ? wrappedDrawableState.getChangingConfigurations() : 0);
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void setDither(boolean dither) {
-        this.mDrawable.setDither(dither);
+    public void setDither(boolean z) {
+        this.mDrawable.setDither(z);
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void setFilterBitmap(boolean filter) {
-        this.mDrawable.setFilterBitmap(filter);
+    public void setFilterBitmap(boolean z) {
+        this.mDrawable.setFilterBitmap(z);
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void setAlpha(int alpha) {
-        this.mDrawable.setAlpha(alpha);
+    public void setAlpha(int i) {
+        this.mDrawable.setAlpha(i);
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void setColorFilter(ColorFilter cf) {
-        this.mDrawable.setColorFilter(cf);
+    public void setColorFilter(ColorFilter colorFilter) {
+        this.mDrawable.setColorFilter(colorFilter);
     }
 
-    @Override // android.graphics.drawable.Drawable
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
+        r0 = r1.mState;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean isStateful() {
-        WrappedDrawableState wrappedDrawableState;
-        ColorStateList colorStateList = (!isCompatTintEnabled() || (wrappedDrawableState = this.mState) == null) ? null : wrappedDrawableState.mTint;
-        return (colorStateList != null && colorStateList.isStateful()) || this.mDrawable.isStateful();
+        /*
+            r1 = this;
+            boolean r0 = r1.isCompatTintEnabled()
+            if (r0 == 0) goto L_0x000d
+            androidx.core.graphics.drawable.WrappedDrawableState r0 = r1.mState
+            if (r0 == 0) goto L_0x000d
+            android.content.res.ColorStateList r0 = r0.mTint
+            goto L_0x000e
+        L_0x000d:
+            r0 = 0
+        L_0x000e:
+            if (r0 == 0) goto L_0x0016
+            boolean r0 = r0.isStateful()
+            if (r0 != 0) goto L_0x001e
+        L_0x0016:
+            android.graphics.drawable.Drawable r1 = r1.mDrawable
+            boolean r1 = r1.isStateful()
+            if (r1 == 0) goto L_0x0020
+        L_0x001e:
+            r1 = 1
+            goto L_0x0021
+        L_0x0020:
+            r1 = 0
+        L_0x0021:
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.core.graphics.drawable.WrappedDrawableApi14.isStateful():boolean");
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public boolean setState(int[] stateSet) {
-        return updateTint(stateSet) || this.mDrawable.setState(stateSet);
+    public boolean setState(int[] iArr) {
+        return updateTint(iArr) || this.mDrawable.setState(iArr);
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int[] getState() {
         return this.mDrawable.getState();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public Drawable getCurrent() {
         return this.mDrawable.getCurrent();
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public boolean setVisible(boolean visible, boolean restart) {
-        return super.setVisible(visible, restart) || this.mDrawable.setVisible(visible, restart);
+    public boolean setVisible(boolean z, boolean z2) {
+        return super.setVisible(z, z2) || this.mDrawable.setVisible(z, z2);
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return this.mDrawable.getOpacity();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public Region getTransparentRegion() {
         return this.mDrawable.getTransparentRegion();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getIntrinsicWidth() {
         return this.mDrawable.getIntrinsicWidth();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getIntrinsicHeight() {
         return this.mDrawable.getIntrinsicHeight();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getMinimumWidth() {
         return this.mDrawable.getMinimumWidth();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getMinimumHeight() {
         return this.mDrawable.getMinimumHeight();
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public boolean getPadding(Rect padding) {
-        return this.mDrawable.getPadding(padding);
+    public boolean getPadding(Rect rect) {
+        return this.mDrawable.getPadding(rect);
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void setAutoMirrored(boolean mirrored) {
-        DrawableCompat.setAutoMirrored(this.mDrawable, mirrored);
+    public void setAutoMirrored(boolean z) {
+        DrawableCompat.setAutoMirrored(this.mDrawable, z);
     }
 
-    @Override // android.graphics.drawable.Drawable
     public boolean isAutoMirrored() {
         return DrawableCompat.isAutoMirrored(this.mDrawable);
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public boolean onLayoutDirectionChanged(int layoutDirection) {
-        return DrawableCompat.setLayoutDirection(this.mDrawable, layoutDirection);
+    public boolean onLayoutDirectionChanged(int i) {
+        return DrawableCompat.setLayoutDirection(this.mDrawable, i);
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getLayoutDirection() {
         return DrawableCompat.getLayoutDirection(this.mDrawable);
     }
 
-    @Override // android.graphics.drawable.Drawable
     public Drawable.ConstantState getConstantState() {
         WrappedDrawableState wrappedDrawableState = this.mState;
         if (wrappedDrawableState == null || !wrappedDrawableState.canConstantState()) {
@@ -186,7 +185,6 @@ public class WrappedDrawableApi14 extends Drawable implements Drawable.Callback,
         return this.mState;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public Drawable mutate() {
         if (!this.mMutated && super.mutate() == this) {
             this.mState = mutateConstantState();
@@ -208,87 +206,78 @@ public class WrappedDrawableApi14 extends Drawable implements Drawable.Callback,
         return new WrappedDrawableState(this.mState);
     }
 
-    @Override // android.graphics.drawable.Drawable.Callback
-    public void invalidateDrawable(Drawable who) {
+    public void invalidateDrawable(Drawable drawable) {
         invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable.Callback
-    public void scheduleDrawable(Drawable who, Runnable what, long when) {
-        scheduleSelf(what, when);
+    public void scheduleDrawable(Drawable drawable, Runnable runnable, long j) {
+        scheduleSelf(runnable, j);
     }
 
-    @Override // android.graphics.drawable.Drawable.Callback
-    public void unscheduleDrawable(Drawable who, Runnable what) {
-        unscheduleSelf(what);
+    public void unscheduleDrawable(Drawable drawable, Runnable runnable) {
+        unscheduleSelf(runnable);
     }
 
-    @Override // android.graphics.drawable.Drawable
-    protected boolean onLevelChange(int level) {
-        return this.mDrawable.setLevel(level);
+    /* access modifiers changed from: protected */
+    public boolean onLevelChange(int i) {
+        return this.mDrawable.setLevel(i);
     }
 
-    @Override // android.graphics.drawable.Drawable, androidx.core.graphics.drawable.TintAwareDrawable
-    public void setTint(int tint) {
-        setTintList(ColorStateList.valueOf(tint));
+    public void setTint(int i) {
+        setTintList(ColorStateList.valueOf(i));
     }
 
-    @Override // android.graphics.drawable.Drawable, androidx.core.graphics.drawable.TintAwareDrawable
-    public void setTintList(ColorStateList tint) {
-        this.mState.mTint = tint;
+    public void setTintList(ColorStateList colorStateList) {
+        this.mState.mTint = colorStateList;
         updateTint(getState());
     }
 
-    @Override // android.graphics.drawable.Drawable, androidx.core.graphics.drawable.TintAwareDrawable
-    public void setTintMode(PorterDuff.Mode tintMode) {
-        this.mState.mTintMode = tintMode;
+    public void setTintMode(PorterDuff.Mode mode) {
+        this.mState.mTintMode = mode;
         updateTint(getState());
     }
 
-    private boolean updateTint(int[] state) {
+    private boolean updateTint(int[] iArr) {
         if (!isCompatTintEnabled()) {
             return false;
         }
-        WrappedDrawableState wrappedDrawableState = this.mState;
-        ColorStateList colorStateList = wrappedDrawableState.mTint;
-        PorterDuff.Mode mode = wrappedDrawableState.mTintMode;
-        if (colorStateList != null && mode != null) {
-            int colorForState = colorStateList.getColorForState(state, colorStateList.getDefaultColor());
-            if (!this.mColorFilterSet || colorForState != this.mCurrentColor || mode != this.mCurrentMode) {
+        ColorStateList colorStateList = this.mState.mTint;
+        PorterDuff.Mode mode = this.mState.mTintMode;
+        if (colorStateList == null || mode == null) {
+            this.mColorFilterSet = false;
+            clearColorFilter();
+        } else {
+            int colorForState = colorStateList.getColorForState(iArr, colorStateList.getDefaultColor());
+            if (!(this.mColorFilterSet && colorForState == this.mCurrentColor && mode == this.mCurrentMode)) {
                 setColorFilter(colorForState, mode);
                 this.mCurrentColor = colorForState;
                 this.mCurrentMode = mode;
                 this.mColorFilterSet = true;
                 return true;
             }
-        } else {
-            this.mColorFilterSet = false;
-            clearColorFilter();
         }
         return false;
     }
 
-    @Override // androidx.core.graphics.drawable.WrappedDrawable
     public final Drawable getWrappedDrawable() {
         return this.mDrawable;
     }
 
-    @Override // androidx.core.graphics.drawable.WrappedDrawable
-    public final void setWrappedDrawable(Drawable dr) {
-        Drawable drawable = this.mDrawable;
-        if (drawable != null) {
-            drawable.setCallback(null);
+    public final void setWrappedDrawable(Drawable drawable) {
+        Drawable drawable2 = this.mDrawable;
+        if (drawable2 != null) {
+            drawable2.setCallback((Drawable.Callback) null);
         }
-        this.mDrawable = dr;
-        if (dr != null) {
-            dr.setCallback(this);
-            setVisible(dr.isVisible(), true);
-            setState(dr.getState());
-            setLevel(dr.getLevel());
-            setBounds(dr.getBounds());
+        this.mDrawable = drawable;
+        if (drawable != null) {
+            drawable.setCallback(this);
+            setVisible(drawable.isVisible(), true);
+            setState(drawable.getState());
+            setLevel(drawable.getLevel());
+            setBounds(drawable.getBounds());
             WrappedDrawableState wrappedDrawableState = this.mState;
             if (wrappedDrawableState != null) {
-                wrappedDrawableState.mDrawableState = dr.getConstantState();
+                wrappedDrawableState.mDrawableState = drawable.getConstantState();
             }
         }
         invalidateSelf();

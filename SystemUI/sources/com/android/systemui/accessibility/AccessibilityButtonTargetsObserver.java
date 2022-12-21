@@ -1,20 +1,22 @@
 package com.android.systemui.accessibility;
 
 import android.content.Context;
-/* loaded from: classes.dex */
+import com.android.systemui.dagger.SysUISingleton;
+import javax.inject.Inject;
+
+@SysUISingleton
 public class AccessibilityButtonTargetsObserver extends SecureSettingsContentObserver<TargetsChangedListener> {
 
-    /* loaded from: classes.dex */
     public interface TargetsChangedListener {
         void onAccessibilityButtonTargetsChanged(String str);
     }
 
+    @Inject
     public AccessibilityButtonTargetsObserver(Context context) {
         super(context, "accessibility_button_targets");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.systemui.accessibility.SecureSettingsContentObserver
+    /* access modifiers changed from: package-private */
     public void onValueChanged(TargetsChangedListener targetsChangedListener, String str) {
         targetsChangedListener.onAccessibilityButtonTargetsChanged(str);
     }

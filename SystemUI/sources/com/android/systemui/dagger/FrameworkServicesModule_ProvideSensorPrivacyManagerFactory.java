@@ -5,7 +5,7 @@ import android.hardware.SensorPrivacyManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideSensorPrivacyManagerFactory implements Factory<SensorPrivacyManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideSensorPrivacyManagerFactory im
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SensorPrivacyManager mo1933get() {
-        return provideSensorPrivacyManager(this.contextProvider.mo1933get());
+    public SensorPrivacyManager get() {
+        return provideSensorPrivacyManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideSensorPrivacyManagerFactory create(Provider<Context> provider) {

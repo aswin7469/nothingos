@@ -2,18 +2,15 @@ package com.airbnb.lottie.parser;
 
 import android.graphics.PointF;
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
-/* loaded from: classes.dex */
+import java.p026io.IOException;
+
 public class PathParser implements ValueParser<PointF> {
     public static final PathParser INSTANCE = new PathParser();
 
     private PathParser() {
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.airbnb.lottie.parser.ValueParser
-    /* renamed from: parse */
-    public PointF mo201parse(JsonReader jsonReader, float f) throws IOException {
+    public PointF parse(JsonReader jsonReader, float f) throws IOException {
         return JsonUtils.jsonToPoint(jsonReader, f);
     }
 }

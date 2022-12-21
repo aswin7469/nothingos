@@ -5,7 +5,7 @@ import android.view.IWindowManager;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ScrollCaptureClient_Factory implements Factory<ScrollCaptureClient> {
     private final Provider<Executor> bgExecutorProvider;
     private final Provider<Context> contextProvider;
@@ -17,10 +17,8 @@ public final class ScrollCaptureClient_Factory implements Factory<ScrollCaptureC
         this.contextProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ScrollCaptureClient mo1933get() {
-        return newInstance(this.windowManagerServiceProvider.mo1933get(), this.bgExecutorProvider.mo1933get(), this.contextProvider.mo1933get());
+    public ScrollCaptureClient get() {
+        return newInstance(this.windowManagerServiceProvider.get(), this.bgExecutorProvider.get(), this.contextProvider.get());
     }
 
     public static ScrollCaptureClient_Factory create(Provider<IWindowManager> provider, Provider<Executor> provider2, Provider<Context> provider3) {

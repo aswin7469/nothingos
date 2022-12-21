@@ -5,7 +5,7 @@ import android.view.inputmethod.InputMethodManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideInputMethodManagerFactory implements Factory<InputMethodManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideInputMethodManagerFactory impl
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public InputMethodManager mo1933get() {
-        return provideInputMethodManager(this.contextProvider.mo1933get());
+    public InputMethodManager get() {
+        return provideInputMethodManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideInputMethodManagerFactory create(Provider<Context> provider) {

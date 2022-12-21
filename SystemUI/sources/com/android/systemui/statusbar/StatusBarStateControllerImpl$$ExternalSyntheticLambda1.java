@@ -1,18 +1,14 @@
 package com.android.systemui.statusbar;
 
-import com.android.systemui.statusbar.SysuiStatusBarStateController;
-import java.util.function.ToIntFunction;
-/* loaded from: classes.dex */
-public final /* synthetic */ class StatusBarStateControllerImpl$$ExternalSyntheticLambda1 implements ToIntFunction {
-    public static final /* synthetic */ StatusBarStateControllerImpl$$ExternalSyntheticLambda1 INSTANCE = new StatusBarStateControllerImpl$$ExternalSyntheticLambda1();
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class StatusBarStateControllerImpl$$ExternalSyntheticLambda1 implements Runnable {
+    public final /* synthetic */ StatusBarStateControllerImpl f$0;
 
-    private /* synthetic */ StatusBarStateControllerImpl$$ExternalSyntheticLambda1() {
+    public /* synthetic */ StatusBarStateControllerImpl$$ExternalSyntheticLambda1(StatusBarStateControllerImpl statusBarStateControllerImpl) {
+        this.f$0 = statusBarStateControllerImpl;
     }
 
-    @Override // java.util.function.ToIntFunction
-    public final int applyAsInt(Object obj) {
-        int i;
-        i = ((SysuiStatusBarStateController.RankedListener) obj).mRank;
-        return i;
+    public final void run() {
+        this.f$0.beginInteractionJankMonitor();
     }
 }

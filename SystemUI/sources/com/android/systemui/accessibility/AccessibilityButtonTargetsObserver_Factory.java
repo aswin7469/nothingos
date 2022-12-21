@@ -3,7 +3,7 @@ package com.android.systemui.accessibility;
 import android.content.Context;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class AccessibilityButtonTargetsObserver_Factory implements Factory<AccessibilityButtonTargetsObserver> {
     private final Provider<Context> contextProvider;
 
@@ -11,10 +11,8 @@ public final class AccessibilityButtonTargetsObserver_Factory implements Factory
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AccessibilityButtonTargetsObserver mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public AccessibilityButtonTargetsObserver get() {
+        return newInstance(this.contextProvider.get());
     }
 
     public static AccessibilityButtonTargetsObserver_Factory create(Provider<Context> provider) {

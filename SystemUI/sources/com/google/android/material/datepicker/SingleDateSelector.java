@@ -10,10 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import androidx.core.util.Pair;
-import com.google.android.material.R$attr;
-import com.google.android.material.R$id;
-import com.google.android.material.R$layout;
-import com.google.android.material.R$string;
+import com.google.android.material.C3621R;
 import com.google.android.material.internal.ManufacturerUtils;
 import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.resources.MaterialAttributes;
@@ -21,53 +18,47 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-/* loaded from: classes2.dex */
+
 public class SingleDateSelector implements DateSelector<Long> {
-    public static final Parcelable.Creator<SingleDateSelector> CREATOR = new Parcelable.Creator<SingleDateSelector>() { // from class: com.google.android.material.datepicker.SingleDateSelector.2
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public SingleDateSelector mo1832createFromParcel(Parcel parcel) {
+    public static final Parcelable.Creator<SingleDateSelector> CREATOR = new Parcelable.Creator<SingleDateSelector>() {
+        public SingleDateSelector createFromParcel(Parcel parcel) {
             SingleDateSelector singleDateSelector = new SingleDateSelector();
-            singleDateSelector.selectedItem = (Long) parcel.readValue(Long.class.getClassLoader());
+            Long unused = singleDateSelector.selectedItem = (Long) parcel.readValue(Long.class.getClassLoader());
             return singleDateSelector;
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public SingleDateSelector[] mo1833newArray(int i) {
+        public SingleDateSelector[] newArray(int i) {
             return new SingleDateSelector[i];
         }
     };
-    private Long selectedItem;
+    /* access modifiers changed from: private */
+    public Long selectedItem;
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    @Override // com.google.android.material.datepicker.DateSelector
     public void select(long j) {
         this.selectedItem = Long.valueOf(j);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void clearSelection() {
         this.selectedItem = null;
     }
 
-    @Override // com.google.android.material.datepicker.DateSelector
+    public void setSelection(Long l) {
+        this.selectedItem = l == null ? null : Long.valueOf(UtcDates.canonicalYearMonthDay(l.longValue()));
+    }
+
     public boolean isSelectionComplete() {
         return this.selectedItem != null;
     }
 
-    @Override // com.google.android.material.datepicker.DateSelector
     public Collection<Pair<Long, Long>> getSelectedRanges() {
         return new ArrayList();
     }
 
-    @Override // com.google.android.material.datepicker.DateSelector
     public Collection<Long> getSelectedDays() {
         ArrayList arrayList = new ArrayList();
         Long l = this.selectedItem;
@@ -77,17 +68,13 @@ public class SingleDateSelector implements DateSelector<Long> {
         return arrayList;
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.google.android.material.datepicker.DateSelector
-    /* renamed from: getSelection */
-    public Long mo1831getSelection() {
+    public Long getSelection() {
         return this.selectedItem;
     }
 
-    @Override // com.google.android.material.datepicker.DateSelector
-    public View onCreateTextInputView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle, CalendarConstraints calendarConstraints, final OnSelectionChangedListener<Long> onSelectionChangedListener) {
-        View inflate = layoutInflater.inflate(R$layout.mtrl_picker_text_input_date, viewGroup, false);
-        TextInputLayout textInputLayout = (TextInputLayout) inflate.findViewById(R$id.mtrl_picker_text_input_date);
+    public View onCreateTextInputView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle, CalendarConstraints calendarConstraints, OnSelectionChangedListener<Long> onSelectionChangedListener) {
+        View inflate = layoutInflater.inflate(C3621R.layout.mtrl_picker_text_input_date, viewGroup, false);
+        TextInputLayout textInputLayout = (TextInputLayout) inflate.findViewById(C3621R.C3624id.mtrl_picker_text_input_date);
         EditText editText = textInputLayout.getEditText();
         if (ManufacturerUtils.isDateInputKeyboardMissingSeparatorCharacters()) {
             editText.setInputType(17);
@@ -99,42 +86,45 @@ public class SingleDateSelector implements DateSelector<Long> {
         if (l != null) {
             editText.setText(textInputFormat.format(l));
         }
-        editText.addTextChangedListener(new DateFormatTextWatcher(textInputHint, textInputFormat, textInputLayout, calendarConstraints) { // from class: com.google.android.material.datepicker.SingleDateSelector.1
-            @Override // com.google.android.material.datepicker.DateFormatTextWatcher
-            void onValidDate(Long l2) {
-                if (l2 == null) {
+        final OnSelectionChangedListener<Long> onSelectionChangedListener2 = onSelectionChangedListener;
+        editText.addTextChangedListener(new DateFormatTextWatcher(textInputHint, textInputFormat, textInputLayout, calendarConstraints) {
+            /* access modifiers changed from: package-private */
+            public void onValidDate(Long l) {
+                if (l == null) {
                     SingleDateSelector.this.clearSelection();
                 } else {
-                    SingleDateSelector.this.select(l2.longValue());
+                    SingleDateSelector.this.select(l.longValue());
                 }
-                onSelectionChangedListener.onSelectionChanged(SingleDateSelector.this.mo1831getSelection());
+                onSelectionChangedListener2.onSelectionChanged(SingleDateSelector.this.getSelection());
             }
 
-            @Override // com.google.android.material.datepicker.DateFormatTextWatcher
-            void onInvalidDate() {
-                onSelectionChangedListener.onIncompleteSelectionChanged();
+            /* access modifiers changed from: package-private */
+            public void onInvalidDate() {
+                onSelectionChangedListener2.onIncompleteSelectionChanged();
             }
         });
         ViewUtils.requestFocusAndShowKeyboard(editText);
         return inflate;
     }
 
-    @Override // com.google.android.material.datepicker.DateSelector
     public int getDefaultThemeResId(Context context) {
-        return MaterialAttributes.resolveOrThrow(context, R$attr.materialCalendarTheme, MaterialDatePicker.class.getCanonicalName());
+        return MaterialAttributes.resolveOrThrow(context, C3621R.attr.materialCalendarTheme, MaterialDatePicker.class.getCanonicalName());
     }
 
-    @Override // com.google.android.material.datepicker.DateSelector
     public String getSelectionDisplayString(Context context) {
         Resources resources = context.getResources();
         Long l = this.selectedItem;
         if (l == null) {
-            return resources.getString(R$string.mtrl_picker_date_header_unselected);
+            return resources.getString(C3621R.string.mtrl_picker_date_header_unselected);
         }
-        return resources.getString(R$string.mtrl_picker_date_header_selected, DateStrings.getYearMonthDay(l.longValue()));
+        String yearMonthDay = DateStrings.getYearMonthDay(l.longValue());
+        return resources.getString(C3621R.string.mtrl_picker_date_header_selected, new Object[]{yearMonthDay});
     }
 
-    @Override // android.os.Parcelable
+    public int getDefaultTitleResId() {
+        return C3621R.string.mtrl_picker_date_header_title;
+    }
+
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeValue(this.selectedItem);
     }

@@ -5,7 +5,7 @@ import android.content.Context;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideTrustManagerFactory implements Factory<TrustManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideTrustManagerFactory implements
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public TrustManager mo1933get() {
-        return provideTrustManager(this.contextProvider.mo1933get());
+    public TrustManager get() {
+        return provideTrustManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideTrustManagerFactory create(Provider<Context> provider) {

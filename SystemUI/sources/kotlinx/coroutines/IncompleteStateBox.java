@@ -1,15 +1,13 @@
 package kotlinx.coroutines;
 
-import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+import kotlin.Metadata;
+
+@Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0002\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004R\u0010\u0010\u0002\u001a\u00020\u00038\u0006X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lkotlinx/coroutines/IncompleteStateBox;", "", "state", "Lkotlinx/coroutines/Incomplete;", "(Lkotlinx/coroutines/Incomplete;)V", "kotlinx-coroutines-core"}, mo64988k = 1, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: JobSupport.kt */
-/* loaded from: classes2.dex */
 final class IncompleteStateBox {
-    @NotNull
     public final Incomplete state;
 
-    public IncompleteStateBox(@NotNull Incomplete state) {
-        Intrinsics.checkParameterIsNotNull(state, "state");
-        this.state = state;
+    public IncompleteStateBox(Incomplete incomplete) {
+        this.state = incomplete;
     }
 }

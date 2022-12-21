@@ -6,7 +6,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class PrivacyDotViewController_Factory implements Factory<PrivacyDotViewController> {
     private final Provider<SystemStatusAnimationScheduler> animationSchedulerProvider;
     private final Provider<ConfigurationController> configurationControllerProvider;
@@ -22,10 +22,8 @@ public final class PrivacyDotViewController_Factory implements Factory<PrivacyDo
         this.animationSchedulerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PrivacyDotViewController mo1933get() {
-        return newInstance(this.mainExecutorProvider.mo1933get(), this.stateControllerProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.contentInsetsProvider.mo1933get(), this.animationSchedulerProvider.mo1933get());
+    public PrivacyDotViewController get() {
+        return newInstance(this.mainExecutorProvider.get(), this.stateControllerProvider.get(), this.configurationControllerProvider.get(), this.contentInsetsProvider.get(), this.animationSchedulerProvider.get());
     }
 
     public static PrivacyDotViewController_Factory create(Provider<Executor> provider, Provider<StatusBarStateController> provider2, Provider<ConfigurationController> provider3, Provider<StatusBarContentInsetsProvider> provider4, Provider<SystemStatusAnimationScheduler> provider5) {

@@ -14,16 +14,16 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.constraintlayout.motion.widget.Key;
+import com.android.keyguard.KeyguardConstants;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.KeyguardVisibilityHelper;
+import com.android.keyguard.dagger.KeyguardUserSwitcherScope;
 import com.android.settingslib.drawable.CircleFramedDrawable;
-import com.android.systemui.R$color;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$drawable;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
@@ -31,117 +31,130 @@ import com.android.systemui.statusbar.notification.AnimatableProperty;
 import com.android.systemui.statusbar.notification.PropertyAnimator;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
 import com.android.systemui.statusbar.phone.DozeParameters;
-import com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController;
+import com.android.systemui.statusbar.phone.ScreenOffAnimationController;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.android.systemui.util.ViewController;
 import java.util.ArrayList;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
+@KeyguardUserSwitcherScope
 public class KeyguardUserSwitcherController extends ViewController<KeyguardUserSwitcherView> {
     private static final AnimationProperties ANIMATION_PROPERTIES = new AnimationProperties().setDuration(360);
+    /* access modifiers changed from: private */
+    public static final boolean DEBUG = KeyguardConstants.DEBUG;
+    private static final String TAG = "KeyguardUserSwitcherController";
     private final KeyguardUserAdapter mAdapter;
     private final KeyguardUserSwitcherScrim mBackground;
-    private int mBarState;
-    private ObjectAnimator mBgAnimator;
+    /* access modifiers changed from: private */
+    public int mBarState;
+    /* access modifiers changed from: private */
+    public ObjectAnimator mBgAnimator;
     private final Context mContext;
-    private float mDarkAmount;
-    private final KeyguardStateController mKeyguardStateController;
-    private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
-    private final KeyguardVisibilityHelper mKeyguardVisibilityHelper;
-    private KeyguardUserSwitcherListView mListView;
-    private final ScreenLifecycle mScreenLifecycle;
-    protected final SysuiStatusBarStateController mStatusBarStateController;
-    private final UserSwitcherController mUserSwitcherController;
-    private boolean mUserSwitcherOpen;
     private int mCurrentUserId = -10000;
-    private final KeyguardUpdateMonitorCallback mInfoCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.systemui.statusbar.policy.KeyguardUserSwitcherController.1
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+    private float mDarkAmount;
+    public final DataSetObserver mDataSetObserver = new DataSetObserver() {
+        public void onChanged() {
+            KeyguardUserSwitcherController.this.refreshUserList();
+        }
+    };
+    private final KeyguardUpdateMonitorCallback mInfoCallback = new KeyguardUpdateMonitorCallback() {
         public void onKeyguardVisibilityChanged(boolean z) {
-            Log.d("KeyguardUserSwitcherController", String.format("onKeyguardVisibilityChanged %b", Boolean.valueOf(z)));
+            if (KeyguardUserSwitcherController.DEBUG) {
+                Log.d(KeyguardUserSwitcherController.TAG, String.format("onKeyguardVisibilityChanged %b", Boolean.valueOf(z)));
+            }
             if (!z) {
                 KeyguardUserSwitcherController.this.closeSwitcherIfOpenAndNotSimple(false);
             }
         }
 
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onUserSwitching(int i) {
             KeyguardUserSwitcherController.this.closeSwitcherIfOpenAndNotSimple(false);
         }
     };
-    private final ScreenLifecycle.Observer mScreenObserver = new ScreenLifecycle.Observer() { // from class: com.android.systemui.statusbar.policy.KeyguardUserSwitcherController.2
-        @Override // com.android.systemui.keyguard.ScreenLifecycle.Observer
+    /* access modifiers changed from: private */
+    public final KeyguardStateController mKeyguardStateController;
+    private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private final KeyguardVisibilityHelper mKeyguardVisibilityHelper;
+    private KeyguardUserSwitcherListView mListView;
+    private final ScreenLifecycle mScreenLifecycle;
+    private final ScreenLifecycle.Observer mScreenObserver = new ScreenLifecycle.Observer() {
         public void onScreenTurnedOff() {
-            Log.d("KeyguardUserSwitcherController", "onScreenTurnedOff");
+            if (KeyguardUserSwitcherController.DEBUG) {
+                Log.d(KeyguardUserSwitcherController.TAG, "onScreenTurnedOff");
+            }
             KeyguardUserSwitcherController.this.closeSwitcherIfOpenAndNotSimple(false);
         }
     };
-    private final StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() { // from class: com.android.systemui.statusbar.policy.KeyguardUserSwitcherController.3
-        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
+    protected final SysuiStatusBarStateController mStatusBarStateController;
+    private final StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() {
         public void onStateChanged(int i) {
-            Log.d("KeyguardUserSwitcherController", String.format("onStateChanged: newState=%d", Integer.valueOf(i)));
+            if (KeyguardUserSwitcherController.DEBUG) {
+                Log.d(KeyguardUserSwitcherController.TAG, String.format("onStateChanged: newState=%d", Integer.valueOf(i)));
+            }
             boolean goingToFullShade = KeyguardUserSwitcherController.this.mStatusBarStateController.goingToFullShade();
             boolean isKeyguardFadingAway = KeyguardUserSwitcherController.this.mKeyguardStateController.isKeyguardFadingAway();
-            int i2 = KeyguardUserSwitcherController.this.mBarState;
-            KeyguardUserSwitcherController.this.mBarState = i;
+            int access$200 = KeyguardUserSwitcherController.this.mBarState;
+            int unused = KeyguardUserSwitcherController.this.mBarState = i;
             if (KeyguardUserSwitcherController.this.mStatusBarStateController.goingToFullShade() || KeyguardUserSwitcherController.this.mKeyguardStateController.isKeyguardFadingAway()) {
                 KeyguardUserSwitcherController.this.closeSwitcherIfOpenAndNotSimple(true);
             }
-            KeyguardUserSwitcherController.this.setKeyguardUserSwitcherVisibility(i, isKeyguardFadingAway, goingToFullShade, i2);
+            KeyguardUserSwitcherController.this.setKeyguardUserSwitcherVisibility(i, isKeyguardFadingAway, goingToFullShade, access$200);
         }
 
-        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onDozeAmountChanged(float f, float f2) {
-            Log.d("KeyguardUserSwitcherController", String.format("onDozeAmountChanged: linearAmount=%f amount=%f", Float.valueOf(f), Float.valueOf(f2)));
+            if (KeyguardUserSwitcherController.DEBUG) {
+                Log.d(KeyguardUserSwitcherController.TAG, String.format("onDozeAmountChanged: linearAmount=%f amount=%f", Float.valueOf(f), Float.valueOf(f2)));
+            }
             KeyguardUserSwitcherController.this.setDarkAmount(f2);
         }
     };
-    public final DataSetObserver mDataSetObserver = new DataSetObserver() { // from class: com.android.systemui.statusbar.policy.KeyguardUserSwitcherController.4
-        @Override // android.database.DataSetObserver
-        public void onChanged() {
-            KeyguardUserSwitcherController.this.refreshUserList();
-        }
-    };
+    private final UserSwitcherController mUserSwitcherController;
+    private boolean mUserSwitcherOpen;
 
-    public KeyguardUserSwitcherController(KeyguardUserSwitcherView keyguardUserSwitcherView, Context context, Resources resources, LayoutInflater layoutInflater, ScreenLifecycle screenLifecycle, UserSwitcherController userSwitcherController, KeyguardStateController keyguardStateController, SysuiStatusBarStateController sysuiStatusBarStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, DozeParameters dozeParameters, UnlockedScreenOffAnimationController unlockedScreenOffAnimationController) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    @Inject
+    public KeyguardUserSwitcherController(KeyguardUserSwitcherView keyguardUserSwitcherView, Context context, @Main Resources resources, LayoutInflater layoutInflater, ScreenLifecycle screenLifecycle, UserSwitcherController userSwitcherController, KeyguardStateController keyguardStateController, SysuiStatusBarStateController sysuiStatusBarStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, DozeParameters dozeParameters, ScreenOffAnimationController screenOffAnimationController) {
         super(keyguardUserSwitcherView);
-        Log.d("KeyguardUserSwitcherController", "New KeyguardUserSwitcherController");
-        this.mContext = context;
+        Context context2 = context;
+        if (DEBUG) {
+            Log.d(TAG, "New KeyguardUserSwitcherController");
+        }
+        this.mContext = context2;
         this.mScreenLifecycle = screenLifecycle;
-        this.mUserSwitcherController = userSwitcherController;
+        UserSwitcherController userSwitcherController2 = userSwitcherController;
+        this.mUserSwitcherController = userSwitcherController2;
         this.mKeyguardStateController = keyguardStateController;
         this.mStatusBarStateController = sysuiStatusBarStateController;
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
-        this.mAdapter = new KeyguardUserAdapter(context, resources, layoutInflater, userSwitcherController, this);
-        this.mKeyguardVisibilityHelper = new KeyguardVisibilityHelper(this.mView, keyguardStateController, dozeParameters, unlockedScreenOffAnimationController, false);
+        this.mAdapter = new KeyguardUserAdapter(context, resources, layoutInflater, userSwitcherController2, this);
+        this.mKeyguardVisibilityHelper = new KeyguardVisibilityHelper(this.mView, keyguardStateController, dozeParameters, screenOffAnimationController, false);
         this.mBackground = new KeyguardUserSwitcherScrim(context);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.ViewController
+    /* access modifiers changed from: protected */
     public void onInit() {
         super.onInit();
-        Log.d("KeyguardUserSwitcherController", "onInit");
-        this.mListView = (KeyguardUserSwitcherListView) ((KeyguardUserSwitcherView) this.mView).findViewById(R$id.keyguard_user_switcher_list);
-        ((KeyguardUserSwitcherView) this.mView).setOnTouchListener(new View.OnTouchListener() { // from class: com.android.systemui.statusbar.policy.KeyguardUserSwitcherController$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnTouchListener
-            public final boolean onTouch(View view, MotionEvent motionEvent) {
-                boolean lambda$onInit$0;
-                lambda$onInit$0 = KeyguardUserSwitcherController.this.lambda$onInit$0(view, motionEvent);
-                return lambda$onInit$0;
-            }
-        });
+        if (DEBUG) {
+            Log.d(TAG, "onInit");
+        }
+        this.mListView = (KeyguardUserSwitcherListView) ((KeyguardUserSwitcherView) this.mView).findViewById(C1893R.C1897id.keyguard_user_switcher_list);
+        ((KeyguardUserSwitcherView) this.mView).setOnTouchListener(new KeyguardUserSwitcherController$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$onInit$0(View view, MotionEvent motionEvent) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onInit$0$com-android-systemui-statusbar-policy-KeyguardUserSwitcherController */
+    public /* synthetic */ boolean mo45883xe534b629(View view, MotionEvent motionEvent) {
         if (!isListAnimating()) {
             return closeSwitcherIfOpenAndNotSimple(true);
         }
         return false;
     }
 
-    @Override // com.android.systemui.util.ViewController
-    protected void onViewAttached() {
-        Log.d("KeyguardUserSwitcherController", "onViewAttached");
+    /* access modifiers changed from: protected */
+    public void onViewAttached() {
+        if (DEBUG) {
+            Log.d(TAG, "onViewAttached");
+        }
         this.mAdapter.registerDataSetObserver(this.mDataSetObserver);
         this.mAdapter.notifyDataSetChanged();
         this.mKeyguardUpdateMonitor.registerCallback(this.mInfoCallback);
@@ -156,21 +169,27 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
         this.mBackground.setAlpha(0);
     }
 
-    @Override // com.android.systemui.util.ViewController
-    protected void onViewDetached() {
-        Log.d("KeyguardUserSwitcherController", "onViewDetached");
+    /* access modifiers changed from: protected */
+    public void onViewDetached() {
+        if (DEBUG) {
+            Log.d(TAG, "onViewDetached");
+        }
         closeSwitcherIfOpenAndNotSimple(false);
         this.mAdapter.unregisterDataSetObserver(this.mDataSetObserver);
         this.mKeyguardUpdateMonitor.removeCallback(this.mInfoCallback);
         this.mStatusBarStateController.removeCallback(this.mStatusBarStateListener);
         this.mScreenLifecycle.removeObserver(this.mScreenObserver);
         ((KeyguardUserSwitcherView) this.mView).removeOnLayoutChangeListener(this.mBackground);
-        ((KeyguardUserSwitcherView) this.mView).setBackground(null);
+        ((KeyguardUserSwitcherView) this.mView).setBackground((Drawable) null);
         this.mBackground.setAlpha(0);
     }
 
     public boolean isSimpleUserSwitcher() {
         return this.mUserSwitcherController.isSimpleUserSwitcher();
+    }
+
+    public int getHeight() {
+        return this.mListView.getHeight();
     }
 
     public boolean closeSwitcherIfOpenAndNotSimple(boolean z) {
@@ -181,23 +200,24 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
         return true;
     }
 
-    void refreshUserList() {
+    /* access modifiers changed from: package-private */
+    public void refreshUserList() {
         int childCount = this.mListView.getChildCount();
         int count = this.mAdapter.getCount();
         int max = Math.max(childCount, count);
-        Log.d("KeyguardUserSwitcherController", String.format("refreshUserList childCount=%d adapterCount=%d", Integer.valueOf(childCount), Integer.valueOf(count)));
+        if (DEBUG) {
+            Log.d(TAG, String.format("refreshUserList childCount=%d adapterCount=%d", Integer.valueOf(childCount), Integer.valueOf(count)));
+        }
+        int i = 0;
         boolean z = false;
-        for (int i = 0; i < max; i++) {
+        while (i < max) {
             if (i < count) {
-                View view = null;
-                if (i < childCount) {
-                    view = this.mListView.getChildAt(i);
-                }
-                KeyguardUserDetailItemView keyguardUserDetailItemView = (KeyguardUserDetailItemView) this.mAdapter.getView(i, view, this.mListView);
+                View childAt = i < childCount ? this.mListView.getChildAt(i) : null;
+                KeyguardUserDetailItemView keyguardUserDetailItemView = (KeyguardUserDetailItemView) this.mAdapter.getView(i, childAt, this.mListView);
                 UserSwitcherController.UserRecord userRecord = (UserSwitcherController.UserRecord) keyguardUserDetailItemView.getTag();
                 if (userRecord.isCurrent) {
                     if (i != 0) {
-                        Log.w("KeyguardUserSwitcherController", "Current user is not the first view in the list");
+                        Log.w(TAG, "Current user is not the first view in the list");
                     }
                     this.mCurrentUserId = userRecord.info.id;
                     keyguardUserDetailItemView.updateVisibilities(true, this.mUserSwitcherOpen, false);
@@ -206,17 +226,18 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
                     keyguardUserDetailItemView.updateVisibilities(this.mUserSwitcherOpen, true, false);
                 }
                 keyguardUserDetailItemView.setDarkAmount(this.mDarkAmount);
-                if (view == null) {
+                if (childAt == null) {
                     this.mListView.addView(keyguardUserDetailItemView);
-                } else if (view != keyguardUserDetailItemView) {
+                } else if (childAt != keyguardUserDetailItemView) {
                     this.mListView.replaceView(keyguardUserDetailItemView, i);
                 }
             } else {
                 this.mListView.removeLastView();
             }
+            i++;
         }
         if (!z) {
-            Log.w("KeyguardUserSwitcherController", "Current user is not listed");
+            Log.w(TAG, "Current user is not listed");
             this.mCurrentUserId = -10000;
         }
     }
@@ -227,12 +248,12 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
 
     public void updatePosition(int i, int i2, boolean z) {
         AnimationProperties animationProperties = ANIMATION_PROPERTIES;
-        PropertyAnimator.setProperty(this.mListView, AnimatableProperty.Y, i2, animationProperties, z);
-        PropertyAnimator.setProperty(this.mListView, AnimatableProperty.TRANSLATION_X, -Math.abs(i), animationProperties, z);
+        PropertyAnimator.setProperty(this.mListView, AnimatableProperty.f376Y, (float) i2, animationProperties, z);
+        PropertyAnimator.setProperty(this.mListView, AnimatableProperty.TRANSLATION_X, (float) (-Math.abs(i)), animationProperties, z);
         Rect rect = new Rect();
         this.mListView.getDrawingRect(rect);
         ((KeyguardUserSwitcherView) this.mView).offsetDescendantRectToMyCoords(this.mListView, rect);
-        this.mBackground.setGradientCenter((int) (this.mListView.getTranslationX() + rect.left + (rect.width() / 2)), (int) (this.mListView.getTranslationY() + rect.top + (rect.height() / 2)));
+        this.mBackground.setGradientCenter((int) (this.mListView.getTranslationX() + ((float) rect.left) + ((float) (rect.width() / 2))), (int) (this.mListView.getTranslationY() + ((float) rect.top) + ((float) (rect.height() / 2))));
     }
 
     public void setAlpha(float f) {
@@ -241,59 +262,59 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setDarkAmount(float f) {
         boolean z = f == 1.0f;
-        if (f == this.mDarkAmount) {
-            return;
+        if (f != this.mDarkAmount) {
+            this.mDarkAmount = f;
+            this.mListView.setDarkAmount(f);
+            if (z) {
+                closeSwitcherIfOpenAndNotSimple(false);
+            }
         }
-        this.mDarkAmount = f;
-        this.mListView.setDarkAmount(f);
-        if (!z) {
-            return;
-        }
-        closeSwitcherIfOpenAndNotSimple(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isListAnimating() {
         return this.mKeyguardVisibilityHelper.isVisibilityAnimating() || this.mListView.isAnimating();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setUserSwitcherOpened(boolean z, boolean z2) {
-        Log.d("KeyguardUserSwitcherController", String.format("setUserSwitcherOpened: %b -> %b (animate=%b)", Boolean.valueOf(this.mUserSwitcherOpen), Boolean.valueOf(z), Boolean.valueOf(z2)));
+        if (DEBUG) {
+            Log.d(TAG, String.format("setUserSwitcherOpened: %b -> %b (animate=%b)", Boolean.valueOf(this.mUserSwitcherOpen), Boolean.valueOf(z), Boolean.valueOf(z2)));
+        }
         this.mUserSwitcherOpen = z;
         updateVisibilities(z2);
     }
 
     private void updateVisibilities(boolean z) {
-        Log.d("KeyguardUserSwitcherController", String.format("updateVisibilities: animate=%b", Boolean.valueOf(z)));
+        if (DEBUG) {
+            Log.d(TAG, String.format("updateVisibilities: animate=%b", Boolean.valueOf(z)));
+        }
         ObjectAnimator objectAnimator = this.mBgAnimator;
         if (objectAnimator != null) {
             objectAnimator.cancel();
         }
         if (this.mUserSwitcherOpen) {
-            ObjectAnimator ofInt = ObjectAnimator.ofInt(this.mBackground, "alpha", 0, 255);
+            ObjectAnimator ofInt = ObjectAnimator.ofInt(this.mBackground, Key.ALPHA, new int[]{0, 255});
             this.mBgAnimator = ofInt;
-            ofInt.setDuration(400L);
+            ofInt.setDuration(400);
             this.mBgAnimator.setInterpolator(Interpolators.ALPHA_IN);
-            this.mBgAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.policy.KeyguardUserSwitcherController.5
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+            this.mBgAnimator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
-                    KeyguardUserSwitcherController.this.mBgAnimator = null;
+                    ObjectAnimator unused = KeyguardUserSwitcherController.this.mBgAnimator = null;
                 }
             });
             this.mBgAnimator.start();
         } else {
-            ObjectAnimator ofInt2 = ObjectAnimator.ofInt(this.mBackground, "alpha", 255, 0);
+            ObjectAnimator ofInt2 = ObjectAnimator.ofInt(this.mBackground, Key.ALPHA, new int[]{255, 0});
             this.mBgAnimator = ofInt2;
-            ofInt2.setDuration(400L);
+            ofInt2.setDuration(400);
             this.mBgAnimator.setInterpolator(Interpolators.ALPHA_OUT);
-            this.mBgAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.policy.KeyguardUserSwitcherController.6
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+            this.mBgAnimator.addListener(new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
-                    KeyguardUserSwitcherController.this.mBgAnimator = null;
+                    ObjectAnimator unused = KeyguardUserSwitcherController.this.mBgAnimator = null;
                 }
             });
             this.mBgAnimator.start();
@@ -301,14 +322,12 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
         this.mListView.updateVisibilities(this.mUserSwitcherOpen, z);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isUserSwitcherOpen() {
         return this.mUserSwitcherOpen;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static class KeyguardUserAdapter extends UserSwitcherController.BaseUserAdapter implements View.OnClickListener {
+    static class KeyguardUserAdapter extends UserSwitcherController.BaseUserAdapter implements View.OnClickListener {
         private final Context mContext;
         private View mCurrentUserView;
         private KeyguardUserSwitcherController mKeyguardUserSwitcherController;
@@ -324,13 +343,13 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
             this.mKeyguardUserSwitcherController = keyguardUserSwitcherController;
         }
 
-        @Override // android.widget.BaseAdapter
         public void notifyDataSetChanged() {
             refreshUserOrder();
             super.notifyDataSetChanged();
         }
 
-        void refreshUserOrder() {
+        /* access modifiers changed from: package-private */
+        public void refreshUserOrder() {
             ArrayList<UserSwitcherController.UserRecord> users = super.getUsers();
             this.mUsersOrdered = new ArrayList<>(users.size());
             for (int i = 0; i < users.size(); i++) {
@@ -343,33 +362,34 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
             }
         }
 
-        @Override // com.android.systemui.statusbar.policy.UserSwitcherController.BaseUserAdapter
-        protected ArrayList<UserSwitcherController.UserRecord> getUsers() {
+        /* access modifiers changed from: protected */
+        public ArrayList<UserSwitcherController.UserRecord> getUsers() {
             return this.mUsersOrdered;
         }
 
-        @Override // android.widget.Adapter
         public View getView(int i, View view, ViewGroup viewGroup) {
-            return createUserDetailItemView(view, viewGroup, mo1332getItem(i));
+            return createUserDetailItemView(view, viewGroup, getItem(i));
         }
 
-        KeyguardUserDetailItemView convertOrInflate(View view, ViewGroup viewGroup) {
+        /* access modifiers changed from: package-private */
+        public KeyguardUserDetailItemView convertOrInflate(View view, ViewGroup viewGroup) {
             if (!(view instanceof KeyguardUserDetailItemView) || !(view.getTag() instanceof UserSwitcherController.UserRecord)) {
-                view = this.mLayoutInflater.inflate(R$layout.keyguard_user_switcher_item, viewGroup, false);
+                view = this.mLayoutInflater.inflate(C1893R.layout.keyguard_user_switcher_item, viewGroup, false);
             }
             return (KeyguardUserDetailItemView) view;
         }
 
-        KeyguardUserDetailItemView createUserDetailItemView(View view, ViewGroup viewGroup, UserSwitcherController.UserRecord userRecord) {
+        /* access modifiers changed from: package-private */
+        public KeyguardUserDetailItemView createUserDetailItemView(View view, ViewGroup viewGroup, UserSwitcherController.UserRecord userRecord) {
             KeyguardUserDetailItemView convertOrInflate = convertOrInflate(view, viewGroup);
             convertOrInflate.setOnClickListener(this);
             String name = getName(this.mContext, userRecord);
             if (userRecord.picture == null) {
                 convertOrInflate.bind(name, getDrawable(userRecord).mutate(), userRecord.resolveId());
             } else {
-                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(userRecord.picture, (int) this.mResources.getDimension(R$dimen.kg_framed_avatar_size));
-                circleFramedDrawable.setColorFilter(userRecord.isSwitchToEnabled ? null : UserSwitcherController.BaseUserAdapter.getDisabledUserAvatarColorFilter());
-                convertOrInflate.bind(name, circleFramedDrawable, userRecord.info.id);
+                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(userRecord.picture, (int) this.mResources.getDimension(C1893R.dimen.kg_framed_avatar_size));
+                circleFramedDrawable.setColorFilter(userRecord.isSwitchToEnabled ? null : getDisabledUserAvatarColorFilter());
+                convertOrInflate.bind(name, (Drawable) circleFramedDrawable, userRecord.info.id);
             }
             convertOrInflate.setActivated(userRecord.isCurrent);
             convertOrInflate.setDisabledByAdmin(userRecord.isDisabledByAdmin);
@@ -383,34 +403,26 @@ public class KeyguardUserSwitcherController extends ViewController<KeyguardUserS
         }
 
         private Drawable getDrawable(UserSwitcherController.UserRecord userRecord) {
-            Drawable iconDrawable;
-            int i;
-            if (userRecord.isCurrent && userRecord.isGuest) {
-                iconDrawable = this.mContext.getDrawable(R$drawable.ic_avatar_guest_user);
+            Drawable drawable;
+            if (!userRecord.isCurrent || !userRecord.isGuest) {
+                drawable = getIconDrawable(this.mContext, userRecord);
             } else {
-                iconDrawable = UserSwitcherController.BaseUserAdapter.getIconDrawable(this.mContext, userRecord);
+                drawable = this.mContext.getDrawable(C1893R.C1895drawable.ic_avatar_guest_user);
             }
-            if (userRecord.isSwitchToEnabled) {
-                i = R$color.kg_user_switcher_avatar_icon_color;
-            } else {
-                i = R$color.kg_user_switcher_restricted_avatar_icon_color;
-            }
-            iconDrawable.setTint(this.mResources.getColor(i, this.mContext.getTheme()));
-            return new LayerDrawable(new Drawable[]{this.mContext.getDrawable(R$drawable.kg_bg_avatar), iconDrawable});
+            drawable.setTint(this.mResources.getColor(userRecord.isSwitchToEnabled ? C1893R.C1894color.kg_user_switcher_avatar_icon_color : C1893R.C1894color.kg_user_switcher_restricted_avatar_icon_color, this.mContext.getTheme()));
+            return new LayerDrawable(new Drawable[]{this.mContext.getDrawable(C1893R.C1895drawable.user_avatar_bg), drawable});
         }
 
-        @Override // android.view.View.OnClickListener
         public void onClick(View view) {
             UserSwitcherController.UserRecord userRecord = (UserSwitcherController.UserRecord) view.getTag();
-            if (this.mKeyguardUserSwitcherController.isListAnimating()) {
-                return;
-            }
-            if (!this.mKeyguardUserSwitcherController.isUserSwitcherOpen()) {
-                this.mKeyguardUserSwitcherController.setUserSwitcherOpened(true, true);
-            } else if (!userRecord.isCurrent || userRecord.isGuest) {
-                onUserListItemClicked(userRecord);
-            } else {
-                this.mKeyguardUserSwitcherController.closeSwitcherIfOpenAndNotSimple(true);
+            if (!this.mKeyguardUserSwitcherController.isListAnimating()) {
+                if (!this.mKeyguardUserSwitcherController.isUserSwitcherOpen()) {
+                    this.mKeyguardUserSwitcherController.setUserSwitcherOpened(true, true);
+                } else if (!userRecord.isCurrent || userRecord.isGuest) {
+                    onUserListItemClicked(userRecord);
+                } else {
+                    this.mKeyguardUserSwitcherController.closeSwitcherIfOpenAndNotSimple(true);
+                }
             }
         }
     }

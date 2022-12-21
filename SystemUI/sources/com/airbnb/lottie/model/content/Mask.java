@@ -2,14 +2,13 @@ package com.airbnb.lottie.model.content;
 
 import com.airbnb.lottie.model.animatable.AnimatableIntegerValue;
 import com.airbnb.lottie.model.animatable.AnimatableShapeValue;
-/* loaded from: classes.dex */
+
 public class Mask {
     private final boolean inverted;
     private final MaskMode maskMode;
     private final AnimatableShapeValue maskPath;
     private final AnimatableIntegerValue opacity;
 
-    /* loaded from: classes.dex */
     public enum MaskMode {
         MASK_MODE_ADD,
         MASK_MODE_SUBTRACT,
@@ -17,8 +16,8 @@ public class Mask {
         MASK_MODE_NONE
     }
 
-    public Mask(MaskMode maskMode, AnimatableShapeValue animatableShapeValue, AnimatableIntegerValue animatableIntegerValue, boolean z) {
-        this.maskMode = maskMode;
+    public Mask(MaskMode maskMode2, AnimatableShapeValue animatableShapeValue, AnimatableIntegerValue animatableIntegerValue, boolean z) {
+        this.maskMode = maskMode2;
         this.maskPath = animatableShapeValue;
         this.opacity = animatableIntegerValue;
         this.inverted = z;

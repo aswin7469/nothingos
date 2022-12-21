@@ -6,198 +6,170 @@ import android.content.IntentFilter;
 import android.os.Handler;
 import android.os.HandlerExecutor;
 import android.os.Looper;
-import android.os.Message;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.IndentingPrintWriter;
 import android.util.SparseArray;
-import com.android.internal.annotations.VisibleForTesting;
+import com.android.settingslib.SliceBroadcastRelay;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.logging.BroadcastDispatcherLogger;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.settings.UserTracker;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-import java.util.Objects;
+import java.p026io.PrintWriter;
 import java.util.concurrent.Executor;
+import javax.inject.Inject;
+import kotlin.Deprecated;
+import kotlin.Metadata;
+import kotlin.ReplaceWith;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@SysUISingleton
+@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003*\u0001\u0012\b\u0017\u0018\u00002\u00020\u0001BC\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\b\b\u0001\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0001\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r\u0012\u0006\u0010\u000e\u001a\u00020\u000f¢\u0006\u0002\u0010\u0010J\u0010\u0010\u0017\u001a\u00020\u00182\u0006\u0010\u0019\u001a\u00020\u001aH\u0002J\u0010\u0010\u001b\u001a\u00020\u00162\u0006\u0010\u001c\u001a\u00020\u001dH\u0015J%\u0010\u001e\u001a\u00020\u00182\u0006\u0010\u001f\u001a\u00020 2\u000e\u0010!\u001a\n\u0012\u0006\b\u0001\u0012\u00020#0\"H\u0016¢\u0006\u0002\u0010$J\u0006\u0010%\u001a\u00020\u0018JF\u0010&\u001a\u00020\u00182\u0006\u0010'\u001a\u00020(2\u0006\u0010\u0019\u001a\u00020\u001a2\n\b\u0002\u0010)\u001a\u0004\u0018\u00010\u00072\n\b\u0002\u0010*\u001a\u0004\u0018\u00010+2\b\b\u0002\u0010,\u001a\u00020\u001d2\n\b\u0002\u0010-\u001a\u0004\u0018\u00010#H\u0017J@\u0010.\u001a\u00020\u00182\u0006\u0010'\u001a\u00020(2\u0006\u0010\u0019\u001a\u00020\u001a2\u0006\u0010\u0011\u001a\u00020/2\b\b\u0002\u0010*\u001a\u00020+2\b\b\u0002\u0010,\u001a\u00020\u001d2\n\b\u0002\u0010-\u001a\u0004\u0018\u00010#H\u0017J\u0010\u00100\u001a\u00020\u00182\u0006\u0010'\u001a\u00020(H\u0016J\u0018\u00101\u001a\u00020\u00182\u0006\u0010'\u001a\u00020(2\u0006\u0010*\u001a\u00020+H\u0016R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0011\u001a\u00020\u0012X\u0004¢\u0006\u0004\n\u0002\u0010\u0013R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0014\u001a\b\u0012\u0004\u0012\u00020\u00160\u0015X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\u000fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000¨\u00062"}, mo64987d2 = {"Lcom/android/systemui/broadcast/BroadcastDispatcher;", "Lcom/android/systemui/Dumpable;", "context", "Landroid/content/Context;", "bgLooper", "Landroid/os/Looper;", "bgExecutor", "Ljava/util/concurrent/Executor;", "dumpManager", "Lcom/android/systemui/dump/DumpManager;", "logger", "Lcom/android/systemui/broadcast/logging/BroadcastDispatcherLogger;", "userTracker", "Lcom/android/systemui/settings/UserTracker;", "removalPendingStore", "Lcom/android/systemui/broadcast/PendingRemovalStore;", "(Landroid/content/Context;Landroid/os/Looper;Ljava/util/concurrent/Executor;Lcom/android/systemui/dump/DumpManager;Lcom/android/systemui/broadcast/logging/BroadcastDispatcherLogger;Lcom/android/systemui/settings/UserTracker;Lcom/android/systemui/broadcast/PendingRemovalStore;)V", "handler", "com/android/systemui/broadcast/BroadcastDispatcher$handler$1", "Lcom/android/systemui/broadcast/BroadcastDispatcher$handler$1;", "receiversByUser", "Landroid/util/SparseArray;", "Lcom/android/systemui/broadcast/UserBroadcastDispatcher;", "checkFilter", "", "filter", "Landroid/content/IntentFilter;", "createUBRForUser", "userId", "", "dump", "pw", "Ljava/io/PrintWriter;", "args", "", "", "(Ljava/io/PrintWriter;[Ljava/lang/String;)V", "initialize", "registerReceiver", "receiver", "Landroid/content/BroadcastReceiver;", "executor", "user", "Landroid/os/UserHandle;", "flags", "permission", "registerReceiverWithHandler", "Landroid/os/Handler;", "unregisterReceiver", "unregisterReceiverForUser", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: BroadcastDispatcher.kt */
-/* loaded from: classes.dex */
 public class BroadcastDispatcher implements Dumpable {
-    @NotNull
     private final Executor bgExecutor;
-    @NotNull
     private final Looper bgLooper;
-    @NotNull
     private final Context context;
-    @NotNull
     private final DumpManager dumpManager;
-    @NotNull
     private final BroadcastDispatcher$handler$1 handler;
-    @NotNull
     private final BroadcastDispatcherLogger logger;
-    @NotNull
-    private final SparseArray<UserBroadcastDispatcher> receiversByUser = new SparseArray<>(20);
-    @NotNull
-    private final UserTracker userTracker;
+    /* access modifiers changed from: private */
+    public final SparseArray<UserBroadcastDispatcher> receiversByUser = new SparseArray<>(20);
+    /* access modifiers changed from: private */
+    public final PendingRemovalStore removalPendingStore;
+    /* access modifiers changed from: private */
+    public final UserTracker userTracker;
 
-    public final void registerReceiver(@NotNull BroadcastReceiver receiver, @NotNull IntentFilter filter) {
-        Intrinsics.checkNotNullParameter(receiver, "receiver");
-        Intrinsics.checkNotNullParameter(filter, "filter");
-        registerReceiver$default(this, receiver, filter, null, null, 12, null);
+    public final void registerReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(intentFilter, SliceBroadcastRelay.EXTRA_FILTER);
+        registerReceiver$default(this, broadcastReceiver, intentFilter, (Executor) null, (UserHandle) null, 0, (String) null, 60, (Object) null);
     }
 
-    public final void registerReceiver(@NotNull BroadcastReceiver receiver, @NotNull IntentFilter filter, @Nullable Executor executor) {
-        Intrinsics.checkNotNullParameter(receiver, "receiver");
-        Intrinsics.checkNotNullParameter(filter, "filter");
-        registerReceiver$default(this, receiver, filter, executor, null, 8, null);
+    public final void registerReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Executor executor) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(intentFilter, SliceBroadcastRelay.EXTRA_FILTER);
+        registerReceiver$default(this, broadcastReceiver, intentFilter, executor, (UserHandle) null, 0, (String) null, 56, (Object) null);
     }
 
-    public final void registerReceiverWithHandler(@NotNull BroadcastReceiver receiver, @NotNull IntentFilter filter, @NotNull Handler handler) {
-        Intrinsics.checkNotNullParameter(receiver, "receiver");
-        Intrinsics.checkNotNullParameter(filter, "filter");
-        Intrinsics.checkNotNullParameter(handler, "handler");
-        registerReceiverWithHandler$default(this, receiver, filter, handler, null, 8, null);
+    public final void registerReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Executor executor, UserHandle userHandle) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(intentFilter, SliceBroadcastRelay.EXTRA_FILTER);
+        registerReceiver$default(this, broadcastReceiver, intentFilter, executor, userHandle, 0, (String) null, 48, (Object) null);
     }
 
-    /* JADX WARN: Type inference failed for: r2v2, types: [com.android.systemui.broadcast.BroadcastDispatcher$handler$1] */
-    public BroadcastDispatcher(@NotNull Context context, @NotNull final Looper bgLooper, @NotNull Executor bgExecutor, @NotNull DumpManager dumpManager, @NotNull BroadcastDispatcherLogger logger, @NotNull UserTracker userTracker) {
-        Intrinsics.checkNotNullParameter(context, "context");
-        Intrinsics.checkNotNullParameter(bgLooper, "bgLooper");
-        Intrinsics.checkNotNullParameter(bgExecutor, "bgExecutor");
-        Intrinsics.checkNotNullParameter(dumpManager, "dumpManager");
-        Intrinsics.checkNotNullParameter(logger, "logger");
-        Intrinsics.checkNotNullParameter(userTracker, "userTracker");
-        this.context = context;
-        this.bgLooper = bgLooper;
-        this.bgExecutor = bgExecutor;
-        this.dumpManager = dumpManager;
-        this.logger = logger;
-        this.userTracker = userTracker;
-        this.handler = new Handler(bgLooper) { // from class: com.android.systemui.broadcast.BroadcastDispatcher$handler$1
-            @Override // android.os.Handler
-            public void handleMessage(@NotNull Message msg) {
-                int identifier;
-                SparseArray sparseArray;
-                SparseArray sparseArray2;
-                UserTracker userTracker2;
-                SparseArray sparseArray3;
-                SparseArray sparseArray4;
-                SparseArray sparseArray5;
-                Intrinsics.checkNotNullParameter(msg, "msg");
-                int i = msg.what;
-                if (i == 0) {
-                    Object obj = msg.obj;
-                    Objects.requireNonNull(obj, "null cannot be cast to non-null type com.android.systemui.broadcast.ReceiverData");
-                    ReceiverData receiverData = (ReceiverData) obj;
-                    if (receiverData.getUser().getIdentifier() == -2) {
-                        userTracker2 = BroadcastDispatcher.this.userTracker;
-                        identifier = userTracker2.getUserId();
-                    } else {
-                        identifier = receiverData.getUser().getIdentifier();
-                    }
-                    if (identifier >= -1) {
-                        sparseArray = BroadcastDispatcher.this.receiversByUser;
-                        UserBroadcastDispatcher userBroadcastDispatcher = (UserBroadcastDispatcher) sparseArray.get(identifier, BroadcastDispatcher.this.createUBRForUser(identifier));
-                        sparseArray2 = BroadcastDispatcher.this.receiversByUser;
-                        sparseArray2.put(identifier, userBroadcastDispatcher);
-                        userBroadcastDispatcher.registerReceiver(receiverData);
-                        return;
-                    }
-                    throw new IllegalStateException("Attempting to register receiver for invalid user {" + identifier + '}');
-                } else if (i != 1) {
-                    if (i == 2) {
-                        sparseArray5 = BroadcastDispatcher.this.receiversByUser;
-                        UserBroadcastDispatcher userBroadcastDispatcher2 = (UserBroadcastDispatcher) sparseArray5.get(msg.arg1);
-                        if (userBroadcastDispatcher2 == null) {
-                            return;
-                        }
-                        Object obj2 = msg.obj;
-                        Objects.requireNonNull(obj2, "null cannot be cast to non-null type android.content.BroadcastReceiver");
-                        userBroadcastDispatcher2.unregisterReceiver((BroadcastReceiver) obj2);
-                        return;
-                    }
-                    super.handleMessage(msg);
-                } else {
-                    int i2 = 0;
-                    sparseArray3 = BroadcastDispatcher.this.receiversByUser;
-                    int size = sparseArray3.size();
-                    if (size <= 0) {
-                        return;
-                    }
-                    while (true) {
-                        int i3 = i2 + 1;
-                        sparseArray4 = BroadcastDispatcher.this.receiversByUser;
-                        Object obj3 = msg.obj;
-                        Objects.requireNonNull(obj3, "null cannot be cast to non-null type android.content.BroadcastReceiver");
-                        ((UserBroadcastDispatcher) sparseArray4.valueAt(i2)).unregisterReceiver((BroadcastReceiver) obj3);
-                        if (i3 >= size) {
-                            return;
-                        }
-                        i2 = i3;
-                    }
-                }
-            }
-        };
+    public final void registerReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Executor executor, UserHandle userHandle, int i) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(intentFilter, SliceBroadcastRelay.EXTRA_FILTER);
+        registerReceiver$default(this, broadcastReceiver, intentFilter, executor, userHandle, i, (String) null, 32, (Object) null);
+    }
+
+    @Deprecated(message = "Replacing Handler for Executor in SystemUI", replaceWith = @ReplaceWith(expression = "registerReceiver(receiver, filter, executor, user, permission)", imports = {}))
+    public final void registerReceiverWithHandler(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Handler handler2) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(intentFilter, SliceBroadcastRelay.EXTRA_FILTER);
+        Intrinsics.checkNotNullParameter(handler2, "handler");
+        registerReceiverWithHandler$default(this, broadcastReceiver, intentFilter, handler2, (UserHandle) null, 0, (String) null, 56, (Object) null);
+    }
+
+    @Deprecated(message = "Replacing Handler for Executor in SystemUI", replaceWith = @ReplaceWith(expression = "registerReceiver(receiver, filter, executor, user, permission)", imports = {}))
+    public final void registerReceiverWithHandler(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Handler handler2, UserHandle userHandle) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(intentFilter, SliceBroadcastRelay.EXTRA_FILTER);
+        Intrinsics.checkNotNullParameter(handler2, "handler");
+        Intrinsics.checkNotNullParameter(userHandle, "user");
+        registerReceiverWithHandler$default(this, broadcastReceiver, intentFilter, handler2, userHandle, 0, (String) null, 48, (Object) null);
+    }
+
+    @Deprecated(message = "Replacing Handler for Executor in SystemUI", replaceWith = @ReplaceWith(expression = "registerReceiver(receiver, filter, executor, user, permission)", imports = {}))
+    public final void registerReceiverWithHandler(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Handler handler2, UserHandle userHandle, int i) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(intentFilter, SliceBroadcastRelay.EXTRA_FILTER);
+        Intrinsics.checkNotNullParameter(handler2, "handler");
+        Intrinsics.checkNotNullParameter(userHandle, "user");
+        registerReceiverWithHandler$default(this, broadcastReceiver, intentFilter, handler2, userHandle, i, (String) null, 32, (Object) null);
+    }
+
+    @Inject
+    public BroadcastDispatcher(Context context2, @Background Looper looper, @Background Executor executor, DumpManager dumpManager2, BroadcastDispatcherLogger broadcastDispatcherLogger, UserTracker userTracker2, PendingRemovalStore pendingRemovalStore) {
+        Intrinsics.checkNotNullParameter(context2, "context");
+        Intrinsics.checkNotNullParameter(looper, "bgLooper");
+        Intrinsics.checkNotNullParameter(executor, "bgExecutor");
+        Intrinsics.checkNotNullParameter(dumpManager2, "dumpManager");
+        Intrinsics.checkNotNullParameter(broadcastDispatcherLogger, "logger");
+        Intrinsics.checkNotNullParameter(userTracker2, "userTracker");
+        Intrinsics.checkNotNullParameter(pendingRemovalStore, "removalPendingStore");
+        this.context = context2;
+        this.bgLooper = looper;
+        this.bgExecutor = executor;
+        this.dumpManager = dumpManager2;
+        this.logger = broadcastDispatcherLogger;
+        this.userTracker = userTracker2;
+        this.removalPendingStore = pendingRemovalStore;
+        this.handler = new BroadcastDispatcher$handler$1(this, looper);
     }
 
     public final void initialize() {
-        DumpManager dumpManager = this.dumpManager;
-        String name = BroadcastDispatcher.class.getName();
+        DumpManager dumpManager2 = this.dumpManager;
+        String name = getClass().getName();
         Intrinsics.checkNotNullExpressionValue(name, "javaClass.name");
-        dumpManager.registerDumpable(name, this);
+        dumpManager2.registerDumpable(name, this);
     }
 
-    public static /* synthetic */ void registerReceiverWithHandler$default(BroadcastDispatcher broadcastDispatcher, BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Handler handler, UserHandle userHandle, int i, Object obj) {
+    public static /* synthetic */ void registerReceiverWithHandler$default(BroadcastDispatcher broadcastDispatcher, BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Handler handler2, UserHandle userHandle, int i, String str, int i2, Object obj) {
         if (obj == null) {
-            if ((i & 8) != 0) {
+            if ((i2 & 8) != 0) {
                 userHandle = broadcastDispatcher.context.getUser();
-                Intrinsics.checkNotNullExpressionValue(userHandle, "fun registerReceiverWithHandler(\n        receiver: BroadcastReceiver,\n        filter: IntentFilter,\n        handler: Handler,\n        user: UserHandle = context.user\n    ) {\n        registerReceiver(receiver, filter, HandlerExecutor(handler), user)\n    }");
+                Intrinsics.checkNotNullExpressionValue(userHandle, "context.user");
             }
-            broadcastDispatcher.registerReceiverWithHandler(broadcastReceiver, intentFilter, handler, userHandle);
+            UserHandle userHandle2 = userHandle;
+            if ((i2 & 16) != 0) {
+                i = 2;
+            }
+            int i3 = i;
+            if ((i2 & 32) != 0) {
+                str = null;
+            }
+            broadcastDispatcher.registerReceiverWithHandler(broadcastReceiver, intentFilter, handler2, userHandle2, i3, str);
             return;
         }
         throw new UnsupportedOperationException("Super calls with default arguments not supported in this target, function: registerReceiverWithHandler");
     }
 
-    public void registerReceiverWithHandler(@NotNull BroadcastReceiver receiver, @NotNull IntentFilter filter, @NotNull Handler handler, @NotNull UserHandle user) {
-        Intrinsics.checkNotNullParameter(receiver, "receiver");
-        Intrinsics.checkNotNullParameter(filter, "filter");
-        Intrinsics.checkNotNullParameter(handler, "handler");
-        Intrinsics.checkNotNullParameter(user, "user");
-        registerReceiver(receiver, filter, new HandlerExecutor(handler), user);
+    @Deprecated(message = "Replacing Handler for Executor in SystemUI", replaceWith = @ReplaceWith(expression = "registerReceiver(receiver, filter, executor, user, permission)", imports = {}))
+    public void registerReceiverWithHandler(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Handler handler2, UserHandle userHandle, int i, String str) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(intentFilter, SliceBroadcastRelay.EXTRA_FILTER);
+        Intrinsics.checkNotNullParameter(handler2, "handler");
+        Intrinsics.checkNotNullParameter(userHandle, "user");
+        registerReceiver(broadcastReceiver, intentFilter, new HandlerExecutor(handler2), userHandle, i, str);
     }
 
-    public static /* synthetic */ void registerReceiver$default(BroadcastDispatcher broadcastDispatcher, BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Executor executor, UserHandle userHandle, int i, Object obj) {
+    public static /* synthetic */ void registerReceiver$default(BroadcastDispatcher broadcastDispatcher, BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Executor executor, UserHandle userHandle, int i, String str, int i2, Object obj) {
         if (obj == null) {
-            if ((i & 4) != 0) {
-                executor = null;
-            }
-            if ((i & 8) != 0) {
-                userHandle = null;
-            }
-            broadcastDispatcher.registerReceiver(broadcastReceiver, intentFilter, executor, userHandle);
+            broadcastDispatcher.registerReceiver(broadcastReceiver, intentFilter, (i2 & 4) != 0 ? null : executor, (i2 & 8) != 0 ? null : userHandle, (i2 & 16) != 0 ? 2 : i, (i2 & 32) != 0 ? null : str);
             return;
         }
         throw new UnsupportedOperationException("Super calls with default arguments not supported in this target, function: registerReceiver");
     }
 
-    public void registerReceiver(@NotNull BroadcastReceiver receiver, @NotNull IntentFilter filter, @Nullable Executor executor, @Nullable UserHandle userHandle) {
-        Intrinsics.checkNotNullParameter(receiver, "receiver");
-        Intrinsics.checkNotNullParameter(filter, "filter");
-        checkFilter(filter);
-        BroadcastDispatcher$handler$1 broadcastDispatcher$handler$1 = this.handler;
+    public void registerReceiver(BroadcastReceiver broadcastReceiver, IntentFilter intentFilter, Executor executor, UserHandle userHandle, int i, String str) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(intentFilter, SliceBroadcastRelay.EXTRA_FILTER);
+        checkFilter(intentFilter);
         if (executor == null) {
             executor = this.context.getMainExecutor();
         }
-        Intrinsics.checkNotNullExpressionValue(executor, "executor ?: context.mainExecutor");
+        Executor executor2 = executor;
+        Intrinsics.checkNotNullExpressionValue(executor2, "executor ?: context.mainExecutor");
         if (userHandle == null) {
             userHandle = this.context.getUser();
         }
-        Intrinsics.checkNotNullExpressionValue(userHandle, "user ?: context.user");
-        broadcastDispatcher$handler$1.obtainMessage(0, new ReceiverData(receiver, filter, executor, userHandle)).sendToTarget();
+        UserHandle userHandle2 = userHandle;
+        Intrinsics.checkNotNullExpressionValue(userHandle2, "user ?: context.user");
+        this.handler.obtainMessage(0, i, 0, new ReceiverData(broadcastReceiver, intentFilter, executor2, userHandle2, str)).sendToTarget();
     }
 
     private final void checkFilter(IntentFilter intentFilter) {
@@ -220,45 +192,42 @@ public class BroadcastDispatcher implements Dumpable {
         if (intentFilter.getPriority() != 0) {
             sb.append("Filter cannot modify priority. ");
         }
-        if (TextUtils.isEmpty(sb)) {
-            return;
+        if (!TextUtils.isEmpty(sb)) {
+            throw new IllegalArgumentException(sb.toString());
         }
-        throw new IllegalArgumentException(sb.toString());
     }
 
-    public void unregisterReceiver(@NotNull BroadcastReceiver receiver) {
-        Intrinsics.checkNotNullParameter(receiver, "receiver");
-        obtainMessage(1, receiver).sendToTarget();
+    public void unregisterReceiver(BroadcastReceiver broadcastReceiver) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        this.removalPendingStore.tagForRemoval(broadcastReceiver, -1);
+        this.handler.obtainMessage(1, broadcastReceiver).sendToTarget();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @VisibleForTesting
-    @NotNull
+    public void unregisterReceiverForUser(BroadcastReceiver broadcastReceiver, UserHandle userHandle) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        Intrinsics.checkNotNullParameter(userHandle, "user");
+        this.removalPendingStore.tagForRemoval(broadcastReceiver, userHandle.getIdentifier());
+        this.handler.obtainMessage(2, userHandle.getIdentifier(), 0, broadcastReceiver).sendToTarget();
+    }
+
+    /* access modifiers changed from: protected */
     public UserBroadcastDispatcher createUBRForUser(int i) {
-        return new UserBroadcastDispatcher(this.context, i, this.bgLooper, this.bgExecutor, this.logger);
+        return new UserBroadcastDispatcher(this.context, i, this.bgLooper, this.bgExecutor, this.logger, this.removalPendingStore);
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(@NotNull FileDescriptor fd, @NotNull PrintWriter pw, @NotNull String[] args) {
-        Intrinsics.checkNotNullParameter(fd, "fd");
-        Intrinsics.checkNotNullParameter(pw, "pw");
-        Intrinsics.checkNotNullParameter(args, "args");
-        pw.println("Broadcast dispatcher:");
-        PrintWriter indentingPrintWriter = new IndentingPrintWriter(pw, "  ");
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        Intrinsics.checkNotNullParameter(printWriter, "pw");
+        Intrinsics.checkNotNullParameter(strArr, "args");
+        printWriter.println("Broadcast dispatcher:");
+        PrintWriter indentingPrintWriter = new IndentingPrintWriter(printWriter, "  ");
         indentingPrintWriter.increaseIndent();
         int size = this.receiversByUser.size();
-        if (size > 0) {
-            int i = 0;
-            while (true) {
-                int i2 = i + 1;
-                indentingPrintWriter.println(Intrinsics.stringPlus("User ", Integer.valueOf(this.receiversByUser.keyAt(i))));
-                this.receiversByUser.valueAt(i).dump(fd, indentingPrintWriter, args);
-                if (i2 >= size) {
-                    break;
-                }
-                i = i2;
-            }
+        for (int i = 0; i < size; i++) {
+            indentingPrintWriter.println("User " + this.receiversByUser.keyAt(i));
+            this.receiversByUser.valueAt(i).dump(indentingPrintWriter, strArr);
         }
+        indentingPrintWriter.println("Pending removal:");
+        this.removalPendingStore.dump(indentingPrintWriter, strArr);
         indentingPrintWriter.decreaseIndent();
     }
 }

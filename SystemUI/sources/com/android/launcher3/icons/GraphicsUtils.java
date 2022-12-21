@@ -1,14 +1,24 @@
 package com.android.launcher3.icons;
 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.RegionIterator;
-/* loaded from: classes.dex */
-public class GraphicsUtils {
-    public static Runnable sOnNewBitmapRunnable = GraphicsUtils$$ExternalSyntheticLambda0.INSTANCE;
+import android.graphics.drawable.AdaptiveIconDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
+import androidx.core.view.ViewCompat;
+import java.p026io.ByteArrayOutputStream;
+import java.p026io.IOException;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$static$0() {
+public class GraphicsUtils {
+    private static final String TAG = "GraphicsUtils";
+    public static Runnable sOnNewBitmapRunnable = new GraphicsUtils$$ExternalSyntheticLambda0();
+
+    static /* synthetic */ void lambda$static$0() {
     }
 
     public static int setColorAlphaBound(int i, int i2) {
@@ -18,6 +28,23 @@ public class GraphicsUtils {
             i2 = 255;
         }
         return (i & 16777215) | (i2 << 24);
+    }
+
+    public static byte[] flattenBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(getExpectedBitmapSize(bitmap));
+        try {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byteArrayOutputStream.flush();
+            byteArrayOutputStream.close();
+            return byteArrayOutputStream.toByteArray();
+        } catch (IOException unused) {
+            Log.w(TAG, "Could not write bitmap");
+            return null;
+        }
+    }
+
+    static int getExpectedBitmapSize(Bitmap bitmap) {
+        return bitmap.getWidth() * bitmap.getHeight() * 4;
     }
 
     public static int getArea(Region region) {
@@ -32,5 +59,25 @@ public class GraphicsUtils {
 
     public static void noteNewBitmapCreated() {
         sOnNewBitmapRunnable.run();
+    }
+
+    public static Path getShapePath(int i) {
+        AdaptiveIconDrawable adaptiveIconDrawable = new AdaptiveIconDrawable(new ColorDrawable(ViewCompat.MEASURED_STATE_MASK), new ColorDrawable(ViewCompat.MEASURED_STATE_MASK));
+        adaptiveIconDrawable.setBounds(0, 0, i, i);
+        return new Path(adaptiveIconDrawable.getIconMask());
+    }
+
+    public static int getAttrColor(Context context, int i) {
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{i});
+        int color = obtainStyledAttributes.getColor(0, 0);
+        obtainStyledAttributes.recycle();
+        return color;
+    }
+
+    public static float getFloat(Context context, int i, float f) {
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{i});
+        float f2 = obtainStyledAttributes.getFloat(0, f);
+        obtainStyledAttributes.recycle();
+        return f2;
     }
 }

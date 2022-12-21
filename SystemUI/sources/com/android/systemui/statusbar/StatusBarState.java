@@ -1,19 +1,17 @@
 package com.android.systemui.statusbar;
-/* loaded from: classes.dex */
+
 public class StatusBarState {
-    public static String toShortString(int i) {
-        if (i != 0) {
-            if (i == 1) {
-                return "KGRD";
-            }
-            if (i == 2) {
-                return "SHD_LCK";
-            }
-            if (i == 3) {
-                return "FS_USRSW";
-            }
-            return "bad_value_" + i;
+    public static final int KEYGUARD = 1;
+    public static final int SHADE = 0;
+    public static final int SHADE_LOCKED = 2;
+
+    public static String toString(int i) {
+        if (i == 0) {
+            return "SHADE";
         }
-        return "SHD";
+        if (i != 1) {
+            return i != 2 ? "UNKNOWN: " + i : "SHADE_LOCKED";
+        }
+        return "KEYGUARD";
     }
 }

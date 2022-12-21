@@ -5,7 +5,7 @@ import android.os.Handler;
 import com.android.systemui.dagger.NightDisplayListenerModule;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NightDisplayListenerModule_Builder_Factory implements Factory<NightDisplayListenerModule.Builder> {
     private final Provider<Handler> bgHandlerProvider;
     private final Provider<Context> contextProvider;
@@ -15,10 +15,8 @@ public final class NightDisplayListenerModule_Builder_Factory implements Factory
         this.bgHandlerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NightDisplayListenerModule.Builder mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.bgHandlerProvider.mo1933get());
+    public NightDisplayListenerModule.Builder get() {
+        return newInstance(this.contextProvider.get(), this.bgHandlerProvider.get());
     }
 
     public static NightDisplayListenerModule_Builder_Factory create(Provider<Context> provider, Provider<Handler> provider2) {

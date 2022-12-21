@@ -5,8 +5,9 @@ import android.view.View;
 import androidx.collection.ArraySet;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class AnimationFilter {
+    public static final int NO_DELAY = -1;
     boolean animateAlpha;
     boolean animateDimmed;
     boolean animateHeight;
@@ -14,11 +15,11 @@ public class AnimationFilter {
     boolean animateTopInset;
     boolean animateX;
     boolean animateY;
+    ArraySet<View> animateYViews = new ArraySet<>();
     boolean animateZ;
     long customDelay;
     boolean hasDelays;
     boolean hasGoToFullShadeEvent;
-    ArraySet<View> animateYViews = new ArraySet<>();
     private ArraySet<Property> mAnimatedProperties = new ArraySet<>();
 
     public AnimationFilter animateAlpha() {
@@ -72,6 +73,11 @@ public class AnimationFilter {
         return this;
     }
 
+    public AnimationFilter animateY(View view) {
+        this.animateYViews.add(view);
+        return this;
+    }
+
     public boolean shouldAnimateY(View view) {
         return this.animateY || this.animateYViews.contains(view);
     }
@@ -91,14 +97,14 @@ public class AnimationFilter {
         this.animateAlpha |= animationFilter.animateAlpha;
         this.animateX |= animationFilter.animateX;
         this.animateY |= animationFilter.animateY;
-        this.animateYViews.addAll((ArraySet<? extends View>) animationFilter.animateYViews);
+        this.animateYViews.addAll(animationFilter.animateYViews);
         this.animateZ |= animationFilter.animateZ;
         this.animateHeight |= animationFilter.animateHeight;
         this.animateTopInset |= animationFilter.animateTopInset;
         this.animateDimmed |= animationFilter.animateDimmed;
         this.animateHideSensitive |= animationFilter.animateHideSensitive;
         this.hasDelays |= animationFilter.hasDelays;
-        this.mAnimatedProperties.addAll((ArraySet<? extends Property>) animationFilter.mAnimatedProperties);
+        this.mAnimatedProperties.addAll(animationFilter.mAnimatedProperties);
     }
 
     public void reset() {
@@ -113,7 +119,7 @@ public class AnimationFilter {
         this.animateHideSensitive = false;
         this.hasDelays = false;
         this.hasGoToFullShadeEvent = false;
-        this.customDelay = -1L;
+        this.customDelay = -1;
         this.mAnimatedProperties.clear();
     }
 

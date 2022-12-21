@@ -4,15 +4,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.ArraySet;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class PluginPrefs {
+    private static final String HAS_PLUGINS = "plugins";
+    private static final String PLUGIN_ACTIONS = "actions";
+    private static final String PREFS = "plugin_prefs";
     private final Set<String> mPluginActions;
     private final SharedPreferences mSharedPrefs;
 
     public PluginPrefs(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("plugin_prefs", 0);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(PREFS, 0);
         this.mSharedPrefs = sharedPreferences;
-        this.mPluginActions = new ArraySet(sharedPreferences.getStringSet("actions", null));
+        this.mPluginActions = new ArraySet(sharedPreferences.getStringSet(PLUGIN_ACTIONS, (Set) null));
     }
 
     public Set<String> getPluginList() {
@@ -21,15 +24,15 @@ public class PluginPrefs {
 
     public synchronized void addAction(String str) {
         if (this.mPluginActions.add(str)) {
-            this.mSharedPrefs.edit().putStringSet("actions", this.mPluginActions).apply();
+            this.mSharedPrefs.edit().putStringSet(PLUGIN_ACTIONS, this.mPluginActions).apply();
         }
     }
 
     public static boolean hasPlugins(Context context) {
-        return context.getSharedPreferences("plugin_prefs", 0).getBoolean("plugins", false);
+        return context.getSharedPreferences(PREFS, 0).getBoolean(HAS_PLUGINS, false);
     }
 
     public static void setHasPlugins(Context context) {
-        context.getSharedPreferences("plugin_prefs", 0).edit().putBoolean("plugins", true).apply();
+        context.getSharedPreferences(PREFS, 0).edit().putBoolean(HAS_PLUGINS, true).apply();
     }
 }

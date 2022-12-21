@@ -5,7 +5,7 @@ import com.android.systemui.statusbar.phone.NotificationShadeWindowView;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class StatusBarViewModule_GetLockIconViewFactory implements Factory<LockIconView> {
     private final Provider<NotificationShadeWindowView> notificationShadeWindowViewProvider;
 
@@ -13,10 +13,8 @@ public final class StatusBarViewModule_GetLockIconViewFactory implements Factory
         this.notificationShadeWindowViewProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LockIconView mo1933get() {
-        return getLockIconView(this.notificationShadeWindowViewProvider.mo1933get());
+    public LockIconView get() {
+        return getLockIconView(this.notificationShadeWindowViewProvider.get());
     }
 
     public static StatusBarViewModule_GetLockIconViewFactory create(Provider<NotificationShadeWindowView> provider) {

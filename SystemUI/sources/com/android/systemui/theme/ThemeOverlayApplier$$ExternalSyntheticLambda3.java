@@ -1,19 +1,18 @@
 package com.android.systemui.theme;
 
 import android.content.om.OverlayInfo;
-import android.util.Pair;
-import java.util.function.Function;
-/* loaded from: classes2.dex */
-public final /* synthetic */ class ThemeOverlayApplier$$ExternalSyntheticLambda3 implements Function {
-    public static final /* synthetic */ ThemeOverlayApplier$$ExternalSyntheticLambda3 INSTANCE = new ThemeOverlayApplier$$ExternalSyntheticLambda3();
+import java.util.Set;
+import java.util.function.Predicate;
 
-    private /* synthetic */ ThemeOverlayApplier$$ExternalSyntheticLambda3() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class ThemeOverlayApplier$$ExternalSyntheticLambda3 implements Predicate {
+    public final /* synthetic */ Set f$0;
+
+    public /* synthetic */ ThemeOverlayApplier$$ExternalSyntheticLambda3(Set set) {
+        this.f$0 = set;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        Pair lambda$applyCurrentUserOverlays$6;
-        lambda$applyCurrentUserOverlays$6 = ThemeOverlayApplier.lambda$applyCurrentUserOverlays$6((OverlayInfo) obj);
-        return lambda$applyCurrentUserOverlays$6;
+    public final boolean test(Object obj) {
+        return this.f$0.contains(((OverlayInfo) obj).category);
     }
 }

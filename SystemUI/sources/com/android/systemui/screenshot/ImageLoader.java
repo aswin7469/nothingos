@@ -6,17 +6,17 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import androidx.concurrent.futures.CallbackToFutureAdapter;
 import com.google.common.util.concurrent.ListenableFuture;
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-/* loaded from: classes.dex */
+import java.p026io.BufferedInputStream;
+import java.p026io.File;
+import java.p026io.FileInputStream;
+import java.p026io.IOException;
+import java.p026io.InputStream;
+import javax.inject.Inject;
+
 public class ImageLoader {
     private final ContentResolver mResolver;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class Result {
+    static class Result {
         Bitmap bitmap;
         File fileName;
         Uri uri;
@@ -25,31 +25,58 @@ public class ImageLoader {
         }
 
         public String toString() {
-            return "Result{uri=" + this.uri + ", fileName=" + this.fileName + ", bitmap=" + this.bitmap + '}';
+            StringBuilder sb = new StringBuilder("Result{uri=");
+            sb.append((Object) this.uri);
+            sb.append(", fileName=").append((Object) this.fileName);
+            sb.append(", bitmap=").append((Object) this.bitmap);
+            sb.append('}');
+            return sb.toString();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ImageLoader(ContentResolver contentResolver) {
+    @Inject
+    ImageLoader(ContentResolver contentResolver) {
         this.mResolver = contentResolver;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ListenableFuture<Result> load(final File file) {
-        return CallbackToFutureAdapter.getFuture(new CallbackToFutureAdapter.Resolver() { // from class: com.android.systemui.screenshot.ImageLoader$$ExternalSyntheticLambda0
-            @Override // androidx.concurrent.futures.CallbackToFutureAdapter.Resolver
-            public final Object attachCompleter(CallbackToFutureAdapter.Completer completer) {
-                Object lambda$load$1;
-                lambda$load$1 = ImageLoader.lambda$load$1(file, completer);
-                return lambda$load$1;
-            }
-        });
+    /* access modifiers changed from: package-private */
+    public ListenableFuture<Result> load(Uri uri) {
+        return CallbackToFutureAdapter.getFuture(new ImageLoader$$ExternalSyntheticLambda0(this, uri));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ Object lambda$load$1(File file, CallbackToFutureAdapter.Completer completer) throws Exception {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$load$0$com-android-systemui-screenshot-ImageLoader  reason: not valid java name */
+    public /* synthetic */ Object m2997lambda$load$0$comandroidsystemuiscreenshotImageLoader(Uri uri, CallbackToFutureAdapter.Completer completer) throws Exception {
+        InputStream openInputStream;
+        Result result = new Result();
         try {
-            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
+            openInputStream = this.mResolver.openInputStream(uri);
+            result.uri = uri;
+            result.bitmap = BitmapFactory.decodeStream(openInputStream);
+            completer.set(result);
+            if (openInputStream == null) {
+                return "BitmapFactory#decodeStream";
+            }
+            openInputStream.close();
+            return "BitmapFactory#decodeStream";
+        } catch (IOException e) {
+            completer.setException(e);
+            return "BitmapFactory#decodeStream";
+        } catch (Throwable th) {
+            th.addSuppressed(th);
+        }
+        throw th;
+    }
+
+    /* access modifiers changed from: package-private */
+    public ListenableFuture<Result> load(File file) {
+        return CallbackToFutureAdapter.getFuture(new ImageLoader$$ExternalSyntheticLambda1(file));
+    }
+
+    static /* synthetic */ Object lambda$load$1(File file, CallbackToFutureAdapter.Completer completer) throws Exception {
+        BufferedInputStream bufferedInputStream;
+        try {
+            bufferedInputStream = new BufferedInputStream(new FileInputStream(file));
             Result result = new Result();
             result.fileName = file;
             result.bitmap = BitmapFactory.decodeStream(bufferedInputStream);
@@ -59,6 +86,9 @@ public class ImageLoader {
         } catch (IOException e) {
             completer.setException(e);
             return "BitmapFactory#decodeStream";
+        } catch (Throwable th) {
+            th.addSuppressed(th);
         }
+        throw th;
     }
 }

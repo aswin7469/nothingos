@@ -1,22 +1,30 @@
 package com.android.systemui.statusbar.policy;
-/* loaded from: classes2.dex */
+
 public interface KeyguardStateController extends CallbackController<Callback> {
 
-    /* loaded from: classes2.dex */
     public interface Callback {
-        default void onKeyguardDismissAmountChanged() {
+        void onBouncerShowingChanged() {
         }
 
-        default void onKeyguardFadingAwayChanged() {
+        void onFaceAuthEnabledChanged() {
         }
 
-        default void onKeyguardShowingChanged() {
+        void onKeyguardDismissAmountChanged() {
         }
 
-        default void onLaunchTransitionFadingAwayChanged() {
+        void onKeyguardFadingAwayChanged() {
         }
 
-        default void onUnlockedChanged() {
+        void onKeyguardGoingAwayChanged() {
+        }
+
+        void onKeyguardShowingChanged() {
+        }
+
+        void onLaunchTransitionFadingAwayChanged() {
+        }
+
+        void onUnlockedChanged() {
         }
     }
 
@@ -24,21 +32,25 @@ public interface KeyguardStateController extends CallbackController<Callback> {
 
     boolean canDismissLockScreen();
 
-    boolean canPerformSmartSpaceTransition();
-
     float getDismissAmount();
 
     long getKeyguardFadingAwayDelay();
 
     long getKeyguardFadingAwayDuration();
 
-    default boolean isBypassFadingAnimation() {
+    boolean isAnimatingBetweenKeyguardAndSurfaceBehind() {
+        return false;
+    }
+
+    boolean isBouncerShowing();
+
+    boolean isBypassFadingAnimation() {
         return false;
     }
 
     boolean isDismissingFromSwipe();
 
-    default boolean isFaceAuthEnabled() {
+    boolean isFaceAuthEnabled() {
         return false;
     }
 
@@ -62,33 +74,38 @@ public interface KeyguardStateController extends CallbackController<Callback> {
 
     boolean isSnappingKeyguardBackAfterSwipe();
 
-    default void notifyKeyguardDismissAmountChanged(float f, boolean z) {
+    boolean isTrusted();
+
+    void notifyBouncerShowing(boolean z) {
     }
 
-    default void notifyKeyguardDoneFading() {
+    void notifyKeyguardDismissAmountChanged(float f, boolean z) {
     }
 
-    default void notifyKeyguardFadingAway(long j, long j2, boolean z) {
+    void notifyKeyguardDoneFading() {
     }
 
-    default void notifyKeyguardGoingAway(boolean z) {
+    void notifyKeyguardFadingAway(long j, long j2, boolean z) {
     }
 
-    default void notifyKeyguardState(boolean z, boolean z2) {
+    void notifyKeyguardGoingAway(boolean z) {
+    }
+
+    void notifyKeyguardState(boolean z, boolean z2) {
     }
 
     void notifyPanelFlingEnd();
 
     void notifyPanelFlingStart(boolean z);
 
-    default void setLaunchTransitionFadingAway(boolean z) {
+    void setLaunchTransitionFadingAway(boolean z) {
     }
 
-    default boolean isUnlocked() {
+    boolean isUnlocked() {
         return !isShowing() || canDismissLockScreen();
     }
 
-    default long getShortenedFadingAwayDuration() {
+    long getShortenedFadingAwayDuration() {
         if (isBypassFadingAnimation()) {
             return getKeyguardFadingAwayDuration();
         }

@@ -10,8 +10,9 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import androidx.core.view.ViewCompat;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
+
 public class ScreenshotSelectorView extends View {
     private Consumer<Rect> mOnScreenshotSelected;
     private final Paint mPaintBackground;
@@ -20,65 +21,57 @@ public class ScreenshotSelectorView extends View {
     private Point mStartPoint;
 
     public ScreenshotSelectorView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public ScreenshotSelectorView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        Paint paint = new Paint(-16777216);
+        Paint paint = new Paint(ViewCompat.MEASURED_STATE_MASK);
         this.mPaintBackground = paint;
         paint.setAlpha(160);
         Paint paint2 = new Paint(0);
         this.mPaintSelection = paint2;
         paint2.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        setOnTouchListener(new View.OnTouchListener() { // from class: com.android.systemui.screenshot.ScreenshotSelectorView$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnTouchListener
-            public final boolean onTouch(View view, MotionEvent motionEvent) {
-                boolean lambda$new$0;
-                lambda$new$0 = ScreenshotSelectorView.this.lambda$new$0(view, motionEvent);
-                return lambda$new$0;
-            }
-        });
+        setOnTouchListener(new ScreenshotSelectorView$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$new$0(View view, MotionEvent motionEvent) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-screenshot-ScreenshotSelectorView */
+    public /* synthetic */ boolean mo37472x302dc8e6(View view, MotionEvent motionEvent) {
         int action = motionEvent.getAction();
         if (action == 0) {
             startSelection((int) motionEvent.getX(), (int) motionEvent.getY());
             return true;
-        } else if (action != 1) {
-            if (action != 2) {
-                return false;
-            }
-            updateSelection((int) motionEvent.getX(), (int) motionEvent.getY());
-            return true;
-        } else {
+        } else if (action == 1) {
             setVisibility(8);
             Rect selectionRect = getSelectionRect();
-            if (this.mOnScreenshotSelected != null && selectionRect != null && selectionRect.width() != 0 && selectionRect.height() != 0) {
+            if (!(this.mOnScreenshotSelected == null || selectionRect == null || selectionRect.width() == 0 || selectionRect.height() == 0)) {
                 this.mOnScreenshotSelected.accept(selectionRect);
             }
             stopSelection();
             return true;
+        } else if (action != 2) {
+            return false;
+        } else {
+            updateSelection((int) motionEvent.getX(), (int) motionEvent.getY());
+            return true;
         }
     }
 
-    @Override // android.view.View
     public void draw(Canvas canvas) {
-        canvas.drawRect(((View) this).mLeft, ((View) this).mTop, ((View) this).mRight, ((View) this).mBottom, this.mPaintBackground);
+        canvas.drawRect((float) this.mLeft, (float) this.mTop, (float) this.mRight, (float) this.mBottom, this.mPaintBackground);
         Rect rect = this.mSelectionRect;
         if (rect != null) {
             canvas.drawRect(rect, this.mPaintSelection);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setOnScreenshotSelected(Consumer<Rect> consumer) {
         this.mOnScreenshotSelected = consumer;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void stop() {
         if (getSelectionRect() != null) {
             stopSelection();

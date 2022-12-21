@@ -8,14 +8,11 @@ import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.os.Build;
 import android.util.AttributeSet;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.R$attr;
-import com.google.android.material.R$id;
-import com.google.android.material.R$style;
-import com.google.android.material.R$styleable;
+import com.google.android.material.C3621R;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.ripple.RippleUtils;
@@ -24,14 +21,17 @@ import com.google.android.material.shape.CutCornerTreatment;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.RoundedCornerTreatment;
 import com.google.android.material.shape.ShapeAppearanceModel;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public class MaterialCardViewHelper {
-    private static final int[] CHECKED_STATE_SET = {16842912};
+
+class MaterialCardViewHelper {
+    private static final float CARD_VIEW_SHADOW_MULTIPLIER = 1.5f;
+    private static final int CHECKED_ICON_LAYER_INDEX = 2;
+    private static final Drawable CHECKED_ICON_NONE = null;
     private static final double COS_45 = Math.cos(Math.toRadians(45.0d));
+    private static final int DEFAULT_STROKE_VALUE = -1;
     private final MaterialShapeDrawable bgDrawable;
     private boolean checkable;
     private Drawable checkedIcon;
+    private int checkedIconGravity;
     private int checkedIconMargin;
     private int checkedIconSize;
     private ColorStateList checkedIconTint;
@@ -40,6 +40,7 @@ public class MaterialCardViewHelper {
     private Drawable fgDrawable;
     private final MaterialShapeDrawable foregroundContentDrawable;
     private MaterialShapeDrawable foregroundShapeDrawable;
+    private boolean isBackgroundOverwritten = false;
     private final MaterialCardView materialCardView;
     private ColorStateList rippleColor;
     private Drawable rippleDrawable;
@@ -47,46 +48,45 @@ public class MaterialCardViewHelper {
     private ColorStateList strokeColor;
     private int strokeWidth;
     private final Rect userContentPadding = new Rect();
-    private boolean isBackgroundOverwritten = false;
 
-    public MaterialCardViewHelper(MaterialCardView materialCardView, AttributeSet attributeSet, int i, int i2) {
-        this.materialCardView = materialCardView;
-        MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable(materialCardView.getContext(), attributeSet, i, i2);
+    public MaterialCardViewHelper(MaterialCardView materialCardView2, AttributeSet attributeSet, int i, int i2) {
+        this.materialCardView = materialCardView2;
+        MaterialShapeDrawable materialShapeDrawable = new MaterialShapeDrawable(materialCardView2.getContext(), attributeSet, i, i2);
         this.bgDrawable = materialShapeDrawable;
-        materialShapeDrawable.initializeElevationOverlay(materialCardView.getContext());
+        materialShapeDrawable.initializeElevationOverlay(materialCardView2.getContext());
         materialShapeDrawable.setShadowColor(-12303292);
         ShapeAppearanceModel.Builder builder = materialShapeDrawable.getShapeAppearanceModel().toBuilder();
-        TypedArray obtainStyledAttributes = materialCardView.getContext().obtainStyledAttributes(attributeSet, R$styleable.CardView, i, R$style.CardView);
-        int i3 = R$styleable.CardView_cardCornerRadius;
-        if (obtainStyledAttributes.hasValue(i3)) {
-            builder.setAllCornerSizes(obtainStyledAttributes.getDimension(i3, 0.0f));
+        TypedArray obtainStyledAttributes = materialCardView2.getContext().obtainStyledAttributes(attributeSet, C3621R.styleable.CardView, i, C3621R.style.CardView);
+        if (obtainStyledAttributes.hasValue(C3621R.styleable.CardView_cardCornerRadius)) {
+            builder.setAllCornerSizes(obtainStyledAttributes.getDimension(C3621R.styleable.CardView_cardCornerRadius, 0.0f));
         }
         this.foregroundContentDrawable = new MaterialShapeDrawable();
         setShapeAppearanceModel(builder.build());
         obtainStyledAttributes.recycle();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void loadFromAttributes(TypedArray typedArray) {
-        ColorStateList colorStateList = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, R$styleable.MaterialCardView_strokeColor);
+        ColorStateList colorStateList = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_strokeColor);
         this.strokeColor = colorStateList;
         if (colorStateList == null) {
             this.strokeColor = ColorStateList.valueOf(-1);
         }
-        this.strokeWidth = typedArray.getDimensionPixelSize(R$styleable.MaterialCardView_strokeWidth, 0);
-        boolean z = typedArray.getBoolean(R$styleable.MaterialCardView_android_checkable, false);
+        this.strokeWidth = typedArray.getDimensionPixelSize(C3621R.styleable.MaterialCardView_strokeWidth, 0);
+        boolean z = typedArray.getBoolean(C3621R.styleable.MaterialCardView_android_checkable, false);
         this.checkable = z;
         this.materialCardView.setLongClickable(z);
-        this.checkedIconTint = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, R$styleable.MaterialCardView_checkedIconTint);
-        setCheckedIcon(MaterialResources.getDrawable(this.materialCardView.getContext(), typedArray, R$styleable.MaterialCardView_checkedIcon));
-        setCheckedIconSize(typedArray.getDimensionPixelSize(R$styleable.MaterialCardView_checkedIconSize, 0));
-        setCheckedIconMargin(typedArray.getDimensionPixelSize(R$styleable.MaterialCardView_checkedIconMargin, 0));
-        ColorStateList colorStateList2 = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, R$styleable.MaterialCardView_rippleColor);
+        this.checkedIconTint = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_checkedIconTint);
+        setCheckedIcon(MaterialResources.getDrawable(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_checkedIcon));
+        setCheckedIconSize(typedArray.getDimensionPixelSize(C3621R.styleable.MaterialCardView_checkedIconSize, 0));
+        setCheckedIconMargin(typedArray.getDimensionPixelSize(C3621R.styleable.MaterialCardView_checkedIconMargin, 0));
+        this.checkedIconGravity = typedArray.getInteger(C3621R.styleable.MaterialCardView_checkedIconGravity, 8388661);
+        ColorStateList colorStateList2 = MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_rippleColor);
         this.rippleColor = colorStateList2;
         if (colorStateList2 == null) {
-            this.rippleColor = ColorStateList.valueOf(MaterialColors.getColor(this.materialCardView, R$attr.colorControlHighlight));
+            this.rippleColor = ColorStateList.valueOf(MaterialColors.getColor(this.materialCardView, C3621R.attr.colorControlHighlight));
         }
-        setCardForegroundColor(MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, R$styleable.MaterialCardView_cardForegroundColor));
+        setCardForegroundColor(MaterialResources.getColorStateList(this.materialCardView.getContext(), typedArray, C3621R.styleable.MaterialCardView_cardForegroundColor));
         updateRippleColor();
         updateElevation();
         updateStroke();
@@ -96,27 +96,68 @@ public class MaterialCardViewHelper {
         this.materialCardView.setForeground(insetDrawable(clickableForeground));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isBackgroundOverwritten() {
         return this.isBackgroundOverwritten;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setBackgroundOverwritten(boolean z) {
         this.isBackgroundOverwritten = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public void setStrokeColor(ColorStateList colorStateList) {
+        if (this.strokeColor != colorStateList) {
+            this.strokeColor = colorStateList;
+            updateStroke();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getStrokeColor() {
+        ColorStateList colorStateList = this.strokeColor;
+        if (colorStateList == null) {
+            return -1;
+        }
+        return colorStateList.getDefaultColor();
+    }
+
+    /* access modifiers changed from: package-private */
+    public ColorStateList getStrokeColorStateList() {
+        return this.strokeColor;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setStrokeWidth(int i) {
+        if (i != this.strokeWidth) {
+            this.strokeWidth = i;
+            updateStroke();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getStrokeWidth() {
+        return this.strokeWidth;
+    }
+
+    /* access modifiers changed from: package-private */
     public MaterialShapeDrawable getBackground() {
         return this.bgDrawable;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setCardBackgroundColor(ColorStateList colorStateList) {
         this.bgDrawable.setFillColor(colorStateList);
     }
 
-    void setCardForegroundColor(ColorStateList colorStateList) {
+    /* access modifiers changed from: package-private */
+    public ColorStateList getCardBackgroundColor() {
+        return this.bgDrawable.getFillColor();
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setCardForegroundColor(ColorStateList colorStateList) {
         MaterialShapeDrawable materialShapeDrawable = this.foregroundContentDrawable;
         if (colorStateList == null) {
             colorStateList = ColorStateList.valueOf(0);
@@ -124,13 +165,23 @@ public class MaterialCardViewHelper {
         materialShapeDrawable.setFillColor(colorStateList);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public ColorStateList getCardForegroundColor() {
+        return this.foregroundContentDrawable.getFillColor();
+    }
+
+    /* access modifiers changed from: package-private */
     public void setUserContentPadding(int i, int i2, int i3, int i4) {
         this.userContentPadding.set(i, i2, i3, i4);
         updateContentPadding();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public Rect getUserContentPadding() {
+        return this.userContentPadding;
+    }
+
+    /* access modifiers changed from: package-private */
     public void updateClickable() {
         Drawable drawable = this.fgDrawable;
         Drawable clickableForeground = this.materialCardView.isClickable() ? getClickableForeground() : this.foregroundContentDrawable;
@@ -140,7 +191,7 @@ public class MaterialCardViewHelper {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setCornerRadius(float f) {
         setShapeAppearanceModel(this.shapeAppearanceModel.withCornerSize(f));
         this.fgDrawable.invalidateSelf();
@@ -152,80 +203,181 @@ public class MaterialCardViewHelper {
         }
     }
 
-    void updateElevation() {
+    /* access modifiers changed from: package-private */
+    public float getCornerRadius() {
+        return this.bgDrawable.getTopLeftCornerResolvedSize();
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setProgress(float f) {
+        this.bgDrawable.setInterpolation(f);
+        MaterialShapeDrawable materialShapeDrawable = this.foregroundContentDrawable;
+        if (materialShapeDrawable != null) {
+            materialShapeDrawable.setInterpolation(f);
+        }
+        MaterialShapeDrawable materialShapeDrawable2 = this.foregroundShapeDrawable;
+        if (materialShapeDrawable2 != null) {
+            materialShapeDrawable2.setInterpolation(f);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public float getProgress() {
+        return this.bgDrawable.getInterpolation();
+    }
+
+    /* access modifiers changed from: package-private */
+    public void updateElevation() {
         this.bgDrawable.setElevation(this.materialCardView.getCardElevation());
     }
 
-    void updateInsets() {
+    /* access modifiers changed from: package-private */
+    public void updateInsets() {
         if (!isBackgroundOverwritten()) {
             this.materialCardView.setBackgroundInternal(insetDrawable(this.bgDrawable));
         }
         this.materialCardView.setForeground(insetDrawable(this.fgDrawable));
     }
 
-    void updateStroke() {
-        this.foregroundContentDrawable.setStroke(this.strokeWidth, this.strokeColor);
+    /* access modifiers changed from: package-private */
+    public void updateStroke() {
+        this.foregroundContentDrawable.setStroke((float) this.strokeWidth, this.strokeColor);
     }
 
-    void updateContentPadding() {
+    /* access modifiers changed from: package-private */
+    public void updateContentPadding() {
         int calculateActualCornerPadding = (int) ((shouldAddCornerPaddingInsideCardBackground() || shouldAddCornerPaddingOutsideCardBackground() ? calculateActualCornerPadding() : 0.0f) - getParentCardViewCalculatedCornerPadding());
-        MaterialCardView materialCardView = this.materialCardView;
-        Rect rect = this.userContentPadding;
-        materialCardView.setAncestorContentPadding(rect.left + calculateActualCornerPadding, rect.top + calculateActualCornerPadding, rect.right + calculateActualCornerPadding, rect.bottom + calculateActualCornerPadding);
+        this.materialCardView.setAncestorContentPadding(this.userContentPadding.left + calculateActualCornerPadding, this.userContentPadding.top + calculateActualCornerPadding, this.userContentPadding.right + calculateActualCornerPadding, this.userContentPadding.bottom + calculateActualCornerPadding);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public void setCheckable(boolean z) {
+        this.checkable = z;
+    }
+
+    /* access modifiers changed from: package-private */
     public boolean isCheckable() {
         return this.checkable;
     }
 
-    void setCheckedIcon(Drawable drawable) {
-        this.checkedIcon = drawable;
+    /* access modifiers changed from: package-private */
+    public void setRippleColor(ColorStateList colorStateList) {
+        this.rippleColor = colorStateList;
+        updateRippleColor();
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setCheckedIconTint(ColorStateList colorStateList) {
+        this.checkedIconTint = colorStateList;
+        Drawable drawable = this.checkedIcon;
         if (drawable != null) {
-            Drawable wrap = DrawableCompat.wrap(drawable.mutate());
-            this.checkedIcon = wrap;
-            DrawableCompat.setTintList(wrap, this.checkedIconTint);
-        }
-        if (this.clickableForegroundDrawable != null) {
-            this.clickableForegroundDrawable.setDrawableByLayerId(R$id.mtrl_card_checked_layer_id, createCheckedIconLayer());
+            DrawableCompat.setTintList(drawable, colorStateList);
         }
     }
 
-    void setCheckedIconSize(int i) {
+    /* access modifiers changed from: package-private */
+    public ColorStateList getCheckedIconTint() {
+        return this.checkedIconTint;
+    }
+
+    /* access modifiers changed from: package-private */
+    public ColorStateList getRippleColor() {
+        return this.rippleColor;
+    }
+
+    /* access modifiers changed from: package-private */
+    public Drawable getCheckedIcon() {
+        return this.checkedIcon;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setCheckedIcon(Drawable drawable) {
+        if (drawable != null) {
+            Drawable mutate = DrawableCompat.wrap(drawable).mutate();
+            this.checkedIcon = mutate;
+            DrawableCompat.setTintList(mutate, this.checkedIconTint);
+            setChecked(this.materialCardView.isChecked());
+        } else {
+            this.checkedIcon = CHECKED_ICON_NONE;
+        }
+        LayerDrawable layerDrawable = this.clickableForegroundDrawable;
+        if (layerDrawable != null) {
+            layerDrawable.setDrawableByLayerId(C3621R.C3624id.mtrl_card_checked_layer_id, this.checkedIcon);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getCheckedIconSize() {
+        return this.checkedIconSize;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setCheckedIconSize(int i) {
         this.checkedIconSize = i;
     }
 
-    void setCheckedIconMargin(int i) {
+    /* access modifiers changed from: package-private */
+    public int getCheckedIconMargin() {
+        return this.checkedIconMargin;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setCheckedIconMargin(int i) {
         this.checkedIconMargin = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void onMeasure(int i, int i2) {
+    /* access modifiers changed from: package-private */
+    public void recalculateCheckedIconPosition(int i, int i2) {
         int i3;
         int i4;
+        int i5;
+        int i6;
+        int i7;
+        int i8;
+        int i9;
+        int i10;
         if (this.clickableForegroundDrawable != null) {
-            int i5 = this.checkedIconMargin;
-            int i6 = this.checkedIconSize;
-            int i7 = (i - i5) - i6;
-            int i8 = (i2 - i5) - i6;
-            if ((Build.VERSION.SDK_INT < 21) || this.materialCardView.getUseCompatPadding()) {
-                i8 -= (int) Math.ceil(calculateVerticalBackgroundPadding() * 2.0f);
-                i7 -= (int) Math.ceil(calculateHorizontalBackgroundPadding() * 2.0f);
-            }
-            int i9 = i8;
-            int i10 = this.checkedIconMargin;
-            if (ViewCompat.getLayoutDirection(this.materialCardView) == 1) {
-                i4 = i7;
-                i3 = i10;
+            if (this.materialCardView.getUseCompatPadding()) {
+                i4 = (int) Math.ceil((double) (calculateVerticalBackgroundPadding() * 2.0f));
+                i3 = (int) Math.ceil((double) (calculateHorizontalBackgroundPadding() * 2.0f));
             } else {
-                i3 = i7;
-                i4 = i10;
+                i4 = 0;
+                i3 = 0;
             }
-            this.clickableForegroundDrawable.setLayerInset(2, i3, this.checkedIconMargin, i4, i9);
+            if (isCheckedIconEnd()) {
+                i5 = ((i - this.checkedIconMargin) - this.checkedIconSize) - i3;
+            } else {
+                i5 = this.checkedIconMargin;
+            }
+            if (isCheckedIconBottom()) {
+                i6 = this.checkedIconMargin;
+            } else {
+                i6 = ((i2 - this.checkedIconMargin) - this.checkedIconSize) - i4;
+            }
+            int i11 = i6;
+            if (isCheckedIconEnd()) {
+                i7 = this.checkedIconMargin;
+            } else {
+                i7 = ((i - this.checkedIconMargin) - this.checkedIconSize) - i3;
+            }
+            if (isCheckedIconBottom()) {
+                i8 = ((i2 - this.checkedIconMargin) - this.checkedIconSize) - i4;
+            } else {
+                i8 = this.checkedIconMargin;
+            }
+            int i12 = i8;
+            if (ViewCompat.getLayoutDirection(this.materialCardView) == 1) {
+                i10 = i7;
+                i9 = i5;
+            } else {
+                i9 = i7;
+                i10 = i5;
+            }
+            this.clickableForegroundDrawable.setLayerInset(2, i10, i12, i9, i11);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void forceRippleRedraw() {
         Drawable drawable = this.rippleDrawable;
         if (drawable != null) {
@@ -236,28 +388,33 @@ public class MaterialCardViewHelper {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setShapeAppearanceModel(ShapeAppearanceModel shapeAppearanceModel) {
-        this.shapeAppearanceModel = shapeAppearanceModel;
-        this.bgDrawable.setShapeAppearanceModel(shapeAppearanceModel);
+    /* access modifiers changed from: package-private */
+    public void setShapeAppearanceModel(ShapeAppearanceModel shapeAppearanceModel2) {
+        this.shapeAppearanceModel = shapeAppearanceModel2;
+        this.bgDrawable.setShapeAppearanceModel(shapeAppearanceModel2);
         MaterialShapeDrawable materialShapeDrawable = this.bgDrawable;
         materialShapeDrawable.setShadowBitmapDrawingEnable(!materialShapeDrawable.isRoundRect());
         MaterialShapeDrawable materialShapeDrawable2 = this.foregroundContentDrawable;
         if (materialShapeDrawable2 != null) {
-            materialShapeDrawable2.setShapeAppearanceModel(shapeAppearanceModel);
+            materialShapeDrawable2.setShapeAppearanceModel(shapeAppearanceModel2);
         }
         MaterialShapeDrawable materialShapeDrawable3 = this.foregroundShapeDrawable;
         if (materialShapeDrawable3 != null) {
-            materialShapeDrawable3.setShapeAppearanceModel(shapeAppearanceModel);
+            materialShapeDrawable3.setShapeAppearanceModel(shapeAppearanceModel2);
         }
         MaterialShapeDrawable materialShapeDrawable4 = this.compatRippleDrawable;
         if (materialShapeDrawable4 != null) {
-            materialShapeDrawable4.setShapeAppearanceModel(shapeAppearanceModel);
+            materialShapeDrawable4.setShapeAppearanceModel(shapeAppearanceModel2);
         }
     }
 
+    /* access modifiers changed from: package-private */
+    public ShapeAppearanceModel getShapeAppearanceModel() {
+        return this.shapeAppearanceModel;
+    }
+
     private void updateInsetForeground(Drawable drawable) {
-        if (Build.VERSION.SDK_INT >= 23 && (this.materialCardView.getForeground() instanceof InsetDrawable)) {
+        if (this.materialCardView.getForeground() instanceof InsetDrawable) {
             ((InsetDrawable) this.materialCardView.getForeground()).setDrawable(drawable);
         } else {
             this.materialCardView.setForeground(insetDrawable(drawable));
@@ -265,28 +422,24 @@ public class MaterialCardViewHelper {
     }
 
     private Drawable insetDrawable(Drawable drawable) {
-        int ceil;
         int i;
-        if ((Build.VERSION.SDK_INT < 21) || this.materialCardView.getUseCompatPadding()) {
-            int ceil2 = (int) Math.ceil(calculateVerticalBackgroundPadding());
-            ceil = (int) Math.ceil(calculateHorizontalBackgroundPadding());
-            i = ceil2;
+        int i2;
+        if (this.materialCardView.getUseCompatPadding()) {
+            i = (int) Math.ceil((double) calculateVerticalBackgroundPadding());
+            i2 = (int) Math.ceil((double) calculateHorizontalBackgroundPadding());
         } else {
-            ceil = 0;
+            i2 = 0;
             i = 0;
         }
-        return new InsetDrawable(drawable, ceil, i, ceil, i) { // from class: com.google.android.material.card.MaterialCardViewHelper.1
-            @Override // android.graphics.drawable.Drawable
+        return new InsetDrawable(drawable, i2, i, i2, i) {
             public int getMinimumHeight() {
                 return -1;
             }
 
-            @Override // android.graphics.drawable.Drawable
             public int getMinimumWidth() {
                 return -1;
             }
 
-            @Override // android.graphics.drawable.InsetDrawable, android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
             public boolean getPadding(Rect rect) {
                 return false;
             }
@@ -302,17 +455,14 @@ public class MaterialCardViewHelper {
     }
 
     private boolean canClipToOutline() {
-        return Build.VERSION.SDK_INT >= 21 && this.bgDrawable.isRoundRect();
+        return this.bgDrawable.isRoundRect();
     }
 
     private float getParentCardViewCalculatedCornerPadding() {
-        if (this.materialCardView.getPreventCornerOverlap()) {
-            if (Build.VERSION.SDK_INT >= 21 && !this.materialCardView.getUseCompatPadding()) {
-                return 0.0f;
-            }
-            return (float) ((1.0d - COS_45) * this.materialCardView.getCardViewRadius());
+        if (!this.materialCardView.getPreventCornerOverlap() || !this.materialCardView.getUseCompatPadding()) {
+            return 0.0f;
         }
-        return 0.0f;
+        return (float) ((1.0d - COS_45) * ((double) this.materialCardView.getCardViewRadius()));
     }
 
     private boolean shouldAddCornerPaddingInsideCardBackground() {
@@ -329,12 +479,12 @@ public class MaterialCardViewHelper {
 
     private float calculateCornerPaddingForCornerTreatment(CornerTreatment cornerTreatment, float f) {
         if (cornerTreatment instanceof RoundedCornerTreatment) {
-            return (float) ((1.0d - COS_45) * f);
+            return (float) ((1.0d - COS_45) * ((double) f));
         }
-        if (!(cornerTreatment instanceof CutCornerTreatment)) {
-            return 0.0f;
+        if (cornerTreatment instanceof CutCornerTreatment) {
+            return f / 2.0f;
         }
-        return f / 2.0f;
+        return 0.0f;
     }
 
     private Drawable getClickableForeground() {
@@ -342,19 +492,19 @@ public class MaterialCardViewHelper {
             this.rippleDrawable = createForegroundRippleDrawable();
         }
         if (this.clickableForegroundDrawable == null) {
-            LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{this.rippleDrawable, this.foregroundContentDrawable, createCheckedIconLayer()});
+            LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{this.rippleDrawable, this.foregroundContentDrawable, this.checkedIcon});
             this.clickableForegroundDrawable = layerDrawable;
-            layerDrawable.setId(2, R$id.mtrl_card_checked_layer_id);
+            layerDrawable.setId(2, C3621R.C3624id.mtrl_card_checked_layer_id);
         }
         return this.clickableForegroundDrawable;
     }
 
     private Drawable createForegroundRippleDrawable() {
-        if (RippleUtils.USE_FRAMEWORK_RIPPLE) {
-            this.foregroundShapeDrawable = createForegroundShapeDrawable();
-            return new RippleDrawable(this.rippleColor, null, this.foregroundShapeDrawable);
+        if (!RippleUtils.USE_FRAMEWORK_RIPPLE) {
+            return createCompatRippleDrawable();
         }
-        return createCompatRippleDrawable();
+        this.foregroundShapeDrawable = createForegroundShapeDrawable();
+        return new RippleDrawable(this.rippleColor, (Drawable) null, this.foregroundShapeDrawable);
     }
 
     private Drawable createCompatRippleDrawable() {
@@ -368,27 +518,44 @@ public class MaterialCardViewHelper {
 
     private void updateRippleColor() {
         Drawable drawable;
-        if (RippleUtils.USE_FRAMEWORK_RIPPLE && (drawable = this.rippleDrawable) != null) {
-            ((RippleDrawable) drawable).setColor(this.rippleColor);
+        if (!RippleUtils.USE_FRAMEWORK_RIPPLE || (drawable = this.rippleDrawable) == null) {
+            MaterialShapeDrawable materialShapeDrawable = this.compatRippleDrawable;
+            if (materialShapeDrawable != null) {
+                materialShapeDrawable.setFillColor(this.rippleColor);
+                return;
+            }
             return;
         }
-        MaterialShapeDrawable materialShapeDrawable = this.compatRippleDrawable;
-        if (materialShapeDrawable == null) {
-            return;
-        }
-        materialShapeDrawable.setFillColor(this.rippleColor);
-    }
-
-    private Drawable createCheckedIconLayer() {
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        Drawable drawable = this.checkedIcon;
-        if (drawable != null) {
-            stateListDrawable.addState(CHECKED_STATE_SET, drawable);
-        }
-        return stateListDrawable;
+        ((RippleDrawable) drawable).setColor(this.rippleColor);
     }
 
     private MaterialShapeDrawable createForegroundShapeDrawable() {
         return new MaterialShapeDrawable(this.shapeAppearanceModel);
+    }
+
+    public void setChecked(boolean z) {
+        Drawable drawable = this.checkedIcon;
+        if (drawable != null) {
+            drawable.setAlpha(z ? 255 : 0);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getCheckedIconGravity() {
+        return this.checkedIconGravity;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setCheckedIconGravity(int i) {
+        this.checkedIconGravity = i;
+        recalculateCheckedIconPosition(this.materialCardView.getMeasuredWidth(), this.materialCardView.getMeasuredHeight());
+    }
+
+    private boolean isCheckedIconEnd() {
+        return (this.checkedIconGravity & GravityCompat.END) == 8388613;
+    }
+
+    private boolean isCheckedIconBottom() {
+        return (this.checkedIconGravity & 80) == 80;
     }
 }

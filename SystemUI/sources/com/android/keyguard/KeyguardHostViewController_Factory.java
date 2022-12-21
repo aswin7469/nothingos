@@ -5,7 +5,7 @@ import android.telephony.TelephonyManager;
 import com.android.keyguard.KeyguardSecurityContainerController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardHostViewController_Factory implements Factory<KeyguardHostViewController> {
     private final Provider<AudioManager> audioManagerProvider;
     private final Provider<KeyguardSecurityContainerController.Factory> keyguardSecurityContainerControllerFactoryProvider;
@@ -23,10 +23,8 @@ public final class KeyguardHostViewController_Factory implements Factory<Keyguar
         this.keyguardSecurityContainerControllerFactoryProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardHostViewController mo1933get() {
-        return newInstance(this.viewProvider.mo1933get(), this.keyguardUpdateMonitorProvider.mo1933get(), this.audioManagerProvider.mo1933get(), this.telephonyManagerProvider.mo1933get(), this.viewMediatorCallbackProvider.mo1933get(), this.keyguardSecurityContainerControllerFactoryProvider.mo1933get());
+    public KeyguardHostViewController get() {
+        return newInstance(this.viewProvider.get(), this.keyguardUpdateMonitorProvider.get(), this.audioManagerProvider.get(), this.telephonyManagerProvider.get(), this.viewMediatorCallbackProvider.get(), this.keyguardSecurityContainerControllerFactoryProvider.get());
     }
 
     public static KeyguardHostViewController_Factory create(Provider<KeyguardHostView> provider, Provider<KeyguardUpdateMonitor> provider2, Provider<AudioManager> provider3, Provider<TelephonyManager> provider4, Provider<ViewMediatorCallback> provider5, Provider<KeyguardSecurityContainerController.Factory> provider6) {

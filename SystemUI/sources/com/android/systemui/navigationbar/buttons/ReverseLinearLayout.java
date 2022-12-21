@@ -4,30 +4,47 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class ReverseLinearLayout extends LinearLayout {
     private boolean mIsAlternativeOrder;
     private boolean mIsLayoutReverse;
 
-    /* loaded from: classes.dex */
     public interface Reversable {
         void reverse(boolean z);
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        return super.generateLayoutParams(layoutParams);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
     }
 
     public ReverseLinearLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         super.onFinishInflate();
         updateOrder();
     }
 
-    @Override // android.view.ViewGroup
     public void addView(View view) {
         reverseParams(view.getLayoutParams(), view, this.mIsLayoutReverse);
         if (this.mIsLayoutReverse) {
@@ -37,7 +54,6 @@ public class ReverseLinearLayout extends LinearLayout {
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewManager
     public void addView(View view, ViewGroup.LayoutParams layoutParams) {
         reverseParams(layoutParams, view, this.mIsLayoutReverse);
         if (this.mIsLayoutReverse) {
@@ -47,7 +63,6 @@ public class ReverseLinearLayout extends LinearLayout {
         }
     }
 
-    @Override // android.widget.LinearLayout, android.view.View
     public void onRtlPropertiesChanged(int i) {
         super.onRtlPropertiesChanged(i);
         updateOrder();
@@ -81,23 +96,28 @@ public class ReverseLinearLayout extends LinearLayout {
         if (view.getPaddingLeft() == view.getPaddingRight() && view.getPaddingTop() == view.getPaddingBottom()) {
             view.setPadding(view.getPaddingTop(), view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingLeft());
         }
-        if (layoutParams == null) {
-            return;
+        if (layoutParams != null) {
+            int i = layoutParams.width;
+            layoutParams.width = layoutParams.height;
+            layoutParams.height = i;
         }
-        int i = layoutParams.width;
-        layoutParams.width = layoutParams.height;
-        layoutParams.height = i;
     }
 
-    /* loaded from: classes.dex */
     public static class ReverseRelativeLayout extends RelativeLayout implements Reversable {
         private int mDefaultGravity = 0;
+
+        public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+            return super.generateLayoutParams(attributeSet);
+        }
+
+        public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+            return super.getOverlay();
+        }
 
         public ReverseRelativeLayout(Context context) {
             super(context);
         }
 
-        @Override // com.android.systemui.navigationbar.buttons.ReverseLinearLayout.Reversable
         public void reverse(boolean z) {
             updateGravity(z);
             ReverseLinearLayout.reverseGroup(this, z);
@@ -113,15 +133,14 @@ public class ReverseLinearLayout extends LinearLayout {
                 if (z) {
                     i = i == 48 ? 80 : 48;
                 }
-                if (getGravity() == i) {
-                    return;
+                if (getGravity() != i) {
+                    setGravity(i);
                 }
-                setGravity(i);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static void reverseGroup(ViewGroup viewGroup, boolean z) {
         for (int i = 0; i < viewGroup.getChildCount(); i++) {
             View childAt = viewGroup.getChildAt(i);

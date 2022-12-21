@@ -2,13 +2,13 @@ package com.android.systemui.controls.management;
 
 import android.content.ComponentName;
 import android.graphics.drawable.Icon;
+import kotlin.Metadata;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.FunctionReferenceImpl;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ControlsModel.kt */
-/* loaded from: classes.dex */
 /* synthetic */ class ControlInfoWrapper$customIconGetter$1 extends FunctionReferenceImpl implements Function2<ComponentName, String, Icon> {
     public static final ControlInfoWrapper$customIconGetter$1 INSTANCE = new ControlInfoWrapper$customIconGetter$1();
 
@@ -16,14 +16,9 @@ import org.jetbrains.annotations.Nullable;
         super(2, ControlsModelKt.class, "nullIconGetter", "nullIconGetter(Landroid/content/ComponentName;Ljava/lang/String;)Landroid/graphics/drawable/Icon;", 1);
     }
 
-    @Override // kotlin.jvm.functions.Function2
-    @Nullable
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final Icon mo1950invoke(@NotNull ComponentName p0, @NotNull String p1) {
-        Icon nullIconGetter;
-        Intrinsics.checkNotNullParameter(p0, "p0");
-        Intrinsics.checkNotNullParameter(p1, "p1");
-        nullIconGetter = ControlsModelKt.nullIconGetter(p0, p1);
-        return nullIconGetter;
+    public final Icon invoke(ComponentName componentName, String str) {
+        Intrinsics.checkNotNullParameter(componentName, "p0");
+        Intrinsics.checkNotNullParameter(str, "p1");
+        return ControlsModelKt.nullIconGetter(componentName, str);
     }
 }

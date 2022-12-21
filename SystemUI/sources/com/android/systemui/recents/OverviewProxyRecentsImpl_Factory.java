@@ -1,29 +1,30 @@
 package com.android.systemui.recents;
 
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
 import dagger.Lazy;
+import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class OverviewProxyRecentsImpl_Factory implements Factory<OverviewProxyRecentsImpl> {
-    private final Provider<Optional<Lazy<StatusBar>>> statusBarLazyProvider;
+    private final Provider<Optional<CentralSurfaces>> centralSurfacesOptionalLazyProvider;
+    private final Provider<OverviewProxyService> overviewProxyServiceProvider;
 
-    public OverviewProxyRecentsImpl_Factory(Provider<Optional<Lazy<StatusBar>>> provider) {
-        this.statusBarLazyProvider = provider;
+    public OverviewProxyRecentsImpl_Factory(Provider<Optional<CentralSurfaces>> provider, Provider<OverviewProxyService> provider2) {
+        this.centralSurfacesOptionalLazyProvider = provider;
+        this.overviewProxyServiceProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public OverviewProxyRecentsImpl mo1933get() {
-        return newInstance(this.statusBarLazyProvider.mo1933get());
+    public OverviewProxyRecentsImpl get() {
+        return newInstance(DoubleCheck.lazy(this.centralSurfacesOptionalLazyProvider), this.overviewProxyServiceProvider.get());
     }
 
-    public static OverviewProxyRecentsImpl_Factory create(Provider<Optional<Lazy<StatusBar>>> provider) {
-        return new OverviewProxyRecentsImpl_Factory(provider);
+    public static OverviewProxyRecentsImpl_Factory create(Provider<Optional<CentralSurfaces>> provider, Provider<OverviewProxyService> provider2) {
+        return new OverviewProxyRecentsImpl_Factory(provider, provider2);
     }
 
-    public static OverviewProxyRecentsImpl newInstance(Optional<Lazy<StatusBar>> optional) {
-        return new OverviewProxyRecentsImpl(optional);
+    public static OverviewProxyRecentsImpl newInstance(Lazy<Optional<CentralSurfaces>> lazy, OverviewProxyService overviewProxyService) {
+        return new OverviewProxyRecentsImpl(lazy, overviewProxyService);
     }
 }

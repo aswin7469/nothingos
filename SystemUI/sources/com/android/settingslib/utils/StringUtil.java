@@ -1,14 +1,28 @@
 package com.android.settingslib.utils;
 
 import android.content.Context;
+import android.icu.text.DisplayContext;
 import android.icu.text.MeasureFormat;
+import android.icu.text.MessageFormat;
+import android.icu.text.NumberFormat;
+import android.icu.text.RelativeDateTimeFormatter;
 import android.icu.util.Measure;
 import android.icu.util.MeasureUnit;
+import android.icu.util.ULocale;
 import android.text.SpannableStringBuilder;
 import android.text.style.TtsSpan;
+import com.android.settingslib.C1757R;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 public class StringUtil {
+    private static final int LIMITED_TIME_UNIT_COUNT = 2;
+    public static final int SECONDS_PER_DAY = 86400;
+    public static final int SECONDS_PER_HOUR = 3600;
+    public static final int SECONDS_PER_MINUTE = 60;
+
     public static CharSequence formatElapsedTime(Context context, double d, boolean z, boolean z2) {
         int i;
         int i2;
@@ -19,8 +33,8 @@ public class StringUtil {
             floor += 30;
         }
         if (floor >= 86400) {
-            i = floor / 86400;
-            floor -= 86400 * i;
+            i = floor / SECONDS_PER_DAY;
+            floor -= SECONDS_PER_DAY * i;
         } else {
             i = 0;
         }
@@ -56,10 +70,46 @@ public class StringUtil {
             arrayList.subList(2, arrayList.size()).clear();
         }
         Measure[] measureArr = (Measure[]) arrayList.toArray(new Measure[arrayList.size()]);
-        spannableStringBuilder.append((CharSequence) MeasureFormat.getInstance(context.getResources().getConfiguration().locale, MeasureFormat.FormatWidth.SHORT).formatMeasures(measureArr));
+        spannableStringBuilder.append(MeasureFormat.getInstance(context.getResources().getConfiguration().locale, MeasureFormat.FormatWidth.SHORT).formatMeasures(measureArr));
         if (measureArr.length == 1 && MeasureUnit.MINUTE.equals(measureArr[0].getUnit())) {
-            spannableStringBuilder.setSpan(new TtsSpan.MeasureBuilder().setNumber(i3).setUnit("minute").build(), 0, spannableStringBuilder.length(), 33);
+            spannableStringBuilder.setSpan(new TtsSpan.MeasureBuilder().setNumber((long) i3).setUnit("minute").build(), 0, spannableStringBuilder.length(), 33);
         }
         return spannableStringBuilder;
+    }
+
+    public static CharSequence formatRelativeTime(Context context, double d, boolean z, RelativeDateTimeFormatter.Style style) {
+        RelativeDateTimeFormatter.RelativeUnit relativeUnit;
+        int i;
+        int floor = (int) Math.floor(d / 1000.0d);
+        if (z && floor < 120) {
+            return context.getResources().getString(C1757R.string.time_unit_just_now);
+        }
+        if (floor < 7200) {
+            relativeUnit = RelativeDateTimeFormatter.RelativeUnit.MINUTES;
+            i = (floor + 30) / 60;
+        } else if (floor < 172800) {
+            relativeUnit = RelativeDateTimeFormatter.RelativeUnit.HOURS;
+            i = (floor + 1800) / 3600;
+        } else {
+            relativeUnit = RelativeDateTimeFormatter.RelativeUnit.DAYS;
+            i = (floor + 43200) / SECONDS_PER_DAY;
+        }
+        return RelativeDateTimeFormatter.getInstance(ULocale.forLocale(context.getResources().getConfiguration().locale), (NumberFormat) null, style, DisplayContext.CAPITALIZATION_FOR_MIDDLE_OF_SENTENCE).format((double) i, RelativeDateTimeFormatter.Direction.LAST, relativeUnit);
+    }
+
+    @Deprecated
+    public static CharSequence formatRelativeTime(Context context, double d, boolean z) {
+        return formatRelativeTime(context, d, z, RelativeDateTimeFormatter.Style.LONG);
+    }
+
+    public static String getIcuPluralsString(Context context, int i, int i2) {
+        MessageFormat messageFormat = new MessageFormat(context.getResources().getString(i2), Locale.getDefault());
+        HashMap hashMap = new HashMap();
+        hashMap.put("count", Integer.valueOf(i));
+        return messageFormat.format(hashMap);
+    }
+
+    public static String getIcuPluralsString(Context context, Map<String, Object> map, int i) {
+        return new MessageFormat(context.getResources().getString(i), Locale.getDefault()).format(map);
     }
 }

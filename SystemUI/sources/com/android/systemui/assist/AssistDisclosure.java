@@ -12,15 +12,13 @@ import android.graphics.PorterDuffXfermode;
 import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.Interpolator;
-import com.android.systemui.R$dimen;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
-/* loaded from: classes.dex */
+
 public class AssistDisclosure {
     private final Context mContext;
     private final Handler mHandler;
-    private Runnable mShowRunnable = new Runnable() { // from class: com.android.systemui.assist.AssistDisclosure.1
-        @Override // java.lang.Runnable
+    private Runnable mShowRunnable = new Runnable() {
         public void run() {
             AssistDisclosure.this.show();
         }
@@ -40,7 +38,7 @@ public class AssistDisclosure {
         this.mHandler.post(this.mShowRunnable);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void show() {
         if (this.mView == null) {
             this.mView = new AssistDisclosureView(this.mContext);
@@ -54,7 +52,7 @@ public class AssistDisclosure {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void hide() {
         if (this.mViewAdded) {
             this.mWm.removeView(this.mView);
@@ -62,17 +60,18 @@ public class AssistDisclosure {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class AssistDisclosureView extends View implements ValueAnimator.AnimatorUpdateListener {
+    private class AssistDisclosureView extends View implements ValueAnimator.AnimatorUpdateListener {
+        static final int ALPHA_IN_ANIMATION_DURATION = 400;
+        static final int ALPHA_OUT_ANIMATION_DURATION = 300;
+        static final int FULL_ALPHA = 222;
+        private int mAlpha = 0;
         private final ValueAnimator mAlphaInAnimator;
         private final ValueAnimator mAlphaOutAnimator;
         private final AnimatorSet mAnimator;
         private final Paint mPaint;
         private final Paint mShadowPaint;
-        private int mAlpha = 0;
-        private float mThickness = getResources().getDimension(R$dimen.assist_disclosure_thickness);
-        private float mShadowThickness = getResources().getDimension(R$dimen.assist_disclosure_shadow_thickness);
+        private float mShadowThickness;
+        private float mThickness;
 
         public AssistDisclosureView(Context context) {
             super(context);
@@ -80,32 +79,28 @@ public class AssistDisclosure {
             this.mPaint = paint;
             Paint paint2 = new Paint();
             this.mShadowPaint = paint2;
-            ValueAnimator duration = ValueAnimator.ofInt(0, 222).setDuration(400L);
+            ValueAnimator duration = ValueAnimator.ofInt(new int[]{0, 222}).setDuration(400);
             this.mAlphaInAnimator = duration;
             duration.addUpdateListener(this);
-            Interpolator interpolator = Interpolators.CUSTOM_40_40;
-            duration.setInterpolator(interpolator);
-            ValueAnimator duration2 = ValueAnimator.ofInt(222, 0).setDuration(300L);
+            duration.setInterpolator(Interpolators.CUSTOM_40_40);
+            ValueAnimator duration2 = ValueAnimator.ofInt(new int[]{222, 0}).setDuration(300);
             this.mAlphaOutAnimator = duration2;
             duration2.addUpdateListener(this);
-            duration2.setInterpolator(interpolator);
+            duration2.setInterpolator(Interpolators.CUSTOM_40_40);
             AnimatorSet animatorSet = new AnimatorSet();
             this.mAnimator = animatorSet;
             animatorSet.play(duration).before(duration2);
-            animatorSet.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.assist.AssistDisclosure.AssistDisclosureView.1
+            animatorSet.addListener(new AnimatorListenerAdapter(AssistDisclosure.this) {
                 boolean mCancelled;
 
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
                 public void onAnimationStart(Animator animator) {
                     this.mCancelled = false;
                 }
 
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
                 public void onAnimationCancel(Animator animator) {
                     this.mCancelled = true;
                 }
 
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
                 public void onAnimationEnd(Animator animator) {
                     if (!this.mCancelled) {
                         AssistDisclosure.this.hide();
@@ -117,17 +112,19 @@ public class AssistDisclosure {
             paint.setXfermode(porterDuffXfermode);
             paint2.setColor(-12303292);
             paint2.setXfermode(porterDuffXfermode);
+            this.mThickness = getResources().getDimension(C1893R.dimen.assist_disclosure_thickness);
+            this.mShadowThickness = getResources().getDimension(C1893R.dimen.assist_disclosure_shadow_thickness);
         }
 
-        @Override // android.view.View
-        protected void onAttachedToWindow() {
+        /* access modifiers changed from: protected */
+        public void onAttachedToWindow() {
             super.onAttachedToWindow();
             startAnimation();
             sendAccessibilityEvent(16777216);
         }
 
-        @Override // android.view.View
-        protected void onDetachedFromWindow() {
+        /* access modifiers changed from: protected */
+        public void onDetachedFromWindow() {
             super.onDetachedFromWindow();
             this.mAnimator.cancel();
             this.mAlpha = 0;
@@ -138,8 +135,8 @@ public class AssistDisclosure {
             this.mAnimator.start();
         }
 
-        @Override // android.view.View
-        protected void onDraw(Canvas canvas) {
+        /* access modifiers changed from: protected */
+        public void onDraw(Canvas canvas) {
             this.mPaint.setAlpha(this.mAlpha);
             this.mShadowPaint.setAlpha(this.mAlpha / 4);
             drawGeometry(canvas, this.mShadowPaint, this.mShadowThickness);
@@ -150,21 +147,24 @@ public class AssistDisclosure {
             int width = getWidth();
             int height = getHeight();
             float f2 = this.mThickness;
-            float f3 = height;
+            float f3 = (float) height;
             float f4 = f3 - f2;
-            float f5 = width;
-            drawBeam(canvas, 0.0f, f4, f5, f3, paint, f);
-            drawBeam(canvas, 0.0f, 0.0f, f2, f4, paint, f);
-            float f6 = f5 - f2;
-            drawBeam(canvas, f6, 0.0f, f5, f4, paint, f);
-            drawBeam(canvas, f2, 0.0f, f6, f2, paint, f);
+            float f5 = (float) width;
+            Canvas canvas2 = canvas;
+            Paint paint2 = paint;
+            float f6 = f;
+            drawBeam(canvas2, 0.0f, f4, f5, f3, paint2, f6);
+            float f7 = f4;
+            drawBeam(canvas2, 0.0f, 0.0f, f2, f7, paint2, f6);
+            float f8 = f5 - f2;
+            drawBeam(canvas2, f8, 0.0f, f5, f7, paint2, f6);
+            drawBeam(canvas2, f2, 0.0f, f8, f2, paint2, f6);
         }
 
         private void drawBeam(Canvas canvas, float f, float f2, float f3, float f4, Paint paint, float f5) {
             canvas.drawRect(f - f5, f2 - f5, f3 + f5, f4 + f5, paint);
         }
 
-        @Override // android.animation.ValueAnimator.AnimatorUpdateListener
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
             ValueAnimator valueAnimator2 = this.mAlphaOutAnimator;
             if (valueAnimator == valueAnimator2) {

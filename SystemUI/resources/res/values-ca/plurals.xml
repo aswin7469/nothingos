@@ -16,6 +16,10 @@
         <item quantity="one">S&apos;ha afegit %s control.</item>
         <item quantity="other">S&apos;han afegit %s controls.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s aplicació està activa</item>
+        <item quantity="other">%s aplicacions estan actives</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">Introdueix el PIN de la SIM. Et queda %d intent; si no l&apos;encertes, contacta amb l&apos;operador de telefonia mòbil per desbloquejar el dispositiu.</item>
         <item quantity="other">Introdueix el PIN de la SIM. Et queden %d intents.</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">El codi PUK de la SIM no és correcte. Et queda %d intent; si no l&apos;encertes, la SIM no es podrà tornar a fer servir.</item>
         <item quantity="other">El codi PUK de la SIM no és correcte. Et queden %d intents; si els esgotes tots, la SIM no es podrà tornar a fer servir.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Fa %d hora que no es desbloqueja el dispositiu. Confirma la contrasenya.</item>
-        <item quantity="other">Fa %d hores que no es desbloqueja el dispositiu. Confirma la contrasenya.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Fa %d hora que no es desbloqueja el dispositiu. Confirma el patró.</item>
-        <item quantity="other">Fa %d hores que no es desbloqueja el dispositiu. Confirma el patró.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Fa %d hora que no es desbloqueja el dispositiu. Confirma el PIN.</item>
-        <item quantity="other">Fa %d hores que no es desbloqueja el dispositiu. Confirma el PIN.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">Torna-ho a provar d&apos;aquí a 1 segon.</item>
-        <item quantity="other">Torna-ho a provar d&apos;aquí a %d segons.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d notificació nova</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">Només es pot crear un usuari.</item>
         <item quantity="other">Pots afegir fins a %d usuaris.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d dispositiu connectat</item>
-        <item quantity="other">%1$d dispositius connectats</item>
     </plurals>
 </resources>

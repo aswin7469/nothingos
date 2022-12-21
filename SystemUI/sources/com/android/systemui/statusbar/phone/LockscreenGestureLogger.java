@@ -5,15 +5,16 @@ import android.util.ArrayMap;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.logging.UiEventLoggerImpl;
-import com.android.systemui.Dependency;
 import com.android.systemui.EventLogConstants;
 import com.android.systemui.EventLogTags;
-/* loaded from: classes.dex */
-public class LockscreenGestureLogger {
-    private final MetricsLogger mMetricsLogger = (MetricsLogger) Dependency.get(MetricsLogger.class);
-    private ArrayMap<Integer, Integer> mLegacyMap = new ArrayMap<>(EventLogConstants.METRICS_GESTURE_TYPE_MAP.length);
+import com.android.systemui.dagger.SysUISingleton;
+import javax.inject.Inject;
 
-    /* loaded from: classes.dex */
+@SysUISingleton
+public class LockscreenGestureLogger {
+    private ArrayMap<Integer, Integer> mLegacyMap = new ArrayMap<>(EventLogConstants.METRICS_GESTURE_TYPE_MAP.length);
+    private final MetricsLogger mMetricsLogger;
+
     public enum LockscreenUiEvent implements UiEventLogger.UiEventEnum {
         LOCKSCREEN_PULL_SHADE_OPEN(539),
         LOCKSCREEN_LOCK_TAP(540),
@@ -25,11 +26,12 @@ public class LockscreenGestureLogger {
         LOCKSCREEN_CAMERA(546),
         LOCKSCREEN_UNLOCK(547),
         LOCKSCREEN_NOTIFICATION_FALSE_TOUCH(548),
-        LOCKSCREEN_UNLOCKED_NOTIFICATION_PANEL_EXPAND(549);
+        LOCKSCREEN_UNLOCKED_NOTIFICATION_PANEL_EXPAND(549),
+        LOCKSCREEN_SWITCH_USER_TAP(934);
         
         private final int mId;
 
-        LockscreenUiEvent(int i) {
+        private LockscreenUiEvent(int i) {
             this.mId = i;
         }
 
@@ -38,16 +40,11 @@ public class LockscreenGestureLogger {
         }
     }
 
-    public LockscreenGestureLogger() {
-        int i = 0;
-        while (true) {
-            int[] iArr = EventLogConstants.METRICS_GESTURE_TYPE_MAP;
-            if (i < iArr.length) {
-                this.mLegacyMap.put(Integer.valueOf(iArr[i]), Integer.valueOf(i));
-                i++;
-            } else {
-                return;
-            }
+    @Inject
+    public LockscreenGestureLogger(MetricsLogger metricsLogger) {
+        this.mMetricsLogger = metricsLogger;
+        for (int i = 0; i < EventLogConstants.METRICS_GESTURE_TYPE_MAP.length; i++) {
+            this.mLegacyMap.put(Integer.valueOf(EventLogConstants.METRICS_GESTURE_TYPE_MAP[i]), Integer.valueOf(i));
         }
     }
 

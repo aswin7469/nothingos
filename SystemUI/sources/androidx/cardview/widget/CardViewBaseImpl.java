@@ -7,102 +7,117 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import androidx.cardview.widget.RoundRectDrawableWithShadow;
-/* loaded from: classes.dex */
+
 class CardViewBaseImpl implements CardViewImpl {
     final RectF mCornerRect = new RectF();
 
-    @Override // androidx.cardview.widget.CardViewImpl
+    public void onCompatPaddingChanged(CardViewDelegate cardViewDelegate) {
+    }
+
+    CardViewBaseImpl() {
+    }
+
     public void initStatic() {
-        RoundRectDrawableWithShadow.sRoundRectHelper = new RoundRectDrawableWithShadow.RoundRectHelper() { // from class: androidx.cardview.widget.CardViewBaseImpl.1
-            @Override // androidx.cardview.widget.RoundRectDrawableWithShadow.RoundRectHelper
-            public void drawRoundRect(Canvas canvas, RectF bounds, float cornerRadius, Paint paint) {
-                float f = 2.0f * cornerRadius;
-                float width = (bounds.width() - f) - 1.0f;
-                float height = (bounds.height() - f) - 1.0f;
-                if (cornerRadius >= 1.0f) {
-                    float f2 = cornerRadius + 0.5f;
-                    float f3 = -f2;
-                    CardViewBaseImpl.this.mCornerRect.set(f3, f3, f2, f2);
+        RoundRectDrawableWithShadow.sRoundRectHelper = new RoundRectDrawableWithShadow.RoundRectHelper() {
+            public void drawRoundRect(Canvas canvas, RectF rectF, float f, Paint paint) {
+                Canvas canvas2 = canvas;
+                RectF rectF2 = rectF;
+                float f2 = 2.0f * f;
+                float width = (rectF.width() - f2) - 1.0f;
+                float height = (rectF.height() - f2) - 1.0f;
+                if (f >= 1.0f) {
+                    float f3 = f + 0.5f;
+                    float f4 = -f3;
+                    CardViewBaseImpl.this.mCornerRect.set(f4, f4, f3, f3);
                     int save = canvas.save();
-                    canvas.translate(bounds.left + f2, bounds.top + f2);
-                    canvas.drawArc(CardViewBaseImpl.this.mCornerRect, 180.0f, 90.0f, true, paint);
-                    canvas.translate(width, 0.0f);
-                    canvas.rotate(90.0f);
-                    canvas.drawArc(CardViewBaseImpl.this.mCornerRect, 180.0f, 90.0f, true, paint);
-                    canvas.translate(height, 0.0f);
-                    canvas.rotate(90.0f);
-                    canvas.drawArc(CardViewBaseImpl.this.mCornerRect, 180.0f, 90.0f, true, paint);
-                    canvas.translate(width, 0.0f);
-                    canvas.rotate(90.0f);
-                    canvas.drawArc(CardViewBaseImpl.this.mCornerRect, 180.0f, 90.0f, true, paint);
-                    canvas.restoreToCount(save);
-                    float f4 = bounds.top;
-                    canvas.drawRect((bounds.left + f2) - 1.0f, f4, (bounds.right - f2) + 1.0f, f4 + f2, paint);
-                    float f5 = bounds.bottom;
-                    canvas.drawRect((bounds.left + f2) - 1.0f, f5 - f2, (bounds.right - f2) + 1.0f, f5, paint);
+                    canvas2.translate(rectF2.left + f3, rectF2.top + f3);
+                    Paint paint2 = paint;
+                    canvas.drawArc(CardViewBaseImpl.this.mCornerRect, 180.0f, 90.0f, true, paint2);
+                    canvas2.translate(width, 0.0f);
+                    canvas2.rotate(90.0f);
+                    canvas.drawArc(CardViewBaseImpl.this.mCornerRect, 180.0f, 90.0f, true, paint2);
+                    canvas2.translate(height, 0.0f);
+                    canvas2.rotate(90.0f);
+                    canvas.drawArc(CardViewBaseImpl.this.mCornerRect, 180.0f, 90.0f, true, paint2);
+                    canvas2.translate(width, 0.0f);
+                    canvas2.rotate(90.0f);
+                    Paint paint3 = paint;
+                    canvas.drawArc(CardViewBaseImpl.this.mCornerRect, 180.0f, 90.0f, true, paint3);
+                    canvas2.restoreToCount(save);
+                    canvas.drawRect((rectF2.left + f3) - 1.0f, rectF2.top, (rectF2.right - f3) + 1.0f, rectF2.top + f3, paint3);
+                    canvas.drawRect((rectF2.left + f3) - 1.0f, rectF2.bottom - f3, (rectF2.right - f3) + 1.0f, rectF2.bottom, paint3);
                 }
-                canvas.drawRect(bounds.left, bounds.top + cornerRadius, bounds.right, bounds.bottom - cornerRadius, paint);
+                canvas.drawRect(rectF2.left, rectF2.top + f, rectF2.right, rectF2.bottom - f, paint);
             }
         };
     }
 
-    @Override // androidx.cardview.widget.CardViewImpl
-    public void initialize(CardViewDelegate cardView, Context context, ColorStateList backgroundColor, float radius, float elevation, float maxElevation) {
-        RoundRectDrawableWithShadow createBackground = createBackground(context, backgroundColor, radius, elevation, maxElevation);
-        createBackground.setAddPaddingForCorners(cardView.getPreventCornerOverlap());
-        cardView.setCardBackground(createBackground);
-        updatePadding(cardView);
+    public void initialize(CardViewDelegate cardViewDelegate, Context context, ColorStateList colorStateList, float f, float f2, float f3) {
+        RoundRectDrawableWithShadow createBackground = createBackground(context, colorStateList, f, f2, f3);
+        createBackground.setAddPaddingForCorners(cardViewDelegate.getPreventCornerOverlap());
+        cardViewDelegate.setCardBackground(createBackground);
+        updatePadding(cardViewDelegate);
     }
 
-    private RoundRectDrawableWithShadow createBackground(Context context, ColorStateList backgroundColor, float radius, float elevation, float maxElevation) {
-        return new RoundRectDrawableWithShadow(context.getResources(), backgroundColor, radius, elevation, maxElevation);
+    private RoundRectDrawableWithShadow createBackground(Context context, ColorStateList colorStateList, float f, float f2, float f3) {
+        return new RoundRectDrawableWithShadow(context.getResources(), colorStateList, f, f2, f3);
     }
 
-    @Override // androidx.cardview.widget.CardViewImpl
-    public void updatePadding(CardViewDelegate cardView) {
+    public void updatePadding(CardViewDelegate cardViewDelegate) {
         Rect rect = new Rect();
-        getShadowBackground(cardView).getMaxShadowAndCornerPadding(rect);
-        cardView.setMinWidthHeightInternal((int) Math.ceil(getMinWidth(cardView)), (int) Math.ceil(getMinHeight(cardView)));
-        cardView.setShadowPadding(rect.left, rect.top, rect.right, rect.bottom);
+        getShadowBackground(cardViewDelegate).getMaxShadowAndCornerPadding(rect);
+        cardViewDelegate.setMinWidthHeightInternal((int) Math.ceil((double) getMinWidth(cardViewDelegate)), (int) Math.ceil((double) getMinHeight(cardViewDelegate)));
+        cardViewDelegate.setShadowPadding(rect.left, rect.top, rect.right, rect.bottom);
     }
 
-    @Override // androidx.cardview.widget.CardViewImpl
-    public ColorStateList getBackgroundColor(CardViewDelegate cardView) {
-        return getShadowBackground(cardView).getColor();
+    public void onPreventCornerOverlapChanged(CardViewDelegate cardViewDelegate) {
+        getShadowBackground(cardViewDelegate).setAddPaddingForCorners(cardViewDelegate.getPreventCornerOverlap());
+        updatePadding(cardViewDelegate);
     }
 
-    @Override // androidx.cardview.widget.CardViewImpl
-    public void setRadius(CardViewDelegate cardView, float radius) {
-        getShadowBackground(cardView).setCornerRadius(radius);
-        updatePadding(cardView);
+    public void setBackgroundColor(CardViewDelegate cardViewDelegate, ColorStateList colorStateList) {
+        getShadowBackground(cardViewDelegate).setColor(colorStateList);
     }
 
-    @Override // androidx.cardview.widget.CardViewImpl
-    public float getRadius(CardViewDelegate cardView) {
-        return getShadowBackground(cardView).getCornerRadius();
+    public ColorStateList getBackgroundColor(CardViewDelegate cardViewDelegate) {
+        return getShadowBackground(cardViewDelegate).getColor();
     }
 
-    @Override // androidx.cardview.widget.CardViewImpl
-    public float getElevation(CardViewDelegate cardView) {
-        return getShadowBackground(cardView).getShadowSize();
+    public void setRadius(CardViewDelegate cardViewDelegate, float f) {
+        getShadowBackground(cardViewDelegate).setCornerRadius(f);
+        updatePadding(cardViewDelegate);
     }
 
-    @Override // androidx.cardview.widget.CardViewImpl
-    public float getMaxElevation(CardViewDelegate cardView) {
-        return getShadowBackground(cardView).getMaxShadowSize();
+    public float getRadius(CardViewDelegate cardViewDelegate) {
+        return getShadowBackground(cardViewDelegate).getCornerRadius();
     }
 
-    @Override // androidx.cardview.widget.CardViewImpl
-    public float getMinWidth(CardViewDelegate cardView) {
-        return getShadowBackground(cardView).getMinWidth();
+    public void setElevation(CardViewDelegate cardViewDelegate, float f) {
+        getShadowBackground(cardViewDelegate).setShadowSize(f);
     }
 
-    @Override // androidx.cardview.widget.CardViewImpl
-    public float getMinHeight(CardViewDelegate cardView) {
-        return getShadowBackground(cardView).getMinHeight();
+    public float getElevation(CardViewDelegate cardViewDelegate) {
+        return getShadowBackground(cardViewDelegate).getShadowSize();
     }
 
-    private RoundRectDrawableWithShadow getShadowBackground(CardViewDelegate cardView) {
-        return (RoundRectDrawableWithShadow) cardView.getCardBackground();
+    public void setMaxElevation(CardViewDelegate cardViewDelegate, float f) {
+        getShadowBackground(cardViewDelegate).setMaxShadowSize(f);
+        updatePadding(cardViewDelegate);
+    }
+
+    public float getMaxElevation(CardViewDelegate cardViewDelegate) {
+        return getShadowBackground(cardViewDelegate).getMaxShadowSize();
+    }
+
+    public float getMinWidth(CardViewDelegate cardViewDelegate) {
+        return getShadowBackground(cardViewDelegate).getMinWidth();
+    }
+
+    public float getMinHeight(CardViewDelegate cardViewDelegate) {
+        return getShadowBackground(cardViewDelegate).getMinHeight();
+    }
+
+    private RoundRectDrawableWithShadow getShadowBackground(CardViewDelegate cardViewDelegate) {
+        return (RoundRectDrawableWithShadow) cardViewDelegate.getCardBackground();
     }
 }

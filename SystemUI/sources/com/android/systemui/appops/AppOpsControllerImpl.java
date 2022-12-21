@@ -12,46 +12,33 @@ import android.os.Looper;
 import android.os.UserHandle;
 import android.permission.PermissionManager;
 import android.util.ArraySet;
-import android.util.Log;
 import android.util.SparseArray;
-import androidx.constraintlayout.widget.R$styleable;
-import com.android.internal.annotations.GuardedBy;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.Dumpable;
 import com.android.systemui.appops.AppOpsController;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.statusbar.policy.IndividualSensorPrivacyController;
 import com.android.systemui.util.Assert;
 import com.android.systemui.util.time.SystemClock;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsController, AppOpsManager.OnOpActiveChangedListener, AppOpsManager.OnOpNotedListener, IndividualSensorPrivacyController.Callback, Dumpable {
-    protected static final int[] OPS = {42, 26, R$styleable.Constraint_layout_goneMarginRight, 24, 27, 100, 0, 1};
+    private static final boolean DEBUG = false;
+    private static final long NOTED_OP_TIME_DELAY_MS = 5000;
+    protected static final int[] OPS = {42, 26, 101, 24, 27, 120, 100, 0, 1};
+    private static final String TAG = "AppOpsControllerImpl";
+    /* access modifiers changed from: private */
+    public final List<AppOpItem> mActiveItems = new ArrayList();
     private final AppOpsManager mAppOps;
     private final AudioManager mAudioManager;
-    private H mBGHandler;
-    private boolean mCameraDisabled;
-    private final SystemClock mClock;
-    private final Context mContext;
-    private final BroadcastDispatcher mDispatcher;
-    private boolean mListening;
-    private boolean mMicMuted;
-    private final IndividualSensorPrivacyController mSensorPrivacyController;
-    private final List<AppOpsController.Callback> mCallbacks = new ArrayList();
-    private final SparseArray<Set<AppOpsController.Callback>> mCallbacksByCode = new SparseArray<>();
-    @GuardedBy({"mActiveItems"})
-    private final List<AppOpItem> mActiveItems = new ArrayList();
-    @GuardedBy({"mNotedItems"})
-    private final List<AppOpItem> mNotedItems = new ArrayList();
-    @GuardedBy({"mActiveItems"})
-    private final SparseArray<ArrayList<AudioRecordingConfiguration>> mRecordingsByUid = new SparseArray<>();
-    private AudioManager.AudioRecordingCallback mAudioRecordingCallback = new AudioManager.AudioRecordingCallback() { // from class: com.android.systemui.appops.AppOpsControllerImpl.1
-        @Override // android.media.AudioManager.AudioRecordingCallback
+    private AudioManager.AudioRecordingCallback mAudioRecordingCallback = new AudioManager.AudioRecordingCallback() {
         public void onRecordingConfigChanged(List<AudioRecordingConfiguration> list) {
             synchronized (AppOpsControllerImpl.this.mActiveItems) {
                 AppOpsControllerImpl.this.mRecordingsByUid.clear();
@@ -69,23 +56,36 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
             AppOpsControllerImpl.this.updateSensorDisabledStatus();
         }
     };
+    private C1942H mBGHandler;
+    private final List<AppOpsController.Callback> mCallbacks = new ArrayList();
+    private final SparseArray<Set<AppOpsController.Callback>> mCallbacksByCode = new SparseArray<>();
+    private boolean mCameraDisabled;
+    private final SystemClock mClock;
+    private final Context mContext;
+    private final BroadcastDispatcher mDispatcher;
+    private boolean mListening;
+    private boolean mMicMuted;
+    private final List<AppOpItem> mNotedItems = new ArrayList();
+    /* access modifiers changed from: private */
+    public final SparseArray<ArrayList<AudioRecordingConfiguration>> mRecordingsByUid = new SparseArray<>();
+    private final IndividualSensorPrivacyController mSensorPrivacyController;
 
     private boolean isOpCamera(int i) {
         return i == 26 || i == 101;
     }
 
     private boolean isOpMicrophone(int i) {
-        return i == 27 || i == 100;
+        return i == 27 || i == 100 || i == 120;
     }
 
-    public AppOpsControllerImpl(Context context, Looper looper, DumpManager dumpManager, AudioManager audioManager, IndividualSensorPrivacyController individualSensorPrivacyController, BroadcastDispatcher broadcastDispatcher, SystemClock systemClock) {
+    @Inject
+    public AppOpsControllerImpl(Context context, @Background Looper looper, DumpManager dumpManager, AudioManager audioManager, IndividualSensorPrivacyController individualSensorPrivacyController, BroadcastDispatcher broadcastDispatcher, SystemClock systemClock) {
         this.mDispatcher = broadcastDispatcher;
         this.mAppOps = (AppOpsManager) context.getSystemService("appops");
-        this.mBGHandler = new H(looper);
-        int length = OPS.length;
+        this.mBGHandler = new C1942H(looper);
         boolean z = false;
-        for (int i = 0; i < length; i++) {
-            this.mCallbacksByCode.put(OPS[i], new ArraySet());
+        for (int put : OPS) {
+            this.mCallbacksByCode.put(put, new ArraySet());
         }
         this.mAudioManager = audioManager;
         this.mSensorPrivacyController = individualSensorPrivacyController;
@@ -93,16 +93,16 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         this.mCameraDisabled = individualSensorPrivacyController.isSensorBlocked(2);
         this.mContext = context;
         this.mClock = systemClock;
-        dumpManager.registerDumpable("AppOpsControllerImpl", this);
+        dumpManager.registerDumpable(TAG, this);
     }
 
-    @VisibleForTesting
-    protected void setBGHandler(H h) {
+    /* access modifiers changed from: protected */
+    public void setBGHandler(C1942H h) {
         this.mBGHandler = h;
     }
 
-    @VisibleForTesting
-    protected void setListening(boolean z) {
+    /* access modifiers changed from: protected */
+    public void setListening(boolean z) {
         this.mListening = z;
         if (z) {
             AppOpsManager appOpsManager = this.mAppOps;
@@ -117,12 +117,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
             }
             this.mMicMuted = z2;
             this.mCameraDisabled = this.mSensorPrivacyController.isSensorBlocked(2);
-            this.mBGHandler.post(new Runnable() { // from class: com.android.systemui.appops.AppOpsControllerImpl$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    AppOpsControllerImpl.this.lambda$setListening$0();
-                }
-            });
+            this.mBGHandler.post(new AppOpsControllerImpl$$ExternalSyntheticLambda1(this));
             this.mDispatcher.registerReceiverWithHandler(this, new IntentFilter("android.media.action.MICROPHONE_MUTE_CHANGED"), this.mBGHandler);
             return;
         }
@@ -130,7 +125,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         this.mAppOps.stopWatchingNoted(this);
         this.mAudioManager.unregisterAudioRecordingCallback(this.mAudioRecordingCallback);
         this.mSensorPrivacyController.removeCallback(this);
-        this.mBGHandler.removeCallbacksAndMessages(null);
+        this.mBGHandler.removeCallbacksAndMessages((Object) null);
         this.mDispatcher.unregisterReceiver(this);
         synchronized (this.mActiveItems) {
             this.mActiveItems.clear();
@@ -141,12 +136,12 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setListening$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setListening$0$com-android-systemui-appops-AppOpsControllerImpl */
+    public /* synthetic */ void mo30325x442deb4b() {
         this.mAudioRecordingCallback.onRecordingConfigChanged(this.mAudioManager.getActiveRecordingConfigurations());
     }
 
-    @Override // com.android.systemui.appops.AppOpsController
     public void addCallback(int[] iArr, AppOpsController.Callback callback) {
         int length = iArr.length;
         boolean z = false;
@@ -154,8 +149,6 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
             if (this.mCallbacksByCode.contains(iArr[i])) {
                 this.mCallbacksByCode.get(iArr[i]).add(callback);
                 z = true;
-            } else {
-                Log.wtf("AppOpsControllerImpl", "APP_OP " + iArr[i] + " not supported");
             }
         }
         if (z) {
@@ -166,7 +159,6 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         }
     }
 
-    @Override // com.android.systemui.appops.AppOpsController
     public void removeCallback(int[] iArr, AppOpsController.Callback callback) {
         int length = iArr.length;
         for (int i = 0; i < length; i++) {
@@ -174,7 +166,7 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
                 this.mCallbacksByCode.get(iArr[i]).remove(callback);
             }
         }
-        this.mCallbacks.remove(callback);
+        this.mCallbacks.remove((Object) callback);
         if (this.mCallbacks.isEmpty()) {
             setListening(false);
         }
@@ -191,51 +183,143 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         return null;
     }
 
-    private boolean updateActives(int i, int i2, String str, boolean z) {
-        synchronized (this.mActiveItems) {
-            AppOpItem appOpItemLocked = getAppOpItemLocked(this.mActiveItems, i, i2, str);
-            boolean z2 = true;
-            if (appOpItemLocked != null || !z) {
-                if (appOpItemLocked == null || z) {
-                    return false;
-                }
-                this.mActiveItems.remove(appOpItemLocked);
-                Log.w("AppOpsControllerImpl", "Removed item: " + appOpItemLocked.toString());
-                return true;
-            }
-            AppOpItem appOpItem = new AppOpItem(i, i2, str, this.mClock.elapsedRealtime());
-            if (isOpMicrophone(i)) {
-                appOpItem.setDisabled(isAnyRecordingPausedLocked(i2));
-            } else if (isOpCamera(i)) {
-                appOpItem.setDisabled(this.mCameraDisabled);
-            }
-            this.mActiveItems.add(appOpItem);
-            Log.w("AppOpsControllerImpl", "Added item: " + appOpItem.toString());
-            if (appOpItem.isDisabled()) {
-                z2 = false;
-            }
-            return z2;
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0045, code lost:
+        return r2;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:24:0x0052, code lost:
+        return false;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private boolean updateActives(int r11, int r12, java.lang.String r13, boolean r14) {
+        /*
+            r10 = this;
+            java.util.List<com.android.systemui.appops.AppOpItem> r0 = r10.mActiveItems
+            monitor-enter(r0)
+            java.util.List<com.android.systemui.appops.AppOpItem> r1 = r10.mActiveItems     // Catch:{ all -> 0x0053 }
+            com.android.systemui.appops.AppOpItem r1 = r10.getAppOpItemLocked(r1, r11, r12, r13)     // Catch:{ all -> 0x0053 }
+            r2 = 1
+            r3 = 0
+            if (r1 != 0) goto L_0x0046
+            if (r14 == 0) goto L_0x0046
+            com.android.systemui.appops.AppOpItem r14 = new com.android.systemui.appops.AppOpItem     // Catch:{ all -> 0x0053 }
+            com.android.systemui.util.time.SystemClock r1 = r10.mClock     // Catch:{ all -> 0x0053 }
+            long r8 = r1.elapsedRealtime()     // Catch:{ all -> 0x0053 }
+            r4 = r14
+            r5 = r11
+            r6 = r12
+            r7 = r13
+            r4.<init>(r5, r6, r7, r8)     // Catch:{ all -> 0x0053 }
+            boolean r13 = r10.isOpMicrophone(r11)     // Catch:{ all -> 0x0053 }
+            if (r13 == 0) goto L_0x002c
+            boolean r11 = r10.isAnyRecordingPausedLocked(r12)     // Catch:{ all -> 0x0053 }
+            r14.setDisabled(r11)     // Catch:{ all -> 0x0053 }
+            goto L_0x0037
+        L_0x002c:
+            boolean r11 = r10.isOpCamera(r11)     // Catch:{ all -> 0x0053 }
+            if (r11 == 0) goto L_0x0037
+            boolean r11 = r10.mCameraDisabled     // Catch:{ all -> 0x0053 }
+            r14.setDisabled(r11)     // Catch:{ all -> 0x0053 }
+        L_0x0037:
+            java.util.List<com.android.systemui.appops.AppOpItem> r10 = r10.mActiveItems     // Catch:{ all -> 0x0053 }
+            r10.add(r14)     // Catch:{ all -> 0x0053 }
+            boolean r10 = r14.isDisabled()     // Catch:{ all -> 0x0053 }
+            if (r10 != 0) goto L_0x0043
+            goto L_0x0044
+        L_0x0043:
+            r2 = r3
+        L_0x0044:
+            monitor-exit(r0)     // Catch:{ all -> 0x0053 }
+            return r2
+        L_0x0046:
+            if (r1 == 0) goto L_0x0051
+            if (r14 != 0) goto L_0x0051
+            java.util.List<com.android.systemui.appops.AppOpItem> r10 = r10.mActiveItems     // Catch:{ all -> 0x0053 }
+            r10.remove((java.lang.Object) r1)     // Catch:{ all -> 0x0053 }
+            monitor-exit(r0)     // Catch:{ all -> 0x0053 }
+            return r2
+        L_0x0051:
+            monitor-exit(r0)     // Catch:{ all -> 0x0053 }
+            return r3
+        L_0x0053:
+            r10 = move-exception
+            monitor-exit(r0)     // Catch:{ all -> 0x0053 }
+            throw r10
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.appops.AppOpsControllerImpl.updateActives(int, int, java.lang.String, boolean):boolean");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void removeNoted(int i, int i2, String str) {
-        boolean z;
-        synchronized (this.mNotedItems) {
-            AppOpItem appOpItemLocked = getAppOpItemLocked(this.mNotedItems, i, i2, str);
-            if (appOpItemLocked == null) {
-                return;
-            }
-            this.mNotedItems.remove(appOpItemLocked);
-            Log.w("AppOpsControllerImpl", "Removed item: " + appOpItemLocked.toString());
-            synchronized (this.mActiveItems) {
-                z = getAppOpItemLocked(this.mActiveItems, i, i2, str) != null;
-            }
-            if (z) {
-                return;
-            }
-            lambda$notifySuscribers$1(i, i2, str, false);
-        }
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Code restructure failed: missing block: B:10:0x0015, code lost:
+        monitor-enter(r1);
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:13:0x001d, code lost:
+        if (getAppOpItemLocked(r3.mActiveItems, r4, r5, r6) == null) goto L_0x0021;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:14:0x001f, code lost:
+        r0 = true;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:15:0x0021, code lost:
+        r0 = false;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:16:0x0022, code lost:
+        monitor-exit(r1);
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0023, code lost:
+        if (r0 != false) goto L_?;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:18:0x0025, code lost:
+        notifySuscribersWorker(r4, r5, r6, false);
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:33:?, code lost:
+        return;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:34:?, code lost:
+        return;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x0013, code lost:
+        r1 = r3.mActiveItems;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void removeNoted(int r4, int r5, java.lang.String r6) {
+        /*
+            r3 = this;
+            java.util.List<com.android.systemui.appops.AppOpItem> r0 = r3.mNotedItems
+            monitor-enter(r0)
+            java.util.List<com.android.systemui.appops.AppOpItem> r1 = r3.mNotedItems     // Catch:{ all -> 0x002c }
+            com.android.systemui.appops.AppOpItem r1 = r3.getAppOpItemLocked(r1, r4, r5, r6)     // Catch:{ all -> 0x002c }
+            if (r1 != 0) goto L_0x000d
+            monitor-exit(r0)     // Catch:{ all -> 0x002c }
+            return
+        L_0x000d:
+            java.util.List<com.android.systemui.appops.AppOpItem> r2 = r3.mNotedItems     // Catch:{ all -> 0x002c }
+            r2.remove((java.lang.Object) r1)     // Catch:{ all -> 0x002c }
+            monitor-exit(r0)     // Catch:{ all -> 0x002c }
+            java.util.List<com.android.systemui.appops.AppOpItem> r1 = r3.mActiveItems
+            monitor-enter(r1)
+            java.util.List<com.android.systemui.appops.AppOpItem> r0 = r3.mActiveItems     // Catch:{ all -> 0x0029 }
+            com.android.systemui.appops.AppOpItem r0 = r3.getAppOpItemLocked(r0, r4, r5, r6)     // Catch:{ all -> 0x0029 }
+            r2 = 0
+            if (r0 == 0) goto L_0x0021
+            r0 = 1
+            goto L_0x0022
+        L_0x0021:
+            r0 = r2
+        L_0x0022:
+            monitor-exit(r1)     // Catch:{ all -> 0x0029 }
+            if (r0 != 0) goto L_0x0028
+            r3.mo30323x425823ed(r4, r5, r6, r2)
+        L_0x0028:
+            return
+        L_0x0029:
+            r3 = move-exception
+            monitor-exit(r1)     // Catch:{ all -> 0x0029 }
+            throw r3
+        L_0x002c:
+            r3 = move-exception
+            monitor-exit(r0)     // Catch:{ all -> 0x002c }
+            throw r3
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.appops.AppOpsControllerImpl.removeNoted(int, int, java.lang.String):void");
     }
 
     private boolean addNoted(int i, int i2, String str) {
@@ -246,14 +330,13 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
             if (appOpItemLocked == null) {
                 appOpItemLocked = new AppOpItem(i, i2, str, this.mClock.elapsedRealtime());
                 this.mNotedItems.add(appOpItemLocked);
-                Log.w("AppOpsControllerImpl", "Added item: " + appOpItemLocked.toString());
                 z = true;
             } else {
                 z = false;
             }
         }
         this.mBGHandler.removeCallbacksAndMessages(appOpItemLocked);
-        this.mBGHandler.scheduleRemoval(appOpItemLocked, 5000L);
+        this.mBGHandler.scheduleRemoval(appOpItemLocked, 5000);
         return z;
     }
 
@@ -261,12 +344,10 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         return PermissionManager.shouldShowPackageForIndicatorCached(this.mContext, str);
     }
 
-    @Override // com.android.systemui.appops.AppOpsController
     public List<AppOpItem> getActiveAppOps() {
         return getActiveAppOps(false);
     }
 
-    @Override // com.android.systemui.appops.AppOpsController
     public List<AppOpItem> getActiveAppOps(boolean z) {
         return getActiveAppOpsForUser(-1, z);
     }
@@ -296,65 +377,50 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         return arrayList;
     }
 
-    private void notifySuscribers(final int i, final int i2, final String str, final boolean z) {
-        this.mBGHandler.post(new Runnable() { // from class: com.android.systemui.appops.AppOpsControllerImpl$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                AppOpsControllerImpl.this.lambda$notifySuscribers$1(i, i2, str, z);
-            }
-        });
+    private void notifySuscribers(int i, int i2, String str, boolean z) {
+        this.mBGHandler.post(new AppOpsControllerImpl$$ExternalSyntheticLambda2(this, i, i2, str, z));
     }
 
-    @Override // android.app.AppOpsManager.OnOpActiveChangedListener
     public void onOpActiveChanged(String str, int i, String str2, boolean z) {
-        onOpActiveChanged(str, i, str2, null, z, 0, -1);
+        onOpActiveChanged(str, i, str2, (String) null, z, 0, -1);
     }
 
     public void onOpActiveChanged(String str, int i, String str2, String str3, boolean z, int i2, int i3) {
+        boolean z2;
         int strOpToOp = AppOpsManager.strOpToOp(str);
-        boolean z2 = false;
-        Log.w("AppOpsControllerImpl", String.format("onActiveChanged(%d,%d,%s,%s,%d,%d)", Integer.valueOf(strOpToOp), Integer.valueOf(i), str2, Boolean.toString(z), Integer.valueOf(i3), Integer.valueOf(i2)));
-        if ((i3 == -1 || i2 == 0 || (i2 & 1) != 0 || (i2 & 8) != 0) && updateActives(strOpToOp, i, str2, z)) {
+        if ((!z || i3 == -1 || i2 == 0 || (i2 & 1) != 0 || (i2 & 8) != 0) && updateActives(strOpToOp, i, str2, z)) {
             synchronized (this.mNotedItems) {
-                if (getAppOpItemLocked(this.mNotedItems, strOpToOp, i, str2) != null) {
-                    z2 = true;
-                }
+                z2 = getAppOpItemLocked(this.mNotedItems, strOpToOp, i, str2) != null;
             }
-            if (z2) {
-                return;
+            if (!z2) {
+                notifySuscribers(strOpToOp, i, str2, z);
             }
-            notifySuscribers(strOpToOp, i, str2, z);
         }
     }
 
     public void onOpNoted(int i, int i2, String str, String str2, int i3, int i4) {
         boolean z;
-        Log.w("AppOpsControllerImpl", "Noted op: " + i + " with result " + AppOpsManager.MODE_NAMES[i4] + " for package " + str);
         if (i4 == 0 && addNoted(i, i2, str)) {
             synchronized (this.mActiveItems) {
                 z = getAppOpItemLocked(this.mActiveItems, i, i2, str) != null;
             }
-            if (z) {
-                return;
+            if (!z) {
+                notifySuscribers(i, i2, str, true);
             }
-            notifySuscribers(i, i2, str, true);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     /* renamed from: notifySuscribersWorker */
-    public void lambda$notifySuscribers$1(int i, int i2, String str, boolean z) {
-        if (!this.mCallbacksByCode.contains(i) || !isUserVisible(str)) {
-            return;
-        }
-        Log.d("AppOpsControllerImpl", "Notifying of change in package " + str);
-        for (AppOpsController.Callback callback : this.mCallbacksByCode.get(i)) {
-            callback.onActiveStateChanged(i, i2, str, z);
+    public void mo30323x425823ed(int i, int i2, String str, boolean z) {
+        if (this.mCallbacksByCode.contains(i) && isUserVisible(str)) {
+            for (AppOpsController.Callback onActiveStateChanged : this.mCallbacksByCode.get(i)) {
+                onActiveStateChanged.onActiveStateChanged(i, i2, str, z);
+            }
         }
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("AppOpsController state:");
         printWriter.println("  Listening: " + this.mListening);
         printWriter.println("  Active Items:");
@@ -373,20 +439,20 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         if (this.mMicMuted) {
             return true;
         }
-        ArrayList<AudioRecordingConfiguration> arrayList = this.mRecordingsByUid.get(i);
-        if (arrayList == null) {
+        List list = this.mRecordingsByUid.get(i);
+        if (list == null) {
             return false;
         }
-        int size = arrayList.size();
+        int size = list.size();
         for (int i2 = 0; i2 < size; i2++) {
-            if (arrayList.get(i2).isClientSilenced()) {
+            if (((AudioRecordingConfiguration) list.get(i2)).isClientSilenced()) {
                 return true;
             }
         }
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateSensorDisabledStatus() {
         boolean z;
         synchronized (this.mActiveItems) {
@@ -406,7 +472,6 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         }
     }
 
-    @Override // android.content.BroadcastReceiver
     public void onReceive(Context context, Intent intent) {
         boolean z = true;
         if (!this.mAudioManager.isMicrophoneMute() && !this.mSensorPrivacyController.isSensorBlocked(1)) {
@@ -416,18 +481,13 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         updateSensorDisabledStatus();
     }
 
-    @Override // com.android.systemui.statusbar.policy.IndividualSensorPrivacyController.Callback
-    public void onSensorBlockedChanged(final int i, final boolean z) {
-        this.mBGHandler.post(new Runnable() { // from class: com.android.systemui.appops.AppOpsControllerImpl$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                AppOpsControllerImpl.this.lambda$onSensorBlockedChanged$2(i, z);
-            }
-        });
+    public void onSensorBlockedChanged(int i, boolean z) {
+        this.mBGHandler.post(new AppOpsControllerImpl$$ExternalSyntheticLambda0(this, i, z));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onSensorBlockedChanged$2(int i, boolean z) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onSensorBlockedChanged$2$com-android-systemui-appops-AppOpsControllerImpl */
+    public /* synthetic */ void mo30324xcfa81741(int i, boolean z) {
         if (i == 2) {
             this.mCameraDisabled = z;
         } else {
@@ -442,22 +502,19 @@ public class AppOpsControllerImpl extends BroadcastReceiver implements AppOpsCon
         updateSensorDisabledStatus();
     }
 
-    @Override // com.android.systemui.appops.AppOpsController
     public boolean isMicMuted() {
         return this.mMicMuted;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public class H extends Handler {
-        H(Looper looper) {
+    /* renamed from: com.android.systemui.appops.AppOpsControllerImpl$H */
+    protected class C1942H extends Handler {
+        C1942H(Looper looper) {
             super(looper);
         }
 
         public void scheduleRemoval(final AppOpItem appOpItem, long j) {
             removeCallbacksAndMessages(appOpItem);
-            postDelayed(new Runnable() { // from class: com.android.systemui.appops.AppOpsControllerImpl.H.1
-                @Override // java.lang.Runnable
+            postDelayed(new Runnable() {
                 public void run() {
                     AppOpsControllerImpl.this.removeNoted(appOpItem.getCode(), appOpItem.getUid(), appOpItem.getPackageName());
                 }

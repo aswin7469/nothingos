@@ -2,7 +2,7 @@ package com.android.systemui.keyguard;
 
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardLifecyclesDispatcher_Factory implements Factory<KeyguardLifecyclesDispatcher> {
     private final Provider<ScreenLifecycle> screenLifecycleProvider;
     private final Provider<WakefulnessLifecycle> wakefulnessLifecycleProvider;
@@ -12,10 +12,8 @@ public final class KeyguardLifecyclesDispatcher_Factory implements Factory<Keygu
         this.wakefulnessLifecycleProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardLifecyclesDispatcher mo1933get() {
-        return newInstance(this.screenLifecycleProvider.mo1933get(), this.wakefulnessLifecycleProvider.mo1933get());
+    public KeyguardLifecyclesDispatcher get() {
+        return newInstance(this.screenLifecycleProvider.get(), this.wakefulnessLifecycleProvider.get());
     }
 
     public static KeyguardLifecyclesDispatcher_Factory create(Provider<ScreenLifecycle> provider, Provider<WakefulnessLifecycle> provider2) {

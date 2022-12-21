@@ -1,11 +1,9 @@
 package com.android.systemui.power;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class EnhancedEstimatesImpl_Factory implements Factory<EnhancedEstimatesImpl> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public EnhancedEstimatesImpl mo1933get() {
+    public EnhancedEstimatesImpl get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class EnhancedEstimatesImpl_Factory implements Factory<EnhancedEsti
         return new EnhancedEstimatesImpl();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final EnhancedEstimatesImpl_Factory INSTANCE = new EnhancedEstimatesImpl_Factory();
+        /* access modifiers changed from: private */
+        public static final EnhancedEstimatesImpl_Factory INSTANCE = new EnhancedEstimatesImpl_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

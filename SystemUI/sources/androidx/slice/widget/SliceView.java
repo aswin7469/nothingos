@@ -2,6 +2,7 @@ package androidx.slice.widget;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -17,35 +18,40 @@ import androidx.slice.SliceMetadata;
 import androidx.slice.core.SliceAction;
 import androidx.slice.core.SliceActionImpl;
 import androidx.slice.core.SliceQuery;
-import androidx.slice.view.R$attr;
-import androidx.slice.view.R$dimen;
-import androidx.slice.view.R$style;
+import androidx.slice.view.C1349R;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-/* loaded from: classes.dex */
+import java.util.Set;
+
 public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClickListener {
-    public static final Comparator<SliceAction> SLICE_ACTION_PRIORITY_COMPARATOR = new Comparator<SliceAction>() { // from class: androidx.slice.widget.SliceView.3
-        @Override // java.util.Comparator
-        public int compare(SliceAction action1, SliceAction action2) {
-            int priority = action1.getPriority();
-            int priority2 = action2.getPriority();
-            if (priority >= 0 || priority2 >= 0) {
-                if (priority < 0) {
-                    return 1;
-                }
-                if (priority2 < 0) {
-                    return -1;
-                }
-                if (priority2 < priority) {
-                    return 1;
-                }
-                return priority2 > priority ? -1 : 0;
+    public static final int MODE_LARGE = 2;
+    public static final int MODE_SHORTCUT = 3;
+    public static final int MODE_SMALL = 1;
+    private static final int REFRESH_LAST_UPDATED_IN_MILLIS = 60000;
+    public static final Comparator<SliceAction> SLICE_ACTION_PRIORITY_COMPARATOR = new Comparator<SliceAction>() {
+        public int compare(SliceAction sliceAction, SliceAction sliceAction2) {
+            int priority = sliceAction.getPriority();
+            int priority2 = sliceAction2.getPriority();
+            if (priority < 0 && priority2 < 0) {
+                return 0;
             }
-            return 0;
+            if (priority < 0) {
+                return 1;
+            }
+            if (priority2 < 0) {
+                return -1;
+            }
+            if (priority2 < priority) {
+                return 1;
+            }
+            return priority2 > priority ? -1 : 0;
         }
     };
+    private static final String TAG = "SliceView";
     private ActionRow mActionRow;
     private int mActionRowHeight;
     private List<SliceAction> mActions;
@@ -79,17 +85,24 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
     private int mTouchSlopSquared;
     private SliceViewPolicy mViewPolicy;
 
-    /* loaded from: classes.dex */
     public interface OnSliceActionListener {
-        void onSliceAction(EventInfo info, SliceItem item);
+        void onSliceAction(EventInfo eventInfo, SliceItem sliceItem);
     }
 
-    public SliceView(Context context, AttributeSet attrs) {
-        this(context, attrs, R$attr.sliceViewStyle);
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SliceMode {
     }
 
-    public SliceView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public SliceView(Context context) {
+        this(context, (AttributeSet) null);
+    }
+
+    public SliceView(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, C1349R.attr.sliceViewStyle);
+    }
+
+    public SliceView(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         this.mShowActions = false;
         this.mShowLastUpdated = true;
         this.mCurrentSliceLoggedVisible = false;
@@ -97,42 +110,65 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
         this.mShowHeaderDivider = false;
         this.mShowActionDividers = false;
         this.mThemeTintColor = -1;
-        this.mLongpressCheck = new Runnable() { // from class: androidx.slice.widget.SliceView.1
-            @Override // java.lang.Runnable
+        this.mLongpressCheck = new Runnable() {
             public void run() {
-                View.OnLongClickListener onLongClickListener;
-                SliceView sliceView = SliceView.this;
-                if (!sliceView.mPressing || (onLongClickListener = sliceView.mLongClickListener) == null) {
-                    return;
+                if (SliceView.this.mPressing && SliceView.this.mLongClickListener != null) {
+                    SliceView.this.mInLongpress = true;
+                    SliceView.this.mLongClickListener.onLongClick(SliceView.this);
+                    SliceView.this.performHapticFeedback(0);
                 }
-                sliceView.mInLongpress = true;
-                onLongClickListener.onLongClick(sliceView);
-                SliceView.this.performHapticFeedback(0);
             }
         };
-        this.mRefreshLastUpdated = new Runnable() { // from class: androidx.slice.widget.SliceView.2
-            @Override // java.lang.Runnable
+        this.mRefreshLastUpdated = new Runnable() {
             public void run() {
-                SliceMetadata sliceMetadata = SliceView.this.mSliceMetadata;
-                if (sliceMetadata != null && sliceMetadata.isExpired()) {
+                if (SliceView.this.mSliceMetadata != null && SliceView.this.mSliceMetadata.isExpired()) {
                     SliceView.this.mCurrentView.setShowLastUpdated(true);
-                    SliceView sliceView = SliceView.this;
-                    sliceView.mCurrentView.setSliceContent(sliceView.mListContent);
+                    SliceView.this.mCurrentView.setSliceContent(SliceView.this.mListContent);
                 }
-                SliceView.this.mHandler.postDelayed(this, 60000L);
+                SliceView.this.mHandler.postDelayed(this, 60000);
             }
         };
-        init(context, attrs, defStyleAttr, R$style.Widget_SliceView);
+        init(context, attributeSet, i, C1349R.style.Widget_SliceView);
     }
 
-    private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        SliceStyle sliceStyle = new SliceStyle(context, attrs, defStyleAttr, defStyleRes);
+    public SliceView(Context context, AttributeSet attributeSet, int i, int i2) {
+        super(context, attributeSet, i, i2);
+        this.mShowActions = false;
+        this.mShowLastUpdated = true;
+        this.mCurrentSliceLoggedVisible = false;
+        this.mShowTitleItems = false;
+        this.mShowHeaderDivider = false;
+        this.mShowActionDividers = false;
+        this.mThemeTintColor = -1;
+        this.mLongpressCheck = new Runnable() {
+            public void run() {
+                if (SliceView.this.mPressing && SliceView.this.mLongClickListener != null) {
+                    SliceView.this.mInLongpress = true;
+                    SliceView.this.mLongClickListener.onLongClick(SliceView.this);
+                    SliceView.this.performHapticFeedback(0);
+                }
+            }
+        };
+        this.mRefreshLastUpdated = new Runnable() {
+            public void run() {
+                if (SliceView.this.mSliceMetadata != null && SliceView.this.mSliceMetadata.isExpired()) {
+                    SliceView.this.mCurrentView.setShowLastUpdated(true);
+                    SliceView.this.mCurrentView.setSliceContent(SliceView.this.mListContent);
+                }
+                SliceView.this.mHandler.postDelayed(this, 60000);
+            }
+        };
+        init(context, attributeSet, i, i2);
+    }
+
+    private void init(Context context, AttributeSet attributeSet, int i, int i2) {
+        SliceStyle sliceStyle = new SliceStyle(context, attributeSet, i, i2);
         this.mSliceStyle = sliceStyle;
         this.mThemeTintColor = sliceStyle.getTintColor();
-        this.mShortcutSize = getContext().getResources().getDimensionPixelSize(R$dimen.abc_slice_shortcut_size);
-        this.mMinTemplateHeight = getContext().getResources().getDimensionPixelSize(R$dimen.abc_slice_row_min_height);
-        this.mLargeHeight = getResources().getDimensionPixelSize(R$dimen.abc_slice_large_height);
-        this.mActionRowHeight = getResources().getDimensionPixelSize(R$dimen.abc_slice_action_row_height);
+        this.mShortcutSize = getContext().getResources().getDimensionPixelSize(C1349R.dimen.abc_slice_shortcut_size);
+        this.mMinTemplateHeight = getContext().getResources().getDimensionPixelSize(C1349R.dimen.abc_slice_row_min_height);
+        this.mLargeHeight = getResources().getDimensionPixelSize(C1349R.dimen.abc_slice_large_height);
+        this.mActionRowHeight = getResources().getDimensionPixelSize(C1349R.dimen.abc_slice_action_row_height);
         this.mViewPolicy = new SliceViewPolicy();
         TemplateView templateView = new TemplateView(getContext());
         this.mCurrentView = templateView;
@@ -153,176 +189,265 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
         super.setOnClickListener(this);
     }
 
-    void setSliceViewPolicy(SliceViewPolicy policy) {
-        this.mViewPolicy = policy;
+    /* access modifiers changed from: package-private */
+    public void setSliceViewPolicy(SliceViewPolicy sliceViewPolicy) {
+        this.mViewPolicy = sliceViewPolicy;
     }
 
+    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0004, code lost:
+        r0 = r1.mListContent;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean isSliceViewClickable() {
-        ListContent listContent;
-        return (this.mOnClickListener == null && ((listContent = this.mListContent) == null || listContent.getShortcut(getContext()) == null)) ? false : true;
+        /*
+            r1 = this;
+            android.view.View$OnClickListener r0 = r1.mOnClickListener
+            if (r0 != 0) goto L_0x0015
+            androidx.slice.widget.ListContent r0 = r1.mListContent
+            if (r0 == 0) goto L_0x0013
+            android.content.Context r1 = r1.getContext()
+            androidx.slice.core.SliceAction r1 = r0.getShortcut(r1)
+            if (r1 == 0) goto L_0x0013
+            goto L_0x0015
+        L_0x0013:
+            r1 = 0
+            goto L_0x0016
+        L_0x0015:
+            r1 = 1
+        L_0x0016:
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.slice.widget.SliceView.isSliceViewClickable():boolean");
     }
 
-    public void setClickInfo(int[] info) {
-        this.mClickInfo = info;
+    public void setClickInfo(int[] iArr) {
+        this.mClickInfo = iArr;
     }
 
-    @Override // android.view.View.OnClickListener
-    public void onClick(View v) {
+    public void onClick(View view) {
         int[] iArr;
         ListContent listContent = this.mListContent;
-        if (listContent != null && listContent.getShortcut(getContext()) != null) {
-            try {
-                SliceActionImpl sliceActionImpl = (SliceActionImpl) this.mListContent.getShortcut(getContext());
-                SliceItem actionItem = sliceActionImpl.getActionItem();
-                if (actionItem != null && actionItem.fireActionInternal(getContext(), null)) {
-                    this.mCurrentView.setActionLoading(sliceActionImpl.getSliceItem());
-                }
-                if (actionItem == null || this.mSliceObserver == null || (iArr = this.mClickInfo) == null || iArr.length <= 1) {
-                    return;
-                }
+        if (listContent == null || listContent.getShortcut(getContext()) == null) {
+            View.OnClickListener onClickListener = this.mOnClickListener;
+            if (onClickListener != null) {
+                onClickListener.onClick(this);
+                return;
+            }
+            return;
+        }
+        try {
+            SliceActionImpl sliceActionImpl = (SliceActionImpl) this.mListContent.getShortcut(getContext());
+            SliceItem actionItem = sliceActionImpl.getActionItem();
+            if (actionItem != null && actionItem.fireActionInternal(getContext(), (Intent) null)) {
+                this.mCurrentView.setActionLoading(sliceActionImpl.getSliceItem());
+            }
+            if (actionItem != null && this.mSliceObserver != null && (iArr = this.mClickInfo) != null && iArr.length > 1) {
                 int mode = getMode();
                 int[] iArr2 = this.mClickInfo;
                 EventInfo eventInfo = new EventInfo(mode, 3, iArr2[0], iArr2[1]);
                 this.mSliceObserver.onSliceAction(eventInfo, sliceActionImpl.getSliceItem());
                 logSliceMetricsOnTouch(sliceActionImpl.getSliceItem(), eventInfo);
-                return;
-            } catch (PendingIntent.CanceledException e) {
-                Log.e("SliceView", "PendingIntent for slice cannot be sent", e);
-                return;
             }
+        } catch (PendingIntent.CanceledException e) {
+            Log.e(TAG, "PendingIntent for slice cannot be sent", e);
         }
-        View.OnClickListener onClickListener = this.mOnClickListener;
-        if (onClickListener == null) {
-            return;
-        }
-        onClickListener.onClick(this);
     }
 
-    @Override // android.view.View
-    public void setOnClickListener(View.OnClickListener listener) {
-        this.mOnClickListener = listener;
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        this.mOnClickListener = onClickListener;
     }
 
-    @Override // android.view.View
-    public void setOnLongClickListener(View.OnLongClickListener listener) {
-        super.setOnLongClickListener(listener);
-        this.mLongClickListener = listener;
+    public void setOnLongClickListener(View.OnLongClickListener onLongClickListener) {
+        super.setOnLongClickListener(onLongClickListener);
+        this.mLongClickListener = onLongClickListener;
     }
 
-    @Override // android.view.ViewGroup
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        return (this.mLongClickListener != null && handleTouchForLongpress(ev)) || super.onInterceptTouchEvent(ev);
+    public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
+        return (this.mLongClickListener != null && handleTouchForLongpress(motionEvent)) || super.onInterceptTouchEvent(motionEvent);
     }
 
-    @Override // android.view.View
-    public boolean onTouchEvent(MotionEvent ev) {
-        return (this.mLongClickListener != null && handleTouchForLongpress(ev)) || super.onTouchEvent(ev);
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        return (this.mLongClickListener != null && handleTouchForLongpress(motionEvent)) || super.onTouchEvent(motionEvent);
     }
 
-    private boolean handleTouchForLongpress(MotionEvent ev) {
-        int actionMasked = ev.getActionMasked();
-        if (actionMasked == 0) {
-            this.mHandler.removeCallbacks(this.mLongpressCheck);
-            this.mDownX = (int) ev.getRawX();
-            this.mDownY = (int) ev.getRawY();
-            this.mPressing = true;
-            this.mInLongpress = false;
-            this.mHandler.postDelayed(this.mLongpressCheck, ViewConfiguration.getLongPressTimeout());
-            return false;
-        }
-        if (actionMasked != 1) {
-            if (actionMasked == 2) {
-                int rawX = ((int) ev.getRawX()) - this.mDownX;
-                int rawY = ((int) ev.getRawY()) - this.mDownY;
-                if ((rawX * rawX) + (rawY * rawY) > this.mTouchSlopSquared) {
-                    this.mPressing = false;
-                    this.mHandler.removeCallbacks(this.mLongpressCheck);
-                }
-                return this.mInLongpress;
-            } else if (actionMasked != 3) {
-                return false;
-            }
-        }
-        boolean z = this.mInLongpress;
-        this.mPressing = false;
-        this.mInLongpress = false;
-        this.mHandler.removeCallbacks(this.mLongpressCheck);
-        return z;
-    }
-
-    protected void configureViewPolicy(int maxHeight) {
-        ListContent listContent = this.mListContent;
-        if (listContent == null || !listContent.isValid() || getMode() == 3) {
-            return;
-        }
-        if (maxHeight > 0 && maxHeight < this.mSliceStyle.getRowMaxHeight()) {
-            int i = this.mMinTemplateHeight;
-            if (maxHeight <= i) {
-                maxHeight = i;
-            }
-            this.mViewPolicy.setMaxSmallHeight(maxHeight);
-        } else {
-            this.mViewPolicy.setMaxSmallHeight(0);
-        }
-        this.mViewPolicy.setMaxHeight(maxHeight);
-    }
-
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x0089, code lost:
-        if (r2 >= (r9 + r0)) goto L21;
-     */
-    @Override // android.view.View
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int i;
-        int size = View.MeasureSpec.getSize(widthMeasureSpec);
-        if (3 == getMode()) {
-            size = this.mShortcutSize + getPaddingLeft() + getPaddingRight();
-        }
-        int i2 = 0;
-        int i3 = this.mActionRow.getVisibility() != 8 ? this.mActionRowHeight : 0;
-        int size2 = View.MeasureSpec.getSize(heightMeasureSpec);
-        int mode = View.MeasureSpec.getMode(heightMeasureSpec);
-        ViewGroup.LayoutParams layoutParams = getLayoutParams();
-        configureViewPolicy(((layoutParams == null || layoutParams.height != -2) && mode != 0) ? size2 : -1);
-        int paddingTop = (size2 - getPaddingTop()) - getPaddingBottom();
-        if (mode != 1073741824) {
-            ListContent listContent = this.mListContent;
-            if (listContent == null || !listContent.isValid()) {
-                paddingTop = i3;
-            } else {
-                if (getMode() == 3) {
-                    i = this.mShortcutSize;
-                } else {
-                    int height = this.mListContent.getHeight(this.mSliceStyle, this.mViewPolicy) + i3;
-                    if (paddingTop > height || mode == 0) {
-                        paddingTop = height;
-                    } else if (!this.mSliceStyle.getExpandToAvailableHeight()) {
-                        if (getMode() == 2) {
-                            i = this.mLargeHeight;
-                        }
-                        int i4 = this.mMinTemplateHeight;
-                        if (paddingTop <= i4) {
-                            paddingTop = i4;
-                        }
+    private boolean handleTouchForLongpress(MotionEvent motionEvent) {
+        int actionMasked = motionEvent.getActionMasked();
+        if (actionMasked != 0) {
+            if (actionMasked != 1) {
+                if (actionMasked == 2) {
+                    int rawX = ((int) motionEvent.getRawX()) - this.mDownX;
+                    int rawY = ((int) motionEvent.getRawY()) - this.mDownY;
+                    if ((rawX * rawX) + (rawY * rawY) > this.mTouchSlopSquared) {
+                        this.mPressing = false;
+                        this.mHandler.removeCallbacks(this.mLongpressCheck);
                     }
+                    return this.mInLongpress;
+                } else if (actionMasked != 3) {
+                    return false;
                 }
-                paddingTop = i + i3;
             }
+            boolean z = this.mInLongpress;
+            this.mPressing = false;
+            this.mInLongpress = false;
+            this.mHandler.removeCallbacks(this.mLongpressCheck);
+            return z;
         }
-        int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(size, 1073741824);
-        this.mActionRow.measure(makeMeasureSpec, View.MeasureSpec.makeMeasureSpec(i3 > 0 ? getPaddingBottom() + i3 : 0, 1073741824));
-        int paddingTop2 = paddingTop + getPaddingTop();
-        if (i3 <= 0) {
-            i2 = getPaddingBottom();
-        }
-        this.mCurrentView.measure(makeMeasureSpec, View.MeasureSpec.makeMeasureSpec(paddingTop2 + i2, 1073741824));
-        setMeasuredDimension(size, this.mCurrentView.getMeasuredHeight() + this.mActionRow.getMeasuredHeight());
+        this.mHandler.removeCallbacks(this.mLongpressCheck);
+        this.mDownX = (int) motionEvent.getRawX();
+        this.mDownY = (int) motionEvent.getRawY();
+        this.mPressing = true;
+        this.mInLongpress = false;
+        this.mHandler.postDelayed(this.mLongpressCheck, (long) ViewConfiguration.getLongPressTimeout());
+        return false;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+    /* access modifiers changed from: protected */
+    public void configureViewPolicy(int i) {
+        ListContent listContent = this.mListContent;
+        if (listContent != null && listContent.isValid() && getMode() != 3) {
+            if (i <= 0 || i >= this.mSliceStyle.getRowMaxHeight()) {
+                this.mViewPolicy.setMaxSmallHeight(0);
+            } else {
+                int i2 = this.mMinTemplateHeight;
+                if (i <= i2) {
+                    i = i2;
+                }
+                this.mViewPolicy.setMaxSmallHeight(i);
+            }
+            this.mViewPolicy.setMaxHeight(i);
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    /* JADX WARNING: Code restructure failed: missing block: B:32:0x0089, code lost:
+        if (r2 >= (r9 + r0)) goto L_0x0062;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void onMeasure(int r8, int r9) {
+        /*
+            r7 = this;
+            int r8 = android.view.View.MeasureSpec.getSize(r8)
+            int r0 = r7.getMode()
+            r1 = 3
+            if (r1 != r0) goto L_0x0017
+            int r8 = r7.mShortcutSize
+            int r0 = r7.getPaddingLeft()
+            int r8 = r8 + r0
+            int r0 = r7.getPaddingRight()
+            int r8 = r8 + r0
+        L_0x0017:
+            androidx.slice.widget.ActionRow r0 = r7.mActionRow
+            int r0 = r0.getVisibility()
+            r2 = 8
+            r3 = 0
+            if (r0 == r2) goto L_0x0025
+            int r0 = r7.mActionRowHeight
+            goto L_0x0026
+        L_0x0025:
+            r0 = r3
+        L_0x0026:
+            int r2 = android.view.View.MeasureSpec.getSize(r9)
+            int r9 = android.view.View.MeasureSpec.getMode(r9)
+            android.view.ViewGroup$LayoutParams r4 = r7.getLayoutParams()
+            if (r4 == 0) goto L_0x0039
+            int r4 = r4.height
+            r5 = -2
+            if (r4 == r5) goto L_0x003b
+        L_0x0039:
+            if (r9 != 0) goto L_0x003d
+        L_0x003b:
+            r4 = -1
+            goto L_0x003e
+        L_0x003d:
+            r4 = r2
+        L_0x003e:
+            r7.configureViewPolicy(r4)
+            int r4 = r7.getPaddingTop()
+            int r2 = r2 - r4
+            int r4 = r7.getPaddingBottom()
+            int r2 = r2 - r4
+            r4 = 1073741824(0x40000000, float:2.0)
+            if (r9 == r4) goto L_0x0095
+            androidx.slice.widget.ListContent r5 = r7.mListContent
+            if (r5 == 0) goto L_0x0094
+            boolean r5 = r5.isValid()
+            if (r5 != 0) goto L_0x005a
+            goto L_0x0094
+        L_0x005a:
+            int r5 = r7.getMode()
+            if (r5 != r1) goto L_0x0065
+            int r9 = r7.mShortcutSize
+        L_0x0062:
+            int r2 = r9 + r0
+            goto L_0x0095
+        L_0x0065:
+            androidx.slice.widget.ListContent r1 = r7.mListContent
+            androidx.slice.widget.SliceStyle r5 = r7.mSliceStyle
+            androidx.slice.widget.SliceViewPolicy r6 = r7.mViewPolicy
+            int r1 = r1.getHeight(r5, r6)
+            int r1 = r1 + r0
+            if (r2 > r1) goto L_0x0092
+            if (r9 != 0) goto L_0x0075
+            goto L_0x0092
+        L_0x0075:
+            androidx.slice.widget.SliceStyle r9 = r7.mSliceStyle
+            boolean r9 = r9.getExpandToAvailableHeight()
+            if (r9 == 0) goto L_0x007e
+            goto L_0x0095
+        L_0x007e:
+            int r9 = r7.getMode()
+            r1 = 2
+            if (r9 != r1) goto L_0x008c
+            int r9 = r7.mLargeHeight
+            int r1 = r9 + r0
+            if (r2 < r1) goto L_0x008c
+            goto L_0x0062
+        L_0x008c:
+            int r9 = r7.mMinTemplateHeight
+            if (r2 > r9) goto L_0x0095
+            r2 = r9
+            goto L_0x0095
+        L_0x0092:
+            r2 = r1
+            goto L_0x0095
+        L_0x0094:
+            r2 = r0
+        L_0x0095:
+            int r9 = android.view.View.MeasureSpec.makeMeasureSpec(r8, r4)
+            if (r0 <= 0) goto L_0x00a1
+            int r1 = r7.getPaddingBottom()
+            int r1 = r1 + r0
+            goto L_0x00a2
+        L_0x00a1:
+            r1 = r3
+        L_0x00a2:
+            androidx.slice.widget.ActionRow r5 = r7.mActionRow
+            int r1 = android.view.View.MeasureSpec.makeMeasureSpec(r1, r4)
+            r5.measure(r9, r1)
+            int r1 = r7.getPaddingTop()
+            int r2 = r2 + r1
+            if (r0 <= 0) goto L_0x00b3
+            goto L_0x00b7
+        L_0x00b3:
+            int r3 = r7.getPaddingBottom()
+        L_0x00b7:
+            int r2 = r2 + r3
+            androidx.slice.widget.SliceChildView r0 = r7.mCurrentView
+            int r1 = android.view.View.MeasureSpec.makeMeasureSpec(r2, r4)
+            r0.measure(r9, r1)
+            androidx.slice.widget.SliceChildView r9 = r7.mCurrentView
+            int r9 = r9.getMeasuredHeight()
+            androidx.slice.widget.ActionRow r0 = r7.mActionRow
+            int r0 = r0.getMeasuredHeight()
+            int r9 = r9 + r0
+            r7.setMeasuredDimension(r8, r9)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.slice.widget.SliceView.onMeasure(int, int):void");
+    }
+
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         SliceChildView sliceChildView = this.mCurrentView;
         sliceChildView.layout(0, 0, sliceChildView.getMeasuredWidth(), sliceChildView.getMeasuredHeight());
         if (this.mActionRow.getVisibility() != 8) {
@@ -332,7 +457,6 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
         }
     }
 
-    @Override // androidx.lifecycle.Observer
     public void onChanged(Slice slice) {
         setSlice(slice);
     }
@@ -347,12 +471,10 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
         this.mCurrentSlice = slice;
         SliceMetadata from = slice != null ? SliceMetadata.from(getContext(), this.mCurrentSlice) : null;
         this.mSliceMetadata = from;
-        if (z2) {
-            if (sliceMetadata.getLoadingState() == 2 && from.getLoadingState() == 0) {
-                return;
-            }
-        } else {
+        if (!z2) {
             this.mCurrentView.resetView();
+        } else if (sliceMetadata.getLoadingState() == 2 && from.getLoadingState() == 0) {
+            return;
         }
         SliceMetadata sliceMetadata2 = this.mSliceMetadata;
         this.mListContent = sliceMetadata2 != null ? sliceMetadata2.getListContent() : null;
@@ -372,7 +494,7 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
             updateActions();
             return;
         }
-        this.mCurrentView.setLoadingActions(null);
+        this.mCurrentView.setLoadingActions((Set<SliceItem>) null);
         this.mActions = this.mSliceMetadata.getSliceActions();
         this.mCurrentView.setLastUpdated(this.mSliceMetadata.getLastUpdatedTime());
         SliceChildView sliceChildView = this.mCurrentView;
@@ -393,83 +515,205 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
         refreshLastUpdatedLabel(true);
     }
 
+    public Slice getSlice() {
+        return this.mCurrentSlice;
+    }
+
+    public List<SliceAction> getSliceActions() {
+        List<SliceAction> list = this.mActions;
+        if (list == null || !list.isEmpty()) {
+            return this.mActions;
+        }
+        return null;
+    }
+
+    public void setSliceActions(List<SliceAction> list) {
+        SliceMetadata sliceMetadata;
+        if (this.mCurrentSlice == null || (sliceMetadata = this.mSliceMetadata) == null) {
+            throw new IllegalStateException("Trying to set actions on a view without a slice");
+        }
+        List<SliceAction> sliceActions = sliceMetadata.getSliceActions();
+        if (!(sliceActions == null || list == null)) {
+            int i = 0;
+            while (i < list.size()) {
+                if (sliceActions.contains(list.get(i))) {
+                    i++;
+                } else {
+                    throw new IllegalArgumentException("Trying to set an action that isn't available: " + list.get(i));
+                }
+            }
+        }
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+        this.mActions = list;
+        updateActions();
+    }
+
+    public void setMode(int i) {
+        setMode(i, false);
+    }
+
+    public void setScrollable(boolean z) {
+        if (z != this.mViewPolicy.isScrollable()) {
+            this.mViewPolicy.setScrollable(z);
+        }
+    }
+
+    public boolean isScrollable() {
+        return this.mViewPolicy.isScrollable();
+    }
+
+    public void setOnSliceActionListener(OnSliceActionListener onSliceActionListener) {
+        this.mSliceObserver = onSliceActionListener;
+        this.mCurrentView.setSliceActionListener(onSliceActionListener);
+    }
+
+    public void setAccentColor(int i) {
+        this.mThemeTintColor = i;
+        this.mSliceStyle.setTintColor(i);
+        this.mCurrentView.setTint(getTintColor());
+    }
+
+    public void setRowStyleFactory(RowStyleFactory rowStyleFactory) {
+        this.mSliceStyle.setRowStyleFactory(rowStyleFactory);
+    }
+
+    public void setMode(int i, boolean z) {
+        if (z) {
+            Log.e(TAG, "Animation not supported yet");
+        }
+        if (this.mViewPolicy.getMode() != i) {
+            if (!(i == 1 || i == 2 || i == 3)) {
+                Log.w(TAG, "Unknown mode: " + i + " please use one of MODE_SHORTCUT, MODE_SMALL, MODE_LARGE");
+                i = 2;
+            }
+            this.mViewPolicy.setMode(i);
+            updateViewConfig();
+        }
+    }
+
     public int getMode() {
         return this.mViewPolicy.getMode();
     }
 
-    public void setShowTitleItems(boolean enabled) {
-        this.mShowTitleItems = enabled;
+    public void setShowTitleItems(boolean z) {
+        this.mShowTitleItems = z;
         ListContent listContent = this.mListContent;
         if (listContent != null) {
-            listContent.showTitleItems(enabled);
+            listContent.showTitleItems(z);
         }
     }
 
     @Deprecated
-    public void showTitleItems(boolean enabled) {
-        setShowTitleItems(enabled);
+    public void showTitleItems(boolean z) {
+        setShowTitleItems(z);
     }
 
-    public void setShowHeaderDivider(boolean enabled) {
-        this.mShowHeaderDivider = enabled;
+    public void setShowHeaderDivider(boolean z) {
+        this.mShowHeaderDivider = z;
         ListContent listContent = this.mListContent;
         if (listContent != null) {
-            listContent.showHeaderDivider(enabled);
+            listContent.showHeaderDivider(z);
         }
     }
 
     @Deprecated
-    public void showHeaderDivider(boolean enabled) {
-        setShowHeaderDivider(enabled);
+    public void showHeaderDivider(boolean z) {
+        setShowHeaderDivider(z);
     }
 
-    public void setShowActionDividers(boolean enabled) {
-        this.mShowActionDividers = enabled;
+    public void setShowActionDividers(boolean z) {
+        this.mShowActionDividers = z;
         ListContent listContent = this.mListContent;
         if (listContent != null) {
-            listContent.showActionDividers(enabled);
+            listContent.showActionDividers(z);
         }
     }
 
     @Deprecated
-    public void showActionDividers(boolean enabled) {
-        setShowActionDividers(enabled);
+    public void showActionDividers(boolean z) {
+        setShowActionDividers(z);
+    }
+
+    public void setShowActionRow(boolean z) {
+        this.mShowActions = z;
+        updateActions();
+    }
+
+    public boolean isShowingActionRow() {
+        return this.mShowActions;
+    }
+
+    public int getHiddenItemCount() {
+        return this.mCurrentView.getHiddenItemCount();
+    }
+
+    private void updateViewConfig() {
+        int mode = getMode();
+        SliceChildView sliceChildView = this.mCurrentView;
+        boolean z = sliceChildView instanceof ShortcutView;
+        Set<SliceItem> loadingActions = sliceChildView.getLoadingActions();
+        boolean z2 = true;
+        if (mode == 3 && !z) {
+            removeView(this.mCurrentView);
+            ShortcutView shortcutView = new ShortcutView(getContext());
+            this.mCurrentView = shortcutView;
+            addView(shortcutView, getChildLp(shortcutView));
+        } else if (mode == 3 || !z) {
+            z2 = false;
+        } else {
+            removeView(this.mCurrentView);
+            TemplateView templateView = new TemplateView(getContext());
+            this.mCurrentView = templateView;
+            addView(templateView, getChildLp(templateView));
+        }
+        if (z2) {
+            this.mCurrentView.setPolicy(this.mViewPolicy);
+            applyConfigurations();
+            ListContent listContent = this.mListContent;
+            if (listContent != null && listContent.isValid()) {
+                this.mCurrentView.setSliceContent(this.mListContent);
+            }
+            this.mCurrentView.setLoadingActions(loadingActions);
+        }
+        updateActions();
     }
 
     private void applyConfigurations() {
         this.mCurrentView.setSliceActionListener(this.mSliceObserver);
         SliceChildView sliceChildView = this.mCurrentView;
         SliceStyle sliceStyle = this.mSliceStyle;
-        sliceChildView.setStyle(sliceStyle, sliceStyle.getRowStyle(null));
+        sliceChildView.setStyle(sliceStyle, sliceStyle.getRowStyle((SliceItem) null));
         this.mCurrentView.setTint(getTintColor());
         ListContent listContent = this.mListContent;
-        if (listContent != null && listContent.getLayoutDir() != -1) {
-            this.mCurrentView.setLayoutDirection(this.mListContent.getLayoutDir());
-        } else {
+        if (listContent == null || listContent.getLayoutDir() == -1) {
             this.mCurrentView.setLayoutDirection(2);
+        } else {
+            this.mCurrentView.setLayoutDirection(this.mListContent.getLayoutDir());
         }
     }
 
     private void updateActions() {
         if (this.mActions == null) {
             this.mActionRow.setVisibility(8);
-            this.mCurrentView.setSliceActions(null);
+            this.mCurrentView.setSliceActions((List<SliceAction>) null);
             this.mCurrentView.setInsets(getPaddingStart(), getPaddingTop(), getPaddingEnd(), getPaddingBottom());
             return;
         }
         ArrayList arrayList = new ArrayList(this.mActions);
         Collections.sort(arrayList, SLICE_ACTION_PRIORITY_COMPARATOR);
-        if (this.mShowActions && getMode() != 3 && this.mActions.size() >= 2) {
-            this.mActionRow.setActions(arrayList, getTintColor());
-            this.mActionRow.setVisibility(0);
-            this.mCurrentView.setSliceActions(null);
-            this.mCurrentView.setInsets(getPaddingStart(), getPaddingTop(), getPaddingEnd(), 0);
-            this.mActionRow.setPaddingRelative(getPaddingStart(), 0, getPaddingEnd(), getPaddingBottom());
+        if (!this.mShowActions || getMode() == 3 || this.mActions.size() < 2) {
+            this.mCurrentView.setSliceActions(arrayList);
+            this.mCurrentView.setInsets(getPaddingStart(), getPaddingTop(), getPaddingEnd(), getPaddingBottom());
+            this.mActionRow.setVisibility(8);
             return;
         }
-        this.mCurrentView.setSliceActions(arrayList);
-        this.mCurrentView.setInsets(getPaddingStart(), getPaddingTop(), getPaddingEnd(), getPaddingBottom());
-        this.mActionRow.setVisibility(8);
+        this.mActionRow.setActions(arrayList, getTintColor());
+        this.mActionRow.setVisibility(0);
+        this.mCurrentView.setSliceActions((List<SliceAction>) null);
+        this.mCurrentView.setInsets(getPaddingStart(), getPaddingTop(), getPaddingEnd(), 0);
+        this.mActionRow.setPaddingRelative(getPaddingStart(), 0, getPaddingEnd(), getPaddingBottom());
     }
 
     private int getTintColor() {
@@ -484,25 +728,26 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
         return SliceViewUtil.getColorAccent(getContext());
     }
 
-    private ViewGroup.LayoutParams getChildLp(View child) {
-        return new ViewGroup.LayoutParams(-1, -1);
-    }
-
-    public static String modeToString(int mode) {
-        if (mode != 1) {
-            if (mode == 2) {
-                return "MODE LARGE";
-            }
-            if (mode == 3) {
-                return "MODE SHORTCUT";
-            }
-            return "unknown mode: " + mode;
+    private ViewGroup.LayoutParams getChildLp(View view) {
+        if (!(view instanceof ShortcutView)) {
+            return new ViewGroup.LayoutParams(-1, -1);
         }
-        return "MODE SMALL";
+        int i = this.mShortcutSize;
+        return new ViewGroup.LayoutParams(i, i);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    public static String modeToString(int i) {
+        if (i == 1) {
+            return "MODE SMALL";
+        }
+        if (i != 2) {
+            return i != 3 ? "unknown mode: " + i : "MODE SHORTCUT";
+        }
+        return "MODE LARGE";
+    }
+
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (isShown()) {
             logSliceMetricsVisibilityChange(true);
@@ -510,32 +755,32 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         logSliceMetricsVisibilityChange(false);
         refreshLastUpdatedLabel(false);
     }
 
-    @Override // android.view.View
-    protected void onVisibilityChanged(View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
+    /* access modifiers changed from: protected */
+    public void onVisibilityChanged(View view, int i) {
+        super.onVisibilityChanged(view, i);
         if (isAttachedToWindow()) {
             boolean z = true;
-            logSliceMetricsVisibilityChange(visibility == 0);
-            if (visibility != 0) {
+            logSliceMetricsVisibilityChange(i == 0);
+            if (i != 0) {
                 z = false;
             }
             refreshLastUpdatedLabel(z);
         }
     }
 
-    @Override // android.view.View
-    protected void onWindowVisibilityChanged(int visibility) {
-        super.onWindowVisibilityChanged(visibility);
+    /* access modifiers changed from: protected */
+    public void onWindowVisibilityChanged(int i) {
+        super.onWindowVisibilityChanged(i);
         boolean z = true;
-        logSliceMetricsVisibilityChange(visibility == 0);
-        if (visibility != 0) {
+        logSliceMetricsVisibilityChange(i == 0);
+        if (i != 0) {
             z = false;
         }
         refreshLastUpdatedLabel(z);
@@ -548,50 +793,46 @@ public class SliceView extends ViewGroup implements Observer<Slice>, View.OnClic
             return;
         }
         Slice slice2 = this.mCurrentSlice;
-        if (slice2 != null && slice2.getUri().equals(slice.getUri())) {
-            return;
+        if (slice2 == null || !slice2.getUri().equals(slice.getUri())) {
+            logSliceMetricsVisibilityChange(false);
+            this.mCurrentSliceMetrics = SliceMetrics.getInstance(getContext(), slice.getUri());
         }
-        logSliceMetricsVisibilityChange(false);
-        this.mCurrentSliceMetrics = SliceMetrics.getInstance(getContext(), slice.getUri());
     }
 
-    private void logSliceMetricsVisibilityChange(boolean visibility) {
+    private void logSliceMetricsVisibilityChange(boolean z) {
         SliceMetrics sliceMetrics = this.mCurrentSliceMetrics;
         if (sliceMetrics != null) {
-            if (visibility && !this.mCurrentSliceLoggedVisible) {
+            if (z && !this.mCurrentSliceLoggedVisible) {
                 sliceMetrics.logVisible();
                 this.mCurrentSliceLoggedVisible = true;
             }
-            if (visibility || !this.mCurrentSliceLoggedVisible) {
+            if (!z && this.mCurrentSliceLoggedVisible) {
+                this.mCurrentSliceMetrics.logHidden();
+                this.mCurrentSliceLoggedVisible = false;
+            }
+        }
+    }
+
+    private void logSliceMetricsOnTouch(SliceItem sliceItem, EventInfo eventInfo) {
+        if (this.mCurrentSliceMetrics != null && sliceItem.getSlice() != null && sliceItem.getSlice().getUri() != null) {
+            this.mCurrentSliceMetrics.logTouch(eventInfo.actionType, sliceItem.getSlice().getUri());
+        }
+    }
+
+    private void refreshLastUpdatedLabel(boolean z) {
+        SliceMetadata sliceMetadata;
+        if (this.mShowLastUpdated && (sliceMetadata = this.mSliceMetadata) != null && !sliceMetadata.neverExpires()) {
+            if (z) {
+                Handler handler = this.mHandler;
+                Runnable runnable = this.mRefreshLastUpdated;
+                long j = 60000;
+                if (!this.mSliceMetadata.isExpired()) {
+                    j = 60000 + this.mSliceMetadata.getTimeToExpiry();
+                }
+                handler.postDelayed(runnable, j);
                 return;
             }
-            this.mCurrentSliceMetrics.logHidden();
-            this.mCurrentSliceLoggedVisible = false;
+            this.mHandler.removeCallbacks(this.mRefreshLastUpdated);
         }
-    }
-
-    private void logSliceMetricsOnTouch(SliceItem item, EventInfo info) {
-        if (this.mCurrentSliceMetrics == null || item.getSlice() == null || item.getSlice().getUri() == null) {
-            return;
-        }
-        this.mCurrentSliceMetrics.logTouch(info.actionType, item.getSlice().getUri());
-    }
-
-    private void refreshLastUpdatedLabel(boolean visibility) {
-        SliceMetadata sliceMetadata;
-        if (!this.mShowLastUpdated || (sliceMetadata = this.mSliceMetadata) == null || sliceMetadata.neverExpires()) {
-            return;
-        }
-        if (visibility) {
-            Handler handler = this.mHandler;
-            Runnable runnable = this.mRefreshLastUpdated;
-            long j = 60000;
-            if (!this.mSliceMetadata.isExpired()) {
-                j = 60000 + this.mSliceMetadata.getTimeToExpiry();
-            }
-            handler.postDelayed(runnable, j);
-            return;
-        }
-        this.mHandler.removeCallbacks(this.mRefreshLastUpdated);
     }
 }

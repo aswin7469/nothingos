@@ -14,43 +14,41 @@ import com.airbnb.lottie.model.layer.BaseLayer;
 import com.airbnb.lottie.utils.MiscUtils;
 import com.airbnb.lottie.value.LottieValueCallback;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class RectangleContent implements BaseKeyframeAnimation.AnimationListener, KeyPathElementContent, PathContent {
     private final BaseKeyframeAnimation<?, Float> cornerRadiusAnimation;
     private final boolean hidden;
     private boolean isPathValid;
     private final LottieDrawable lottieDrawable;
     private final String name;
-    private final BaseKeyframeAnimation<?, PointF> positionAnimation;
-    private final BaseKeyframeAnimation<?, PointF> sizeAnimation;
     private final Path path = new Path();
+    private final BaseKeyframeAnimation<?, PointF> positionAnimation;
     private final RectF rect = new RectF();
+    private final BaseKeyframeAnimation<?, PointF> sizeAnimation;
     private CompoundTrimPathContent trimPaths = new CompoundTrimPathContent();
 
-    public RectangleContent(LottieDrawable lottieDrawable, BaseLayer baseLayer, RectangleShape rectangleShape) {
+    public RectangleContent(LottieDrawable lottieDrawable2, BaseLayer baseLayer, RectangleShape rectangleShape) {
         this.name = rectangleShape.getName();
         this.hidden = rectangleShape.isHidden();
-        this.lottieDrawable = lottieDrawable;
-        BaseKeyframeAnimation<PointF, PointF> mo192createAnimation = rectangleShape.getPosition().mo192createAnimation();
-        this.positionAnimation = mo192createAnimation;
-        BaseKeyframeAnimation<PointF, PointF> mo192createAnimation2 = rectangleShape.getSize().mo192createAnimation();
-        this.sizeAnimation = mo192createAnimation2;
-        BaseKeyframeAnimation<Float, Float> mo192createAnimation3 = rectangleShape.getCornerRadius().mo192createAnimation();
-        this.cornerRadiusAnimation = mo192createAnimation3;
-        baseLayer.addAnimation(mo192createAnimation);
-        baseLayer.addAnimation(mo192createAnimation2);
-        baseLayer.addAnimation(mo192createAnimation3);
-        mo192createAnimation.addUpdateListener(this);
-        mo192createAnimation2.addUpdateListener(this);
-        mo192createAnimation3.addUpdateListener(this);
+        this.lottieDrawable = lottieDrawable2;
+        BaseKeyframeAnimation<PointF, PointF> createAnimation = rectangleShape.getPosition().createAnimation();
+        this.positionAnimation = createAnimation;
+        BaseKeyframeAnimation<PointF, PointF> createAnimation2 = rectangleShape.getSize().createAnimation();
+        this.sizeAnimation = createAnimation2;
+        BaseKeyframeAnimation<Float, Float> createAnimation3 = rectangleShape.getCornerRadius().createAnimation();
+        this.cornerRadiusAnimation = createAnimation3;
+        baseLayer.addAnimation(createAnimation);
+        baseLayer.addAnimation(createAnimation2);
+        baseLayer.addAnimation(createAnimation3);
+        createAnimation.addUpdateListener(this);
+        createAnimation2.addUpdateListener(this);
+        createAnimation3.addUpdateListener(this);
     }
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public String getName() {
         return this.name;
     }
 
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation.AnimationListener
     public void onValueChanged() {
         invalidate();
     }
@@ -60,7 +58,6 @@ public class RectangleContent implements BaseKeyframeAnimation.AnimationListener
         this.lottieDrawable.invalidateSelf();
     }
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public void setContents(List<Content> list, List<Content> list2) {
         for (int i = 0; i < list.size(); i++) {
             Content content = list.get(i);
@@ -74,8 +71,8 @@ public class RectangleContent implements BaseKeyframeAnimation.AnimationListener
         }
     }
 
-    @Override // com.airbnb.lottie.animation.content.PathContent
     public Path getPath() {
+        float f;
         if (this.isPathValid) {
             return this.path;
         }
@@ -84,52 +81,44 @@ public class RectangleContent implements BaseKeyframeAnimation.AnimationListener
             this.isPathValid = true;
             return this.path;
         }
-        PointF mo189getValue = this.sizeAnimation.mo189getValue();
-        float f = mo189getValue.x / 2.0f;
-        float f2 = mo189getValue.y / 2.0f;
+        PointF value = this.sizeAnimation.getValue();
+        float f2 = value.x / 2.0f;
+        float f3 = value.y / 2.0f;
         BaseKeyframeAnimation<?, Float> baseKeyframeAnimation = this.cornerRadiusAnimation;
-        float floatValue = baseKeyframeAnimation == null ? 0.0f : ((FloatKeyframeAnimation) baseKeyframeAnimation).getFloatValue();
-        float min = Math.min(f, f2);
-        if (floatValue > min) {
-            floatValue = min;
+        if (baseKeyframeAnimation == null) {
+            f = 0.0f;
+        } else {
+            f = ((FloatKeyframeAnimation) baseKeyframeAnimation).getFloatValue();
         }
-        PointF mo189getValue2 = this.positionAnimation.mo189getValue();
-        this.path.moveTo(mo189getValue2.x + f, (mo189getValue2.y - f2) + floatValue);
-        this.path.lineTo(mo189getValue2.x + f, (mo189getValue2.y + f2) - floatValue);
-        int i = (floatValue > 0.0f ? 1 : (floatValue == 0.0f ? 0 : -1));
+        float min = Math.min(f2, f3);
+        if (f > min) {
+            f = min;
+        }
+        PointF value2 = this.positionAnimation.getValue();
+        this.path.moveTo(value2.x + f2, (value2.y - f3) + f);
+        this.path.lineTo(value2.x + f2, (value2.y + f3) - f);
+        int i = (f > 0.0f ? 1 : (f == 0.0f ? 0 : -1));
         if (i > 0) {
-            RectF rectF = this.rect;
-            float f3 = mo189getValue2.x;
-            float f4 = floatValue * 2.0f;
-            float f5 = mo189getValue2.y;
-            rectF.set((f3 + f) - f4, (f5 + f2) - f4, f3 + f, f5 + f2);
+            float f4 = f * 2.0f;
+            this.rect.set((value2.x + f2) - f4, (value2.y + f3) - f4, value2.x + f2, value2.y + f3);
             this.path.arcTo(this.rect, 0.0f, 90.0f, false);
         }
-        this.path.lineTo((mo189getValue2.x - f) + floatValue, mo189getValue2.y + f2);
+        this.path.lineTo((value2.x - f2) + f, value2.y + f3);
         if (i > 0) {
-            RectF rectF2 = this.rect;
-            float f6 = mo189getValue2.x;
-            float f7 = mo189getValue2.y;
-            float f8 = floatValue * 2.0f;
-            rectF2.set(f6 - f, (f7 + f2) - f8, (f6 - f) + f8, f7 + f2);
+            float f5 = f * 2.0f;
+            this.rect.set(value2.x - f2, (value2.y + f3) - f5, (value2.x - f2) + f5, value2.y + f3);
             this.path.arcTo(this.rect, 90.0f, 90.0f, false);
         }
-        this.path.lineTo(mo189getValue2.x - f, (mo189getValue2.y - f2) + floatValue);
+        this.path.lineTo(value2.x - f2, (value2.y - f3) + f);
         if (i > 0) {
-            RectF rectF3 = this.rect;
-            float f9 = mo189getValue2.x;
-            float f10 = mo189getValue2.y;
-            float f11 = floatValue * 2.0f;
-            rectF3.set(f9 - f, f10 - f2, (f9 - f) + f11, (f10 - f2) + f11);
+            float f6 = f * 2.0f;
+            this.rect.set(value2.x - f2, value2.y - f3, (value2.x - f2) + f6, (value2.y - f3) + f6);
             this.path.arcTo(this.rect, 180.0f, 90.0f, false);
         }
-        this.path.lineTo((mo189getValue2.x + f) - floatValue, mo189getValue2.y - f2);
+        this.path.lineTo((value2.x + f2) - f, value2.y - f3);
         if (i > 0) {
-            RectF rectF4 = this.rect;
-            float f12 = mo189getValue2.x;
-            float f13 = floatValue * 2.0f;
-            float f14 = mo189getValue2.y;
-            rectF4.set((f12 + f) - f13, f14 - f2, f12 + f, (f14 - f2) + f13);
+            float f7 = f * 2.0f;
+            this.rect.set((value2.x + f2) - f7, value2.y - f3, value2.x + f2, (value2.y - f3) + f7);
             this.path.arcTo(this.rect, 270.0f, 90.0f, false);
         }
         this.path.close();
@@ -138,19 +127,16 @@ public class RectangleContent implements BaseKeyframeAnimation.AnimationListener
         return this.path;
     }
 
-    @Override // com.airbnb.lottie.model.KeyPathElement
     public void resolveKeyPath(KeyPath keyPath, int i, List<KeyPath> list, KeyPath keyPath2) {
         MiscUtils.resolveKeyPath(keyPath, i, list, keyPath2, this);
     }
 
-    @Override // com.airbnb.lottie.model.KeyPathElement
     public <T> void addValueCallback(T t, LottieValueCallback<T> lottieValueCallback) {
         if (t == LottieProperty.RECTANGLE_SIZE) {
             this.sizeAnimation.setValueCallback(lottieValueCallback);
         } else if (t == LottieProperty.POSITION) {
             this.positionAnimation.setValueCallback(lottieValueCallback);
-        } else if (t != LottieProperty.CORNER_RADIUS) {
-        } else {
+        } else if (t == LottieProperty.CORNER_RADIUS) {
             this.cornerRadiusAnimation.setValueCallback(lottieValueCallback);
         }
     }

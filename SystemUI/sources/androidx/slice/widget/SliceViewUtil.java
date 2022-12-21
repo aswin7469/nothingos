@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -11,16 +12,20 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.format.DateUtils;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
-import androidx.appcompat.R$attr;
+import androidx.appcompat.C0329R;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.graphics.drawable.IconCompat;
 import java.util.Calendar;
-/* loaded from: classes.dex */
+
 public class SliceViewUtil {
-    public static int resolveLayoutDirection(int layoutDir) {
-        if (layoutDir == 2 || layoutDir == 3 || layoutDir == 1 || layoutDir == 0) {
-            return layoutDir;
+    public static int resolveLayoutDirection(int i) {
+        if (i == 2 || i == 3 || i == 1 || i == 0) {
+            return i;
         }
         return -1;
     }
@@ -29,29 +34,85 @@ public class SliceViewUtil {
         return getColorAttr(context, 16843829);
     }
 
-    public static int getColorAttr(Context context, int attr) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{attr});
+    public static int getColorError(Context context) {
+        return getColorAttr(context, 16844099);
+    }
+
+    public static int getDefaultColor(Context context, int i) {
+        return ContextCompat.getColorStateList(context, i).getDefaultColor();
+    }
+
+    public static int getDisabled(Context context, int i) {
+        return applyAlphaAttr(context, 16842803, i);
+    }
+
+    public static int applyAlphaAttr(Context context, int i, int i2) {
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{i});
+        float f = obtainStyledAttributes.getFloat(0, 0.0f);
+        obtainStyledAttributes.recycle();
+        return applyAlpha(f, i2);
+    }
+
+    public static int applyAlpha(float f, int i) {
+        return Color.argb((int) (f * ((float) Color.alpha(i))), Color.red(i), Color.green(i), Color.blue(i));
+    }
+
+    public static int getColorAttr(Context context, int i) {
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{i});
         int color = obtainStyledAttributes.getColor(0, 0);
         obtainStyledAttributes.recycle();
         return color;
     }
 
-    public static Drawable getDrawable(Context context, int attr) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{attr});
+    public static int getThemeAttr(Context context, int i) {
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{i});
+        int resourceId = obtainStyledAttributes.getResourceId(0, 0);
+        obtainStyledAttributes.recycle();
+        return resourceId;
+    }
+
+    public static Drawable getDrawable(Context context, int i) {
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(new int[]{i});
         Drawable drawable = obtainStyledAttributes.getDrawable(0);
         obtainStyledAttributes.recycle();
         return drawable;
     }
 
-    public static IconCompat createIconFromDrawable(Drawable d) {
-        if (d instanceof BitmapDrawable) {
-            return IconCompat.createWithBitmap(((BitmapDrawable) d).getBitmap());
+    public static IconCompat createIconFromDrawable(Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return IconCompat.createWithBitmap(((BitmapDrawable) drawable).getBitmap());
         }
-        Bitmap createBitmap = Bitmap.createBitmap(d.getIntrinsicWidth(), d.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Bitmap createBitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(createBitmap);
-        d.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        d.draw(canvas);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
         return IconCompat.createWithBitmap(createBitmap);
+    }
+
+    public static void createCircledIcon(Context context, int i, IconCompat iconCompat, boolean z, ViewGroup viewGroup) {
+        ImageView.ScaleType scaleType;
+        ImageView imageView = new ImageView(context);
+        imageView.setImageDrawable(iconCompat.loadDrawable(context));
+        if (z) {
+            scaleType = ImageView.ScaleType.CENTER_CROP;
+        } else {
+            scaleType = ImageView.ScaleType.CENTER_INSIDE;
+        }
+        imageView.setScaleType(scaleType);
+        viewGroup.addView(imageView);
+        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) imageView.getLayoutParams();
+        if (z) {
+            Bitmap createBitmap = Bitmap.createBitmap(i, i, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(createBitmap);
+            imageView.layout(0, 0, i, i);
+            imageView.draw(canvas);
+            imageView.setImageBitmap(getCircularBitmap(createBitmap));
+        } else {
+            imageView.setColorFilter(-1);
+        }
+        layoutParams.width = i;
+        layoutParams.height = i;
+        layoutParams.gravity = 17;
     }
 
     public static Bitmap getCircularBitmap(Bitmap bitmap) {
@@ -61,26 +122,28 @@ public class SliceViewUtil {
         Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
         paint.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
-        canvas.drawCircle(bitmap.getWidth() / 2, bitmap.getHeight() / 2, bitmap.getWidth() / 2, paint);
+        canvas.drawCircle((float) (bitmap.getWidth() / 2), (float) (bitmap.getHeight() / 2), (float) (bitmap.getWidth() / 2), paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
         return createBitmap;
     }
 
-    public static CharSequence getTimestampString(Context context, long time) {
-        if (time < System.currentTimeMillis() || DateUtils.isToday(time)) {
-            return DateUtils.getRelativeTimeSpanString(time, Calendar.getInstance().getTimeInMillis(), 60000L, 262144);
+    public static CharSequence getTimestampString(Context context, long j) {
+        if (j >= System.currentTimeMillis() && !DateUtils.isToday(j)) {
+            return DateUtils.formatDateTime(context, j, 8);
         }
-        return DateUtils.formatDateTime(context, time, 8);
+        return DateUtils.getRelativeTimeSpanString(j, Calendar.getInstance().getTimeInMillis(), 60000, 262144);
     }
 
-    public static void tintIndeterminateProgressBar(Context context, ProgressBar bar) {
-        int colorAttr = getColorAttr(context, R$attr.colorControlHighlight);
-        Drawable wrap = DrawableCompat.wrap(bar.getIndeterminateDrawable());
-        if (wrap == null || colorAttr == 0) {
-            return;
+    public static void tintIndeterminateProgressBar(Context context, ProgressBar progressBar) {
+        int colorAttr = getColorAttr(context, C0329R.attr.colorControlHighlight);
+        Drawable wrap = DrawableCompat.wrap(progressBar.getIndeterminateDrawable());
+        if (wrap != null && colorAttr != 0) {
+            wrap.setColorFilter(colorAttr, PorterDuff.Mode.MULTIPLY);
+            progressBar.setProgressDrawable(wrap);
         }
-        wrap.setColorFilter(colorAttr, PorterDuff.Mode.MULTIPLY);
-        bar.setProgressDrawable(wrap);
+    }
+
+    private SliceViewUtil() {
     }
 }

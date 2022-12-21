@@ -2,11 +2,11 @@ package com.android.systemui.controls.management;
 
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.controller.ControlsControllerImpl;
-import com.android.systemui.controls.ui.ControlsUiController;
+import com.android.systemui.controls.p010ui.ControlsUiController;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ControlsFavoritingActivity_Factory implements Factory<ControlsFavoritingActivity> {
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
     private final Provider<ControlsControllerImpl> controllerProvider;
@@ -22,10 +22,8 @@ public final class ControlsFavoritingActivity_Factory implements Factory<Control
         this.uiControllerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ControlsFavoritingActivity mo1933get() {
-        return newInstance(this.executorProvider.mo1933get(), this.controllerProvider.mo1933get(), this.listingControllerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.uiControllerProvider.mo1933get());
+    public ControlsFavoritingActivity get() {
+        return newInstance(this.executorProvider.get(), this.controllerProvider.get(), this.listingControllerProvider.get(), this.broadcastDispatcherProvider.get(), this.uiControllerProvider.get());
     }
 
     public static ControlsFavoritingActivity_Factory create(Provider<Executor> provider, Provider<ControlsControllerImpl> provider2, Provider<ControlsListingController> provider3, Provider<BroadcastDispatcher> provider4, Provider<ControlsUiController> provider5) {

@@ -1,38 +1,56 @@
 package okio;
 
-import java.io.EOFException;
-import java.io.IOException;
+import android.net.wifi.hotspot2.pps.UpdateParameter;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 import java.nio.charset.Charset;
-import kotlin.collections.ArraysKt;
-import kotlin.jvm.internal.Intrinsics;
-import kotlin.text.Charsets;
-import okio.internal.BufferKt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-/* compiled from: Buffer.kt */
-/* loaded from: classes2.dex */
-public final class Buffer implements BufferedSource, BufferedSink, Cloneable, ByteChannel {
-    @Nullable
-    public Segment head;
-    private long size;
+import java.p026io.Closeable;
+import java.p026io.EOFException;
+import java.p026io.IOException;
+import java.p026io.InputStream;
+import java.p026io.OutputStream;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.annotation.Nullable;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import kotlin.text.Typography;
+import sun.security.util.DerValue;
 
-    @Override // okio.Source, java.io.Closeable, java.lang.AutoCloseable, java.nio.channels.Channel
+public final class Buffer implements BufferedSource, BufferedSink, Cloneable, ByteChannel {
+    private static final byte[] DIGITS = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 97, 98, 99, 100, 101, 102};
+    static final int REPLACEMENT_CHARACTER = 65533;
+    @Nullable
+    Segment head;
+    long size;
+
+    public Buffer buffer() {
+        return this;
+    }
+
     public void close() {
     }
 
-    @Override // java.io.Flushable
+    public BufferedSink emit() {
+        return this;
+    }
+
+    public Buffer emitCompleteSegments() {
+        return this;
+    }
+
     public void flush() {
     }
 
-    @Override // okio.BufferedSource
-    @NotNull
     public Buffer getBuffer() {
         return this;
     }
 
-    @Override // java.nio.channels.Channel
     public boolean isOpen() {
         return true;
     }
@@ -41,328 +59,983 @@ public final class Buffer implements BufferedSource, BufferedSink, Cloneable, By
         return this.size;
     }
 
-    public final void setSize$external__okio__android_common__okio_lib(long j) {
-        this.size = j;
-    }
+    public OutputStream outputStream() {
+        return new OutputStream() {
+            public void close() {
+            }
 
-    public long indexOfElement(@NotNull ByteString targetBytes, long j) {
-        int i;
-        int i2;
-        Intrinsics.checkNotNullParameter(targetBytes, "targetBytes");
-        long j2 = 0;
-        if (j >= 0) {
-            Segment segment = this.head;
-            if (segment == null) {
-                return -1L;
+            public void flush() {
             }
-            if (size() - j < j) {
-                j2 = size();
-                while (j2 > j) {
-                    segment = segment.prev;
-                    Intrinsics.checkNotNull(segment);
-                    j2 -= segment.limit - segment.pos;
-                }
-                if (targetBytes.size() == 2) {
-                    byte b = targetBytes.getByte(0);
-                    byte b2 = targetBytes.getByte(1);
-                    while (j2 < size()) {
-                        byte[] bArr = segment.data;
-                        i = (int) ((segment.pos + j) - j2);
-                        int i3 = segment.limit;
-                        while (i < i3) {
-                            byte b3 = bArr[i];
-                            if (b3 != b && b3 != b2) {
-                                i++;
-                            }
-                            i2 = segment.pos;
-                        }
-                        j2 += segment.limit - segment.pos;
-                        segment = segment.next;
-                        Intrinsics.checkNotNull(segment);
-                        j = j2;
-                    }
-                    return -1L;
-                }
-                byte[] internalArray$external__okio__android_common__okio_lib = targetBytes.internalArray$external__okio__android_common__okio_lib();
-                while (j2 < size()) {
-                    byte[] bArr2 = segment.data;
-                    i = (int) ((segment.pos + j) - j2);
-                    int i4 = segment.limit;
-                    while (i < i4) {
-                        byte b4 = bArr2[i];
-                        int length = internalArray$external__okio__android_common__okio_lib.length;
-                        int i5 = 0;
-                        while (i5 < length) {
-                            byte b5 = internalArray$external__okio__android_common__okio_lib[i5];
-                            i5++;
-                            if (b4 == b5) {
-                                i2 = segment.pos;
-                            }
-                        }
-                        i++;
-                    }
-                    j2 += segment.limit - segment.pos;
-                    segment = segment.next;
-                    Intrinsics.checkNotNull(segment);
-                    j = j2;
-                }
-                return -1L;
+
+            public void write(int i) {
+                Buffer.this.writeByte((int) (byte) i);
             }
-            while (true) {
-                long j3 = (segment.limit - segment.pos) + j2;
-                if (j3 > j) {
-                    break;
-                }
-                segment = segment.next;
-                Intrinsics.checkNotNull(segment);
-                j2 = j3;
+
+            public void write(byte[] bArr, int i, int i2) {
+                Buffer.this.write(bArr, i, i2);
             }
-            if (targetBytes.size() == 2) {
-                byte b6 = targetBytes.getByte(0);
-                byte b7 = targetBytes.getByte(1);
-                while (j2 < size()) {
-                    byte[] bArr3 = segment.data;
-                    i = (int) ((segment.pos + j) - j2);
-                    int i6 = segment.limit;
-                    while (i < i6) {
-                        byte b8 = bArr3[i];
-                        if (b8 != b6 && b8 != b7) {
-                            i++;
-                        }
-                        i2 = segment.pos;
-                    }
-                    j2 += segment.limit - segment.pos;
-                    segment = segment.next;
-                    Intrinsics.checkNotNull(segment);
-                    j = j2;
-                }
-                return -1L;
+
+            public String toString() {
+                return Buffer.this + ".outputStream()";
             }
-            byte[] internalArray$external__okio__android_common__okio_lib2 = targetBytes.internalArray$external__okio__android_common__okio_lib();
-            while (j2 < size()) {
-                byte[] bArr4 = segment.data;
-                i = (int) ((segment.pos + j) - j2);
-                int i7 = segment.limit;
-                while (i < i7) {
-                    byte b9 = bArr4[i];
-                    int length2 = internalArray$external__okio__android_common__okio_lib2.length;
-                    int i8 = 0;
-                    while (i8 < length2) {
-                        byte b10 = internalArray$external__okio__android_common__okio_lib2[i8];
-                        i8++;
-                        if (b9 == b10) {
-                            i2 = segment.pos;
-                        }
-                    }
-                    i++;
-                }
-                j2 += segment.limit - segment.pos;
-                segment = segment.next;
-                Intrinsics.checkNotNull(segment);
-                j = j2;
-            }
-            return -1L;
-            return (i - i2) + j2;
-        }
-        throw new IllegalArgumentException(Intrinsics.stringPlus("fromIndex < 0: ", Long.valueOf(j)).toString());
+        };
     }
 
     public boolean exhausted() {
         return this.size == 0;
     }
 
-    @Override // okio.BufferedSource
+    public void require(long j) throws EOFException {
+        if (this.size < j) {
+            throw new EOFException();
+        }
+    }
+
     public boolean request(long j) {
         return this.size >= j;
     }
 
-    public byte readByte() throws EOFException {
-        if (size() == 0) {
-            throw new EOFException();
-        }
-        Segment segment = this.head;
-        Intrinsics.checkNotNull(segment);
-        int i = segment.pos;
-        int i2 = segment.limit;
-        int i3 = i + 1;
-        byte b = segment.data[i];
-        setSize$external__okio__android_common__okio_lib(size() - 1);
-        if (i3 == i2) {
-            this.head = segment.pop();
-            SegmentPool segmentPool = SegmentPool.INSTANCE;
-            SegmentPool.recycle(segment);
-        } else {
-            segment.pos = i3;
-        }
-        return b;
+    public BufferedSource peek() {
+        return Okio.buffer((Source) new PeekSource(this));
     }
 
-    @NotNull
+    public InputStream inputStream() {
+        return new InputStream() {
+            public void close() {
+            }
+
+            public int read() {
+                if (Buffer.this.size > 0) {
+                    return Buffer.this.readByte() & 255;
+                }
+                return -1;
+            }
+
+            public int read(byte[] bArr, int i, int i2) {
+                return Buffer.this.read(bArr, i, i2);
+            }
+
+            public int available() {
+                return (int) Math.min(Buffer.this.size, 2147483647L);
+            }
+
+            public String toString() {
+                return Buffer.this + ".inputStream()";
+            }
+        };
+    }
+
+    public final Buffer copyTo(OutputStream outputStream) throws IOException {
+        return copyTo(outputStream, 0, this.size);
+    }
+
+    public final Buffer copyTo(OutputStream outputStream, long j, long j2) throws IOException {
+        if (outputStream != null) {
+            Util.checkOffsetAndCount(this.size, j, j2);
+            if (j2 == 0) {
+                return this;
+            }
+            Segment segment = this.head;
+            while (j >= ((long) (segment.limit - segment.pos))) {
+                j -= (long) (segment.limit - segment.pos);
+                segment = segment.next;
+            }
+            while (j2 > 0) {
+                int i = (int) (((long) segment.pos) + j);
+                int min = (int) Math.min((long) (segment.limit - i), j2);
+                outputStream.write(segment.data, i, min);
+                j2 -= (long) min;
+                segment = segment.next;
+                j = 0;
+            }
+            return this;
+        }
+        throw new IllegalArgumentException("out == null");
+    }
+
+    public final Buffer copyTo(Buffer buffer, long j, long j2) {
+        if (buffer != null) {
+            Util.checkOffsetAndCount(this.size, j, j2);
+            if (j2 == 0) {
+                return this;
+            }
+            buffer.size += j2;
+            Segment segment = this.head;
+            while (j >= ((long) (segment.limit - segment.pos))) {
+                j -= (long) (segment.limit - segment.pos);
+                segment = segment.next;
+            }
+            while (j2 > 0) {
+                Segment sharedCopy = segment.sharedCopy();
+                sharedCopy.pos = (int) (((long) sharedCopy.pos) + j);
+                sharedCopy.limit = Math.min(sharedCopy.pos + ((int) j2), sharedCopy.limit);
+                Segment segment2 = buffer.head;
+                if (segment2 == null) {
+                    sharedCopy.prev = sharedCopy;
+                    sharedCopy.next = sharedCopy;
+                    buffer.head = sharedCopy;
+                } else {
+                    segment2.prev.push(sharedCopy);
+                }
+                j2 -= (long) (sharedCopy.limit - sharedCopy.pos);
+                segment = segment.next;
+                j = 0;
+            }
+            return this;
+        }
+        throw new IllegalArgumentException("out == null");
+    }
+
+    public final Buffer writeTo(OutputStream outputStream) throws IOException {
+        return writeTo(outputStream, this.size);
+    }
+
+    public final Buffer writeTo(OutputStream outputStream, long j) throws IOException {
+        if (outputStream != null) {
+            Util.checkOffsetAndCount(this.size, 0, j);
+            Segment segment = this.head;
+            while (j > 0) {
+                int min = (int) Math.min(j, (long) (segment.limit - segment.pos));
+                outputStream.write(segment.data, segment.pos, min);
+                segment.pos += min;
+                long j2 = (long) min;
+                this.size -= j2;
+                j -= j2;
+                if (segment.pos == segment.limit) {
+                    Segment pop = segment.pop();
+                    this.head = pop;
+                    SegmentPool.recycle(segment);
+                    segment = pop;
+                }
+            }
+            return this;
+        }
+        throw new IllegalArgumentException("out == null");
+    }
+
+    public final Buffer readFrom(InputStream inputStream) throws IOException {
+        readFrom(inputStream, Long.MAX_VALUE, true);
+        return this;
+    }
+
+    public final Buffer readFrom(InputStream inputStream, long j) throws IOException {
+        if (j >= 0) {
+            readFrom(inputStream, j, false);
+            return this;
+        }
+        throw new IllegalArgumentException("byteCount < 0: " + j);
+    }
+
+    private void readFrom(InputStream inputStream, long j, boolean z) throws IOException {
+        if (inputStream != null) {
+            while (true) {
+                if (j > 0 || z) {
+                    Segment writableSegment = writableSegment(1);
+                    int read = inputStream.read(writableSegment.data, writableSegment.limit, (int) Math.min(j, (long) (8192 - writableSegment.limit)));
+                    if (read != -1) {
+                        writableSegment.limit += read;
+                        long j2 = (long) read;
+                        this.size += j2;
+                        j -= j2;
+                    } else if (!z) {
+                        throw new EOFException();
+                    } else {
+                        return;
+                    }
+                } else {
+                    return;
+                }
+            }
+        } else {
+            throw new IllegalArgumentException("in == null");
+        }
+    }
+
+    public final long completeSegmentByteCount() {
+        long j = this.size;
+        if (j == 0) {
+            return 0;
+        }
+        Segment segment = this.head.prev;
+        return (segment.limit >= 8192 || !segment.owner) ? j : j - ((long) (segment.limit - segment.pos));
+    }
+
+    public byte readByte() {
+        if (this.size != 0) {
+            Segment segment = this.head;
+            int i = segment.pos;
+            int i2 = segment.limit;
+            int i3 = i + 1;
+            byte b = segment.data[i];
+            this.size--;
+            if (i3 == i2) {
+                this.head = segment.pop();
+                SegmentPool.recycle(segment);
+            } else {
+                segment.pos = i3;
+            }
+            return b;
+        }
+        throw new IllegalStateException("size == 0");
+    }
+
+    public final byte getByte(long j) {
+        Util.checkOffsetAndCount(this.size, j, 1);
+        long j2 = this.size;
+        if (j2 - j > j) {
+            Segment segment = this.head;
+            while (true) {
+                long j3 = (long) (segment.limit - segment.pos);
+                if (j < j3) {
+                    return segment.data[segment.pos + ((int) j)];
+                }
+                j -= j3;
+                segment = segment.next;
+            }
+        } else {
+            long j4 = j - j2;
+            Segment segment2 = this.head;
+            do {
+                segment2 = segment2.prev;
+                j4 += (long) (segment2.limit - segment2.pos);
+            } while (j4 < 0);
+            return segment2.data[segment2.pos + ((int) j4)];
+        }
+    }
+
+    public short readShort() {
+        if (this.size >= 2) {
+            Segment segment = this.head;
+            int i = segment.pos;
+            int i2 = segment.limit;
+            if (i2 - i < 2) {
+                return (short) ((readByte() & 255) | ((readByte() & 255) << 8));
+            }
+            byte[] bArr = segment.data;
+            int i3 = i + 1;
+            int i4 = i3 + 1;
+            byte b = ((bArr[i] & 255) << 8) | (bArr[i3] & 255);
+            this.size -= 2;
+            if (i4 == i2) {
+                this.head = segment.pop();
+                SegmentPool.recycle(segment);
+            } else {
+                segment.pos = i4;
+            }
+            return (short) b;
+        }
+        throw new IllegalStateException("size < 2: " + this.size);
+    }
+
+    public int readInt() {
+        if (this.size >= 4) {
+            Segment segment = this.head;
+            int i = segment.pos;
+            int i2 = segment.limit;
+            if (i2 - i < 4) {
+                return (readByte() & 255) | ((readByte() & 255) << 24) | ((readByte() & 255) << 16) | ((readByte() & 255) << 8);
+            }
+            byte[] bArr = segment.data;
+            int i3 = i + 1;
+            int i4 = i3 + 1;
+            byte b = ((bArr[i] & 255) << 24) | ((bArr[i3] & 255) << 16);
+            int i5 = i4 + 1;
+            byte b2 = b | ((bArr[i4] & 255) << 8);
+            int i6 = i5 + 1;
+            byte b3 = b2 | (bArr[i5] & 255);
+            this.size -= 4;
+            if (i6 == i2) {
+                this.head = segment.pop();
+                SegmentPool.recycle(segment);
+            } else {
+                segment.pos = i6;
+            }
+            return b3;
+        }
+        throw new IllegalStateException("size < 4: " + this.size);
+    }
+
+    public long readLong() {
+        if (this.size >= 8) {
+            Segment segment = this.head;
+            int i = segment.pos;
+            int i2 = segment.limit;
+            if (i2 - i < 8) {
+                return ((((long) readInt()) & UpdateParameter.UPDATE_CHECK_INTERVAL_NEVER) << 32) | (UpdateParameter.UPDATE_CHECK_INTERVAL_NEVER & ((long) readInt()));
+            }
+            byte[] bArr = segment.data;
+            int i3 = i + 1;
+            int i4 = i3 + 1;
+            int i5 = i4 + 1;
+            int i6 = i5 + 1;
+            int i7 = i6 + 1;
+            int i8 = i7 + 1;
+            int i9 = i8 + 1;
+            int i10 = i9 + 1;
+            long j = (((long) bArr[i9]) & 255) | ((((long) bArr[i]) & 255) << 56) | ((((long) bArr[i3]) & 255) << 48) | ((((long) bArr[i4]) & 255) << 40) | ((((long) bArr[i5]) & 255) << 32) | ((((long) bArr[i6]) & 255) << 24) | ((((long) bArr[i7]) & 255) << 16) | ((((long) bArr[i8]) & 255) << 8);
+            this.size -= 8;
+            if (i10 == i2) {
+                this.head = segment.pop();
+                SegmentPool.recycle(segment);
+            } else {
+                segment.pos = i10;
+            }
+            return j;
+        }
+        throw new IllegalStateException("size < 8: " + this.size);
+    }
+
+    public short readShortLe() {
+        return Util.reverseBytesShort(readShort());
+    }
+
+    public int readIntLe() {
+        return Util.reverseBytesInt(readInt());
+    }
+
+    public long readLongLe() {
+        return Util.reverseBytesLong(readLong());
+    }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:16:0x0049, code lost:
+        if (r1 != false) goto L_0x004e;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:17:0x004b, code lost:
+        r15.readByte();
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:19:0x0066, code lost:
+        throw new java.lang.NumberFormatException("Number too large: " + r15.readUtf8());
+     */
+    /* JADX WARNING: Removed duplicated region for block: B:30:0x0096  */
+    /* JADX WARNING: Removed duplicated region for block: B:31:0x00a0  */
+    /* JADX WARNING: Removed duplicated region for block: B:47:0x0094 A[EDGE_INSN: B:47:0x0094->B:29:0x0094 ?: BREAK  , SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:5:0x0019  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public long readDecimalLong() {
+        /*
+            r15 = this;
+            long r0 = r15.size
+            r2 = 0
+            int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
+            if (r0 == 0) goto L_0x00b3
+            r0 = 0
+            r4 = -7
+            r1 = r0
+            r5 = r4
+            r3 = r2
+            r2 = r1
+        L_0x000f:
+            okio.Segment r7 = r15.head
+            byte[] r8 = r7.data
+            int r9 = r7.pos
+            int r10 = r7.limit
+        L_0x0017:
+            if (r9 >= r10) goto L_0x0094
+            byte r11 = r8[r9]
+            r12 = 48
+            if (r11 < r12) goto L_0x0067
+            r12 = 57
+            if (r11 > r12) goto L_0x0067
+            int r12 = 48 - r11
+            r13 = -922337203685477580(0xf333333333333334, double:-8.390303882365713E246)
+            int r13 = (r3 > r13 ? 1 : (r3 == r13 ? 0 : -1))
+            if (r13 < 0) goto L_0x003c
+            if (r13 != 0) goto L_0x0036
+            long r13 = (long) r12
+            int r13 = (r13 > r5 ? 1 : (r13 == r5 ? 0 : -1))
+            if (r13 >= 0) goto L_0x0036
+            goto L_0x003c
+        L_0x0036:
+            r13 = 10
+            long r3 = r3 * r13
+            long r11 = (long) r12
+            long r3 = r3 + r11
+            goto L_0x0072
+        L_0x003c:
+            okio.Buffer r15 = new okio.Buffer
+            r15.<init>()
+            okio.Buffer r15 = r15.writeDecimalLong((long) r3)
+            okio.Buffer r15 = r15.writeByte((int) r11)
+            if (r1 != 0) goto L_0x004e
+            r15.readByte()
+        L_0x004e:
+            java.lang.NumberFormatException r0 = new java.lang.NumberFormatException
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            java.lang.String r2 = "Number too large: "
+            r1.<init>((java.lang.String) r2)
+            java.lang.String r15 = r15.readUtf8()
+            java.lang.StringBuilder r15 = r1.append((java.lang.String) r15)
+            java.lang.String r15 = r15.toString()
+            r0.<init>(r15)
+            throw r0
+        L_0x0067:
+            r12 = 45
+            r13 = 1
+            if (r11 != r12) goto L_0x0077
+            if (r0 != 0) goto L_0x0077
+            r11 = 1
+            long r5 = r5 - r11
+            r1 = r13
+        L_0x0072:
+            int r9 = r9 + 1
+            int r0 = r0 + 1
+            goto L_0x0017
+        L_0x0077:
+            if (r0 == 0) goto L_0x007b
+            r2 = r13
+            goto L_0x0094
+        L_0x007b:
+            java.lang.NumberFormatException r15 = new java.lang.NumberFormatException
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            java.lang.String r1 = "Expected leading [0-9] or '-' character but was 0x"
+            r0.<init>((java.lang.String) r1)
+            java.lang.String r1 = java.lang.Integer.toHexString(r11)
+            java.lang.StringBuilder r0 = r0.append((java.lang.String) r1)
+            java.lang.String r0 = r0.toString()
+            r15.<init>(r0)
+            throw r15
+        L_0x0094:
+            if (r9 != r10) goto L_0x00a0
+            okio.Segment r8 = r7.pop()
+            r15.head = r8
+            okio.SegmentPool.recycle(r7)
+            goto L_0x00a2
+        L_0x00a0:
+            r7.pos = r9
+        L_0x00a2:
+            if (r2 != 0) goto L_0x00a8
+            okio.Segment r7 = r15.head
+            if (r7 != 0) goto L_0x000f
+        L_0x00a8:
+            long r5 = r15.size
+            long r7 = (long) r0
+            long r5 = r5 - r7
+            r15.size = r5
+            if (r1 == 0) goto L_0x00b1
+            goto L_0x00b2
+        L_0x00b1:
+            long r3 = -r3
+        L_0x00b2:
+            return r3
+        L_0x00b3:
+            java.lang.IllegalStateException r15 = new java.lang.IllegalStateException
+            java.lang.String r0 = "size == 0"
+            r15.<init>((java.lang.String) r0)
+            throw r15
+        */
+        throw new UnsupportedOperationException("Method not decompiled: okio.Buffer.readDecimalLong():long");
+    }
+
+    /* JADX WARNING: Code restructure failed: missing block: B:30:0x008d, code lost:
+        if (r8 != r9) goto L_0x0099;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:31:0x008f, code lost:
+        r14.head = r6.pop();
+        okio.SegmentPool.recycle(r6);
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:32:0x0099, code lost:
+        r6.pos = r8;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:33:0x009b, code lost:
+        if (r1 != false) goto L_0x00a1;
+     */
+    /* JADX WARNING: Removed duplicated region for block: B:27:0x0072  */
+    /* JADX WARNING: Removed duplicated region for block: B:42:0x0074 A[SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public long readHexadecimalUnsignedLong() {
+        /*
+            r14 = this;
+            long r0 = r14.size
+            r2 = 0
+            int r0 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
+            if (r0 == 0) goto L_0x00a8
+            r0 = 0
+            r1 = r0
+            r4 = r2
+        L_0x000b:
+            okio.Segment r6 = r14.head
+            byte[] r7 = r6.data
+            int r8 = r6.pos
+            int r9 = r6.limit
+        L_0x0013:
+            if (r8 >= r9) goto L_0x008d
+            byte r10 = r7[r8]
+            r11 = 48
+            if (r10 < r11) goto L_0x0022
+            r11 = 57
+            if (r10 > r11) goto L_0x0022
+            int r11 = r10 + -48
+            goto L_0x003a
+        L_0x0022:
+            r11 = 97
+            if (r10 < r11) goto L_0x002f
+            r11 = 102(0x66, float:1.43E-43)
+            if (r10 > r11) goto L_0x002f
+            int r11 = r10 + -97
+        L_0x002c:
+            int r11 = r11 + 10
+            goto L_0x003a
+        L_0x002f:
+            r11 = 65
+            if (r10 < r11) goto L_0x0070
+            r11 = 70
+            if (r10 > r11) goto L_0x0070
+            int r11 = r10 + -65
+            goto L_0x002c
+        L_0x003a:
+            r12 = -1152921504606846976(0xf000000000000000, double:-3.105036184601418E231)
+            long r12 = r12 & r4
+            int r12 = (r12 > r2 ? 1 : (r12 == r2 ? 0 : -1))
+            if (r12 != 0) goto L_0x004a
+            r10 = 4
+            long r4 = r4 << r10
+            long r10 = (long) r11
+            long r4 = r4 | r10
+            int r8 = r8 + 1
+            int r0 = r0 + 1
+            goto L_0x0013
+        L_0x004a:
+            okio.Buffer r14 = new okio.Buffer
+            r14.<init>()
+            okio.Buffer r14 = r14.writeHexadecimalUnsignedLong((long) r4)
+            okio.Buffer r14 = r14.writeByte((int) r10)
+            java.lang.NumberFormatException r0 = new java.lang.NumberFormatException
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            java.lang.String r2 = "Number too large: "
+            r1.<init>((java.lang.String) r2)
+            java.lang.String r14 = r14.readUtf8()
+            java.lang.StringBuilder r14 = r1.append((java.lang.String) r14)
+            java.lang.String r14 = r14.toString()
+            r0.<init>(r14)
+            throw r0
+        L_0x0070:
+            if (r0 == 0) goto L_0x0074
+            r1 = 1
+            goto L_0x008d
+        L_0x0074:
+            java.lang.NumberFormatException r14 = new java.lang.NumberFormatException
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            java.lang.String r1 = "Expected leading [0-9a-fA-F] character but was 0x"
+            r0.<init>((java.lang.String) r1)
+            java.lang.String r1 = java.lang.Integer.toHexString(r10)
+            java.lang.StringBuilder r0 = r0.append((java.lang.String) r1)
+            java.lang.String r0 = r0.toString()
+            r14.<init>(r0)
+            throw r14
+        L_0x008d:
+            if (r8 != r9) goto L_0x0099
+            okio.Segment r7 = r6.pop()
+            r14.head = r7
+            okio.SegmentPool.recycle(r6)
+            goto L_0x009b
+        L_0x0099:
+            r6.pos = r8
+        L_0x009b:
+            if (r1 != 0) goto L_0x00a1
+            okio.Segment r6 = r14.head
+            if (r6 != 0) goto L_0x000b
+        L_0x00a1:
+            long r1 = r14.size
+            long r6 = (long) r0
+            long r1 = r1 - r6
+            r14.size = r1
+            return r4
+        L_0x00a8:
+            java.lang.IllegalStateException r14 = new java.lang.IllegalStateException
+            java.lang.String r0 = "size == 0"
+            r14.<init>((java.lang.String) r0)
+            throw r14
+        */
+        throw new UnsupportedOperationException("Method not decompiled: okio.Buffer.readHexadecimalUnsignedLong():long");
+    }
+
+    public ByteString readByteString() {
+        return new ByteString(readByteArray());
+    }
+
+    public ByteString readByteString(long j) throws EOFException {
+        return new ByteString(readByteArray(j));
+    }
+
+    public int select(Options options) {
+        int selectPrefix = selectPrefix(options, false);
+        if (selectPrefix == -1) {
+            return -1;
+        }
+        try {
+            skip((long) options.byteStrings[selectPrefix].size());
+            return selectPrefix;
+        } catch (EOFException unused) {
+            throw new AssertionError();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public int selectPrefix(Options options, boolean z) {
+        int i;
+        int i2;
+        int i3;
+        Segment segment;
+        int i4;
+        Options options2 = options;
+        Segment segment2 = this.head;
+        if (segment2 != null) {
+            byte[] bArr = segment2.data;
+            int i5 = segment2.pos;
+            int i6 = segment2.limit;
+            int[] iArr = options2.trie;
+            Segment segment3 = segment2;
+            int i7 = 0;
+            int i8 = -1;
+            loop0:
+            while (true) {
+                int i9 = i7 + 1;
+                int i10 = iArr[i7];
+                int i11 = i9 + 1;
+                int i12 = iArr[i9];
+                if (i12 != -1) {
+                    i8 = i12;
+                }
+                if (segment3 == null) {
+                    break;
+                }
+                if (i10 < 0) {
+                    int i13 = i11 + (i10 * -1);
+                    while (true) {
+                        int i14 = i5 + 1;
+                        int i15 = i11 + 1;
+                        if ((bArr[i5] & 255) != iArr[i11]) {
+                            return i8;
+                        }
+                        boolean z2 = i15 == i13;
+                        if (i14 == i6) {
+                            Segment segment4 = segment3.next;
+                            i4 = segment4.pos;
+                            byte[] bArr2 = segment4.data;
+                            i3 = segment4.limit;
+                            if (segment4 != segment2) {
+                                byte[] bArr3 = bArr2;
+                                segment = segment4;
+                                bArr = bArr3;
+                            } else if (!z2) {
+                                break loop0;
+                            } else {
+                                bArr = bArr2;
+                                segment = null;
+                            }
+                        } else {
+                            Segment segment5 = segment3;
+                            i3 = i6;
+                            i4 = i14;
+                            segment = segment5;
+                        }
+                        if (z2) {
+                            i2 = iArr[i15];
+                            i = i4;
+                            i6 = i3;
+                            segment3 = segment;
+                            break;
+                        }
+                        i5 = i4;
+                        i6 = i3;
+                        i11 = i15;
+                        segment3 = segment;
+                    }
+                } else {
+                    i = i5 + 1;
+                    byte b = bArr[i5] & 255;
+                    int i16 = i11 + i10;
+                    while (i11 != i16) {
+                        if (b == iArr[i11]) {
+                            i2 = iArr[i11 + i10];
+                            if (i == i6) {
+                                segment3 = segment3.next;
+                                i = segment3.pos;
+                                bArr = segment3.data;
+                                i6 = segment3.limit;
+                                if (segment3 == segment2) {
+                                    segment3 = null;
+                                }
+                            }
+                        } else {
+                            i11++;
+                        }
+                    }
+                    return i8;
+                }
+                if (i2 >= 0) {
+                    return i2;
+                }
+                i7 = -i2;
+                i5 = i;
+            }
+            if (z) {
+                return -2;
+            }
+            return i8;
+        } else if (z) {
+            return -2;
+        } else {
+            return options2.indexOf(ByteString.EMPTY);
+        }
+    }
+
+    public void readFully(Buffer buffer, long j) throws EOFException {
+        long j2 = this.size;
+        if (j2 >= j) {
+            buffer.write(this, j);
+        } else {
+            buffer.write(this, j2);
+            throw new EOFException();
+        }
+    }
+
+    public long readAll(Sink sink) throws IOException {
+        long j = this.size;
+        if (j > 0) {
+            sink.write(this, j);
+        }
+        return j;
+    }
+
     public String readUtf8() {
-        return readString(this.size, Charsets.UTF_8);
+        try {
+            return readString(this.size, Util.UTF_8);
+        } catch (EOFException e) {
+            throw new AssertionError((Object) e);
+        }
     }
 
-    @NotNull
     public String readUtf8(long j) throws EOFException {
-        return readString(j, Charsets.UTF_8);
+        return readString(j, Util.UTF_8);
     }
 
-    @NotNull
-    public String readString(long j, @NotNull Charset charset) throws EOFException {
-        Intrinsics.checkNotNullParameter(charset, "charset");
-        int i = (j > 0L ? 1 : (j == 0L ? 0 : -1));
-        if (!(i >= 0 && j <= 2147483647L)) {
-            throw new IllegalArgumentException(Intrinsics.stringPlus("byteCount: ", Long.valueOf(j)).toString());
+    public String readString(Charset charset) {
+        try {
+            return readString(this.size, charset);
+        } catch (EOFException e) {
+            throw new AssertionError((Object) e);
         }
-        if (this.size < j) {
-            throw new EOFException();
-        }
-        if (i == 0) {
+    }
+
+    public String readString(long j, Charset charset) throws EOFException {
+        Util.checkOffsetAndCount(this.size, 0, j);
+        if (charset == null) {
+            throw new IllegalArgumentException("charset == null");
+        } else if (j > 2147483647L) {
+            throw new IllegalArgumentException("byteCount > Integer.MAX_VALUE: " + j);
+        } else if (j == 0) {
             return "";
-        }
-        Segment segment = this.head;
-        Intrinsics.checkNotNull(segment);
-        int i2 = segment.pos;
-        if (i2 + j > segment.limit) {
-            return new String(readByteArray(j), charset);
-        }
-        int i3 = (int) j;
-        String str = new String(segment.data, i2, i3, charset);
-        int i4 = segment.pos + i3;
-        segment.pos = i4;
-        this.size -= j;
-        if (i4 == segment.limit) {
-            this.head = segment.pop();
-            SegmentPool segmentPool = SegmentPool.INSTANCE;
-            SegmentPool.recycle(segment);
-        }
-        return str;
-    }
-
-    public int readInt() throws EOFException {
-        if (size() < 4) {
-            throw new EOFException();
-        }
-        Segment segment = this.head;
-        Intrinsics.checkNotNull(segment);
-        int i = segment.pos;
-        int i2 = segment.limit;
-        if (i2 - i < 4) {
-            return (readByte() & 255) | ((readByte() & 255) << 24) | ((readByte() & 255) << 16) | ((readByte() & 255) << 8);
-        }
-        byte[] bArr = segment.data;
-        int i3 = i + 1;
-        int i4 = i3 + 1;
-        int i5 = ((bArr[i] & 255) << 24) | ((bArr[i3] & 255) << 16);
-        int i6 = i4 + 1;
-        int i7 = i5 | ((bArr[i4] & 255) << 8);
-        int i8 = i6 + 1;
-        int i9 = i7 | (bArr[i6] & 255);
-        setSize$external__okio__android_common__okio_lib(size() - 4);
-        if (i8 == i2) {
-            this.head = segment.pop();
-            SegmentPool segmentPool = SegmentPool.INSTANCE;
-            SegmentPool.recycle(segment);
         } else {
-            segment.pos = i8;
+            Segment segment = this.head;
+            if (((long) segment.pos) + j > ((long) segment.limit)) {
+                return new String(readByteArray(j), charset);
+            }
+            String str = new String(segment.data, segment.pos, (int) j, charset);
+            segment.pos = (int) (((long) segment.pos) + j);
+            this.size -= j;
+            if (segment.pos == segment.limit) {
+                this.head = segment.pop();
+                SegmentPool.recycle(segment);
+            }
+            return str;
         }
-        return i9;
     }
 
-    @Override // java.nio.channels.ReadableByteChannel
-    public int read(@NotNull ByteBuffer sink) throws IOException {
-        Intrinsics.checkNotNullParameter(sink, "sink");
+    @Nullable
+    public String readUtf8Line() throws EOFException {
+        long indexOf = indexOf((byte) 10);
+        if (indexOf != -1) {
+            return readUtf8Line(indexOf);
+        }
+        long j = this.size;
+        if (j != 0) {
+            return readUtf8(j);
+        }
+        return null;
+    }
+
+    public String readUtf8LineStrict() throws EOFException {
+        return readUtf8LineStrict(Long.MAX_VALUE);
+    }
+
+    public String readUtf8LineStrict(long j) throws EOFException {
+        if (j >= 0) {
+            long j2 = Long.MAX_VALUE;
+            if (j != Long.MAX_VALUE) {
+                j2 = j + 1;
+            }
+            long indexOf = indexOf((byte) 10, 0, j2);
+            if (indexOf != -1) {
+                return readUtf8Line(indexOf);
+            }
+            if (j2 < size() && getByte(j2 - 1) == 13 && getByte(j2) == 10) {
+                return readUtf8Line(j2);
+            }
+            Buffer buffer = new Buffer();
+            copyTo(buffer, 0, Math.min(32, size()));
+            throw new EOFException("\\n not found: limit=" + Math.min(size(), j) + " content=" + buffer.readByteString().hex() + Typography.ellipsis);
+        }
+        throw new IllegalArgumentException("limit < 0: " + j);
+    }
+
+    /* access modifiers changed from: package-private */
+    public String readUtf8Line(long j) throws EOFException {
+        if (j > 0) {
+            long j2 = j - 1;
+            if (getByte(j2) == 13) {
+                String readUtf8 = readUtf8(j2);
+                skip(2);
+                return readUtf8;
+            }
+        }
+        String readUtf82 = readUtf8(j);
+        skip(1);
+        return readUtf82;
+    }
+
+    public int readUtf8CodePoint() throws EOFException {
+        byte b;
+        int i;
+        byte b2;
+        if (this.size != 0) {
+            byte b3 = getByte(0);
+            int i2 = 1;
+            if ((b3 & 128) == 0) {
+                b2 = b3 & Byte.MAX_VALUE;
+                b = 0;
+                i = 1;
+            } else if ((b3 & 224) == 192) {
+                b2 = b3 & 31;
+                i = 2;
+                b = 128;
+            } else if ((b3 & 240) == 224) {
+                b2 = b3 & 15;
+                i = 3;
+                b = 2048;
+            } else if ((b3 & 248) == 240) {
+                b2 = b3 & 7;
+                i = 4;
+                b = 65536;
+            } else {
+                skip(1);
+                return 65533;
+            }
+            long j = (long) i;
+            if (this.size >= j) {
+                while (i2 < i) {
+                    long j2 = (long) i2;
+                    byte b4 = getByte(j2);
+                    if ((b4 & DerValue.TAG_PRIVATE) == 128) {
+                        b2 = (b2 << 6) | (b4 & 63);
+                        i2++;
+                    } else {
+                        skip(j2);
+                        return 65533;
+                    }
+                }
+                skip(j);
+                if (b2 > 1114111) {
+                    return 65533;
+                }
+                if ((b2 < 55296 || b2 > 57343) && b2 >= b) {
+                    return b2;
+                }
+                return 65533;
+            }
+            throw new EOFException("size < " + i + ": " + this.size + " (to read code point prefixed 0x" + Integer.toHexString(b3) + NavigationBarInflaterView.KEY_CODE_END);
+        }
+        throw new EOFException();
+    }
+
+    public byte[] readByteArray() {
+        try {
+            return readByteArray(this.size);
+        } catch (EOFException e) {
+            throw new AssertionError((Object) e);
+        }
+    }
+
+    public byte[] readByteArray(long j) throws EOFException {
+        Util.checkOffsetAndCount(this.size, 0, j);
+        if (j <= 2147483647L) {
+            byte[] bArr = new byte[((int) j)];
+            readFully(bArr);
+            return bArr;
+        }
+        throw new IllegalArgumentException("byteCount > Integer.MAX_VALUE: " + j);
+    }
+
+    public int read(byte[] bArr) {
+        return read(bArr, 0, bArr.length);
+    }
+
+    public void readFully(byte[] bArr) throws EOFException {
+        int i = 0;
+        while (i < bArr.length) {
+            int read = read(bArr, i, bArr.length - i);
+            if (read != -1) {
+                i += read;
+            } else {
+                throw new EOFException();
+            }
+        }
+    }
+
+    public int read(byte[] bArr, int i, int i2) {
+        Util.checkOffsetAndCount((long) bArr.length, (long) i, (long) i2);
         Segment segment = this.head;
         if (segment == null) {
             return -1;
         }
-        int min = Math.min(sink.remaining(), segment.limit - segment.pos);
-        sink.put(segment.data, segment.pos, min);
-        int i = segment.pos + min;
-        segment.pos = i;
-        this.size -= min;
-        if (i == segment.limit) {
+        int min = Math.min(i2, segment.limit - segment.pos);
+        System.arraycopy((Object) segment.data, segment.pos, (Object) bArr, i, min);
+        segment.pos += min;
+        this.size -= (long) min;
+        if (segment.pos == segment.limit) {
             this.head = segment.pop();
-            SegmentPool segmentPool = SegmentPool.INSTANCE;
             SegmentPool.recycle(segment);
         }
         return min;
     }
 
-    @Override // okio.BufferedSink
-    @NotNull
-    /* renamed from: writeUtf8 */
-    public Buffer mo1954writeUtf8(@NotNull String string) {
-        Intrinsics.checkNotNullParameter(string, "string");
-        return mo1955writeUtf8(string, 0, string.length());
-    }
-
-    public final byte getByte(long j) {
-        Util.checkOffsetAndCount(size(), j, 1L);
+    public int read(ByteBuffer byteBuffer) throws IOException {
         Segment segment = this.head;
-        if (segment != null) {
-            if (size() - j < j) {
-                long size = size();
-                while (size > j) {
-                    segment = segment.prev;
-                    Intrinsics.checkNotNull(segment);
-                    size -= segment.limit - segment.pos;
-                }
-                return segment.data[(int) ((segment.pos + j) - size)];
-            }
-            long j2 = 0;
-            while (true) {
-                int i = segment.limit;
-                int i2 = segment.pos;
-                long j3 = (i - i2) + j2;
-                if (j3 <= j) {
-                    segment = segment.next;
-                    Intrinsics.checkNotNull(segment);
-                    j2 = j3;
-                } else {
-                    return segment.data[(int) ((i2 + j) - j2)];
-                }
-            }
-        } else {
-            Intrinsics.checkNotNull(null);
-            throw null;
+        if (segment == null) {
+            return -1;
         }
+        int min = Math.min(byteBuffer.remaining(), segment.limit - segment.pos);
+        byteBuffer.put(segment.data, segment.pos, min);
+        segment.pos += min;
+        this.size -= (long) min;
+        if (segment.pos == segment.limit) {
+            this.head = segment.pop();
+            SegmentPool.recycle(segment);
+        }
+        return min;
     }
 
     public final void clear() {
-        skip(size());
-    }
-
-    @Override // java.nio.channels.WritableByteChannel
-    public int write(@NotNull ByteBuffer source) throws IOException {
-        Intrinsics.checkNotNullParameter(source, "source");
-        int remaining = source.remaining();
-        int i = remaining;
-        while (i > 0) {
-            Segment writableSegment$external__okio__android_common__okio_lib = writableSegment$external__okio__android_common__okio_lib(1);
-            int min = Math.min(i, 8192 - writableSegment$external__okio__android_common__okio_lib.limit);
-            source.get(writableSegment$external__okio__android_common__okio_lib.data, writableSegment$external__okio__android_common__okio_lib.limit, min);
-            i -= min;
-            writableSegment$external__okio__android_common__okio_lib.limit += min;
+        try {
+            skip(this.size);
+        } catch (EOFException e) {
+            throw new AssertionError((Object) e);
         }
-        this.size += remaining;
-        return remaining;
     }
 
     public void skip(long j) throws EOFException {
         while (j > 0) {
             Segment segment = this.head;
             if (segment != null) {
-                int min = (int) Math.min(j, segment.limit - segment.pos);
-                long j2 = min;
-                setSize$external__okio__android_common__okio_lib(size() - j2);
+                int min = (int) Math.min(j, (long) (segment.limit - this.head.pos));
+                long j2 = (long) min;
+                this.size -= j2;
                 j -= j2;
-                int i = segment.pos + min;
-                segment.pos = i;
-                if (i == segment.limit) {
-                    this.head = segment.pop();
-                    SegmentPool segmentPool = SegmentPool.INSTANCE;
-                    SegmentPool.recycle(segment);
+                this.head.pos += min;
+                if (this.head.pos == this.head.limit) {
+                    Segment segment2 = this.head;
+                    this.head = segment2.pop();
+                    SegmentPool.recycle(segment2);
                 }
             } else {
                 throw new EOFException();
@@ -370,245 +1043,231 @@ public final class Buffer implements BufferedSource, BufferedSink, Cloneable, By
         }
     }
 
-    @Override // okio.BufferedSource
-    public long indexOf(@NotNull ByteString bytes) throws IOException {
-        Intrinsics.checkNotNullParameter(bytes, "bytes");
-        return indexOf(bytes, 0L);
+    public Buffer write(ByteString byteString) {
+        if (byteString != null) {
+            byteString.write(this);
+            return this;
+        }
+        throw new IllegalArgumentException("byteString == null");
     }
 
-    @Override // okio.BufferedSource
-    public long indexOfElement(@NotNull ByteString targetBytes) {
-        Intrinsics.checkNotNullParameter(targetBytes, "targetBytes");
-        return indexOfElement(targetBytes, 0L);
+    public Buffer writeUtf8(String str) {
+        return writeUtf8(str, 0, str.length());
     }
 
-    @NotNull
-    public final Segment writableSegment$external__okio__android_common__okio_lib(int i) {
-        boolean z = true;
-        if (i < 1 || i > 8192) {
-            z = false;
-        }
-        if (!z) {
-            throw new IllegalArgumentException("unexpected capacity".toString());
-        }
-        Segment segment = this.head;
-        if (segment == null) {
-            SegmentPool segmentPool = SegmentPool.INSTANCE;
-            Segment take = SegmentPool.take();
-            this.head = take;
-            take.prev = take;
-            take.next = take;
-            return take;
-        }
-        Intrinsics.checkNotNull(segment);
-        Segment segment2 = segment.prev;
-        Intrinsics.checkNotNull(segment2);
-        if (segment2.limit + i > 8192 || !segment2.owner) {
-            SegmentPool segmentPool2 = SegmentPool.INSTANCE;
-            segment2 = segment2.push(SegmentPool.take());
-        }
-        return segment2;
-    }
-
-    @NotNull
-    public String toString() {
-        return snapshot().toString();
-    }
-
-    @NotNull
-    public Buffer clone() {
-        return copy();
-    }
-
-    @NotNull
-    public byte[] readByteArray(long j) throws EOFException {
-        if (!(j >= 0 && j <= 2147483647L)) {
-            throw new IllegalArgumentException(Intrinsics.stringPlus("byteCount: ", Long.valueOf(j)).toString());
-        }
-        if (size() < j) {
-            throw new EOFException();
-        }
-        byte[] bArr = new byte[(int) j];
-        readFully(bArr);
-        return bArr;
-    }
-
-    public void readFully(@NotNull byte[] sink) throws EOFException {
-        Intrinsics.checkNotNullParameter(sink, "sink");
-        int i = 0;
-        while (i < sink.length) {
-            int read = read(sink, i, sink.length - i);
-            if (read == -1) {
-                throw new EOFException();
-            }
-            i += read;
-        }
-    }
-
-    public int read(@NotNull byte[] sink, int i, int i2) {
-        Intrinsics.checkNotNullParameter(sink, "sink");
-        Util.checkOffsetAndCount(sink.length, i, i2);
-        Segment segment = this.head;
-        if (segment == null) {
-            return -1;
-        }
-        int min = Math.min(i2, segment.limit - segment.pos);
-        byte[] bArr = segment.data;
-        int i3 = segment.pos;
-        ArraysKt.copyInto(bArr, sink, i, i3, i3 + min);
-        segment.pos += min;
-        setSize$external__okio__android_common__okio_lib(size() - min);
-        if (segment.pos == segment.limit) {
-            this.head = segment.pop();
-            SegmentPool segmentPool = SegmentPool.INSTANCE;
-            SegmentPool.recycle(segment);
-        }
-        return min;
-    }
-
-    @NotNull
-    public ByteString readByteString() {
-        return readByteString(size());
-    }
-
-    @NotNull
-    public ByteString readByteString(long j) throws EOFException {
-        if (!(j >= 0 && j <= 2147483647L)) {
-            throw new IllegalArgumentException(Intrinsics.stringPlus("byteCount: ", Long.valueOf(j)).toString());
-        }
-        if (size() < j) {
-            throw new EOFException();
-        }
-        if (j >= 4096) {
-            ByteString snapshot = snapshot((int) j);
-            skip(j);
-            return snapshot;
-        }
-        return new ByteString(readByteArray(j));
-    }
-
-    @Override // okio.BufferedSource
-    public int select(@NotNull Options options) {
-        Intrinsics.checkNotNullParameter(options, "options");
-        int selectPrefix$default = BufferKt.selectPrefix$default(this, options, false, 2, null);
-        if (selectPrefix$default == -1) {
-            return -1;
-        }
-        skip(options.getByteStrings$external__okio__android_common__okio_lib()[selectPrefix$default].size());
-        return selectPrefix$default;
-    }
-
-    @Override // okio.BufferedSink
-    @NotNull
-    /* renamed from: writeUtf8 */
-    public Buffer mo1955writeUtf8(@NotNull String string, int i, int i2) {
-        char charAt;
-        Intrinsics.checkNotNullParameter(string, "string");
-        if (i >= 0) {
-            if (!(i2 >= i)) {
-                throw new IllegalArgumentException(("endIndex < beginIndex: " + i2 + " < " + i).toString());
-            }
-            if (!(i2 <= string.length())) {
-                throw new IllegalArgumentException(("endIndex > string.length: " + i2 + " > " + string.length()).toString());
-            }
+    public Buffer writeUtf8(String str, int i, int i2) {
+        char c;
+        if (str == null) {
+            throw new IllegalArgumentException("string == null");
+        } else if (i < 0) {
+            throw new IllegalArgumentException("beginIndex < 0: " + i);
+        } else if (i2 < i) {
+            throw new IllegalArgumentException("endIndex < beginIndex: " + i2 + " < " + i);
+        } else if (i2 <= str.length()) {
             while (i < i2) {
-                char charAt2 = string.charAt(i);
-                if (charAt2 < 128) {
-                    Segment writableSegment$external__okio__android_common__okio_lib = writableSegment$external__okio__android_common__okio_lib(1);
-                    byte[] bArr = writableSegment$external__okio__android_common__okio_lib.data;
-                    int i3 = writableSegment$external__okio__android_common__okio_lib.limit - i;
+                char charAt = str.charAt(i);
+                if (charAt < 128) {
+                    Segment writableSegment = writableSegment(1);
+                    byte[] bArr = writableSegment.data;
+                    int i3 = writableSegment.limit - i;
                     int min = Math.min(i2, 8192 - i3);
                     int i4 = i + 1;
-                    bArr[i + i3] = (byte) charAt2;
-                    while (true) {
-                        i = i4;
-                        if (i >= min || (charAt = string.charAt(i)) >= 128) {
+                    bArr[i + i3] = (byte) charAt;
+                    while (i4 < min) {
+                        char charAt2 = str.charAt(i4);
+                        if (charAt2 >= 128) {
                             break;
                         }
-                        i4 = i + 1;
-                        bArr[i + i3] = (byte) charAt;
+                        bArr[i4 + i3] = (byte) charAt2;
+                        i4++;
                     }
-                    int i5 = writableSegment$external__okio__android_common__okio_lib.limit;
-                    int i6 = (i3 + i) - i5;
-                    writableSegment$external__okio__android_common__okio_lib.limit = i5 + i6;
-                    setSize$external__okio__android_common__okio_lib(size() + i6);
+                    int i5 = (i3 + i4) - writableSegment.limit;
+                    writableSegment.limit += i5;
+                    this.size += (long) i5;
+                    i = i4;
                 } else {
-                    if (charAt2 < 2048) {
-                        Segment writableSegment$external__okio__android_common__okio_lib2 = writableSegment$external__okio__android_common__okio_lib(2);
-                        byte[] bArr2 = writableSegment$external__okio__android_common__okio_lib2.data;
-                        int i7 = writableSegment$external__okio__android_common__okio_lib2.limit;
-                        bArr2[i7] = (byte) ((charAt2 >> 6) | 192);
-                        bArr2[i7 + 1] = (byte) ((charAt2 & '?') | 128);
-                        writableSegment$external__okio__android_common__okio_lib2.limit = i7 + 2;
-                        setSize$external__okio__android_common__okio_lib(size() + 2);
-                    } else if (charAt2 < 55296 || charAt2 > 57343) {
-                        Segment writableSegment$external__okio__android_common__okio_lib3 = writableSegment$external__okio__android_common__okio_lib(3);
-                        byte[] bArr3 = writableSegment$external__okio__android_common__okio_lib3.data;
-                        int i8 = writableSegment$external__okio__android_common__okio_lib3.limit;
-                        bArr3[i8] = (byte) ((charAt2 >> '\f') | 224);
-                        bArr3[i8 + 1] = (byte) ((63 & (charAt2 >> 6)) | 128);
-                        bArr3[i8 + 2] = (byte) ((charAt2 & '?') | 128);
-                        writableSegment$external__okio__android_common__okio_lib3.limit = i8 + 3;
-                        setSize$external__okio__android_common__okio_lib(size() + 3);
+                    if (charAt < 2048) {
+                        writeByte((charAt >> 6) | 192);
+                        writeByte((int) (charAt & '?') | 128);
+                    } else if (charAt < 55296 || charAt > 57343) {
+                        writeByte((charAt >> 12) | 224);
+                        writeByte(((charAt >> 6) & 63) | 128);
+                        writeByte((int) (charAt & '?') | 128);
                     } else {
-                        int i9 = i + 1;
-                        char charAt3 = i9 < i2 ? string.charAt(i9) : (char) 0;
-                        if (charAt2 <= 56319) {
-                            if (56320 <= charAt3 && charAt3 <= 57343) {
-                                int i10 = (((charAt2 & 1023) << 10) | (charAt3 & 1023)) + 65536;
-                                Segment writableSegment$external__okio__android_common__okio_lib4 = writableSegment$external__okio__android_common__okio_lib(4);
-                                byte[] bArr4 = writableSegment$external__okio__android_common__okio_lib4.data;
-                                int i11 = writableSegment$external__okio__android_common__okio_lib4.limit;
-                                bArr4[i11] = (byte) ((i10 >> 18) | 240);
-                                bArr4[i11 + 1] = (byte) (((i10 >> 12) & 63) | 128);
-                                bArr4[i11 + 2] = (byte) (((i10 >> 6) & 63) | 128);
-                                bArr4[i11 + 3] = (byte) ((i10 & 63) | 128);
-                                writableSegment$external__okio__android_common__okio_lib4.limit = i11 + 4;
-                                setSize$external__okio__android_common__okio_lib(size() + 4);
-                                i += 2;
-                            }
+                        int i6 = i + 1;
+                        if (i6 < i2) {
+                            c = str.charAt(i6);
+                        } else {
+                            c = 0;
                         }
-                        mo1953writeByte(63);
-                        i = i9;
+                        if (charAt > 56319 || c < 56320 || c > 57343) {
+                            writeByte(63);
+                            i = i6;
+                        } else {
+                            int i7 = (((charAt & 10239) << 10) | (9215 & c)) + 0;
+                            writeByte((i7 >> 18) | 240);
+                            writeByte(((i7 >> 12) & 63) | 128);
+                            writeByte(((i7 >> 6) & 63) | 128);
+                            writeByte((i7 & 63) | 128);
+                            i += 2;
+                        }
                     }
                     i++;
                 }
             }
             return this;
+        } else {
+            throw new IllegalArgumentException("endIndex > string.length: " + i2 + " > " + str.length());
         }
-        throw new IllegalArgumentException(Intrinsics.stringPlus("beginIndex < 0: ", Integer.valueOf(i)).toString());
     }
 
-    public long writeAll(@NotNull Source source) throws IOException {
-        Intrinsics.checkNotNullParameter(source, "source");
-        long j = 0;
-        while (true) {
-            long read = source.read(this, 8192L);
-            if (read == -1) {
-                return j;
+    public Buffer writeUtf8CodePoint(int i) {
+        if (i < 128) {
+            writeByte(i);
+        } else if (i < 2048) {
+            writeByte((i >> 6) | 192);
+            writeByte((i & 63) | 128);
+        } else if (i < 65536) {
+            if (i < 55296 || i > 57343) {
+                writeByte((i >> 12) | 224);
+                writeByte(((i >> 6) & 63) | 128);
+                writeByte((i & 63) | 128);
+            } else {
+                writeByte(63);
             }
-            j += read;
+        } else if (i <= 1114111) {
+            writeByte((i >> 18) | 240);
+            writeByte(((i >> 12) & 63) | 128);
+            writeByte(((i >> 6) & 63) | 128);
+            writeByte((i & 63) | 128);
+        } else {
+            throw new IllegalArgumentException("Unexpected code point: " + Integer.toHexString(i));
         }
-    }
-
-    @Override // okio.BufferedSink
-    @NotNull
-    /* renamed from: writeByte */
-    public Buffer mo1953writeByte(int i) {
-        Segment writableSegment$external__okio__android_common__okio_lib = writableSegment$external__okio__android_common__okio_lib(1);
-        byte[] bArr = writableSegment$external__okio__android_common__okio_lib.data;
-        int i2 = writableSegment$external__okio__android_common__okio_lib.limit;
-        writableSegment$external__okio__android_common__okio_lib.limit = i2 + 1;
-        bArr[i2] = (byte) i;
-        setSize$external__okio__android_common__okio_lib(size() + 1);
         return this;
     }
 
-    @NotNull
+    public Buffer writeString(String str, Charset charset) {
+        return writeString(str, 0, str.length(), charset);
+    }
+
+    public Buffer writeString(String str, int i, int i2, Charset charset) {
+        if (str == null) {
+            throw new IllegalArgumentException("string == null");
+        } else if (i < 0) {
+            throw new IllegalAccessError("beginIndex < 0: " + i);
+        } else if (i2 < i) {
+            throw new IllegalArgumentException("endIndex < beginIndex: " + i2 + " < " + i);
+        } else if (i2 > str.length()) {
+            throw new IllegalArgumentException("endIndex > string.length: " + i2 + " > " + str.length());
+        } else if (charset == null) {
+            throw new IllegalArgumentException("charset == null");
+        } else if (charset.equals(Util.UTF_8)) {
+            return writeUtf8(str, i, i2);
+        } else {
+            byte[] bytes = str.substring(i, i2).getBytes(charset);
+            return write(bytes, 0, bytes.length);
+        }
+    }
+
+    public Buffer write(byte[] bArr) {
+        if (bArr != null) {
+            return write(bArr, 0, bArr.length);
+        }
+        throw new IllegalArgumentException("source == null");
+    }
+
+    public Buffer write(byte[] bArr, int i, int i2) {
+        if (bArr != null) {
+            long j = (long) i2;
+            Util.checkOffsetAndCount((long) bArr.length, (long) i, j);
+            int i3 = i2 + i;
+            while (i < i3) {
+                Segment writableSegment = writableSegment(1);
+                int min = Math.min(i3 - i, 8192 - writableSegment.limit);
+                System.arraycopy((Object) bArr, i, (Object) writableSegment.data, writableSegment.limit, min);
+                i += min;
+                writableSegment.limit += min;
+            }
+            this.size += j;
+            return this;
+        }
+        throw new IllegalArgumentException("source == null");
+    }
+
+    public int write(ByteBuffer byteBuffer) throws IOException {
+        if (byteBuffer != null) {
+            int remaining = byteBuffer.remaining();
+            int i = remaining;
+            while (i > 0) {
+                Segment writableSegment = writableSegment(1);
+                int min = Math.min(i, 8192 - writableSegment.limit);
+                byteBuffer.get(writableSegment.data, writableSegment.limit, min);
+                i -= min;
+                writableSegment.limit += min;
+            }
+            this.size += (long) remaining;
+            return remaining;
+        }
+        throw new IllegalArgumentException("source == null");
+    }
+
+    public long writeAll(Source source) throws IOException {
+        if (source != null) {
+            long j = 0;
+            while (true) {
+                long read = source.read(this, 8192);
+                if (read == -1) {
+                    return j;
+                }
+                j += read;
+            }
+        } else {
+            throw new IllegalArgumentException("source == null");
+        }
+    }
+
+    public BufferedSink write(Source source, long j) throws IOException {
+        while (j > 0) {
+            long read = source.read(this, j);
+            if (read != -1) {
+                j -= read;
+            } else {
+                throw new EOFException();
+            }
+        }
+        return this;
+    }
+
+    public Buffer writeByte(int i) {
+        Segment writableSegment = writableSegment(1);
+        byte[] bArr = writableSegment.data;
+        int i2 = writableSegment.limit;
+        writableSegment.limit = i2 + 1;
+        bArr[i2] = (byte) i;
+        this.size++;
+        return this;
+    }
+
+    public Buffer writeShort(int i) {
+        Segment writableSegment = writableSegment(2);
+        byte[] bArr = writableSegment.data;
+        int i2 = writableSegment.limit;
+        int i3 = i2 + 1;
+        bArr[i2] = (byte) ((i >>> 8) & 255);
+        bArr[i3] = (byte) (i & 255);
+        writableSegment.limit = i3 + 1;
+        this.size += 2;
+        return this;
+    }
+
+    public Buffer writeShortLe(int i) {
+        return writeShort((int) Util.reverseBytesShort((short) i));
+    }
+
     public Buffer writeInt(int i) {
-        Segment writableSegment$external__okio__android_common__okio_lib = writableSegment$external__okio__android_common__okio_lib(4);
-        byte[] bArr = writableSegment$external__okio__android_common__okio_lib.data;
-        int i2 = writableSegment$external__okio__android_common__okio_lib.limit;
+        Segment writableSegment = writableSegment(4);
+        byte[] bArr = writableSegment.data;
+        int i2 = writableSegment.limit;
         int i3 = i2 + 1;
         bArr[i2] = (byte) ((i >>> 24) & 255);
         int i4 = i3 + 1;
@@ -616,236 +1275,556 @@ public final class Buffer implements BufferedSource, BufferedSink, Cloneable, By
         int i5 = i4 + 1;
         bArr[i4] = (byte) ((i >>> 8) & 255);
         bArr[i5] = (byte) (i & 255);
-        writableSegment$external__okio__android_common__okio_lib.limit = i5 + 1;
-        setSize$external__okio__android_common__okio_lib(size() + 4);
+        writableSegment.limit = i5 + 1;
+        this.size += 4;
         return this;
     }
 
-    public void write(@NotNull Buffer source, long j) {
-        Segment segment;
-        Segment segment2;
-        Intrinsics.checkNotNullParameter(source, "source");
-        if (!(source != this)) {
-            throw new IllegalArgumentException("source == this".toString());
-        }
-        Util.checkOffsetAndCount(source.size(), 0L, j);
-        while (j > 0) {
-            Segment segment3 = source.head;
-            Intrinsics.checkNotNull(segment3);
-            int i = segment3.limit;
-            Intrinsics.checkNotNull(source.head);
-            if (j < i - segment.pos) {
-                Segment segment4 = this.head;
-                if (segment4 != null) {
-                    Intrinsics.checkNotNull(segment4);
-                    segment2 = segment4.prev;
-                } else {
-                    segment2 = null;
-                }
-                if (segment2 != null && segment2.owner) {
-                    if ((segment2.limit + j) - (segment2.shared ? 0 : segment2.pos) <= 8192) {
-                        Segment segment5 = source.head;
-                        Intrinsics.checkNotNull(segment5);
-                        segment5.writeTo(segment2, (int) j);
-                        source.setSize$external__okio__android_common__okio_lib(source.size() - j);
-                        setSize$external__okio__android_common__okio_lib(size() + j);
-                        return;
-                    }
-                }
-                Segment segment6 = source.head;
-                Intrinsics.checkNotNull(segment6);
-                source.head = segment6.split((int) j);
-            }
-            Segment segment7 = source.head;
-            Intrinsics.checkNotNull(segment7);
-            long j2 = segment7.limit - segment7.pos;
-            source.head = segment7.pop();
-            Segment segment8 = this.head;
-            if (segment8 == null) {
-                this.head = segment7;
-                segment7.prev = segment7;
-                segment7.next = segment7;
-            } else {
-                Intrinsics.checkNotNull(segment8);
-                Segment segment9 = segment8.prev;
-                Intrinsics.checkNotNull(segment9);
-                segment9.push(segment7).compact();
-            }
-            source.setSize$external__okio__android_common__okio_lib(source.size() - j2);
-            setSize$external__okio__android_common__okio_lib(size() + j2);
-            j -= j2;
-        }
+    public Buffer writeIntLe(int i) {
+        return writeInt(Util.reverseBytesInt(i));
     }
 
-    @Override // okio.Source
-    public long read(@NotNull Buffer sink, long j) {
-        Intrinsics.checkNotNullParameter(sink, "sink");
-        if (!(j >= 0)) {
-            throw new IllegalArgumentException(Intrinsics.stringPlus("byteCount < 0: ", Long.valueOf(j)).toString());
-        }
-        if (size() == 0) {
-            return -1L;
-        }
-        if (j > size()) {
-            j = size();
-        }
-        sink.write(this, j);
-        return j;
+    public Buffer writeLong(long j) {
+        Segment writableSegment = writableSegment(8);
+        byte[] bArr = writableSegment.data;
+        int i = writableSegment.limit;
+        int i2 = i + 1;
+        bArr[i] = (byte) ((int) ((j >>> 56) & 255));
+        int i3 = i2 + 1;
+        bArr[i2] = (byte) ((int) ((j >>> 48) & 255));
+        int i4 = i3 + 1;
+        bArr[i3] = (byte) ((int) ((j >>> 40) & 255));
+        int i5 = i4 + 1;
+        bArr[i4] = (byte) ((int) ((j >>> 32) & 255));
+        int i6 = i5 + 1;
+        bArr[i5] = (byte) ((int) ((j >>> 24) & 255));
+        int i7 = i6 + 1;
+        bArr[i6] = (byte) ((int) ((j >>> 16) & 255));
+        int i8 = i7 + 1;
+        bArr[i7] = (byte) ((int) ((j >>> 8) & 255));
+        bArr[i8] = (byte) ((int) (j & 255));
+        writableSegment.limit = i8 + 1;
+        this.size += 8;
+        return this;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:31:?, code lost:
-        return (r4 - r6.pos) + r10;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public long indexOf(@NotNull ByteString bytes, long j) throws IOException {
-        long j2;
-        int i;
+    public Buffer writeLongLe(long j) {
+        return writeLong(Util.reverseBytesLong(j));
+    }
+
+    public Buffer writeDecimalLong(long j) {
         boolean z;
-        Intrinsics.checkNotNullParameter(bytes, "bytes");
-        if (bytes.size() > 0) {
-            long j3 = 0;
+        int i = (j > 0 ? 1 : (j == 0 ? 0 : -1));
+        if (i == 0) {
+            return writeByte(48);
+        }
+        int i2 = 1;
+        if (i < 0) {
+            j = -j;
+            if (j < 0) {
+                return writeUtf8("-9223372036854775808");
+            }
+            z = true;
+        } else {
+            z = false;
+        }
+        if (j >= 100000000) {
+            i2 = j < 1000000000000L ? j < 10000000000L ? j < 1000000000 ? 9 : 10 : j < 100000000000L ? 11 : 12 : j < 1000000000000000L ? j < 10000000000000L ? 13 : j < 100000000000000L ? 14 : 15 : j < 100000000000000000L ? j < 10000000000000000L ? 16 : 17 : j < 1000000000000000000L ? 18 : 19;
+        } else if (j >= 10000) {
+            i2 = j < 1000000 ? j < 100000 ? 5 : 6 : j < 10000000 ? 7 : 8;
+        } else if (j >= 100) {
+            i2 = j < 1000 ? 3 : 4;
+        } else if (j >= 10) {
+            i2 = 2;
+        }
+        if (z) {
+            i2++;
+        }
+        Segment writableSegment = writableSegment(i2);
+        byte[] bArr = writableSegment.data;
+        int i3 = writableSegment.limit + i2;
+        while (j != 0) {
+            i3--;
+            bArr[i3] = DIGITS[(int) (j % 10)];
+            j /= 10;
+        }
+        if (z) {
+            bArr[i3 - 1] = 45;
+        }
+        writableSegment.limit += i2;
+        this.size += (long) i2;
+        return this;
+    }
+
+    public Buffer writeHexadecimalUnsignedLong(long j) {
+        if (j == 0) {
+            return writeByte(48);
+        }
+        int numberOfTrailingZeros = (Long.numberOfTrailingZeros(Long.highestOneBit(j)) / 4) + 1;
+        Segment writableSegment = writableSegment(numberOfTrailingZeros);
+        byte[] bArr = writableSegment.data;
+        int i = writableSegment.limit;
+        for (int i2 = (writableSegment.limit + numberOfTrailingZeros) - 1; i2 >= i; i2--) {
+            bArr[i2] = DIGITS[(int) (15 & j)];
+            j >>>= 4;
+        }
+        writableSegment.limit += numberOfTrailingZeros;
+        this.size += (long) numberOfTrailingZeros;
+        return this;
+    }
+
+    /* access modifiers changed from: package-private */
+    public Segment writableSegment(int i) {
+        if (i < 1 || i > 8192) {
+            throw new IllegalArgumentException();
+        }
+        Segment segment = this.head;
+        if (segment == null) {
+            Segment take = SegmentPool.take();
+            this.head = take;
+            take.prev = take;
+            take.next = take;
+            return take;
+        }
+        Segment segment2 = segment.prev;
+        return (segment2.limit + i > 8192 || !segment2.owner) ? segment2.push(SegmentPool.take()) : segment2;
+    }
+
+    public void write(Buffer buffer, long j) {
+        int i;
+        if (buffer == null) {
+            throw new IllegalArgumentException("source == null");
+        } else if (buffer != this) {
+            Util.checkOffsetAndCount(buffer.size, 0, j);
+            while (j > 0) {
+                if (j < ((long) (buffer.head.limit - buffer.head.pos))) {
+                    Segment segment = this.head;
+                    Segment segment2 = segment != null ? segment.prev : null;
+                    if (segment2 != null && segment2.owner) {
+                        long j2 = ((long) segment2.limit) + j;
+                        if (segment2.shared) {
+                            i = 0;
+                        } else {
+                            i = segment2.pos;
+                        }
+                        if (j2 - ((long) i) <= 8192) {
+                            buffer.head.writeTo(segment2, (int) j);
+                            buffer.size -= j;
+                            this.size += j;
+                            return;
+                        }
+                    }
+                    buffer.head = buffer.head.split((int) j);
+                }
+                Segment segment3 = buffer.head;
+                long j3 = (long) (segment3.limit - segment3.pos);
+                buffer.head = segment3.pop();
+                Segment segment4 = this.head;
+                if (segment4 == null) {
+                    this.head = segment3;
+                    segment3.prev = segment3;
+                    segment3.next = segment3;
+                } else {
+                    segment4.prev.push(segment3).compact();
+                }
+                buffer.size -= j3;
+                this.size += j3;
+                j -= j3;
+            }
+        } else {
+            throw new IllegalArgumentException("source == this");
+        }
+    }
+
+    public long read(Buffer buffer, long j) {
+        if (buffer == null) {
+            throw new IllegalArgumentException("sink == null");
+        } else if (j >= 0) {
+            long j2 = this.size;
+            if (j2 == 0) {
+                return -1;
+            }
+            if (j > j2) {
+                j = j2;
+            }
+            buffer.write(this, j);
+            return j;
+        } else {
+            throw new IllegalArgumentException("byteCount < 0: " + j);
+        }
+    }
+
+    public long indexOf(byte b) {
+        return indexOf(b, 0, Long.MAX_VALUE);
+    }
+
+    public long indexOf(byte b, long j) {
+        return indexOf(b, j, Long.MAX_VALUE);
+    }
+
+    public long indexOf(byte b, long j, long j2) {
+        Segment segment;
+        long j3 = 0;
+        if (j < 0 || j2 < j) {
+            throw new IllegalArgumentException(String.format("size=%s fromIndex=%s toIndex=%s", Long.valueOf(this.size), Long.valueOf(j), Long.valueOf(j2)));
+        }
+        long j4 = this.size;
+        long j5 = j2 > j4 ? j4 : j2;
+        if (j == j5 || (segment = this.head) == null) {
+            return -1;
+        }
+        if (j4 - j < j) {
+            while (j4 > j) {
+                segment = segment.prev;
+                j4 -= (long) (segment.limit - segment.pos);
+            }
+        } else {
+            while (true) {
+                long j6 = ((long) (segment.limit - segment.pos)) + j3;
+                if (j6 >= j) {
+                    break;
+                }
+                segment = segment.next;
+                j3 = j6;
+            }
+            j4 = j3;
+        }
+        Segment segment2 = segment;
+        long j7 = j;
+        while (j4 < j5) {
+            byte[] bArr = segment2.data;
+            int min = (int) Math.min((long) segment2.limit, (((long) segment2.pos) + j5) - j4);
+            for (int i = (int) ((((long) segment2.pos) + j7) - j4); i < min; i++) {
+                if (bArr[i] == b) {
+                    return ((long) (i - segment2.pos)) + j4;
+                }
+            }
+            byte b2 = b;
+            j4 += (long) (segment2.limit - segment2.pos);
+            segment2 = segment2.next;
+            j7 = j4;
+        }
+        return -1;
+    }
+
+    public long indexOf(ByteString byteString) throws IOException {
+        return indexOf(byteString, 0);
+    }
+
+    public long indexOf(ByteString byteString, long j) throws IOException {
+        byte[] bArr;
+        if (byteString.size() != 0) {
+            long j2 = 0;
             if (j >= 0) {
                 Segment segment = this.head;
-                if (segment != null) {
-                    if (size() - j < j) {
-                        long size = size();
-                        while (size > j) {
-                            segment = segment.prev;
-                            Intrinsics.checkNotNull(segment);
-                            size -= segment.limit - segment.pos;
-                        }
-                        byte[] internalArray$external__okio__android_common__okio_lib = bytes.internalArray$external__okio__android_common__okio_lib();
-                        byte b = internalArray$external__okio__android_common__okio_lib[0];
-                        int size2 = bytes.size();
-                        long size3 = (size() - size2) + 1;
-                        j2 = size;
-                        long j4 = j;
-                        loop1: while (j2 < size3) {
-                            byte[] bArr = segment.data;
-                            int min = (int) Math.min(segment.limit, (segment.pos + size3) - j2);
-                            i = (int) ((segment.pos + j4) - j2);
-                            if (i < min) {
-                                while (true) {
-                                    int i2 = i + 1;
-                                    if (bArr[i] == b && BufferKt.rangeEquals(segment, i2, internalArray$external__okio__android_common__okio_lib, 1, size2)) {
-                                        break loop1;
-                                    } else if (i2 >= min) {
-                                        break;
-                                    } else {
-                                        i = i2;
-                                    }
-                                }
-                            }
-                            j2 += segment.limit - segment.pos;
-                            segment = segment.next;
-                            Intrinsics.checkNotNull(segment);
-                            j4 = j2;
-                        }
-                    } else {
-                        while (true) {
-                            long j5 = (segment.limit - segment.pos) + j3;
-                            if (j5 > j) {
-                                break;
-                            }
-                            segment = segment.next;
-                            Intrinsics.checkNotNull(segment);
-                            j3 = j5;
-                        }
-                        byte[] internalArray$external__okio__android_common__okio_lib2 = bytes.internalArray$external__okio__android_common__okio_lib();
-                        byte b2 = internalArray$external__okio__android_common__okio_lib2[0];
-                        int size4 = bytes.size();
-                        long size5 = (size() - size4) + 1;
-                        j2 = j3;
-                        long j6 = j;
-                        loop4: while (j2 < size5) {
-                            byte[] bArr2 = segment.data;
-                            int min2 = (int) Math.min(segment.limit, (segment.pos + size5) - j2);
-                            i = (int) ((segment.pos + j6) - j2);
-                            if (i < min2) {
-                                while (true) {
-                                    int i3 = i + 1;
-                                    if (bArr2[i] == b2) {
-                                        z = true;
-                                        if (BufferKt.rangeEquals(segment, i3, internalArray$external__okio__android_common__okio_lib2, 1, size4)) {
-                                            break loop4;
-                                        }
-                                    } else {
-                                        z = true;
-                                    }
-                                    if (i3 >= min2) {
-                                        break;
-                                    }
-                                    i = i3;
-                                }
-                            } else {
-                                z = true;
-                            }
-                            j2 += segment.limit - segment.pos;
-                            segment = segment.next;
-                            Intrinsics.checkNotNull(segment);
-                            j6 = j2;
-                        }
-                    }
+                long j3 = -1;
+                if (segment == null) {
+                    return -1;
                 }
-                return -1L;
+                long j4 = this.size;
+                if (j4 - j < j) {
+                    while (j4 > j) {
+                        segment = segment.prev;
+                        j4 -= (long) (segment.limit - segment.pos);
+                    }
+                } else {
+                    while (true) {
+                        long j5 = ((long) (segment.limit - segment.pos)) + j2;
+                        if (j5 >= j) {
+                            break;
+                        }
+                        segment = segment.next;
+                        j2 = j5;
+                    }
+                    j4 = j2;
+                }
+                byte b = byteString.getByte(0);
+                int size2 = byteString.size();
+                long j6 = 1 + (this.size - ((long) size2));
+                long j7 = j;
+                Segment segment2 = segment;
+                long j8 = j4;
+                while (j8 < j6) {
+                    byte[] bArr2 = segment2.data;
+                    int min = (int) Math.min((long) segment2.limit, (((long) segment2.pos) + j6) - j8);
+                    int i = (int) ((((long) segment2.pos) + j7) - j8);
+                    while (i < min) {
+                        if (bArr2[i] == b) {
+                            bArr = bArr2;
+                            if (rangeEquals(segment2, i + 1, byteString, 1, size2)) {
+                                return ((long) (i - segment2.pos)) + j8;
+                            }
+                        } else {
+                            bArr = bArr2;
+                        }
+                        i++;
+                        bArr2 = bArr;
+                    }
+                    j8 += (long) (segment2.limit - segment2.pos);
+                    segment2 = segment2.next;
+                    j7 = j8;
+                    j3 = -1;
+                }
+                return j3;
             }
-            throw new IllegalArgumentException(Intrinsics.stringPlus("fromIndex < 0: ", Long.valueOf(j)).toString());
+            throw new IllegalArgumentException("fromIndex < 0");
         }
-        throw new IllegalArgumentException("bytes is empty".toString());
+        throw new IllegalArgumentException("bytes is empty");
     }
 
-    public boolean equals(@Nullable Object obj) {
-        if (this != obj) {
-            if (!(obj instanceof Buffer)) {
-                return false;
+    public long indexOfElement(ByteString byteString) {
+        return indexOfElement(byteString, 0);
+    }
+
+    public long indexOfElement(ByteString byteString, long j) {
+        int i;
+        int i2;
+        long j2 = 0;
+        if (j >= 0) {
+            Segment segment = this.head;
+            if (segment == null) {
+                return -1;
             }
-            Buffer buffer = (Buffer) obj;
-            if (size() != buffer.size()) {
-                return false;
+            long j3 = this.size;
+            if (j3 - j < j) {
+                while (j3 > j) {
+                    segment = segment.prev;
+                    j3 -= (long) (segment.limit - segment.pos);
+                }
+            } else {
+                while (true) {
+                    long j4 = ((long) (segment.limit - segment.pos)) + j2;
+                    if (j4 >= j) {
+                        break;
+                    }
+                    segment = segment.next;
+                    j2 = j4;
+                }
+                j3 = j2;
             }
-            if (size() != 0) {
-                Segment segment = this.head;
-                Intrinsics.checkNotNull(segment);
-                Segment segment2 = buffer.head;
-                Intrinsics.checkNotNull(segment2);
-                int i = segment.pos;
-                int i2 = segment2.pos;
-                long j = 0;
-                while (j < size()) {
-                    long min = Math.min(segment.limit - i, segment2.limit - i2);
-                    if (0 < min) {
-                        long j2 = 0;
-                        while (true) {
-                            j2++;
-                            int i3 = i + 1;
-                            int i4 = i2 + 1;
-                            if (segment.data[i] != segment2.data[i2]) {
-                                return false;
-                            }
-                            if (j2 >= min) {
-                                i = i3;
-                                i2 = i4;
-                                break;
-                            }
-                            i = i3;
-                            i2 = i4;
+            if (byteString.size() == 2) {
+                byte b = byteString.getByte(0);
+                byte b2 = byteString.getByte(1);
+                while (j3 < this.size) {
+                    byte[] bArr = segment.data;
+                    i = (int) ((((long) segment.pos) + j) - j3);
+                    int i3 = segment.limit;
+                    while (i < i3) {
+                        byte b3 = bArr[i];
+                        if (b3 == b || b3 == b2) {
+                            i2 = segment.pos;
+                        } else {
+                            i++;
                         }
                     }
-                    if (i == segment.limit) {
-                        segment = segment.next;
-                        Intrinsics.checkNotNull(segment);
-                        i = segment.pos;
+                    j3 += (long) (segment.limit - segment.pos);
+                    segment = segment.next;
+                    j = j3;
+                }
+                return -1;
+            }
+            byte[] internalArray = byteString.internalArray();
+            while (j3 < this.size) {
+                byte[] bArr2 = segment.data;
+                int i4 = (int) ((((long) segment.pos) + j) - j3);
+                int i5 = segment.limit;
+                while (i < i5) {
+                    byte b4 = bArr2[i];
+                    int length = internalArray.length;
+                    int i6 = 0;
+                    while (i6 < length) {
+                        if (b4 == internalArray[i6]) {
+                            i2 = segment.pos;
+                        } else {
+                            i6++;
+                        }
                     }
-                    if (i2 == segment2.limit) {
-                        segment2 = segment2.next;
-                        Intrinsics.checkNotNull(segment2);
-                        i2 = segment2.pos;
+                    i4 = i + 1;
+                }
+                j3 += (long) (segment.limit - segment.pos);
+                segment = segment.next;
+                j = j3;
+            }
+            return -1;
+            return ((long) (i - i2)) + j3;
+        }
+        throw new IllegalArgumentException("fromIndex < 0");
+    }
+
+    public boolean rangeEquals(long j, ByteString byteString) {
+        return rangeEquals(j, byteString, 0, byteString.size());
+    }
+
+    public boolean rangeEquals(long j, ByteString byteString, int i, int i2) {
+        if (j < 0 || i < 0 || i2 < 0 || this.size - j < ((long) i2) || byteString.size() - i < i2) {
+            return false;
+        }
+        for (int i3 = 0; i3 < i2; i3++) {
+            if (getByte(((long) i3) + j) != byteString.getByte(i + i3)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean rangeEquals(Segment segment, int i, ByteString byteString, int i2, int i3) {
+        int i4 = segment.limit;
+        byte[] bArr = segment.data;
+        while (i2 < i3) {
+            if (i == i4) {
+                Segment segment2 = segment.next;
+                byte[] bArr2 = segment2.data;
+                i = segment2.pos;
+                byte[] bArr3 = bArr2;
+                segment = segment2;
+                i4 = segment2.limit;
+                bArr = bArr3;
+            }
+            if (bArr[i] != byteString.getByte(i2)) {
+                return false;
+            }
+            i++;
+            i2++;
+        }
+        return true;
+    }
+
+    public Timeout timeout() {
+        return Timeout.NONE;
+    }
+
+    /* access modifiers changed from: package-private */
+    public List<Integer> segmentSizes() {
+        if (this.head == null) {
+            return Collections.emptyList();
+        }
+        ArrayList arrayList = new ArrayList();
+        arrayList.add(Integer.valueOf(this.head.limit - this.head.pos));
+        Segment segment = this.head;
+        while (true) {
+            segment = segment.next;
+            if (segment == this.head) {
+                return arrayList;
+            }
+            arrayList.add(Integer.valueOf(segment.limit - segment.pos));
+        }
+    }
+
+    public final ByteString md5() {
+        return digest("MD5");
+    }
+
+    public final ByteString sha1() {
+        return digest("SHA-1");
+    }
+
+    public final ByteString sha256() {
+        return digest("SHA-256");
+    }
+
+    public final ByteString sha512() {
+        return digest("SHA-512");
+    }
+
+    private ByteString digest(String str) {
+        try {
+            MessageDigest instance = MessageDigest.getInstance(str);
+            Segment segment = this.head;
+            if (segment != null) {
+                instance.update(segment.data, this.head.pos, this.head.limit - this.head.pos);
+                Segment segment2 = this.head;
+                while (true) {
+                    segment2 = segment2.next;
+                    if (segment2 == this.head) {
+                        break;
                     }
-                    j += min;
+                    instance.update(segment2.data, segment2.pos, segment2.limit - segment2.pos);
                 }
             }
+            return ByteString.m1815of(instance.digest());
+        } catch (NoSuchAlgorithmException unused) {
+            throw new AssertionError();
+        }
+    }
+
+    public final ByteString hmacSha1(ByteString byteString) {
+        return hmac("HmacSHA1", byteString);
+    }
+
+    public final ByteString hmacSha256(ByteString byteString) {
+        return hmac("HmacSHA256", byteString);
+    }
+
+    public final ByteString hmacSha512(ByteString byteString) {
+        return hmac("HmacSHA512", byteString);
+    }
+
+    private ByteString hmac(String str, ByteString byteString) {
+        try {
+            Mac instance = Mac.getInstance(str);
+            instance.init(new SecretKeySpec(byteString.toByteArray(), str));
+            Segment segment = this.head;
+            if (segment != null) {
+                instance.update(segment.data, this.head.pos, this.head.limit - this.head.pos);
+                Segment segment2 = this.head;
+                while (true) {
+                    segment2 = segment2.next;
+                    if (segment2 == this.head) {
+                        break;
+                    }
+                    instance.update(segment2.data, segment2.pos, segment2.limit - segment2.pos);
+                }
+            }
+            return ByteString.m1815of(instance.doFinal());
+        } catch (NoSuchAlgorithmException unused) {
+            throw new AssertionError();
+        } catch (InvalidKeyException e) {
+            throw new IllegalArgumentException((Throwable) e);
+        }
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Buffer)) {
+            return false;
+        }
+        Buffer buffer = (Buffer) obj;
+        long j = this.size;
+        if (j != buffer.size) {
+            return false;
+        }
+        long j2 = 0;
+        if (j == 0) {
+            return true;
+        }
+        Segment segment = this.head;
+        Segment segment2 = buffer.head;
+        int i = segment.pos;
+        int i2 = segment2.pos;
+        while (j2 < this.size) {
+            long min = (long) Math.min(segment.limit - i, segment2.limit - i2);
+            int i3 = 0;
+            while (((long) i3) < min) {
+                int i4 = i + 1;
+                int i5 = i2 + 1;
+                if (segment.data[i] != segment2.data[i2]) {
+                    return false;
+                }
+                i3++;
+                i = i4;
+                i2 = i5;
+            }
+            if (i == segment.limit) {
+                segment = segment.next;
+                i = segment.pos;
+            }
+            if (i2 == segment2.limit) {
+                segment2 = segment2.next;
+                i2 = segment2.pos;
+            }
+            j2 += min;
         }
         return true;
     }
@@ -862,75 +1841,250 @@ public final class Buffer implements BufferedSource, BufferedSink, Cloneable, By
                 i = (i * 31) + segment.data[i3];
             }
             segment = segment.next;
-            Intrinsics.checkNotNull(segment);
         } while (segment != this.head);
         return i;
     }
 
-    @NotNull
-    public final Buffer copy() {
+    public String toString() {
+        return snapshot().toString();
+    }
+
+    public Buffer clone() {
         Buffer buffer = new Buffer();
-        if (size() != 0) {
-            Segment segment = this.head;
-            Intrinsics.checkNotNull(segment);
-            Segment sharedCopy = segment.sharedCopy();
-            buffer.head = sharedCopy;
-            sharedCopy.prev = sharedCopy;
-            sharedCopy.next = sharedCopy;
-            for (Segment segment2 = segment.next; segment2 != segment; segment2 = segment2.next) {
-                Segment segment3 = sharedCopy.prev;
-                Intrinsics.checkNotNull(segment3);
-                Intrinsics.checkNotNull(segment2);
-                segment3.push(segment2.sharedCopy());
+        if (this.size == 0) {
+            return buffer;
+        }
+        Segment sharedCopy = this.head.sharedCopy();
+        buffer.head = sharedCopy;
+        sharedCopy.prev = sharedCopy;
+        sharedCopy.next = sharedCopy;
+        Segment segment = this.head;
+        while (true) {
+            segment = segment.next;
+            if (segment != this.head) {
+                buffer.head.prev.push(segment.sharedCopy());
+            } else {
+                buffer.size = this.size;
+                return buffer;
             }
-            buffer.setSize$external__okio__android_common__okio_lib(size());
         }
-        return buffer;
     }
 
-    @NotNull
     public final ByteString snapshot() {
-        if (!(size() <= 2147483647L)) {
-            throw new IllegalStateException(Intrinsics.stringPlus("size > Int.MAX_VALUE: ", Long.valueOf(size())).toString());
+        long j = this.size;
+        if (j <= 2147483647L) {
+            return snapshot((int) j);
         }
-        return snapshot((int) size());
+        throw new IllegalArgumentException("size > Integer.MAX_VALUE: " + this.size);
     }
 
-    @NotNull
     public final ByteString snapshot(int i) {
         if (i == 0) {
             return ByteString.EMPTY;
         }
-        Util.checkOffsetAndCount(size(), 0L, i);
-        Segment segment = this.head;
-        int i2 = 0;
-        int i3 = 0;
-        int i4 = 0;
-        while (i3 < i) {
-            Intrinsics.checkNotNull(segment);
-            int i5 = segment.limit;
-            int i6 = segment.pos;
-            if (i5 == i6) {
-                throw new AssertionError("s.limit == s.pos");
+        return new SegmentedByteString(this, i);
+    }
+
+    public final UnsafeCursor readUnsafe() {
+        return readUnsafe(new UnsafeCursor());
+    }
+
+    public final UnsafeCursor readUnsafe(UnsafeCursor unsafeCursor) {
+        if (unsafeCursor.buffer == null) {
+            unsafeCursor.buffer = this;
+            unsafeCursor.readWrite = false;
+            return unsafeCursor;
+        }
+        throw new IllegalStateException("already attached to a buffer");
+    }
+
+    public final UnsafeCursor readAndWriteUnsafe() {
+        return readAndWriteUnsafe(new UnsafeCursor());
+    }
+
+    public final UnsafeCursor readAndWriteUnsafe(UnsafeCursor unsafeCursor) {
+        if (unsafeCursor.buffer == null) {
+            unsafeCursor.buffer = this;
+            unsafeCursor.readWrite = true;
+            return unsafeCursor;
+        }
+        throw new IllegalStateException("already attached to a buffer");
+    }
+
+    public static final class UnsafeCursor implements Closeable {
+        public Buffer buffer;
+        public byte[] data;
+        public int end = -1;
+        public long offset = -1;
+        public boolean readWrite;
+        private Segment segment;
+        public int start = -1;
+
+        public final int next() {
+            if (this.offset != this.buffer.size) {
+                long j = this.offset;
+                if (j == -1) {
+                    return seek(0);
+                }
+                return seek(j + ((long) (this.end - this.start)));
             }
-            i3 += i5 - i6;
-            i4++;
-            segment = segment.next;
+            throw new IllegalStateException();
         }
-        byte[][] bArr = new byte[i4];
-        int[] iArr = new int[i4 * 2];
-        Segment segment2 = this.head;
-        int i7 = 0;
-        while (i2 < i) {
-            Intrinsics.checkNotNull(segment2);
-            bArr[i7] = segment2.data;
-            i2 += segment2.limit - segment2.pos;
-            iArr[i7] = Math.min(i2, i);
-            iArr[i7 + i4] = segment2.pos;
-            segment2.shared = true;
-            i7++;
-            segment2 = segment2.next;
+
+        public final int seek(long j) {
+            int i = (j > -1 ? 1 : (j == -1 ? 0 : -1));
+            if (i < 0 || j > this.buffer.size) {
+                throw new ArrayIndexOutOfBoundsException(String.format("offset=%s > size=%s", Long.valueOf(j), Long.valueOf(this.buffer.size)));
+            } else if (i == 0 || j == this.buffer.size) {
+                this.segment = null;
+                this.offset = j;
+                this.data = null;
+                this.start = -1;
+                this.end = -1;
+                return -1;
+            } else {
+                long j2 = this.buffer.size;
+                Segment segment2 = this.buffer.head;
+                Segment segment3 = this.buffer.head;
+                Segment segment4 = this.segment;
+                long j3 = 0;
+                if (segment4 != null) {
+                    long j4 = this.offset - ((long) (this.start - segment4.pos));
+                    if (j4 > j) {
+                        segment3 = this.segment;
+                        j2 = j4;
+                    } else {
+                        segment2 = this.segment;
+                        j3 = j4;
+                    }
+                }
+                if (j2 - j > j - j3) {
+                    while (j >= ((long) (segment2.limit - segment2.pos)) + j3) {
+                        j3 += (long) (segment2.limit - segment2.pos);
+                        segment2 = segment2.next;
+                    }
+                } else {
+                    while (j2 > j) {
+                        segment3 = segment3.prev;
+                        j2 -= (long) (segment3.limit - segment3.pos);
+                    }
+                    j3 = j2;
+                    segment2 = segment3;
+                }
+                if (this.readWrite && segment2.shared) {
+                    Segment unsharedCopy = segment2.unsharedCopy();
+                    if (this.buffer.head == segment2) {
+                        this.buffer.head = unsharedCopy;
+                    }
+                    segment2 = segment2.push(unsharedCopy);
+                    segment2.prev.pop();
+                }
+                this.segment = segment2;
+                this.offset = j;
+                this.data = segment2.data;
+                this.start = segment2.pos + ((int) (j - j3));
+                int i2 = segment2.limit;
+                this.end = i2;
+                return i2 - this.start;
+            }
         }
-        return new SegmentedByteString(bArr, iArr);
+
+        public final long resizeBuffer(long j) {
+            Buffer buffer2 = this.buffer;
+            if (buffer2 == null) {
+                throw new IllegalStateException("not attached to a buffer");
+            } else if (this.readWrite) {
+                long j2 = buffer2.size;
+                int i = (j > j2 ? 1 : (j == j2 ? 0 : -1));
+                if (i <= 0) {
+                    if (j >= 0) {
+                        long j3 = j2 - j;
+                        while (true) {
+                            if (j3 <= 0) {
+                                break;
+                            }
+                            Segment segment2 = this.buffer.head.prev;
+                            long j4 = (long) (segment2.limit - segment2.pos);
+                            if (j4 > j3) {
+                                segment2.limit = (int) (((long) segment2.limit) - j3);
+                                break;
+                            }
+                            this.buffer.head = segment2.pop();
+                            SegmentPool.recycle(segment2);
+                            j3 -= j4;
+                        }
+                        this.segment = null;
+                        this.offset = j;
+                        this.data = null;
+                        this.start = -1;
+                        this.end = -1;
+                    } else {
+                        throw new IllegalArgumentException("newSize < 0: " + j);
+                    }
+                } else if (i > 0) {
+                    long j5 = j - j2;
+                    boolean z = true;
+                    while (j5 > 0) {
+                        Segment writableSegment = this.buffer.writableSegment(1);
+                        int min = (int) Math.min(j5, (long) (8192 - writableSegment.limit));
+                        writableSegment.limit += min;
+                        j5 -= (long) min;
+                        if (z) {
+                            this.segment = writableSegment;
+                            this.offset = j2;
+                            this.data = writableSegment.data;
+                            this.start = writableSegment.limit - min;
+                            this.end = writableSegment.limit;
+                            z = false;
+                        }
+                    }
+                }
+                this.buffer.size = j;
+                return j2;
+            } else {
+                throw new IllegalStateException("resizeBuffer() only permitted for read/write buffers");
+            }
+        }
+
+        public final long expandBuffer(int i) {
+            if (i <= 0) {
+                throw new IllegalArgumentException("minByteCount <= 0: " + i);
+            } else if (i <= 8192) {
+                Buffer buffer2 = this.buffer;
+                if (buffer2 == null) {
+                    throw new IllegalStateException("not attached to a buffer");
+                } else if (this.readWrite) {
+                    long j = buffer2.size;
+                    Segment writableSegment = this.buffer.writableSegment(i);
+                    int i2 = 8192 - writableSegment.limit;
+                    writableSegment.limit = 8192;
+                    long j2 = (long) i2;
+                    this.buffer.size = j + j2;
+                    this.segment = writableSegment;
+                    this.offset = j;
+                    this.data = writableSegment.data;
+                    this.start = 8192 - i2;
+                    this.end = 8192;
+                    return j2;
+                } else {
+                    throw new IllegalStateException("expandBuffer() only permitted for read/write buffers");
+                }
+            } else {
+                throw new IllegalArgumentException("minByteCount > Segment.SIZE: " + i);
+            }
+        }
+
+        public void close() {
+            if (this.buffer != null) {
+                this.buffer = null;
+                this.segment = null;
+                this.offset = -1;
+                this.data = null;
+                this.start = -1;
+                this.end = -1;
+                return;
+            }
+            throw new IllegalStateException("not attached to a buffer");
+        }
     }
 }

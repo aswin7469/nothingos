@@ -6,7 +6,7 @@ import android.os.Handler;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NightDisplayListenerModule_ProvideNightDisplayListenerFactory implements Factory<NightDisplayListener> {
     private final Provider<Handler> bgHandlerProvider;
     private final Provider<Context> contextProvider;
@@ -18,10 +18,8 @@ public final class NightDisplayListenerModule_ProvideNightDisplayListenerFactory
         this.bgHandlerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NightDisplayListener mo1933get() {
-        return provideNightDisplayListener(this.module, this.contextProvider.mo1933get(), this.bgHandlerProvider.mo1933get());
+    public NightDisplayListener get() {
+        return provideNightDisplayListener(this.module, this.contextProvider.get(), this.bgHandlerProvider.get());
     }
 
     public static NightDisplayListenerModule_ProvideNightDisplayListenerFactory create(NightDisplayListenerModule nightDisplayListenerModule, Provider<Context> provider, Provider<Handler> provider2) {

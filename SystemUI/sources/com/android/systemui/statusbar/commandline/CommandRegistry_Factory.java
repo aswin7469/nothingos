@@ -4,7 +4,7 @@ import android.content.Context;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class CommandRegistry_Factory implements Factory<CommandRegistry> {
     private final Provider<Context> contextProvider;
     private final Provider<Executor> mainExecutorProvider;
@@ -14,10 +14,8 @@ public final class CommandRegistry_Factory implements Factory<CommandRegistry> {
         this.mainExecutorProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public CommandRegistry mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.mainExecutorProvider.mo1933get());
+    public CommandRegistry get() {
+        return newInstance(this.contextProvider.get(), this.mainExecutorProvider.get());
     }
 
     public static CommandRegistry_Factory create(Provider<Context> provider, Provider<Executor> provider2) {

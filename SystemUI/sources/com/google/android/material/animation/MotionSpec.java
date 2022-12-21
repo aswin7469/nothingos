@@ -12,20 +12,21 @@ import android.util.Property;
 import androidx.collection.SimpleArrayMap;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 public class MotionSpec {
-    private final SimpleArrayMap<String, MotionTiming> timings = new SimpleArrayMap<>();
+    private static final String TAG = "MotionSpec";
     private final SimpleArrayMap<String, PropertyValuesHolder[]> propertyValues = new SimpleArrayMap<>();
+    private final SimpleArrayMap<String, MotionTiming> timings = new SimpleArrayMap<>();
 
     public boolean hasTiming(String str) {
         return this.timings.get(str) != null;
     }
 
     public MotionTiming getTiming(String str) {
-        if (!hasTiming(str)) {
-            throw new IllegalArgumentException();
+        if (hasTiming(str)) {
+            return this.timings.get(str);
         }
-        return this.timings.get(str);
+        throw new IllegalArgumentException();
     }
 
     public void setTiming(String str, MotionTiming motionTiming) {
@@ -37,10 +38,10 @@ public class MotionSpec {
     }
 
     public PropertyValuesHolder[] getPropertyValues(String str) {
-        if (!hasPropertyValues(str)) {
-            throw new IllegalArgumentException();
+        if (hasPropertyValues(str)) {
+            return clonePropertyValuesHolder(this.propertyValues.get(str));
         }
-        return clonePropertyValuesHolder(this.propertyValues.get(str));
+        throw new IllegalArgumentException();
     }
 
     public void setPropertyValues(String str, PropertyValuesHolder[] propertyValuesHolderArr) {
@@ -93,7 +94,7 @@ public class MotionSpec {
             arrayList.add(loadAnimator);
             return createSpecFromAnimators(arrayList);
         } catch (Exception e) {
-            Log.w("MotionSpec", "Can't load animation resource ID #0x" + Integer.toHexString(i), e);
+            Log.w(TAG, "Can't load animation resource ID #0x" + Integer.toHexString(i), e);
             return null;
         }
     }
@@ -121,10 +122,10 @@ public class MotionSpec {
         if (this == obj) {
             return true;
         }
-        if (obj instanceof MotionSpec) {
-            return this.timings.equals(((MotionSpec) obj).timings);
+        if (!(obj instanceof MotionSpec)) {
+            return false;
         }
-        return false;
+        return this.timings.equals(((MotionSpec) obj).timings);
     }
 
     public int hashCode() {
@@ -132,6 +133,6 @@ public class MotionSpec {
     }
 
     public String toString() {
-        return '\n' + MotionSpec.class.getName() + '{' + Integer.toHexString(System.identityHashCode(this)) + " timings: " + this.timings + "}\n";
+        return "\n" + getClass().getName() + '{' + Integer.toHexString(System.identityHashCode(this)) + " timings: " + this.timings + "}\n";
     }
 }

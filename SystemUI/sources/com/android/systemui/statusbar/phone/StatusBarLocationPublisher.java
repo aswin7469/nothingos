@@ -1,18 +1,20 @@
 package com.android.systemui.statusbar.phone;
 
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.policy.CallbackController;
 import java.lang.ref.WeakReference;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import kotlin.Metadata;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+
+@SysUISingleton
+@Metadata(mo64986d1 = {"\u0000*\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010#\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0002\b\u0007\b\u0007\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B\u0007\b\u0007¢\u0006\u0002\u0010\u0003J\u0010\u0010\u000e\u001a\u00020\u000f2\u0006\u0010\u0010\u001a\u00020\u0002H\u0016J\b\u0010\u0011\u001a\u00020\u000fH\u0002J\u0010\u0010\u0012\u001a\u00020\u000f2\u0006\u0010\u0010\u001a\u00020\u0002H\u0016J\u0016\u0010\u0013\u001a\u00020\u000f2\u0006\u0010\u0014\u001a\u00020\b2\u0006\u0010\u0015\u001a\u00020\bR\u001a\u0010\u0004\u001a\u000e\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u00020\u00060\u0005X\u0004¢\u0006\u0002\n\u0000R\u001e\u0010\t\u001a\u00020\b2\u0006\u0010\u0007\u001a\u00020\b@BX\u000e¢\u0006\b\n\u0000\u001a\u0004\b\n\u0010\u000bR\u001e\u0010\f\u001a\u00020\b2\u0006\u0010\u0007\u001a\u00020\b@BX\u000e¢\u0006\b\n\u0000\u001a\u0004\b\r\u0010\u000b¨\u0006\u0016"}, mo64987d2 = {"Lcom/android/systemui/statusbar/phone/StatusBarLocationPublisher;", "Lcom/android/systemui/statusbar/policy/CallbackController;", "Lcom/android/systemui/statusbar/phone/StatusBarMarginUpdatedListener;", "()V", "listeners", "", "Ljava/lang/ref/WeakReference;", "<set-?>", "", "marginLeft", "getMarginLeft", "()I", "marginRight", "getMarginRight", "addCallback", "", "listener", "notifyListeners", "removeCallback", "updateStatusBarMargin", "left", "right", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: StatusBarLocationPublisher.kt */
-/* loaded from: classes.dex */
 public final class StatusBarLocationPublisher implements CallbackController<StatusBarMarginUpdatedListener> {
-    @NotNull
     private final Set<WeakReference<StatusBarMarginUpdatedListener>> listeners = new LinkedHashSet();
     private int marginLeft;
     private int marginRight;
@@ -25,19 +27,17 @@ public final class StatusBarLocationPublisher implements CallbackController<Stat
         return this.marginRight;
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
-    public void addCallback(@NotNull StatusBarMarginUpdatedListener listener) {
-        Intrinsics.checkNotNullParameter(listener, "listener");
-        this.listeners.add(new WeakReference<>(listener));
+    public void addCallback(StatusBarMarginUpdatedListener statusBarMarginUpdatedListener) {
+        Intrinsics.checkNotNullParameter(statusBarMarginUpdatedListener, "listener");
+        this.listeners.add(new WeakReference(statusBarMarginUpdatedListener));
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
-    public void removeCallback(@NotNull StatusBarMarginUpdatedListener listener) {
-        Intrinsics.checkNotNullParameter(listener, "listener");
-        WeakReference<StatusBarMarginUpdatedListener> weakReference = null;
-        for (WeakReference<StatusBarMarginUpdatedListener> weakReference2 : this.listeners) {
-            if (Intrinsics.areEqual(weakReference2.get(), listener)) {
-                weakReference = weakReference2;
+    public void removeCallback(StatusBarMarginUpdatedListener statusBarMarginUpdatedListener) {
+        Intrinsics.checkNotNullParameter(statusBarMarginUpdatedListener, "listener");
+        WeakReference weakReference = null;
+        for (WeakReference next : this.listeners) {
+            if (Intrinsics.areEqual(next.get(), (Object) statusBarMarginUpdatedListener)) {
+                weakReference = next;
             }
         }
         if (weakReference != null) {
@@ -63,7 +63,7 @@ public final class StatusBarLocationPublisher implements CallbackController<Stat
             }
             StatusBarMarginUpdatedListener statusBarMarginUpdatedListener = (StatusBarMarginUpdatedListener) weakReference.get();
             if (statusBarMarginUpdatedListener != null) {
-                statusBarMarginUpdatedListener.onStatusBarMarginUpdated(getMarginLeft(), getMarginRight());
+                statusBarMarginUpdatedListener.onStatusBarMarginUpdated(this.marginLeft, this.marginRight);
             }
         }
     }

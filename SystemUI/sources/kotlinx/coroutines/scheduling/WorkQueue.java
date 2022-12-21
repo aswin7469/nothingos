@@ -3,187 +3,204 @@ package kotlinx.coroutines.scheduling;
 import java.util.concurrent.atomic.AtomicIntegerFieldUpdater;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
-import kotlin.jvm.internal.Intrinsics;
-import kotlin.ranges.RangesKt___RangesKt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import kotlin.Metadata;
+import kotlinx.coroutines.DebugKt;
+
+@Metadata(mo64986d1 = {"\u0000@\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\t\n\u0002\u0010\t\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0010\u0000\b\u0000\u0018\u00002\u00020*B\u0007¢\u0006\u0004\b\u0001\u0010\u0002J!\u0010\u0007\u001a\u0004\u0018\u00010\u00032\u0006\u0010\u0004\u001a\u00020\u00032\b\b\u0002\u0010\u0006\u001a\u00020\u0005¢\u0006\u0004\b\u0007\u0010\bJ\u0019\u0010\t\u001a\u0004\u0018\u00010\u00032\u0006\u0010\u0004\u001a\u00020\u0003H\u0002¢\u0006\u0004\b\t\u0010\nJ\u0015\u0010\u000e\u001a\u00020\r2\u0006\u0010\f\u001a\u00020\u000b¢\u0006\u0004\b\u000e\u0010\u000fJ\u000f\u0010\u0010\u001a\u0004\u0018\u00010\u0003¢\u0006\u0004\b\u0010\u0010\u0011J\u0011\u0010\u0012\u001a\u0004\u0018\u00010\u0003H\u0002¢\u0006\u0004\b\u0012\u0010\u0011J\u0017\u0010\u0014\u001a\u00020\u00052\u0006\u0010\u0013\u001a\u00020\u000bH\u0002¢\u0006\u0004\b\u0014\u0010\u0015J\u0015\u0010\u0018\u001a\u00020\u00172\u0006\u0010\u0016\u001a\u00020\u0000¢\u0006\u0004\b\u0018\u0010\u0019J\u0015\u0010\u001a\u001a\u00020\u00172\u0006\u0010\u0016\u001a\u00020\u0000¢\u0006\u0004\b\u001a\u0010\u0019J\u001f\u0010\u001c\u001a\u00020\u00172\u0006\u0010\u0016\u001a\u00020\u00002\u0006\u0010\u001b\u001a\u00020\u0005H\u0002¢\u0006\u0004\b\u001c\u0010\u001dJ\u0015\u0010\u001e\u001a\u00020\r*\u0004\u0018\u00010\u0003H\u0002¢\u0006\u0004\b\u001e\u0010\u001fR\u001e\u0010!\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\u00030 8\u0002@\u0002X\u0004¢\u0006\u0006\n\u0004\b!\u0010\"R\u0016\u0010&\u001a\u00020#8@@\u0000X\u0004¢\u0006\u0006\u001a\u0004\b$\u0010%R\u0016\u0010(\u001a\u00020#8@@\u0000X\u0004¢\u0006\u0006\u001a\u0004\b'\u0010%¨\u0006)"}, mo64987d2 = {"Lkotlinx/coroutines/scheduling/WorkQueue;", "<init>", "()V", "Lkotlinx/coroutines/scheduling/Task;", "task", "", "fair", "add", "(Lkotlinx/coroutines/scheduling/Task;Z)Lkotlinx/coroutines/scheduling/Task;", "addLast", "(Lkotlinx/coroutines/scheduling/Task;)Lkotlinx/coroutines/scheduling/Task;", "Lkotlinx/coroutines/scheduling/GlobalQueue;", "globalQueue", "", "offloadAllWorkTo", "(Lkotlinx/coroutines/scheduling/GlobalQueue;)V", "poll", "()Lkotlinx/coroutines/scheduling/Task;", "pollBuffer", "queue", "pollTo", "(Lkotlinx/coroutines/scheduling/GlobalQueue;)Z", "victim", "", "tryStealBlockingFrom", "(Lkotlinx/coroutines/scheduling/WorkQueue;)J", "tryStealFrom", "blockingOnly", "tryStealLastScheduled", "(Lkotlinx/coroutines/scheduling/WorkQueue;Z)J", "decrementIfBlocking", "(Lkotlinx/coroutines/scheduling/Task;)V", "Ljava/util/concurrent/atomic/AtomicReferenceArray;", "buffer", "Ljava/util/concurrent/atomic/AtomicReferenceArray;", "", "getBufferSize$kotlinx_coroutines_core", "()I", "bufferSize", "getSize$kotlinx_coroutines_core", "size", "kotlinx-coroutines-core", ""}, mo64988k = 1, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: WorkQueue.kt */
-/* loaded from: classes2.dex */
 public final class WorkQueue {
-    private static final AtomicReferenceFieldUpdater lastScheduledTask$FU = AtomicReferenceFieldUpdater.newUpdater(WorkQueue.class, Object.class, "lastScheduledTask");
-    static final AtomicIntegerFieldUpdater producerIndex$FU = AtomicIntegerFieldUpdater.newUpdater(WorkQueue.class, "producerIndex");
-    static final AtomicIntegerFieldUpdater consumerIndex$FU = AtomicIntegerFieldUpdater.newUpdater(WorkQueue.class, "consumerIndex");
+    private static final /* synthetic */ AtomicIntegerFieldUpdater blockingTasksInBuffer$FU;
+    private static final /* synthetic */ AtomicIntegerFieldUpdater consumerIndex$FU;
+    private static final /* synthetic */ AtomicReferenceFieldUpdater lastScheduledTask$FU;
+    private static final /* synthetic */ AtomicIntegerFieldUpdater producerIndex$FU;
+    private volatile /* synthetic */ int blockingTasksInBuffer = 0;
     private final AtomicReferenceArray<Task> buffer = new AtomicReferenceArray<>(128);
-    private volatile Object lastScheduledTask = null;
-    volatile int producerIndex = 0;
-    volatile int consumerIndex = 0;
+    private volatile /* synthetic */ int consumerIndex = 0;
+    private volatile /* synthetic */ Object lastScheduledTask = null;
+    private volatile /* synthetic */ int producerIndex = 0;
+
+    static {
+        Class<WorkQueue> cls = WorkQueue.class;
+        lastScheduledTask$FU = AtomicReferenceFieldUpdater.newUpdater(cls, Object.class, "lastScheduledTask");
+        producerIndex$FU = AtomicIntegerFieldUpdater.newUpdater(cls, "producerIndex");
+        consumerIndex$FU = AtomicIntegerFieldUpdater.newUpdater(cls, "consumerIndex");
+        blockingTasksInBuffer$FU = AtomicIntegerFieldUpdater.newUpdater(cls, "blockingTasksInBuffer");
+    }
 
     public final int getBufferSize$kotlinx_coroutines_core() {
         return this.producerIndex - this.consumerIndex;
     }
 
-    @Nullable
+    public final int getSize$kotlinx_coroutines_core() {
+        Object obj = this.lastScheduledTask;
+        int bufferSize$kotlinx_coroutines_core = getBufferSize$kotlinx_coroutines_core();
+        return obj != null ? bufferSize$kotlinx_coroutines_core + 1 : bufferSize$kotlinx_coroutines_core;
+    }
+
     public final Task poll() {
         Task task = (Task) lastScheduledTask$FU.getAndSet(this, null);
-        if (task != null) {
-            return task;
+        return task == null ? pollBuffer() : task;
+    }
+
+    public static /* synthetic */ Task add$default(WorkQueue workQueue, Task task, boolean z, int i, Object obj) {
+        if ((i & 2) != 0) {
+            z = false;
         }
+        return workQueue.add(task, z);
+    }
+
+    public final Task add(Task task, boolean z) {
+        if (z) {
+            return addLast(task);
+        }
+        Task task2 = (Task) lastScheduledTask$FU.getAndSet(this, task);
+        if (task2 == null) {
+            return null;
+        }
+        return addLast(task2);
+    }
+
+    public final long tryStealFrom(WorkQueue workQueue) {
+        boolean z = true;
+        if (DebugKt.getASSERTIONS_ENABLED()) {
+            if (!(getBufferSize$kotlinx_coroutines_core() == 0)) {
+                throw new AssertionError();
+            }
+        }
+        Task pollBuffer = workQueue.pollBuffer();
+        if (pollBuffer == null) {
+            return tryStealLastScheduled(workQueue, false);
+        }
+        Task add$default = add$default(this, pollBuffer, false, 2, (Object) null);
+        if (!DebugKt.getASSERTIONS_ENABLED()) {
+            return -1;
+        }
+        if (add$default != null) {
+            z = false;
+        }
+        if (z) {
+            return -1;
+        }
+        throw new AssertionError();
+    }
+
+    public final long tryStealBlockingFrom(WorkQueue workQueue) {
+        if (DebugKt.getASSERTIONS_ENABLED()) {
+            if (!(getBufferSize$kotlinx_coroutines_core() == 0)) {
+                throw new AssertionError();
+            }
+        }
+        int i = workQueue.producerIndex;
+        AtomicReferenceArray<Task> atomicReferenceArray = workQueue.buffer;
+        for (int i2 = workQueue.consumerIndex; i2 != i; i2++) {
+            int i3 = i2 & 127;
+            if (workQueue.blockingTasksInBuffer == 0) {
+                break;
+            }
+            Task task = atomicReferenceArray.get(i3);
+            if (task != null) {
+                if ((task.taskContext.getTaskMode() == 1) && atomicReferenceArray.compareAndSet(i3, task, null)) {
+                    blockingTasksInBuffer$FU.decrementAndGet(workQueue);
+                    add$default(this, task, false, 2, (Object) null);
+                    return -1;
+                }
+            }
+        }
+        return tryStealLastScheduled(workQueue, true);
+    }
+
+    public final void offloadAllWorkTo(GlobalQueue globalQueue) {
+        Task task = (Task) lastScheduledTask$FU.getAndSet(this, null);
+        if (task != null) {
+            globalQueue.addLast(task);
+        }
+        do {
+        } while (pollTo(globalQueue));
+    }
+
+    private final long tryStealLastScheduled(WorkQueue workQueue, boolean z) {
+        Task task;
+        do {
+            task = (Task) workQueue.lastScheduledTask;
+            if (task == null) {
+                return -2;
+            }
+            if (z) {
+                boolean z2 = true;
+                if (task.taskContext.getTaskMode() != 1) {
+                    z2 = false;
+                }
+                if (!z2) {
+                    return -2;
+                }
+            }
+            long nanoTime = TasksKt.schedulerTimeSource.nanoTime() - task.submissionTime;
+            if (nanoTime < TasksKt.WORK_STEALING_TIME_RESOLUTION_NS) {
+                return TasksKt.WORK_STEALING_TIME_RESOLUTION_NS - nanoTime;
+            }
+        } while (!lastScheduledTask$FU.compareAndSet(workQueue, task, null));
+        add$default(this, task, false, 2, (Object) null);
+        return -1;
+    }
+
+    private final boolean pollTo(GlobalQueue globalQueue) {
+        Task pollBuffer = pollBuffer();
+        if (pollBuffer == null) {
+            return false;
+        }
+        globalQueue.addLast(pollBuffer);
+        return true;
+    }
+
+    private final Task pollBuffer() {
+        Task andSet;
         while (true) {
             int i = this.consumerIndex;
             if (i - this.producerIndex == 0) {
                 return null;
             }
             int i2 = i & 127;
-            if (((Task) this.buffer.get(i2)) != null && consumerIndex$FU.compareAndSet(this, i, i + 1)) {
-                return (Task) this.buffer.getAndSet(i2, null);
+            if (consumerIndex$FU.compareAndSet(this, i, i + 1) && (andSet = this.buffer.getAndSet(i2, null)) != null) {
+                decrementIfBlocking(andSet);
+                return andSet;
             }
         }
     }
 
-    public final boolean add(@NotNull Task task, @NotNull GlobalQueue globalQueue) {
-        Intrinsics.checkParameterIsNotNull(task, "task");
-        Intrinsics.checkParameterIsNotNull(globalQueue, "globalQueue");
-        Task task2 = (Task) lastScheduledTask$FU.getAndSet(this, task);
-        if (task2 != null) {
-            return addLast(task2, globalQueue);
-        }
-        return true;
-    }
-
-    public final boolean addLast(@NotNull Task task, @NotNull GlobalQueue globalQueue) {
-        Intrinsics.checkParameterIsNotNull(task, "task");
-        Intrinsics.checkParameterIsNotNull(globalQueue, "globalQueue");
+    private final Task addLast(Task task) {
         boolean z = true;
-        while (!tryAddLast(task)) {
-            offloadWork(globalQueue);
+        if (task.taskContext.getTaskMode() != 1) {
             z = false;
         }
-        return z;
-    }
-
-    public final boolean trySteal(@NotNull WorkQueue victim, @NotNull GlobalQueue globalQueue) {
-        int coerceAtLeast;
-        Task task;
-        Intrinsics.checkParameterIsNotNull(victim, "victim");
-        Intrinsics.checkParameterIsNotNull(globalQueue, "globalQueue");
-        long nanoTime = TasksKt.schedulerTimeSource.nanoTime();
-        int bufferSize$kotlinx_coroutines_core = victim.getBufferSize$kotlinx_coroutines_core();
-        if (bufferSize$kotlinx_coroutines_core == 0) {
-            return tryStealLastScheduled(nanoTime, victim, globalQueue);
+        if (z) {
+            blockingTasksInBuffer$FU.incrementAndGet(this);
         }
-        coerceAtLeast = RangesKt___RangesKt.coerceAtLeast(bufferSize$kotlinx_coroutines_core / 2, 1);
-        int i = 0;
-        boolean z = false;
-        while (i < coerceAtLeast) {
-            while (true) {
-                int i2 = victim.consumerIndex;
-                task = null;
-                if (i2 - victim.producerIndex != 0) {
-                    int i3 = i2 & 127;
-                    Task task2 = (Task) victim.buffer.get(i3);
-                    if (task2 != null) {
-                        if (!(nanoTime - task2.submissionTime >= TasksKt.WORK_STEALING_TIME_RESOLUTION_NS || victim.getBufferSize$kotlinx_coroutines_core() > TasksKt.QUEUE_SIZE_OFFLOAD_THRESHOLD)) {
-                            break;
-                        } else if (consumerIndex$FU.compareAndSet(victim, i2, i2 + 1)) {
-                            task = (Task) victim.buffer.getAndSet(i3, null);
-                            break;
-                        }
-                    }
-                } else {
-                    break;
-                }
-            }
-            if (task == null) {
-                break;
-            }
-            add(task, globalQueue);
-            i++;
-            z = true;
-        }
-        return z;
-    }
-
-    private final boolean tryStealLastScheduled(long j, WorkQueue workQueue, GlobalQueue globalQueue) {
-        Task task = (Task) workQueue.lastScheduledTask;
-        if (task == null || j - task.submissionTime < TasksKt.WORK_STEALING_TIME_RESOLUTION_NS || !lastScheduledTask$FU.compareAndSet(workQueue, task, null)) {
-            return false;
-        }
-        add(task, globalQueue);
-        return true;
-    }
-
-    public final int size$kotlinx_coroutines_core() {
-        Object obj = this.lastScheduledTask;
-        int bufferSize$kotlinx_coroutines_core = getBufferSize$kotlinx_coroutines_core();
-        return obj != null ? bufferSize$kotlinx_coroutines_core + 1 : bufferSize$kotlinx_coroutines_core;
-    }
-
-    private final void offloadWork(GlobalQueue globalQueue) {
-        int coerceAtLeast;
-        Task task;
-        coerceAtLeast = RangesKt___RangesKt.coerceAtLeast(getBufferSize$kotlinx_coroutines_core() / 2, 1);
-        for (int i = 0; i < coerceAtLeast; i++) {
-            while (true) {
-                int i2 = this.consumerIndex;
-                task = null;
-                if (i2 - this.producerIndex == 0) {
-                    break;
-                }
-                int i3 = i2 & 127;
-                if (((Task) this.buffer.get(i3)) != null && consumerIndex$FU.compareAndSet(this, i2, i2 + 1)) {
-                    task = (Task) this.buffer.getAndSet(i3, null);
-                    break;
-                }
-            }
-            if (task == null) {
-                return;
-            }
-            addToGlobalQueue(globalQueue, task);
-        }
-    }
-
-    private final void addToGlobalQueue(GlobalQueue globalQueue, Task task) {
-        if (globalQueue.addLast(task)) {
-            return;
-        }
-        throw new IllegalStateException("GlobalQueue could not be closed yet".toString());
-    }
-
-    public final void offloadAllWork$kotlinx_coroutines_core(@NotNull GlobalQueue globalQueue) {
-        Task task;
-        Intrinsics.checkParameterIsNotNull(globalQueue, "globalQueue");
-        Task task2 = (Task) lastScheduledTask$FU.getAndSet(this, null);
-        if (task2 != null) {
-            addToGlobalQueue(globalQueue, task2);
-        }
-        while (true) {
-            int i = this.consumerIndex;
-            if (i - this.producerIndex == 0) {
-                task = null;
-            } else {
-                int i2 = i & 127;
-                if (((Task) this.buffer.get(i2)) != null && consumerIndex$FU.compareAndSet(this, i, i + 1)) {
-                    task = (Task) this.buffer.getAndSet(i2, null);
-                }
-            }
-            if (task != null) {
-                addToGlobalQueue(globalQueue, task);
-            } else {
-                return;
-            }
-        }
-    }
-
-    private final boolean tryAddLast(Task task) {
         if (getBufferSize$kotlinx_coroutines_core() == 127) {
-            return false;
+            return task;
         }
         int i = this.producerIndex & 127;
-        if (this.buffer.get(i) != null) {
-            return false;
+        while (this.buffer.get(i) != null) {
+            Thread.yield();
         }
         this.buffer.lazySet(i, task);
         producerIndex$FU.incrementAndGet(this);
-        return true;
+        return null;
+    }
+
+    private final void decrementIfBlocking(Task task) {
+        if (task != null) {
+            boolean z = false;
+            if (task.taskContext.getTaskMode() == 1) {
+                int decrementAndGet = blockingTasksInBuffer$FU.decrementAndGet(this);
+                if (DebugKt.getASSERTIONS_ENABLED()) {
+                    if (decrementAndGet >= 0) {
+                        z = true;
+                    }
+                    if (!z) {
+                        throw new AssertionError();
+                    }
+                }
+            }
+        }
     }
 }

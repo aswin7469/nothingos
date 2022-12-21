@@ -4,7 +4,7 @@ import android.content.pm.LauncherApps;
 import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class IconManager_Factory implements Factory<IconManager> {
     private final Provider<IconBuilder> iconBuilderProvider;
     private final Provider<LauncherApps> launcherAppsProvider;
@@ -16,10 +16,8 @@ public final class IconManager_Factory implements Factory<IconManager> {
         this.iconBuilderProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public IconManager mo1933get() {
-        return newInstance(this.notifCollectionProvider.mo1933get(), this.launcherAppsProvider.mo1933get(), this.iconBuilderProvider.mo1933get());
+    public IconManager get() {
+        return newInstance(this.notifCollectionProvider.get(), this.launcherAppsProvider.get(), this.iconBuilderProvider.get());
     }
 
     public static IconManager_Factory create(Provider<CommonNotifCollection> provider, Provider<LauncherApps> provider2, Provider<IconBuilder> provider3) {

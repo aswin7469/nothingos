@@ -6,12 +6,11 @@ import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate;
+
 @Deprecated
-/* loaded from: classes.dex */
 public class PreferenceRecyclerViewAccessibilityDelegate extends RecyclerViewAccessibilityDelegate {
     final AccessibilityDelegateCompat mDefaultItemDelegate = super.getItemDelegate();
-    final AccessibilityDelegateCompat mItemDelegate = new AccessibilityDelegateCompat() { // from class: androidx.preference.PreferenceRecyclerViewAccessibilityDelegate.1
-        @Override // androidx.core.view.AccessibilityDelegateCompat
+    final AccessibilityDelegateCompat mItemDelegate = new AccessibilityDelegateCompat() {
         public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             Preference item;
             PreferenceRecyclerViewAccessibilityDelegate.this.mDefaultItemDelegate.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfoCompat);
@@ -22,7 +21,6 @@ public class PreferenceRecyclerViewAccessibilityDelegate extends RecyclerViewAcc
             }
         }
 
-        @Override // androidx.core.view.AccessibilityDelegateCompat
         public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
             return PreferenceRecyclerViewAccessibilityDelegate.this.mDefaultItemDelegate.performAccessibilityAction(view, i, bundle);
         }
@@ -34,7 +32,6 @@ public class PreferenceRecyclerViewAccessibilityDelegate extends RecyclerViewAcc
         this.mRecyclerView = recyclerView;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerViewAccessibilityDelegate
     public AccessibilityDelegateCompat getItemDelegate() {
         return this.mItemDelegate;
     }

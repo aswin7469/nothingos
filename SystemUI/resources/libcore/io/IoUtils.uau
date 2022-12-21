@@ -1,0 +1,7 @@
+signature,file,startline,startcol,endline,endcol,properties
+Llibcore/io/IoUtils;->closeQuietly(Ljava/lang/AutoCloseable;)V,libcore/luni/src/main/java/libcore/io/IoUtils.java,190,5,190,25,
+Llibcore/io/IoUtils;->closeQuietly(Ljava/io/FileDescriptor;)V,libcore/luni/src/main/java/libcore/io/IoUtils.java,210,5,210,25,
+Llibcore/io/IoUtils;->closeQuietly(Ljava/net/Socket;)V,libcore/luni/src/main/java/libcore/io/IoUtils.java,226,5,226,25,
+Llibcore/io/IoUtils;->setBlocking(Ljava/io/FileDescriptor;Z)V,libcore/luni/src/main/java/libcore/io/IoUtils.java,248,5,248,25,
+Llibcore/io/IoUtils;->readFileAsByteArray(Ljava/lang/String;)[B,libcore/luni/src/main/java/libcore/io/IoUtils.java,273,5,273,25,
+Llibcore/io/IoUtils;->readFileAsString(Ljava/lang/String;)Ljava/lang/String;,libcore/luni/src/main/java/libcore/io/IoUtils.java,288,5,288,25,

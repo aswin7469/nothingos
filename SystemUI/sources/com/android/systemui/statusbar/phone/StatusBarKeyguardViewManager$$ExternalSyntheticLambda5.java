@@ -1,16 +1,14 @@
 package com.android.systemui.statusbar.phone;
 
-import android.view.View;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public final /* synthetic */ class StatusBarKeyguardViewManager$$ExternalSyntheticLambda5 implements Consumer {
-    public static final /* synthetic */ StatusBarKeyguardViewManager$$ExternalSyntheticLambda5 INSTANCE = new StatusBarKeyguardViewManager$$ExternalSyntheticLambda5();
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class StatusBarKeyguardViewManager$$ExternalSyntheticLambda5 implements Runnable {
+    public final /* synthetic */ StatusBarKeyguardViewManager f$0;
 
-    private /* synthetic */ StatusBarKeyguardViewManager$$ExternalSyntheticLambda5() {
+    public /* synthetic */ StatusBarKeyguardViewManager$$ExternalSyntheticLambda5(StatusBarKeyguardViewManager statusBarKeyguardViewManager) {
+        this.f$0 = statusBarKeyguardViewManager;
     }
 
-    @Override // java.util.function.Consumer
-    public final void accept(Object obj) {
-        StatusBarKeyguardViewManager.lambda$onStartedGoingToSleep$2((View) obj);
+    public final void run() {
+        this.f$0.mo45262x60026997();
     }
 }

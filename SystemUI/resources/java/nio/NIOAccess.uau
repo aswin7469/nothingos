@@ -1,0 +1,4 @@
+signature,file,startline,startcol,endline,endcol,properties
+Ljava/nio/NIOAccess;->getBasePointer(Ljava/nio/Buffer;)J,libcore/luni/src/main/java/java/nio/NIOAccess.java,43,5,43,25,
+Ljava/nio/NIOAccess;->getBaseArray(Ljava/nio/Buffer;)Ljava/lang/Object;,libcore/luni/src/main/java/java/nio/NIOAccess.java,61,5,61,25,
+Ljava/nio/NIOAccess;->getBaseArrayOffset(Ljava/nio/Buffer;)I,libcore/luni/src/main/java/java/nio/NIOAccess.java,79,5,79,25,

@@ -6,29 +6,25 @@ import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-/* loaded from: classes2.dex */
+import java.p026io.IOException;
+
 final class TypeAdapterRuntimeTypeWrapper<T> extends TypeAdapter<T> {
     private final Gson context;
     private final TypeAdapter<T> delegate;
     private final Type type;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public TypeAdapterRuntimeTypeWrapper(Gson gson, TypeAdapter<T> typeAdapter, Type type) {
+    TypeAdapterRuntimeTypeWrapper(Gson gson, TypeAdapter<T> typeAdapter, Type type2) {
         this.context = gson;
         this.delegate = typeAdapter;
-        this.type = type;
+        this.type = type2;
     }
 
-    @Override // com.google.gson.TypeAdapter
-    /* renamed from: read */
-    public T mo1911read(JsonReader jsonReader) throws IOException {
-        return this.delegate.mo1911read(jsonReader);
+    public T read(JsonReader jsonReader) throws IOException {
+        return this.delegate.read(jsonReader);
     }
 
-    @Override // com.google.gson.TypeAdapter
     public void write(JsonWriter jsonWriter, T t) throws IOException {
         TypeAdapter<T> typeAdapter = this.delegate;
         Type runtimeTypeIfMoreSpecific = getRuntimeTypeIfMoreSpecific(this.type, t);
@@ -44,7 +40,10 @@ final class TypeAdapterRuntimeTypeWrapper<T> extends TypeAdapter<T> {
         typeAdapter.write(jsonWriter, t);
     }
 
-    private Type getRuntimeTypeIfMoreSpecific(Type type, Object obj) {
-        return obj != null ? (type == Object.class || (type instanceof TypeVariable) || (type instanceof Class)) ? obj.getClass() : type : type;
+    private Type getRuntimeTypeIfMoreSpecific(Type type2, Object obj) {
+        if (obj != null) {
+            return (type2 == Object.class || (type2 instanceof TypeVariable) || (type2 instanceof Class)) ? obj.getClass() : type2;
+        }
+        return type2;
     }
 }

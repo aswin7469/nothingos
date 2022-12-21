@@ -8,7 +8,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import com.android.settingslib.Utils;
-/* loaded from: classes.dex */
+
 public class HardwareBgDrawable extends LayerDrawable {
     private final Drawable[] mLayers;
     private final Paint mPaint;
@@ -16,7 +16,6 @@ public class HardwareBgDrawable extends LayerDrawable {
     private boolean mRotatedBackground;
     private final boolean mRoundTop;
 
-    @Override // android.graphics.drawable.LayerDrawable, android.graphics.drawable.Drawable
     public int getOpacity() {
         return -1;
     }
@@ -28,67 +27,70 @@ public class HardwareBgDrawable extends LayerDrawable {
     public HardwareBgDrawable(boolean z, Drawable[] drawableArr) {
         super(drawableArr);
         this.mPaint = new Paint();
-        if (drawableArr.length != 2) {
-            throw new IllegalArgumentException("Need 2 layers");
+        if (drawableArr.length == 2) {
+            this.mRoundTop = z;
+            this.mLayers = drawableArr;
+            return;
         }
-        this.mRoundTop = z;
-        this.mLayers = drawableArr;
+        throw new IllegalArgumentException("Need 2 layers");
     }
 
     private static Drawable[] getLayers(Context context, boolean z, boolean z2) {
         Drawable[] drawableArr;
-        int i;
-        int i2 = z2 ? R$drawable.rounded_bg_full : R$drawable.rounded_bg;
+        int i = z2 ? C1893R.C1895drawable.rounded_bg_full : C1893R.C1895drawable.rounded_bg;
         if (z) {
-            drawableArr = new Drawable[]{context.getDrawable(i2).mutate(), context.getDrawable(i2).mutate()};
+            drawableArr = new Drawable[]{context.getDrawable(i).mutate(), context.getDrawable(i).mutate()};
         } else {
             drawableArr = new Drawable[2];
-            drawableArr[0] = context.getDrawable(i2).mutate();
-            if (z2) {
-                i = R$drawable.rounded_full_bg_bottom;
-            } else {
-                i = R$drawable.rounded_bg_bottom;
-            }
-            drawableArr[1] = context.getDrawable(i).mutate();
+            drawableArr[0] = context.getDrawable(i).mutate();
+            drawableArr[1] = context.getDrawable(z2 ? C1893R.C1895drawable.rounded_full_bg_bottom : C1893R.C1895drawable.rounded_bg_bottom).mutate();
         }
         drawableArr[1].setTintList(Utils.getColorAttr(context, 16843827));
         return drawableArr;
     }
 
-    @Override // android.graphics.drawable.LayerDrawable, android.graphics.drawable.Drawable
+    public void setCutPoint(int i) {
+        this.mPoint = i;
+        invalidateSelf();
+    }
+
+    public int getCutPoint() {
+        return this.mPoint;
+    }
+
     public void draw(Canvas canvas) {
-        if (this.mPoint >= 0 && !this.mRotatedBackground) {
-            Rect bounds = getBounds();
-            int i = bounds.top;
-            int i2 = this.mPoint + i;
-            int i3 = bounds.bottom;
-            if (i2 > i3) {
-                i2 = i3;
-            }
-            if (this.mRoundTop) {
-                this.mLayers[0].setBounds(bounds.left, i, bounds.right, i2);
-            } else {
-                this.mLayers[1].setBounds(bounds.left, i2, bounds.right, i3);
-            }
-            if (this.mRoundTop) {
-                this.mLayers[1].draw(canvas);
-                this.mLayers[0].draw(canvas);
-                return;
-            }
+        if (this.mPoint < 0 || this.mRotatedBackground) {
             this.mLayers[0].draw(canvas);
+            return;
+        }
+        Rect bounds = getBounds();
+        int i = bounds.top + this.mPoint;
+        if (i > bounds.bottom) {
+            i = bounds.bottom;
+        }
+        if (this.mRoundTop) {
+            this.mLayers[0].setBounds(bounds.left, bounds.top, bounds.right, i);
+        } else {
+            this.mLayers[1].setBounds(bounds.left, i, bounds.right, bounds.bottom);
+        }
+        if (this.mRoundTop) {
             this.mLayers[1].draw(canvas);
+            this.mLayers[0].draw(canvas);
             return;
         }
         this.mLayers[0].draw(canvas);
+        this.mLayers[1].draw(canvas);
     }
 
-    @Override // android.graphics.drawable.LayerDrawable, android.graphics.drawable.Drawable
     public void setAlpha(int i) {
         this.mPaint.setAlpha(i);
     }
 
-    @Override // android.graphics.drawable.LayerDrawable, android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
         this.mPaint.setColorFilter(colorFilter);
+    }
+
+    public void setRotatedBackground(boolean z) {
+        this.mRotatedBackground = z;
     }
 }

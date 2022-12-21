@@ -1,42 +1,43 @@
 package com.android.systemui.tuner;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
+import androidx.core.app.NotificationCompat;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
+import com.android.systemui.demomode.DemoMode;
 import com.android.systemui.demomode.DemoModeAvailabilityTracker;
 import com.android.systemui.demomode.DemoModeController;
-/* loaded from: classes2.dex */
+import com.nothing.p023os.device.DeviceConstant;
+import com.nothing.systemui.p024qs.tiles.settings.panel.SettingContentRegistry;
+
 public class DemoModeFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
-    private static final String[] STATUS_ICONS = {"volume", "bluetooth", "location", "alarm", "zen", "sync", "tty", "eri", "mute", "speakerphone", "managed_profile"};
+    private static final String[] STATUS_ICONS = {"volume", SettingContentRegistry.BLUETOOTH_ITEM, "location", NotificationCompat.CATEGORY_ALARM, "zen", "sync", "tty", "eri", "mute", "speakerphone", "managed_profile"};
     private DemoModeController mDemoModeController;
     private Tracker mDemoModeTracker;
     private SwitchPreference mEnabledSwitch;
     private SwitchPreference mOnSwitch;
 
-    @SuppressLint({"ValidFragment"})
     public DemoModeFragment(DemoModeController demoModeController) {
         this.mDemoModeController = demoModeController;
     }
 
-    @Override // androidx.preference.PreferenceFragment
     public void onCreatePreferences(Bundle bundle, String str) {
         Context context = getContext();
         SwitchPreference switchPreference = new SwitchPreference(context);
         this.mEnabledSwitch = switchPreference;
-        switchPreference.setTitle(R$string.enable_demo_mode);
+        switchPreference.setTitle((int) C1893R.string.enable_demo_mode);
         this.mEnabledSwitch.setOnPreferenceChangeListener(this);
         SwitchPreference switchPreference2 = new SwitchPreference(context);
         this.mOnSwitch = switchPreference2;
-        switchPreference2.setTitle(R$string.show_demo_mode);
+        switchPreference2.setTitle((int) C1893R.string.show_demo_mode);
         this.mOnSwitch.setEnabled(false);
         this.mOnSwitch.setOnPreferenceChangeListener(this);
         PreferenceScreen createPreferenceScreen = getPreferenceManager().createPreferenceScreen(context);
@@ -51,7 +52,6 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
         setHasOptionsMenu(true);
     }
 
-    @Override // android.app.Fragment
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == 16908332) {
             getFragmentManager().popBackStack();
@@ -59,36 +59,32 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
         return super.onOptionsItemSelected(menuItem);
     }
 
-    @Override // android.app.Fragment
     public void onResume() {
         super.onResume();
         MetricsLogger.visibility(getContext(), 229, true);
     }
 
-    @Override // android.app.Fragment
     public void onPause() {
         super.onPause();
         MetricsLogger.visibility(getContext(), 229, false);
     }
 
-    @Override // android.app.Fragment
     public void onDestroy() {
         this.mDemoModeTracker.stopTracking();
         super.onDestroy();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateDemoModeEnabled() {
         this.mEnabledSwitch.setChecked(this.mDemoModeTracker.isDemoModeAvailable());
         this.mOnSwitch.setEnabled(this.mDemoModeTracker.isDemoModeAvailable());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateDemoModeOn() {
         this.mOnSwitch.setChecked(this.mDemoModeTracker.isInDemoMode());
     }
 
-    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean z = obj == Boolean.TRUE;
         if (preference == this.mEnabledSwitch) {
@@ -113,9 +109,9 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
 
     private void startDemoMode() {
         String str;
-        Intent intent = new Intent("com.android.systemui.demo");
+        Intent intent = new Intent(DemoMode.ACTION_DEMO);
         this.mDemoModeController.requestStartDemoMode();
-        intent.putExtra("command", "clock");
+        intent.putExtra(DemoMode.EXTRA_COMMAND, DemoMode.COMMAND_CLOCK);
         try {
             str = String.format("%02d00", Integer.valueOf(Integer.valueOf(Build.VERSION.RELEASE_OR_CODENAME.split("\\.")[0]).intValue() % 24));
         } catch (IllegalArgumentException unused) {
@@ -123,26 +119,26 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
         }
         intent.putExtra("hhmm", str);
         getContext().sendBroadcast(intent);
-        intent.putExtra("command", "network");
+        intent.putExtra(DemoMode.EXTRA_COMMAND, DemoMode.COMMAND_NETWORK);
         intent.putExtra("wifi", "show");
         intent.putExtra("mobile", "show");
         intent.putExtra("sims", "1");
         intent.putExtra("nosim", "false");
-        intent.putExtra("level", "4");
+        intent.putExtra("level", DeviceConstant.NOISE_CANCELLATION_ADAPTIVE);
         intent.putExtra("datatype", "lte");
         getContext().sendBroadcast(intent);
         intent.putExtra("fully", "true");
         getContext().sendBroadcast(intent);
-        intent.putExtra("command", "battery");
+        intent.putExtra(DemoMode.EXTRA_COMMAND, DemoMode.COMMAND_BATTERY);
         intent.putExtra("level", "100");
         intent.putExtra("plugged", "false");
         getContext().sendBroadcast(intent);
-        intent.putExtra("command", "status");
-        for (String str2 : STATUS_ICONS) {
-            intent.putExtra(str2, "hide");
+        intent.putExtra(DemoMode.EXTRA_COMMAND, "status");
+        for (String putExtra : STATUS_ICONS) {
+            intent.putExtra(putExtra, "hide");
         }
         getContext().sendBroadcast(intent);
-        intent.putExtra("command", "notifications");
+        intent.putExtra(DemoMode.EXTRA_COMMAND, DemoMode.COMMAND_NOTIFICATIONS);
         intent.putExtra("visible", "false");
         getContext().sendBroadcast(intent);
     }
@@ -151,25 +147,20 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
         this.mDemoModeController.requestFinishDemoMode();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public class Tracker extends DemoModeAvailabilityTracker {
+    private class Tracker extends DemoModeAvailabilityTracker {
         Tracker(Context context) {
             super(context);
         }
 
-        @Override // com.android.systemui.demomode.DemoModeAvailabilityTracker
         public void onDemoModeAvailabilityChanged() {
             DemoModeFragment.this.updateDemoModeEnabled();
             DemoModeFragment.this.updateDemoModeOn();
         }
 
-        @Override // com.android.systemui.demomode.DemoModeAvailabilityTracker
         public void onDemoModeStarted() {
             DemoModeFragment.this.updateDemoModeOn();
         }
 
-        @Override // com.android.systemui.demomode.DemoModeAvailabilityTracker
         public void onDemoModeFinished() {
             DemoModeFragment.this.updateDemoModeOn();
         }

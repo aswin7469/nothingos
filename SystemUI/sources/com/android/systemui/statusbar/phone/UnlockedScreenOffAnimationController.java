@@ -1,14 +1,16 @@
 package com.android.systemui.statusbar.phone;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.View;
+import com.android.internal.jank.InteractionJankMonitor;
 import com.android.systemui.animation.Interpolators;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.LightRevealScrim;
@@ -18,126 +20,123 @@ import com.android.systemui.statusbar.notification.PropertyAnimator;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.settings.GlobalSettings;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.doze.AODController;
 import dagger.Lazy;
-import java.util.HashSet;
-import java.util.Objects;
-import kotlin.Unit;
+import javax.inject.Inject;
+import kotlin.Metadata;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@SysUISingleton
+@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0007\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0015\b\u0007\u0018\u0000 G2\u00020\u00012\u00020\u0002:\u0001GBe\b\u0007\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\f\u0010\t\u001a\b\u0012\u0004\u0012\u00020\u000b0\n\u0012\u0006\u0010\f\u001a\u00020\r\u0012\f\u0010\u000e\u001a\b\u0012\u0004\u0012\u00020\u000f0\n\u0012\u0006\u0010\u0010\u001a\u00020\u0011\u0012\u0006\u0010\u0012\u001a\u00020\u0013\u0012\u0006\u0010\u0014\u001a\u00020\u0015\u0012\b\b\u0002\u0010\u0016\u001a\u00020\u0017¢\u0006\u0002\u0010\u0018J\u0018\u0010.\u001a\u00020/2\u0006\u00100\u001a\u0002012\u0006\u00102\u001a\u000203H\u0016J\u0018\u00104\u001a\u00020/2\u0006\u00105\u001a\u00020,2\u0006\u0010)\u001a\u00020*H\u0016J\b\u00106\u001a\u00020 H\u0016J\b\u00107\u001a\u00020 H\u0016J\u0006\u00108\u001a\u00020 J\u0006\u00109\u001a\u00020 J\b\u0010:\u001a\u00020/H\u0016J\b\u0010;\u001a\u00020/H\u0016J\b\u0010<\u001a\u00020 H\u0016J\u000e\u0010=\u001a\u00020/2\u0006\u0010$\u001a\u00020 J\b\u0010>\u001a\u00020 H\u0016J\b\u0010-\u001a\u00020 H\u0016J\b\u0010?\u001a\u00020 H\u0016J\b\u0010@\u001a\u00020 H\u0016J\b\u0010A\u001a\u00020 H\u0016J\b\u0010B\u001a\u00020 H\u0016J\u0006\u0010C\u001a\u00020 J\b\u0010D\u001a\u00020 H\u0016J\b\u0010E\u001a\u00020 H\u0016J\u0006\u0010F\u001a\u00020/R\u000e\u0010\u0019\u001a\u00020\u001aX\u000e¢\u0006\u0002\n\u0000R\u0011\u0010\u001b\u001a\u00020\u001c¢\u0006\b\n\u0000\u001a\u0004\b\u001d\u0010\u001eR\u000e\u0010\u001f\u001a\u00020 X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0003\u001a\u00020\u0004X\u0004¢\u0006\u0002\n\u0000R\u0012\u0010!\u001a\u0004\u0018\u00010 X\u000e¢\u0006\u0004\n\u0002\u0010\"R\u0014\u0010\u000e\u001a\b\u0012\u0004\u0012\u00020\u000f0\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0016\u001a\u00020\u0017X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010#\u001a\u00020 X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\t\u001a\b\u0012\u0004\u0012\u00020\u000b0\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010$\u001a\u00020 X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010%\u001a\u00020 X\u000e¢\u0006\u0002\n\u0000R\u0016\u0010&\u001a\n (*\u0004\u0018\u00010'0'X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010)\u001a\u00020*X.¢\u0006\u0002\n\u0000R\u000e\u0010+\u001a\u00020,X.¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0015X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010-\u001a\u00020 X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000¨\u0006H"}, mo64987d2 = {"Lcom/android/systemui/statusbar/phone/UnlockedScreenOffAnimationController;", "Lcom/android/systemui/keyguard/WakefulnessLifecycle$Observer;", "Lcom/android/systemui/statusbar/phone/ScreenOffAnimation;", "context", "Landroid/content/Context;", "wakefulnessLifecycle", "Lcom/android/systemui/keyguard/WakefulnessLifecycle;", "statusBarStateControllerImpl", "Lcom/android/systemui/statusbar/StatusBarStateControllerImpl;", "keyguardViewMediatorLazy", "Ldagger/Lazy;", "Lcom/android/systemui/keyguard/KeyguardViewMediator;", "keyguardStateController", "Lcom/android/systemui/statusbar/policy/KeyguardStateController;", "dozeParameters", "Lcom/android/systemui/statusbar/phone/DozeParameters;", "globalSettings", "Lcom/android/systemui/util/settings/GlobalSettings;", "interactionJankMonitor", "Lcom/android/internal/jank/InteractionJankMonitor;", "powerManager", "Landroid/os/PowerManager;", "handler", "Landroid/os/Handler;", "(Landroid/content/Context;Lcom/android/systemui/keyguard/WakefulnessLifecycle;Lcom/android/systemui/statusbar/StatusBarStateControllerImpl;Ldagger/Lazy;Lcom/android/systemui/statusbar/policy/KeyguardStateController;Ldagger/Lazy;Lcom/android/systemui/util/settings/GlobalSettings;Lcom/android/internal/jank/InteractionJankMonitor;Landroid/os/PowerManager;Landroid/os/Handler;)V", "animatorDurationScale", "", "animatorDurationScaleObserver", "Landroid/database/ContentObserver;", "getAnimatorDurationScaleObserver", "()Landroid/database/ContentObserver;", "aodUiAnimationPlaying", "", "decidedToAnimateGoingToSleep", "Ljava/lang/Boolean;", "initialized", "landscapeScreenOff", "lightRevealAnimationPlaying", "lightRevealAnimator", "Landroid/animation/ValueAnimator;", "kotlin.jvm.PlatformType", "lightRevealScrim", "Lcom/android/systemui/statusbar/LightRevealScrim;", "mCentralSurfaces", "Lcom/android/systemui/statusbar/phone/CentralSurfaces;", "shouldAnimateInKeyguard", "animateInKeyguard", "", "keyguardView", "Landroid/view/View;", "after", "Ljava/lang/Runnable;", "initialize", "centralSurfaces", "isAnimationPlaying", "isKeyguardShowDelayed", "isLandscapeScreenOff", "isScreenOffLightRevealAnimationPlaying", "onFinishedWakingUp", "onStartedWakingUp", "overrideNotificationsDozeAmount", "setIsLandscapeOff", "shouldAnimateAodIcons", "shouldDelayDisplayDozeTransition", "shouldDelayKeyguardShow", "shouldHideScrimOnWakeUp", "shouldPlayAnimation", "shouldPlayUnlockedScreenOffAnimation", "shouldShowAodIconsWhenShade", "startAnimation", "updateAnimatorDurationScale", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: UnlockedScreenOffAnimationController.kt */
-/* loaded from: classes.dex */
-public final class UnlockedScreenOffAnimationController implements WakefulnessLifecycle.Observer {
-    private boolean aodUiAnimationPlaying;
-    @NotNull
+public final class UnlockedScreenOffAnimationController implements WakefulnessLifecycle.Observer, ScreenOffAnimation {
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    private static final String TAG = "UnlockedScreenOffAnimationController";
+    private float animatorDurationScale;
+    private final ContentObserver animatorDurationScaleObserver;
+    /* access modifiers changed from: private */
+    public boolean aodUiAnimationPlaying;
     private final Context context;
-    @Nullable
-    private Boolean decidedToAnimateGoingToSleep;
-    @NotNull
+    /* access modifiers changed from: private */
+    public Boolean decidedToAnimateGoingToSleep;
     private final Lazy<DozeParameters> dozeParameters;
-    @NotNull
     private final GlobalSettings globalSettings;
-    @NotNull
+    private final Handler handler;
+    private boolean initialized;
+    /* access modifiers changed from: private */
+    public final InteractionJankMonitor interactionJankMonitor;
     private final KeyguardStateController keyguardStateController;
-    @NotNull
     private final Lazy<KeyguardViewMediator> keyguardViewMediatorLazy;
-    private boolean lightRevealAnimationPlaying;
+    private boolean landscapeScreenOff;
+    /* access modifiers changed from: private */
+    public boolean lightRevealAnimationPlaying;
     private final ValueAnimator lightRevealAnimator;
-    private LightRevealScrim lightRevealScrim;
+    /* access modifiers changed from: private */
+    public LightRevealScrim lightRevealScrim;
+    /* access modifiers changed from: private */
+    public CentralSurfaces mCentralSurfaces;
+    private final PowerManager powerManager;
     private boolean shouldAnimateInKeyguard;
-    private StatusBar statusBar;
-    @NotNull
     private final StatusBarStateControllerImpl statusBarStateControllerImpl;
-    @NotNull
     private final WakefulnessLifecycle wakefulnessLifecycle;
-    @NotNull
-    private final Handler handler = new Handler();
-    private float animatorDurationScale = 1.0f;
-    @NotNull
-    private HashSet<Callback> callbacks = new HashSet<>();
-    @NotNull
-    private final ContentObserver animatorDurationScaleObserver = new ContentObserver() { // from class: com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController$animatorDurationScaleObserver$1
-        /* JADX INFO: Access modifiers changed from: package-private */
-        {
-            super(null);
-        }
 
-        @Override // android.database.ContentObserver
-        public void onChange(boolean z) {
-            UnlockedScreenOffAnimationController.this.updateAnimatorDurationScale();
-        }
-    };
-
-    /* compiled from: UnlockedScreenOffAnimationController.kt */
-    /* loaded from: classes.dex */
-    public interface Callback {
-        void onUnlockedScreenOffProgressUpdate(float f, float f2);
-    }
-
-    public UnlockedScreenOffAnimationController(@NotNull Context context, @NotNull WakefulnessLifecycle wakefulnessLifecycle, @NotNull StatusBarStateControllerImpl statusBarStateControllerImpl, @NotNull Lazy<KeyguardViewMediator> keyguardViewMediatorLazy, @NotNull KeyguardStateController keyguardStateController, @NotNull Lazy<DozeParameters> dozeParameters, @NotNull GlobalSettings globalSettings) {
-        Intrinsics.checkNotNullParameter(context, "context");
-        Intrinsics.checkNotNullParameter(wakefulnessLifecycle, "wakefulnessLifecycle");
-        Intrinsics.checkNotNullParameter(statusBarStateControllerImpl, "statusBarStateControllerImpl");
-        Intrinsics.checkNotNullParameter(keyguardViewMediatorLazy, "keyguardViewMediatorLazy");
-        Intrinsics.checkNotNullParameter(keyguardStateController, "keyguardStateController");
-        Intrinsics.checkNotNullParameter(dozeParameters, "dozeParameters");
-        Intrinsics.checkNotNullParameter(globalSettings, "globalSettings");
-        this.context = context;
-        this.wakefulnessLifecycle = wakefulnessLifecycle;
-        this.statusBarStateControllerImpl = statusBarStateControllerImpl;
-        this.keyguardViewMediatorLazy = keyguardViewMediatorLazy;
-        this.keyguardStateController = keyguardStateController;
-        this.dozeParameters = dozeParameters;
-        this.globalSettings = globalSettings;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
-        ofFloat.setDuration(750L);
+    @Inject
+    public UnlockedScreenOffAnimationController(Context context2, WakefulnessLifecycle wakefulnessLifecycle2, StatusBarStateControllerImpl statusBarStateControllerImpl2, Lazy<KeyguardViewMediator> lazy, KeyguardStateController keyguardStateController2, Lazy<DozeParameters> lazy2, GlobalSettings globalSettings2, InteractionJankMonitor interactionJankMonitor2, PowerManager powerManager2, Handler handler2) {
+        Intrinsics.checkNotNullParameter(context2, "context");
+        Intrinsics.checkNotNullParameter(wakefulnessLifecycle2, "wakefulnessLifecycle");
+        Intrinsics.checkNotNullParameter(statusBarStateControllerImpl2, "statusBarStateControllerImpl");
+        Intrinsics.checkNotNullParameter(lazy, "keyguardViewMediatorLazy");
+        Intrinsics.checkNotNullParameter(keyguardStateController2, "keyguardStateController");
+        Intrinsics.checkNotNullParameter(lazy2, "dozeParameters");
+        Intrinsics.checkNotNullParameter(globalSettings2, "globalSettings");
+        Intrinsics.checkNotNullParameter(interactionJankMonitor2, "interactionJankMonitor");
+        Intrinsics.checkNotNullParameter(powerManager2, "powerManager");
+        Intrinsics.checkNotNullParameter(handler2, "handler");
+        this.context = context2;
+        this.wakefulnessLifecycle = wakefulnessLifecycle2;
+        this.statusBarStateControllerImpl = statusBarStateControllerImpl2;
+        this.keyguardViewMediatorLazy = lazy;
+        this.keyguardStateController = keyguardStateController2;
+        this.dozeParameters = lazy2;
+        this.globalSettings = globalSettings2;
+        this.interactionJankMonitor = interactionJankMonitor2;
+        this.powerManager = powerManager2;
+        this.handler = handler2;
+        this.animatorDurationScale = 1.0f;
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+        ofFloat.setDuration(750);
         ofFloat.setInterpolator(Interpolators.LINEAR);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController$lightRevealAnimator$1$1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                LightRevealScrim lightRevealScrim;
-                lightRevealScrim = UnlockedScreenOffAnimationController.this.lightRevealScrim;
-                if (lightRevealScrim == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("lightRevealScrim");
-                    throw null;
-                }
-                Object animatedValue = valueAnimator.getAnimatedValue();
-                Objects.requireNonNull(animatedValue, "null cannot be cast to non-null type kotlin.Float");
-                lightRevealScrim.setRevealAmount(((Float) animatedValue).floatValue());
-                Object animatedValue2 = valueAnimator.getAnimatedValue();
-                Objects.requireNonNull(animatedValue2, "null cannot be cast to non-null type kotlin.Float");
-                UnlockedScreenOffAnimationController.this.sendUnlockedScreenOffProgressUpdate(1.0f - valueAnimator.getAnimatedFraction(), 1.0f - ((Float) animatedValue2).floatValue());
-            }
-        });
-        ofFloat.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController$lightRevealAnimator$1$2
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-            public void onAnimationCancel(@Nullable Animator animator) {
-                LightRevealScrim lightRevealScrim;
-                lightRevealScrim = UnlockedScreenOffAnimationController.this.lightRevealScrim;
-                if (lightRevealScrim != null) {
-                    lightRevealScrim.setRevealAmount(1.0f);
-                    UnlockedScreenOffAnimationController.this.lightRevealAnimationPlaying = false;
-                    UnlockedScreenOffAnimationController.this.sendUnlockedScreenOffProgressUpdate(0.0f, 0.0f);
-                    return;
-                }
-                Intrinsics.throwUninitializedPropertyAccessException("lightRevealScrim");
-                throw null;
-            }
-
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-            public void onAnimationEnd(@Nullable Animator animator) {
-                UnlockedScreenOffAnimationController.this.lightRevealAnimationPlaying = false;
-            }
-        });
-        Unit unit = Unit.INSTANCE;
+        ofFloat.addUpdateListener(new UnlockedScreenOffAnimationController$$ExternalSyntheticLambda0(this));
+        ofFloat.addListener(new UnlockedScreenOffAnimationController$lightRevealAnimator$1$2(this));
         this.lightRevealAnimator = ofFloat;
+        this.animatorDurationScaleObserver = new C3120x7f4c478e(this);
     }
 
-    public final void initialize(@NotNull StatusBar statusBar, @NotNull LightRevealScrim lightRevealScrim) {
-        Intrinsics.checkNotNullParameter(statusBar, "statusBar");
-        Intrinsics.checkNotNullParameter(lightRevealScrim, "lightRevealScrim");
-        this.lightRevealScrim = lightRevealScrim;
-        this.statusBar = statusBar;
+    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
+    public /* synthetic */ UnlockedScreenOffAnimationController(Context context2, WakefulnessLifecycle wakefulnessLifecycle2, StatusBarStateControllerImpl statusBarStateControllerImpl2, Lazy lazy, KeyguardStateController keyguardStateController2, Lazy lazy2, GlobalSettings globalSettings2, InteractionJankMonitor interactionJankMonitor2, PowerManager powerManager2, Handler handler2, int i, DefaultConstructorMarker defaultConstructorMarker) {
+        this(context2, wakefulnessLifecycle2, statusBarStateControllerImpl2, lazy, keyguardStateController2, lazy2, globalSettings2, interactionJankMonitor2, powerManager2, (i & 512) != 0 ? new Handler() : handler2);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lightRevealAnimator$lambda-1$lambda-0  reason: not valid java name */
+    public static final void m3195lightRevealAnimator$lambda1$lambda0(UnlockedScreenOffAnimationController unlockedScreenOffAnimationController, ValueAnimator valueAnimator) {
+        Intrinsics.checkNotNullParameter(unlockedScreenOffAnimationController, "this$0");
+        LightRevealScrim lightRevealScrim2 = unlockedScreenOffAnimationController.lightRevealScrim;
+        LightRevealScrim lightRevealScrim3 = null;
+        if (lightRevealScrim2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("lightRevealScrim");
+            lightRevealScrim2 = null;
+        }
+        Object animatedValue = valueAnimator.getAnimatedValue();
+        if (animatedValue != null) {
+            lightRevealScrim2.setRevealAmount(((Float) animatedValue).floatValue());
+            LightRevealScrim lightRevealScrim4 = unlockedScreenOffAnimationController.lightRevealScrim;
+            if (lightRevealScrim4 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("lightRevealScrim");
+            } else {
+                lightRevealScrim3 = lightRevealScrim4;
+            }
+            if (lightRevealScrim3.isScrimAlmostOccludes() && unlockedScreenOffAnimationController.interactionJankMonitor.isInstrumenting(40)) {
+                unlockedScreenOffAnimationController.interactionJankMonitor.end(40);
+                return;
+            }
+            return;
+        }
+        throw new NullPointerException("null cannot be cast to non-null type kotlin.Float");
+    }
+
+    public final ContentObserver getAnimatorDurationScaleObserver() {
+        return this.animatorDurationScaleObserver;
+    }
+
+    public void initialize(CentralSurfaces centralSurfaces, LightRevealScrim lightRevealScrim2) {
+        Intrinsics.checkNotNullParameter(centralSurfaces, "centralSurfaces");
+        Intrinsics.checkNotNullParameter(lightRevealScrim2, "lightRevealScrim");
+        this.initialized = true;
+        this.lightRevealScrim = lightRevealScrim2;
+        this.mCentralSurfaces = centralSurfaces;
         updateAnimatorDurationScale();
         this.globalSettings.registerContentObserver(Settings.Global.getUriFor("animator_duration_scale"), false, this.animatorDurationScaleObserver);
         this.wakefulnessLifecycle.addObserver(this);
@@ -147,127 +146,294 @@ public final class UnlockedScreenOffAnimationController implements WakefulnessLi
         this.animatorDurationScale = this.globalSettings.getFloat("animator_duration_scale", 1.0f);
     }
 
-    public final void animateInKeyguard(@NotNull final View keyguardView, @NotNull final Runnable after) {
-        Intrinsics.checkNotNullParameter(keyguardView, "keyguardView");
-        Intrinsics.checkNotNullParameter(after, "after");
-        this.shouldAnimateInKeyguard = false;
-        keyguardView.setAlpha(0.0f);
-        keyguardView.setVisibility(0);
-        float y = keyguardView.getY();
-        keyguardView.setY(y - (keyguardView.getHeight() * 0.1f));
-        AnimatableProperty animatableProperty = AnimatableProperty.Y;
-        PropertyAnimator.cancelAnimation(keyguardView, animatableProperty);
-        long j = 500;
-        PropertyAnimator.setProperty(keyguardView, animatableProperty, y, new AnimationProperties().setDuration(j), true);
-        keyguardView.animate().setDuration(j).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).alpha(1.0f).setListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController$animateInKeyguard$1
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-            public void onAnimationEnd(@Nullable Animator animator) {
-                Lazy lazy;
-                StatusBar statusBar;
-                UnlockedScreenOffAnimationController.this.aodUiAnimationPlaying = false;
-                lazy = UnlockedScreenOffAnimationController.this.keyguardViewMediatorLazy;
-                ((KeyguardViewMediator) lazy.get()).maybeHandlePendingLock();
-                statusBar = UnlockedScreenOffAnimationController.this.statusBar;
-                if (statusBar == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("statusBar");
-                    throw null;
-                }
-                statusBar.updateIsKeyguard();
-                after.run();
-                UnlockedScreenOffAnimationController.this.decidedToAnimateGoingToSleep = null;
-                keyguardView.animate().setListener(null);
-            }
-        }).start();
+    public boolean shouldDelayKeyguardShow() {
+        return shouldPlayAnimation();
     }
 
-    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
+    public boolean isKeyguardShowDelayed() {
+        return isAnimationPlaying();
+    }
+
+    public void animateInKeyguard(View view, Runnable runnable) {
+        Intrinsics.checkNotNullParameter(view, "keyguardView");
+        Intrinsics.checkNotNullParameter(runnable, "after");
+        this.shouldAnimateInKeyguard = false;
+        view.setAlpha(0.0f);
+        view.setVisibility(0);
+        float y = view.getY();
+        view.setY(y - (((float) view.getHeight()) * 0.1f));
+        PropertyAnimator.cancelAnimation(view, AnimatableProperty.f376Y);
+        long j = (long) 500;
+        PropertyAnimator.setProperty(view, AnimatableProperty.f376Y, y, new AnimationProperties().setDuration(j), true);
+        view.animate().setDuration(j).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).alpha(1.0f).withEndAction(new UnlockedScreenOffAnimationController$$ExternalSyntheticLambda2(this, runnable, view)).setListener(new UnlockedScreenOffAnimationController$animateInKeyguard$2(this, view)).start();
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: animateInKeyguard$lambda-2  reason: not valid java name */
+    public static final void m3194animateInKeyguard$lambda2(UnlockedScreenOffAnimationController unlockedScreenOffAnimationController, Runnable runnable, View view) {
+        Intrinsics.checkNotNullParameter(unlockedScreenOffAnimationController, "this$0");
+        Intrinsics.checkNotNullParameter(runnable, "$after");
+        Intrinsics.checkNotNullParameter(view, "$keyguardView");
+        unlockedScreenOffAnimationController.aodUiAnimationPlaying = false;
+        unlockedScreenOffAnimationController.keyguardViewMediatorLazy.get().maybeHandlePendingLock();
+        CentralSurfaces centralSurfaces = unlockedScreenOffAnimationController.mCentralSurfaces;
+        if (centralSurfaces == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("mCentralSurfaces");
+            centralSurfaces = null;
+        }
+        centralSurfaces.updateIsKeyguard();
+        runnable.run();
+        unlockedScreenOffAnimationController.decidedToAnimateGoingToSleep = null;
+        view.animate().setListener((Animator.AnimatorListener) null);
+        unlockedScreenOffAnimationController.interactionJankMonitor.end(41);
+    }
+
     public void onStartedWakingUp() {
         this.decidedToAnimateGoingToSleep = null;
         this.shouldAnimateInKeyguard = false;
         this.lightRevealAnimator.cancel();
-        this.handler.removeCallbacksAndMessages(null);
+        this.handler.removeCallbacksAndMessages((Object) null);
+        this.landscapeScreenOff = false;
     }
 
-    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
     public void onFinishedWakingUp() {
         this.aodUiAnimationPlaying = false;
         if (this.dozeParameters.get().canControlUnlockedScreenOff()) {
-            StatusBar statusBar = this.statusBar;
-            if (statusBar != null) {
-                statusBar.updateIsKeyguard(true);
-            } else {
-                Intrinsics.throwUninitializedPropertyAccessException("statusBar");
-                throw null;
+            CentralSurfaces centralSurfaces = this.mCentralSurfaces;
+            if (centralSurfaces == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mCentralSurfaces");
+                centralSurfaces = null;
             }
+            centralSurfaces.updateIsKeyguard(true);
         }
     }
 
-    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
-    public void onStartedGoingToSleep() {
-        if (this.dozeParameters.get().shouldControlUnlockedScreenOff()) {
-            this.decidedToAnimateGoingToSleep = Boolean.TRUE;
-            this.shouldAnimateInKeyguard = true;
-            this.lightRevealAnimationPlaying = true;
-            this.lightRevealAnimator.start();
-            this.handler.postDelayed(new Runnable() { // from class: com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController$onStartedGoingToSleep$1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    StatusBar statusBar;
-                    UnlockedScreenOffAnimationController.this.aodUiAnimationPlaying = true;
-                    statusBar = UnlockedScreenOffAnimationController.this.statusBar;
-                    if (statusBar != null) {
-                        statusBar.getNotificationPanelViewController().showAodUi();
-                    } else {
-                        Intrinsics.throwUninitializedPropertyAccessException("statusBar");
-                        throw null;
-                    }
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r1v4, resolved type: com.android.systemui.statusbar.LightRevealScrim} */
+    /* JADX WARNING: type inference failed for: r1v0 */
+    /* JADX WARNING: type inference failed for: r1v1, types: [com.android.systemui.statusbar.phone.CentralSurfaces] */
+    /* JADX WARNING: type inference failed for: r1v3 */
+    /* JADX WARNING: type inference failed for: r1v6 */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean startAnimation() {
+        /*
+            r5 = this;
+            boolean r0 = r5.shouldPlayUnlockedScreenOffAnimation()
+            r1 = 0
+            r2 = 1
+            if (r0 == 0) goto L_0x004b
+            java.lang.Boolean r0 = java.lang.Boolean.valueOf((boolean) r2)
+            r5.decidedToAnimateGoingToSleep = r0
+            r5.shouldAnimateInKeyguard = r2
+            r5.lightRevealAnimationPlaying = r2
+            com.android.systemui.statusbar.LightRevealScrim r0 = r5.lightRevealScrim
+            if (r0 != 0) goto L_0x001c
+            java.lang.String r0 = "lightRevealScrim"
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r0)
+            goto L_0x001d
+        L_0x001c:
+            r1 = r0
+        L_0x001d:
+            com.android.systemui.statusbar.LightRevealEffect r0 = r1.getRevealEffect()
+            boolean r0 = r0 instanceof com.android.systemui.statusbar.CircleReveal
+            if (r0 == 0) goto L_0x002d
+            android.animation.ValueAnimator r0 = r5.lightRevealAnimator
+            r3 = 500(0x1f4, double:2.47E-321)
+            r0.setDuration(r3)
+            goto L_0x0034
+        L_0x002d:
+            android.animation.ValueAnimator r0 = r5.lightRevealAnimator
+            r3 = 750(0x2ee, double:3.705E-321)
+            r0.setDuration(r3)
+        L_0x0034:
+            android.animation.ValueAnimator r0 = r5.lightRevealAnimator
+            r0.start()
+            android.os.Handler r0 = r5.handler
+            com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController$$ExternalSyntheticLambda1 r1 = new com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController$$ExternalSyntheticLambda1
+            r1.<init>(r5)
+            r3 = 600(0x258, double:2.964E-321)
+            float r3 = (float) r3
+            float r5 = r5.animatorDurationScale
+            float r3 = r3 * r5
+            long r3 = (long) r3
+            r0.postDelayed(r1, r3)
+            return r2
+        L_0x004b:
+            com.android.systemui.statusbar.phone.CentralSurfaces r0 = r5.mCentralSurfaces
+            if (r0 != 0) goto L_0x0055
+            java.lang.String r0 = "mCentralSurfaces"
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r0)
+            goto L_0x0056
+        L_0x0055:
+            r1 = r0
+        L_0x0056:
+            com.android.systemui.statusbar.phone.NotificationPanelViewController r0 = r1.getNotificationPanelViewController()
+            boolean r0 = r0.isQsCustomizing()
+            if (r0 == 0) goto L_0x006b
+            java.lang.Class<com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx> r0 = com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx.class
+            java.lang.Object r0 = com.nothing.systemui.NTDependencyEx.get(r0)
+            com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx r0 = (com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx) r0
+            r0.setDelayToShowAod(r2)
+        L_0x006b:
+            r0 = 0
+            java.lang.Boolean r1 = java.lang.Boolean.valueOf((boolean) r0)
+            r5.decidedToAnimateGoingToSleep = r1
+            return r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController.startAnimation():boolean");
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: startAnimation$lambda-3  reason: not valid java name */
+    public static final void m3196startAnimation$lambda3(UnlockedScreenOffAnimationController unlockedScreenOffAnimationController) {
+        Intrinsics.checkNotNullParameter(unlockedScreenOffAnimationController, "this$0");
+        if (!unlockedScreenOffAnimationController.powerManager.isInteractive()) {
+            CentralSurfaces centralSurfaces = null;
+            if (!unlockedScreenOffAnimationController.dozeParameters.get().getAlwaysOn() || (unlockedScreenOffAnimationController.dozeParameters.get().getAlwaysOn() && ((AODController) NTDependencyEx.get(AODController.class)).checkNightMode())) {
+                CentralSurfaces centralSurfaces2 = unlockedScreenOffAnimationController.mCentralSurfaces;
+                if (centralSurfaces2 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("mCentralSurfaces");
+                    centralSurfaces2 = null;
                 }
-            }, ((float) 600) * this.animatorDurationScale);
-            return;
+                centralSurfaces2.getNotificationPanelViewController().setAlpha(0.0f);
+            }
+            unlockedScreenOffAnimationController.aodUiAnimationPlaying = true;
+            CentralSurfaces centralSurfaces3 = unlockedScreenOffAnimationController.mCentralSurfaces;
+            if (centralSurfaces3 == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("mCentralSurfaces");
+            } else {
+                centralSurfaces = centralSurfaces3;
+            }
+            centralSurfaces.getNotificationPanelViewController().showAodUi();
         }
-        this.decidedToAnimateGoingToSleep = Boolean.FALSE;
     }
 
+    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0054, code lost:
+        if (r0.getNotificationPanelViewController().isPanelExpanded() != false) goto L_0x0056;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public final boolean shouldPlayUnlockedScreenOffAnimation() {
-        StatusBar statusBar;
-        if (!Intrinsics.areEqual(this.decidedToAnimateGoingToSleep, Boolean.FALSE) && this.dozeParameters.get().canControlUnlockedScreenOff() && this.statusBarStateControllerImpl.getState() == 0 && (statusBar = this.statusBar) != null) {
-            if (statusBar != null) {
-                if (statusBar.getNotificationPanelViewController().isFullyCollapsed()) {
-                    return this.keyguardStateController.isKeyguardScreenRotationAllowed() || this.context.getResources().getConfiguration().orientation == 1;
-                }
-            } else {
-                Intrinsics.throwUninitializedPropertyAccessException("statusBar");
-                throw null;
-            }
-        }
-        return false;
+        /*
+            r3 = this;
+            boolean r0 = r3.initialized
+            r1 = 0
+            if (r0 != 0) goto L_0x0006
+            return r1
+        L_0x0006:
+            dagger.Lazy<com.android.systemui.statusbar.phone.DozeParameters> r0 = r3.dozeParameters
+            java.lang.Object r0 = r0.get()
+            com.android.systemui.statusbar.phone.DozeParameters r0 = (com.android.systemui.statusbar.phone.DozeParameters) r0
+            boolean r0 = r0.canControlUnlockedScreenOff()
+            if (r0 != 0) goto L_0x0015
+            return r1
+        L_0x0015:
+            java.lang.Boolean r0 = r3.decidedToAnimateGoingToSleep
+            java.lang.Boolean r2 = java.lang.Boolean.valueOf((boolean) r1)
+            boolean r0 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r0, (java.lang.Object) r2)
+            if (r0 == 0) goto L_0x0022
+            return r1
+        L_0x0022:
+            android.content.Context r0 = r3.context
+            android.content.ContentResolver r0 = r0.getContentResolver()
+            java.lang.String r2 = "animator_duration_scale"
+            java.lang.String r0 = android.provider.Settings.Global.getString(r0, r2)
+            java.lang.String r2 = "0"
+            boolean r0 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r0, (java.lang.Object) r2)
+            if (r0 == 0) goto L_0x0037
+            return r1
+        L_0x0037:
+            com.android.systemui.statusbar.StatusBarStateControllerImpl r0 = r3.statusBarStateControllerImpl
+            int r0 = r0.getState()
+            if (r0 == 0) goto L_0x0040
+            return r1
+        L_0x0040:
+            com.android.systemui.statusbar.phone.CentralSurfaces r0 = r3.mCentralSurfaces
+            if (r0 == 0) goto L_0x0056
+            if (r0 != 0) goto L_0x004c
+            java.lang.String r0 = "mCentralSurfaces"
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r0)
+            r0 = 0
+        L_0x004c:
+            com.android.systemui.statusbar.phone.NotificationPanelViewController r0 = r0.getNotificationPanelViewController()
+            boolean r0 = r0.isPanelExpanded()
+            if (r0 == 0) goto L_0x005d
+        L_0x0056:
+            boolean r0 = r3.isAnimationPlaying()
+            if (r0 != 0) goto L_0x005d
+            return r1
+        L_0x005d:
+            com.android.systemui.statusbar.policy.KeyguardStateController r0 = r3.keyguardStateController
+            boolean r0 = r0.isKeyguardScreenRotationAllowed()
+            r2 = 1
+            if (r0 != 0) goto L_0x007d
+            android.content.Context r0 = r3.context
+            android.view.Display r0 = r0.getDisplay()
+            int r0 = r0.getRotation()
+            if (r0 == 0) goto L_0x007d
+            android.os.PowerManager r0 = r3.powerManager
+            boolean r0 = r0.isInteractive()
+            if (r0 != 0) goto L_0x007c
+            r3.landscapeScreenOff = r2
+        L_0x007c:
+            return r1
+        L_0x007d:
+            return r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController.shouldPlayUnlockedScreenOffAnimation():boolean");
     }
 
-    public final void addCallback(@NotNull Callback callback) {
-        Intrinsics.checkNotNullParameter(callback, "callback");
-        this.callbacks.add(callback);
+    public boolean shouldDelayDisplayDozeTransition() {
+        return shouldPlayUnlockedScreenOffAnimation();
     }
 
-    public final void removeCallback(@NotNull Callback callback) {
-        Intrinsics.checkNotNullParameter(callback, "callback");
-        this.callbacks.remove(callback);
-    }
-
-    public final void sendUnlockedScreenOffProgressUpdate(float f, float f2) {
-        for (Callback callback : this.callbacks) {
-            callback.onUnlockedScreenOffProgressUpdate(f, f2);
-        }
-    }
-
-    public final boolean isScreenOffAnimationPlaying() {
+    public boolean isAnimationPlaying() {
         return this.lightRevealAnimationPlaying || this.aodUiAnimationPlaying;
     }
 
-    public final boolean shouldAnimateInKeyguard() {
+    public boolean shouldAnimateInKeyguard() {
         return this.shouldAnimateInKeyguard;
+    }
+
+    public boolean shouldHideScrimOnWakeUp() {
+        return isScreenOffLightRevealAnimationPlaying();
+    }
+
+    public boolean overrideNotificationsDozeAmount() {
+        return shouldPlayUnlockedScreenOffAnimation() && isAnimationPlaying();
+    }
+
+    public boolean shouldShowAodIconsWhenShade() {
+        return isAnimationPlaying();
+    }
+
+    public boolean shouldAnimateAodIcons() {
+        return shouldPlayUnlockedScreenOffAnimation();
+    }
+
+    public boolean shouldPlayAnimation() {
+        return shouldPlayUnlockedScreenOffAnimation();
     }
 
     public final boolean isScreenOffLightRevealAnimationPlaying() {
         return this.lightRevealAnimationPlaying;
+    }
+
+    public final boolean isLandscapeScreenOff() {
+        return this.landscapeScreenOff;
+    }
+
+    public final void setIsLandscapeOff(boolean z) {
+        this.landscapeScreenOff = z;
+    }
+
+    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/systemui/statusbar/phone/UnlockedScreenOffAnimationController$Companion;", "", "()V", "TAG", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    /* compiled from: UnlockedScreenOffAnimationController.kt */
+    public static final class Companion {
+        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
+            this();
+        }
+
+        private Companion() {
+        }
     }
 }

@@ -5,7 +5,7 @@ import android.media.session.MediaSessionManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideMediaSessionManagerFactory implements Factory<MediaSessionManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideMediaSessionManagerFactory imp
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaSessionManager mo1933get() {
-        return provideMediaSessionManager(this.contextProvider.mo1933get());
+    public MediaSessionManager get() {
+        return provideMediaSessionManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideMediaSessionManagerFactory create(Provider<Context> provider) {

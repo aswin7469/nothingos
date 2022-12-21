@@ -2,39 +2,41 @@ package com.android.systemui.plugins.statusbar;
 
 import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
-@ProvidesInterface(version = 1)
+
 @DependsOn(target = StateListener.class)
-/* loaded from: classes.dex */
+@ProvidesInterface(version = 1)
 public interface StatusBarStateController {
     public static final int VERSION = 1;
 
     @ProvidesInterface(version = 1)
-    /* loaded from: classes.dex */
     public interface StateListener {
         public static final int VERSION = 1;
 
-        default void onDozeAmountChanged(float f, float f2) {
+        void onDozeAmountChanged(float f, float f2) {
         }
 
-        default void onDozingChanged(boolean z) {
+        void onDozingChanged(boolean z) {
         }
 
-        default void onExpandedChanged(boolean z) {
+        void onExpandedChanged(boolean z) {
         }
 
-        default void onFullscreenStateChanged(boolean z, boolean z2) {
+        void onFullscreenStateChanged(boolean z) {
         }
 
-        default void onPulsingChanged(boolean z) {
+        void onPulsingChanged(boolean z) {
         }
 
-        default void onStateChanged(int i) {
+        void onStateChanged(int i) {
         }
 
-        default void onStatePostChange() {
+        void onStatePostChange() {
         }
 
-        default void onStatePreChange(int i, int i2) {
+        void onStatePreChange(int i, int i2) {
+        }
+
+        void onUpcomingStateChanged(int i) {
         }
     }
 

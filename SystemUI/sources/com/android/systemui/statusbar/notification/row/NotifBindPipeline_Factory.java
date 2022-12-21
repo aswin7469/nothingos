@@ -4,7 +4,7 @@ import android.os.Looper;
 import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotifBindPipeline_Factory implements Factory<NotifBindPipeline> {
     private final Provider<CommonNotifCollection> collectionProvider;
     private final Provider<NotifBindPipelineLogger> loggerProvider;
@@ -16,10 +16,8 @@ public final class NotifBindPipeline_Factory implements Factory<NotifBindPipelin
         this.mainLooperProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotifBindPipeline mo1933get() {
-        return newInstance(this.collectionProvider.mo1933get(), this.loggerProvider.mo1933get(), this.mainLooperProvider.mo1933get());
+    public NotifBindPipeline get() {
+        return newInstance(this.collectionProvider.get(), this.loggerProvider.get(), this.mainLooperProvider.get());
     }
 
     public static NotifBindPipeline_Factory create(Provider<CommonNotifCollection> provider, Provider<NotifBindPipelineLogger> provider2, Provider<Looper> provider3) {

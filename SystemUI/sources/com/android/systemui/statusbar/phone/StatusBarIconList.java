@@ -1,17 +1,16 @@
 package com.android.systemui.statusbar.phone;
 
-import com.android.internal.annotations.VisibleForTesting;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class StatusBarIconList {
     private ArrayList<Slot> mSlots = new ArrayList<>();
 
     public StatusBarIconList(String[] strArr) {
-        for (String str : strArr) {
-            this.mSlots.add(new Slot(str, null));
+        for (String slot : strArr) {
+            this.mSlots.add(new Slot(slot, (StatusBarIconHolder) null));
         }
     }
 
@@ -22,18 +21,22 @@ public class StatusBarIconList {
                 return i;
             }
         }
-        this.mSlots.add(0, new Slot(str, null));
+        this.mSlots.add(0, new Slot(str, (StatusBarIconHolder) null));
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public ArrayList<Slot> getSlots() {
         return new ArrayList<>(this.mSlots);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public Slot getSlot(String str) {
         return this.mSlots.get(getSlotIndex(str));
+    }
+
+    public int size() {
+        return this.mSlots.size();
     }
 
     public void setIcon(int i, StatusBarIconHolder statusBarIconHolder) {
@@ -72,7 +75,6 @@ public class StatusBarIconList {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class Slot {
         private StatusBarIconHolder mHolder;
         private final String mName;
@@ -120,13 +122,11 @@ public class StatusBarIconList {
                 return;
             }
             int indexForTag = getIndexForTag(i);
-            if (indexForTag == -1) {
-                return;
+            if (indexForTag != -1) {
+                this.mSubSlots.remove(indexForTag);
             }
-            this.mSubSlots.remove(indexForTag);
         }
 
-        @VisibleForTesting
         public void clear() {
             this.mHolder = null;
             if (this.mSubSlots != null) {
@@ -139,8 +139,7 @@ public class StatusBarIconList {
                 ArrayList<StatusBarIconHolder> arrayList = new ArrayList<>();
                 this.mSubSlots = arrayList;
                 arrayList.add(statusBarIconHolder);
-            } else if (getIndexForTag(i) != -1) {
-            } else {
+            } else if (getIndexForTag(i) == -1) {
                 this.mSubSlots.add(statusBarIconHolder);
             }
         }
@@ -159,13 +158,22 @@ public class StatusBarIconList {
                 return true;
             }
             ArrayList<StatusBarIconHolder> arrayList = this.mSubSlots;
-            return arrayList != null && arrayList.size() > 0;
+            if (arrayList == null) {
+                return false;
+            }
+            if (arrayList.size() > 0) {
+                return true;
+            }
+            return false;
         }
 
         public int numberOfIcons() {
             int i = this.mHolder == null ? 0 : 1;
             ArrayList<StatusBarIconHolder> arrayList = this.mSubSlots;
-            return arrayList == null ? i : i + arrayList.size();
+            if (arrayList == null) {
+                return i;
+            }
+            return i + arrayList.size();
         }
 
         public int viewIndexOffsetForTag(int i) {
@@ -174,7 +182,10 @@ public class StatusBarIconList {
                 return 0;
             }
             int size = arrayList.size();
-            return i == 0 ? size : (size - getIndexForTag(i)) - 1;
+            if (i == 0) {
+                return size;
+            }
+            return (size - getIndexForTag(i)) - 1;
         }
 
         public List<StatusBarIconHolder> getHolderListInViewOrder() {

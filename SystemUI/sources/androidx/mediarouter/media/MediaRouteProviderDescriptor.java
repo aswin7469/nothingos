@@ -6,14 +6,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public final class MediaRouteProviderDescriptor {
+    private static final String KEY_ROUTES = "routes";
+    private static final String KEY_SUPPORTS_DYNAMIC_GROUP_ROUTE = "supportsDynamicGroupRoute";
+    Bundle mBundle;
     final List<MediaRouteDescriptor> mRoutes;
     final boolean mSupportsDynamicGroupRoute;
 
-    MediaRouteProviderDescriptor(List<MediaRouteDescriptor> routes, boolean supportsDynamicGroupRoute) {
-        this.mRoutes = routes == null ? Collections.emptyList() : routes;
-        this.mSupportsDynamicGroupRoute = supportsDynamicGroupRoute;
+    MediaRouteProviderDescriptor(List<MediaRouteDescriptor> list, boolean z) {
+        this.mRoutes = list == null ? Collections.emptyList() : list;
+        this.mSupportsDynamicGroupRoute = z;
     }
 
     public List<MediaRouteDescriptor> getRoutes() {
@@ -36,7 +39,30 @@ public final class MediaRouteProviderDescriptor {
     }
 
     public String toString() {
-        return "MediaRouteProviderDescriptor{ routes=" + Arrays.toString(getRoutes().toArray()) + ", isValid=" + isValid() + " }";
+        StringBuilder sb = new StringBuilder("MediaRouteProviderDescriptor{ routes=");
+        sb.append(Arrays.toString(getRoutes().toArray()));
+        sb.append(", isValid=").append(isValid());
+        sb.append(" }");
+        return sb.toString();
+    }
+
+    public Bundle asBundle() {
+        Bundle bundle = this.mBundle;
+        if (bundle != null) {
+            return bundle;
+        }
+        this.mBundle = new Bundle();
+        List<MediaRouteDescriptor> list = this.mRoutes;
+        if (list != null && !list.isEmpty()) {
+            int size = this.mRoutes.size();
+            ArrayList arrayList = new ArrayList(size);
+            for (int i = 0; i < size; i++) {
+                arrayList.add(this.mRoutes.get(i).asBundle());
+            }
+            this.mBundle.putParcelableArrayList(KEY_ROUTES, arrayList);
+        }
+        this.mBundle.putBoolean(KEY_SUPPORTS_DYNAMIC_GROUP_ROUTE, this.mSupportsDynamicGroupRoute);
+        return this.mBundle;
     }
 
     public static MediaRouteProviderDescriptor fromBundle(Bundle bundle) {
@@ -44,7 +70,7 @@ public final class MediaRouteProviderDescriptor {
         if (bundle == null) {
             return null;
         }
-        ArrayList parcelableArrayList = bundle.getParcelableArrayList("routes");
+        ArrayList parcelableArrayList = bundle.getParcelableArrayList(KEY_ROUTES);
         if (parcelableArrayList != null && !parcelableArrayList.isEmpty()) {
             int size = parcelableArrayList.size();
             ArrayList arrayList2 = new ArrayList(size);
@@ -53,42 +79,63 @@ public final class MediaRouteProviderDescriptor {
             }
             arrayList = arrayList2;
         }
-        return new MediaRouteProviderDescriptor(arrayList, bundle.getBoolean("supportsDynamicGroupRoute", false));
+        return new MediaRouteProviderDescriptor(arrayList, bundle.getBoolean(KEY_SUPPORTS_DYNAMIC_GROUP_ROUTE, false));
     }
 
-    /* loaded from: classes.dex */
     public static final class Builder {
         private List<MediaRouteDescriptor> mRoutes;
         private boolean mSupportsDynamicGroupRoute = false;
 
-        public Builder addRoute(MediaRouteDescriptor route) {
-            if (route == null) {
-                throw new IllegalArgumentException("route must not be null");
-            }
-            List<MediaRouteDescriptor> list = this.mRoutes;
-            if (list == null) {
-                this.mRoutes = new ArrayList();
-            } else if (list.contains(route)) {
-                throw new IllegalArgumentException("route descriptor already added");
-            }
-            this.mRoutes.add(route);
-            return this;
+        public Builder() {
         }
 
-        public Builder addRoutes(Collection<MediaRouteDescriptor> routes) {
-            if (routes == null) {
-                throw new IllegalArgumentException("routes must not be null");
+        public Builder(MediaRouteProviderDescriptor mediaRouteProviderDescriptor) {
+            if (mediaRouteProviderDescriptor != null) {
+                this.mRoutes = mediaRouteProviderDescriptor.mRoutes;
+                this.mSupportsDynamicGroupRoute = mediaRouteProviderDescriptor.mSupportsDynamicGroupRoute;
+                return;
             }
-            if (!routes.isEmpty()) {
-                for (MediaRouteDescriptor mediaRouteDescriptor : routes) {
-                    addRoute(mediaRouteDescriptor);
+            throw new IllegalArgumentException("descriptor must not be null");
+        }
+
+        public Builder addRoute(MediaRouteDescriptor mediaRouteDescriptor) {
+            if (mediaRouteDescriptor != null) {
+                List<MediaRouteDescriptor> list = this.mRoutes;
+                if (list == null) {
+                    this.mRoutes = new ArrayList();
+                } else if (list.contains(mediaRouteDescriptor)) {
+                    throw new IllegalArgumentException("route descriptor already added");
                 }
+                this.mRoutes.add(mediaRouteDescriptor);
+                return this;
+            }
+            throw new IllegalArgumentException("route must not be null");
+        }
+
+        public Builder addRoutes(Collection<MediaRouteDescriptor> collection) {
+            if (collection != null) {
+                if (!collection.isEmpty()) {
+                    for (MediaRouteDescriptor addRoute : collection) {
+                        addRoute(addRoute);
+                    }
+                }
+                return this;
+            }
+            throw new IllegalArgumentException("routes must not be null");
+        }
+
+        /* access modifiers changed from: package-private */
+        public Builder setRoutes(Collection<MediaRouteDescriptor> collection) {
+            if (collection == null || collection.isEmpty()) {
+                this.mRoutes = null;
+            } else {
+                this.mRoutes = new ArrayList(collection);
             }
             return this;
         }
 
-        public Builder setSupportsDynamicGroupRoute(boolean value) {
-            this.mSupportsDynamicGroupRoute = value;
+        public Builder setSupportsDynamicGroupRoute(boolean z) {
+            this.mSupportsDynamicGroupRoute = z;
             return this;
         }
 

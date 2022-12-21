@@ -2,90 +2,69 @@ package com.android.systemui.statusbar.notification.row;
 
 import com.android.systemui.log.LogBuffer;
 import com.android.systemui.log.LogLevel;
-import com.android.systemui.log.LogMessageImpl;
+import com.android.systemui.log.LogMessage;
+import com.android.systemui.log.dagger.NotificationLog;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000&\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0002\b\u0007\u0018\u00002\u00020\u0001B\u0011\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\u0016\u0010\u0005\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nJ\u000e\u0010\u000b\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\bJ\u000e\u0010\f\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\bJ\u000e\u0010\r\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\bJ\u000e\u0010\u000e\u001a\u00020\u00062\u0006\u0010\u000f\u001a\u00020\bJ\u000e\u0010\u0010\u001a\u00020\u00062\u0006\u0010\u0007\u001a\u00020\bR\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0011"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/row/NotifBindPipelineLogger;", "", "buffer", "Lcom/android/systemui/log/LogBuffer;", "(Lcom/android/systemui/log/LogBuffer;)V", "logFinishedPipeline", "", "notifKey", "", "numCallbacks", "", "logManagedRow", "logRequestPipelineRowNotSet", "logRequestPipelineRun", "logStageSet", "stageName", "logStartPipeline", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: NotifBindPipelineLogger.kt */
-/* loaded from: classes.dex */
 public final class NotifBindPipelineLogger {
-    @NotNull
     private final LogBuffer buffer;
 
-    public NotifBindPipelineLogger(@NotNull LogBuffer buffer) {
-        Intrinsics.checkNotNullParameter(buffer, "buffer");
-        this.buffer = buffer;
+    @Inject
+    public NotifBindPipelineLogger(@NotificationLog LogBuffer logBuffer) {
+        Intrinsics.checkNotNullParameter(logBuffer, "buffer");
+        this.buffer = logBuffer;
     }
 
-    public final void logStageSet(@NotNull String stageName) {
-        Intrinsics.checkNotNullParameter(stageName, "stageName");
+    public final void logStageSet(String str) {
+        Intrinsics.checkNotNullParameter(str, "stageName");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.INFO;
-        NotifBindPipelineLogger$logStageSet$2 notifBindPipelineLogger$logStageSet$2 = NotifBindPipelineLogger$logStageSet$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifBindPipeline", logLevel, notifBindPipelineLogger$logStageSet$2);
-            obtain.setStr1(stageName);
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifBindPipeline", LogLevel.INFO, NotifBindPipelineLogger$logStageSet$2.INSTANCE);
+        obtain.setStr1(str);
+        logBuffer.commit(obtain);
     }
 
-    public final void logManagedRow(@NotNull String notifKey) {
-        Intrinsics.checkNotNullParameter(notifKey, "notifKey");
+    public final void logManagedRow(String str) {
+        Intrinsics.checkNotNullParameter(str, "notifKey");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.INFO;
-        NotifBindPipelineLogger$logManagedRow$2 notifBindPipelineLogger$logManagedRow$2 = NotifBindPipelineLogger$logManagedRow$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifBindPipeline", logLevel, notifBindPipelineLogger$logManagedRow$2);
-            obtain.setStr1(notifKey);
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifBindPipeline", LogLevel.INFO, NotifBindPipelineLogger$logManagedRow$2.INSTANCE);
+        obtain.setStr1(str);
+        logBuffer.commit(obtain);
     }
 
-    public final void logRequestPipelineRun(@NotNull String notifKey) {
-        Intrinsics.checkNotNullParameter(notifKey, "notifKey");
+    public final void logRequestPipelineRun(String str) {
+        Intrinsics.checkNotNullParameter(str, "notifKey");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.INFO;
-        NotifBindPipelineLogger$logRequestPipelineRun$2 notifBindPipelineLogger$logRequestPipelineRun$2 = NotifBindPipelineLogger$logRequestPipelineRun$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifBindPipeline", logLevel, notifBindPipelineLogger$logRequestPipelineRun$2);
-            obtain.setStr1(notifKey);
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifBindPipeline", LogLevel.INFO, NotifBindPipelineLogger$logRequestPipelineRun$2.INSTANCE);
+        obtain.setStr1(str);
+        logBuffer.commit(obtain);
     }
 
-    public final void logRequestPipelineRowNotSet(@NotNull String notifKey) {
-        Intrinsics.checkNotNullParameter(notifKey, "notifKey");
+    public final void logRequestPipelineRowNotSet(String str) {
+        Intrinsics.checkNotNullParameter(str, "notifKey");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.WARNING;
-        NotifBindPipelineLogger$logRequestPipelineRowNotSet$2 notifBindPipelineLogger$logRequestPipelineRowNotSet$2 = NotifBindPipelineLogger$logRequestPipelineRowNotSet$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifBindPipeline", logLevel, notifBindPipelineLogger$logRequestPipelineRowNotSet$2);
-            obtain.setStr1(notifKey);
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifBindPipeline", LogLevel.INFO, NotifBindPipelineLogger$logRequestPipelineRowNotSet$2.INSTANCE);
+        obtain.setStr1(str);
+        logBuffer.commit(obtain);
     }
 
-    public final void logStartPipeline(@NotNull String notifKey) {
-        Intrinsics.checkNotNullParameter(notifKey, "notifKey");
+    public final void logStartPipeline(String str) {
+        Intrinsics.checkNotNullParameter(str, "notifKey");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.INFO;
-        NotifBindPipelineLogger$logStartPipeline$2 notifBindPipelineLogger$logStartPipeline$2 = NotifBindPipelineLogger$logStartPipeline$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifBindPipeline", logLevel, notifBindPipelineLogger$logStartPipeline$2);
-            obtain.setStr1(notifKey);
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifBindPipeline", LogLevel.INFO, NotifBindPipelineLogger$logStartPipeline$2.INSTANCE);
+        obtain.setStr1(str);
+        logBuffer.commit(obtain);
     }
 
-    public final void logFinishedPipeline(@NotNull String notifKey, int i) {
-        Intrinsics.checkNotNullParameter(notifKey, "notifKey");
+    public final void logFinishedPipeline(String str, int i) {
+        Intrinsics.checkNotNullParameter(str, "notifKey");
         LogBuffer logBuffer = this.buffer;
-        LogLevel logLevel = LogLevel.INFO;
-        NotifBindPipelineLogger$logFinishedPipeline$2 notifBindPipelineLogger$logFinishedPipeline$2 = NotifBindPipelineLogger$logFinishedPipeline$2.INSTANCE;
-        if (!logBuffer.getFrozen()) {
-            LogMessageImpl obtain = logBuffer.obtain("NotifBindPipeline", logLevel, notifBindPipelineLogger$logFinishedPipeline$2);
-            obtain.setStr1(notifKey);
-            obtain.setInt1(i);
-            logBuffer.push(obtain);
-        }
+        LogMessage obtain = logBuffer.obtain("NotifBindPipeline", LogLevel.INFO, NotifBindPipelineLogger$logFinishedPipeline$2.INSTANCE);
+        obtain.setStr1(str);
+        obtain.setInt1(i);
+        logBuffer.commit(obtain);
     }
 }

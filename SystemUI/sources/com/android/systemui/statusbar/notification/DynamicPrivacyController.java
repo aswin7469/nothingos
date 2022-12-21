@@ -1,40 +1,41 @@
 package com.android.systemui.statusbar.notification;
 
 import android.util.ArraySet;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class DynamicPrivacyController implements KeyguardStateController.Callback {
     private boolean mCacheInvalid;
     private final KeyguardStateController mKeyguardStateController;
+    private boolean mLastDynamicUnlocked;
+    private final ArraySet<Listener> mListeners = new ArraySet<>();
     private final NotificationLockscreenUserManager mLockscreenUserManager;
     private final StatusBarStateController mStateController;
     private StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
-    private final ArraySet<Listener> mListeners = new ArraySet<>();
-    private boolean mLastDynamicUnlocked = isDynamicallyUnlocked();
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onDynamicPrivacyChanged();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public DynamicPrivacyController(NotificationLockscreenUserManager notificationLockscreenUserManager, KeyguardStateController keyguardStateController, StatusBarStateController statusBarStateController) {
+    @Inject
+    DynamicPrivacyController(NotificationLockscreenUserManager notificationLockscreenUserManager, KeyguardStateController keyguardStateController, StatusBarStateController statusBarStateController) {
         this.mLockscreenUserManager = notificationLockscreenUserManager;
         this.mStateController = statusBarStateController;
         this.mKeyguardStateController = keyguardStateController;
         keyguardStateController.addCallback(this);
+        this.mLastDynamicUnlocked = isDynamicallyUnlocked();
     }
 
-    @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
     public void onKeyguardFadingAwayChanged() {
         onUnlockedChanged();
     }
 
-    @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
     public void onUnlockedChanged() {
         if (isDynamicPrivacyEnabled()) {
             boolean isDynamicallyUnlocked = isDynamicallyUnlocked();
@@ -51,7 +52,8 @@ public class DynamicPrivacyController implements KeyguardStateController.Callbac
         this.mCacheInvalid = true;
     }
 
-    boolean isDynamicPrivacyEnabled() {
+    /* access modifiers changed from: package-private */
+    public boolean isDynamicPrivacyEnabled() {
         NotificationLockscreenUserManager notificationLockscreenUserManager = this.mLockscreenUserManager;
         return !notificationLockscreenUserManager.userAllowsPrivateNotificationsInPublic(notificationLockscreenUserManager.getCurrentUserId());
     }
@@ -66,7 +68,10 @@ public class DynamicPrivacyController implements KeyguardStateController.Callbac
 
     public boolean isInLockedDownShade() {
         int state;
-        return isStatusBarKeyguardShowing() && this.mKeyguardStateController.isMethodSecure() && ((state = this.mStateController.getState()) == 0 || state == 2) && isDynamicPrivacyEnabled() && !isDynamicallyUnlocked();
+        if (!isStatusBarKeyguardShowing() || !this.mKeyguardStateController.isMethodSecure() || (((state = this.mStateController.getState()) != 0 && state != 2) || !isDynamicPrivacyEnabled() || isDynamicallyUnlocked())) {
+            return false;
+        }
+        return true;
     }
 
     private boolean isStatusBarKeyguardShowing() {

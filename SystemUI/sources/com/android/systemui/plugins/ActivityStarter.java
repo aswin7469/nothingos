@@ -2,24 +2,23 @@ package com.android.systemui.plugins;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.UserHandle;
 import android.view.View;
 import com.android.systemui.animation.ActivityLaunchAnimator;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
+
 @ProvidesInterface(version = 2)
-/* loaded from: classes.dex */
 public interface ActivityStarter {
     public static final int VERSION = 2;
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onActivityStarted(int i);
     }
 
-    /* loaded from: classes.dex */
     public interface OnDismissAction {
         boolean onDismiss();
 
-        default boolean willRunAnimationOnKeyguard() {
+        boolean willRunAnimationOnKeyguard() {
             return false;
         }
     }
@@ -38,7 +37,9 @@ public interface ActivityStarter {
 
     void startActivity(Intent intent, boolean z);
 
-    void startActivity(Intent intent, boolean z, ActivityLaunchAnimator.Controller controller);
+    void startActivity(Intent intent, boolean z, ActivityLaunchAnimator.Controller controller, boolean z2);
+
+    void startActivity(Intent intent, boolean z, ActivityLaunchAnimator.Controller controller, boolean z2, UserHandle userHandle);
 
     void startActivity(Intent intent, boolean z, Callback callback);
 
@@ -53,4 +54,8 @@ public interface ActivityStarter {
     void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable, View view);
 
     void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable, ActivityLaunchAnimator.Controller controller);
+
+    void startActivity(Intent intent, boolean z, ActivityLaunchAnimator.Controller controller) {
+        startActivity(intent, z, controller, false);
+    }
 }

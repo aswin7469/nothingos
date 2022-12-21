@@ -7,7 +7,7 @@ import com.airbnb.lottie.model.CubicCurveData;
 import com.airbnb.lottie.model.KeyPath;
 import com.airbnb.lottie.model.content.ShapeData;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class MiscUtils {
     private static PointF pathFromDataCurrentPoint = new PointF();
 
@@ -24,7 +24,7 @@ public class MiscUtils {
     }
 
     public static int lerp(int i, int i2, float f) {
-        return (int) (i + (f * (i2 - i)));
+        return (int) (((float) i) + (f * ((float) (i2 - i))));
     }
 
     public static PointF addPoints(PointF pointF, PointF pointF2) {
@@ -41,10 +41,10 @@ public class MiscUtils {
             PointF controlPoint1 = cubicCurveData.getControlPoint1();
             PointF controlPoint2 = cubicCurveData.getControlPoint2();
             PointF vertex = cubicCurveData.getVertex();
-            if (controlPoint1.equals(pathFromDataCurrentPoint) && controlPoint2.equals(vertex)) {
-                path.lineTo(vertex.x, vertex.y);
-            } else {
+            if (!controlPoint1.equals(pathFromDataCurrentPoint) || !controlPoint2.equals(vertex)) {
                 path.cubicTo(controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, vertex.x, vertex.y);
+            } else {
+                path.lineTo(vertex.x, vertex.y);
             }
             pathFromDataCurrentPoint.set(vertex.x, vertex.y);
         }
@@ -53,8 +53,7 @@ public class MiscUtils {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int floorMod(float f, float f2) {
+    static int floorMod(float f, float f2) {
         return floorMod((int) f, (int) f2);
     }
 
@@ -73,6 +72,10 @@ public class MiscUtils {
 
     public static float clamp(float f, float f2, float f3) {
         return Math.max(f2, Math.min(f3, f));
+    }
+
+    public static double clamp(double d, double d2, double d3) {
+        return Math.max(d2, Math.min(d3, d));
     }
 
     public static void resolveKeyPath(KeyPath keyPath, int i, List<KeyPath> list, KeyPath keyPath2, KeyPathElementContent keyPathElementContent) {

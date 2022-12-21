@@ -10,9 +10,30 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-/* loaded from: classes.dex */
+
 public final class MediaRouteDescriptor {
+    static final String IS_DYNAMIC_GROUP_ROUTE = "isDynamicGroupRoute";
+    static final String KEY_CAN_DISCONNECT = "canDisconnect";
+    static final String KEY_CONNECTING = "connecting";
+    static final String KEY_CONNECTION_STATE = "connectionState";
+    static final String KEY_CONTROL_FILTERS = "controlFilters";
+    static final String KEY_DESCRIPTION = "status";
+    static final String KEY_DEVICE_TYPE = "deviceType";
+    static final String KEY_ENABLED = "enabled";
+    static final String KEY_EXTRAS = "extras";
+    static final String KEY_GROUP_MEMBER_IDS = "groupMemberIds";
+    static final String KEY_ICON_URI = "iconUri";
+    static final String KEY_ID = "id";
+    static final String KEY_MAX_CLIENT_VERSION = "maxClientVersion";
+    static final String KEY_MIN_CLIENT_VERSION = "minClientVersion";
+    static final String KEY_NAME = "name";
+    static final String KEY_PLAYBACK_STREAM = "playbackStream";
+    static final String KEY_PLAYBACK_TYPE = "playbackType";
+    static final String KEY_PRESENTATION_DISPLAY_ID = "presentationDisplayId";
+    static final String KEY_SETTINGS_INTENT = "settingsIntent";
+    static final String KEY_VOLUME = "volume";
+    static final String KEY_VOLUME_HANDLING = "volumeHandling";
+    static final String KEY_VOLUME_MAX = "volumeMax";
     final Bundle mBundle;
     List<IntentFilter> mControlFilters;
     List<String> mGroupMemberIds;
@@ -30,14 +51,14 @@ public final class MediaRouteDescriptor {
         return this.mGroupMemberIds;
     }
 
-    void ensureGroupMemberIds() {
+    /* access modifiers changed from: package-private */
+    public void ensureGroupMemberIds() {
         if (this.mGroupMemberIds == null) {
-            ArrayList<String> stringArrayList = this.mBundle.getStringArrayList("groupMemberIds");
+            ArrayList<String> stringArrayList = this.mBundle.getStringArrayList(KEY_GROUP_MEMBER_IDS);
             this.mGroupMemberIds = stringArrayList;
-            if (stringArrayList != null) {
-                return;
+            if (stringArrayList == null) {
+                this.mGroupMemberIds = Collections.emptyList();
             }
-            this.mGroupMemberIds = Collections.emptyList();
         }
     }
 
@@ -50,7 +71,7 @@ public final class MediaRouteDescriptor {
     }
 
     public Uri getIconUri() {
-        String string = this.mBundle.getString("iconUri");
+        String string = this.mBundle.getString(KEY_ICON_URI);
         if (string == null) {
             return null;
         }
@@ -58,19 +79,28 @@ public final class MediaRouteDescriptor {
     }
 
     public boolean isEnabled() {
-        return this.mBundle.getBoolean("enabled", true);
+        return this.mBundle.getBoolean(KEY_ENABLED, true);
+    }
+
+    public boolean isDynamicGroupRoute() {
+        return this.mBundle.getBoolean(IS_DYNAMIC_GROUP_ROUTE, false);
+    }
+
+    @Deprecated
+    public boolean isConnecting() {
+        return this.mBundle.getBoolean(KEY_CONNECTING, false);
     }
 
     public int getConnectionState() {
-        return this.mBundle.getInt("connectionState", 0);
+        return this.mBundle.getInt(KEY_CONNECTION_STATE, 0);
     }
 
     public boolean canDisconnectAndKeepPlaying() {
-        return this.mBundle.getBoolean("canDisconnect", false);
+        return this.mBundle.getBoolean(KEY_CAN_DISCONNECT, false);
     }
 
     public IntentSender getSettingsActivity() {
-        return (IntentSender) this.mBundle.getParcelable("settingsIntent");
+        return (IntentSender) this.mBundle.getParcelable(KEY_SETTINGS_INTENT);
     }
 
     public List<IntentFilter> getControlFilters() {
@@ -78,23 +108,23 @@ public final class MediaRouteDescriptor {
         return this.mControlFilters;
     }
 
-    void ensureControlFilters() {
+    /* access modifiers changed from: package-private */
+    public void ensureControlFilters() {
         if (this.mControlFilters == null) {
-            ArrayList parcelableArrayList = this.mBundle.getParcelableArrayList("controlFilters");
+            ArrayList parcelableArrayList = this.mBundle.getParcelableArrayList(KEY_CONTROL_FILTERS);
             this.mControlFilters = parcelableArrayList;
-            if (parcelableArrayList != null) {
-                return;
+            if (parcelableArrayList == null) {
+                this.mControlFilters = Collections.emptyList();
             }
-            this.mControlFilters = Collections.emptyList();
         }
     }
 
     public int getPlaybackType() {
-        return this.mBundle.getInt("playbackType", 1);
+        return this.mBundle.getInt(KEY_PLAYBACK_TYPE, 1);
     }
 
     public int getPlaybackStream() {
-        return this.mBundle.getInt("playbackStream", -1);
+        return this.mBundle.getInt(KEY_PLAYBACK_STREAM, -1);
     }
 
     public int getDeviceType() {
@@ -106,36 +136,61 @@ public final class MediaRouteDescriptor {
     }
 
     public int getVolumeMax() {
-        return this.mBundle.getInt("volumeMax");
+        return this.mBundle.getInt(KEY_VOLUME_MAX);
     }
 
     public int getVolumeHandling() {
-        return this.mBundle.getInt("volumeHandling", 0);
+        return this.mBundle.getInt(KEY_VOLUME_HANDLING, 0);
     }
 
     public int getPresentationDisplayId() {
-        return this.mBundle.getInt("presentationDisplayId", -1);
+        return this.mBundle.getInt(KEY_PRESENTATION_DISPLAY_ID, -1);
     }
 
     public Bundle getExtras() {
-        return this.mBundle.getBundle("extras");
+        return this.mBundle.getBundle(KEY_EXTRAS);
     }
 
     public int getMinClientVersion() {
-        return this.mBundle.getInt("minClientVersion", 1);
+        return this.mBundle.getInt(KEY_MIN_CLIENT_VERSION, 1);
     }
 
     public int getMaxClientVersion() {
-        return this.mBundle.getInt("maxClientVersion", Integer.MAX_VALUE);
+        return this.mBundle.getInt(KEY_MAX_CLIENT_VERSION, Integer.MAX_VALUE);
     }
 
     public boolean isValid() {
         ensureControlFilters();
-        return !TextUtils.isEmpty(getId()) && !TextUtils.isEmpty(getName()) && !this.mControlFilters.contains(null);
+        return !TextUtils.isEmpty(getId()) && !TextUtils.isEmpty(getName()) && !this.mControlFilters.contains((Object) null);
     }
 
     public String toString() {
-        return "MediaRouteDescriptor{ id=" + getId() + ", groupMemberIds=" + getGroupMemberIds() + ", name=" + getName() + ", description=" + getDescription() + ", iconUri=" + getIconUri() + ", isEnabled=" + isEnabled() + ", connectionState=" + getConnectionState() + ", controlFilters=" + Arrays.toString(getControlFilters().toArray()) + ", playbackType=" + getPlaybackType() + ", playbackStream=" + getPlaybackStream() + ", deviceType=" + getDeviceType() + ", volume=" + getVolume() + ", volumeMax=" + getVolumeMax() + ", volumeHandling=" + getVolumeHandling() + ", presentationDisplayId=" + getPresentationDisplayId() + ", extras=" + getExtras() + ", isValid=" + isValid() + ", minClientVersion=" + getMinClientVersion() + ", maxClientVersion=" + getMaxClientVersion() + " }";
+        StringBuilder sb = new StringBuilder("MediaRouteDescriptor{ id=");
+        sb.append(getId());
+        sb.append(", groupMemberIds=").append((Object) getGroupMemberIds());
+        sb.append(", name=").append(getName());
+        sb.append(", description=").append(getDescription());
+        sb.append(", iconUri=").append((Object) getIconUri());
+        sb.append(", isEnabled=").append(isEnabled());
+        sb.append(", connectionState=").append(getConnectionState());
+        sb.append(", controlFilters=").append(Arrays.toString(getControlFilters().toArray()));
+        sb.append(", playbackType=").append(getPlaybackType());
+        sb.append(", playbackStream=").append(getPlaybackStream());
+        sb.append(", deviceType=").append(getDeviceType());
+        sb.append(", volume=").append(getVolume());
+        sb.append(", volumeMax=").append(getVolumeMax());
+        sb.append(", volumeHandling=").append(getVolumeHandling());
+        sb.append(", presentationDisplayId=").append(getPresentationDisplayId());
+        sb.append(", extras=").append((Object) getExtras());
+        sb.append(", isValid=").append(isValid());
+        sb.append(", minClientVersion=").append(getMinClientVersion());
+        sb.append(", maxClientVersion=").append(getMaxClientVersion());
+        sb.append(" }");
+        return sb.toString();
+    }
+
+    public Bundle asBundle() {
+        return this.mBundle;
     }
 
     public static MediaRouteDescriptor fromBundle(Bundle bundle) {
@@ -145,176 +200,215 @@ public final class MediaRouteDescriptor {
         return null;
     }
 
-    /* loaded from: classes.dex */
     public static final class Builder {
         private final Bundle mBundle;
         private ArrayList<IntentFilter> mControlFilters;
         private ArrayList<String> mGroupMemberIds;
 
-        public Builder(String id, String name) {
+        public Builder(String str, String str2) {
             this.mBundle = new Bundle();
-            setId(id);
-            setName(name);
+            setId(str);
+            setName(str2);
         }
 
-        public Builder(MediaRouteDescriptor descriptor) {
-            if (descriptor == null) {
-                throw new IllegalArgumentException("descriptor must not be null");
-            }
-            this.mBundle = new Bundle(descriptor.mBundle);
-            if (!descriptor.getGroupMemberIds().isEmpty()) {
-                this.mGroupMemberIds = new ArrayList<>(descriptor.getGroupMemberIds());
-            }
-            if (descriptor.getControlFilters().isEmpty()) {
+        public Builder(MediaRouteDescriptor mediaRouteDescriptor) {
+            if (mediaRouteDescriptor != null) {
+                this.mBundle = new Bundle(mediaRouteDescriptor.mBundle);
+                if (!mediaRouteDescriptor.getGroupMemberIds().isEmpty()) {
+                    this.mGroupMemberIds = new ArrayList<>(mediaRouteDescriptor.getGroupMemberIds());
+                }
+                if (!mediaRouteDescriptor.getControlFilters().isEmpty()) {
+                    this.mControlFilters = new ArrayList<>(mediaRouteDescriptor.mControlFilters);
+                    return;
+                }
                 return;
             }
-            this.mControlFilters = new ArrayList<>(descriptor.mControlFilters);
+            throw new IllegalArgumentException("descriptor must not be null");
         }
 
-        public Builder setId(String id) {
-            Objects.requireNonNull(id, "id must not be null");
-            this.mBundle.putString("id", id);
+        public Builder setId(String str) {
+            this.mBundle.putString("id", str);
             return this;
         }
 
-        public Builder addGroupMemberId(String groupMemberId) {
-            if (TextUtils.isEmpty(groupMemberId)) {
-                throw new IllegalArgumentException("groupMemberId must not be empty");
-            }
-            if (this.mGroupMemberIds == null) {
+        public Builder clearGroupMemberIds() {
+            ArrayList<String> arrayList = this.mGroupMemberIds;
+            if (arrayList == null) {
                 this.mGroupMemberIds = new ArrayList<>();
-            }
-            if (!this.mGroupMemberIds.contains(groupMemberId)) {
-                this.mGroupMemberIds.add(groupMemberId);
+            } else {
+                arrayList.clear();
             }
             return this;
         }
 
-        public Builder addGroupMemberIds(Collection<String> groupMemberIds) {
-            if (groupMemberIds == null) {
-                throw new IllegalArgumentException("groupMemberIds must not be null");
-            }
-            if (!groupMemberIds.isEmpty()) {
-                for (String str : groupMemberIds) {
-                    addGroupMemberId(str);
+        public Builder addGroupMemberId(String str) {
+            if (!TextUtils.isEmpty(str)) {
+                if (this.mGroupMemberIds == null) {
+                    this.mGroupMemberIds = new ArrayList<>();
                 }
+                if (!this.mGroupMemberIds.contains(str)) {
+                    this.mGroupMemberIds.add(str);
+                }
+                return this;
             }
-            return this;
+            throw new IllegalArgumentException("groupMemberId must not be empty");
         }
 
-        public Builder setName(String name) {
-            Objects.requireNonNull(name, "name must not be null");
-            this.mBundle.putString("name", name);
-            return this;
-        }
-
-        public Builder setDescription(String description) {
-            this.mBundle.putString("status", description);
-            return this;
-        }
-
-        public Builder setIconUri(Uri iconUri) {
-            if (iconUri == null) {
-                throw new IllegalArgumentException("iconUri must not be null");
-            }
-            this.mBundle.putString("iconUri", iconUri.toString());
-            return this;
-        }
-
-        public Builder setEnabled(boolean enabled) {
-            this.mBundle.putBoolean("enabled", enabled);
-            return this;
-        }
-
-        public Builder setConnectionState(int connectionState) {
-            this.mBundle.putInt("connectionState", connectionState);
-            return this;
-        }
-
-        public Builder setCanDisconnect(boolean canDisconnect) {
-            this.mBundle.putBoolean("canDisconnect", canDisconnect);
-            return this;
-        }
-
-        public Builder addControlFilter(IntentFilter filter) {
-            if (filter == null) {
-                throw new IllegalArgumentException("filter must not be null");
-            }
-            if (this.mControlFilters == null) {
-                this.mControlFilters = new ArrayList<>();
-            }
-            if (!this.mControlFilters.contains(filter)) {
-                this.mControlFilters.add(filter);
-            }
-            return this;
-        }
-
-        public Builder addControlFilters(Collection<IntentFilter> filters) {
-            if (filters == null) {
-                throw new IllegalArgumentException("filters must not be null");
-            }
-            if (!filters.isEmpty()) {
-                for (IntentFilter intentFilter : filters) {
-                    if (intentFilter != null) {
-                        addControlFilter(intentFilter);
+        public Builder addGroupMemberIds(Collection<String> collection) {
+            if (collection != null) {
+                if (!collection.isEmpty()) {
+                    for (String addGroupMemberId : collection) {
+                        addGroupMemberId(addGroupMemberId);
                     }
                 }
+                return this;
             }
-            return this;
+            throw new IllegalArgumentException("groupMemberIds must not be null");
         }
 
-        public Builder setPlaybackType(int playbackType) {
-            this.mBundle.putInt("playbackType", playbackType);
-            return this;
-        }
-
-        public Builder setPlaybackStream(int playbackStream) {
-            this.mBundle.putInt("playbackStream", playbackStream);
-            return this;
-        }
-
-        public Builder setDeviceType(int deviceType) {
-            this.mBundle.putInt("deviceType", deviceType);
-            return this;
-        }
-
-        public Builder setVolume(int volume) {
-            this.mBundle.putInt("volume", volume);
-            return this;
-        }
-
-        public Builder setVolumeMax(int volumeMax) {
-            this.mBundle.putInt("volumeMax", volumeMax);
-            return this;
-        }
-
-        public Builder setVolumeHandling(int volumeHandling) {
-            this.mBundle.putInt("volumeHandling", volumeHandling);
-            return this;
-        }
-
-        public Builder setPresentationDisplayId(int presentationDisplayId) {
-            this.mBundle.putInt("presentationDisplayId", presentationDisplayId);
-            return this;
-        }
-
-        public Builder setExtras(Bundle extras) {
-            if (extras == null) {
-                this.mBundle.putBundle("extras", null);
-            } else {
-                this.mBundle.putBundle("extras", new Bundle(extras));
+        public Builder removeGroupMemberId(String str) {
+            if (!TextUtils.isEmpty(str)) {
+                ArrayList<String> arrayList = this.mGroupMemberIds;
+                if (arrayList != null) {
+                    arrayList.remove((Object) str);
+                }
+                return this;
             }
+            throw new IllegalArgumentException("memberRouteId must not be empty");
+        }
+
+        public Builder setName(String str) {
+            this.mBundle.putString("name", str);
+            return this;
+        }
+
+        public Builder setDescription(String str) {
+            this.mBundle.putString("status", str);
+            return this;
+        }
+
+        public Builder setIconUri(Uri uri) {
+            if (uri != null) {
+                this.mBundle.putString(MediaRouteDescriptor.KEY_ICON_URI, uri.toString());
+                return this;
+            }
+            throw new IllegalArgumentException("iconUri must not be null");
+        }
+
+        public Builder setEnabled(boolean z) {
+            this.mBundle.putBoolean(MediaRouteDescriptor.KEY_ENABLED, z);
+            return this;
+        }
+
+        public Builder setIsDynamicGroupRoute(boolean z) {
+            this.mBundle.putBoolean(MediaRouteDescriptor.IS_DYNAMIC_GROUP_ROUTE, z);
+            return this;
+        }
+
+        @Deprecated
+        public Builder setConnecting(boolean z) {
+            this.mBundle.putBoolean(MediaRouteDescriptor.KEY_CONNECTING, z);
+            return this;
+        }
+
+        public Builder setConnectionState(int i) {
+            this.mBundle.putInt(MediaRouteDescriptor.KEY_CONNECTION_STATE, i);
+            return this;
+        }
+
+        public Builder setCanDisconnect(boolean z) {
+            this.mBundle.putBoolean(MediaRouteDescriptor.KEY_CAN_DISCONNECT, z);
+            return this;
+        }
+
+        public Builder setSettingsActivity(IntentSender intentSender) {
+            this.mBundle.putParcelable(MediaRouteDescriptor.KEY_SETTINGS_INTENT, intentSender);
+            return this;
+        }
+
+        public Builder addControlFilter(IntentFilter intentFilter) {
+            if (intentFilter != null) {
+                if (this.mControlFilters == null) {
+                    this.mControlFilters = new ArrayList<>();
+                }
+                if (!this.mControlFilters.contains(intentFilter)) {
+                    this.mControlFilters.add(intentFilter);
+                }
+                return this;
+            }
+            throw new IllegalArgumentException("filter must not be null");
+        }
+
+        public Builder addControlFilters(Collection<IntentFilter> collection) {
+            if (collection != null) {
+                if (!collection.isEmpty()) {
+                    for (IntentFilter addControlFilter : collection) {
+                        addControlFilter(addControlFilter);
+                    }
+                }
+                return this;
+            }
+            throw new IllegalArgumentException("filters must not be null");
+        }
+
+        public Builder setPlaybackType(int i) {
+            this.mBundle.putInt(MediaRouteDescriptor.KEY_PLAYBACK_TYPE, i);
+            return this;
+        }
+
+        public Builder setPlaybackStream(int i) {
+            this.mBundle.putInt(MediaRouteDescriptor.KEY_PLAYBACK_STREAM, i);
+            return this;
+        }
+
+        public Builder setDeviceType(int i) {
+            this.mBundle.putInt("deviceType", i);
+            return this;
+        }
+
+        public Builder setVolume(int i) {
+            this.mBundle.putInt("volume", i);
+            return this;
+        }
+
+        public Builder setVolumeMax(int i) {
+            this.mBundle.putInt(MediaRouteDescriptor.KEY_VOLUME_MAX, i);
+            return this;
+        }
+
+        public Builder setVolumeHandling(int i) {
+            this.mBundle.putInt(MediaRouteDescriptor.KEY_VOLUME_HANDLING, i);
+            return this;
+        }
+
+        public Builder setPresentationDisplayId(int i) {
+            this.mBundle.putInt(MediaRouteDescriptor.KEY_PRESENTATION_DISPLAY_ID, i);
+            return this;
+        }
+
+        public Builder setExtras(Bundle bundle) {
+            this.mBundle.putBundle(MediaRouteDescriptor.KEY_EXTRAS, bundle);
+            return this;
+        }
+
+        public Builder setMinClientVersion(int i) {
+            this.mBundle.putInt(MediaRouteDescriptor.KEY_MIN_CLIENT_VERSION, i);
+            return this;
+        }
+
+        public Builder setMaxClientVersion(int i) {
+            this.mBundle.putInt(MediaRouteDescriptor.KEY_MAX_CLIENT_VERSION, i);
             return this;
         }
 
         public MediaRouteDescriptor build() {
             ArrayList<IntentFilter> arrayList = this.mControlFilters;
             if (arrayList != null) {
-                this.mBundle.putParcelableArrayList("controlFilters", arrayList);
+                this.mBundle.putParcelableArrayList(MediaRouteDescriptor.KEY_CONTROL_FILTERS, arrayList);
             }
             ArrayList<String> arrayList2 = this.mGroupMemberIds;
             if (arrayList2 != null) {
-                this.mBundle.putStringArrayList("groupMemberIds", arrayList2);
+                this.mBundle.putStringArrayList(MediaRouteDescriptor.KEY_GROUP_MEMBER_IDS, arrayList2);
             }
             return new MediaRouteDescriptor(this.mBundle);
         }

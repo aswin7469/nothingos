@@ -5,26 +5,32 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
+import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import androidx.appcompat.R$attr;
-import androidx.appcompat.R$id;
-import androidx.appcompat.R$styleable;
+import android.widget.SpinnerAdapter;
+import androidx.appcompat.C0329R;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.view.ActionBarPolicy;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.view.SupportMenuInflater;
 import androidx.appcompat.view.ViewPropertyAnimatorCompatSet;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.view.menu.MenuPopupHelper;
+import androidx.appcompat.view.menu.SubMenuBuilder;
 import androidx.appcompat.widget.ActionBarContainer;
 import androidx.appcompat.widget.ActionBarContextView;
 import androidx.appcompat.widget.ActionBarOverlayLayout;
@@ -36,18 +42,26 @@ import androidx.core.view.ViewPropertyAnimatorCompat;
 import androidx.core.view.ViewPropertyAnimatorListener;
 import androidx.core.view.ViewPropertyAnimatorListenerAdapter;
 import androidx.core.view.ViewPropertyAnimatorUpdateListener;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayLayout.ActionBarVisibilityCallback {
+    private static final long FADE_IN_DURATION_MS = 200;
+    private static final long FADE_OUT_DURATION_MS = 100;
+    private static final int INVALID_POSITION = -1;
+    private static final String TAG = "WindowDecorActionBar";
     private static final Interpolator sHideInterpolator = new AccelerateInterpolator();
     private static final Interpolator sShowInterpolator = new DecelerateInterpolator();
     ActionModeImpl mActionMode;
     private Activity mActivity;
     ActionBarContainer mContainerView;
+    boolean mContentAnimations = true;
     View mContentView;
     Context mContext;
     ActionBarContextView mContextView;
+    private int mCurWindowVisibility = 0;
     ViewPropertyAnimatorCompatSet mCurrentShowAnim;
     DecorToolbar mDecorToolbar;
     ActionMode mDeferredDestroyActionMode;
@@ -56,49 +70,40 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
     private boolean mHasEmbeddedTabs;
     boolean mHiddenByApp;
     boolean mHiddenBySystem;
-    boolean mHideOnContentScroll;
-    private boolean mLastMenuVisibility;
-    ActionBarOverlayLayout mOverlayLayout;
-    private boolean mShowHideAnimationEnabled;
-    private boolean mShowingForMode;
-    ScrollingTabContainerView mTabScrollView;
-    private Context mThemedContext;
-    private ArrayList<?> mTabs = new ArrayList<>();
-    private int mSavedTabPosition = -1;
-    private ArrayList<ActionBar.OnMenuVisibilityListener> mMenuVisibilityListeners = new ArrayList<>();
-    private int mCurWindowVisibility = 0;
-    boolean mContentAnimations = true;
-    private boolean mNowShowing = true;
-    final ViewPropertyAnimatorListener mHideListener = new ViewPropertyAnimatorListenerAdapter() { // from class: androidx.appcompat.app.WindowDecorActionBar.1
-        @Override // androidx.core.view.ViewPropertyAnimatorListener
+    final ViewPropertyAnimatorListener mHideListener = new ViewPropertyAnimatorListenerAdapter() {
         public void onAnimationEnd(View view) {
-            View view2;
-            WindowDecorActionBar windowDecorActionBar = WindowDecorActionBar.this;
-            if (windowDecorActionBar.mContentAnimations && (view2 = windowDecorActionBar.mContentView) != null) {
-                view2.setTranslationY(0.0f);
+            if (WindowDecorActionBar.this.mContentAnimations && WindowDecorActionBar.this.mContentView != null) {
+                WindowDecorActionBar.this.mContentView.setTranslationY(0.0f);
                 WindowDecorActionBar.this.mContainerView.setTranslationY(0.0f);
             }
             WindowDecorActionBar.this.mContainerView.setVisibility(8);
             WindowDecorActionBar.this.mContainerView.setTransitioning(false);
-            WindowDecorActionBar windowDecorActionBar2 = WindowDecorActionBar.this;
-            windowDecorActionBar2.mCurrentShowAnim = null;
-            windowDecorActionBar2.completeDeferredDestroyActionMode();
-            ActionBarOverlayLayout actionBarOverlayLayout = WindowDecorActionBar.this.mOverlayLayout;
-            if (actionBarOverlayLayout != null) {
-                ViewCompat.requestApplyInsets(actionBarOverlayLayout);
+            WindowDecorActionBar.this.mCurrentShowAnim = null;
+            WindowDecorActionBar.this.completeDeferredDestroyActionMode();
+            if (WindowDecorActionBar.this.mOverlayLayout != null) {
+                ViewCompat.requestApplyInsets(WindowDecorActionBar.this.mOverlayLayout);
             }
         }
     };
-    final ViewPropertyAnimatorListener mShowListener = new ViewPropertyAnimatorListenerAdapter() { // from class: androidx.appcompat.app.WindowDecorActionBar.2
-        @Override // androidx.core.view.ViewPropertyAnimatorListener
+    boolean mHideOnContentScroll;
+    private boolean mLastMenuVisibility;
+    private ArrayList<ActionBar.OnMenuVisibilityListener> mMenuVisibilityListeners = new ArrayList<>();
+    private boolean mNowShowing = true;
+    ActionBarOverlayLayout mOverlayLayout;
+    private int mSavedTabPosition = -1;
+    private TabImpl mSelectedTab;
+    private boolean mShowHideAnimationEnabled;
+    final ViewPropertyAnimatorListener mShowListener = new ViewPropertyAnimatorListenerAdapter() {
         public void onAnimationEnd(View view) {
-            WindowDecorActionBar windowDecorActionBar = WindowDecorActionBar.this;
-            windowDecorActionBar.mCurrentShowAnim = null;
-            windowDecorActionBar.mContainerView.requestLayout();
+            WindowDecorActionBar.this.mCurrentShowAnim = null;
+            WindowDecorActionBar.this.mContainerView.requestLayout();
         }
     };
-    final ViewPropertyAnimatorUpdateListener mUpdateListener = new ViewPropertyAnimatorUpdateListener() { // from class: androidx.appcompat.app.WindowDecorActionBar.3
-        @Override // androidx.core.view.ViewPropertyAnimatorUpdateListener
+    private boolean mShowingForMode;
+    ScrollingTabContainerView mTabScrollView;
+    private ArrayList<TabImpl> mTabs = new ArrayList<>();
+    private Context mThemedContext;
+    final ViewPropertyAnimatorUpdateListener mUpdateListener = new ViewPropertyAnimatorUpdateListener() {
         public void onAnimationUpdate(View view) {
             ((View) WindowDecorActionBar.this.mContainerView.getParent()).invalidate();
         }
@@ -111,8 +116,10 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         return !z && !z2;
     }
 
-    @Override // androidx.appcompat.widget.ActionBarOverlayLayout.ActionBarVisibilityCallback
     public void onContentScrollStopped() {
+    }
+
+    public void setSplitBackgroundDrawable(Drawable drawable) {
     }
 
     public WindowDecorActionBar(Activity activity, boolean z) {
@@ -128,19 +135,23 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         init(dialog.getWindow().getDecorView());
     }
 
+    public WindowDecorActionBar(View view) {
+        init(view);
+    }
+
     private void init(View view) {
-        ActionBarOverlayLayout actionBarOverlayLayout = (ActionBarOverlayLayout) view.findViewById(R$id.decor_content_parent);
+        ActionBarOverlayLayout actionBarOverlayLayout = (ActionBarOverlayLayout) view.findViewById(C0329R.C0332id.decor_content_parent);
         this.mOverlayLayout = actionBarOverlayLayout;
         if (actionBarOverlayLayout != null) {
             actionBarOverlayLayout.setActionBarVisibilityCallback(this);
         }
-        this.mDecorToolbar = getDecorToolbar(view.findViewById(R$id.action_bar));
-        this.mContextView = (ActionBarContextView) view.findViewById(R$id.action_context_bar);
-        ActionBarContainer actionBarContainer = (ActionBarContainer) view.findViewById(R$id.action_bar_container);
+        this.mDecorToolbar = getDecorToolbar(view.findViewById(C0329R.C0332id.action_bar));
+        this.mContextView = (ActionBarContextView) view.findViewById(C0329R.C0332id.action_context_bar);
+        ActionBarContainer actionBarContainer = (ActionBarContainer) view.findViewById(C0329R.C0332id.action_bar_container);
         this.mContainerView = actionBarContainer;
         DecorToolbar decorToolbar = this.mDecorToolbar;
         if (decorToolbar == null || this.mContextView == null || actionBarContainer == null) {
-            throw new IllegalStateException(WindowDecorActionBar.class.getSimpleName() + " can only be used with a compatible window decor layout");
+            throw new IllegalStateException(getClass().getSimpleName() + " can only be used with a compatible window decor layout");
         }
         this.mContext = decorToolbar.getContext();
         boolean z = (this.mDecorToolbar.getDisplayOptions() & 4) != 0;
@@ -150,13 +161,13 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         ActionBarPolicy actionBarPolicy = ActionBarPolicy.get(this.mContext);
         setHomeButtonEnabled(actionBarPolicy.enableHomeButtonByDefault() || z);
         setHasEmbeddedTabs(actionBarPolicy.hasEmbeddedTabs());
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(null, R$styleable.ActionBar, R$attr.actionBarStyle, 0);
-        if (obtainStyledAttributes.getBoolean(R$styleable.ActionBar_hideOnContentScroll, false)) {
+        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes((AttributeSet) null, C0329R.styleable.ActionBar, C0329R.attr.actionBarStyle, 0);
+        if (obtainStyledAttributes.getBoolean(C0329R.styleable.ActionBar_hideOnContentScroll, false)) {
             setHideOnContentScrollEnabled(true);
         }
-        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.ActionBar_elevation, 0);
+        int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(C0329R.styleable.ActionBar_elevation, 0);
         if (dimensionPixelSize != 0) {
-            setElevation(dimensionPixelSize);
+            setElevation((float) dimensionPixelSize);
         }
         obtainStyledAttributes.recycle();
     }
@@ -168,17 +179,17 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         if (view instanceof Toolbar) {
             return ((Toolbar) view).getWrapper();
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append("Can't make a decor toolbar out of ");
-        sb.append(view != null ? view.getClass().getSimpleName() : "null");
-        throw new IllegalStateException(sb.toString());
+        throw new IllegalStateException("Can't make a decor toolbar out of " + (view != null ? view.getClass().getSimpleName() : "null"));
     }
 
     public void setElevation(float f) {
         ViewCompat.setElevation(this.mContainerView, f);
     }
 
-    @Override // androidx.appcompat.app.ActionBar
+    public float getElevation() {
+        return ViewCompat.getElevation(this.mContainerView);
+    }
+
     public void onConfigurationChanged(Configuration configuration) {
         setHasEmbeddedTabs(ActionBarPolicy.get(this.mContext).hasEmbeddedTabs());
     }
@@ -186,23 +197,58 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
     private void setHasEmbeddedTabs(boolean z) {
         this.mHasEmbeddedTabs = z;
         if (!z) {
-            this.mDecorToolbar.setEmbeddedTabView(null);
+            this.mDecorToolbar.setEmbeddedTabView((ScrollingTabContainerView) null);
             this.mContainerView.setTabContainer(this.mTabScrollView);
         } else {
-            this.mContainerView.setTabContainer(null);
+            this.mContainerView.setTabContainer((ScrollingTabContainerView) null);
             this.mDecorToolbar.setEmbeddedTabView(this.mTabScrollView);
         }
         boolean z2 = true;
         boolean z3 = getNavigationMode() == 2;
+        ScrollingTabContainerView scrollingTabContainerView = this.mTabScrollView;
+        if (scrollingTabContainerView != null) {
+            if (z3) {
+                scrollingTabContainerView.setVisibility(0);
+                ActionBarOverlayLayout actionBarOverlayLayout = this.mOverlayLayout;
+                if (actionBarOverlayLayout != null) {
+                    ViewCompat.requestApplyInsets(actionBarOverlayLayout);
+                }
+            } else {
+                scrollingTabContainerView.setVisibility(8);
+            }
+        }
         this.mDecorToolbar.setCollapsible(!this.mHasEmbeddedTabs && z3);
-        ActionBarOverlayLayout actionBarOverlayLayout = this.mOverlayLayout;
+        ActionBarOverlayLayout actionBarOverlayLayout2 = this.mOverlayLayout;
         if (this.mHasEmbeddedTabs || !z3) {
             z2 = false;
         }
-        actionBarOverlayLayout.setHasNonEmbeddedTabs(z2);
+        actionBarOverlayLayout2.setHasNonEmbeddedTabs(z2);
     }
 
-    void completeDeferredDestroyActionMode() {
+    private void ensureTabsExist() {
+        if (this.mTabScrollView == null) {
+            ScrollingTabContainerView scrollingTabContainerView = new ScrollingTabContainerView(this.mContext);
+            if (this.mHasEmbeddedTabs) {
+                scrollingTabContainerView.setVisibility(0);
+                this.mDecorToolbar.setEmbeddedTabView(scrollingTabContainerView);
+            } else {
+                if (getNavigationMode() == 2) {
+                    scrollingTabContainerView.setVisibility(0);
+                    ActionBarOverlayLayout actionBarOverlayLayout = this.mOverlayLayout;
+                    if (actionBarOverlayLayout != null) {
+                        ViewCompat.requestApplyInsets(actionBarOverlayLayout);
+                    }
+                } else {
+                    scrollingTabContainerView.setVisibility(8);
+                }
+                this.mContainerView.setTabContainer(scrollingTabContainerView);
+            }
+            this.mTabScrollView = scrollingTabContainerView;
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void completeDeferredDestroyActionMode() {
         ActionMode.Callback callback = this.mDeferredModeDestroyCallback;
         if (callback != null) {
             callback.onDestroyActionMode(this.mDeferredDestroyActionMode);
@@ -211,44 +257,125 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         }
     }
 
-    @Override // androidx.appcompat.widget.ActionBarOverlayLayout.ActionBarVisibilityCallback
     public void onWindowVisibilityChanged(int i) {
         this.mCurWindowVisibility = i;
     }
 
-    @Override // androidx.appcompat.app.ActionBar
     public void setShowHideAnimationEnabled(boolean z) {
         ViewPropertyAnimatorCompatSet viewPropertyAnimatorCompatSet;
         this.mShowHideAnimationEnabled = z;
-        if (z || (viewPropertyAnimatorCompatSet = this.mCurrentShowAnim) == null) {
-            return;
+        if (!z && (viewPropertyAnimatorCompatSet = this.mCurrentShowAnim) != null) {
+            viewPropertyAnimatorCompatSet.cancel();
         }
-        viewPropertyAnimatorCompatSet.cancel();
     }
 
-    @Override // androidx.appcompat.app.ActionBar
+    public void addOnMenuVisibilityListener(ActionBar.OnMenuVisibilityListener onMenuVisibilityListener) {
+        this.mMenuVisibilityListeners.add(onMenuVisibilityListener);
+    }
+
+    public void removeOnMenuVisibilityListener(ActionBar.OnMenuVisibilityListener onMenuVisibilityListener) {
+        this.mMenuVisibilityListeners.remove((Object) onMenuVisibilityListener);
+    }
+
     public void dispatchMenuVisibilityChanged(boolean z) {
-        if (z == this.mLastMenuVisibility) {
-            return;
+        if (z != this.mLastMenuVisibility) {
+            this.mLastMenuVisibility = z;
+            int size = this.mMenuVisibilityListeners.size();
+            for (int i = 0; i < size; i++) {
+                this.mMenuVisibilityListeners.get(i).onMenuVisibilityChanged(z);
+            }
         }
-        this.mLastMenuVisibility = z;
-        int size = this.mMenuVisibilityListeners.size();
-        for (int i = 0; i < size; i++) {
-            this.mMenuVisibilityListeners.get(i).onMenuVisibilityChanged(z);
-        }
+    }
+
+    public void setCustomView(int i) {
+        setCustomView(LayoutInflater.from(getThemedContext()).inflate(i, this.mDecorToolbar.getViewGroup(), false));
+    }
+
+    public void setDisplayUseLogoEnabled(boolean z) {
+        setDisplayOptions(z ? 1 : 0, 1);
+    }
+
+    public void setDisplayShowHomeEnabled(boolean z) {
+        setDisplayOptions(z ? 2 : 0, 2);
     }
 
     public void setDisplayHomeAsUpEnabled(boolean z) {
         setDisplayOptions(z ? 4 : 0, 4);
     }
 
+    public void setDisplayShowTitleEnabled(boolean z) {
+        setDisplayOptions(z ? 8 : 0, 8);
+    }
+
+    public void setDisplayShowCustomEnabled(boolean z) {
+        setDisplayOptions(z ? 16 : 0, 16);
+    }
+
     public void setHomeButtonEnabled(boolean z) {
         this.mDecorToolbar.setHomeButtonEnabled(z);
     }
 
-    @Override // androidx.appcompat.app.ActionBar
+    public void setTitle(int i) {
+        setTitle((CharSequence) this.mContext.getString(i));
+    }
+
+    public void setSubtitle(int i) {
+        setSubtitle((CharSequence) this.mContext.getString(i));
+    }
+
+    public void setSelectedNavigationItem(int i) {
+        int navigationMode = this.mDecorToolbar.getNavigationMode();
+        if (navigationMode == 1) {
+            this.mDecorToolbar.setDropdownSelectedPosition(i);
+        } else if (navigationMode == 2) {
+            selectTab(this.mTabs.get(i));
+        } else {
+            throw new IllegalStateException("setSelectedNavigationIndex not valid for current navigation mode");
+        }
+    }
+
+    public void removeAllTabs() {
+        cleanupTabs();
+    }
+
+    private void cleanupTabs() {
+        if (this.mSelectedTab != null) {
+            selectTab((ActionBar.Tab) null);
+        }
+        this.mTabs.clear();
+        ScrollingTabContainerView scrollingTabContainerView = this.mTabScrollView;
+        if (scrollingTabContainerView != null) {
+            scrollingTabContainerView.removeAllTabs();
+        }
+        this.mSavedTabPosition = -1;
+    }
+
+    public void setTitle(CharSequence charSequence) {
+        this.mDecorToolbar.setTitle(charSequence);
+    }
+
     public void setWindowTitle(CharSequence charSequence) {
         this.mDecorToolbar.setWindowTitle(charSequence);
+    }
+
+    public boolean requestFocus() {
+        ViewGroup viewGroup = this.mDecorToolbar.getViewGroup();
+        if (viewGroup == null || viewGroup.hasFocus()) {
+            return false;
+        }
+        viewGroup.requestFocus();
+        return true;
+    }
+
+    public void setSubtitle(CharSequence charSequence) {
+        this.mDecorToolbar.setSubtitle(charSequence);
+    }
+
+    public void setDisplayOptions(int i) {
+        if ((i & 4) != 0) {
+            this.mDisplayHomeAsUpSet = true;
+        }
+        this.mDecorToolbar.setDisplayOptions(i);
     }
 
     public void setDisplayOptions(int i, int i2) {
@@ -259,16 +386,34 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         this.mDecorToolbar.setDisplayOptions((i & i2) | ((~i2) & displayOptions));
     }
 
+    public void setBackgroundDrawable(Drawable drawable) {
+        this.mContainerView.setPrimaryBackground(drawable);
+    }
+
+    public void setStackedBackgroundDrawable(Drawable drawable) {
+        this.mContainerView.setStackedBackground(drawable);
+    }
+
+    public View getCustomView() {
+        return this.mDecorToolbar.getCustomView();
+    }
+
+    public CharSequence getTitle() {
+        return this.mDecorToolbar.getTitle();
+    }
+
+    public CharSequence getSubtitle() {
+        return this.mDecorToolbar.getSubtitle();
+    }
+
     public int getNavigationMode() {
         return this.mDecorToolbar.getNavigationMode();
     }
 
-    @Override // androidx.appcompat.app.ActionBar
     public int getDisplayOptions() {
         return this.mDecorToolbar.getDisplayOptions();
     }
 
-    @Override // androidx.appcompat.app.ActionBar
     public ActionMode startActionMode(ActionMode.Callback callback) {
         ActionModeImpl actionModeImpl = this.mActionMode;
         if (actionModeImpl != null) {
@@ -277,20 +422,141 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         this.mOverlayLayout.setHideOnContentScrollEnabled(false);
         this.mContextView.killMode();
         ActionModeImpl actionModeImpl2 = new ActionModeImpl(this.mContextView.getContext(), callback);
-        if (actionModeImpl2.dispatchOnCreate()) {
-            this.mActionMode = actionModeImpl2;
-            actionModeImpl2.invalidate();
-            this.mContextView.initForMode(actionModeImpl2);
-            animateToMode(true);
-            this.mContextView.sendAccessibilityEvent(32);
-            return actionModeImpl2;
+        if (!actionModeImpl2.dispatchOnCreate()) {
+            return null;
         }
-        return null;
+        this.mActionMode = actionModeImpl2;
+        actionModeImpl2.invalidate();
+        this.mContextView.initForMode(actionModeImpl2);
+        animateToMode(true);
+        this.mContextView.sendAccessibilityEvent(32);
+        return actionModeImpl2;
     }
 
-    @Override // androidx.appcompat.widget.ActionBarOverlayLayout.ActionBarVisibilityCallback
+    private void configureTab(ActionBar.Tab tab, int i) {
+        TabImpl tabImpl = (TabImpl) tab;
+        if (tabImpl.getCallback() != null) {
+            tabImpl.setPosition(i);
+            this.mTabs.add(i, tabImpl);
+            int size = this.mTabs.size();
+            while (true) {
+                i++;
+                if (i < size) {
+                    this.mTabs.get(i).setPosition(i);
+                } else {
+                    return;
+                }
+            }
+        } else {
+            throw new IllegalStateException("Action Bar Tab must have a Callback");
+        }
+    }
+
+    public void addTab(ActionBar.Tab tab) {
+        addTab(tab, this.mTabs.isEmpty());
+    }
+
+    public void addTab(ActionBar.Tab tab, int i) {
+        addTab(tab, i, this.mTabs.isEmpty());
+    }
+
+    public void addTab(ActionBar.Tab tab, boolean z) {
+        ensureTabsExist();
+        this.mTabScrollView.addTab(tab, z);
+        configureTab(tab, this.mTabs.size());
+        if (z) {
+            selectTab(tab);
+        }
+    }
+
+    public void addTab(ActionBar.Tab tab, int i, boolean z) {
+        ensureTabsExist();
+        this.mTabScrollView.addTab(tab, i, z);
+        configureTab(tab, i);
+        if (z) {
+            selectTab(tab);
+        }
+    }
+
+    public ActionBar.Tab newTab() {
+        return new TabImpl();
+    }
+
+    public void removeTab(ActionBar.Tab tab) {
+        removeTabAt(tab.getPosition());
+    }
+
+    public void removeTabAt(int i) {
+        if (this.mTabScrollView != null) {
+            TabImpl tabImpl = this.mSelectedTab;
+            int position = tabImpl != null ? tabImpl.getPosition() : this.mSavedTabPosition;
+            this.mTabScrollView.removeTabAt(i);
+            TabImpl remove = this.mTabs.remove(i);
+            if (remove != null) {
+                remove.setPosition(-1);
+            }
+            int size = this.mTabs.size();
+            for (int i2 = i; i2 < size; i2++) {
+                this.mTabs.get(i2).setPosition(i2);
+            }
+            if (position == i) {
+                selectTab(this.mTabs.isEmpty() ? null : this.mTabs.get(Math.max(0, i - 1)));
+            }
+        }
+    }
+
+    public void selectTab(ActionBar.Tab tab) {
+        int i = -1;
+        if (getNavigationMode() != 2) {
+            if (tab != null) {
+                i = tab.getPosition();
+            }
+            this.mSavedTabPosition = i;
+            return;
+        }
+        FragmentTransaction disallowAddToBackStack = (!(this.mActivity instanceof FragmentActivity) || this.mDecorToolbar.getViewGroup().isInEditMode()) ? null : ((FragmentActivity) this.mActivity).getSupportFragmentManager().beginTransaction().disallowAddToBackStack();
+        TabImpl tabImpl = this.mSelectedTab;
+        if (tabImpl != tab) {
+            ScrollingTabContainerView scrollingTabContainerView = this.mTabScrollView;
+            if (tab != null) {
+                i = tab.getPosition();
+            }
+            scrollingTabContainerView.setTabSelected(i);
+            TabImpl tabImpl2 = this.mSelectedTab;
+            if (tabImpl2 != null) {
+                tabImpl2.getCallback().onTabUnselected(this.mSelectedTab, disallowAddToBackStack);
+            }
+            TabImpl tabImpl3 = (TabImpl) tab;
+            this.mSelectedTab = tabImpl3;
+            if (tabImpl3 != null) {
+                tabImpl3.getCallback().onTabSelected(this.mSelectedTab, disallowAddToBackStack);
+            }
+        } else if (tabImpl != null) {
+            tabImpl.getCallback().onTabReselected(this.mSelectedTab, disallowAddToBackStack);
+            this.mTabScrollView.animateToTab(tab.getPosition());
+        }
+        if (disallowAddToBackStack != null && !disallowAddToBackStack.isEmpty()) {
+            disallowAddToBackStack.commit();
+        }
+    }
+
+    public ActionBar.Tab getSelectedTab() {
+        return this.mSelectedTab;
+    }
+
+    public int getHeight() {
+        return this.mContainerView.getHeight();
+    }
+
     public void enableContentAnimations(boolean z) {
         this.mContentAnimations = z;
+    }
+
+    public void show() {
+        if (this.mHiddenByApp) {
+            this.mHiddenByApp = false;
+            updateVisibility(false);
+        }
     }
 
     private void showForActionMode() {
@@ -304,11 +570,17 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         }
     }
 
-    @Override // androidx.appcompat.widget.ActionBarOverlayLayout.ActionBarVisibilityCallback
     public void showForSystem() {
         if (this.mHiddenBySystem) {
             this.mHiddenBySystem = false;
             updateVisibility(true);
+        }
+    }
+
+    public void hide() {
+        if (!this.mHiddenByApp) {
+            this.mHiddenByApp = true;
+            updateVisibility(false);
         }
     }
 
@@ -323,7 +595,6 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         }
     }
 
-    @Override // androidx.appcompat.widget.ActionBarOverlayLayout.ActionBarVisibilityCallback
     public void hideForSystem() {
         if (!this.mHiddenBySystem) {
             this.mHiddenBySystem = true;
@@ -332,22 +603,37 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
     }
 
     public void setHideOnContentScrollEnabled(boolean z) {
-        if (z && !this.mOverlayLayout.isInOverlayMode()) {
-            throw new IllegalStateException("Action bar must be in overlay mode (Window.FEATURE_OVERLAY_ACTION_BAR) to enable hide on content scroll");
+        if (!z || this.mOverlayLayout.isInOverlayMode()) {
+            this.mHideOnContentScroll = z;
+            this.mOverlayLayout.setHideOnContentScrollEnabled(z);
+            return;
         }
-        this.mHideOnContentScroll = z;
-        this.mOverlayLayout.setHideOnContentScrollEnabled(z);
+        throw new IllegalStateException("Action bar must be in overlay mode (Window.FEATURE_OVERLAY_ACTION_BAR) to enable hide on content scroll");
+    }
+
+    public boolean isHideOnContentScrollEnabled() {
+        return this.mOverlayLayout.isHideOnContentScrollEnabled();
+    }
+
+    public int getHideOffset() {
+        return this.mOverlayLayout.getActionBarHideOffset();
+    }
+
+    public void setHideOffset(int i) {
+        if (i == 0 || this.mOverlayLayout.isInOverlayMode()) {
+            this.mOverlayLayout.setActionBarHideOffset(i);
+            return;
+        }
+        throw new IllegalStateException("Action bar must be in overlay mode (Window.FEATURE_OVERLAY_ACTION_BAR) to set a non-zero hide offset");
     }
 
     private void updateVisibility(boolean z) {
         if (checkShowingFlags(this.mHiddenByApp, this.mHiddenBySystem, this.mShowingForMode)) {
-            if (this.mNowShowing) {
-                return;
+            if (!this.mNowShowing) {
+                this.mNowShowing = true;
+                doShow(z);
             }
-            this.mNowShowing = true;
-            doShow(z);
-        } else if (!this.mNowShowing) {
-        } else {
+        } else if (this.mNowShowing) {
             this.mNowShowing = false;
             doHide(z);
         }
@@ -356,18 +642,25 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
     public void doShow(boolean z) {
         View view;
         View view2;
-        int[] iArr;
         ViewPropertyAnimatorCompatSet viewPropertyAnimatorCompatSet = this.mCurrentShowAnim;
         if (viewPropertyAnimatorCompatSet != null) {
             viewPropertyAnimatorCompatSet.cancel();
         }
         this.mContainerView.setVisibility(0);
-        if (this.mCurWindowVisibility == 0 && (this.mShowHideAnimationEnabled || z)) {
+        if (this.mCurWindowVisibility != 0 || (!this.mShowHideAnimationEnabled && !z)) {
+            this.mContainerView.setAlpha(1.0f);
             this.mContainerView.setTranslationY(0.0f);
-            float f = -this.mContainerView.getHeight();
+            if (this.mContentAnimations && (view = this.mContentView) != null) {
+                view.setTranslationY(0.0f);
+            }
+            this.mShowListener.onAnimationEnd((View) null);
+        } else {
+            this.mContainerView.setTranslationY(0.0f);
+            float f = (float) (-this.mContainerView.getHeight());
             if (z) {
-                this.mContainerView.getLocationInWindow(new int[]{0, 0});
-                f -= iArr[1];
+                int[] iArr = {0, 0};
+                this.mContainerView.getLocationInWindow(iArr);
+                f -= (float) iArr[1];
             }
             this.mContainerView.setTranslationY(f);
             ViewPropertyAnimatorCompatSet viewPropertyAnimatorCompatSet2 = new ViewPropertyAnimatorCompatSet();
@@ -379,17 +672,10 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
                 viewPropertyAnimatorCompatSet2.play(ViewCompat.animate(this.mContentView).translationY(0.0f));
             }
             viewPropertyAnimatorCompatSet2.setInterpolator(sShowInterpolator);
-            viewPropertyAnimatorCompatSet2.setDuration(250L);
+            viewPropertyAnimatorCompatSet2.setDuration(250);
             viewPropertyAnimatorCompatSet2.setListener(this.mShowListener);
             this.mCurrentShowAnim = viewPropertyAnimatorCompatSet2;
             viewPropertyAnimatorCompatSet2.start();
-        } else {
-            this.mContainerView.setAlpha(1.0f);
-            this.mContainerView.setTranslationY(0.0f);
-            if (this.mContentAnimations && (view = this.mContentView) != null) {
-                view.setTranslationY(0.0f);
-            }
-            this.mShowListener.onAnimationEnd(null);
         }
         ActionBarOverlayLayout actionBarOverlayLayout = this.mOverlayLayout;
         if (actionBarOverlayLayout != null) {
@@ -399,34 +685,39 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
 
     public void doHide(boolean z) {
         View view;
-        int[] iArr;
         ViewPropertyAnimatorCompatSet viewPropertyAnimatorCompatSet = this.mCurrentShowAnim;
         if (viewPropertyAnimatorCompatSet != null) {
             viewPropertyAnimatorCompatSet.cancel();
         }
-        if (this.mCurWindowVisibility == 0 && (this.mShowHideAnimationEnabled || z)) {
-            this.mContainerView.setAlpha(1.0f);
-            this.mContainerView.setTransitioning(true);
-            ViewPropertyAnimatorCompatSet viewPropertyAnimatorCompatSet2 = new ViewPropertyAnimatorCompatSet();
-            float f = -this.mContainerView.getHeight();
-            if (z) {
-                this.mContainerView.getLocationInWindow(new int[]{0, 0});
-                f -= iArr[1];
-            }
-            ViewPropertyAnimatorCompat translationY = ViewCompat.animate(this.mContainerView).translationY(f);
-            translationY.setUpdateListener(this.mUpdateListener);
-            viewPropertyAnimatorCompatSet2.play(translationY);
-            if (this.mContentAnimations && (view = this.mContentView) != null) {
-                viewPropertyAnimatorCompatSet2.play(ViewCompat.animate(view).translationY(f));
-            }
-            viewPropertyAnimatorCompatSet2.setInterpolator(sHideInterpolator);
-            viewPropertyAnimatorCompatSet2.setDuration(250L);
-            viewPropertyAnimatorCompatSet2.setListener(this.mHideListener);
-            this.mCurrentShowAnim = viewPropertyAnimatorCompatSet2;
-            viewPropertyAnimatorCompatSet2.start();
+        if (this.mCurWindowVisibility != 0 || (!this.mShowHideAnimationEnabled && !z)) {
+            this.mHideListener.onAnimationEnd((View) null);
             return;
         }
-        this.mHideListener.onAnimationEnd(null);
+        this.mContainerView.setAlpha(1.0f);
+        this.mContainerView.setTransitioning(true);
+        ViewPropertyAnimatorCompatSet viewPropertyAnimatorCompatSet2 = new ViewPropertyAnimatorCompatSet();
+        float f = (float) (-this.mContainerView.getHeight());
+        if (z) {
+            int[] iArr = {0, 0};
+            this.mContainerView.getLocationInWindow(iArr);
+            f -= (float) iArr[1];
+        }
+        ViewPropertyAnimatorCompat translationY = ViewCompat.animate(this.mContainerView).translationY(f);
+        translationY.setUpdateListener(this.mUpdateListener);
+        viewPropertyAnimatorCompatSet2.play(translationY);
+        if (this.mContentAnimations && (view = this.mContentView) != null) {
+            viewPropertyAnimatorCompatSet2.play(ViewCompat.animate(view).translationY(f));
+        }
+        viewPropertyAnimatorCompatSet2.setInterpolator(sHideInterpolator);
+        viewPropertyAnimatorCompatSet2.setDuration(250);
+        viewPropertyAnimatorCompatSet2.setListener(this.mHideListener);
+        this.mCurrentShowAnim = viewPropertyAnimatorCompatSet2;
+        viewPropertyAnimatorCompatSet2.start();
+    }
+
+    public boolean isShowing() {
+        int height = getHeight();
+        return this.mNowShowing && (height == 0 || getHideOffset() < height);
     }
 
     public void animateToMode(boolean z) {
@@ -437,38 +728,35 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         } else {
             hideForActionMode();
         }
-        if (!shouldAnimateContextView()) {
+        if (shouldAnimateContextView()) {
             if (z) {
-                this.mDecorToolbar.setVisibility(4);
-                this.mContextView.setVisibility(0);
-                return;
+                viewPropertyAnimatorCompat = this.mDecorToolbar.setupAnimatorToVisibility(4, 100);
+                viewPropertyAnimatorCompat2 = this.mContextView.setupAnimatorToVisibility(0, 200);
+            } else {
+                ViewPropertyAnimatorCompat viewPropertyAnimatorCompat3 = this.mDecorToolbar.setupAnimatorToVisibility(0, 200);
+                viewPropertyAnimatorCompat = this.mContextView.setupAnimatorToVisibility(8, 100);
+                viewPropertyAnimatorCompat2 = viewPropertyAnimatorCompat3;
             }
+            ViewPropertyAnimatorCompatSet viewPropertyAnimatorCompatSet = new ViewPropertyAnimatorCompatSet();
+            viewPropertyAnimatorCompatSet.playSequentially(viewPropertyAnimatorCompat, viewPropertyAnimatorCompat2);
+            viewPropertyAnimatorCompatSet.start();
+        } else if (z) {
+            this.mDecorToolbar.setVisibility(4);
+            this.mContextView.setVisibility(0);
+        } else {
             this.mDecorToolbar.setVisibility(0);
             this.mContextView.setVisibility(8);
-            return;
         }
-        if (z) {
-            viewPropertyAnimatorCompat = this.mDecorToolbar.setupAnimatorToVisibility(4, 100L);
-            viewPropertyAnimatorCompat2 = this.mContextView.setupAnimatorToVisibility(0, 200L);
-        } else {
-            ViewPropertyAnimatorCompat viewPropertyAnimatorCompat3 = this.mDecorToolbar.setupAnimatorToVisibility(0, 200L);
-            viewPropertyAnimatorCompat = this.mContextView.setupAnimatorToVisibility(8, 100L);
-            viewPropertyAnimatorCompat2 = viewPropertyAnimatorCompat3;
-        }
-        ViewPropertyAnimatorCompatSet viewPropertyAnimatorCompatSet = new ViewPropertyAnimatorCompatSet();
-        viewPropertyAnimatorCompatSet.playSequentially(viewPropertyAnimatorCompat, viewPropertyAnimatorCompat2);
-        viewPropertyAnimatorCompatSet.start();
     }
 
     private boolean shouldAnimateContextView() {
         return ViewCompat.isLaidOut(this.mContainerView);
     }
 
-    @Override // androidx.appcompat.app.ActionBar
     public Context getThemedContext() {
         if (this.mThemedContext == null) {
             TypedValue typedValue = new TypedValue();
-            this.mContext.getTheme().resolveAttribute(R$attr.actionBarWidgetTheme, typedValue, true);
+            this.mContext.getTheme().resolveAttribute(C0329R.attr.actionBarWidgetTheme, typedValue, true);
             int i = typedValue.resourceId;
             if (i != 0) {
                 this.mThemedContext = new ContextThemeWrapper(this.mContext, i);
@@ -479,7 +767,27 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         return this.mThemedContext;
     }
 
-    @Override // androidx.appcompat.widget.ActionBarOverlayLayout.ActionBarVisibilityCallback
+    public boolean isTitleTruncated() {
+        DecorToolbar decorToolbar = this.mDecorToolbar;
+        return decorToolbar != null && decorToolbar.isTitleTruncated();
+    }
+
+    public void setHomeAsUpIndicator(Drawable drawable) {
+        this.mDecorToolbar.setNavigationIcon(drawable);
+    }
+
+    public void setHomeAsUpIndicator(int i) {
+        this.mDecorToolbar.setNavigationIcon(i);
+    }
+
+    public void setHomeActionContentDescription(CharSequence charSequence) {
+        this.mDecorToolbar.setNavigationContentDescription(charSequence);
+    }
+
+    public void setHomeActionContentDescription(int i) {
+        this.mDecorToolbar.setNavigationContentDescription(i);
+    }
+
     public void onContentScrollStarted() {
         ViewPropertyAnimatorCompatSet viewPropertyAnimatorCompatSet = this.mCurrentShowAnim;
         if (viewPropertyAnimatorCompatSet != null) {
@@ -488,7 +796,6 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         }
     }
 
-    @Override // androidx.appcompat.app.ActionBar
     public boolean collapseActionView() {
         DecorToolbar decorToolbar = this.mDecorToolbar;
         if (decorToolbar == null || !decorToolbar.hasExpandedActionView()) {
@@ -498,12 +805,17 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
         return true;
     }
 
-    /* loaded from: classes.dex */
     public class ActionModeImpl extends ActionMode implements MenuBuilder.Callback {
         private final Context mActionModeContext;
         private ActionMode.Callback mCallback;
         private WeakReference<View> mCustomView;
         private final MenuBuilder mMenu;
+
+        public void onCloseMenu(MenuBuilder menuBuilder, boolean z) {
+        }
+
+        public void onCloseSubMenu(SubMenuBuilder subMenuBuilder) {
+        }
 
         public ActionModeImpl(Context context, ActionMode.Callback callback) {
             this.mActionModeContext = context;
@@ -513,48 +825,39 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
             defaultShowAsAction.setCallback(this);
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public MenuInflater getMenuInflater() {
             return new SupportMenuInflater(this.mActionModeContext);
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public Menu getMenu() {
             return this.mMenu;
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public void finish() {
-            WindowDecorActionBar windowDecorActionBar = WindowDecorActionBar.this;
-            if (windowDecorActionBar.mActionMode != this) {
-                return;
+            if (WindowDecorActionBar.this.mActionMode == this) {
+                if (!WindowDecorActionBar.checkShowingFlags(WindowDecorActionBar.this.mHiddenByApp, WindowDecorActionBar.this.mHiddenBySystem, false)) {
+                    WindowDecorActionBar.this.mDeferredDestroyActionMode = this;
+                    WindowDecorActionBar.this.mDeferredModeDestroyCallback = this.mCallback;
+                } else {
+                    this.mCallback.onDestroyActionMode(this);
+                }
+                this.mCallback = null;
+                WindowDecorActionBar.this.animateToMode(false);
+                WindowDecorActionBar.this.mContextView.closeMode();
+                WindowDecorActionBar.this.mDecorToolbar.getViewGroup().sendAccessibilityEvent(32);
+                WindowDecorActionBar.this.mOverlayLayout.setHideOnContentScrollEnabled(WindowDecorActionBar.this.mHideOnContentScroll);
+                WindowDecorActionBar.this.mActionMode = null;
             }
-            if (!WindowDecorActionBar.checkShowingFlags(windowDecorActionBar.mHiddenByApp, windowDecorActionBar.mHiddenBySystem, false)) {
-                WindowDecorActionBar windowDecorActionBar2 = WindowDecorActionBar.this;
-                windowDecorActionBar2.mDeferredDestroyActionMode = this;
-                windowDecorActionBar2.mDeferredModeDestroyCallback = this.mCallback;
-            } else {
-                this.mCallback.onDestroyActionMode(this);
-            }
-            this.mCallback = null;
-            WindowDecorActionBar.this.animateToMode(false);
-            WindowDecorActionBar.this.mContextView.closeMode();
-            WindowDecorActionBar.this.mDecorToolbar.getViewGroup().sendAccessibilityEvent(32);
-            WindowDecorActionBar windowDecorActionBar3 = WindowDecorActionBar.this;
-            windowDecorActionBar3.mOverlayLayout.setHideOnContentScrollEnabled(windowDecorActionBar3.mHideOnContentScroll);
-            WindowDecorActionBar.this.mActionMode = null;
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public void invalidate() {
-            if (WindowDecorActionBar.this.mActionMode != this) {
-                return;
-            }
-            this.mMenu.stopDispatchingItemsChanged();
-            try {
-                this.mCallback.onPrepareActionMode(this, this.mMenu);
-            } finally {
-                this.mMenu.startDispatchingItemsChanged();
+            if (WindowDecorActionBar.this.mActionMode == this) {
+                this.mMenu.stopDispatchingItemsChanged();
+                try {
+                    this.mCallback.onPrepareActionMode(this, this.mMenu);
+                } finally {
+                    this.mMenu.startDispatchingItemsChanged();
+                }
             }
         }
 
@@ -567,54 +870,44 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
             }
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public void setCustomView(View view) {
             WindowDecorActionBar.this.mContextView.setCustomView(view);
             this.mCustomView = new WeakReference<>(view);
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public void setSubtitle(CharSequence charSequence) {
             WindowDecorActionBar.this.mContextView.setSubtitle(charSequence);
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public void setTitle(CharSequence charSequence) {
             WindowDecorActionBar.this.mContextView.setTitle(charSequence);
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public void setTitle(int i) {
-            setTitle(WindowDecorActionBar.this.mContext.getResources().getString(i));
+            setTitle((CharSequence) WindowDecorActionBar.this.mContext.getResources().getString(i));
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public void setSubtitle(int i) {
-            setSubtitle(WindowDecorActionBar.this.mContext.getResources().getString(i));
+            setSubtitle((CharSequence) WindowDecorActionBar.this.mContext.getResources().getString(i));
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public CharSequence getTitle() {
             return WindowDecorActionBar.this.mContextView.getTitle();
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public CharSequence getSubtitle() {
             return WindowDecorActionBar.this.mContextView.getSubtitle();
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public void setTitleOptionalHint(boolean z) {
             super.setTitleOptionalHint(z);
             WindowDecorActionBar.this.mContextView.setTitleOptional(z);
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public boolean isTitleOptional() {
             return WindowDecorActionBar.this.mContextView.isTitleOptional();
         }
 
-        @Override // androidx.appcompat.view.ActionMode
         public View getCustomView() {
             WeakReference<View> weakReference = this.mCustomView;
             if (weakReference != null) {
@@ -623,7 +916,6 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
             return null;
         }
 
-        @Override // androidx.appcompat.view.menu.MenuBuilder.Callback
         public boolean onMenuItemSelected(MenuBuilder menuBuilder, MenuItem menuItem) {
             ActionMode.Callback callback = this.mCallback;
             if (callback != null) {
@@ -632,24 +924,236 @@ public class WindowDecorActionBar extends ActionBar implements ActionBarOverlayL
             return false;
         }
 
-        @Override // androidx.appcompat.view.menu.MenuBuilder.Callback
-        public void onMenuModeChange(MenuBuilder menuBuilder) {
+        public boolean onSubMenuSelected(SubMenuBuilder subMenuBuilder) {
             if (this.mCallback == null) {
-                return;
+                return false;
             }
-            invalidate();
-            WindowDecorActionBar.this.mContextView.showOverflowMenu();
+            if (!subMenuBuilder.hasVisibleItems()) {
+                return true;
+            }
+            new MenuPopupHelper(WindowDecorActionBar.this.getThemedContext(), subMenuBuilder).show();
+            return true;
+        }
+
+        public void onMenuModeChange(MenuBuilder menuBuilder) {
+            if (this.mCallback != null) {
+                invalidate();
+                WindowDecorActionBar.this.mContextView.showOverflowMenu();
+            }
         }
     }
 
-    @Override // androidx.appcompat.app.ActionBar
+    public class TabImpl extends ActionBar.Tab {
+        private ActionBar.TabListener mCallback;
+        private CharSequence mContentDesc;
+        private View mCustomView;
+        private Drawable mIcon;
+        private int mPosition = -1;
+        private Object mTag;
+        private CharSequence mText;
+
+        public TabImpl() {
+        }
+
+        public Object getTag() {
+            return this.mTag;
+        }
+
+        public ActionBar.Tab setTag(Object obj) {
+            this.mTag = obj;
+            return this;
+        }
+
+        public ActionBar.TabListener getCallback() {
+            return this.mCallback;
+        }
+
+        public ActionBar.Tab setTabListener(ActionBar.TabListener tabListener) {
+            this.mCallback = tabListener;
+            return this;
+        }
+
+        public View getCustomView() {
+            return this.mCustomView;
+        }
+
+        public ActionBar.Tab setCustomView(View view) {
+            this.mCustomView = view;
+            if (this.mPosition >= 0) {
+                WindowDecorActionBar.this.mTabScrollView.updateTab(this.mPosition);
+            }
+            return this;
+        }
+
+        public ActionBar.Tab setCustomView(int i) {
+            return setCustomView(LayoutInflater.from(WindowDecorActionBar.this.getThemedContext()).inflate(i, (ViewGroup) null));
+        }
+
+        public Drawable getIcon() {
+            return this.mIcon;
+        }
+
+        public int getPosition() {
+            return this.mPosition;
+        }
+
+        public void setPosition(int i) {
+            this.mPosition = i;
+        }
+
+        public CharSequence getText() {
+            return this.mText;
+        }
+
+        public ActionBar.Tab setIcon(Drawable drawable) {
+            this.mIcon = drawable;
+            if (this.mPosition >= 0) {
+                WindowDecorActionBar.this.mTabScrollView.updateTab(this.mPosition);
+            }
+            return this;
+        }
+
+        public ActionBar.Tab setIcon(int i) {
+            return setIcon(AppCompatResources.getDrawable(WindowDecorActionBar.this.mContext, i));
+        }
+
+        public ActionBar.Tab setText(CharSequence charSequence) {
+            this.mText = charSequence;
+            if (this.mPosition >= 0) {
+                WindowDecorActionBar.this.mTabScrollView.updateTab(this.mPosition);
+            }
+            return this;
+        }
+
+        public ActionBar.Tab setText(int i) {
+            return setText(WindowDecorActionBar.this.mContext.getResources().getText(i));
+        }
+
+        public void select() {
+            WindowDecorActionBar.this.selectTab(this);
+        }
+
+        public ActionBar.Tab setContentDescription(int i) {
+            return setContentDescription(WindowDecorActionBar.this.mContext.getResources().getText(i));
+        }
+
+        public ActionBar.Tab setContentDescription(CharSequence charSequence) {
+            this.mContentDesc = charSequence;
+            if (this.mPosition >= 0) {
+                WindowDecorActionBar.this.mTabScrollView.updateTab(this.mPosition);
+            }
+            return this;
+        }
+
+        public CharSequence getContentDescription() {
+            return this.mContentDesc;
+        }
+    }
+
+    public void setCustomView(View view) {
+        this.mDecorToolbar.setCustomView(view);
+    }
+
+    public void setCustomView(View view, ActionBar.LayoutParams layoutParams) {
+        view.setLayoutParams(layoutParams);
+        this.mDecorToolbar.setCustomView(view);
+    }
+
+    public void setListNavigationCallbacks(SpinnerAdapter spinnerAdapter, ActionBar.OnNavigationListener onNavigationListener) {
+        this.mDecorToolbar.setDropdownParams(spinnerAdapter, new NavItemSelectedListener(onNavigationListener));
+    }
+
+    public int getSelectedNavigationIndex() {
+        TabImpl tabImpl;
+        int navigationMode = this.mDecorToolbar.getNavigationMode();
+        if (navigationMode == 1) {
+            return this.mDecorToolbar.getDropdownSelectedPosition();
+        }
+        if (navigationMode == 2 && (tabImpl = this.mSelectedTab) != null) {
+            return tabImpl.getPosition();
+        }
+        return -1;
+    }
+
+    public int getNavigationItemCount() {
+        int navigationMode = this.mDecorToolbar.getNavigationMode();
+        if (navigationMode == 1) {
+            return this.mDecorToolbar.getDropdownItemCount();
+        }
+        if (navigationMode != 2) {
+            return 0;
+        }
+        return this.mTabs.size();
+    }
+
+    public int getTabCount() {
+        return this.mTabs.size();
+    }
+
+    public void setNavigationMode(int i) {
+        ActionBarOverlayLayout actionBarOverlayLayout;
+        int navigationMode = this.mDecorToolbar.getNavigationMode();
+        if (navigationMode == 2) {
+            this.mSavedTabPosition = getSelectedNavigationIndex();
+            selectTab((ActionBar.Tab) null);
+            this.mTabScrollView.setVisibility(8);
+        }
+        if (!(navigationMode == i || this.mHasEmbeddedTabs || (actionBarOverlayLayout = this.mOverlayLayout) == null)) {
+            ViewCompat.requestApplyInsets(actionBarOverlayLayout);
+        }
+        this.mDecorToolbar.setNavigationMode(i);
+        boolean z = false;
+        if (i == 2) {
+            ensureTabsExist();
+            this.mTabScrollView.setVisibility(0);
+            int i2 = this.mSavedTabPosition;
+            if (i2 != -1) {
+                setSelectedNavigationItem(i2);
+                this.mSavedTabPosition = -1;
+            }
+        }
+        this.mDecorToolbar.setCollapsible(i == 2 && !this.mHasEmbeddedTabs);
+        ActionBarOverlayLayout actionBarOverlayLayout2 = this.mOverlayLayout;
+        if (i == 2 && !this.mHasEmbeddedTabs) {
+            z = true;
+        }
+        actionBarOverlayLayout2.setHasNonEmbeddedTabs(z);
+    }
+
+    public ActionBar.Tab getTabAt(int i) {
+        return this.mTabs.get(i);
+    }
+
+    public void setIcon(int i) {
+        this.mDecorToolbar.setIcon(i);
+    }
+
+    public void setIcon(Drawable drawable) {
+        this.mDecorToolbar.setIcon(drawable);
+    }
+
+    public boolean hasIcon() {
+        return this.mDecorToolbar.hasIcon();
+    }
+
+    public void setLogo(int i) {
+        this.mDecorToolbar.setLogo(i);
+    }
+
+    public void setLogo(Drawable drawable) {
+        this.mDecorToolbar.setLogo(drawable);
+    }
+
+    public boolean hasLogo() {
+        return this.mDecorToolbar.hasLogo();
+    }
+
     public void setDefaultDisplayHomeAsUpEnabled(boolean z) {
         if (!this.mDisplayHomeAsUpSet) {
             setDisplayHomeAsUpEnabled(z);
         }
     }
 
-    @Override // androidx.appcompat.app.ActionBar
     public boolean onKeyShortcut(int i, KeyEvent keyEvent) {
         Menu menu;
         ActionModeImpl actionModeImpl = this.mActionMode;

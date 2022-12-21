@@ -2,11 +2,15 @@ package com.android.systemui.statusbar.notification.collection;
 
 import android.app.Notification;
 import android.service.notification.StatusBarNotification;
+import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
+
+@Metadata(mo64986d1 = {"\u0000\u001a\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\u000b\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\u001a\f\u0010\u0002\u001a\u00020\u0003*\u00020\u0004H\u0002\u001a\f\u0010\u0005\u001a\u00020\u0003*\u00020\u0004H\u0002\u001a\f\u0010\u0006\u001a\u00020\u0003*\u00020\u0004H\u0002\u001a\f\u0010\u0007\u001a\u00020\u0003*\u00020\bH\u0002\"\u000e\u0010\u0000\u001a\u00020\u0001XT¢\u0006\u0002\n\u0000¨\u0006\t"}, mo64987d2 = {"TAG", "", "isColorizedForegroundService", "", "Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;", "isImportantCall", "isSystemMax", "isSystemNotification", "Landroid/service/notification/StatusBarNotification;", "SystemUI_nothingRelease"}, mo64988k = 2, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: NotificationRankingManager.kt */
-/* loaded from: classes.dex */
 public final class NotificationRankingManagerKt {
-    /* JADX INFO: Access modifiers changed from: private */
+    private static final String TAG = "NotifRankingManager";
+
+    /* access modifiers changed from: private */
     public static final boolean isSystemMax(NotificationEntry notificationEntry) {
         if (notificationEntry.getImportance() >= 4) {
             StatusBarNotification sbn = notificationEntry.getSbn();
@@ -19,15 +23,15 @@ public final class NotificationRankingManagerKt {
     }
 
     private static final boolean isSystemNotification(StatusBarNotification statusBarNotification) {
-        return Intrinsics.areEqual("android", statusBarNotification.getPackageName()) || Intrinsics.areEqual("com.android.systemui", statusBarNotification.getPackageName());
+        return Intrinsics.areEqual((Object) "android", (Object) statusBarNotification.getPackageName()) || Intrinsics.areEqual((Object) "com.android.systemui", (Object) statusBarNotification.getPackageName());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static final boolean isImportantCall(NotificationEntry notificationEntry) {
         return notificationEntry.getSbn().getNotification().isStyle(Notification.CallStyle.class) && notificationEntry.getImportance() > 1;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static final boolean isColorizedForegroundService(NotificationEntry notificationEntry) {
         Notification notification = notificationEntry.getSbn().getNotification();
         return notification.isForegroundService() && notification.isColorized() && notificationEntry.getImportance() > 1;

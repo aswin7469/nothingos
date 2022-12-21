@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:orientation="vertical" android:id="@+id/lay_view" android:layout_width="match_parent" android:layout_height="wrap_content">
+    <include android:id="@+id/headed_divider" android:visibility="gone" layout="@layout/horizontal_divider"/>
+    <com.nothing.systemui.p024qs.tiles.settings.panel.RowView android:gravity="center_vertical" android:layout_gravity="center_vertical" android:orientation="horizontal" android:id="@+id/row_view" android:background="?android:attr/selectableItemBackground" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="28dp" android:layout_marginBottom="@dimen/settings_panel_title_margin" android:layout_marginStart="@dimen/settings_panel_title_margin" android:layout_marginEnd="@dimen/settings_panel_title_margin">
+        <FrameLayout android:gravity="center" android:id="@+id/nt_icon_title_layout" android:background="@null" android:layout_width="@dimen/nt_panel_icon_title_height_medium" android:layout_height="@dimen/nt_panel_icon_title_height_medium" android:layout_marginEnd="15dp">
+            <ImageView android:layout_gravity="center" android:id="@+id/icon_title" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:scaleType="centerCrop"/>
+        </FrameLayout>
+        <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:id="@+id/content" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1">
+            <TextView android:textSize="14sp" android:textColor="?android:attr/textColorPrimary" android:id="@+id/title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1" android:fontFamily="google-sans-medium"/>
+            <TextView android:textSize="14sp" android:textColor="?android:attr/textColorSecondary" android:ellipsize="end" android:id="@+id/summary" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxLines="1"/>
+        </LinearLayout>
+        <ImageView android:id="@+id/arrow_forward" android:visibility="gone" android:layout_width="12dp" android:layout_height="12dp" android:src="@drawable/nt_forward_arrow" android:layout_marginEnd="24.42dp"/>
+        <View android:id="@+id/divider" android:background="?android:attr/listDivider" android:visibility="gone" android:layout_width="1dp" android:layout_height="24dp" android:layout_marginEnd="20dp"/>
+        <Switch android:id="@+id/switch_widget" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="match_parent" android:thumb="@drawable/switch_custom_thumb_selector" android:track="@drawable/switch_custom_track_selector" android:switchMinWidth="56dp"/>
+        <ImageView android:id="@+id/icon_action" android:background="?android:attr/selectableItemBackground" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:tint="?android:attr/colorAccent"/>
+        <LinearLayout android:gravity="center_vertical" android:orientation="vertical" android:id="@+id/expand_bluetooth_icon_container" android:visibility="gone" android:layout_width="48dp" android:layout_height="48dp">
+            <ImageView android:layout_gravity="right" android:id="@+id/expand_bluetooth_icon" android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/nt_ic_arrow_up" android:scaleType="center"/>
+        </LinearLayout>
+    </com.nothing.systemui.p024qs.tiles.settings.panel.RowView>
+    <LinearLayout android:orientation="vertical" android:id="@+id/expandeable_bluetooth_control_panel_parent" android:background="@drawable/control_panel_background" android:visibility="gone" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" android:layout_marginHorizontal="24dp"/>
+</LinearLayout>

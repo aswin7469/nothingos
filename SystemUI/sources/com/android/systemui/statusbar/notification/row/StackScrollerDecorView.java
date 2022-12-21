@@ -1,71 +1,62 @@
 package com.android.systemui.statusbar.notification.row;
 
+import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import com.android.internal.annotations.VisibleForTesting;
+import android.view.ViewOutlineProvider;
 import com.android.systemui.animation.Interpolators;
-/* loaded from: classes.dex */
+import java.util.function.Consumer;
+
 public abstract class StackScrollerDecorView extends ExpandableView {
     protected View mContent;
     private boolean mContentAnimating;
-    protected View mSecondaryView;
-    private boolean mIsVisible = true;
+    private final Runnable mContentVisibilityEndRunnable = new StackScrollerDecorView$$ExternalSyntheticLambda0(this);
     private boolean mContentVisible = true;
-    private boolean mIsSecondaryVisible = true;
     private int mDuration = 260;
-    private final Runnable mContentVisibilityEndRunnable = new Runnable() { // from class: com.android.systemui.statusbar.notification.row.StackScrollerDecorView$$ExternalSyntheticLambda1
-        @Override // java.lang.Runnable
-        public final void run() {
-            StackScrollerDecorView.this.lambda$new$0();
-        }
-    };
+    private boolean mIsSecondaryVisible = true;
+    private boolean mIsVisible = true;
     private boolean mSecondaryAnimating = false;
-    private final Runnable mSecondaryVisibilityEndRunnable = new Runnable() { // from class: com.android.systemui.statusbar.notification.row.StackScrollerDecorView$$ExternalSyntheticLambda0
-        @Override // java.lang.Runnable
-        public final void run() {
-            StackScrollerDecorView.this.lambda$new$1();
-        }
-    };
+    protected View mSecondaryView;
+    private final Consumer<Boolean> mSecondaryVisibilityEndRunnable = new StackScrollerDecorView$$ExternalSyntheticLambda1(this);
 
-    protected abstract View findContentView();
+    /* access modifiers changed from: protected */
+    public abstract View findContentView();
 
-    protected abstract View findSecondaryView();
+    /* access modifiers changed from: protected */
+    public abstract View findSecondaryView();
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView, android.view.View
     public boolean hasOverlappingRendering() {
         return false;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public boolean isTransparent() {
         return true;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public boolean needsClippingToShelf() {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-row-StackScrollerDecorView */
+    public /* synthetic */ void mo41743x61f35466() {
         this.mContentAnimating = false;
-        if (getVisibility() == 8 || this.mIsVisible) {
-            return;
+        if (getVisibility() != 8 && !this.mIsVisible) {
+            setVisibility(8);
+            setWillBeGone(false);
+            notifyHeightChanged(false);
         }
-        setVisibility(8);
-        setWillBeGone(false);
-        notifyHeightChanged(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$1() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$1$com-android-systemui-statusbar-notification-row-StackScrollerDecorView */
+    public /* synthetic */ void mo41744xe43e0945(Boolean bool) {
         this.mSecondaryAnimating = false;
-        if (this.mSecondaryView == null || getVisibility() == 8 || this.mSecondaryView.getVisibility() == 8 || this.mIsSecondaryVisible) {
-            return;
+        if (this.mSecondaryView != null && getVisibility() != 8 && this.mSecondaryView.getVisibility() != 8 && !this.mIsSecondaryVisible) {
+            this.mSecondaryView.setVisibility(8);
         }
-        this.mSecondaryView.setVisibility(8);
     }
 
     public StackScrollerDecorView(Context context, AttributeSet attributeSet) {
@@ -73,8 +64,7 @@ public abstract class StackScrollerDecorView extends ExpandableView {
         setClipChildren(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.View
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mContent = findContentView();
@@ -83,44 +73,43 @@ public abstract class StackScrollerDecorView extends ExpandableView {
         setSecondaryVisible(false, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView, android.widget.FrameLayout, android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
-        setOutlineProvider(null);
+        setOutlineProvider((ViewOutlineProvider) null);
     }
 
     public void setContentVisible(boolean z) {
-        setContentVisible(z, true, null);
+        setContentVisible(z, true, (Consumer<Boolean>) null);
     }
 
-    public void setContentVisible(boolean z, boolean z2, final Runnable runnable) {
+    public void setContentVisible(boolean z, boolean z2, Consumer<Boolean> consumer) {
         if (this.mContentVisible != z) {
             this.mContentAnimating = z2;
             this.mContentVisible = z;
-            setViewVisible(this.mContent, z, z2, runnable == null ? this.mContentVisibilityEndRunnable : new Runnable() { // from class: com.android.systemui.statusbar.notification.row.StackScrollerDecorView$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    StackScrollerDecorView.this.lambda$setContentVisible$2(runnable);
-                }
-            });
+            setViewVisible(this.mContent, z, z2, new StackScrollerDecorView$$ExternalSyntheticLambda2(this, consumer));
+        } else if (consumer != null) {
+            consumer.accept(true);
         }
         if (!this.mContentAnimating) {
             this.mContentVisibilityEndRunnable.run();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setContentVisible$2(Runnable runnable) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setContentVisible$2$com-android-systemui-statusbar-notification-row-StackScrollerDecorView */
+    public /* synthetic */ void mo41745x9f0c0a9(Consumer consumer, Boolean bool) {
         this.mContentVisibilityEndRunnable.run();
-        runnable.run();
+        if (consumer != null) {
+            consumer.accept(bool);
+        }
+    }
+
+    public boolean isContentVisible() {
+        return this.mContentVisible;
     }
 
     public void setVisible(boolean z, boolean z2) {
-        setVisible(z, z2, null);
-    }
-
-    public void setVisible(boolean z, boolean z2, Runnable runnable) {
         if (this.mIsVisible != z) {
             this.mIsVisible = z;
             if (z2) {
@@ -131,11 +120,11 @@ public abstract class StackScrollerDecorView extends ExpandableView {
                 } else {
                     setWillBeGone(true);
                 }
-                setContentVisible(z, true, runnable);
+                setContentVisible(z, true, (Consumer<Boolean>) null);
                 return;
             }
             setVisibility(z ? 0 : 8);
-            setContentVisible(z, false, runnable);
+            setContentVisible(z, false, (Consumer<Boolean>) null);
             setWillBeGone(false);
             notifyHeightChanged(false);
         }
@@ -148,12 +137,12 @@ public abstract class StackScrollerDecorView extends ExpandableView {
             setViewVisible(this.mSecondaryView, z, z2, this.mSecondaryVisibilityEndRunnable);
         }
         if (!this.mSecondaryAnimating) {
-            this.mSecondaryVisibilityEndRunnable.run();
+            this.mSecondaryVisibilityEndRunnable.accept(true);
         }
     }
 
-    @VisibleForTesting
-    boolean isSecondaryVisible() {
+    /* access modifiers changed from: package-private */
+    public boolean isSecondaryVisible() {
         return this.mIsSecondaryVisible;
     }
 
@@ -161,34 +150,50 @@ public abstract class StackScrollerDecorView extends ExpandableView {
         return this.mIsVisible;
     }
 
-    private void setViewVisible(View view, boolean z, boolean z2, Runnable runnable) {
-        if (view == null) {
-            return;
-        }
-        if (view.getVisibility() != 0) {
-            view.setVisibility(0);
-        }
-        view.animate().cancel();
-        float f = z ? 1.0f : 0.0f;
-        if (!z2) {
-            view.setAlpha(f);
-            if (runnable == null) {
+    /* access modifiers changed from: package-private */
+    public void setDuration(int i) {
+        this.mDuration = i;
+    }
+
+    private void setViewVisible(View view, boolean z, boolean z2, final Consumer<Boolean> consumer) {
+        if (view != null) {
+            if (view.getVisibility() != 0) {
+                view.setVisibility(0);
+            }
+            view.animate().cancel();
+            float f = z ? 1.0f : 0.0f;
+            if (!z2) {
+                view.setAlpha(f);
+                if (consumer != null) {
+                    consumer.accept(true);
+                    return;
+                }
                 return;
             }
-            runnable.run();
-            return;
+            view.animate().alpha(f).setInterpolator(z ? Interpolators.ALPHA_IN : Interpolators.ALPHA_OUT).setDuration((long) this.mDuration).setListener(new AnimatorListenerAdapter() {
+                boolean mCancelled;
+
+                public void onAnimationCancel(Animator animator) {
+                    this.mCancelled = true;
+                }
+
+                public void onAnimationEnd(Animator animator) {
+                    consumer.accept(Boolean.valueOf(this.mCancelled));
+                }
+            });
         }
-        view.animate().alpha(f).setInterpolator(z ? Interpolators.ALPHA_IN : Interpolators.ALPHA_OUT).setDuration(this.mDuration).withEndAction(runnable);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public long performRemoveAnimation(long j, long j2, float f, boolean z, float f2, Runnable runnable, AnimatorListenerAdapter animatorListenerAdapter) {
-        setContentVisible(false);
-        return 0L;
+        setContentVisible(false, true, new StackScrollerDecorView$$ExternalSyntheticLambda3(runnable));
+        return 0;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void performAddAnimation(long j, long j2, boolean z) {
+        setContentVisible(true);
+    }
+
+    public void performAddAnimation(long j, long j2, boolean z, Runnable runnable) {
         setContentVisible(true);
     }
 }

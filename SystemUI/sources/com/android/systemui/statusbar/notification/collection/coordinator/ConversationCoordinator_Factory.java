@@ -1,30 +1,31 @@
 package com.android.systemui.statusbar.notification.collection.coordinator;
 
 import com.android.systemui.statusbar.notification.collection.render.NodeController;
+import com.android.systemui.statusbar.notification.icon.ConversationIconManager;
 import com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifier;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ConversationCoordinator_Factory implements Factory<ConversationCoordinator> {
+    private final Provider<ConversationIconManager> conversationIconManagerProvider;
     private final Provider<NodeController> peopleHeaderControllerProvider;
     private final Provider<PeopleNotificationIdentifier> peopleNotificationIdentifierProvider;
 
-    public ConversationCoordinator_Factory(Provider<PeopleNotificationIdentifier> provider, Provider<NodeController> provider2) {
+    public ConversationCoordinator_Factory(Provider<PeopleNotificationIdentifier> provider, Provider<ConversationIconManager> provider2, Provider<NodeController> provider3) {
         this.peopleNotificationIdentifierProvider = provider;
-        this.peopleHeaderControllerProvider = provider2;
+        this.conversationIconManagerProvider = provider2;
+        this.peopleHeaderControllerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ConversationCoordinator mo1933get() {
-        return newInstance(this.peopleNotificationIdentifierProvider.mo1933get(), this.peopleHeaderControllerProvider.mo1933get());
+    public ConversationCoordinator get() {
+        return newInstance(this.peopleNotificationIdentifierProvider.get(), this.conversationIconManagerProvider.get(), this.peopleHeaderControllerProvider.get());
     }
 
-    public static ConversationCoordinator_Factory create(Provider<PeopleNotificationIdentifier> provider, Provider<NodeController> provider2) {
-        return new ConversationCoordinator_Factory(provider, provider2);
+    public static ConversationCoordinator_Factory create(Provider<PeopleNotificationIdentifier> provider, Provider<ConversationIconManager> provider2, Provider<NodeController> provider3) {
+        return new ConversationCoordinator_Factory(provider, provider2, provider3);
     }
 
-    public static ConversationCoordinator newInstance(PeopleNotificationIdentifier peopleNotificationIdentifier, NodeController nodeController) {
-        return new ConversationCoordinator(peopleNotificationIdentifier, nodeController);
+    public static ConversationCoordinator newInstance(PeopleNotificationIdentifier peopleNotificationIdentifier, ConversationIconManager conversationIconManager, NodeController nodeController) {
+        return new ConversationCoordinator(peopleNotificationIdentifier, conversationIconManager, nodeController);
     }
 }

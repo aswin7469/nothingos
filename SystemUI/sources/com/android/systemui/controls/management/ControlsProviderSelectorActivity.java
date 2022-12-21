@@ -16,79 +16,78 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.controller.ControlsController;
-import com.android.systemui.controls.ui.ControlsActivity;
-import com.android.systemui.controls.ui.ControlsUiController;
-import com.android.systemui.settings.CurrentUserTracker;
+import com.android.systemui.controls.p010ui.ControlsActivity;
+import com.android.systemui.controls.p010ui.ControlsUiController;
+import com.android.systemui.dagger.qualifiers.Background;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.util.LifecycleActivity;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.Executor;
-import kotlin.Unit;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u0000W\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005*\u0001\u0011\u0018\u0000 !2\u00020\u0001:\u0001!B;\b\u0007\u0012\b\b\u0001\u0010\u0002\u001a\u00020\u0003\u0012\b\b\u0001\u0010\u0004\u001a\u00020\u0003\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\u0006\u0010\u0007\u001a\u00020\b\u0012\u0006\u0010\t\u001a\u00020\n\u0012\u0006\u0010\u000b\u001a\u00020\f¢\u0006\u0002\u0010\rJ\b\u0010\u0015\u001a\u00020\u0016H\u0002J\u0010\u0010\u0017\u001a\u00020\u00162\b\u0010\u0018\u001a\u0004\u0018\u00010\u0019J\b\u0010\u001a\u001a\u00020\u0016H\u0016J\u0012\u0010\u001b\u001a\u00020\u00162\b\u0010\u001c\u001a\u0004\u0018\u00010\u001dH\u0014J\b\u0010\u001e\u001a\u00020\u0016H\u0014J\b\u0010\u001f\u001a\u00020\u0016H\u0014J\b\u0010 \u001a\u00020\u0016H\u0014R\u000e\u0010\u0004\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\u000fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\bX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0004\n\u0002\u0010\u0012R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0013\u001a\u00020\u0014X.¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u0004¢\u0006\u0002\n\u0000¨\u0006\""}, mo64987d2 = {"Lcom/android/systemui/controls/management/ControlsProviderSelectorActivity;", "Lcom/android/systemui/util/LifecycleActivity;", "executor", "Ljava/util/concurrent/Executor;", "backExecutor", "listingController", "Lcom/android/systemui/controls/management/ControlsListingController;", "controlsController", "Lcom/android/systemui/controls/controller/ControlsController;", "broadcastDispatcher", "Lcom/android/systemui/broadcast/BroadcastDispatcher;", "uiController", "Lcom/android/systemui/controls/ui/ControlsUiController;", "(Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;Lcom/android/systemui/controls/management/ControlsListingController;Lcom/android/systemui/controls/controller/ControlsController;Lcom/android/systemui/broadcast/BroadcastDispatcher;Lcom/android/systemui/controls/ui/ControlsUiController;)V", "backShouldExit", "", "currentUserTracker", "com/android/systemui/controls/management/ControlsProviderSelectorActivity$currentUserTracker$1", "Lcom/android/systemui/controls/management/ControlsProviderSelectorActivity$currentUserTracker$1;", "recyclerView", "Landroidx/recyclerview/widget/RecyclerView;", "animateExitAndFinish", "", "launchFavoritingActivity", "component", "Landroid/content/ComponentName;", "onBackPressed", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "onStart", "onStop", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ControlsProviderSelectorActivity.kt */
-/* loaded from: classes.dex */
 public final class ControlsProviderSelectorActivity extends LifecycleActivity {
-    @NotNull
-    public static final Companion Companion = new Companion(null);
-    @NotNull
+    public static final String BACK_SHOULD_EXIT = "back_should_exit";
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    private static final String TAG = "ControlsProviderSelectorActivity";
+    public Map<Integer, View> _$_findViewCache = new LinkedHashMap();
     private final Executor backExecutor;
     private boolean backShouldExit;
-    @NotNull
     private final BroadcastDispatcher broadcastDispatcher;
-    @NotNull
     private final ControlsController controlsController;
-    @NotNull
     private final ControlsProviderSelectorActivity$currentUserTracker$1 currentUserTracker;
-    @NotNull
     private final Executor executor;
-    @NotNull
-    private final ControlsListingController listingController;
-    private RecyclerView recyclerView;
-    @NotNull
+    /* access modifiers changed from: private */
+    public final ControlsListingController listingController;
+    /* access modifiers changed from: private */
+    public RecyclerView recyclerView;
     private final ControlsUiController uiController;
 
-    /* JADX WARN: Type inference failed for: r2v1, types: [com.android.systemui.controls.management.ControlsProviderSelectorActivity$currentUserTracker$1] */
-    public ControlsProviderSelectorActivity(@NotNull Executor executor, @NotNull Executor backExecutor, @NotNull ControlsListingController listingController, @NotNull ControlsController controlsController, @NotNull final BroadcastDispatcher broadcastDispatcher, @NotNull ControlsUiController uiController) {
-        Intrinsics.checkNotNullParameter(executor, "executor");
-        Intrinsics.checkNotNullParameter(backExecutor, "backExecutor");
-        Intrinsics.checkNotNullParameter(listingController, "listingController");
-        Intrinsics.checkNotNullParameter(controlsController, "controlsController");
-        Intrinsics.checkNotNullParameter(broadcastDispatcher, "broadcastDispatcher");
-        Intrinsics.checkNotNullParameter(uiController, "uiController");
-        this.executor = executor;
-        this.backExecutor = backExecutor;
-        this.listingController = listingController;
-        this.controlsController = controlsController;
-        this.broadcastDispatcher = broadcastDispatcher;
-        this.uiController = uiController;
-        this.currentUserTracker = new CurrentUserTracker(broadcastDispatcher) { // from class: com.android.systemui.controls.management.ControlsProviderSelectorActivity$currentUserTracker$1
-            private final int startingUser;
-
-            /* JADX INFO: Access modifiers changed from: package-private */
-            {
-                ControlsListingController controlsListingController;
-                controlsListingController = ControlsProviderSelectorActivity.this.listingController;
-                this.startingUser = controlsListingController.getCurrentUserId();
-            }
-
-            @Override // com.android.systemui.settings.CurrentUserTracker
-            public void onUserSwitched(int i) {
-                if (i != this.startingUser) {
-                    stopTracking();
-                    ControlsProviderSelectorActivity.this.finish();
-                }
-            }
-        };
+    public void _$_clearFindViewByIdCache() {
+        this._$_findViewCache.clear();
     }
 
+    public View _$_findCachedViewById(int i) {
+        Map<Integer, View> map = this._$_findViewCache;
+        View view = map.get(Integer.valueOf(i));
+        if (view != null) {
+            return view;
+        }
+        View findViewById = findViewById(i);
+        if (findViewById == null) {
+            return null;
+        }
+        map.put(Integer.valueOf(i), findViewById);
+        return findViewById;
+    }
+
+    @Inject
+    public ControlsProviderSelectorActivity(@Main Executor executor2, @Background Executor executor3, ControlsListingController controlsListingController, ControlsController controlsController2, BroadcastDispatcher broadcastDispatcher2, ControlsUiController controlsUiController) {
+        Intrinsics.checkNotNullParameter(executor2, "executor");
+        Intrinsics.checkNotNullParameter(executor3, "backExecutor");
+        Intrinsics.checkNotNullParameter(controlsListingController, "listingController");
+        Intrinsics.checkNotNullParameter(controlsController2, "controlsController");
+        Intrinsics.checkNotNullParameter(broadcastDispatcher2, "broadcastDispatcher");
+        Intrinsics.checkNotNullParameter(controlsUiController, "uiController");
+        this.executor = executor2;
+        this.backExecutor = executor3;
+        this.listingController = controlsListingController;
+        this.controlsController = controlsController2;
+        this.broadcastDispatcher = broadcastDispatcher2;
+        this.uiController = controlsUiController;
+        this.currentUserTracker = new ControlsProviderSelectorActivity$currentUserTracker$1(this, broadcastDispatcher2);
+    }
+
+    @Metadata(mo64986d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0006"}, mo64987d2 = {"Lcom/android/systemui/controls/management/ControlsProviderSelectorActivity$Companion;", "", "()V", "BACK_SHOULD_EXIT", "", "TAG", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: ControlsProviderSelectorActivity.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -98,49 +97,48 @@ public final class ControlsProviderSelectorActivity extends LifecycleActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.LifecycleActivity, android.app.Activity
-    public void onCreate(@Nullable Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(R$layout.controls_management);
-        Lifecycle mo1437getLifecycle = mo1437getLifecycle();
+        setContentView(C1893R.layout.controls_management);
+        Lifecycle lifecycle = getLifecycle();
         ControlsAnimations controlsAnimations = ControlsAnimations.INSTANCE;
-        View requireViewById = requireViewById(R$id.controls_management_root);
-        Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<ViewGroup>(R.id.controls_management_root)");
+        View requireViewById = requireViewById(C1893R.C1897id.controls_management_root);
+        Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<ViewGrou…controls_management_root)");
         Window window = getWindow();
         Intrinsics.checkNotNullExpressionValue(window, "window");
         Intent intent = getIntent();
         Intrinsics.checkNotNullExpressionValue(intent, "intent");
-        mo1437getLifecycle.addObserver(controlsAnimations.observerForAnimations((ViewGroup) requireViewById, window, intent));
-        ViewStub viewStub = (ViewStub) requireViewById(R$id.stub);
-        viewStub.setLayoutResource(R$layout.controls_management_apps);
+        lifecycle.addObserver(controlsAnimations.observerForAnimations((ViewGroup) requireViewById, window, intent));
+        ViewStub viewStub = (ViewStub) requireViewById(C1893R.C1897id.stub);
+        viewStub.setLayoutResource(C1893R.layout.controls_management_apps);
         viewStub.inflate();
-        View requireViewById2 = requireViewById(R$id.list);
+        View requireViewById2 = requireViewById(C1893R.C1897id.list);
         Intrinsics.checkNotNullExpressionValue(requireViewById2, "requireViewById(R.id.list)");
-        RecyclerView recyclerView = (RecyclerView) requireViewById2;
-        this.recyclerView = recyclerView;
-        if (recyclerView != null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            TextView textView = (TextView) requireViewById(R$id.title);
-            textView.setText(textView.getResources().getText(R$string.controls_providers_title));
-            Button button = (Button) requireViewById(R$id.other_apps);
-            button.setVisibility(0);
-            button.setText(17039360);
-            button.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.controls.management.ControlsProviderSelectorActivity$onCreate$3$1
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    ControlsProviderSelectorActivity.this.onBackPressed();
-                }
-            });
-            requireViewById(R$id.done).setVisibility(8);
-            this.backShouldExit = getIntent().getBooleanExtra("back_should_exit", false);
-            return;
+        RecyclerView recyclerView2 = (RecyclerView) requireViewById2;
+        this.recyclerView = recyclerView2;
+        if (recyclerView2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("recyclerView");
+            recyclerView2 = null;
         }
-        Intrinsics.throwUninitializedPropertyAccessException("recyclerView");
-        throw null;
+        recyclerView2.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        TextView textView = (TextView) requireViewById(C1893R.C1897id.title);
+        textView.setText(textView.getResources().getText(C1893R.string.controls_providers_title));
+        Button button = (Button) requireViewById(C1893R.C1897id.other_apps);
+        button.setVisibility(0);
+        button.setText(17039360);
+        button.setOnClickListener(new ControlsProviderSelectorActivity$$ExternalSyntheticLambda1(this));
+        requireViewById(C1893R.C1897id.done).setVisibility(8);
+        this.backShouldExit = getIntent().getBooleanExtra(BACK_SHOULD_EXIT, false);
     }
 
-    @Override // android.app.Activity
+    /* access modifiers changed from: private */
+    /* renamed from: onCreate$lambda-3$lambda-2  reason: not valid java name */
+    public static final void m2659onCreate$lambda3$lambda2(ControlsProviderSelectorActivity controlsProviderSelectorActivity, View view) {
+        Intrinsics.checkNotNullParameter(controlsProviderSelectorActivity, "this$0");
+        controlsProviderSelectorActivity.onBackPressed();
+    }
+
     public void onBackPressed() {
         if (!this.backShouldExit) {
             Intent intent = new Intent();
@@ -150,103 +148,69 @@ public final class ControlsProviderSelectorActivity extends LifecycleActivity {
         animateExitAndFinish();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.LifecycleActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onStart() {
         super.onStart();
-        startTracking();
-        RecyclerView recyclerView = this.recyclerView;
-        if (recyclerView == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("recyclerView");
-            throw null;
-        }
-        recyclerView.setAlpha(0.0f);
+        this.currentUserTracker.startTracking();
         RecyclerView recyclerView2 = this.recyclerView;
+        RecyclerView recyclerView3 = null;
         if (recyclerView2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("recyclerView");
-            throw null;
+            recyclerView2 = null;
         }
-        Executor executor = this.backExecutor;
-        Executor executor2 = this.executor;
-        Lifecycle mo1437getLifecycle = mo1437getLifecycle();
+        recyclerView2.setAlpha(0.0f);
+        RecyclerView recyclerView4 = this.recyclerView;
+        if (recyclerView4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("recyclerView");
+        } else {
+            recyclerView3 = recyclerView4;
+        }
         ControlsListingController controlsListingController = this.listingController;
         LayoutInflater from = LayoutInflater.from(this);
         Intrinsics.checkNotNullExpressionValue(from, "from(this)");
-        ControlsProviderSelectorActivity$onStart$1 controlsProviderSelectorActivity$onStart$1 = new ControlsProviderSelectorActivity$onStart$1(this);
         Resources resources = getResources();
         Intrinsics.checkNotNullExpressionValue(resources, "resources");
         FavoritesRenderer favoritesRenderer = new FavoritesRenderer(resources, new ControlsProviderSelectorActivity$onStart$2(this.controlsController));
         Resources resources2 = getResources();
         Intrinsics.checkNotNullExpressionValue(resources2, "resources");
-        AppAdapter appAdapter = new AppAdapter(executor, executor2, mo1437getLifecycle, controlsListingController, from, controlsProviderSelectorActivity$onStart$1, favoritesRenderer, resources2);
-        appAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() { // from class: com.android.systemui.controls.management.ControlsProviderSelectorActivity$onStart$3$1
-            private boolean hasAnimated;
-
-            @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
-            public void onChanged() {
-                RecyclerView recyclerView3;
-                if (!this.hasAnimated) {
-                    this.hasAnimated = true;
-                    ControlsAnimations controlsAnimations = ControlsAnimations.INSTANCE;
-                    recyclerView3 = ControlsProviderSelectorActivity.this.recyclerView;
-                    if (recyclerView3 != null) {
-                        controlsAnimations.enterAnimation(recyclerView3).start();
-                    } else {
-                        Intrinsics.throwUninitializedPropertyAccessException("recyclerView");
-                        throw null;
-                    }
-                }
-            }
-        });
-        Unit unit = Unit.INSTANCE;
-        recyclerView2.setAdapter(appAdapter);
+        AppAdapter appAdapter = new AppAdapter(this.backExecutor, this.executor, getLifecycle(), controlsListingController, from, new ControlsProviderSelectorActivity$onStart$1(this), favoritesRenderer, resources2);
+        appAdapter.registerAdapterDataObserver(new ControlsProviderSelectorActivity$onStart$3$1(this));
+        recyclerView3.setAdapter(appAdapter);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.LifecycleActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onStop() {
         super.onStop();
-        stopTracking();
+        this.currentUserTracker.stopTracking();
     }
 
-    public final void launchFavoritingActivity(@Nullable final ComponentName componentName) {
-        this.executor.execute(new Runnable() { // from class: com.android.systemui.controls.management.ControlsProviderSelectorActivity$launchFavoritingActivity$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                ControlsListingController controlsListingController;
-                ComponentName componentName2 = componentName;
-                if (componentName2 == null) {
-                    return;
-                }
-                ControlsProviderSelectorActivity controlsProviderSelectorActivity = this;
-                Intent intent = new Intent(controlsProviderSelectorActivity.getApplicationContext(), ControlsFavoritingActivity.class);
-                controlsListingController = controlsProviderSelectorActivity.listingController;
-                intent.putExtra("extra_app_label", controlsListingController.getAppLabel(componentName2));
-                intent.putExtra("android.intent.extra.COMPONENT_NAME", componentName2);
-                intent.putExtra("extra_from_provider_selector", true);
-                controlsProviderSelectorActivity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(controlsProviderSelectorActivity, new Pair[0]).toBundle());
-                controlsProviderSelectorActivity.animateExitAndFinish();
-            }
-        });
+    public final void launchFavoritingActivity(ComponentName componentName) {
+        this.executor.execute(new ControlsProviderSelectorActivity$$ExternalSyntheticLambda0(componentName, this));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.LifecycleActivity, android.app.Activity
+    /* access modifiers changed from: private */
+    /* renamed from: launchFavoritingActivity$lambda-8  reason: not valid java name */
+    public static final void m2658launchFavoritingActivity$lambda8(ComponentName componentName, ControlsProviderSelectorActivity controlsProviderSelectorActivity) {
+        Intrinsics.checkNotNullParameter(controlsProviderSelectorActivity, "this$0");
+        if (componentName != null) {
+            Intent intent = new Intent(controlsProviderSelectorActivity.getApplicationContext(), ControlsFavoritingActivity.class);
+            intent.putExtra(ControlsFavoritingActivity.EXTRA_APP, controlsProviderSelectorActivity.listingController.getAppLabel(componentName));
+            intent.putExtra("android.intent.extra.COMPONENT_NAME", componentName);
+            intent.putExtra(ControlsFavoritingActivity.EXTRA_FROM_PROVIDER_SELECTOR, true);
+            controlsProviderSelectorActivity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(controlsProviderSelectorActivity, new Pair[0]).toBundle());
+            controlsProviderSelectorActivity.animateExitAndFinish();
+        }
+    }
+
+    /* access modifiers changed from: protected */
     public void onDestroy() {
-        stopTracking();
+        this.currentUserTracker.stopTracking();
         super.onDestroy();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void animateExitAndFinish() {
-        ViewGroup rootView = (ViewGroup) requireViewById(R$id.controls_management_root);
-        ControlsAnimations controlsAnimations = ControlsAnimations.INSTANCE;
-        Intrinsics.checkNotNullExpressionValue(rootView, "rootView");
-        ControlsAnimations.exitAnimation(rootView, new Runnable() { // from class: com.android.systemui.controls.management.ControlsProviderSelectorActivity$animateExitAndFinish$1
-            @Override // java.lang.Runnable
-            public void run() {
-                ControlsProviderSelectorActivity.this.finish();
-            }
-        }).start();
+    private final void animateExitAndFinish() {
+        ViewGroup viewGroup = (ViewGroup) requireViewById(C1893R.C1897id.controls_management_root);
+        Intrinsics.checkNotNullExpressionValue(viewGroup, "rootView");
+        ControlsAnimations.exitAnimation(viewGroup, new ControlsProviderSelectorActivity$animateExitAndFinish$1(this)).start();
     }
 }

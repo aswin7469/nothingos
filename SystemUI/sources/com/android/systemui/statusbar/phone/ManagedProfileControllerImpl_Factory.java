@@ -4,7 +4,7 @@ import android.content.Context;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ManagedProfileControllerImpl_Factory implements Factory<ManagedProfileControllerImpl> {
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
     private final Provider<Context> contextProvider;
@@ -14,10 +14,8 @@ public final class ManagedProfileControllerImpl_Factory implements Factory<Manag
         this.broadcastDispatcherProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ManagedProfileControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get());
+    public ManagedProfileControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.broadcastDispatcherProvider.get());
     }
 
     public static ManagedProfileControllerImpl_Factory create(Provider<Context> provider, Provider<BroadcastDispatcher> provider2) {

@@ -2,22 +2,21 @@ package com.android.systemui.model;
 
 import android.util.Log;
 import com.android.systemui.Dumpable;
-import com.android.systemui.model.SysUiState;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.shared.system.QuickStepContract;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public class SysUiState implements Dumpable {
-    private static final String TAG = "SysUiState";
-    private int mFlags;
-    private final List<SysUiStateCallback> mCallbacks = new ArrayList();
-    private int mFlagsToSet = 0;
-    private int mFlagsToClear = 0;
 
-    /* loaded from: classes.dex */
+@SysUISingleton
+public class SysUiState implements Dumpable {
+    public static final boolean DEBUG = false;
+    private static final String TAG = "SysUiState";
+    private final List<SysUiStateCallback> mCallbacks = new ArrayList();
+    private int mFlags;
+    private int mFlagsToClear = 0;
+    private int mFlagsToSet = 0;
+
     public interface SysUiStateCallback {
         void onSystemUiStateChanged(int i);
     }
@@ -28,7 +27,7 @@ public class SysUiState implements Dumpable {
     }
 
     public void removeCallback(SysUiStateCallback sysUiStateCallback) {
-        this.mCallbacks.remove(sysUiStateCallback);
+        this.mCallbacks.remove((Object) sysUiStateCallback);
     }
 
     public int getFlags() {
@@ -52,28 +51,21 @@ public class SysUiState implements Dumpable {
 
     private void updateFlags(int i) {
         if (i != 0) {
-            String str = TAG;
-            Log.w(str, "Ignoring flag update for display: " + i, new Throwable());
+            Log.w(TAG, "Ignoring flag update for display: " + i, new Throwable());
             return;
         }
         int i2 = this.mFlags;
         notifyAndSetSystemUiStateChanged((this.mFlagsToSet | i2) & (~this.mFlagsToClear), i2);
     }
 
-    private void notifyAndSetSystemUiStateChanged(final int i, int i2) {
+    private void notifyAndSetSystemUiStateChanged(int i, int i2) {
         if (i != i2) {
-            this.mCallbacks.forEach(new Consumer() { // from class: com.android.systemui.model.SysUiState$$ExternalSyntheticLambda0
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    ((SysUiState.SysUiStateCallback) obj).onSystemUiStateChanged(i);
-                }
-            });
+            this.mCallbacks.forEach(new SysUiState$$ExternalSyntheticLambda0(i));
             this.mFlags = i;
         }
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("SysUiState state:");
         printWriter.print("  mSysUiStateFlags=");
         printWriter.println(this.mFlags);

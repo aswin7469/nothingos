@@ -7,40 +7,57 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.Trace;
 import android.util.DisplayMetrics;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dumpable;
-import com.android.systemui.R$dimen;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-/* loaded from: classes.dex */
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dump.DumpManager;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.p026io.PrintWriter;
+import javax.inject.Inject;
+
+@SysUISingleton
 public class WakefulnessLifecycle extends Lifecycle<Observer> implements Dumpable {
+    public static final int WAKEFULNESS_ASLEEP = 0;
+    public static final int WAKEFULNESS_AWAKE = 2;
+    public static final int WAKEFULNESS_GOING_TO_SLEEP = 3;
+    public static final int WAKEFULNESS_WAKING = 1;
     private final Context mContext;
     private final DisplayMetrics mDisplayMetrics;
-    private final IWallpaperManager mWallpaperManagerService;
-    private int mWakefulness = 2;
-    private int mLastWakeReason = 0;
-    private Point mLastWakeOriginLocation = null;
-    private int mLastSleepReason = 0;
     private Point mLastSleepOriginLocation = null;
+    private int mLastSleepReason = 0;
+    private Point mLastWakeOriginLocation = null;
+    private int mLastWakeReason = 0;
+    private int mWakefulness = 2;
+    private final IWallpaperManager mWallpaperManagerService;
 
-    /* loaded from: classes.dex */
     public interface Observer {
-        default void onFinishedGoingToSleep() {
+        void onFinishedGoingToSleep() {
         }
 
-        default void onFinishedWakingUp() {
+        void onFinishedWakingUp() {
         }
 
-        default void onStartedGoingToSleep() {
+        void onPostFinishedWakingUp() {
         }
 
-        default void onStartedWakingUp() {
+        void onStartedGoingToSleep() {
+        }
+
+        void onStartedWakingUp() {
         }
     }
 
-    public WakefulnessLifecycle(Context context, IWallpaperManager iWallpaperManager) {
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Wakefulness {
+    }
+
+    @Inject
+    public WakefulnessLifecycle(Context context, IWallpaperManager iWallpaperManager, DumpManager dumpManager) {
         this.mContext = context;
         this.mDisplayMetrics = context.getResources().getDisplayMetrics();
         this.mWallpaperManagerService = iWallpaperManager;
+        dumpManager.registerDumpable(getClass().getSimpleName(), this);
     }
 
     public int getWakefulness() {
@@ -56,85 +73,79 @@ public class WakefulnessLifecycle extends Lifecycle<Observer> implements Dumpabl
     }
 
     public void dispatchStartedWakingUp(int i) {
-        if (getWakefulness() == 1) {
-            return;
-        }
-        setWakefulness(1);
-        this.mLastWakeReason = i;
-        updateLastWakeOriginLocation();
-        IWallpaperManager iWallpaperManager = this.mWallpaperManagerService;
-        if (iWallpaperManager != null) {
-            try {
-                Point point = this.mLastWakeOriginLocation;
-                iWallpaperManager.notifyWakingUp(point.x, point.y, new Bundle());
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        if (getWakefulness() != 1) {
+            setWakefulness(1);
+            this.mLastWakeReason = i;
+            updateLastWakeOriginLocation();
+            IWallpaperManager iWallpaperManager = this.mWallpaperManagerService;
+            if (iWallpaperManager != null) {
+                try {
+                    iWallpaperManager.notifyWakingUp(this.mLastWakeOriginLocation.x, this.mLastWakeOriginLocation.y, new Bundle());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
+            dispatch(new WakefulnessLifecycle$$ExternalSyntheticLambda4());
         }
-        dispatch(WakefulnessLifecycle$$ExternalSyntheticLambda3.INSTANCE);
     }
 
     public void dispatchFinishedWakingUp() {
-        if (getWakefulness() == 2) {
-            return;
+        if (getWakefulness() != 2) {
+            setWakefulness(2);
+            dispatch(new WakefulnessLifecycle$$ExternalSyntheticLambda2());
+            dispatch(new WakefulnessLifecycle$$ExternalSyntheticLambda3());
         }
-        setWakefulness(2);
-        dispatch(WakefulnessLifecycle$$ExternalSyntheticLambda1.INSTANCE);
     }
 
     public void dispatchStartedGoingToSleep(int i) {
-        if (getWakefulness() == 3) {
-            return;
-        }
-        setWakefulness(3);
-        this.mLastSleepReason = i;
-        updateLastSleepOriginLocation();
-        IWallpaperManager iWallpaperManager = this.mWallpaperManagerService;
-        if (iWallpaperManager != null) {
-            try {
-                Point point = this.mLastSleepOriginLocation;
-                iWallpaperManager.notifyGoingToSleep(point.x, point.y, new Bundle());
-            } catch (RemoteException e) {
-                e.printStackTrace();
+        if (getWakefulness() != 3) {
+            setWakefulness(3);
+            this.mLastSleepReason = i;
+            updateLastSleepOriginLocation();
+            IWallpaperManager iWallpaperManager = this.mWallpaperManagerService;
+            if (iWallpaperManager != null) {
+                try {
+                    iWallpaperManager.notifyGoingToSleep(this.mLastSleepOriginLocation.x, this.mLastSleepOriginLocation.y, new Bundle());
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
             }
+            dispatch(new WakefulnessLifecycle$$ExternalSyntheticLambda0());
         }
-        dispatch(WakefulnessLifecycle$$ExternalSyntheticLambda2.INSTANCE);
     }
 
     public void dispatchFinishedGoingToSleep() {
-        if (getWakefulness() == 0) {
-            return;
+        if (getWakefulness() != 0) {
+            setWakefulness(0);
+            dispatch(new WakefulnessLifecycle$$ExternalSyntheticLambda1());
         }
-        setWakefulness(0);
-        dispatch(WakefulnessLifecycle$$ExternalSyntheticLambda0.INSTANCE);
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("WakefulnessLifecycle:");
         printWriter.println("  mWakefulness=" + this.mWakefulness);
     }
 
     private void setWakefulness(int i) {
         this.mWakefulness = i;
-        Trace.traceCounter(4096L, "wakefulness", i);
+        Trace.traceCounter(4096, "wakefulness", i);
     }
 
     private void updateLastWakeOriginLocation() {
         this.mLastWakeOriginLocation = null;
-        if (this.mLastWakeReason == 1) {
-            this.mLastWakeOriginLocation = getPowerButtonOrigin();
-        } else {
+        if (this.mLastWakeReason != 1) {
             this.mLastWakeOriginLocation = getDefaultWakeSleepOrigin();
+        } else {
+            this.mLastWakeOriginLocation = getPowerButtonOrigin();
         }
     }
 
     private void updateLastSleepOriginLocation() {
         this.mLastSleepOriginLocation = null;
-        if (this.mLastSleepReason == 4) {
-            this.mLastSleepOriginLocation = getPowerButtonOrigin();
-        } else {
+        if (this.mLastSleepReason != 4) {
             this.mLastSleepOriginLocation = getDefaultWakeSleepOrigin();
+        } else {
+            this.mLastSleepOriginLocation = getPowerButtonOrigin();
         }
     }
 
@@ -144,13 +155,12 @@ public class WakefulnessLifecycle extends Lifecycle<Observer> implements Dumpabl
             z = false;
         }
         if (z) {
-            return new Point(this.mDisplayMetrics.widthPixels, this.mContext.getResources().getDimensionPixelSize(R$dimen.physical_power_button_center_screen_location_y));
+            return new Point(this.mDisplayMetrics.widthPixels, this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.physical_power_button_center_screen_location_y));
         }
-        return new Point(this.mContext.getResources().getDimensionPixelSize(R$dimen.physical_power_button_center_screen_location_y), this.mDisplayMetrics.heightPixels);
+        return new Point(this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.physical_power_button_center_screen_location_y), this.mDisplayMetrics.heightPixels);
     }
 
     private Point getDefaultWakeSleepOrigin() {
-        DisplayMetrics displayMetrics = this.mDisplayMetrics;
-        return new Point(displayMetrics.widthPixels / 2, displayMetrics.heightPixels);
+        return new Point(this.mDisplayMetrics.widthPixels / 2, this.mDisplayMetrics.heightPixels);
     }
 }

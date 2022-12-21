@@ -1,18 +1,17 @@
 package com.android.systemui.people.widget;
 
-import android.service.notification.ConversationChannelWrapper;
+import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLambda13 implements Predicate {
-    public static final /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda13 INSTANCE = new PeopleSpaceWidgetManager$$ExternalSyntheticLambda13();
 
-    private /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda13() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLambda13 implements Predicate {
+    public final /* synthetic */ PeopleSpaceWidgetManager f$0;
+
+    public /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda13(PeopleSpaceWidgetManager peopleSpaceWidgetManager) {
+        this.f$0 = peopleSpaceWidgetManager;
     }
 
-    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
-        boolean lambda$getRecentTiles$8;
-        lambda$getRecentTiles$8 = PeopleSpaceWidgetManager.lambda$getRecentTiles$8((ConversationChannelWrapper) obj);
-        return lambda$getRecentTiles$8;
+        return this.f$0.mo35177x6a1f398c((NotificationEntry) obj);
     }
 }

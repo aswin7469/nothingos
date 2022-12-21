@@ -10,14 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import com.android.settingslib.media.MediaDevice;
-import com.android.systemui.R$drawable;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.media.dialog.MediaOutputBaseAdapter;
-import com.android.systemui.media.dialog.MediaOutputGroupAdapter;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
-    private static final boolean DEBUG = Log.isLoggable("MediaOutputGroupAdapter", 3);
+    private static final boolean DEBUG = Log.isLoggable(TAG, 3);
+    private static final String TAG = "MediaOutputGroupAdapter";
     private final List<MediaDevice> mGroupMediaDevices;
 
     public MediaOutputGroupAdapter(MediaOutputController mediaOutputController) {
@@ -25,14 +24,11 @@ public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
         this.mGroupMediaDevices = mediaOutputController.getGroupMediaDevices();
     }
 
-    @Override // com.android.systemui.media.dialog.MediaOutputBaseAdapter, androidx.recyclerview.widget.RecyclerView.Adapter
-    /* renamed from: onCreateViewHolder  reason: collision with other method in class */
-    public MediaOutputBaseAdapter.MediaDeviceBaseViewHolder mo1838onCreateViewHolder(ViewGroup viewGroup, int i) {
-        super.mo1838onCreateViewHolder(viewGroup, i);
+    public MediaOutputBaseAdapter.MediaDeviceBaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        super.onCreateViewHolder(viewGroup, i);
         return new GroupViewHolder(this.mHolderView);
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public void onBindViewHolder(MediaOutputBaseAdapter.MediaDeviceBaseViewHolder mediaDeviceBaseViewHolder, int i) {
         boolean z = true;
         if (i == 0) {
@@ -47,49 +43,36 @@ public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
                 z = false;
             }
             mediaDeviceBaseViewHolder.onBind(mediaDevice, false, z, i);
-        } else if (!DEBUG) {
-        } else {
-            Log.d("MediaOutputGroupAdapter", "Incorrect position: " + i);
+        } else if (DEBUG) {
+            Log.d(TAG, "Incorrect position: " + i);
         }
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mGroupMediaDevices.size() + 1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.systemui.media.dialog.MediaOutputBaseAdapter
+    /* access modifiers changed from: package-private */
     public CharSequence getItemTitle(MediaDevice mediaDevice) {
         return super.getItemTitle(mediaDevice);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class GroupViewHolder extends MediaOutputBaseAdapter.MediaDeviceBaseViewHolder {
+    class GroupViewHolder extends MediaOutputBaseAdapter.MediaDeviceBaseViewHolder {
         GroupViewHolder(View view) {
             super(view);
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        @Override // com.android.systemui.media.dialog.MediaOutputBaseAdapter.MediaDeviceBaseViewHolder
-        public void onBind(final MediaDevice mediaDevice, boolean z, boolean z2, int i) {
+        /* access modifiers changed from: package-private */
+        public void onBind(MediaDevice mediaDevice, boolean z, boolean z2, int i) {
             super.onBind(mediaDevice, z, z2, i);
-            this.mDivider.setVisibility(8);
-            this.mAddIcon.setVisibility(8);
-            this.mBottomDivider.setVisibility(8);
             this.mCheckBox.setVisibility(0);
-            this.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() { // from class: com.android.systemui.media.dialog.MediaOutputGroupAdapter$GroupViewHolder$$ExternalSyntheticLambda0
-                @Override // android.widget.CompoundButton.OnCheckedChangeListener
-                public final void onCheckedChanged(CompoundButton compoundButton, boolean z3) {
-                    MediaOutputGroupAdapter.GroupViewHolder.this.lambda$onBind$0(mediaDevice, compoundButton, z3);
-                }
-            });
+            this.mCheckBox.setOnCheckedChangeListener(new C2229x1869e5b0(this, mediaDevice));
+            boolean z3 = this.mSeekBar.getVisibility() == 8;
             setTwoLineLayout(mediaDevice, false, true, false, false);
-            initSeekbar(mediaDevice);
+            initSeekbar(mediaDevice, z3);
             List<MediaDevice> selectedMediaDevice = MediaOutputGroupAdapter.this.mController.getSelectedMediaDevice();
             if (isDeviceIncluded(MediaOutputGroupAdapter.this.mController.getSelectableMediaDevice(), mediaDevice)) {
-                this.mCheckBox.setButtonDrawable(R$drawable.ic_check_box);
+                this.mCheckBox.setButtonDrawable(C1893R.C1895drawable.ic_check_box);
                 this.mCheckBox.setChecked(false);
                 this.mCheckBox.setEnabled(true);
             } else if (!isDeviceIncluded(selectedMediaDevice, mediaDevice)) {
@@ -100,28 +83,24 @@ public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
                     this.mCheckBox.setEnabled(false);
                     return;
                 }
-                this.mCheckBox.setButtonDrawable(R$drawable.ic_check_box);
+                this.mCheckBox.setButtonDrawable(C1893R.C1895drawable.ic_check_box);
                 this.mCheckBox.setChecked(true);
                 this.mCheckBox.setEnabled(true);
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onBind$0(MediaDevice mediaDevice, CompoundButton compoundButton, boolean z) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onBind$0$com-android-systemui-media-dialog-MediaOutputGroupAdapter$GroupViewHolder */
+        public /* synthetic */ void mo34463x27986ca6(MediaDevice mediaDevice, CompoundButton compoundButton, boolean z) {
             onCheckBoxClicked(z, mediaDevice);
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        @Override // com.android.systemui.media.dialog.MediaOutputBaseAdapter.MediaDeviceBaseViewHolder
+        /* access modifiers changed from: package-private */
         public void onBind(int i, boolean z, boolean z2) {
-            super.onBind(i, z, z2);
             if (i == 2) {
-                setTwoLineLayout(MediaOutputGroupAdapter.this.mContext.getText(R$string.media_output_dialog_group), true, true, false, false);
+                setTwoLineLayout(MediaOutputGroupAdapter.this.mContext.getText(C1893R.string.media_output_dialog_group), true, true, false, false);
                 this.mTitleIcon.setImageDrawable(getSpeakerDrawable());
-                this.mBottomDivider.setVisibility(0);
                 this.mCheckBox.setVisibility(8);
-                this.mDivider.setVisibility(8);
-                this.mAddIcon.setVisibility(8);
                 initSessionSeekbar();
             }
         }
@@ -129,14 +108,13 @@ public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
         private void onCheckBoxClicked(boolean z, MediaDevice mediaDevice) {
             if (z && isDeviceIncluded(MediaOutputGroupAdapter.this.mController.getSelectableMediaDevice(), mediaDevice)) {
                 MediaOutputGroupAdapter.this.mController.addDeviceToPlayMedia(mediaDevice);
-            } else if (z || !isDeviceIncluded(MediaOutputGroupAdapter.this.mController.getDeselectableMediaDevice(), mediaDevice)) {
-            } else {
+            } else if (!z && isDeviceIncluded(MediaOutputGroupAdapter.this.mController.getDeselectableMediaDevice(), mediaDevice)) {
                 MediaOutputGroupAdapter.this.mController.removeDeviceFromPlayMedia(mediaDevice);
             }
         }
 
         private Drawable getDisabledCheckboxDrawable() {
-            Drawable mutate = MediaOutputGroupAdapter.this.mContext.getDrawable(R$drawable.ic_check_box_blue_24dp).mutate();
+            Drawable mutate = MediaOutputGroupAdapter.this.mContext.getDrawable(C1893R.C1895drawable.ic_check_box_blue_24dp).mutate();
             Canvas canvas = new Canvas(Bitmap.createBitmap(mutate.getIntrinsicWidth(), mutate.getIntrinsicHeight(), Bitmap.Config.ARGB_8888));
             TypedValue typedValue = new TypedValue();
             MediaOutputGroupAdapter.this.mContext.getTheme().resolveAttribute(16842803, typedValue, true);
@@ -147,8 +125,8 @@ public class MediaOutputGroupAdapter extends MediaOutputBaseAdapter {
         }
 
         private boolean isDeviceIncluded(List<MediaDevice> list, MediaDevice mediaDevice) {
-            for (MediaDevice mediaDevice2 : list) {
-                if (TextUtils.equals(mediaDevice2.getId(), mediaDevice.getId())) {
+            for (MediaDevice id : list) {
+                if (TextUtils.equals(id.getId(), mediaDevice.getId())) {
                     return true;
                 }
             }

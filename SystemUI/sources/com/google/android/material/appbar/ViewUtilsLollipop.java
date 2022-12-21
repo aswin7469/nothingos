@@ -8,20 +8,21 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
-import com.google.android.material.R$attr;
-import com.google.android.material.R$integer;
+import androidx.constraintlayout.motion.widget.Key;
+import com.google.android.material.C3621R;
 import com.google.android.material.internal.ThemeEnforcement;
-/* loaded from: classes2.dex */
+
 class ViewUtilsLollipop {
     private static final int[] STATE_LIST_ANIM_ATTRS = {16843848};
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void setBoundsViewOutlineProvider(View view) {
+    ViewUtilsLollipop() {
+    }
+
+    static void setBoundsViewOutlineProvider(View view) {
         view.setOutlineProvider(ViewOutlineProvider.BOUNDS);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void setStateListAnimatorFromAttrs(View view, AttributeSet attributeSet, int i, int i2) {
+    static void setStateListAnimatorFromAttrs(View view, AttributeSet attributeSet, int i, int i2) {
         Context context = view.getContext();
         TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, STATE_LIST_ANIM_ATTRS, i, i2, new int[0]);
         try {
@@ -33,14 +34,13 @@ class ViewUtilsLollipop {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static void setDefaultAppBarLayoutStateListAnimator(View view, float f) {
-        int integer = view.getResources().getInteger(R$integer.app_bar_elevation_anim_duration);
+    static void setDefaultAppBarLayoutStateListAnimator(View view, float f) {
+        int integer = view.getResources().getInteger(C3621R.integer.app_bar_elevation_anim_duration);
         StateListAnimator stateListAnimator = new StateListAnimator();
-        long j = integer;
-        stateListAnimator.addState(new int[]{16842766, R$attr.state_liftable, -R$attr.state_lifted}, ObjectAnimator.ofFloat(view, "elevation", 0.0f).setDuration(j));
-        stateListAnimator.addState(new int[]{16842766}, ObjectAnimator.ofFloat(view, "elevation", f).setDuration(j));
-        stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(view, "elevation", 0.0f).setDuration(0L));
+        long j = (long) integer;
+        stateListAnimator.addState(new int[]{16842910, C3621R.attr.state_liftable, -C3621R.attr.state_lifted}, ObjectAnimator.ofFloat(view, Key.ELEVATION, new float[]{0.0f}).setDuration(j));
+        stateListAnimator.addState(new int[]{16842910}, ObjectAnimator.ofFloat(view, Key.ELEVATION, new float[]{f}).setDuration(j));
+        stateListAnimator.addState(new int[0], ObjectAnimator.ofFloat(view, Key.ELEVATION, new float[]{0.0f}).setDuration(0));
         view.setStateListAnimator(stateListAnimator);
     }
 }

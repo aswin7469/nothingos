@@ -7,25 +7,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import androidx.fragment.R$styleable;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class FragmentLayoutInflaterFactory implements LayoutInflater.Factory2 {
+import androidx.fragment.C0664R;
+
+class FragmentLayoutInflaterFactory implements LayoutInflater.Factory2 {
+    private static final String TAG = "FragmentManager";
     final FragmentManager mFragmentManager;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public FragmentLayoutInflaterFactory(FragmentManager fragmentManager) {
+    FragmentLayoutInflaterFactory(FragmentManager fragmentManager) {
         this.mFragmentManager = fragmentManager;
     }
 
-    @Override // android.view.LayoutInflater.Factory
     public View onCreateView(String str, Context context, AttributeSet attributeSet) {
-        return onCreateView(null, str, context, attributeSet);
+        return onCreateView((View) null, str, context, attributeSet);
     }
 
-    @Override // android.view.LayoutInflater.Factory2
     public View onCreateView(View view, String str, Context context, AttributeSet attributeSet) {
-        final FragmentStateManager createOrGetFragmentStateManager;
+        final FragmentStateManager fragmentStateManager;
         if (FragmentContainerView.class.getName().equals(str)) {
             return new FragmentContainerView(context, attributeSet, this.mFragmentManager);
         }
@@ -33,13 +30,13 @@ public class FragmentLayoutInflaterFactory implements LayoutInflater.Factory2 {
         if (!"fragment".equals(str)) {
             return null;
         }
-        String attributeValue = attributeSet.getAttributeValue(null, "class");
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.Fragment);
+        String attributeValue = attributeSet.getAttributeValue((String) null, "class");
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0664R.styleable.Fragment);
         if (attributeValue == null) {
-            attributeValue = obtainStyledAttributes.getString(R$styleable.Fragment_android_name);
+            attributeValue = obtainStyledAttributes.getString(C0664R.styleable.Fragment_android_name);
         }
-        int resourceId = obtainStyledAttributes.getResourceId(R$styleable.Fragment_android_id, -1);
-        String string = obtainStyledAttributes.getString(R$styleable.Fragment_android_tag);
+        int resourceId = obtainStyledAttributes.getResourceId(C0664R.styleable.Fragment_android_id, -1);
+        String string = obtainStyledAttributes.getString(C0664R.styleable.Fragment_android_tag);
         obtainStyledAttributes.recycle();
         if (attributeValue == null || !FragmentFactory.isFragmentClass(context.getClassLoader(), attributeValue)) {
             return null;
@@ -64,52 +61,47 @@ public class FragmentLayoutInflaterFactory implements LayoutInflater.Factory2 {
             fragment.mContainerId = id;
             fragment.mTag = string;
             fragment.mInLayout = true;
-            FragmentManager fragmentManager = this.mFragmentManager;
-            fragment.mFragmentManager = fragmentManager;
-            fragment.mHost = fragmentManager.getHost();
+            fragment.mFragmentManager = this.mFragmentManager;
+            fragment.mHost = this.mFragmentManager.getHost();
             fragment.onInflate(this.mFragmentManager.getHost().getContext(), attributeSet, fragment.mSavedFragmentState);
-            createOrGetFragmentStateManager = this.mFragmentManager.addFragment(fragment);
+            fragmentStateManager = this.mFragmentManager.addFragment(fragment);
             if (FragmentManager.isLoggingEnabled(2)) {
-                Log.v("FragmentManager", "Fragment " + fragment + " has been inflated via the <fragment> tag: id=0x" + Integer.toHexString(resourceId));
+                Log.v(TAG, "Fragment " + fragment + " has been inflated via the <fragment> tag: id=0x" + Integer.toHexString(resourceId));
             }
-        } else if (fragment.mInLayout) {
-            throw new IllegalArgumentException(attributeSet.getPositionDescription() + ": Duplicate id 0x" + Integer.toHexString(resourceId) + ", tag " + string + ", or parent id 0x" + Integer.toHexString(id) + " with another fragment for " + attributeValue);
-        } else {
+        } else if (!fragment.mInLayout) {
             fragment.mInLayout = true;
-            FragmentManager fragmentManager2 = this.mFragmentManager;
-            fragment.mFragmentManager = fragmentManager2;
-            fragment.mHost = fragmentManager2.getHost();
+            fragment.mFragmentManager = this.mFragmentManager;
+            fragment.mHost = this.mFragmentManager.getHost();
             fragment.onInflate(this.mFragmentManager.getHost().getContext(), attributeSet, fragment.mSavedFragmentState);
-            createOrGetFragmentStateManager = this.mFragmentManager.createOrGetFragmentStateManager(fragment);
+            fragmentStateManager = this.mFragmentManager.createOrGetFragmentStateManager(fragment);
             if (FragmentManager.isLoggingEnabled(2)) {
-                Log.v("FragmentManager", "Retained Fragment " + fragment + " has been re-attached via the <fragment> tag: id=0x" + Integer.toHexString(resourceId));
+                Log.v(TAG, "Retained Fragment " + fragment + " has been re-attached via the <fragment> tag: id=0x" + Integer.toHexString(resourceId));
             }
+        } else {
+            throw new IllegalArgumentException(attributeSet.getPositionDescription() + ": Duplicate id 0x" + Integer.toHexString(resourceId) + ", tag " + string + ", or parent id 0x" + Integer.toHexString(id) + " with another fragment for " + attributeValue);
         }
         fragment.mContainer = (ViewGroup) view;
-        createOrGetFragmentStateManager.moveToExpectedState();
-        createOrGetFragmentStateManager.ensureInflatedView();
-        View view2 = fragment.mView;
-        if (view2 == null) {
-            throw new IllegalStateException("Fragment " + attributeValue + " did not create a view.");
-        }
-        if (resourceId != 0) {
-            view2.setId(resourceId);
-        }
-        if (fragment.mView.getTag() == null) {
-            fragment.mView.setTag(string);
-        }
-        fragment.mView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() { // from class: androidx.fragment.app.FragmentLayoutInflaterFactory.1
-            @Override // android.view.View.OnAttachStateChangeListener
-            public void onViewDetachedFromWindow(View view3) {
+        fragmentStateManager.moveToExpectedState();
+        fragmentStateManager.ensureInflatedView();
+        if (fragment.mView != null) {
+            if (resourceId != 0) {
+                fragment.mView.setId(resourceId);
             }
+            if (fragment.mView.getTag() == null) {
+                fragment.mView.setTag(string);
+            }
+            fragment.mView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                public void onViewDetachedFromWindow(View view) {
+                }
 
-            @Override // android.view.View.OnAttachStateChangeListener
-            public void onViewAttachedToWindow(View view3) {
-                Fragment fragment2 = createOrGetFragmentStateManager.getFragment();
-                createOrGetFragmentStateManager.moveToExpectedState();
-                SpecialEffectsController.getOrCreateController((ViewGroup) fragment2.mView.getParent(), FragmentLayoutInflaterFactory.this.mFragmentManager).forceCompleteAllOperations();
-            }
-        });
-        return fragment.mView;
+                public void onViewAttachedToWindow(View view) {
+                    Fragment fragment = fragmentStateManager.getFragment();
+                    fragmentStateManager.moveToExpectedState();
+                    SpecialEffectsController.getOrCreateController((ViewGroup) fragment.mView.getParent(), FragmentLayoutInflaterFactory.this.mFragmentManager).forceCompleteAllOperations();
+                }
+            });
+            return fragment.mView;
+        }
+        throw new IllegalStateException("Fragment " + attributeValue + " did not create a view.");
     }
 }

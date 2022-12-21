@@ -1,36 +1,27 @@
 package androidx.preference;
 
-import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.view.View;
-import android.widget.TextView;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
-/* loaded from: classes.dex */
+
 public class PreferenceViewHolder extends RecyclerView.ViewHolder {
-    private Drawable mBackground;
     private final SparseArray<View> mCachedViews;
     private boolean mDividerAllowedAbove;
     private boolean mDividerAllowedBelow;
-    private ColorStateList mTitleTextColors;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public PreferenceViewHolder(View view) {
+    PreferenceViewHolder(View view) {
         super(view);
         SparseArray<View> sparseArray = new SparseArray<>(4);
         this.mCachedViews = sparseArray;
-        TextView textView = (TextView) view.findViewById(16908310);
-        sparseArray.put(16908310, textView);
+        sparseArray.put(16908310, view.findViewById(16908310));
         sparseArray.put(16908304, view.findViewById(16908304));
         sparseArray.put(16908294, view.findViewById(16908294));
-        int i = R$id.icon_frame;
-        sparseArray.put(i, view.findViewById(i));
-        sparseArray.put(16908350, view.findViewById(16908350));
-        this.mBackground = view.getBackground();
-        if (textView != null) {
-            this.mTitleTextColors = textView.getTextColors();
-        }
+        sparseArray.put(C1246R.C1249id.icon_frame, view.findViewById(C1246R.C1249id.icon_frame));
+        sparseArray.put(AndroidResources.ANDROID_R_ICON_FRAME, view.findViewById(AndroidResources.ANDROID_R_ICON_FRAME));
+    }
+
+    public static PreferenceViewHolder createInstanceForTests(View view) {
+        return new PreferenceViewHolder(view);
     }
 
     public View findViewById(int i) {
@@ -59,19 +50,5 @@ public class PreferenceViewHolder extends RecyclerView.ViewHolder {
 
     public void setDividerAllowedBelow(boolean z) {
         this.mDividerAllowedBelow = z;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void resetState() {
-        Drawable background = this.itemView.getBackground();
-        Drawable drawable = this.mBackground;
-        if (background != drawable) {
-            ViewCompat.setBackground(this.itemView, drawable);
-        }
-        TextView textView = (TextView) findViewById(16908310);
-        if (textView == null || this.mTitleTextColors == null || textView.getTextColors().equals(this.mTitleTextColors)) {
-            return;
-        }
-        textView.setTextColor(this.mTitleTextColors);
     }
 }

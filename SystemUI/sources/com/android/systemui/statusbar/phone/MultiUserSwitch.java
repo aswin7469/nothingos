@@ -3,37 +3,54 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import com.android.systemui.R$string;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+
 public class MultiUserSwitch extends FrameLayout {
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
     }
 
     public MultiUserSwitch(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void refreshContentDescription(String str) {
-        String string = !TextUtils.isEmpty(str) ? ((FrameLayout) this).mContext.getString(R$string.accessibility_quick_settings_user, str) : null;
-        if (!TextUtils.equals(getContentDescription(), string)) {
-            setContentDescription(string);
+        String str2;
+        if (!TextUtils.isEmpty(str)) {
+            str2 = this.mContext.getString(C1893R.string.accessibility_quick_settings_user, new Object[]{str});
+        } else {
+            str2 = null;
+        }
+        if (!TextUtils.equals(getContentDescription(), str2)) {
+            setContentDescription(str2);
         }
     }
 
-    @Override // android.view.View
     public void onInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         accessibilityEvent.setClassName(Button.class.getName());
     }
 
-    @Override // android.view.View
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
         accessibilityNodeInfo.setClassName(Button.class.getName());

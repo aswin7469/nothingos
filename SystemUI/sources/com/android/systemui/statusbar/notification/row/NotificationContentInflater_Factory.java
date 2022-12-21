@@ -7,7 +7,7 @@ import com.android.systemui.statusbar.policy.SmartReplyStateInflater;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationContentInflater_Factory implements Factory<NotificationContentInflater> {
     private final Provider<Executor> bgExecutorProvider;
     private final Provider<ConversationNotificationProcessor> conversationProcessorProvider;
@@ -25,10 +25,8 @@ public final class NotificationContentInflater_Factory implements Factory<Notifi
         this.smartRepliesInflaterProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationContentInflater mo1933get() {
-        return newInstance(this.remoteViewCacheProvider.mo1933get(), this.remoteInputManagerProvider.mo1933get(), this.conversationProcessorProvider.mo1933get(), this.mediaFeatureFlagProvider.mo1933get(), this.bgExecutorProvider.mo1933get(), this.smartRepliesInflaterProvider.mo1933get());
+    public NotificationContentInflater get() {
+        return newInstance(this.remoteViewCacheProvider.get(), this.remoteInputManagerProvider.get(), this.conversationProcessorProvider.get(), this.mediaFeatureFlagProvider.get(), this.bgExecutorProvider.get(), this.smartRepliesInflaterProvider.get());
     }
 
     public static NotificationContentInflater_Factory create(Provider<NotifRemoteViewCache> provider, Provider<NotificationRemoteInputManager> provider2, Provider<ConversationNotificationProcessor> provider3, Provider<MediaFeatureFlag> provider4, Provider<Executor> provider5, Provider<SmartReplyStateInflater> provider6) {

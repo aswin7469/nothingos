@@ -1,25 +1,10 @@
 package com.android.systemui.privacy;
 
-import android.content.Context;
-import com.android.systemui.privacy.PrivacyDialog;
-import com.android.systemui.privacy.PrivacyDialogController;
-import java.util.List;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function2;
-import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+import kotlin.Metadata;
+
+@Metadata(mo64986d1 = {"\u0000\t\n\u0000\n\u0002\b\u0003*\u0001\u0001\"\u0010\u0010\u0000\u001a\u00020\u0001X\u0004¢\u0006\u0004\n\u0002\u0010\u0002¨\u0006\u0003"}, mo64987d2 = {"defaultDialogProvider", "com/android/systemui/privacy/PrivacyDialogControllerKt$defaultDialogProvider$1", "Lcom/android/systemui/privacy/PrivacyDialogControllerKt$defaultDialogProvider$1;", "SystemUI_nothingRelease"}, mo64988k = 2, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: PrivacyDialogController.kt */
-/* loaded from: classes.dex */
 public final class PrivacyDialogControllerKt {
-    @NotNull
-    private static final PrivacyDialogControllerKt$defaultDialogProvider$1 defaultDialogProvider = new PrivacyDialogController.DialogProvider() { // from class: com.android.systemui.privacy.PrivacyDialogControllerKt$defaultDialogProvider$1
-        @Override // com.android.systemui.privacy.PrivacyDialogController.DialogProvider
-        @NotNull
-        public PrivacyDialog makeDialog(@NotNull Context context, @NotNull List<PrivacyDialog.PrivacyElement> list, @NotNull Function2<? super String, ? super Integer, Unit> starter) {
-            Intrinsics.checkNotNullParameter(context, "context");
-            Intrinsics.checkNotNullParameter(list, "list");
-            Intrinsics.checkNotNullParameter(starter, "starter");
-            return new PrivacyDialog(context, list, starter);
-        }
-    };
+    /* access modifiers changed from: private */
+    public static final PrivacyDialogControllerKt$defaultDialogProvider$1 defaultDialogProvider = new PrivacyDialogControllerKt$defaultDialogProvider$1();
 }

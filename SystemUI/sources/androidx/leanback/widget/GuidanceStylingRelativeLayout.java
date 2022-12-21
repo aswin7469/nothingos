@@ -6,43 +6,42 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import androidx.leanback.R$id;
-import androidx.leanback.R$styleable;
-/* loaded from: classes.dex */
+import androidx.leanback.C0742R;
+
 class GuidanceStylingRelativeLayout extends RelativeLayout {
     private float mTitleKeylinePercent;
 
     public GuidanceStylingRelativeLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    public GuidanceStylingRelativeLayout(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public GuidanceStylingRelativeLayout(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
     }
 
-    public GuidanceStylingRelativeLayout(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public GuidanceStylingRelativeLayout(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         this.mTitleKeylinePercent = getKeyLinePercent(context);
     }
 
     public static float getKeyLinePercent(Context context) {
-        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(R$styleable.LeanbackGuidedStepTheme);
-        float f = obtainStyledAttributes.getFloat(R$styleable.LeanbackGuidedStepTheme_guidedStepKeyline, 40.0f);
+        TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(C0742R.styleable.LeanbackGuidedStepTheme);
+        float f = obtainStyledAttributes.getFloat(C0742R.styleable.LeanbackGuidedStepTheme_guidedStepKeyline, 40.0f);
         obtainStyledAttributes.recycle();
         return f;
     }
 
-    @Override // android.widget.RelativeLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        super.onLayout(changed, l, t, r, b);
-        View findViewById = getRootView().findViewById(R$id.guidance_title);
-        View findViewById2 = getRootView().findViewById(R$id.guidance_breadcrumb);
-        View findViewById3 = getRootView().findViewById(R$id.guidance_description);
-        ImageView imageView = (ImageView) getRootView().findViewById(R$id.guidance_icon);
-        int measuredHeight = (int) ((getMeasuredHeight() * this.mTitleKeylinePercent) / 100.0f);
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
+        super.onLayout(z, i, i2, i3, i4);
+        View findViewById = getRootView().findViewById(C0742R.C0745id.guidance_title);
+        View findViewById2 = getRootView().findViewById(C0742R.C0745id.guidance_breadcrumb);
+        View findViewById3 = getRootView().findViewById(C0742R.C0745id.guidance_description);
+        ImageView imageView = (ImageView) getRootView().findViewById(C0742R.C0745id.guidance_icon);
+        int measuredHeight = (int) ((((float) getMeasuredHeight()) * this.mTitleKeylinePercent) / 100.0f);
         if (findViewById != null && findViewById.getParent() == this) {
             int baseline = (((measuredHeight - findViewById.getBaseline()) - findViewById2.getMeasuredHeight()) - findViewById.getPaddingTop()) - findViewById2.getTop();
-            if (findViewById2.getParent() == this) {
+            if (findViewById2 != null && findViewById2.getParent() == this) {
                 findViewById2.offsetTopAndBottom(baseline);
             }
             findViewById.offsetTopAndBottom(baseline);
@@ -50,9 +49,8 @@ class GuidanceStylingRelativeLayout extends RelativeLayout {
                 findViewById3.offsetTopAndBottom(baseline);
             }
         }
-        if (imageView == null || imageView.getParent() != this || imageView.getDrawable() == null) {
-            return;
+        if (imageView != null && imageView.getParent() == this && imageView.getDrawable() != null) {
+            imageView.offsetTopAndBottom(measuredHeight - (imageView.getMeasuredHeight() / 2));
         }
-        imageView.offsetTopAndBottom(measuredHeight - (imageView.getMeasuredHeight() / 2));
     }
 }

@@ -5,7 +5,7 @@ import android.hardware.display.ColorDisplayManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideColorDisplayManagerFactory implements Factory<ColorDisplayManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideColorDisplayManagerFactory imp
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ColorDisplayManager mo1933get() {
-        return provideColorDisplayManager(this.contextProvider.mo1933get());
+    public ColorDisplayManager get() {
+        return provideColorDisplayManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideColorDisplayManagerFactory create(Provider<Context> provider) {

@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.TextKeyListener;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,86 +22,82 @@ import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
-import com.android.systemui.R$bool;
-import com.android.systemui.R$color;
-import com.android.systemui.R$id;
+import com.android.settingslib.Utils;
+import com.android.systemui.C1893R;
 import com.android.systemui.classifier.FalsingCollector;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class KeyguardPasswordViewController extends KeyguardAbsKeyInputViewController<KeyguardPasswordView> {
+    private static final int DELAY_MILLIS_TO_REEVALUATE_IME_SWITCH_ICON = 500;
+    private final String TAG = "KeyguardPasswordViewController";
     private final InputMethodManager mInputMethodManager;
-    private final KeyguardSecurityCallback mKeyguardSecurityCallback;
+    /* access modifiers changed from: private */
+    public final KeyguardSecurityCallback mKeyguardSecurityCallback;
+    private final KeyguardViewController mKeyguardViewController;
+    private final LockPatternUtils mLockPatternUtils;
     private final DelayableExecutor mMainExecutor;
+    private final TextView.OnEditorActionListener mOnEditorActionListener = new KeyguardPasswordViewController$$ExternalSyntheticLambda0(this);
     private EditText mPasswordEntry;
+    private boolean mPaused;
     private final boolean mShowImeAtScreenOn;
-    private final TextView.OnEditorActionListener mOnEditorActionListener = new TextView.OnEditorActionListener() { // from class: com.android.keyguard.KeyguardPasswordViewController$$ExternalSyntheticLambda3
-        @Override // android.widget.TextView.OnEditorActionListener
-        public final boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-            boolean lambda$new$0;
-            lambda$new$0 = KeyguardPasswordViewController.this.lambda$new$0(textView, i, keyEvent);
-            return lambda$new$0;
-        }
-    };
-    private final TextWatcher mTextWatcher = new TextWatcher() { // from class: com.android.keyguard.KeyguardPasswordViewController.1
-        @Override // android.text.TextWatcher
+    private ImageView mSwitchImeButton;
+    private final TextWatcher mTextWatcher = new TextWatcher() {
         public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
         }
 
-        @Override // android.text.TextWatcher
         public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
             KeyguardPasswordViewController.this.mKeyguardSecurityCallback.userActivity();
         }
 
-        @Override // android.text.TextWatcher
         public void afterTextChanged(Editable editable) {
             if (!TextUtils.isEmpty(editable)) {
                 KeyguardPasswordViewController.this.onUserInput();
             }
         }
     };
-    private ImageView mSwitchImeButton = (ImageView) ((KeyguardPasswordView) this.mView).findViewById(R$id.switch_ime_button);
 
-    @Override // com.android.keyguard.KeyguardAbsKeyInputViewController, com.android.keyguard.KeyguardSecurityView
     public boolean needsInput() {
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$new$0(TextView textView, int i, KeyEvent keyEvent) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-keyguard-KeyguardPasswordViewController  reason: not valid java name */
+    public /* synthetic */ boolean m2287lambda$new$0$comandroidkeyguardKeyguardPasswordViewController(TextView textView, int i, KeyEvent keyEvent) {
         boolean z = keyEvent == null && (i == 0 || i == 6 || i == 5);
         boolean z2 = keyEvent != null && KeyEvent.isConfirmKey(keyEvent.getKeyCode()) && keyEvent.getAction() == 0;
-        if (z || z2) {
-            verifyPasswordAndUnlock();
-            return true;
+        if (!z && !z2) {
+            return false;
         }
-        return false;
+        verifyPasswordAndUnlock();
+        return true;
     }
 
-    @Override // com.android.keyguard.KeyguardAbsKeyInputViewController, com.android.keyguard.KeyguardInputViewController
     public void reloadColors() {
         super.reloadColors();
-        int color = ((KeyguardPasswordView) this.mView).getContext().getColor(R$color.nothingDefaultTextColor);
-        this.mPasswordEntry.setTextColor(color);
-        this.mPasswordEntry.setHighlightColor(color);
-        this.mPasswordEntry.setBackgroundTintList(ColorStateList.valueOf(color));
-        this.mPasswordEntry.setForegroundTintList(ColorStateList.valueOf(color));
-        this.mSwitchImeButton.setImageTintList(ColorStateList.valueOf(color));
+        int defaultColor = Utils.getColorAttr(((KeyguardPasswordView) this.mView).getContext(), 16842806).getDefaultColor();
+        this.mPasswordEntry.setTextColor(defaultColor);
+        this.mPasswordEntry.setHighlightColor(defaultColor);
+        this.mPasswordEntry.setBackgroundTintList(ColorStateList.valueOf(defaultColor));
+        this.mPasswordEntry.setForegroundTintList(ColorStateList.valueOf(defaultColor));
+        this.mSwitchImeButton.setImageTintList(ColorStateList.valueOf(defaultColor));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public KeyguardPasswordViewController(KeyguardPasswordView keyguardPasswordView, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardSecurityModel.SecurityMode securityMode, LockPatternUtils lockPatternUtils, KeyguardSecurityCallback keyguardSecurityCallback, KeyguardMessageAreaController.Factory factory, LatencyTracker latencyTracker, InputMethodManager inputMethodManager, EmergencyButtonController emergencyButtonController, DelayableExecutor delayableExecutor, Resources resources, FalsingCollector falsingCollector) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    protected KeyguardPasswordViewController(KeyguardPasswordView keyguardPasswordView, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardSecurityModel.SecurityMode securityMode, LockPatternUtils lockPatternUtils, KeyguardSecurityCallback keyguardSecurityCallback, KeyguardMessageAreaController.Factory factory, LatencyTracker latencyTracker, InputMethodManager inputMethodManager, EmergencyButtonController emergencyButtonController, @Main DelayableExecutor delayableExecutor, @Main Resources resources, FalsingCollector falsingCollector, KeyguardViewController keyguardViewController) {
         super(keyguardPasswordView, keyguardUpdateMonitor, securityMode, lockPatternUtils, keyguardSecurityCallback, factory, latencyTracker, falsingCollector, emergencyButtonController);
         this.mKeyguardSecurityCallback = keyguardSecurityCallback;
         this.mInputMethodManager = inputMethodManager;
         this.mMainExecutor = delayableExecutor;
-        this.mShowImeAtScreenOn = resources.getBoolean(R$bool.kg_show_ime_at_screen_on);
-        T t = this.mView;
-        this.mPasswordEntry = (EditText) ((KeyguardPasswordView) t).findViewById(((KeyguardPasswordView) t).getPasswordTextViewId());
+        this.mKeyguardViewController = keyguardViewController;
+        this.mShowImeAtScreenOn = resources.getBoolean(C1893R.bool.kg_show_ime_at_screen_on);
+        this.mPasswordEntry = (EditText) ((KeyguardPasswordView) this.mView).findViewById(((KeyguardPasswordView) this.mView).getPasswordTextViewId());
+        this.mSwitchImeButton = (ImageView) ((KeyguardPasswordView) this.mView).findViewById(C1893R.C1897id.switch_ime_button);
+        this.mLockPatternUtils = lockPatternUtils;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputViewController, com.android.keyguard.KeyguardInputViewController, com.android.systemui.util.ViewController
+    /* access modifiers changed from: protected */
     public void onViewAttached() {
         super.onViewAttached();
         this.mPasswordEntry.setTextOperationUser(UserHandle.of(KeyguardUpdateMonitor.getCurrentUser()));
@@ -109,143 +106,121 @@ public class KeyguardPasswordViewController extends KeyguardAbsKeyInputViewContr
         this.mPasswordEntry.setSelected(true);
         this.mPasswordEntry.setOnEditorActionListener(this.mOnEditorActionListener);
         this.mPasswordEntry.addTextChangedListener(this.mTextWatcher);
-        this.mPasswordEntry.setOnClickListener(new View.OnClickListener() { // from class: com.android.keyguard.KeyguardPasswordViewController$$ExternalSyntheticLambda2
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                KeyguardPasswordViewController.this.lambda$onViewAttached$1(view);
-            }
-        });
-        this.mSwitchImeButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.keyguard.KeyguardPasswordViewController$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                KeyguardPasswordViewController.this.lambda$onViewAttached$2(view);
-            }
-        });
-        View findViewById = ((KeyguardPasswordView) this.mView).findViewById(R$id.cancel_button);
+        this.mPasswordEntry.setOnClickListener(new KeyguardPasswordViewController$$ExternalSyntheticLambda2(this));
+        this.mSwitchImeButton.setOnClickListener(new KeyguardPasswordViewController$$ExternalSyntheticLambda3(this));
+        View findViewById = ((KeyguardPasswordView) this.mView).findViewById(C1893R.C1897id.cancel_button);
         if (findViewById != null) {
-            findViewById.setOnClickListener(new View.OnClickListener() { // from class: com.android.keyguard.KeyguardPasswordViewController$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    KeyguardPasswordViewController.this.lambda$onViewAttached$3(view);
-                }
-            });
+            findViewById.setOnClickListener(new KeyguardPasswordViewController$$ExternalSyntheticLambda4(this));
         }
         updateSwitchImeButton();
-        this.mMainExecutor.executeDelayed(new Runnable() { // from class: com.android.keyguard.KeyguardPasswordViewController$$ExternalSyntheticLambda4
-            @Override // java.lang.Runnable
-            public final void run() {
-                KeyguardPasswordViewController.this.updateSwitchImeButton();
-            }
-        }, 500L);
+        this.mMainExecutor.executeDelayed(new KeyguardPasswordViewController$$ExternalSyntheticLambda5(this), 500);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onViewAttached$1(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onViewAttached$1$com-android-keyguard-KeyguardPasswordViewController */
+    public /* synthetic */ void mo25944x7d32d6d(View view) {
         this.mKeyguardSecurityCallback.userActivity();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onViewAttached$2(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onViewAttached$2$com-android-keyguard-KeyguardPasswordViewController */
+    public /* synthetic */ void mo25945x950ddeee(View view) {
         this.mKeyguardSecurityCallback.userActivity();
         this.mInputMethodManager.showInputMethodPickerFromSystem(false, ((KeyguardPasswordView) this.mView).getContext().getDisplayId());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onViewAttached$3(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onViewAttached$3$com-android-keyguard-KeyguardPasswordViewController */
+    public /* synthetic */ void mo25946x2248906f(View view) {
         this.mKeyguardSecurityCallback.reset();
         this.mKeyguardSecurityCallback.onCancelClicked();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardInputViewController, com.android.systemui.util.ViewController
+    /* access modifiers changed from: protected */
     public void onViewDetached() {
         super.onViewDetached();
-        this.mPasswordEntry.setOnEditorActionListener(null);
+        this.mPasswordEntry.setOnEditorActionListener((TextView.OnEditorActionListener) null);
     }
 
-    @Override // com.android.keyguard.KeyguardAbsKeyInputViewController
-    void resetState() {
+    /* access modifiers changed from: package-private */
+    public void resetState() {
         this.mPasswordEntry.setTextOperationUser(UserHandle.of(KeyguardUpdateMonitor.getCurrentUser()));
-        this.mMessageAreaController.setMessage("");
+        this.mMessageAreaController.setMessage((CharSequence) "");
         boolean isEnabled = this.mPasswordEntry.isEnabled();
         ((KeyguardPasswordView) this.mView).setPasswordEntryEnabled(true);
         ((KeyguardPasswordView) this.mView).setPasswordEntryInputEnabled(true);
-        if (!this.mResumed || !this.mPasswordEntry.isVisibleToUser() || !isEnabled) {
-            return;
+        if (this.mResumed && this.mPasswordEntry.isVisibleToUser() && isEnabled) {
+            showInput();
         }
-        showInput();
     }
 
-    @Override // com.android.keyguard.KeyguardAbsKeyInputViewController, com.android.keyguard.KeyguardInputViewController
     public void onResume(int i) {
         super.onResume(i);
+        this.mPaused = false;
         if (i != 1 || this.mShowImeAtScreenOn) {
             showInput();
         }
     }
 
     private void showInput() {
-        ((KeyguardPasswordView) this.mView).post(new Runnable() { // from class: com.android.keyguard.KeyguardPasswordViewController$$ExternalSyntheticLambda6
-            @Override // java.lang.Runnable
-            public final void run() {
-                KeyguardPasswordViewController.this.lambda$showInput$4();
+        if (this.mKeyguardViewController.isBouncerShowing()) {
+            if (this.mLockPatternUtils.getLockoutAttemptDeadline(KeyguardUpdateMonitor.getCurrentUser()) > 0) {
+                Log.d("KeyguardPasswordViewController", "lockout return");
+            } else {
+                ((KeyguardPasswordView) this.mView).post(new KeyguardPasswordViewController$$ExternalSyntheticLambda1(this));
             }
-        });
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$showInput$4() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$showInput$4$com-android-keyguard-KeyguardPasswordViewController */
+    public /* synthetic */ void mo25947xbd13447b() {
         if (((KeyguardPasswordView) this.mView).isShown()) {
             this.mPasswordEntry.requestFocus();
-            this.mInputMethodManager.showSoftInput(this.mPasswordEntry, 1);
+            this.mPasswordEntry.getWindowInsetsController().show(WindowInsets.Type.ime());
         }
     }
 
-    @Override // com.android.keyguard.KeyguardAbsKeyInputViewController, com.android.keyguard.KeyguardInputViewController
     public void onPause() {
-        if (!this.mPasswordEntry.isVisibleToUser()) {
-            super.onPause();
-        } else {
-            ((KeyguardPasswordView) this.mView).setOnFinishImeAnimationRunnable(new Runnable() { // from class: com.android.keyguard.KeyguardPasswordViewController$$ExternalSyntheticLambda5
-                @Override // java.lang.Runnable
-                public final void run() {
-                    KeyguardPasswordViewController.this.lambda$onPause$5();
-                }
-            });
-        }
-        if (this.mPasswordEntry.isAttachedToWindow()) {
-            this.mPasswordEntry.getWindowInsetsController().hide(WindowInsets.Type.ime());
+        if (!this.mPaused) {
+            this.mPaused = true;
+            if (!this.mPasswordEntry.isVisibleToUser()) {
+                super.onPause();
+            } else {
+                ((KeyguardPasswordView) this.mView).setOnFinishImeAnimationRunnable(new KeyguardPasswordViewController$$ExternalSyntheticLambda6(this));
+            }
+            if (this.mPasswordEntry.isAttachedToWindow()) {
+                this.mPasswordEntry.getWindowInsetsController().hide(WindowInsets.Type.ime());
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onPause$5() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onPause$5$com-android-keyguard-KeyguardPasswordViewController */
+    public /* synthetic */ void mo25943xe8e06fc6() {
         this.mPasswordEntry.clearFocus();
         super.onPause();
     }
 
-    @Override // com.android.keyguard.KeyguardSecurityView
     public void onStartingToHide() {
         if (this.mPasswordEntry.isAttachedToWindow()) {
             this.mPasswordEntry.getWindowInsetsController().hide(WindowInsets.Type.ime());
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateSwitchImeButton() {
         boolean z = this.mSwitchImeButton.getVisibility() == 0;
         boolean hasMultipleEnabledIMEsOrSubtypes = hasMultipleEnabledIMEsOrSubtypes(this.mInputMethodManager, false);
         if (z != hasMultipleEnabledIMEsOrSubtypes) {
             this.mSwitchImeButton.setVisibility(hasMultipleEnabledIMEsOrSubtypes ? 0 : 8);
         }
-        this.mSwitchImeButton.setVisibility(8);
         if (this.mSwitchImeButton.getVisibility() != 0) {
             ViewGroup.LayoutParams layoutParams = this.mPasswordEntry.getLayoutParams();
-            if (!(layoutParams instanceof ViewGroup.MarginLayoutParams)) {
-                return;
+            if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+                ((ViewGroup.MarginLayoutParams) layoutParams).setMarginStart(0);
+                this.mPasswordEntry.setLayoutParams(layoutParams);
             }
-            ((ViewGroup.MarginLayoutParams) layoutParams).setMarginStart(0);
-            this.mPasswordEntry.setLayoutParams(layoutParams);
         }
     }
 
@@ -258,18 +233,23 @@ public class KeyguardPasswordViewController extends KeyguardAbsKeyInputViewContr
             List<InputMethodSubtype> enabledInputMethodSubtypeList = inputMethodManager.getEnabledInputMethodSubtypeList(inputMethodInfo, true);
             if (!enabledInputMethodSubtypeList.isEmpty()) {
                 int i2 = 0;
-                for (InputMethodSubtype inputMethodSubtype : enabledInputMethodSubtypeList) {
-                    if (inputMethodSubtype.isAuxiliary()) {
+                for (InputMethodSubtype isAuxiliary : enabledInputMethodSubtypeList) {
+                    if (isAuxiliary.isAuxiliary()) {
                         i2++;
                     }
                 }
                 if (enabledInputMethodSubtypeList.size() - i2 <= 0) {
-                    if (z && i2 > 1) {
+                    if (z) {
+                        if (i2 <= 1) {
+                        }
                     }
                 }
             }
             i++;
         }
-        return i > 1 || inputMethodManager.getEnabledInputMethodSubtypeList(null, false).size() > 1;
+        if (i > 1 || inputMethodManager.getEnabledInputMethodSubtypeList((InputMethodInfo) null, false).size() > 1) {
+            return true;
+        }
+        return false;
     }
 }

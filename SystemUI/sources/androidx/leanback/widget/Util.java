@@ -3,19 +3,22 @@ package androidx.leanback.widget;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-/* loaded from: classes.dex */
+
 public class Util {
-    public static boolean isDescendant(ViewGroup parent, View child) {
-        while (child != null) {
-            if (child == parent) {
+    public static boolean isDescendant(ViewGroup viewGroup, View view) {
+        while (view != null) {
+            if (view == viewGroup) {
                 return true;
             }
-            ViewParent parent2 = child.getParent();
-            if (!(parent2 instanceof View)) {
+            ViewParent parent = view.getParent();
+            if (!(parent instanceof View)) {
                 return false;
             }
-            child = (View) parent2;
+            view = (View) parent;
         }
         return false;
+    }
+
+    private Util() {
     }
 }

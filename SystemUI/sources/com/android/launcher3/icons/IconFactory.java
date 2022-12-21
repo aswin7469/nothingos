@@ -1,7 +1,7 @@
 package com.android.launcher3.icons;
 
 import android.content.Context;
-/* loaded from: classes.dex */
+
 public class IconFactory extends BaseIconFactory {
     private static IconFactory sPool;
     private static int sPoolId;
@@ -17,7 +17,15 @@ public class IconFactory extends BaseIconFactory {
                 iconFactory.next = null;
                 return iconFactory;
             }
-            return new IconFactory(context, context.getResources().getConfiguration().densityDpi, context.getResources().getDimensionPixelSize(R$dimen.default_icon_bitmap_size), sPoolId);
+            int i = sPoolId;
+            return new IconFactory(context, context.getResources().getConfiguration().densityDpi, context.getResources().getDimensionPixelSize(C1693R.dimen.default_icon_bitmap_size), i);
+        }
+    }
+
+    public static void clearPool() {
+        synchronized (sPoolSync) {
+            sPool = null;
+            sPoolId++;
         }
     }
 
@@ -28,16 +36,14 @@ public class IconFactory extends BaseIconFactory {
 
     public void recycle() {
         synchronized (sPoolSync) {
-            if (sPoolId != this.mPoolId) {
-                return;
+            if (sPoolId == this.mPoolId) {
+                clear();
+                this.next = sPool;
+                sPool = this;
             }
-            clear();
-            this.next = sPool;
-            sPool = this;
         }
     }
 
-    @Override // com.android.launcher3.icons.BaseIconFactory, java.lang.AutoCloseable
     public void close() {
         recycle();
     }

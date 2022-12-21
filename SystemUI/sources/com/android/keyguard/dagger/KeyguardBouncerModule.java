@@ -5,23 +5,30 @@ import android.view.ViewGroup;
 import com.android.keyguard.KeyguardHostView;
 import com.android.keyguard.KeyguardSecurityContainer;
 import com.android.keyguard.KeyguardSecurityViewFlipper;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+import com.android.systemui.dagger.qualifiers.RootView;
+import dagger.Module;
+import dagger.Provides;
+
+@Module
 public interface KeyguardBouncerModule {
-    static ViewGroup providesRootView(LayoutInflater layoutInflater) {
-        return (ViewGroup) layoutInflater.inflate(R$layout.keyguard_bouncer, (ViewGroup) null);
+    @KeyguardBouncerScope
+    @Provides
+    static KeyguardHostView providesKeyguardHostView(@RootView ViewGroup viewGroup, LayoutInflater layoutInflater) {
+        KeyguardHostView keyguardHostView = (KeyguardHostView) layoutInflater.inflate(C1893R.layout.keyguard_host_view, viewGroup, false);
+        viewGroup.addView(keyguardHostView);
+        return keyguardHostView;
     }
 
-    static KeyguardHostView providesKeyguardHostView(ViewGroup viewGroup) {
-        return (KeyguardHostView) viewGroup.findViewById(R$id.keyguard_host_view);
-    }
-
+    @KeyguardBouncerScope
+    @Provides
     static KeyguardSecurityContainer providesKeyguardSecurityContainer(KeyguardHostView keyguardHostView) {
-        return (KeyguardSecurityContainer) keyguardHostView.findViewById(R$id.keyguard_security_container);
+        return (KeyguardSecurityContainer) keyguardHostView.findViewById(C1893R.C1897id.keyguard_security_container);
     }
 
+    @KeyguardBouncerScope
+    @Provides
     static KeyguardSecurityViewFlipper providesKeyguardSecurityViewFlipper(KeyguardSecurityContainer keyguardSecurityContainer) {
-        return (KeyguardSecurityViewFlipper) keyguardSecurityContainer.findViewById(R$id.view_flipper);
+        return (KeyguardSecurityViewFlipper) keyguardSecurityContainer.findViewById(C1893R.C1897id.view_flipper);
     }
 }

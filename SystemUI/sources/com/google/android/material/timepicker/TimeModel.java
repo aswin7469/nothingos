@@ -4,24 +4,19 @@ import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 import java.util.Arrays;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public class TimeModel implements Parcelable {
-    public static final Parcelable.Creator<TimeModel> CREATOR = new Parcelable.Creator<TimeModel>() { // from class: com.google.android.material.timepicker.TimeModel.1
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public TimeModel mo1870createFromParcel(Parcel parcel) {
+
+class TimeModel implements Parcelable {
+    public static final Parcelable.Creator<TimeModel> CREATOR = new Parcelable.Creator<TimeModel>() {
+        public TimeModel createFromParcel(Parcel parcel) {
             return new TimeModel(parcel);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public TimeModel[] mo1871newArray(int i) {
+        public TimeModel[] newArray(int i) {
             return new TimeModel[i];
         }
     };
+    public static final String NUMBER_FORMAT = "%d";
+    public static final String ZERO_LEADING_NUMBER_FORMAT = "%02d";
     final int format;
     int hour;
     private final MaxInputValidator hourInputValidator;
@@ -34,7 +29,6 @@ public class TimeModel implements Parcelable {
         return i >= 12 ? 1 : 0;
     }
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
@@ -61,6 +55,47 @@ public class TimeModel implements Parcelable {
         this(parcel.readInt(), parcel.readInt(), parcel.readInt(), parcel.readInt());
     }
 
+    public void setHourOfDay(int i) {
+        this.period = getPeriod(i);
+        this.hour = i;
+    }
+
+    public void setHour(int i) {
+        if (this.format == 1) {
+            this.hour = i;
+            return;
+        }
+        int i2 = 12;
+        int i3 = i % 12;
+        if (this.period != 1) {
+            i2 = 0;
+        }
+        this.hour = i3 + i2;
+    }
+
+    public void setMinute(int i) {
+        this.minute = i % 60;
+    }
+
+    public int getHourForDisplay() {
+        if (this.format == 1) {
+            return this.hour % 24;
+        }
+        int i = this.hour;
+        if (i % 12 == 0) {
+            return 12;
+        }
+        return this.period == 1 ? i - 12 : i;
+    }
+
+    public MaxInputValidator getMinuteInputValidator() {
+        return this.minuteInputValidator;
+    }
+
+    public MaxInputValidator getHourInputValidator() {
+        return this.hourInputValidator;
+    }
+
     public int hashCode() {
         return Arrays.hashCode(new Object[]{Integer.valueOf(this.format), Integer.valueOf(this.hour), Integer.valueOf(this.minute), Integer.valueOf(this.selection)});
     }
@@ -73,10 +108,12 @@ public class TimeModel implements Parcelable {
             return false;
         }
         TimeModel timeModel = (TimeModel) obj;
-        return this.hour == timeModel.hour && this.minute == timeModel.minute && this.format == timeModel.format && this.selection == timeModel.selection;
+        if (this.hour == timeModel.hour && this.minute == timeModel.minute && this.format == timeModel.format && this.selection == timeModel.selection) {
+            return true;
+        }
+        return false;
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(this.hour);
         parcel.writeInt(this.minute);
@@ -84,11 +121,23 @@ public class TimeModel implements Parcelable {
         parcel.writeInt(this.format);
     }
 
+    public void setPeriod(int i) {
+        if (i != this.period) {
+            this.period = i;
+            int i2 = this.hour;
+            if (i2 < 12 && i == 1) {
+                this.hour = i2 + 12;
+            } else if (i2 >= 12 && i == 0) {
+                this.hour = i2 - 12;
+            }
+        }
+    }
+
     public static String formatText(Resources resources, CharSequence charSequence) {
-        return formatText(resources, charSequence, "%02d");
+        return formatText(resources, charSequence, ZERO_LEADING_NUMBER_FORMAT);
     }
 
     public static String formatText(Resources resources, CharSequence charSequence, String str) {
-        return String.format(resources.getConfiguration().locale, str, Integer.valueOf(Integer.parseInt(String.valueOf(charSequence))));
+        return String.format(resources.getConfiguration().locale, str, Integer.valueOf(Integer.parseInt(String.valueOf((Object) charSequence))));
     }
 }

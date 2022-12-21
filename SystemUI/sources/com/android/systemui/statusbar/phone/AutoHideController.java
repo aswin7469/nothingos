@@ -6,15 +6,16 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.IWindowManager;
 import android.view.MotionEvent;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.statusbar.AutoHideUiElement;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class AutoHideController {
-    private final Runnable mAutoHide = new Runnable() { // from class: com.android.systemui.statusbar.phone.AutoHideController$$ExternalSyntheticLambda1
-        @Override // java.lang.Runnable
-        public final void run() {
-            AutoHideController.this.lambda$new$0();
-        }
-    };
+    private static final long AUTO_HIDE_TIMEOUT_MS = 2250;
+    private static final String TAG = "AutoHideController";
+    private final Runnable mAutoHide = new AutoHideController$$ExternalSyntheticLambda0(this);
     private boolean mAutoHideSuspended;
     private int mDisplayId;
     private final Handler mHandler;
@@ -22,14 +23,16 @@ public class AutoHideController {
     private AutoHideUiElement mStatusBar;
     private final IWindowManager mWindowManagerService;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-AutoHideController */
+    public /* synthetic */ void mo43646x84907423() {
         if (isAnyTransientBarShown()) {
             hideTransientBars();
         }
     }
 
-    public AutoHideController(Context context, Handler handler, IWindowManager iWindowManager) {
+    @Inject
+    public AutoHideController(Context context, @Main Handler handler, IWindowManager iWindowManager) {
         this.mHandler = handler;
         this.mWindowManagerService = iWindowManager;
         this.mDisplayId = context.getDisplayId();
@@ -47,7 +50,7 @@ public class AutoHideController {
         try {
             this.mWindowManagerService.hideTransientBars(this.mDisplayId);
         } catch (RemoteException unused) {
-            Log.w("AutoHideController", "Cannot get WindowManager");
+            Log.w(TAG, "Cannot get WindowManager");
         }
         AutoHideUiElement autoHideUiElement = this.mStatusBar;
         if (autoHideUiElement != null) {
@@ -59,19 +62,16 @@ public class AutoHideController {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
     public void resumeSuspendedAutoHide() {
         if (this.mAutoHideSuspended) {
             scheduleAutoHide();
             Runnable checkBarModesRunnable = getCheckBarModesRunnable();
-            if (checkBarModesRunnable == null) {
-                return;
+            if (checkBarModesRunnable != null) {
+                this.mHandler.postDelayed(checkBarModesRunnable, 500);
             }
-            this.mHandler.postDelayed(checkBarModesRunnable, 500L);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
     public void suspendAutoHide() {
         this.mHandler.removeCallbacks(this.mAutoHide);
         Runnable checkBarModesRunnable = getCheckBarModesRunnable();
@@ -91,31 +91,23 @@ public class AutoHideController {
 
     private Runnable getCheckBarModesRunnable() {
         if (this.mStatusBar != null) {
-            return new Runnable() { // from class: com.android.systemui.statusbar.phone.AutoHideController$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    AutoHideController.this.lambda$getCheckBarModesRunnable$1();
-                }
-            };
+            return new AutoHideController$$ExternalSyntheticLambda1(this);
         }
-        if (this.mNavigationBar == null) {
-            return null;
+        if (this.mNavigationBar != null) {
+            return new AutoHideController$$ExternalSyntheticLambda2(this);
         }
-        return new Runnable() { // from class: com.android.systemui.statusbar.phone.AutoHideController$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                AutoHideController.this.lambda$getCheckBarModesRunnable$2();
-            }
-        };
+        return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$getCheckBarModesRunnable$1() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$getCheckBarModesRunnable$1$com-android-systemui-statusbar-phone-AutoHideController */
+    public /* synthetic */ void mo43644x3377612a() {
         this.mStatusBar.synchronizeState();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$getCheckBarModesRunnable$2() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$getCheckBarModesRunnable$2$com-android-systemui-statusbar-phone-AutoHideController */
+    public /* synthetic */ void mo43645x590b6a2b() {
         this.mNavigationBar.synchronizeState();
     }
 
@@ -126,7 +118,7 @@ public class AutoHideController {
 
     private void scheduleAutoHide() {
         cancelAutoHide();
-        this.mHandler.postDelayed(this.mAutoHide, 2250L);
+        this.mHandler.postDelayed(this.mAutoHide, AUTO_HIDE_TIMEOUT_MS);
     }
 
     public void checkUserAutoHide(MotionEvent motionEvent) {
@@ -146,15 +138,33 @@ public class AutoHideController {
 
     private void userAutoHide() {
         cancelAutoHide();
-        this.mHandler.postDelayed(this.mAutoHide, 350L);
+        this.mHandler.postDelayed(this.mAutoHide, 350);
     }
 
     private boolean isAnyTransientBarShown() {
         AutoHideUiElement autoHideUiElement = this.mStatusBar;
-        if (autoHideUiElement == null || !autoHideUiElement.isVisible()) {
-            AutoHideUiElement autoHideUiElement2 = this.mNavigationBar;
-            return autoHideUiElement2 != null && autoHideUiElement2.isVisible();
+        if (autoHideUiElement != null && autoHideUiElement.isVisible()) {
+            return true;
+        }
+        AutoHideUiElement autoHideUiElement2 = this.mNavigationBar;
+        if (autoHideUiElement2 == null || !autoHideUiElement2.isVisible()) {
+            return false;
         }
         return true;
+    }
+
+    public static class Factory {
+        private final Handler mHandler;
+        private final IWindowManager mIWindowManager;
+
+        @Inject
+        public Factory(@Main Handler handler, IWindowManager iWindowManager) {
+            this.mHandler = handler;
+            this.mIWindowManager = iWindowManager;
+        }
+
+        public AutoHideController create(Context context) {
+            return new AutoHideController(context, this.mHandler, this.mIWindowManager);
+        }
     }
 }

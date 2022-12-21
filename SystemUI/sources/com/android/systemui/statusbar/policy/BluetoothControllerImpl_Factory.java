@@ -6,7 +6,7 @@ import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.systemui.dump.DumpManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class BluetoothControllerImpl_Factory implements Factory<BluetoothControllerImpl> {
     private final Provider<Looper> bgLooperProvider;
     private final Provider<Context> contextProvider;
@@ -22,10 +22,8 @@ public final class BluetoothControllerImpl_Factory implements Factory<BluetoothC
         this.localBluetoothManagerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public BluetoothControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.bgLooperProvider.mo1933get(), this.mainLooperProvider.mo1933get(), this.localBluetoothManagerProvider.mo1933get());
+    public BluetoothControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.dumpManagerProvider.get(), this.bgLooperProvider.get(), this.mainLooperProvider.get(), this.localBluetoothManagerProvider.get());
     }
 
     public static BluetoothControllerImpl_Factory create(Provider<Context> provider, Provider<DumpManager> provider2, Provider<Looper> provider3, Provider<Looper> provider4, Provider<LocalBluetoothManager> provider5) {

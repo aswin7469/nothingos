@@ -1,23 +1,22 @@
 package androidx.slice.widget;
 
 import java.util.List;
-/* loaded from: classes.dex */
+
 class DisplayedListItems {
     private final List<SliceContent> mDisplayedItems;
     private final int mHiddenItemCount;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public DisplayedListItems(List<SliceContent> displayedItems, int hiddenItemCount) {
-        this.mDisplayedItems = displayedItems;
-        this.mHiddenItemCount = hiddenItemCount;
+    DisplayedListItems(List<SliceContent> list, int i) {
+        this.mDisplayedItems = list;
+        this.mHiddenItemCount = i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public List<SliceContent> getDisplayedItems() {
         return this.mDisplayedItems;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getHiddenItemCount() {
         return this.mHiddenItemCount;
     }

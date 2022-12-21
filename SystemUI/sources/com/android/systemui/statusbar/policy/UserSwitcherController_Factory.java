@@ -1,70 +1,87 @@
 package com.android.systemui.statusbar.policy;
 
-import android.app.IActivityTaskManager;
+import android.app.IActivityManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.os.Handler;
 import android.os.UserManager;
+import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.logging.UiEventLogger;
+import com.android.internal.util.LatencyTracker;
+import com.android.systemui.animation.DialogLaunchAnimator;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.broadcast.BroadcastSender;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.settings.UserTracker;
-import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.android.systemui.telephony.TelephonyListenerManager;
+import com.android.systemui.util.settings.GlobalSettings;
 import com.android.systemui.util.settings.SecureSettings;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class UserSwitcherController_Factory implements Factory<UserSwitcherController> {
+    private final Provider<IActivityManager> activityManagerProvider;
     private final Provider<ActivityStarter> activityStarterProvider;
-    private final Provider<IActivityTaskManager> activityTaskManagerProvider;
     private final Provider<Executor> bgExecutorProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
+    private final Provider<BroadcastSender> broadcastSenderProvider;
     private final Provider<Context> contextProvider;
     private final Provider<DevicePolicyManager> devicePolicyManagerProvider;
     private final Provider<DeviceProvisionedController> deviceProvisionedControllerProvider;
+    private final Provider<DialogLaunchAnimator> dialogLaunchAnimatorProvider;
+    private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<FalsingManager> falsingManagerProvider;
+    private final Provider<GlobalSettings> globalSettingsProvider;
     private final Provider<Handler> handlerProvider;
+    private final Provider<InteractionJankMonitor> interactionJankMonitorProvider;
     private final Provider<KeyguardStateController> keyguardStateControllerProvider;
+    private final Provider<LatencyTracker> latencyTrackerProvider;
+    private final Provider<Executor> longRunningExecutorProvider;
     private final Provider<SecureSettings> secureSettingsProvider;
     private final Provider<TelephonyListenerManager> telephonyListenerManagerProvider;
     private final Provider<UiEventLogger> uiEventLoggerProvider;
-    private final Provider<UserSwitcherController.UserDetailAdapter> userDetailAdapterProvider;
+    private final Provider<Executor> uiExecutorProvider;
     private final Provider<UserManager> userManagerProvider;
     private final Provider<UserTracker> userTrackerProvider;
 
-    public UserSwitcherController_Factory(Provider<Context> provider, Provider<UserManager> provider2, Provider<UserTracker> provider3, Provider<KeyguardStateController> provider4, Provider<DeviceProvisionedController> provider5, Provider<DevicePolicyManager> provider6, Provider<Handler> provider7, Provider<ActivityStarter> provider8, Provider<BroadcastDispatcher> provider9, Provider<UiEventLogger> provider10, Provider<FalsingManager> provider11, Provider<TelephonyListenerManager> provider12, Provider<IActivityTaskManager> provider13, Provider<UserSwitcherController.UserDetailAdapter> provider14, Provider<SecureSettings> provider15, Provider<Executor> provider16) {
+    public UserSwitcherController_Factory(Provider<Context> provider, Provider<IActivityManager> provider2, Provider<UserManager> provider3, Provider<UserTracker> provider4, Provider<KeyguardStateController> provider5, Provider<DeviceProvisionedController> provider6, Provider<DevicePolicyManager> provider7, Provider<Handler> provider8, Provider<ActivityStarter> provider9, Provider<BroadcastDispatcher> provider10, Provider<BroadcastSender> provider11, Provider<UiEventLogger> provider12, Provider<FalsingManager> provider13, Provider<TelephonyListenerManager> provider14, Provider<SecureSettings> provider15, Provider<GlobalSettings> provider16, Provider<Executor> provider17, Provider<Executor> provider18, Provider<Executor> provider19, Provider<InteractionJankMonitor> provider20, Provider<LatencyTracker> provider21, Provider<DumpManager> provider22, Provider<DialogLaunchAnimator> provider23) {
         this.contextProvider = provider;
-        this.userManagerProvider = provider2;
-        this.userTrackerProvider = provider3;
-        this.keyguardStateControllerProvider = provider4;
-        this.deviceProvisionedControllerProvider = provider5;
-        this.devicePolicyManagerProvider = provider6;
-        this.handlerProvider = provider7;
-        this.activityStarterProvider = provider8;
-        this.broadcastDispatcherProvider = provider9;
-        this.uiEventLoggerProvider = provider10;
-        this.falsingManagerProvider = provider11;
-        this.telephonyListenerManagerProvider = provider12;
-        this.activityTaskManagerProvider = provider13;
-        this.userDetailAdapterProvider = provider14;
+        this.activityManagerProvider = provider2;
+        this.userManagerProvider = provider3;
+        this.userTrackerProvider = provider4;
+        this.keyguardStateControllerProvider = provider5;
+        this.deviceProvisionedControllerProvider = provider6;
+        this.devicePolicyManagerProvider = provider7;
+        this.handlerProvider = provider8;
+        this.activityStarterProvider = provider9;
+        this.broadcastDispatcherProvider = provider10;
+        this.broadcastSenderProvider = provider11;
+        this.uiEventLoggerProvider = provider12;
+        this.falsingManagerProvider = provider13;
+        this.telephonyListenerManagerProvider = provider14;
         this.secureSettingsProvider = provider15;
-        this.bgExecutorProvider = provider16;
+        this.globalSettingsProvider = provider16;
+        this.bgExecutorProvider = provider17;
+        this.longRunningExecutorProvider = provider18;
+        this.uiExecutorProvider = provider19;
+        this.interactionJankMonitorProvider = provider20;
+        this.latencyTrackerProvider = provider21;
+        this.dumpManagerProvider = provider22;
+        this.dialogLaunchAnimatorProvider = provider23;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public UserSwitcherController mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.userManagerProvider.mo1933get(), this.userTrackerProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.deviceProvisionedControllerProvider.mo1933get(), this.devicePolicyManagerProvider.mo1933get(), this.handlerProvider.mo1933get(), this.activityStarterProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.uiEventLoggerProvider.mo1933get(), this.falsingManagerProvider.mo1933get(), this.telephonyListenerManagerProvider.mo1933get(), this.activityTaskManagerProvider.mo1933get(), this.userDetailAdapterProvider.mo1933get(), this.secureSettingsProvider.mo1933get(), this.bgExecutorProvider.mo1933get());
+    public UserSwitcherController get() {
+        return newInstance(this.contextProvider.get(), this.activityManagerProvider.get(), this.userManagerProvider.get(), this.userTrackerProvider.get(), this.keyguardStateControllerProvider.get(), this.deviceProvisionedControllerProvider.get(), this.devicePolicyManagerProvider.get(), this.handlerProvider.get(), this.activityStarterProvider.get(), this.broadcastDispatcherProvider.get(), this.broadcastSenderProvider.get(), this.uiEventLoggerProvider.get(), this.falsingManagerProvider.get(), this.telephonyListenerManagerProvider.get(), this.secureSettingsProvider.get(), this.globalSettingsProvider.get(), this.bgExecutorProvider.get(), this.longRunningExecutorProvider.get(), this.uiExecutorProvider.get(), this.interactionJankMonitorProvider.get(), this.latencyTrackerProvider.get(), this.dumpManagerProvider.get(), this.dialogLaunchAnimatorProvider.get());
     }
 
-    public static UserSwitcherController_Factory create(Provider<Context> provider, Provider<UserManager> provider2, Provider<UserTracker> provider3, Provider<KeyguardStateController> provider4, Provider<DeviceProvisionedController> provider5, Provider<DevicePolicyManager> provider6, Provider<Handler> provider7, Provider<ActivityStarter> provider8, Provider<BroadcastDispatcher> provider9, Provider<UiEventLogger> provider10, Provider<FalsingManager> provider11, Provider<TelephonyListenerManager> provider12, Provider<IActivityTaskManager> provider13, Provider<UserSwitcherController.UserDetailAdapter> provider14, Provider<SecureSettings> provider15, Provider<Executor> provider16) {
-        return new UserSwitcherController_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16);
+    public static UserSwitcherController_Factory create(Provider<Context> provider, Provider<IActivityManager> provider2, Provider<UserManager> provider3, Provider<UserTracker> provider4, Provider<KeyguardStateController> provider5, Provider<DeviceProvisionedController> provider6, Provider<DevicePolicyManager> provider7, Provider<Handler> provider8, Provider<ActivityStarter> provider9, Provider<BroadcastDispatcher> provider10, Provider<BroadcastSender> provider11, Provider<UiEventLogger> provider12, Provider<FalsingManager> provider13, Provider<TelephonyListenerManager> provider14, Provider<SecureSettings> provider15, Provider<GlobalSettings> provider16, Provider<Executor> provider17, Provider<Executor> provider18, Provider<Executor> provider19, Provider<InteractionJankMonitor> provider20, Provider<LatencyTracker> provider21, Provider<DumpManager> provider22, Provider<DialogLaunchAnimator> provider23) {
+        return new UserSwitcherController_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18, provider19, provider20, provider21, provider22, provider23);
     }
 
-    public static UserSwitcherController newInstance(Context context, UserManager userManager, UserTracker userTracker, KeyguardStateController keyguardStateController, DeviceProvisionedController deviceProvisionedController, DevicePolicyManager devicePolicyManager, Handler handler, ActivityStarter activityStarter, BroadcastDispatcher broadcastDispatcher, UiEventLogger uiEventLogger, FalsingManager falsingManager, TelephonyListenerManager telephonyListenerManager, IActivityTaskManager iActivityTaskManager, UserSwitcherController.UserDetailAdapter userDetailAdapter, SecureSettings secureSettings, Executor executor) {
-        return new UserSwitcherController(context, userManager, userTracker, keyguardStateController, deviceProvisionedController, devicePolicyManager, handler, activityStarter, broadcastDispatcher, uiEventLogger, falsingManager, telephonyListenerManager, iActivityTaskManager, userDetailAdapter, secureSettings, executor);
+    public static UserSwitcherController newInstance(Context context, IActivityManager iActivityManager, UserManager userManager, UserTracker userTracker, KeyguardStateController keyguardStateController, DeviceProvisionedController deviceProvisionedController, DevicePolicyManager devicePolicyManager, Handler handler, ActivityStarter activityStarter, BroadcastDispatcher broadcastDispatcher, BroadcastSender broadcastSender, UiEventLogger uiEventLogger, FalsingManager falsingManager, TelephonyListenerManager telephonyListenerManager, SecureSettings secureSettings, GlobalSettings globalSettings, Executor executor, Executor executor2, Executor executor3, InteractionJankMonitor interactionJankMonitor, LatencyTracker latencyTracker, DumpManager dumpManager, DialogLaunchAnimator dialogLaunchAnimator) {
+        return new UserSwitcherController(context, iActivityManager, userManager, userTracker, keyguardStateController, deviceProvisionedController, devicePolicyManager, handler, activityStarter, broadcastDispatcher, broadcastSender, uiEventLogger, falsingManager, telephonyListenerManager, secureSettings, globalSettings, executor, executor2, executor3, interactionJankMonitor, latencyTracker, dumpManager, dialogLaunchAnimator);
     }
 }

@@ -6,44 +6,47 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.ArrayMap;
 import com.android.systemui.Dumpable;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.statusbar.NotificationListener;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.time.SystemClock;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class GroupCoalescer implements Dumpable {
+    private static final int MAX_GROUP_LINGER_DURATION = 500;
+    private static final int MIN_GROUP_LINGER_DURATION = 200;
     private final Map<String, EventBatch> mBatches;
     private final SystemClock mClock;
     private final Map<String, CoalescedEvent> mCoalescedEvents;
     private final Comparator<CoalescedEvent> mEventComparator;
-    private BatchableNotificationHandler mHandler;
+    /* access modifiers changed from: private */
+    public BatchableNotificationHandler mHandler;
     private final NotificationListener.NotificationHandler mListener;
-    private final GroupCoalescerLogger mLogger;
+    /* access modifiers changed from: private */
+    public final GroupCoalescerLogger mLogger;
     private final DelayableExecutor mMainExecutor;
     private final long mMaxGroupLingerDuration;
     private final long mMinGroupLingerDuration;
 
-    /* loaded from: classes.dex */
     public interface BatchableNotificationHandler extends NotificationListener.NotificationHandler {
         void onNotificationBatchPosted(List<CoalescedEvent> list);
     }
 
-    public GroupCoalescer(DelayableExecutor delayableExecutor, SystemClock systemClock, GroupCoalescerLogger groupCoalescerLogger) {
-        this(delayableExecutor, systemClock, groupCoalescerLogger, 50L, 500L);
+    @Inject
+    public GroupCoalescer(@Main DelayableExecutor delayableExecutor, SystemClock systemClock, GroupCoalescerLogger groupCoalescerLogger) {
+        this(delayableExecutor, systemClock, groupCoalescerLogger, 200, 500);
     }
 
-    GroupCoalescer(DelayableExecutor delayableExecutor, SystemClock systemClock, GroupCoalescerLogger groupCoalescerLogger, long j, long j2) {
+    GroupCoalescer(@Main DelayableExecutor delayableExecutor, SystemClock systemClock, GroupCoalescerLogger groupCoalescerLogger, long j, long j2) {
         this.mCoalescedEvents = new ArrayMap();
         this.mBatches = new ArrayMap();
-        this.mListener = new NotificationListener.NotificationHandler() { // from class: com.android.systemui.statusbar.notification.collection.coalescer.GroupCoalescer.1
-            @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
+        this.mListener = new NotificationListener.NotificationHandler() {
             public void onNotificationPosted(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
                 GroupCoalescer.this.maybeEmitBatch(statusBarNotification);
                 GroupCoalescer.this.applyRanking(rankingMap);
@@ -55,30 +58,32 @@ public class GroupCoalescer implements Dumpable {
                 GroupCoalescer.this.mHandler.onNotificationPosted(statusBarNotification, rankingMap);
             }
 
-            @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
+            public void onNotificationRemoved(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
+                GroupCoalescer.this.maybeEmitBatch(statusBarNotification);
+                GroupCoalescer.this.applyRanking(rankingMap);
+                GroupCoalescer.this.mHandler.onNotificationRemoved(statusBarNotification, rankingMap);
+            }
+
             public void onNotificationRemoved(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap, int i) {
                 GroupCoalescer.this.maybeEmitBatch(statusBarNotification);
                 GroupCoalescer.this.applyRanking(rankingMap);
                 GroupCoalescer.this.mHandler.onNotificationRemoved(statusBarNotification, rankingMap, i);
             }
 
-            @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
             public void onNotificationRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
                 GroupCoalescer.this.applyRanking(rankingMap);
                 GroupCoalescer.this.mHandler.onNotificationRankingUpdate(rankingMap);
             }
 
-            @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
             public void onNotificationsInitialized() {
                 GroupCoalescer.this.mHandler.onNotificationsInitialized();
             }
 
-            @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
             public void onNotificationChannelModified(String str, UserHandle userHandle, NotificationChannel notificationChannel, int i) {
                 GroupCoalescer.this.mHandler.onNotificationChannelModified(str, userHandle, notificationChannel, i);
             }
         };
-        this.mEventComparator = GroupCoalescer$$ExternalSyntheticLambda1.INSTANCE;
+        this.mEventComparator = new GroupCoalescer$$ExternalSyntheticLambda1();
         this.mMainExecutor = delayableExecutor;
         this.mClock = systemClock;
         this.mLogger = groupCoalescerLogger;
@@ -94,27 +99,20 @@ public class GroupCoalescer implements Dumpable {
         this.mHandler = batchableNotificationHandler;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void maybeEmitBatch(StatusBarNotification statusBarNotification) {
         CoalescedEvent coalescedEvent = this.mCoalescedEvents.get(statusBarNotification.getKey());
         EventBatch eventBatch = this.mBatches.get(statusBarNotification.getGroupKey());
         if (coalescedEvent != null) {
-            GroupCoalescerLogger groupCoalescerLogger = this.mLogger;
-            String key = statusBarNotification.getKey();
-            EventBatch batch = coalescedEvent.getBatch();
-            Objects.requireNonNull(batch);
-            groupCoalescerLogger.logEarlyEmit(key, batch.mGroupKey);
-            EventBatch batch2 = coalescedEvent.getBatch();
-            Objects.requireNonNull(batch2);
-            emitBatch(batch2);
-        } else if (eventBatch == null || this.mClock.uptimeMillis() - eventBatch.mCreatedTimestamp < this.mMaxGroupLingerDuration) {
-        } else {
+            this.mLogger.logEarlyEmit(statusBarNotification.getKey(), ((EventBatch) Objects.requireNonNull(coalescedEvent.getBatch())).mGroupKey);
+            emitBatch((EventBatch) Objects.requireNonNull(coalescedEvent.getBatch()));
+        } else if (eventBatch != null && this.mClock.uptimeMillis() - eventBatch.mCreatedTimestamp >= this.mMaxGroupLingerDuration) {
             this.mLogger.logMaxBatchTimeout(statusBarNotification.getKey(), eventBatch.mGroupKey);
             emitBatch(eventBatch);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean handleNotificationPosted(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
         if (this.mCoalescedEvents.containsKey(statusBarNotification.getKey())) {
             throw new IllegalStateException("Notification has already been coalesced: " + statusBarNotification.getKey());
@@ -132,29 +130,24 @@ public class GroupCoalescer implements Dumpable {
 
     private EventBatch getOrBuildBatch(String str) {
         EventBatch eventBatch = this.mBatches.get(str);
-        if (eventBatch == null) {
-            EventBatch eventBatch2 = new EventBatch(this.mClock.uptimeMillis(), str);
-            this.mBatches.put(str, eventBatch2);
-            return eventBatch2;
+        if (eventBatch != null) {
+            return eventBatch;
         }
-        return eventBatch;
+        EventBatch eventBatch2 = new EventBatch(this.mClock.uptimeMillis(), str);
+        this.mBatches.put(str, eventBatch2);
+        return eventBatch2;
     }
 
-    private void resetShortTimeout(final EventBatch eventBatch) {
-        Runnable runnable = eventBatch.mCancelShortTimeout;
-        if (runnable != null) {
-            runnable.run();
+    private void resetShortTimeout(EventBatch eventBatch) {
+        if (eventBatch.mCancelShortTimeout != null) {
+            eventBatch.mCancelShortTimeout.run();
         }
-        eventBatch.mCancelShortTimeout = this.mMainExecutor.executeDelayed(new Runnable() { // from class: com.android.systemui.statusbar.notification.collection.coalescer.GroupCoalescer$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                GroupCoalescer.this.lambda$resetShortTimeout$0(eventBatch);
-            }
-        }, this.mMinGroupLingerDuration);
+        eventBatch.mCancelShortTimeout = this.mMainExecutor.executeDelayed(new GroupCoalescer$$ExternalSyntheticLambda0(this, eventBatch), this.mMinGroupLingerDuration);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$resetShortTimeout$0(EventBatch eventBatch) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$resetShortTimeout$0$com-android-systemui-statusbar-notification-collection-coalescer-GroupCoalescer */
+    public /* synthetic */ void mo40164xba716d66(EventBatch eventBatch) {
         eventBatch.mCancelShortTimeout = null;
         emitBatch(eventBatch);
     }
@@ -162,23 +155,22 @@ public class GroupCoalescer implements Dumpable {
     private void emitBatch(EventBatch eventBatch) {
         if (eventBatch != this.mBatches.get(eventBatch.mGroupKey)) {
             throw new IllegalStateException("Cannot emit out-of-date batch " + eventBatch.mGroupKey);
-        } else if (eventBatch.mMembers.isEmpty()) {
-            throw new IllegalStateException("Batch " + eventBatch.mGroupKey + " cannot be empty");
-        } else {
-            Runnable runnable = eventBatch.mCancelShortTimeout;
-            if (runnable != null) {
-                runnable.run();
+        } else if (!eventBatch.mMembers.isEmpty()) {
+            if (eventBatch.mCancelShortTimeout != null) {
+                eventBatch.mCancelShortTimeout.run();
                 eventBatch.mCancelShortTimeout = null;
             }
             this.mBatches.remove(eventBatch.mGroupKey);
-            ArrayList<CoalescedEvent> arrayList = new ArrayList(eventBatch.mMembers);
+            ArrayList<CoalescedEvent> arrayList = new ArrayList<>(eventBatch.mMembers);
             for (CoalescedEvent coalescedEvent : arrayList) {
                 this.mCoalescedEvents.remove(coalescedEvent.getKey());
-                coalescedEvent.setBatch(null);
+                coalescedEvent.setBatch((EventBatch) null);
             }
             arrayList.sort(this.mEventComparator);
-            this.mLogger.logEmitBatch(eventBatch.mGroupKey);
+            this.mLogger.logEmitBatch(eventBatch.mGroupKey, eventBatch.mMembers.size(), this.mClock.uptimeMillis() - eventBatch.mCreatedTimestamp);
             this.mHandler.onNotificationBatchPosted(arrayList);
+        } else {
+            throw new IllegalStateException("Batch " + eventBatch.mGroupKey + " cannot be empty");
         }
     }
 
@@ -190,45 +182,41 @@ public class GroupCoalescer implements Dumpable {
         throw new IllegalArgumentException("Ranking map does not contain key " + str);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void applyRanking(NotificationListenerService.RankingMap rankingMap) {
-        for (CoalescedEvent coalescedEvent : this.mCoalescedEvents.values()) {
+        for (CoalescedEvent next : this.mCoalescedEvents.values()) {
             NotificationListenerService.Ranking ranking = new NotificationListenerService.Ranking();
-            if (rankingMap.getRanking(coalescedEvent.getKey(), ranking)) {
-                coalescedEvent.setRanking(ranking);
+            if (rankingMap.getRanking(next.getKey(), ranking)) {
+                next.setRanking(ranking);
             } else {
-                this.mLogger.logMissingRanking(coalescedEvent.getKey());
+                this.mLogger.logMissingRanking(next.getKey());
             }
         }
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         long uptimeMillis = this.mClock.uptimeMillis();
         printWriter.println();
         printWriter.println("Coalesced notifications:");
         int i = 0;
-        for (EventBatch eventBatch : this.mBatches.values()) {
-            printWriter.println("   Batch " + eventBatch.mGroupKey + ":");
-            printWriter.println("       Created " + (uptimeMillis - eventBatch.mCreatedTimestamp) + "ms ago");
-            Iterator<CoalescedEvent> it = eventBatch.mMembers.iterator();
-            while (it.hasNext()) {
-                printWriter.println("       " + it.next().getKey());
+        for (EventBatch next : this.mBatches.values()) {
+            printWriter.println("   Batch " + next.mGroupKey + ":");
+            printWriter.println("       Created " + (uptimeMillis - next.mCreatedTimestamp) + "ms ago");
+            for (CoalescedEvent key : next.mMembers) {
+                printWriter.println("       " + key.getKey());
                 i++;
             }
         }
         if (i != this.mCoalescedEvents.size()) {
             printWriter.println("    ERROR: batches contain " + this.mCoalescedEvents.size() + " events but am tracking " + this.mCoalescedEvents.size() + " total events");
             printWriter.println("    All tracked events:");
-            Iterator<CoalescedEvent> it2 = this.mCoalescedEvents.values().iterator();
-            while (it2.hasNext()) {
-                printWriter.println("        " + it2.next().getKey());
+            for (CoalescedEvent key2 : this.mCoalescedEvents.values()) {
+                printWriter.println("        " + key2.getKey());
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ int lambda$new$1(CoalescedEvent coalescedEvent, CoalescedEvent coalescedEvent2) {
+    static /* synthetic */ int lambda$new$1(CoalescedEvent coalescedEvent, CoalescedEvent coalescedEvent2) {
         int compare = Boolean.compare(coalescedEvent2.getSbn().getNotification().isGroupSummary(), coalescedEvent.getSbn().getNotification().isGroupSummary());
         return compare == 0 ? coalescedEvent.getPosition() - coalescedEvent2.getPosition() : compare;
     }

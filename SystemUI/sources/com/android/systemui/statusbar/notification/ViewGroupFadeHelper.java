@@ -1,40 +1,41 @@
 package com.android.systemui.statusbar.notification;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.graphics.Paint;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Objects;
 import java.util.Set;
+import kotlin.Metadata;
+import kotlin.jvm.JvmStatic;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.TypeIntrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-/* compiled from: ViewGroupFadeHelper.kt */
-/* loaded from: classes.dex */
-public final class ViewGroupFadeHelper {
-    @NotNull
-    public static final Companion Companion = new Companion(null);
-    @NotNull
-    private static final Function1<View, Boolean> visibilityIncluder = ViewGroupFadeHelper$Companion$visibilityIncluder$1.INSTANCE;
 
-    public static final void fadeOutAllChildrenExcept(@NotNull ViewGroup viewGroup, @NotNull View view, long j, @Nullable Runnable runnable) {
+@Metadata(mo64986d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0003\u0018\u0000 \u00032\u00020\u0001:\u0001\u0003B\u0005¢\u0006\u0002\u0010\u0002¨\u0006\u0004"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/ViewGroupFadeHelper;", "", "()V", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+/* compiled from: ViewGroupFadeHelper.kt */
+public final class ViewGroupFadeHelper {
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    /* access modifiers changed from: private */
+    public static final Function1<View, Boolean> visibilityIncluder = ViewGroupFadeHelper$Companion$visibilityIncluder$1.INSTANCE;
+
+    @JvmStatic
+    public static final void fadeOutAllChildrenExcept(ViewGroup viewGroup, View view, long j, Runnable runnable) {
         Companion.fadeOutAllChildrenExcept(viewGroup, view, j, runnable);
     }
 
-    public static final void reset(@NotNull ViewGroup viewGroup) {
+    @JvmStatic
+    public static final void reset(ViewGroup viewGroup) {
         Companion.reset(viewGroup);
     }
 
+    @Metadata(mo64986d1 = {"\u0000<\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\t\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010#\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J*\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\n2\u0006\u0010\u000b\u001a\u00020\u00052\u0006\u0010\f\u001a\u00020\r2\b\u0010\u000e\u001a\u0004\u0018\u00010\u000fH\u0007J2\u0010\u0010\u001a\b\u0012\u0004\u0012\u00020\u00050\u00112\u0006\u0010\t\u001a\u00020\n2\u0006\u0010\u000b\u001a\u00020\u00052\u0012\u0010\u0012\u001a\u000e\u0012\u0004\u0012\u00020\u0005\u0012\u0004\u0012\u00020\u00060\u0004H\u0002J\u0010\u0010\u0013\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\nH\u0007R\u001a\u0010\u0003\u001a\u000e\u0012\u0004\u0012\u00020\u0005\u0012\u0004\u0012\u00020\u00060\u0004X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0014"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/ViewGroupFadeHelper$Companion;", "", "()V", "visibilityIncluder", "Lkotlin/Function1;", "Landroid/view/View;", "", "fadeOutAllChildrenExcept", "", "root", "Landroid/view/ViewGroup;", "excludedView", "duration", "", "endRunnable", "Ljava/lang/Runnable;", "gatherViews", "", "shouldInclude", "reset", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: ViewGroupFadeHelper.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -43,113 +44,94 @@ public final class ViewGroupFadeHelper {
         private Companion() {
         }
 
-        public final void fadeOutAllChildrenExcept(@NotNull final ViewGroup root, @NotNull View excludedView, long j, @Nullable final Runnable runnable) {
-            Intrinsics.checkNotNullParameter(root, "root");
-            Intrinsics.checkNotNullParameter(excludedView, "excludedView");
-            final Set<View> gatherViews = gatherViews(root, excludedView, ViewGroupFadeHelper.visibilityIncluder);
-            for (View view : gatherViews) {
-                if (view.getHasOverlappingRendering() && view.getLayerType() == 0) {
-                    view.setLayerType(2, null);
-                    view.setTag(R$id.view_group_fade_helper_hardware_layer, Boolean.TRUE);
+        @JvmStatic
+        public final void fadeOutAllChildrenExcept(ViewGroup viewGroup, View view, long j, Runnable runnable) {
+            Intrinsics.checkNotNullParameter(viewGroup, "root");
+            Intrinsics.checkNotNullParameter(view, "excludedView");
+            Set<View> gatherViews = gatherViews(viewGroup, view, ViewGroupFadeHelper.visibilityIncluder);
+            for (View next : gatherViews) {
+                if (next.getHasOverlappingRendering() && next.getLayerType() == 0) {
+                    next.setLayerType(2, (Paint) null);
+                    next.setTag(C1893R.C1897id.view_group_fade_helper_hardware_layer, true);
                 }
             }
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
             ofFloat.setDuration(j);
             ofFloat.setInterpolator(Interpolators.ALPHA_OUT);
-            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.notification.ViewGroupFadeHelper$Companion$fadeOutAllChildrenExcept$animator$1$1
-                @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    Float f = (Float) root.getTag(R$id.view_group_fade_helper_previous_value_tag);
-                    Object animatedValue = valueAnimator.getAnimatedValue();
-                    Objects.requireNonNull(animatedValue, "null cannot be cast to non-null type kotlin.Float");
-                    float floatValue = ((Float) animatedValue).floatValue();
-                    for (View view2 : gatherViews) {
-                        if (!Intrinsics.areEqual(view2.getAlpha(), f)) {
-                            view2.setTag(R$id.view_group_fade_helper_restore_tag, Float.valueOf(view2.getAlpha()));
-                        }
-                        view2.setAlpha(floatValue);
-                    }
-                    root.setTag(R$id.view_group_fade_helper_previous_value_tag, Float.valueOf(floatValue));
-                }
-            });
-            ofFloat.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.notification.ViewGroupFadeHelper$Companion$fadeOutAllChildrenExcept$animator$1$2
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-                public void onAnimationEnd(@Nullable Animator animator) {
-                    Runnable runnable2 = runnable;
-                    if (runnable2 == null) {
-                        return;
-                    }
-                    runnable2.run();
-                }
-            });
+            ofFloat.addUpdateListener(new ViewGroupFadeHelper$Companion$$ExternalSyntheticLambda0(viewGroup, gatherViews));
+            ofFloat.addListener(new C2664xbb47cb27(runnable));
             ofFloat.start();
-            root.setTag(R$id.view_group_fade_helper_modified_views, gatherViews);
-            root.setTag(R$id.view_group_fade_helper_animator, ofFloat);
+            viewGroup.setTag(C1893R.C1897id.view_group_fade_helper_modified_views, gatherViews);
+            viewGroup.setTag(C1893R.C1897id.view_group_fade_helper_animator, ofFloat);
+        }
+
+        /* access modifiers changed from: private */
+        /* renamed from: fadeOutAllChildrenExcept$lambda-1$lambda-0  reason: not valid java name */
+        public static final void m3094fadeOutAllChildrenExcept$lambda1$lambda0(ViewGroup viewGroup, Set set, ValueAnimator valueAnimator) {
+            Intrinsics.checkNotNullParameter(viewGroup, "$root");
+            Intrinsics.checkNotNullParameter(set, "$viewsToFadeOut");
+            Float f = (Float) viewGroup.getTag(C1893R.C1897id.view_group_fade_helper_previous_value_tag);
+            Object animatedValue = valueAnimator.getAnimatedValue();
+            if (animatedValue != null) {
+                float floatValue = ((Float) animatedValue).floatValue();
+                Iterator it = set.iterator();
+                while (it.hasNext()) {
+                    View view = (View) it.next();
+                    if (!Intrinsics.areEqual(view.getAlpha(), f)) {
+                        view.setTag(C1893R.C1897id.view_group_fade_helper_restore_tag, Float.valueOf(view.getAlpha()));
+                    }
+                    view.setAlpha(floatValue);
+                }
+                viewGroup.setTag(C1893R.C1897id.view_group_fade_helper_previous_value_tag, Float.valueOf(floatValue));
+                return;
+            }
+            throw new NullPointerException("null cannot be cast to non-null type kotlin.Float");
         }
 
         private final Set<View> gatherViews(ViewGroup viewGroup, View view, Function1<? super View, Boolean> function1) {
-            LinkedHashSet linkedHashSet = new LinkedHashSet();
-            ViewParent parent = view.getParent();
-            ViewGroup viewGroup2 = view;
-            while (true) {
-                ViewGroup viewGroup3 = (ViewGroup) parent;
-                View view2 = viewGroup2;
-                ViewGroup viewGroup4 = viewGroup3;
-                if (viewGroup4 == null) {
-                    break;
-                }
-                int i = 0;
-                int childCount = viewGroup4.getChildCount();
-                if (childCount > 0) {
-                    while (true) {
-                        int i2 = i + 1;
-                        View child = viewGroup4.getChildAt(i);
-                        Intrinsics.checkNotNullExpressionValue(child, "child");
-                        if (function1.mo1949invoke(child).booleanValue() && !Intrinsics.areEqual(view2, child)) {
-                            linkedHashSet.add(child);
-                        }
-                        if (i2 >= childCount) {
-                            break;
-                        }
-                        i = i2;
+            Set<View> linkedHashSet = new LinkedHashSet<>();
+            for (ViewGroup viewGroup2 = (ViewGroup) view.getParent(); viewGroup2 != null; viewGroup2 = (ViewGroup) viewGroup2.getParent()) {
+                int childCount = viewGroup2.getChildCount();
+                for (int i = 0; i < childCount; i++) {
+                    View childAt = viewGroup2.getChildAt(i);
+                    Intrinsics.checkNotNullExpressionValue(childAt, "child");
+                    if (function1.invoke(childAt).booleanValue() && !Intrinsics.areEqual((Object) view, (Object) childAt)) {
+                        linkedHashSet.add(childAt);
                     }
                 }
-                if (Intrinsics.areEqual(viewGroup4, viewGroup)) {
+                if (Intrinsics.areEqual((Object) viewGroup2, (Object) viewGroup)) {
                     break;
                 }
-                parent = viewGroup4.getParent();
-                viewGroup2 = viewGroup4;
+                view = viewGroup2;
             }
             return linkedHashSet;
         }
 
-        public final void reset(@NotNull ViewGroup root) {
-            Intrinsics.checkNotNullParameter(root, "root");
-            Set<View> asMutableSet = TypeIntrinsics.asMutableSet(root.getTag(R$id.view_group_fade_helper_modified_views));
-            Animator animator = (Animator) root.getTag(R$id.view_group_fade_helper_animator);
-            if (asMutableSet == null || animator == null) {
-                return;
-            }
-            animator.cancel();
-            Float f = (Float) root.getTag(R$id.view_group_fade_helper_previous_value_tag);
-            for (View view : asMutableSet) {
-                int i = R$id.view_group_fade_helper_restore_tag;
-                Float f2 = (Float) view.getTag(i);
-                if (f2 != null) {
-                    if (Intrinsics.areEqual(f, view.getAlpha())) {
-                        view.setAlpha(f2.floatValue());
+        @JvmStatic
+        public final void reset(ViewGroup viewGroup) {
+            Intrinsics.checkNotNullParameter(viewGroup, "root");
+            Set<View> asMutableSet = TypeIntrinsics.asMutableSet(viewGroup.getTag(C1893R.C1897id.view_group_fade_helper_modified_views));
+            Animator animator = (Animator) viewGroup.getTag(C1893R.C1897id.view_group_fade_helper_animator);
+            if (asMutableSet != null && animator != null) {
+                animator.cancel();
+                Float f = (Float) viewGroup.getTag(C1893R.C1897id.view_group_fade_helper_previous_value_tag);
+                for (View view : asMutableSet) {
+                    Float f2 = (Float) view.getTag(C1893R.C1897id.view_group_fade_helper_restore_tag);
+                    if (f2 != null) {
+                        if (Intrinsics.areEqual(f, view.getAlpha())) {
+                            view.setAlpha(f2.floatValue());
+                        }
+                        if (Intrinsics.areEqual((Object) (Boolean) view.getTag(C1893R.C1897id.view_group_fade_helper_hardware_layer), (Object) true)) {
+                            view.setLayerType(0, (Paint) null);
+                            view.setTag(C1893R.C1897id.view_group_fade_helper_hardware_layer, (Object) null);
+                        }
+                        view.setTag(C1893R.C1897id.view_group_fade_helper_restore_tag, (Object) null);
                     }
-                    int i2 = R$id.view_group_fade_helper_hardware_layer;
-                    if (Intrinsics.areEqual((Boolean) view.getTag(i2), Boolean.TRUE)) {
-                        view.setLayerType(0, null);
-                        view.setTag(i2, null);
-                    }
-                    view.setTag(i, null);
                 }
+                viewGroup.setTag(C1893R.C1897id.view_group_fade_helper_modified_views, (Object) null);
+                viewGroup.setTag(C1893R.C1897id.view_group_fade_helper_previous_value_tag, (Object) null);
+                viewGroup.setTag(C1893R.C1897id.view_group_fade_helper_animator, (Object) null);
             }
-            root.setTag(R$id.view_group_fade_helper_modified_views, null);
-            root.setTag(R$id.view_group_fade_helper_previous_value_tag, null);
-            root.setTag(R$id.view_group_fade_helper_animator, null);
         }
     }
 }

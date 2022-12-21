@@ -1,11 +1,7 @@
 package kotlin;
 
-import kotlin.jvm.functions.Function0;
-import org.jetbrains.annotations.NotNull;
-/* loaded from: classes2.dex */
+@Metadata(mo64986d1 = {"kotlin/LazyKt__LazyJVMKt", "kotlin/LazyKt__LazyKt"}, mo64988k = 4, mo64989mv = {1, 7, 1}, mo64991xi = 49)
 public final class LazyKt extends LazyKt__LazyKt {
-    @NotNull
-    public static /* bridge */ /* synthetic */ <T> Lazy<T> lazy(@NotNull Function0<? extends T> function0) {
-        return LazyKt__LazyJVMKt.lazy(function0);
+    private LazyKt() {
     }
 }

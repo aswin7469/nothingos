@@ -7,7 +7,7 @@ import com.android.systemui.media.MediaHostStatesManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class MediaModule_ProvidesQSMediaHostFactory implements Factory<MediaHost> {
     private final Provider<MediaDataManager> dataManagerProvider;
     private final Provider<MediaHierarchyManager> hierarchyManagerProvider;
@@ -21,10 +21,8 @@ public final class MediaModule_ProvidesQSMediaHostFactory implements Factory<Med
         this.statesManagerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaHost mo1933get() {
-        return providesQSMediaHost(this.stateHolderProvider.mo1933get(), this.hierarchyManagerProvider.mo1933get(), this.dataManagerProvider.mo1933get(), this.statesManagerProvider.mo1933get());
+    public MediaHost get() {
+        return providesQSMediaHost(this.stateHolderProvider.get(), this.hierarchyManagerProvider.get(), this.dataManagerProvider.get(), this.statesManagerProvider.get());
     }
 
     public static MediaModule_ProvidesQSMediaHostFactory create(Provider<MediaHost.MediaHostStateHolder> provider, Provider<MediaHierarchyManager> provider2, Provider<MediaDataManager> provider3, Provider<MediaHostStatesManager> provider4) {

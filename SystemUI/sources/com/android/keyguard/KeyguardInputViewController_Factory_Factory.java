@@ -9,15 +9,18 @@ import com.android.keyguard.EmergencyButtonController;
 import com.android.keyguard.KeyguardInputViewController;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.systemui.classifier.FalsingCollector;
+import com.android.systemui.statusbar.policy.DevicePostureController;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardInputViewController_Factory_Factory implements Factory<KeyguardInputViewController.Factory> {
+    private final Provider<DevicePostureController> devicePostureControllerProvider;
     private final Provider<EmergencyButtonController.Factory> emergencyButtonControllerFactoryProvider;
     private final Provider<FalsingCollector> falsingCollectorProvider;
     private final Provider<InputMethodManager> inputMethodManagerProvider;
     private final Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
+    private final Provider<KeyguardViewController> keyguardViewControllerProvider;
     private final Provider<LatencyTracker> latencyTrackerProvider;
     private final Provider<LiftToActivateListener> liftToActivateListenerProvider;
     private final Provider<LockPatternUtils> lockPatternUtilsProvider;
@@ -26,7 +29,7 @@ public final class KeyguardInputViewController_Factory_Factory implements Factor
     private final Provider<Resources> resourcesProvider;
     private final Provider<TelephonyManager> telephonyManagerProvider;
 
-    public KeyguardInputViewController_Factory_Factory(Provider<KeyguardUpdateMonitor> provider, Provider<LockPatternUtils> provider2, Provider<LatencyTracker> provider3, Provider<KeyguardMessageAreaController.Factory> provider4, Provider<InputMethodManager> provider5, Provider<DelayableExecutor> provider6, Provider<Resources> provider7, Provider<LiftToActivateListener> provider8, Provider<TelephonyManager> provider9, Provider<FalsingCollector> provider10, Provider<EmergencyButtonController.Factory> provider11) {
+    public KeyguardInputViewController_Factory_Factory(Provider<KeyguardUpdateMonitor> provider, Provider<LockPatternUtils> provider2, Provider<LatencyTracker> provider3, Provider<KeyguardMessageAreaController.Factory> provider4, Provider<InputMethodManager> provider5, Provider<DelayableExecutor> provider6, Provider<Resources> provider7, Provider<LiftToActivateListener> provider8, Provider<TelephonyManager> provider9, Provider<FalsingCollector> provider10, Provider<EmergencyButtonController.Factory> provider11, Provider<DevicePostureController> provider12, Provider<KeyguardViewController> provider13) {
         this.keyguardUpdateMonitorProvider = provider;
         this.lockPatternUtilsProvider = provider2;
         this.latencyTrackerProvider = provider3;
@@ -38,19 +41,19 @@ public final class KeyguardInputViewController_Factory_Factory implements Factor
         this.telephonyManagerProvider = provider9;
         this.falsingCollectorProvider = provider10;
         this.emergencyButtonControllerFactoryProvider = provider11;
+        this.devicePostureControllerProvider = provider12;
+        this.keyguardViewControllerProvider = provider13;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardInputViewController.Factory mo1933get() {
-        return newInstance(this.keyguardUpdateMonitorProvider.mo1933get(), this.lockPatternUtilsProvider.mo1933get(), this.latencyTrackerProvider.mo1933get(), this.messageAreaControllerFactoryProvider.mo1933get(), this.inputMethodManagerProvider.mo1933get(), this.mainExecutorProvider.mo1933get(), this.resourcesProvider.mo1933get(), this.liftToActivateListenerProvider.mo1933get(), this.telephonyManagerProvider.mo1933get(), this.falsingCollectorProvider.mo1933get(), this.emergencyButtonControllerFactoryProvider.mo1933get());
+    public KeyguardInputViewController.Factory get() {
+        return newInstance(this.keyguardUpdateMonitorProvider.get(), this.lockPatternUtilsProvider.get(), this.latencyTrackerProvider.get(), this.messageAreaControllerFactoryProvider.get(), this.inputMethodManagerProvider.get(), this.mainExecutorProvider.get(), this.resourcesProvider.get(), this.liftToActivateListenerProvider.get(), this.telephonyManagerProvider.get(), this.falsingCollectorProvider.get(), this.emergencyButtonControllerFactoryProvider.get(), this.devicePostureControllerProvider.get(), this.keyguardViewControllerProvider.get());
     }
 
-    public static KeyguardInputViewController_Factory_Factory create(Provider<KeyguardUpdateMonitor> provider, Provider<LockPatternUtils> provider2, Provider<LatencyTracker> provider3, Provider<KeyguardMessageAreaController.Factory> provider4, Provider<InputMethodManager> provider5, Provider<DelayableExecutor> provider6, Provider<Resources> provider7, Provider<LiftToActivateListener> provider8, Provider<TelephonyManager> provider9, Provider<FalsingCollector> provider10, Provider<EmergencyButtonController.Factory> provider11) {
-        return new KeyguardInputViewController_Factory_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11);
+    public static KeyguardInputViewController_Factory_Factory create(Provider<KeyguardUpdateMonitor> provider, Provider<LockPatternUtils> provider2, Provider<LatencyTracker> provider3, Provider<KeyguardMessageAreaController.Factory> provider4, Provider<InputMethodManager> provider5, Provider<DelayableExecutor> provider6, Provider<Resources> provider7, Provider<LiftToActivateListener> provider8, Provider<TelephonyManager> provider9, Provider<FalsingCollector> provider10, Provider<EmergencyButtonController.Factory> provider11, Provider<DevicePostureController> provider12, Provider<KeyguardViewController> provider13) {
+        return new KeyguardInputViewController_Factory_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13);
     }
 
-    public static KeyguardInputViewController.Factory newInstance(KeyguardUpdateMonitor keyguardUpdateMonitor, LockPatternUtils lockPatternUtils, LatencyTracker latencyTracker, KeyguardMessageAreaController.Factory factory, InputMethodManager inputMethodManager, DelayableExecutor delayableExecutor, Resources resources, Object obj, TelephonyManager telephonyManager, FalsingCollector falsingCollector, EmergencyButtonController.Factory factory2) {
-        return new KeyguardInputViewController.Factory(keyguardUpdateMonitor, lockPatternUtils, latencyTracker, factory, inputMethodManager, delayableExecutor, resources, (LiftToActivateListener) obj, telephonyManager, falsingCollector, factory2);
+    public static KeyguardInputViewController.Factory newInstance(KeyguardUpdateMonitor keyguardUpdateMonitor, LockPatternUtils lockPatternUtils, LatencyTracker latencyTracker, KeyguardMessageAreaController.Factory factory, InputMethodManager inputMethodManager, DelayableExecutor delayableExecutor, Resources resources, Object obj, TelephonyManager telephonyManager, FalsingCollector falsingCollector, EmergencyButtonController.Factory factory2, DevicePostureController devicePostureController, KeyguardViewController keyguardViewController) {
+        return new KeyguardInputViewController.Factory(keyguardUpdateMonitor, lockPatternUtils, latencyTracker, factory, inputMethodManager, delayableExecutor, resources, (LiftToActivateListener) obj, telephonyManager, falsingCollector, factory2, devicePostureController, keyguardViewController);
     }
 }

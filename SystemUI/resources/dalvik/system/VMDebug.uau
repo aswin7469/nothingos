@@ -1,0 +1,4 @@
+signature,file,startline,startcol,endline,endcol,properties
+Ldalvik/system/VMDebug;->isDebuggerConnected()Z,libcore/dalvik/src/main/java/dalvik/system/VMDebug.java,206,5,206,25,
+Ldalvik/system/VMDebug;->dumpReferenceTables()V,libcore/dalvik/src/main/java/dalvik/system/VMDebug.java,524,5,524,25,
+Ldalvik/system/VMDebug;->allowHiddenApiReflectionFrom(Ljava/lang/Class;)V,libcore/dalvik/src/main/java/dalvik/system/VMDebug.java,674,5,674,25,

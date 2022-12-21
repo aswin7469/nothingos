@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.os.UserManager;
@@ -19,71 +20,74 @@ import android.provider.ContactsContract;
 import android.util.Log;
 import com.android.internal.util.UserIcons;
 import com.android.settingslib.drawable.UserIconDrawable;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$style;
+import com.android.systemui.C1893R;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import java.util.ArrayList;
 import java.util.Iterator;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class UserInfoControllerImpl implements UserInfoController {
+    private static final String TAG = "UserInfoController";
     private final ArrayList<UserInfoController.OnUserInfoChangedListener> mCallbacks = new ArrayList<>();
-    private final Context mContext;
+    /* access modifiers changed from: private */
+    public final Context mContext;
     private final BroadcastReceiver mProfileReceiver;
     private final BroadcastReceiver mReceiver;
-    private String mUserAccount;
-    private Drawable mUserDrawable;
-    private AsyncTask<Void, Void, UserInfoQueryResult> mUserInfoTask;
-    private String mUserName;
+    /* access modifiers changed from: private */
+    public String mUserAccount;
+    /* access modifiers changed from: private */
+    public Drawable mUserDrawable;
+    /* access modifiers changed from: private */
+    public AsyncTask<Void, Void, UserInfoQueryResult> mUserInfoTask;
+    /* access modifiers changed from: private */
+    public String mUserName;
 
+    @Inject
     public UserInfoControllerImpl(Context context) {
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() { // from class: com.android.systemui.statusbar.policy.UserInfoControllerImpl.1
-            @Override // android.content.BroadcastReceiver
-            public void onReceive(Context context2, Intent intent) {
+        C31911 r0 = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
                 if ("android.intent.action.USER_SWITCHED".equals(intent.getAction())) {
                     UserInfoControllerImpl.this.reloadUserInfo();
                 }
             }
         };
-        this.mReceiver = broadcastReceiver;
-        BroadcastReceiver broadcastReceiver2 = new BroadcastReceiver() { // from class: com.android.systemui.statusbar.policy.UserInfoControllerImpl.2
-            @Override // android.content.BroadcastReceiver
-            public void onReceive(Context context2, Intent intent) {
+        this.mReceiver = r0;
+        C31922 r2 = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if ("android.provider.Contacts.PROFILE_CHANGED".equals(action) || "android.intent.action.USER_INFO_CHANGED".equals(action)) {
                     try {
-                        if (intent.getIntExtra("android.intent.extra.user_handle", getSendingUserId()) != ActivityManager.getService().getCurrentUser().id) {
-                            return;
+                        if (intent.getIntExtra("android.intent.extra.user_handle", getSendingUserId()) == ActivityManager.getService().getCurrentUser().id) {
+                            UserInfoControllerImpl.this.reloadUserInfo();
                         }
-                        UserInfoControllerImpl.this.reloadUserInfo();
                     } catch (RemoteException e) {
-                        Log.e("UserInfoController", "Couldn't get current user id for profile change", e);
+                        Log.e(UserInfoControllerImpl.TAG, "Couldn't get current user id for profile change", e);
                     }
                 }
             }
         };
-        this.mProfileReceiver = broadcastReceiver2;
+        this.mProfileReceiver = r2;
         this.mContext = context;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
-        context.registerReceiver(broadcastReceiver, intentFilter);
+        context.registerReceiver(r0, intentFilter);
         IntentFilter intentFilter2 = new IntentFilter();
         intentFilter2.addAction("android.provider.Contacts.PROFILE_CHANGED");
         intentFilter2.addAction("android.intent.action.USER_INFO_CHANGED");
-        context.registerReceiverAsUser(broadcastReceiver2, UserHandle.ALL, intentFilter2, null, null);
+        context.registerReceiverAsUser(r2, UserHandle.ALL, intentFilter2, (String) null, (Handler) null, 2);
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void addCallback(UserInfoController.OnUserInfoChangedListener onUserInfoChangedListener) {
         this.mCallbacks.add(onUserInfoChangedListener);
         onUserInfoChangedListener.onUserInfoChanged(this.mUserName, this.mUserDrawable, this.mUserAccount);
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void removeCallback(UserInfoController.OnUserInfoChangedListener onUserInfoChangedListener) {
-        this.mCallbacks.remove(onUserInfoChangedListener);
+        this.mCallbacks.remove((Object) onUserInfoChangedListener);
     }
 
-    @Override // com.android.systemui.statusbar.policy.UserInfoController
     public void reloadUserInfo() {
         AsyncTask<Void, Void, UserInfoQueryResult> asyncTask = this.mUserInfoTask;
         if (asyncTask != null) {
@@ -100,57 +104,55 @@ public class UserInfoControllerImpl implements UserInfoController {
             final int i = currentUser.id;
             final boolean isGuest = currentUser.isGuest();
             final String str = currentUser.name;
-            final boolean z = this.mContext.getThemeResId() != R$style.Theme_SystemUI_LightWallpaper;
+            final boolean z = this.mContext.getThemeResId() != 2132018221;
             Resources resources = this.mContext.getResources();
-            final int max = Math.max(resources.getDimensionPixelSize(R$dimen.multi_user_avatar_expanded_size), resources.getDimensionPixelSize(R$dimen.multi_user_avatar_keyguard_size));
-            AsyncTask<Void, Void, UserInfoQueryResult> asyncTask = new AsyncTask<Void, Void, UserInfoQueryResult>() { // from class: com.android.systemui.statusbar.policy.UserInfoControllerImpl.3
-                /* JADX INFO: Access modifiers changed from: protected */
-                @Override // android.os.AsyncTask
+            final int max = Math.max(resources.getDimensionPixelSize(C1893R.dimen.multi_user_avatar_expanded_size), resources.getDimensionPixelSize(C1893R.dimen.multi_user_avatar_keyguard_size));
+            C31933 r6 = new AsyncTask<Void, Void, UserInfoQueryResult>() {
+                /* access modifiers changed from: protected */
                 public UserInfoQueryResult doInBackground(Void... voidArr) {
-                    Drawable defaultUserIcon;
+                    Drawable drawable;
                     Cursor query;
                     UserManager userManager = UserManager.get(UserInfoControllerImpl.this.mContext);
-                    String str2 = str;
+                    String str = str;
                     Bitmap userIcon = userManager.getUserIcon(i);
                     if (userIcon != null) {
-                        defaultUserIcon = new UserIconDrawable(max).setIcon(userIcon).setBadgeIfManagedUser(UserInfoControllerImpl.this.mContext, i).bake();
+                        drawable = new UserIconDrawable(max).setIcon(userIcon).setBadgeIfManagedUser(UserInfoControllerImpl.this.mContext, i).bake();
                     } else {
-                        defaultUserIcon = UserIcons.getDefaultUserIcon(createPackageContextAsUser.getResources(), isGuest ? -10000 : i, z);
+                        drawable = UserIcons.getDefaultUserIcon(createPackageContextAsUser.getResources(), isGuest ? -10000 : i, z);
                     }
-                    if (userManager.getUsers().size() <= 1 && (query = createPackageContextAsUser.getContentResolver().query(ContactsContract.Profile.CONTENT_URI, new String[]{"_id", "display_name"}, null, null, null)) != null) {
+                    if (userManager.getUsers().size() <= 1 && (query = createPackageContextAsUser.getContentResolver().query(ContactsContract.Profile.CONTENT_URI, new String[]{"_id", "display_name"}, (String) null, (String[]) null, (String) null)) != null) {
                         try {
                             if (query.moveToFirst()) {
-                                str2 = query.getString(query.getColumnIndex("display_name"));
+                                str = query.getString(query.getColumnIndex("display_name"));
                             }
                         } finally {
                             query.close();
                         }
                     }
-                    return new UserInfoQueryResult(str2, defaultUserIcon, userManager.getUserAccount(i));
+                    return new UserInfoQueryResult(str, drawable, userManager.getUserAccount(i));
                 }
 
-                /* JADX INFO: Access modifiers changed from: protected */
-                @Override // android.os.AsyncTask
+                /* access modifiers changed from: protected */
                 public void onPostExecute(UserInfoQueryResult userInfoQueryResult) {
-                    UserInfoControllerImpl.this.mUserName = userInfoQueryResult.getName();
-                    UserInfoControllerImpl.this.mUserDrawable = userInfoQueryResult.getAvatar();
-                    UserInfoControllerImpl.this.mUserAccount = userInfoQueryResult.getUserAccount();
-                    UserInfoControllerImpl.this.mUserInfoTask = null;
+                    String unused = UserInfoControllerImpl.this.mUserName = userInfoQueryResult.getName();
+                    Drawable unused2 = UserInfoControllerImpl.this.mUserDrawable = userInfoQueryResult.getAvatar();
+                    String unused3 = UserInfoControllerImpl.this.mUserAccount = userInfoQueryResult.getUserAccount();
+                    AsyncTask unused4 = UserInfoControllerImpl.this.mUserInfoTask = null;
                     UserInfoControllerImpl.this.notifyChanged();
                 }
             };
-            this.mUserInfoTask = asyncTask;
-            asyncTask.execute(new Void[0]);
+            this.mUserInfoTask = r6;
+            r6.execute(new Void[0]);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("UserInfoController", "Couldn't create user context", e);
-            throw new RuntimeException(e);
+            Log.e(TAG, "Couldn't create user context", e);
+            throw new RuntimeException((Throwable) e);
         } catch (RemoteException e2) {
-            Log.e("UserInfoController", "Couldn't get user info", e2);
-            throw new RuntimeException(e2);
+            Log.e(TAG, "Couldn't get user info", e2);
+            throw new RuntimeException((Throwable) e2);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void notifyChanged() {
         Iterator<UserInfoController.OnUserInfoChangedListener> it = this.mCallbacks.iterator();
         while (it.hasNext()) {
@@ -162,9 +164,7 @@ public class UserInfoControllerImpl implements UserInfoController {
         reloadUserInfo();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class UserInfoQueryResult {
+    private static class UserInfoQueryResult {
         private Drawable mAvatar;
         private String mName;
         private String mUserAccount;

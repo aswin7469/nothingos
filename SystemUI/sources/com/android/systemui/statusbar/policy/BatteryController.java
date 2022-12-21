@@ -1,72 +1,84 @@
 package com.android.systemui.statusbar.policy;
 
+import android.view.View;
 import com.android.systemui.Dumpable;
 import com.android.systemui.demomode.DemoMode;
-/* loaded from: classes2.dex */
+import java.lang.ref.WeakReference;
+import java.p026io.PrintWriter;
+
 public interface BatteryController extends DemoMode, Dumpable, CallbackController<BatteryStateChangeCallback> {
 
-    /* loaded from: classes2.dex */
     public interface BatteryStateChangeCallback {
-        default void onBatteryLevelChanged(int i, boolean z, boolean z2) {
+        void onBatteryLevelChanged(int i, boolean z, boolean z2) {
         }
 
-        default void onBatteryUnknownStateChanged(boolean z) {
+        void onBatteryUnknownStateChanged(boolean z) {
         }
 
-        default void onPowerSaveChanged(boolean z) {
+        void onExtremeBatterySaverChanged(boolean z) {
         }
 
-        default void onWirelessChargingChanged(boolean z) {
+        void onPowerSaveChanged(boolean z) {
+        }
+
+        void onReverseChanged(boolean z, int i, String str) {
+        }
+
+        void onWirelessChargingChanged(boolean z) {
         }
     }
 
-    /* loaded from: classes2.dex */
-    public interface BatteryStateChangeCallbackExt extends BatteryStateChangeCallback {
-        default void onBatteryLevelChangedExt(int i, boolean z, boolean z2, BatteryStateExt batteryStateExt) {
-        }
-    }
-
-    /* loaded from: classes2.dex */
     public interface EstimateFetchCompletion {
         void onBatteryRemainingEstimateRetrieved(String str);
     }
 
-    default void getEstimatedTimeRemainingString(EstimateFetchCompletion estimateFetchCompletion) {
+    void clearLastPowerSaverStartView() {
     }
 
-    default void init() {
+    void dump(PrintWriter printWriter, String[] strArr);
+
+    void getEstimatedTimeRemainingString(EstimateFetchCompletion estimateFetchCompletion) {
+    }
+
+    WeakReference<View> getLastPowerSaverStartView() {
+        return null;
+    }
+
+    void init() {
     }
 
     boolean isAodPowerSave();
 
+    boolean isExtremeSaverOn() {
+        return false;
+    }
+
     boolean isPluggedIn();
 
-    default boolean isPluggedInWireless() {
+    boolean isPluggedInWireless() {
         return false;
     }
 
     boolean isPowerSave();
 
-    default boolean isWirelessCharging() {
+    boolean isReverseOn() {
         return false;
     }
 
-    void setPowerSaveMode(boolean z);
+    boolean isReverseSupported() {
+        return false;
+    }
 
-    /* loaded from: classes2.dex */
-    public static class BatteryStateExt {
-        public int status;
-        public int temperature;
-        public int voltage;
+    boolean isWirelessCharging() {
+        return false;
+    }
 
-        public void copy(BatteryStateExt batteryStateExt) {
-            this.status = batteryStateExt.status;
-            this.temperature = batteryStateExt.temperature;
-            this.voltage = batteryStateExt.voltage;
-        }
+    void setPowerSaveMode(boolean z, View view);
 
-        public String toString() {
-            return "BatteryStateExt{status=" + this.status + ", temperature=" + this.temperature + ", voltage=" + this.voltage + '}';
-        }
+    void setReverseState(boolean z) {
+    }
+
+    void setPowerSaveMode(boolean z) {
+        setPowerSaveMode(z, (View) null);
     }
 }

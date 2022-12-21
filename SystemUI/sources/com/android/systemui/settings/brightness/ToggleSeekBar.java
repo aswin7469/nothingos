@@ -8,7 +8,9 @@ import android.widget.SeekBar;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
-/* loaded from: classes.dex */
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.settings.brightness.BrightnessControllerEx;
+
 public class ToggleSeekBar extends SeekBar {
     private String mAccessibilityLabel;
     private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin = null;
@@ -25,16 +27,15 @@ public class ToggleSeekBar extends SeekBar {
         super(context, attributeSet, i);
     }
 
-    @Override // android.widget.AbsSeekBar, android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        RestrictedLockUtils.EnforcedAdmin enforcedAdmin = this.mEnforcedAdmin;
-        if (enforcedAdmin != null) {
-            ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(RestrictedLockUtils.getShowAdminSupportDetailsIntent(((SeekBar) this).mContext, enforcedAdmin), 0);
+        if (this.mEnforcedAdmin != null) {
+            ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(RestrictedLockUtils.getShowAdminSupportDetailsIntent(this.mContext, this.mEnforcedAdmin), 0);
             return true;
         }
         if (!isEnabled()) {
             setEnabled(true);
         }
+        ((BrightnessControllerEx) NTDependencyEx.get(BrightnessControllerEx.class)).setMotionAction(motionEvent.getActionMasked());
         return super.onTouchEvent(motionEvent);
     }
 
@@ -42,7 +43,6 @@ public class ToggleSeekBar extends SeekBar {
         this.mAccessibilityLabel = str;
     }
 
-    @Override // android.view.View
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
         String str = this.mAccessibilityLabel;

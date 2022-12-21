@@ -3,20 +3,23 @@ package com.android.systemui.statusbar;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Rect;
+import android.service.notification.StatusBarNotification;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
+import com.android.systemui.C1893R;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
-/* loaded from: classes.dex */
+import java.util.ArrayList;
+
 public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher.DarkReceiver, StatusIconDisplayable {
+    private static final String TAG = "StatusBarWifiView";
     private View mAirplaneSpacer;
     private StatusBarIconView mDotView;
     private ImageView mIn;
@@ -25,13 +28,25 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     private View mSignalSpacer;
     private String mSlot;
     private StatusBarSignalPolicy.WifiIconState mState;
+    private int mVisibleState = -1;
     private LinearLayout mWifiGroup;
     private ImageView mWifiIcon;
-    private int mVisibleState = -1;
-    private boolean mShowActivityInOut = false;
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
 
     public static StatusBarWifiView fromContext(Context context, String str) {
-        StatusBarWifiView statusBarWifiView = (StatusBarWifiView) LayoutInflater.from(context).inflate(R$layout.status_bar_wifi_group, (ViewGroup) null);
+        StatusBarWifiView statusBarWifiView = (StatusBarWifiView) LayoutInflater.from(context).inflate(C1893R.layout.status_bar_wifi_group, (ViewGroup) null);
         statusBarWifiView.setSlot(str);
         statusBarWifiView.init();
         statusBarWifiView.setVisibleState(0);
@@ -58,7 +73,6 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         this.mSlot = str;
     }
 
-    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setStaticDrawableColor(int i) {
         ColorStateList valueOf = ColorStateList.valueOf(i);
         this.mWifiIcon.setImageTintList(valueOf);
@@ -67,72 +81,65 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         this.mDotView.setDecorColor(i);
     }
 
-    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setDecorColor(int i) {
         this.mDotView.setDecorColor(i);
     }
 
-    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public String getSlot() {
         return this.mSlot;
     }
 
-    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public boolean isIconVisible() {
         StatusBarSignalPolicy.WifiIconState wifiIconState = this.mState;
         return wifiIconState != null && wifiIconState.visible;
     }
 
-    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setVisibleState(int i, boolean z) {
-        if (i == this.mVisibleState) {
-            return;
-        }
-        this.mVisibleState = i;
-        if (i == 0) {
-            this.mWifiGroup.setVisibility(0);
-            this.mDotView.setVisibility(8);
-        } else if (i == 1) {
-            this.mWifiGroup.setVisibility(8);
-            this.mDotView.setVisibility(0);
-        } else {
-            this.mWifiGroup.setVisibility(8);
-            this.mDotView.setVisibility(8);
+        if (i != this.mVisibleState) {
+            this.mVisibleState = i;
+            if (i == 0) {
+                this.mWifiGroup.setVisibility(0);
+                this.mDotView.setVisibility(8);
+            } else if (i != 1) {
+                this.mWifiGroup.setVisibility(8);
+                this.mDotView.setVisibility(8);
+            } else {
+                this.mWifiGroup.setVisibility(8);
+                this.mDotView.setVisibility(0);
+            }
         }
     }
 
-    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public int getVisibleState() {
         return this.mVisibleState;
     }
 
-    @Override // android.view.View
     public void getDrawingRect(Rect rect) {
         super.getDrawingRect(rect);
         float translationX = getTranslationX();
         float translationY = getTranslationY();
-        rect.left = (int) (rect.left + translationX);
-        rect.right = (int) (rect.right + translationX);
-        rect.top = (int) (rect.top + translationY);
-        rect.bottom = (int) (rect.bottom + translationY);
+        rect.left = (int) (((float) rect.left) + translationX);
+        rect.right = (int) (((float) rect.right) + translationX);
+        rect.top = (int) (((float) rect.top) + translationY);
+        rect.bottom = (int) (((float) rect.bottom) + translationY);
     }
 
     private void init() {
-        this.mWifiGroup = (LinearLayout) findViewById(R$id.wifi_group);
-        this.mWifiIcon = (ImageView) findViewById(R$id.wifi_signal);
-        this.mIn = (ImageView) findViewById(R$id.wifi_in);
-        this.mOut = (ImageView) findViewById(R$id.wifi_out);
-        this.mSignalSpacer = findViewById(R$id.wifi_signal_spacer);
-        this.mAirplaneSpacer = findViewById(R$id.wifi_airplane_spacer);
-        this.mInoutContainer = findViewById(R$id.inout_container);
+        this.mWifiGroup = (LinearLayout) findViewById(C1893R.C1897id.wifi_group);
+        this.mWifiIcon = (ImageView) findViewById(C1893R.C1897id.wifi_signal);
+        this.mIn = (ImageView) findViewById(C1893R.C1897id.wifi_in);
+        this.mOut = (ImageView) findViewById(C1893R.C1897id.wifi_out);
+        this.mSignalSpacer = findViewById(C1893R.C1897id.wifi_signal_spacer);
+        this.mAirplaneSpacer = findViewById(C1893R.C1897id.wifi_airplane_spacer);
+        this.mInoutContainer = findViewById(C1893R.C1897id.inout_container);
         initDotView();
     }
 
     private void initDotView() {
-        StatusBarIconView statusBarIconView = new StatusBarIconView(((FrameLayout) this).mContext, this.mSlot, null);
+        StatusBarIconView statusBarIconView = new StatusBarIconView(this.mContext, this.mSlot, (StatusBarNotification) null);
         this.mDotView = statusBarIconView;
         statusBarIconView.setVisibleState(1);
-        int dimensionPixelSize = ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(R$dimen.status_bar_icon_size);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_icon_size);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
         layoutParams.gravity = 8388627;
         addView(this.mDotView, layoutParams);
@@ -162,77 +169,46 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
 
     private boolean updateState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
         setContentDescription(wifiIconState.contentDescription);
-        int i = this.mState.resId;
-        int i2 = wifiIconState.resId;
-        if (i != i2 && i2 >= 0) {
-            this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(i2));
+        if (this.mState.resId != wifiIconState.resId && wifiIconState.resId >= 0) {
+            this.mWifiIcon.setImageDrawable(this.mContext.getDrawable(wifiIconState.resId));
         }
-        int i3 = 8;
+        int i = 0;
         this.mIn.setVisibility(wifiIconState.activityIn ? 0 : 8);
         this.mOut.setVisibility(wifiIconState.activityOut ? 0 : 8);
-        this.mInoutContainer.setVisibility((!this.mShowActivityInOut || (!wifiIconState.activityIn && !wifiIconState.activityOut)) ? 8 : 0);
+        this.mInoutContainer.setVisibility(8);
         this.mAirplaneSpacer.setVisibility(wifiIconState.airplaneSpacerVisible ? 0 : 8);
         this.mSignalSpacer.setVisibility(wifiIconState.signalSpacerVisible ? 0 : 8);
-        boolean z = wifiIconState.activityIn;
-        StatusBarSignalPolicy.WifiIconState wifiIconState2 = this.mState;
-        boolean z2 = (z == wifiIconState2.activityIn && wifiIconState.activityOut == wifiIconState2.activityOut) ? false : true;
-        boolean z3 = wifiIconState2.visible;
-        boolean z4 = wifiIconState.visible;
-        if (z3 != z4) {
-            z2 |= true;
-            if (z4) {
-                i3 = 0;
+        boolean z = (wifiIconState.activityIn == this.mState.activityIn && wifiIconState.activityOut == this.mState.activityOut) ? false : true;
+        if (this.mState.visible != wifiIconState.visible) {
+            z |= true;
+            if (!wifiIconState.visible) {
+                i = 8;
             }
-            setVisibility(i3);
+            setVisibility(i);
         }
         this.mState = wifiIconState;
-        return z2;
+        return z;
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:19:0x0055  */
-    /* JADX WARN: Removed duplicated region for block: B:22:0x0063  */
-    /* JADX WARN: Removed duplicated region for block: B:25:0x0070  */
-    /* JADX WARN: Removed duplicated region for block: B:29:0x0065  */
-    /* JADX WARN: Removed duplicated region for block: B:30:0x0057  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     private void initViewState() {
-        int i;
         setContentDescription(this.mState.contentDescription);
-        int i2 = this.mState.resId;
-        if (i2 >= 0) {
-            this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(i2));
+        if (this.mState.resId >= 0) {
+            this.mWifiIcon.setImageDrawable(this.mContext.getDrawable(this.mState.resId));
         }
-        int i3 = 0;
+        int i = 0;
         this.mIn.setVisibility(this.mState.activityIn ? 0 : 8);
         this.mOut.setVisibility(this.mState.activityOut ? 0 : 8);
-        View view = this.mInoutContainer;
-        if (this.mShowActivityInOut) {
-            StatusBarSignalPolicy.WifiIconState wifiIconState = this.mState;
-            if (wifiIconState.activityIn || wifiIconState.activityOut) {
-                i = 0;
-                view.setVisibility(i);
-                this.mAirplaneSpacer.setVisibility(!this.mState.airplaneSpacerVisible ? 0 : 8);
-                this.mSignalSpacer.setVisibility(!this.mState.signalSpacerVisible ? 0 : 8);
-                if (!this.mState.visible) {
-                    i3 = 8;
-                }
-                setVisibility(i3);
-            }
-        }
-        i = 8;
-        view.setVisibility(i);
-        this.mAirplaneSpacer.setVisibility(!this.mState.airplaneSpacerVisible ? 0 : 8);
-        this.mSignalSpacer.setVisibility(!this.mState.signalSpacerVisible ? 0 : 8);
+        this.mInoutContainer.setVisibility(8);
+        this.mAirplaneSpacer.setVisibility(this.mState.airplaneSpacerVisible ? 0 : 8);
+        this.mSignalSpacer.setVisibility(this.mState.signalSpacerVisible ? 0 : 8);
         if (!this.mState.visible) {
+            i = 8;
         }
-        setVisibility(i3);
+        setVisibility(i);
     }
 
-    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
-    public void onDarkChanged(Rect rect, float f, int i) {
-        int tint = DarkIconDispatcher.getTint(rect, this, i);
+    public void onDarkChanged(ArrayList<Rect> arrayList, float f, int i) {
+        int tint = DarkIconDispatcher.getTint(arrayList, this, i);
         ColorStateList valueOf = ColorStateList.valueOf(tint);
         this.mWifiIcon.setImageTintList(valueOf);
         this.mIn.setImageTintList(valueOf);
@@ -241,8 +217,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         this.mDotView.setIconColor(tint, false);
     }
 
-    @Override // android.view.View
     public String toString() {
-        return "StatusBarWifiView(slot=" + this.mSlot + " state=" + this.mState + ")";
+        return "StatusBarWifiView(slot=" + this.mSlot + " state=" + this.mState + NavigationBarInflaterView.KEY_CODE_END;
     }
 }

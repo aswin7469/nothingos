@@ -5,7 +5,7 @@ import android.content.Context;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideActivityManagerFactory implements Factory<ActivityManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideActivityManagerFactory impleme
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ActivityManager mo1933get() {
-        return provideActivityManager(this.contextProvider.mo1933get());
+    public ActivityManager get() {
+        return provideActivityManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideActivityManagerFactory create(Provider<Context> provider) {

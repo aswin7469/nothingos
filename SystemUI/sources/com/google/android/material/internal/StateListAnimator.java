@@ -5,20 +5,18 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.util.StateSet;
 import java.util.ArrayList;
-/* loaded from: classes2.dex */
+
 public final class StateListAnimator {
-    private final ArrayList<Tuple> tuples = new ArrayList<>();
-    private Tuple lastMatch = null;
-    ValueAnimator runningAnimator = null;
-    private final Animator.AnimatorListener animationListener = new AnimatorListenerAdapter() { // from class: com.google.android.material.internal.StateListAnimator.1
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+    private final Animator.AnimatorListener animationListener = new AnimatorListenerAdapter() {
         public void onAnimationEnd(Animator animator) {
-            StateListAnimator stateListAnimator = StateListAnimator.this;
-            if (stateListAnimator.runningAnimator == animator) {
-                stateListAnimator.runningAnimator = null;
+            if (StateListAnimator.this.runningAnimator == animator) {
+                StateListAnimator.this.runningAnimator = null;
             }
         }
     };
+    private Tuple lastMatch = null;
+    ValueAnimator runningAnimator = null;
+    private final ArrayList<Tuple> tuples = new ArrayList<>();
 
     public void addState(int[] iArr, ValueAnimator valueAnimator) {
         Tuple tuple = new Tuple(iArr, valueAnimator);
@@ -42,17 +40,15 @@ public final class StateListAnimator {
             i++;
         }
         Tuple tuple2 = this.lastMatch;
-        if (tuple == tuple2) {
-            return;
+        if (tuple != tuple2) {
+            if (tuple2 != null) {
+                cancel();
+            }
+            this.lastMatch = tuple;
+            if (tuple != null) {
+                start(tuple);
+            }
         }
-        if (tuple2 != null) {
-            cancel();
-        }
-        this.lastMatch = tuple;
-        if (tuple == null) {
-            return;
-        }
-        start(tuple);
     }
 
     private void start(Tuple tuple) {
@@ -77,9 +73,7 @@ public final class StateListAnimator {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static class Tuple {
+    static class Tuple {
         final ValueAnimator animator;
         final int[] specs;
 

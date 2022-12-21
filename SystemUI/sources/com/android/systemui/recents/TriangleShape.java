@@ -3,7 +3,7 @@ package com.android.systemui.recents;
 import android.graphics.Outline;
 import android.graphics.Path;
 import android.graphics.drawable.shapes.PathShape;
-/* loaded from: classes.dex */
+
 public class TriangleShape extends PathShape {
     private Path mTriangularPath;
 
@@ -44,7 +44,6 @@ public class TriangleShape extends PathShape {
         return new TriangleShape(path, f, f2);
     }
 
-    @Override // android.graphics.drawable.shapes.Shape
     public void getOutline(Outline outline) {
         outline.setPath(this.mTriangularPath);
     }

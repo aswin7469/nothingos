@@ -5,7 +5,7 @@ import com.android.systemui.dock.DockManager;
 import com.android.systemui.statusbar.policy.BatteryController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FalsingDataProvider_Factory implements Factory<FalsingDataProvider> {
     private final Provider<BatteryController> batteryControllerProvider;
     private final Provider<DisplayMetrics> displayMetricsProvider;
@@ -17,10 +17,8 @@ public final class FalsingDataProvider_Factory implements Factory<FalsingDataPro
         this.dockManagerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public FalsingDataProvider mo1933get() {
-        return newInstance(this.displayMetricsProvider.mo1933get(), this.batteryControllerProvider.mo1933get(), this.dockManagerProvider.mo1933get());
+    public FalsingDataProvider get() {
+        return newInstance(this.displayMetricsProvider.get(), this.batteryControllerProvider.get(), this.dockManagerProvider.get());
     }
 
     public static FalsingDataProvider_Factory create(Provider<DisplayMetrics> provider, Provider<BatteryController> provider2, Provider<DockManager> provider3) {

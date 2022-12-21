@@ -2,7 +2,7 @@ package androidx.activity;
 
 import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
-/* loaded from: classes.dex */
+
 public abstract class OnBackPressedCallback {
     private CopyOnWriteArrayList<Cancellable> mCancellables = new CopyOnWriteArrayList<>();
     private boolean mEnabled;
@@ -28,13 +28,13 @@ public abstract class OnBackPressedCallback {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void addCancellable(Cancellable cancellable) {
         this.mCancellables.add(cancellable);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void removeCancellable(Cancellable cancellable) {
-        this.mCancellables.remove(cancellable);
+        this.mCancellables.remove((Object) cancellable);
     }
 }

@@ -2,12 +2,12 @@ package com.android.systemui.statusbar.policy.dagger;
 
 import android.os.UserManager;
 import com.android.systemui.settings.UserTracker;
-import com.android.systemui.statusbar.policy.AccessPointControllerImpl;
+import com.android.systemui.statusbar.connectivity.AccessPointControllerImpl;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class StatusBarPolicyModule_ProvideAccessPointControllerImplFactory implements Factory<AccessPointControllerImpl> {
     private final Provider<Executor> mainExecutorProvider;
     private final Provider<UserManager> userManagerProvider;
@@ -21,10 +21,8 @@ public final class StatusBarPolicyModule_ProvideAccessPointControllerImplFactory
         this.wifiPickerTrackerFactoryProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AccessPointControllerImpl mo1933get() {
-        return provideAccessPointControllerImpl(this.userManagerProvider.mo1933get(), this.userTrackerProvider.mo1933get(), this.mainExecutorProvider.mo1933get(), this.wifiPickerTrackerFactoryProvider.mo1933get());
+    public AccessPointControllerImpl get() {
+        return provideAccessPointControllerImpl(this.userManagerProvider.get(), this.userTrackerProvider.get(), this.mainExecutorProvider.get(), this.wifiPickerTrackerFactoryProvider.get());
     }
 
     public static StatusBarPolicyModule_ProvideAccessPointControllerImplFactory create(Provider<UserManager> provider, Provider<UserTracker> provider2, Provider<Executor> provider3, Provider<AccessPointControllerImpl.WifiPickerTrackerFactory> provider4) {

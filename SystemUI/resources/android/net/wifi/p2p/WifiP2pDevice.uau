@@ -1,0 +1,6 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/wifi/p2p/WifiP2pDevice;->wpsConfigMethodsSupported:I,packages/modules/Wifi/framework/java/android/net/wifi/p2p/WifiP2pDevice.java,108,5,108,25,
+Landroid/net/wifi/p2p/WifiP2pDevice;->deviceCapability:I,packages/modules/Wifi/framework/java/android/net/wifi/p2p/WifiP2pDevice.java,115,5,115,25,
+Landroid/net/wifi/p2p/WifiP2pDevice;->groupCapability:I,packages/modules/Wifi/framework/java/android/net/wifi/p2p/WifiP2pDevice.java,122,5,122,25,
+Landroid/net/wifi/p2p/WifiP2pDevice;->wfdInfo:Landroid/net/wifi/p2p/WifiP2pWfdInfo;,packages/modules/Wifi/framework/java/android/net/wifi/p2p/WifiP2pDevice.java,135,5,135,25,
+Landroid/net/wifi/p2p/WifiP2pDevice;-><init>(Ljava/lang/String;)V,packages/modules/Wifi/framework/java/android/net/wifi/p2p/WifiP2pDevice.java,199,5,199,88,maxTargetSdk=30&trackingBug=170729553L

@@ -7,7 +7,7 @@ import com.airbnb.lottie.animation.content.EllipseContent;
 import com.airbnb.lottie.model.animatable.AnimatablePointValue;
 import com.airbnb.lottie.model.animatable.AnimatableValue;
 import com.airbnb.lottie.model.layer.BaseLayer;
-/* loaded from: classes.dex */
+
 public class CircleShape implements ContentModel {
     private final boolean hidden;
     private final boolean isReversed;
@@ -23,7 +23,6 @@ public class CircleShape implements ContentModel {
         this.hidden = z2;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new EllipseContent(lottieDrawable, baseLayer, this);
     }

@@ -16,6 +16,10 @@
         <item quantity="one">%s башкаруу элементи кошулду.</item>
         <item quantity="other">%s башкаруу элементи кошулду.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s колдонмо иштеп жатат</item>
+        <item quantity="other">%s колдонмо иштеп жатат</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">SIM-картанын PIN кодун киргизиңиз. Сизде %d аракет калды, андан кийин түзмөктү бөгөттөн чыгаруу үчүн байланыш операторуна кайрылышыңыз керек болот.</item>
         <item quantity="other">SIM-картанын PIN кодун киргизиңиз. Сизде %d аракет калды.</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">SIM-картанын PUK-коду туура эмес, SIM-картанын биротоло жарактан чыгаарына %d аракет калды.</item>
         <item quantity="other">SIM-картанын PUK-коду туура эмес, SIM-картанын биротоло жарактан чыгаарына %d аракет калды.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Түзмөктүн кулпусу %d саат бою ачылган жок. Сырсөздү ырастаңыз.</item>
-        <item quantity="other">Түзмөктүн кулпусу %d саат бою ачылган жок. Сырсөздү ырастаңыз.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Түзмөктүн кулпусу %d саат бою ачылган жок. Графикалык ачкычты ырастаңыз.</item>
-        <item quantity="other">Түзмөктүн кулпусу %d саат бою ачылган жок. Графикалык ачкычты ырастаңыз.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Түзмөктүн кулпусу %d саат бою ачылган жок. PIN-кодду ырастаңыз.</item>
-        <item quantity="other">Түзмөктүн кулпусу %d саат бою ачылган жок. PIN-кодду ырастаңыз.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">1 секунддан кийин кайталаңыз.</item>
-        <item quantity="other">%d секунддан кийин кайталаңыз.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d жаңы билдирме</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">Бир колдонуучуну гана кошууга болот.</item>
         <item quantity="other">%d колдонуучуга чейин кошууга болот.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d түзмөк туташып турат</item>
-        <item quantity="other">%1$d түзмөк туташып турат</item>
     </plurals>
 </resources>

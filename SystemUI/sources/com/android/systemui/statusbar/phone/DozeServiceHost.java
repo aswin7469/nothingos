@@ -7,15 +7,17 @@ import android.os.SystemProperties;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.keyguard.mediator.ScreenOnCoordinator$$ExternalSyntheticLambda1;
 import com.android.systemui.assist.AssistManager;
 import com.android.systemui.biometrics.AuthController;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.doze.DozeHost;
 import com.android.systemui.doze.DozeLog;
 import com.android.systemui.doze.DozeReceiver;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.statusbar.NotificationShadeWindowController;
 import com.android.systemui.statusbar.PulseExpansionHandler;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
@@ -23,46 +25,66 @@ import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
+import com.android.systemui.unfold.FoldAodAnimationController;
+import com.android.systemui.unfold.SysUIUnfoldComponent;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.statusbar.phone.DozeServiceHostEx;
 import dagger.Lazy;
 import java.util.ArrayList;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+import java.util.Optional;
+import javax.inject.Inject;
+
+@SysUISingleton
 public final class DozeServiceHost implements DozeHost {
+    private static final String TAG = "DozeServiceHost";
+    private boolean mAlwaysOnSuppressed;
     private View mAmbientIndicationContainer;
-    private boolean mAnimateScreenOff;
     private boolean mAnimateWakeup;
     private final Lazy<AssistManager> mAssistManagerLazy;
     private final AuthController mAuthController;
     private final BatteryController mBatteryController;
     private final Lazy<BiometricUnlockController> mBiometricUnlockControllerLazy;
+    private final ArrayList<DozeHost.Callback> mCallbacks;
+    /* access modifiers changed from: private */
+    public CentralSurfaces mCentralSurfaces;
     private final DeviceProvisionedController mDeviceProvisionedController;
     private final DozeLog mDozeLog;
     private final DozeScrimController mDozeScrimController;
     private boolean mDozingRequested;
+    private final FoldAodAnimationController mFoldAodAnimationController;
     private final HeadsUpManagerPhone mHeadsUpManagerPhone;
-    private boolean mIgnoreTouchWhilePulsing;
-    private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    /* access modifiers changed from: private */
+    public boolean mIgnoreTouchWhilePulsing;
+    /* access modifiers changed from: private */
+    public final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final KeyguardViewMediator mKeyguardViewMediator;
     private final NotificationIconAreaController mNotificationIconAreaController;
-    private NotificationPanelViewController mNotificationPanel;
+    /* access modifiers changed from: private */
+    public NotificationPanelViewController mNotificationPanel;
     private final NotificationShadeWindowController mNotificationShadeWindowController;
     private NotificationShadeWindowViewController mNotificationShadeWindowViewController;
-    private final NotificationWakeUpCoordinator mNotificationWakeUpCoordinator;
+    /* access modifiers changed from: private */
+    public final NotificationWakeUpCoordinator mNotificationWakeUpCoordinator;
     private Runnable mPendingScreenOffCallback;
     private final PowerManager mPowerManager;
-    private final PulseExpansionHandler mPulseExpansionHandler;
-    private boolean mPulsing;
-    private final ScrimController mScrimController;
-    private StatusBar mStatusBar;
-    private StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
-    private final SysuiStatusBarStateController mStatusBarStateController;
-    private boolean mSuppressed;
-    private final WakefulnessLifecycle mWakefulnessLifecycle;
-    private final ArrayList<DozeHost.Callback> mCallbacks = new ArrayList<>();
-    @VisibleForTesting
+    /* access modifiers changed from: private */
+    public final PulseExpansionHandler mPulseExpansionHandler;
+    /* access modifiers changed from: private */
+    public boolean mPulsing;
+    /* access modifiers changed from: private */
+    public final ScrimController mScrimController;
+    /* access modifiers changed from: private */
+    public StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
+    /* access modifiers changed from: private */
+    public final SysuiStatusBarStateController mStatusBarStateController;
     boolean mWakeLockScreenPerformsAuth = SystemProperties.getBoolean("persist.sysui.wake_performs_auth", true);
+    private final WakefulnessLifecycle mWakefulnessLifecycle;
 
-    public DozeServiceHost(DozeLog dozeLog, PowerManager powerManager, WakefulnessLifecycle wakefulnessLifecycle, SysuiStatusBarStateController sysuiStatusBarStateController, DeviceProvisionedController deviceProvisionedController, HeadsUpManagerPhone headsUpManagerPhone, BatteryController batteryController, ScrimController scrimController, Lazy<BiometricUnlockController> lazy, KeyguardViewMediator keyguardViewMediator, Lazy<AssistManager> lazy2, DozeScrimController dozeScrimController, KeyguardUpdateMonitor keyguardUpdateMonitor, PulseExpansionHandler pulseExpansionHandler, NotificationShadeWindowController notificationShadeWindowController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, AuthController authController, NotificationIconAreaController notificationIconAreaController) {
+    @Inject
+    public DozeServiceHost(DozeLog dozeLog, PowerManager powerManager, WakefulnessLifecycle wakefulnessLifecycle, SysuiStatusBarStateController sysuiStatusBarStateController, DeviceProvisionedController deviceProvisionedController, HeadsUpManagerPhone headsUpManagerPhone, BatteryController batteryController, ScrimController scrimController, Lazy<BiometricUnlockController> lazy, KeyguardViewMediator keyguardViewMediator, Lazy<AssistManager> lazy2, DozeScrimController dozeScrimController, KeyguardUpdateMonitor keyguardUpdateMonitor, PulseExpansionHandler pulseExpansionHandler, Optional<SysUIUnfoldComponent> optional, NotificationShadeWindowController notificationShadeWindowController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, AuthController authController, NotificationIconAreaController notificationIconAreaController) {
+        ArrayList<DozeHost.Callback> arrayList = new ArrayList<>();
+        this.mCallbacks = arrayList;
         this.mDozeLog = dozeLog;
         this.mPowerManager = powerManager;
         this.mWakefulnessLifecycle = wakefulnessLifecycle;
@@ -81,10 +103,12 @@ public final class DozeServiceHost implements DozeHost {
         this.mNotificationWakeUpCoordinator = notificationWakeUpCoordinator;
         this.mAuthController = authController;
         this.mNotificationIconAreaController = notificationIconAreaController;
+        this.mFoldAodAnimationController = (FoldAodAnimationController) optional.map(new ScreenOnCoordinator$$ExternalSyntheticLambda1()).orElse(null);
+        ((DozeServiceHostEx) NTDependencyEx.get(DozeServiceHostEx.class)).init(arrayList);
     }
 
-    public void initialize(StatusBar statusBar, StatusBarKeyguardViewManager statusBarKeyguardViewManager, NotificationShadeWindowViewController notificationShadeWindowViewController, NotificationPanelViewController notificationPanelViewController, View view) {
-        this.mStatusBar = statusBar;
+    public void initialize(CentralSurfaces centralSurfaces, StatusBarKeyguardViewManager statusBarKeyguardViewManager, NotificationShadeWindowViewController notificationShadeWindowViewController, NotificationPanelViewController notificationPanelViewController, View view) {
+        this.mCentralSurfaces = centralSurfaces;
         this.mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
         this.mNotificationPanel = notificationPanelViewController;
         this.mNotificationShadeWindowViewController = notificationShadeWindowViewController;
@@ -92,10 +116,10 @@ public final class DozeServiceHost implements DozeHost {
     }
 
     public String toString() {
-        return "PSB.DozeServiceHost[mCallbacks=" + this.mCallbacks.size() + "]";
+        return "PSB.DozeServiceHost[mCallbacks=" + this.mCallbacks.size() + NavigationBarInflaterView.SIZE_MOD_END;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void firePowerSaveChanged(boolean z) {
         Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
         while (it.hasNext()) {
@@ -103,60 +127,52 @@ public final class DozeServiceHost implements DozeHost {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void fireNotificationPulse(final NotificationEntry notificationEntry) {
-        Runnable runnable = new Runnable() { // from class: com.android.systemui.statusbar.phone.DozeServiceHost$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                DozeServiceHost.this.lambda$fireNotificationPulse$0(notificationEntry);
-            }
-        };
+    /* access modifiers changed from: package-private */
+    public void fireNotificationPulse(NotificationEntry notificationEntry) {
+        DozeServiceHost$$ExternalSyntheticLambda0 dozeServiceHost$$ExternalSyntheticLambda0 = new DozeServiceHost$$ExternalSyntheticLambda0(this, notificationEntry);
         Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
         while (it.hasNext()) {
-            it.next().onNotificationAlerted(runnable);
+            it.next().onNotificationAlerted(dozeServiceHost$$ExternalSyntheticLambda0);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$fireNotificationPulse$0(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$fireNotificationPulse$0$com-android-systemui-statusbar-phone-DozeServiceHost */
+    public /* synthetic */ void mo44034x85b51859(NotificationEntry notificationEntry) {
         notificationEntry.setPulseSuppressed(true);
         this.mNotificationIconAreaController.updateAodNotificationIcons();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean getDozingRequested() {
         return this.mDozingRequested;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isPulsing() {
         return this.mPulsing;
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void addCallback(DozeHost.Callback callback) {
         this.mCallbacks.add(callback);
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void removeCallback(DozeHost.Callback callback) {
-        this.mCallbacks.remove(callback);
+        this.mCallbacks.remove((Object) callback);
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void startDozing() {
         if (!this.mDozingRequested) {
             this.mDozingRequested = true;
             updateDozing();
             this.mDozeLog.traceDozing(this.mStatusBarStateController.isDozing());
-            this.mStatusBar.updateIsKeyguard();
-        } else {
-            this.mDozingRequested = true;
+            this.mCentralSurfaces.updateIsKeyguard();
+            return;
         }
-        Log.d("DozeServiceHost", "startDozing: ");
+        this.mDozingRequested = true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateDozing() {
         boolean z = false;
         boolean z2 = (this.mDozingRequested && this.mStatusBarStateController.getState() == 1) || this.mBiometricUnlockControllerLazy.get().getMode() == 2;
@@ -164,9 +180,13 @@ public final class DozeServiceHost implements DozeHost {
             z = z2;
         }
         this.mStatusBarStateController.setIsDozing(z);
+        this.mNotificationShadeWindowViewController.setDozing(z);
+        FoldAodAnimationController foldAodAnimationController = this.mFoldAodAnimationController;
+        if (foldAodAnimationController != null) {
+            foldAodAnimationController.setIsDozing(z);
+        }
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void pulseWhileDozing(final DozeHost.PulseCallback pulseCallback, int i) {
         if (i == 5) {
             this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), 4, "com.android.systemui:LONG_PRESS");
@@ -178,265 +198,183 @@ public final class DozeServiceHost implements DozeHost {
         }
         final boolean z = i == 8 && this.mWakeLockScreenPerformsAuth;
         this.mPulsing = true;
-        this.mDozeScrimController.pulse(new DozeHost.PulseCallback() { // from class: com.android.systemui.statusbar.phone.DozeServiceHost.1
-            @Override // com.android.systemui.doze.DozeHost.PulseCallback
+        this.mDozeScrimController.pulse(new DozeHost.PulseCallback() {
             public void onPulseStarted() {
                 pulseCallback.onPulseStarted();
-                DozeServiceHost.this.mStatusBar.updateNotificationPanelTouchState();
+                DozeServiceHost.this.mCentralSurfaces.updateNotificationPanelTouchState();
                 setPulsing(true);
             }
 
-            @Override // com.android.systemui.doze.DozeHost.PulseCallback
             public void onPulseFinished() {
-                DozeServiceHost.this.mPulsing = false;
+                boolean unused = DozeServiceHost.this.mPulsing = false;
                 pulseCallback.onPulseFinished();
-                DozeServiceHost.this.mStatusBar.updateNotificationPanelTouchState();
+                DozeServiceHost.this.mCentralSurfaces.updateNotificationPanelTouchState();
                 DozeServiceHost.this.mScrimController.setWakeLockScreenSensorActive(false);
                 setPulsing(false);
             }
 
-            private void setPulsing(boolean z2) {
-                DozeServiceHost.this.mStatusBarKeyguardViewManager.setPulsing(z2);
-                DozeServiceHost.this.mKeyguardViewMediator.setPulsing(z2);
-                DozeServiceHost.this.mNotificationPanel.setPulsing(z2);
-                DozeServiceHost.this.mStatusBarStateController.setPulsing(z2);
-                DozeServiceHost.this.mIgnoreTouchWhilePulsing = false;
+            private void setPulsing(boolean z) {
+                DozeServiceHost.this.mStatusBarKeyguardViewManager.setPulsing(z);
+                DozeServiceHost.this.mNotificationPanel.setPulsing(z);
+                DozeServiceHost.this.mStatusBarStateController.setPulsing(z);
+                boolean unused = DozeServiceHost.this.mIgnoreTouchWhilePulsing = false;
                 if (DozeServiceHost.this.mKeyguardUpdateMonitor != null && z) {
-                    DozeServiceHost.this.mKeyguardUpdateMonitor.onAuthInterruptDetected(z2);
+                    DozeServiceHost.this.mKeyguardUpdateMonitor.onAuthInterruptDetected(z);
                 }
-                DozeServiceHost.this.mStatusBar.updateScrimController();
-                DozeServiceHost.this.mPulseExpansionHandler.setPulsing(z2);
-                DozeServiceHost.this.mNotificationWakeUpCoordinator.setPulsing(z2);
+                DozeServiceHost.this.mCentralSurfaces.updateScrimController();
+                DozeServiceHost.this.mPulseExpansionHandler.setPulsing(z);
+                DozeServiceHost.this.mNotificationWakeUpCoordinator.setPulsing(z);
             }
         }, i);
-        this.mStatusBar.updateScrimController();
+        this.mCentralSurfaces.updateScrimController();
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void stopDozing() {
         if (this.mDozingRequested) {
             this.mDozingRequested = false;
             updateDozing();
             this.mDozeLog.traceDozing(this.mStatusBarStateController.isDozing());
         }
-        Log.d("DozeServiceHost", "stopDozing: ");
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void onIgnoreTouchWhilePulsing(boolean z) {
         if (z != this.mIgnoreTouchWhilePulsing) {
             this.mDozeLog.tracePulseTouchDisabledByProx(z);
         }
         this.mIgnoreTouchWhilePulsing = z;
-        if (!this.mStatusBarStateController.isDozing() || !z) {
-            return;
+        if (this.mStatusBarStateController.isDozing() && z) {
+            this.mNotificationShadeWindowViewController.cancelCurrentTouch();
         }
-        this.mNotificationShadeWindowViewController.cancelCurrentTouch();
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void dozeTimeTick() {
         this.mNotificationPanel.dozeTimeTick();
         this.mAuthController.dozeTimeTick();
+        this.mNotificationShadeWindowViewController.dozeTimeTick();
         View view = this.mAmbientIndicationContainer;
         if (view instanceof DozeReceiver) {
             ((DozeReceiver) view).dozeTimeTick();
         }
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public boolean isPowerSaveActive() {
         return this.mBatteryController.isAodPowerSave();
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public boolean isPulsingBlocked() {
         return this.mBiometricUnlockControllerLazy.get().getMode() == 1;
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public boolean isProvisioned() {
         return this.mDeviceProvisionedController.isDeviceProvisioned() && this.mDeviceProvisionedController.isCurrentUserSetup();
     }
 
-    @Override // com.android.systemui.doze.DozeHost
-    public boolean isBlockingDoze() {
-        if (this.mBiometricUnlockControllerLazy.get().hasPendingAuthentication()) {
-            Log.i("StatusBar", "Blocking AOD because fingerprint has authenticated");
-            return true;
-        }
-        return false;
-    }
-
-    @Override // com.android.systemui.doze.DozeHost
     public void extendPulse(int i) {
         if (i == 8) {
             this.mScrimController.setWakeLockScreenSensorActive(true);
         }
-        if (this.mDozeScrimController.isPulsing() && this.mHeadsUpManagerPhone.hasNotifications()) {
-            this.mHeadsUpManagerPhone.extendHeadsUp();
-        } else {
+        if (!this.mDozeScrimController.isPulsing() || !this.mHeadsUpManagerPhone.hasNotifications()) {
             this.mDozeScrimController.extendPulse();
+        } else {
+            this.mHeadsUpManagerPhone.extendHeadsUp();
         }
     }
 
-    @Override // com.android.systemui.doze.DozeHost
+    public void stopPulsing() {
+        if (this.mDozeScrimController.isPulsing()) {
+            this.mDozeScrimController.pulseOutNow();
+        }
+    }
+
     public void setAnimateWakeup(boolean z) {
-        if (this.mWakefulnessLifecycle.getWakefulness() == 2 || this.mWakefulnessLifecycle.getWakefulness() == 1) {
-            return;
+        if (this.mWakefulnessLifecycle.getWakefulness() != 2 && this.mWakefulnessLifecycle.getWakefulness() != 1) {
+            this.mAnimateWakeup = z;
         }
-        this.mAnimateWakeup = z;
     }
 
-    @Override // com.android.systemui.doze.DozeHost
-    public void setAnimateScreenOff(boolean z) {
-        this.mAnimateScreenOff = z;
-    }
-
-    @Override // com.android.systemui.doze.DozeHost
     public void onSlpiTap(float f, float f2) {
         View view;
-        if (f <= 0.0f || f2 <= 0.0f || (view = this.mAmbientIndicationContainer) == null || view.getVisibility() != 0) {
-            return;
+        if (f > 0.0f && f2 > 0.0f && (view = this.mAmbientIndicationContainer) != null && view.getVisibility() == 0) {
+            int[] iArr = new int[2];
+            this.mAmbientIndicationContainer.getLocationOnScreen(iArr);
+            float f3 = f - ((float) iArr[0]);
+            float f4 = f2 - ((float) iArr[1]);
+            if (0.0f <= f3 && f3 <= ((float) this.mAmbientIndicationContainer.getWidth()) && 0.0f <= f4 && f4 <= ((float) this.mAmbientIndicationContainer.getHeight())) {
+                long elapsedRealtime = SystemClock.elapsedRealtime();
+                long j = elapsedRealtime;
+                float f5 = f;
+                float f6 = f2;
+                MotionEvent obtain = MotionEvent.obtain(elapsedRealtime, j, 0, f5, f6, 0);
+                this.mAmbientIndicationContainer.dispatchTouchEvent(obtain);
+                obtain.recycle();
+                MotionEvent obtain2 = MotionEvent.obtain(elapsedRealtime, j, 1, f5, f6, 0);
+                this.mAmbientIndicationContainer.dispatchTouchEvent(obtain2);
+                obtain2.recycle();
+            }
         }
-        int[] iArr = new int[2];
-        this.mAmbientIndicationContainer.getLocationOnScreen(iArr);
-        float f3 = f - iArr[0];
-        float f4 = f2 - iArr[1];
-        if (0.0f > f3 || f3 > this.mAmbientIndicationContainer.getWidth() || 0.0f > f4 || f4 > this.mAmbientIndicationContainer.getHeight()) {
-            return;
-        }
-        long elapsedRealtime = SystemClock.elapsedRealtime();
-        MotionEvent obtain = MotionEvent.obtain(elapsedRealtime, elapsedRealtime, 0, f, f2, 0);
-        this.mAmbientIndicationContainer.dispatchTouchEvent(obtain);
-        obtain.recycle();
-        MotionEvent obtain2 = MotionEvent.obtain(elapsedRealtime, elapsedRealtime, 1, f, f2, 0);
-        this.mAmbientIndicationContainer.dispatchTouchEvent(obtain2);
-        obtain2.recycle();
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void setDozeScreenBrightness(int i) {
         this.mDozeLog.traceDozeScreenBrightness(i);
         this.mNotificationShadeWindowController.setDozeScreenBrightness(i);
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void setAodDimmingScrim(float f) {
         this.mDozeLog.traceSetAodDimmingScrim(f);
         this.mScrimController.setAodFrontScrimAlpha(f);
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void prepareForGentleSleep(Runnable runnable) {
         if (this.mPendingScreenOffCallback != null) {
-            Log.w("DozeServiceHost", "Overlapping onDisplayOffCallback. Ignoring previous one.");
+            Log.w(TAG, "Overlapping onDisplayOffCallback. Ignoring previous one.");
         }
         this.mPendingScreenOffCallback = runnable;
-        this.mStatusBar.updateScrimController();
+        this.mCentralSurfaces.updateScrimController();
     }
 
-    @Override // com.android.systemui.doze.DozeHost
     public void cancelGentleSleep() {
         this.mPendingScreenOffCallback = null;
         if (this.mScrimController.getState() == ScrimState.OFF) {
-            this.mStatusBar.updateScrimController();
+            this.mCentralSurfaces.updateScrimController();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean hasPendingScreenOffCallback() {
         return this.mPendingScreenOffCallback != null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void executePendingScreenOffCallback() {
         Runnable runnable = this.mPendingScreenOffCallback;
-        if (runnable == null) {
-            return;
+        if (runnable != null) {
+            runnable.run();
+            this.mPendingScreenOffCallback = null;
         }
-        runnable.run();
-        this.mPendingScreenOffCallback = null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean shouldAnimateWakeup() {
         return this.mAnimateWakeup;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public boolean shouldAnimateScreenOff() {
-        return this.mAnimateScreenOff;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean getIgnoreTouchWhilePulsing() {
         return this.mIgnoreTouchWhilePulsing;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setDozeSuppressed(boolean z) {
-        if (z == this.mSuppressed) {
-            return;
-        }
-        this.mSuppressed = z;
-        this.mDozeLog.traceDozingSuppressed(z);
-        Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
-        while (it.hasNext()) {
-            it.next().onDozeSuppressedChanged(z);
+    /* access modifiers changed from: package-private */
+    public void setAlwaysOnSuppressed(boolean z) {
+        if (z != this.mAlwaysOnSuppressed) {
+            this.mAlwaysOnSuppressed = z;
+            Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
+            while (it.hasNext()) {
+                it.next().onAlwaysOnSuppressedChanged(z);
+            }
         }
     }
 
-    @Override // com.android.systemui.doze.DozeHost
-    public boolean isDozeSuppressed() {
-        return this.mSuppressed;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void fireFingerprintDown() {
-        Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
-        while (it.hasNext()) {
-            it.next().onDozeFingerprintDown();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void fireFingerprintUp() {
-        Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
-        while (it.hasNext()) {
-            it.next().onDozeFingerprintUp();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void fireDozeFingerprintRunningStateChanged() {
-        Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
-        while (it.hasNext()) {
-            it.next().onDozeFingerprintRunningStateChanged();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void fireTapWake() {
-        Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
-        while (it.hasNext()) {
-            it.next().onTapWake();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void fireLiftWake() {
-        Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
-        while (it.hasNext()) {
-            it.next().onLiftWake();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void fireMotion() {
-        Iterator<DozeHost.Callback> it = this.mCallbacks.iterator();
-        while (it.hasNext()) {
-            it.next().onMotion();
-        }
+    public boolean isAlwaysOnSuppressed() {
+        return this.mAlwaysOnSuppressed;
     }
 }

@@ -1,20 +1,21 @@
 package com.android.systemui.statusbar.notification.row;
 
 import androidx.collection.ArraySet;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
+@SysUISingleton
 public class NotifInflationErrorManager {
     Set<NotificationEntry> mErroredNotifs = new ArraySet();
     List<NotifInflationErrorListener> mListeners = new ArrayList();
 
-    /* loaded from: classes.dex */
     public interface NotifInflationErrorListener {
         void onNotifInflationError(NotificationEntry notificationEntry, Exception exc);
 
-        default void onNotifInflationErrorCleared(NotificationEntry notificationEntry) {
+        void onNotifInflationErrorCleared(NotificationEntry notificationEntry) {
         }
     }
 
@@ -32,6 +33,10 @@ public class NotifInflationErrorManager {
                 this.mListeners.get(i).onNotifInflationErrorCleared(notificationEntry);
             }
         }
+    }
+
+    public boolean hasInflationError(NotificationEntry notificationEntry) {
+        return this.mErroredNotifs.contains(notificationEntry);
     }
 
     public void addInflationErrorListener(NotifInflationErrorListener notifInflationErrorListener) {

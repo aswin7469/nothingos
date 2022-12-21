@@ -4,10 +4,9 @@ import android.app.admin.DeviceAdminInfo;
 import android.content.ComponentName;
 import android.graphics.drawable.Drawable;
 import com.android.systemui.Dumpable;
-/* loaded from: classes2.dex */
+
 public interface SecurityController extends CallbackController<SecurityControllerCallback>, Dumpable {
 
-    /* loaded from: classes2.dex */
     public interface SecurityControllerCallback {
         void onStateChanged();
     }
@@ -15,6 +14,8 @@ public interface SecurityController extends CallbackController<SecurityControlle
     DeviceAdminInfo getDeviceAdminInfo();
 
     ComponentName getDeviceOwnerComponentOnAnyUser();
+
+    String getDeviceOwnerName();
 
     CharSequence getDeviceOwnerOrganizationName();
 
@@ -26,6 +27,8 @@ public interface SecurityController extends CallbackController<SecurityControlle
 
     String getPrimaryVpnName();
 
+    String getProfileOwnerName();
+
     CharSequence getWorkProfileOrganizationName();
 
     String getWorkProfileVpnName();
@@ -33,6 +36,8 @@ public interface SecurityController extends CallbackController<SecurityControlle
     boolean hasCACertInCurrentUser();
 
     boolean hasCACertInWorkProfile();
+
+    boolean hasProfileOwner();
 
     boolean hasWorkProfile();
 
@@ -48,5 +53,9 @@ public interface SecurityController extends CallbackController<SecurityControlle
 
     boolean isVpnEnabled();
 
+    boolean isVpnRestricted();
+
     boolean isWorkProfileOn();
+
+    void onUserSwitched(int i);
 }

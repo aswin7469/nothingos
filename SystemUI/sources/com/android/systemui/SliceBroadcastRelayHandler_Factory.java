@@ -4,7 +4,7 @@ import android.content.Context;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class SliceBroadcastRelayHandler_Factory implements Factory<SliceBroadcastRelayHandler> {
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
     private final Provider<Context> contextProvider;
@@ -14,10 +14,8 @@ public final class SliceBroadcastRelayHandler_Factory implements Factory<SliceBr
         this.broadcastDispatcherProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SliceBroadcastRelayHandler mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get());
+    public SliceBroadcastRelayHandler get() {
+        return newInstance(this.contextProvider.get(), this.broadcastDispatcherProvider.get());
     }
 
     public static SliceBroadcastRelayHandler_Factory create(Provider<Context> provider, Provider<BroadcastDispatcher> provider2) {

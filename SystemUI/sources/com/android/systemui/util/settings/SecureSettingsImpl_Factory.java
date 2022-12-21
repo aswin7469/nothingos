@@ -3,7 +3,7 @@ package com.android.systemui.util.settings;
 import android.content.ContentResolver;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class SecureSettingsImpl_Factory implements Factory<SecureSettingsImpl> {
     private final Provider<ContentResolver> contentResolverProvider;
 
@@ -11,10 +11,8 @@ public final class SecureSettingsImpl_Factory implements Factory<SecureSettingsI
         this.contentResolverProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SecureSettingsImpl mo1933get() {
-        return newInstance(this.contentResolverProvider.mo1933get());
+    public SecureSettingsImpl get() {
+        return newInstance(this.contentResolverProvider.get());
     }
 
     public static SecureSettingsImpl_Factory create(Provider<ContentResolver> provider) {

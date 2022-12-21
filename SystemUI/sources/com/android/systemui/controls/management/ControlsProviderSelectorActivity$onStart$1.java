@@ -1,27 +1,24 @@
 package com.android.systemui.controls.management;
 
 import android.content.ComponentName;
+import kotlin.Metadata;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.FunctionReferenceImpl;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ControlsProviderSelectorActivity.kt */
-/* loaded from: classes.dex */
 /* synthetic */ class ControlsProviderSelectorActivity$onStart$1 extends FunctionReferenceImpl implements Function1<ComponentName, Unit> {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ControlsProviderSelectorActivity$onStart$1(ControlsProviderSelectorActivity controlsProviderSelectorActivity) {
-        super(1, controlsProviderSelectorActivity, ControlsProviderSelectorActivity.class, "launchFavoritingActivity", "launchFavoritingActivity(Landroid/content/ComponentName;)V", 0);
+    ControlsProviderSelectorActivity$onStart$1(Object obj) {
+        super(1, obj, ControlsProviderSelectorActivity.class, "launchFavoritingActivity", "launchFavoritingActivity(Landroid/content/ComponentName;)V", 0);
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    /* renamed from: invoke */
-    public /* bridge */ /* synthetic */ Unit mo1949invoke(ComponentName componentName) {
-        invoke2(componentName);
+    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
+        invoke((ComponentName) obj);
         return Unit.INSTANCE;
     }
 
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final void invoke2(@Nullable ComponentName componentName) {
+    public final void invoke(ComponentName componentName) {
         ((ControlsProviderSelectorActivity) this.receiver).launchFavoritingActivity(componentName);
     }
 }

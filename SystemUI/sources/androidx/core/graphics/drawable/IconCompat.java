@@ -1,6 +1,8 @@
 package androidx.core.graphics.drawable;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -18,24 +20,35 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.net.Uri;
-import android.os.Build;
+import android.net.wifi.WifiEnterpriseConfig;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.Log;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.util.ObjectsCompat;
 import androidx.core.util.Preconditions;
+import androidx.core.view.ViewCompat;
+import androidx.slice.core.SliceHints;
 import androidx.versionedparcelable.CustomVersionedParcelable;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.nio.charset.Charset;
-/* loaded from: classes.dex */
+import java.p026io.ByteArrayOutputStream;
+import java.p026io.File;
+import java.p026io.FileInputStream;
+import java.p026io.FileNotFoundException;
+import java.p026io.InputStream;
+import sun.util.locale.LanguageTag;
+
 public class IconCompat extends CustomVersionedParcelable {
+    private static final float ADAPTIVE_ICON_INSET_FACTOR = 0.25f;
+    private static final int AMBIENT_SHADOW_ALPHA = 30;
+    private static final float BLUR_FACTOR = 0.010416667f;
     static final PorterDuff.Mode DEFAULT_TINT_MODE = PorterDuff.Mode.SRC_IN;
+    private static final float DEFAULT_VIEW_PORT_SCALE = 0.6666667f;
     static final String EXTRA_INT1 = "int1";
     static final String EXTRA_INT2 = "int2";
     static final String EXTRA_OBJ = "obj";
@@ -43,6 +56,17 @@ public class IconCompat extends CustomVersionedParcelable {
     static final String EXTRA_TINT_LIST = "tint_list";
     static final String EXTRA_TINT_MODE = "tint_mode";
     static final String EXTRA_TYPE = "type";
+    private static final float ICON_DIAMETER_FACTOR = 0.9166667f;
+    private static final int KEY_SHADOW_ALPHA = 61;
+    private static final float KEY_SHADOW_OFFSET_FACTOR = 0.020833334f;
+    private static final String TAG = "IconCompat";
+    public static final int TYPE_ADAPTIVE_BITMAP = 5;
+    public static final int TYPE_BITMAP = 1;
+    public static final int TYPE_DATA = 3;
+    public static final int TYPE_RESOURCE = 2;
+    public static final int TYPE_UNKNOWN = -1;
+    public static final int TYPE_URI = 4;
+    public static final int TYPE_URI_ADAPTIVE_BITMAP = 6;
     public byte[] mData;
     public int mInt1;
     public int mInt2;
@@ -54,8 +78,12 @@ public class IconCompat extends CustomVersionedParcelable {
     public String mTintModeStr;
     public int mType;
 
-    private static String typeToString(int x) {
-        switch (x) {
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface IconType {
+    }
+
+    private static String typeToString(int i) {
+        switch (i) {
             case 1:
                 return "BITMAP";
             case 2:
@@ -73,73 +101,75 @@ public class IconCompat extends CustomVersionedParcelable {
         }
     }
 
-    public static IconCompat createWithResource(Context context, int resId) {
-        if (context == null) {
-            throw new IllegalArgumentException("Context must not be null.");
-        }
-        return createWithResource(context.getResources(), context.getPackageName(), resId);
+    public static IconCompat createWithResource(Context context, int i) {
+        ObjectsCompat.requireNonNull(context);
+        return createWithResource(context.getResources(), context.getPackageName(), i);
     }
 
-    public static IconCompat createWithResource(Resources r, String pkg, int resId) {
-        if (pkg != null) {
-            if (resId == 0) {
-                throw new IllegalArgumentException("Drawable resource ID must not be 0");
-            }
+    public static IconCompat createWithResource(Resources resources, String str, int i) {
+        ObjectsCompat.requireNonNull(str);
+        if (i != 0) {
             IconCompat iconCompat = new IconCompat(2);
-            iconCompat.mInt1 = resId;
-            if (r != null) {
+            iconCompat.mInt1 = i;
+            if (resources != null) {
                 try {
-                    iconCompat.mObj1 = r.getResourceName(resId);
+                    iconCompat.mObj1 = resources.getResourceName(i);
                 } catch (Resources.NotFoundException unused) {
                     throw new IllegalArgumentException("Icon resource cannot be found");
                 }
             } else {
-                iconCompat.mObj1 = pkg;
+                iconCompat.mObj1 = str;
             }
-            iconCompat.mString1 = pkg;
+            iconCompat.mString1 = str;
             return iconCompat;
         }
-        throw new IllegalArgumentException("Package must not be null.");
+        throw new IllegalArgumentException("Drawable resource ID must not be 0");
     }
 
-    public static IconCompat createWithBitmap(Bitmap bits) {
-        if (bits == null) {
-            throw new IllegalArgumentException("Bitmap must not be null.");
-        }
+    public static IconCompat createWithBitmap(Bitmap bitmap) {
+        ObjectsCompat.requireNonNull(bitmap);
         IconCompat iconCompat = new IconCompat(1);
-        iconCompat.mObj1 = bits;
+        iconCompat.mObj1 = bitmap;
         return iconCompat;
     }
 
-    public static IconCompat createWithContentUri(String uri) {
-        if (uri == null) {
-            throw new IllegalArgumentException("Uri must not be null.");
-        }
+    public static IconCompat createWithAdaptiveBitmap(Bitmap bitmap) {
+        ObjectsCompat.requireNonNull(bitmap);
+        IconCompat iconCompat = new IconCompat(5);
+        iconCompat.mObj1 = bitmap;
+        return iconCompat;
+    }
+
+    public static IconCompat createWithData(byte[] bArr, int i, int i2) {
+        ObjectsCompat.requireNonNull(bArr);
+        IconCompat iconCompat = new IconCompat(3);
+        iconCompat.mObj1 = bArr;
+        iconCompat.mInt1 = i;
+        iconCompat.mInt2 = i2;
+        return iconCompat;
+    }
+
+    public static IconCompat createWithContentUri(String str) {
+        ObjectsCompat.requireNonNull(str);
         IconCompat iconCompat = new IconCompat(4);
-        iconCompat.mObj1 = uri;
+        iconCompat.mObj1 = str;
         return iconCompat;
     }
 
     public static IconCompat createWithContentUri(Uri uri) {
-        if (uri == null) {
-            throw new IllegalArgumentException("Uri must not be null.");
-        }
+        ObjectsCompat.requireNonNull(uri);
         return createWithContentUri(uri.toString());
     }
 
-    public static IconCompat createWithAdaptiveBitmapContentUri(String uri) {
-        if (uri == null) {
-            throw new IllegalArgumentException("Uri must not be null.");
-        }
+    public static IconCompat createWithAdaptiveBitmapContentUri(String str) {
+        ObjectsCompat.requireNonNull(str);
         IconCompat iconCompat = new IconCompat(6);
-        iconCompat.mObj1 = uri;
+        iconCompat.mObj1 = str;
         return iconCompat;
     }
 
     public static IconCompat createWithAdaptiveBitmapContentUri(Uri uri) {
-        if (uri == null) {
-            throw new IllegalArgumentException("Uri must not be null.");
-        }
+        ObjectsCompat.requireNonNull(uri);
         return createWithAdaptiveBitmapContentUri(uri.toString());
     }
 
@@ -154,8 +184,7 @@ public class IconCompat extends CustomVersionedParcelable {
         this.mTintModeStr = null;
     }
 
-    private IconCompat(int mType) {
-        this.mType = -1;
+    IconCompat(int i) {
         this.mData = null;
         this.mParcelable = null;
         this.mInt1 = 0;
@@ -163,152 +192,118 @@ public class IconCompat extends CustomVersionedParcelable {
         this.mTintList = null;
         this.mTintMode = DEFAULT_TINT_MODE;
         this.mTintModeStr = null;
-        this.mType = mType;
+        this.mType = i;
     }
 
     public int getType() {
         int i = this.mType;
-        return (i != -1 || Build.VERSION.SDK_INT < 23) ? i : getType((Icon) this.mObj1);
+        return i == -1 ? Api23Impl.getType(this.mObj1) : i;
     }
 
     public String getResPackage() {
         int i = this.mType;
-        if (i != -1 || Build.VERSION.SDK_INT < 23) {
-            if (i != 2) {
-                throw new IllegalStateException("called getResPackage() on " + this);
-            } else if (TextUtils.isEmpty(this.mString1)) {
-                return ((String) this.mObj1).split(":", -1)[0];
-            } else {
-                return this.mString1;
-            }
+        if (i == -1) {
+            return Api23Impl.getResPackage(this.mObj1);
         }
-        return getResPackage((Icon) this.mObj1);
+        if (i == 2) {
+            String str = this.mString1;
+            if (str == null || TextUtils.isEmpty(str)) {
+                return ((String) this.mObj1).split(":", -1)[0];
+            }
+            return this.mString1;
+        }
+        throw new IllegalStateException("called getResPackage() on " + this);
     }
 
     public int getResId() {
         int i = this.mType;
-        if (i != -1 || Build.VERSION.SDK_INT < 23) {
-            if (i != 2) {
-                throw new IllegalStateException("called getResId() on " + this);
-            }
+        if (i == -1) {
+            return Api23Impl.getResId(this.mObj1);
+        }
+        if (i == 2) {
             return this.mInt1;
         }
-        return getResId((Icon) this.mObj1);
+        throw new IllegalStateException("called getResId() on " + this);
+    }
+
+    public Bitmap getBitmap() {
+        int i = this.mType;
+        if (i == -1) {
+            Object obj = this.mObj1;
+            if (obj instanceof Bitmap) {
+                return (Bitmap) obj;
+            }
+            return null;
+        } else if (i == 1) {
+            return (Bitmap) this.mObj1;
+        } else {
+            if (i == 5) {
+                return createLegacyIconFromAdaptiveIcon((Bitmap) this.mObj1, true);
+            }
+            throw new IllegalStateException("called getBitmap() on " + this);
+        }
     }
 
     public Uri getUri() {
         int i = this.mType;
-        if (i != -1 || Build.VERSION.SDK_INT < 23) {
-            if (i != 4 && i != 6) {
-                throw new IllegalStateException("called getUri() on " + this);
-            }
+        if (i == -1) {
+            return Api23Impl.getUri(this.mObj1);
+        }
+        if (i == 4 || i == 6) {
             return Uri.parse((String) this.mObj1);
         }
-        return getUri((Icon) this.mObj1);
+        throw new IllegalStateException("called getUri() on " + this);
+    }
+
+    public IconCompat setTint(int i) {
+        return setTintList(ColorStateList.valueOf(i));
+    }
+
+    public IconCompat setTintList(ColorStateList colorStateList) {
+        this.mTintList = colorStateList;
+        return this;
+    }
+
+    public IconCompat setTintMode(PorterDuff.Mode mode) {
+        this.mTintMode = mode;
+        return this;
     }
 
     @Deprecated
     public Icon toIcon() {
-        return toIcon(null);
+        return toIcon((Context) null);
     }
 
     public Icon toIcon(Context context) {
-        Icon createWithBitmap;
-        switch (this.mType) {
-            case -1:
-                return (Icon) this.mObj1;
-            case 0:
-            default:
-                throw new IllegalArgumentException("Unknown type");
-            case 1:
-                createWithBitmap = Icon.createWithBitmap((Bitmap) this.mObj1);
-                break;
-            case 2:
-                createWithBitmap = Icon.createWithResource(getResPackage(), this.mInt1);
-                break;
-            case 3:
-                createWithBitmap = Icon.createWithData((byte[]) this.mObj1, this.mInt1, this.mInt2);
-                break;
-            case 4:
-                createWithBitmap = Icon.createWithContentUri((String) this.mObj1);
-                break;
-            case 5:
-                if (Build.VERSION.SDK_INT >= 26) {
-                    createWithBitmap = Icon.createWithAdaptiveBitmap((Bitmap) this.mObj1);
-                    break;
-                } else {
-                    createWithBitmap = Icon.createWithBitmap(createLegacyIconFromAdaptiveIcon((Bitmap) this.mObj1, false));
-                    break;
-                }
-            case 6:
-                int i = Build.VERSION.SDK_INT;
-                if (i >= 30) {
-                    createWithBitmap = Icon.createWithAdaptiveBitmapContentUri(getUri());
-                    break;
-                } else if (context == null) {
-                    throw new IllegalArgumentException("Context is required to resolve the file uri of the icon: " + getUri());
-                } else {
-                    InputStream uriInputStream = getUriInputStream(context);
-                    if (uriInputStream == null) {
-                        throw new IllegalStateException("Cannot load adaptive icon from uri: " + getUri());
-                    } else if (i >= 26) {
-                        createWithBitmap = Icon.createWithAdaptiveBitmap(BitmapFactory.decodeStream(uriInputStream));
-                        break;
-                    } else {
-                        createWithBitmap = Icon.createWithBitmap(createLegacyIconFromAdaptiveIcon(BitmapFactory.decodeStream(uriInputStream), false));
-                        break;
-                    }
-                }
-        }
-        ColorStateList colorStateList = this.mTintList;
-        if (colorStateList != null) {
-            createWithBitmap.setTintList(colorStateList);
-        }
-        PorterDuff.Mode mode = this.mTintMode;
-        if (mode != DEFAULT_TINT_MODE) {
-            createWithBitmap.setTintMode(mode);
-        }
-        return createWithBitmap;
+        return Api23Impl.toIcon(this, context);
     }
 
     public void checkResource(Context context) {
         Object obj;
-        if (this.mType != 2 || (obj = this.mObj1) == null) {
-            return;
+        if (this.mType == 2 && (obj = this.mObj1) != null) {
+            String str = (String) obj;
+            if (str.contains(":")) {
+                String str2 = str.split(":", -1)[1];
+                String str3 = str2.split("/", -1)[0];
+                String str4 = str2.split("/", -1)[1];
+                String str5 = str.split(":", -1)[0];
+                if ("0_resource_name_obfuscated".equals(str4)) {
+                    Log.i(TAG, "Found obfuscated resource, not trying to update resource id for it");
+                    return;
+                }
+                String resPackage = getResPackage();
+                int identifier = getResources(context, resPackage).getIdentifier(str4, str3, str5);
+                if (this.mInt1 != identifier) {
+                    Log.i(TAG, "Id has changed for " + resPackage + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + str);
+                    this.mInt1 = identifier;
+                }
+            }
         }
-        String str = (String) obj;
-        if (!str.contains(":")) {
-            return;
-        }
-        String str2 = str.split(":", -1)[1];
-        String str3 = str2.split("/", -1)[0];
-        String str4 = str2.split("/", -1)[1];
-        String str5 = str.split(":", -1)[0];
-        if ("0_resource_name_obfuscated".equals(str4)) {
-            Log.i("IconCompat", "Found obfuscated resource, not trying to update resource id for it");
-            return;
-        }
-        String resPackage = getResPackage();
-        int identifier = getResources(context, resPackage).getIdentifier(str4, str3, str5);
-        if (this.mInt1 == identifier) {
-            return;
-        }
-        Log.i("IconCompat", "Id has changed for " + resPackage + " " + str);
-        this.mInt1 = identifier;
     }
 
     public Drawable loadDrawable(Context context) {
         checkResource(context);
-        if (Build.VERSION.SDK_INT >= 23) {
-            return toIcon(context).loadDrawable(context);
-        }
-        Drawable loadDrawableInner = loadDrawableInner(context);
-        if (loadDrawableInner != null && (this.mTintList != null || this.mTintMode != DEFAULT_TINT_MODE)) {
-            loadDrawableInner.mutate();
-            DrawableCompat.setTintList(loadDrawableInner, this.mTintList);
-            DrawableCompat.setTintMode(loadDrawableInner, this.mTintMode);
-        }
-        return loadDrawableInner;
+        return Api23Impl.loadDrawable(toIcon(context), context);
     }
 
     private Drawable loadDrawableInner(Context context) {
@@ -323,7 +318,7 @@ public class IconCompat extends CustomVersionedParcelable {
                 try {
                     return ResourcesCompat.getDrawable(getResources(context, resPackage), this.mInt1, context.getTheme());
                 } catch (RuntimeException e) {
-                    Log.e("IconCompat", String.format("Unable to load resource 0x%08x from pkg=%s", Integer.valueOf(this.mInt1), this.mObj1), e);
+                    Log.e(TAG, String.format("Unable to load resource 0x%08x from pkg=%s", Integer.valueOf(this.mInt1), this.mObj1), e);
                     break;
                 }
             case 3:
@@ -339,10 +334,7 @@ public class IconCompat extends CustomVersionedParcelable {
             case 6:
                 InputStream uriInputStream2 = getUriInputStream(context);
                 if (uriInputStream2 != null) {
-                    if (Build.VERSION.SDK_INT >= 26) {
-                        return new AdaptiveIconDrawable(null, new BitmapDrawable(context.getResources(), BitmapFactory.decodeStream(uriInputStream2)));
-                    }
-                    return new BitmapDrawable(context.getResources(), createLegacyIconFromAdaptiveIcon(BitmapFactory.decodeStream(uriInputStream2), false));
+                    return Api26Impl.createAdaptiveIconDrawable((Drawable) null, new BitmapDrawable(context.getResources(), BitmapFactory.decodeStream(uriInputStream2)));
                 }
                 break;
         }
@@ -356,33 +348,82 @@ public class IconCompat extends CustomVersionedParcelable {
             try {
                 return context.getContentResolver().openInputStream(uri);
             } catch (Exception e) {
-                Log.w("IconCompat", "Unable to load image from URI: " + uri, e);
+                Log.w(TAG, "Unable to load image from URI: " + uri, e);
+                return null;
+            }
+        } else {
+            try {
+                return new FileInputStream(new File((String) this.mObj1));
+            } catch (FileNotFoundException e2) {
+                Log.w(TAG, "Unable to load image from path: " + uri, e2);
                 return null;
             }
         }
-        try {
-            return new FileInputStream(new File((String) this.mObj1));
-        } catch (FileNotFoundException e2) {
-            Log.w("IconCompat", "Unable to load image from path: " + uri, e2);
-            return null;
-        }
     }
 
-    private static Resources getResources(Context context, String resPackage) {
-        if ("android".equals(resPackage)) {
+    static Resources getResources(Context context, String str) {
+        if ("android".equals(str)) {
             return Resources.getSystem();
         }
         PackageManager packageManager = context.getPackageManager();
         try {
-            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(resPackage, 8192);
-            if (applicationInfo == null) {
-                return null;
+            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(str, 8192);
+            if (applicationInfo != null) {
+                return packageManager.getResourcesForApplication(applicationInfo);
             }
-            return packageManager.getResourcesForApplication(applicationInfo);
+            return null;
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("IconCompat", String.format("Unable to find pkg=%s for icon", resPackage), e);
+            Log.e(TAG, String.format("Unable to find pkg=%s for icon", str), e);
             return null;
         }
+    }
+
+    public void addToShortcutIntent(Intent intent, Drawable drawable, Context context) {
+        Bitmap bitmap;
+        Bitmap bitmap2;
+        checkResource(context);
+        int i = this.mType;
+        if (i == 1) {
+            bitmap = (Bitmap) this.mObj1;
+            if (drawable != null) {
+                bitmap = bitmap.copy(bitmap.getConfig(), true);
+            }
+        } else if (i == 2) {
+            try {
+                Context createPackageContext = context.createPackageContext(getResPackage(), 0);
+                if (drawable == null) {
+                    intent.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(createPackageContext, this.mInt1));
+                    return;
+                }
+                Drawable drawable2 = ContextCompat.getDrawable(createPackageContext, this.mInt1);
+                if (drawable2.getIntrinsicWidth() > 0) {
+                    if (drawable2.getIntrinsicHeight() > 0) {
+                        bitmap2 = Bitmap.createBitmap(drawable2.getIntrinsicWidth(), drawable2.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                        drawable2.setBounds(0, 0, bitmap2.getWidth(), bitmap2.getHeight());
+                        drawable2.draw(new Canvas(bitmap2));
+                        bitmap = bitmap2;
+                    }
+                }
+                int launcherLargeIconSize = ((ActivityManager) createPackageContext.getSystemService(SliceHints.HINT_ACTIVITY)).getLauncherLargeIconSize();
+                bitmap2 = Bitmap.createBitmap(launcherLargeIconSize, launcherLargeIconSize, Bitmap.Config.ARGB_8888);
+                drawable2.setBounds(0, 0, bitmap2.getWidth(), bitmap2.getHeight());
+                drawable2.draw(new Canvas(bitmap2));
+                bitmap = bitmap2;
+            } catch (PackageManager.NameNotFoundException e) {
+                throw new IllegalArgumentException("Can't find package " + this.mObj1, e);
+            }
+        } else if (i == 5) {
+            bitmap = createLegacyIconFromAdaptiveIcon((Bitmap) this.mObj1, true);
+        } else {
+            throw new IllegalArgumentException("Icon type not supported for intent shortcuts");
+        }
+        if (drawable != null) {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            drawable.setBounds(width / 2, height / 2, width, height);
+            drawable.draw(new Canvas(bitmap));
+        }
+        intent.putExtra("android.intent.extra.shortcut.ICON", bitmap);
     }
 
     public Bundle toBundle() {
@@ -391,9 +432,6 @@ public class IconCompat extends CustomVersionedParcelable {
             case -1:
                 bundle.putParcelable(EXTRA_OBJ, (Parcelable) this.mObj1);
                 break;
-            case 0:
-            default:
-                throw new IllegalArgumentException("Invalid icon");
             case 1:
             case 5:
                 bundle.putParcelable(EXTRA_OBJ, (Bitmap) this.mObj1);
@@ -406,6 +444,8 @@ public class IconCompat extends CustomVersionedParcelable {
             case 3:
                 bundle.putByteArray(EXTRA_OBJ, (byte[]) this.mObj1);
                 break;
+            default:
+                throw new IllegalArgumentException("Invalid icon");
         }
         bundle.putInt(EXTRA_TYPE, this.mType);
         bundle.putInt(EXTRA_INT1, this.mInt1);
@@ -426,64 +466,50 @@ public class IconCompat extends CustomVersionedParcelable {
         if (this.mType == -1) {
             return String.valueOf(this.mObj1);
         }
-        StringBuilder sb = new StringBuilder("Icon(typ=");
-        sb.append(typeToString(this.mType));
+        StringBuilder append = new StringBuilder("Icon(typ=").append(typeToString(this.mType));
         switch (this.mType) {
             case 1:
             case 5:
-                sb.append(" size=");
-                sb.append(((Bitmap) this.mObj1).getWidth());
-                sb.append("x");
-                sb.append(((Bitmap) this.mObj1).getHeight());
+                append.append(" size=").append(((Bitmap) this.mObj1).getWidth()).append(LanguageTag.PRIVATEUSE).append(((Bitmap) this.mObj1).getHeight());
                 break;
             case 2:
-                sb.append(" pkg=");
-                sb.append(this.mString1);
-                sb.append(" id=");
-                sb.append(String.format("0x%08x", Integer.valueOf(getResId())));
+                append.append(" pkg=").append(this.mString1).append(" id=").append(String.format("0x%08x", Integer.valueOf(getResId())));
                 break;
             case 3:
-                sb.append(" len=");
-                sb.append(this.mInt1);
+                append.append(" len=").append(this.mInt1);
                 if (this.mInt2 != 0) {
-                    sb.append(" off=");
-                    sb.append(this.mInt2);
+                    append.append(" off=").append(this.mInt2);
                     break;
                 }
                 break;
             case 4:
             case 6:
-                sb.append(" uri=");
-                sb.append(this.mObj1);
+                append.append(" uri=").append(this.mObj1);
                 break;
         }
         if (this.mTintList != null) {
-            sb.append(" tint=");
-            sb.append(this.mTintList);
+            append.append(" tint=");
+            append.append((Object) this.mTintList);
         }
         if (this.mTintMode != DEFAULT_TINT_MODE) {
-            sb.append(" mode=");
-            sb.append(this.mTintMode);
+            append.append(" mode=").append((Object) this.mTintMode);
         }
-        sb.append(")");
-        return sb.toString();
+        append.append(NavigationBarInflaterView.KEY_CODE_END);
+        return append.toString();
     }
 
-    public void onPreParceling(boolean isStream) {
+    public void onPreParceling(boolean z) {
         this.mTintModeStr = this.mTintMode.name();
         switch (this.mType) {
             case -1:
-                if (isStream) {
-                    throw new IllegalArgumentException("Can't serialize Icon created with IconCompat#createFromIcon");
+                if (!z) {
+                    this.mParcelable = (Parcelable) this.mObj1;
+                    return;
                 }
-                this.mParcelable = (Parcelable) this.mObj1;
-                return;
-            case 0:
-            default:
-                return;
+                throw new IllegalArgumentException("Can't serialize Icon created with IconCompat#createFromIcon");
             case 1:
             case 5:
-                if (isStream) {
+                if (z) {
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     ((Bitmap) this.mObj1).compress(Bitmap.CompressFormat.PNG, 90, byteArrayOutputStream);
                     this.mData = byteArrayOutputStream.toByteArray();
@@ -501,6 +527,8 @@ public class IconCompat extends CustomVersionedParcelable {
             case 6:
                 this.mData = this.mObj1.toString().getBytes(Charset.forName("UTF-16"));
                 return;
+            default:
+                return;
         }
     }
 
@@ -514,9 +542,6 @@ public class IconCompat extends CustomVersionedParcelable {
                     return;
                 }
                 throw new IllegalArgumentException("Invalid icon");
-            case 0:
-            default:
-                return;
             case 1:
             case 5:
                 Parcelable parcelable2 = this.mParcelable;
@@ -535,13 +560,16 @@ public class IconCompat extends CustomVersionedParcelable {
             case 6:
                 String str = new String(this.mData, Charset.forName("UTF-16"));
                 this.mObj1 = str;
-                if (this.mType != 2 || this.mString1 != null) {
+                if (this.mType == 2 && this.mString1 == null) {
+                    String str2 = str;
+                    this.mString1 = str.split(":", -1)[0];
                     return;
                 }
-                this.mString1 = str.split(":", -1)[0];
                 return;
             case 3:
                 this.mObj1 = this.mData;
+                return;
+            default:
                 return;
         }
     }
@@ -564,10 +592,6 @@ public class IconCompat extends CustomVersionedParcelable {
             case 5:
                 iconCompat.mObj1 = bundle.getParcelable(EXTRA_OBJ);
                 break;
-            case 0:
-            default:
-                Log.w("IconCompat", "Unknown type " + i);
-                return null;
             case 2:
             case 4:
             case 6:
@@ -576,131 +600,39 @@ public class IconCompat extends CustomVersionedParcelable {
             case 3:
                 iconCompat.mObj1 = bundle.getByteArray(EXTRA_OBJ);
                 break;
+            default:
+                Log.w(TAG, "Unknown type " + i);
+                return null;
         }
         return iconCompat;
     }
 
     public static IconCompat createFromIcon(Context context, Icon icon) {
         Preconditions.checkNotNull(icon);
-        int type = getType(icon);
-        if (type == 2) {
-            String resPackage = getResPackage(icon);
-            try {
-                return createWithResource(getResources(context, resPackage), resPackage, getResId(icon));
-            } catch (Resources.NotFoundException unused) {
-                throw new IllegalArgumentException("Icon resource cannot be found");
-            }
-        } else if (type == 4) {
-            return createWithContentUri(getUri(icon));
-        } else {
-            if (type == 6) {
-                return createWithAdaptiveBitmapContentUri(getUri(icon));
-            }
-            IconCompat iconCompat = new IconCompat(-1);
-            iconCompat.mObj1 = icon;
-            return iconCompat;
-        }
+        return Api23Impl.createFromIcon(context, icon);
     }
 
     public static IconCompat createFromIcon(Icon icon) {
-        Preconditions.checkNotNull(icon);
-        int type = getType(icon);
-        if (type != 2) {
-            if (type == 4) {
-                return createWithContentUri(getUri(icon));
-            }
-            if (type == 6) {
-                return createWithAdaptiveBitmapContentUri(getUri(icon));
-            }
-            IconCompat iconCompat = new IconCompat(-1);
-            iconCompat.mObj1 = icon;
-            return iconCompat;
-        }
-        return createWithResource(null, getResPackage(icon), getResId(icon));
+        return Api23Impl.createFromIconInner(icon);
     }
 
-    private static int getType(Icon icon) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return icon.getType();
+    public static IconCompat createFromIconOrNullIfZeroResId(Icon icon) {
+        if (Api23Impl.getType(icon) == 2 && Api23Impl.getResId(icon) == 0) {
+            return null;
         }
-        try {
-            return ((Integer) icon.getClass().getMethod("getType", new Class[0]).invoke(icon, new Object[0])).intValue();
-        } catch (IllegalAccessException e) {
-            Log.e("IconCompat", "Unable to get icon type " + icon, e);
-            return -1;
-        } catch (NoSuchMethodException e2) {
-            Log.e("IconCompat", "Unable to get icon type " + icon, e2);
-            return -1;
-        } catch (InvocationTargetException e3) {
-            Log.e("IconCompat", "Unable to get icon type " + icon, e3);
-            return -1;
-        }
+        return Api23Impl.createFromIconInner(icon);
     }
 
-    private static String getResPackage(Icon icon) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return icon.getResPackage();
-        }
-        try {
-            return (String) icon.getClass().getMethod("getResPackage", new Class[0]).invoke(icon, new Object[0]);
-        } catch (IllegalAccessException e) {
-            Log.e("IconCompat", "Unable to get icon package", e);
-            return null;
-        } catch (NoSuchMethodException e2) {
-            Log.e("IconCompat", "Unable to get icon package", e2);
-            return null;
-        } catch (InvocationTargetException e3) {
-            Log.e("IconCompat", "Unable to get icon package", e3);
-            return null;
-        }
-    }
-
-    private static int getResId(Icon icon) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return icon.getResId();
-        }
-        try {
-            return ((Integer) icon.getClass().getMethod("getResId", new Class[0]).invoke(icon, new Object[0])).intValue();
-        } catch (IllegalAccessException e) {
-            Log.e("IconCompat", "Unable to get icon resource", e);
-            return 0;
-        } catch (NoSuchMethodException e2) {
-            Log.e("IconCompat", "Unable to get icon resource", e2);
-            return 0;
-        } catch (InvocationTargetException e3) {
-            Log.e("IconCompat", "Unable to get icon resource", e3);
-            return 0;
-        }
-    }
-
-    private static Uri getUri(Icon icon) {
-        if (Build.VERSION.SDK_INT >= 28) {
-            return icon.getUri();
-        }
-        try {
-            return (Uri) icon.getClass().getMethod("getUri", new Class[0]).invoke(icon, new Object[0]);
-        } catch (IllegalAccessException e) {
-            Log.e("IconCompat", "Unable to get icon uri", e);
-            return null;
-        } catch (NoSuchMethodException e2) {
-            Log.e("IconCompat", "Unable to get icon uri", e2);
-            return null;
-        } catch (InvocationTargetException e3) {
-            Log.e("IconCompat", "Unable to get icon uri", e3);
-            return null;
-        }
-    }
-
-    static Bitmap createLegacyIconFromAdaptiveIcon(Bitmap adaptiveIconBitmap, boolean addShadow) {
-        int min = (int) (Math.min(adaptiveIconBitmap.getWidth(), adaptiveIconBitmap.getHeight()) * 0.6666667f);
+    static Bitmap createLegacyIconFromAdaptiveIcon(Bitmap bitmap, boolean z) {
+        int min = (int) (((float) Math.min(bitmap.getWidth(), bitmap.getHeight())) * DEFAULT_VIEW_PORT_SCALE);
         Bitmap createBitmap = Bitmap.createBitmap(min, min, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(createBitmap);
         Paint paint = new Paint(3);
-        float f = min;
+        float f = (float) min;
         float f2 = 0.5f * f;
-        float f3 = 0.9166667f * f2;
-        if (addShadow) {
-            float f4 = 0.010416667f * f;
+        float f3 = ICON_DIAMETER_FACTOR * f2;
+        if (z) {
+            float f4 = BLUR_FACTOR * f;
             paint.setColor(0);
             paint.setShadowLayer(f4, 0.0f, f * 0.020833334f, 1023410176);
             canvas.drawCircle(f2, f2, f3, paint);
@@ -708,15 +640,155 @@ public class IconCompat extends CustomVersionedParcelable {
             canvas.drawCircle(f2, f2, f3, paint);
             paint.clearShadowLayer();
         }
-        paint.setColor(-16777216);
-        Shader.TileMode tileMode = Shader.TileMode.CLAMP;
-        BitmapShader bitmapShader = new BitmapShader(adaptiveIconBitmap, tileMode, tileMode);
+        paint.setColor(ViewCompat.MEASURED_STATE_MASK);
+        BitmapShader bitmapShader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         Matrix matrix = new Matrix();
-        matrix.setTranslate((-(adaptiveIconBitmap.getWidth() - min)) / 2, (-(adaptiveIconBitmap.getHeight() - min)) / 2);
+        matrix.setTranslate(((float) (-(bitmap.getWidth() - min))) / 2.0f, ((float) (-(bitmap.getHeight() - min))) / 2.0f);
         bitmapShader.setLocalMatrix(matrix);
         paint.setShader(bitmapShader);
         canvas.drawCircle(f2, f2, f3, paint);
-        canvas.setBitmap(null);
+        canvas.setBitmap((Bitmap) null);
         return createBitmap;
+    }
+
+    static class Api28Impl {
+        private Api28Impl() {
+        }
+
+        static String getResPackage(Object obj) {
+            return ((Icon) obj).getResPackage();
+        }
+
+        static int getType(Object obj) {
+            return ((Icon) obj).getType();
+        }
+
+        static int getResId(Object obj) {
+            return ((Icon) obj).getResId();
+        }
+
+        static Uri getUri(Object obj) {
+            return ((Icon) obj).getUri();
+        }
+    }
+
+    static class Api26Impl {
+        private Api26Impl() {
+        }
+
+        static Drawable createAdaptiveIconDrawable(Drawable drawable, Drawable drawable2) {
+            return new AdaptiveIconDrawable(drawable, drawable2);
+        }
+
+        static Icon createWithAdaptiveBitmap(Bitmap bitmap) {
+            return Icon.createWithAdaptiveBitmap(bitmap);
+        }
+    }
+
+    static class Api30Impl {
+        private Api30Impl() {
+        }
+
+        static Icon createWithAdaptiveBitmapContentUri(Uri uri) {
+            return Icon.createWithAdaptiveBitmapContentUri(uri);
+        }
+    }
+
+    static class Api23Impl {
+        private Api23Impl() {
+        }
+
+        static IconCompat createFromIcon(Context context, Icon icon) {
+            int type = getType(icon);
+            if (type == 2) {
+                String resPackage = getResPackage(icon);
+                try {
+                    return IconCompat.createWithResource(IconCompat.getResources(context, resPackage), resPackage, getResId(icon));
+                } catch (Resources.NotFoundException unused) {
+                    throw new IllegalArgumentException("Icon resource cannot be found");
+                }
+            } else if (type == 4) {
+                return IconCompat.createWithContentUri(getUri(icon));
+            } else {
+                if (type == 6) {
+                    return IconCompat.createWithAdaptiveBitmapContentUri(getUri(icon));
+                }
+                IconCompat iconCompat = new IconCompat(-1);
+                iconCompat.mObj1 = icon;
+                return iconCompat;
+            }
+        }
+
+        static int getType(Object obj) {
+            return Api28Impl.getType(obj);
+        }
+
+        static String getResPackage(Object obj) {
+            return Api28Impl.getResPackage(obj);
+        }
+
+        static IconCompat createFromIconInner(Object obj) {
+            Preconditions.checkNotNull(obj);
+            int type = getType(obj);
+            if (type == 2) {
+                return IconCompat.createWithResource((Resources) null, getResPackage(obj), getResId(obj));
+            }
+            if (type == 4) {
+                return IconCompat.createWithContentUri(getUri(obj));
+            }
+            if (type == 6) {
+                return IconCompat.createWithAdaptiveBitmapContentUri(getUri(obj));
+            }
+            IconCompat iconCompat = new IconCompat(-1);
+            iconCompat.mObj1 = obj;
+            return iconCompat;
+        }
+
+        static int getResId(Object obj) {
+            return Api28Impl.getResId(obj);
+        }
+
+        static Uri getUri(Object obj) {
+            return Api28Impl.getUri(obj);
+        }
+
+        static Icon toIcon(IconCompat iconCompat, Context context) {
+            Icon icon;
+            switch (iconCompat.mType) {
+                case -1:
+                    return (Icon) iconCompat.mObj1;
+                case 1:
+                    icon = Icon.createWithBitmap((Bitmap) iconCompat.mObj1);
+                    break;
+                case 2:
+                    icon = Icon.createWithResource(iconCompat.getResPackage(), iconCompat.mInt1);
+                    break;
+                case 3:
+                    icon = Icon.createWithData((byte[]) iconCompat.mObj1, iconCompat.mInt1, iconCompat.mInt2);
+                    break;
+                case 4:
+                    icon = Icon.createWithContentUri((String) iconCompat.mObj1);
+                    break;
+                case 5:
+                    icon = Api26Impl.createWithAdaptiveBitmap((Bitmap) iconCompat.mObj1);
+                    break;
+                case 6:
+                    icon = Api30Impl.createWithAdaptiveBitmapContentUri(iconCompat.getUri());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unknown type");
+            }
+            if (iconCompat.mTintList != null) {
+                icon.setTintList(iconCompat.mTintList);
+            }
+            if (iconCompat.mTintMode != IconCompat.DEFAULT_TINT_MODE) {
+                icon.setTintMode(iconCompat.mTintMode);
+            }
+            return icon;
+        }
+
+        static Drawable loadDrawable(Icon icon, Context context) {
+            return icon.loadDrawable(context);
+        }
     }
 }

@@ -6,7 +6,7 @@ import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideOptionalVibratorFactory implements Factory<Optional<Vibrator>> {
     private final Provider<Context> contextProvider;
 
@@ -14,10 +14,8 @@ public final class FrameworkServicesModule_ProvideOptionalVibratorFactory implem
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get  reason: collision with other method in class */
-    public Optional<Vibrator> mo1933get() {
-        return provideOptionalVibrator(this.contextProvider.mo1933get());
+    public Optional<Vibrator> get() {
+        return provideOptionalVibrator(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideOptionalVibratorFactory create(Provider<Context> provider) {

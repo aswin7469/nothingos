@@ -1,19 +1,18 @@
 package com.android.systemui.people;
 
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Stream;
-/* loaded from: classes.dex */
-public final /* synthetic */ class PeopleSpaceUtils$$ExternalSyntheticLambda4 implements Function {
-    public static final /* synthetic */ PeopleSpaceUtils$$ExternalSyntheticLambda4 INSTANCE = new PeopleSpaceUtils$$ExternalSyntheticLambda4();
+import android.content.pm.ShortcutInfo;
+import android.os.UserManager;
+import java.util.function.Predicate;
 
-    private /* synthetic */ PeopleSpaceUtils$$ExternalSyntheticLambda4() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class PeopleSpaceUtils$$ExternalSyntheticLambda4 implements Predicate {
+    public final /* synthetic */ UserManager f$0;
+
+    public /* synthetic */ PeopleSpaceUtils$$ExternalSyntheticLambda4(UserManager userManager) {
+        this.f$0 = userManager;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        Stream lambda$getNotificationsByUri$0;
-        lambda$getNotificationsByUri$0 = PeopleSpaceUtils.lambda$getNotificationsByUri$0((Map.Entry) obj);
-        return lambda$getNotificationsByUri$0;
+    public final boolean test(Object obj) {
+        return PeopleSpaceUtils.lambda$getSortedTiles$2(this.f$0, (ShortcutInfo) obj);
     }
 }

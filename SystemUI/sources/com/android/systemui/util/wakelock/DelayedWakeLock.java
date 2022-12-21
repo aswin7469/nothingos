@@ -2,8 +2,11 @@ package com.android.systemui.util.wakelock;
 
 import android.content.Context;
 import android.os.Handler;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
 public class DelayedWakeLock implements WakeLock {
+    private static final long RELEASE_DELAY_MS = 100;
+    private static final String TO_STRING_PREFIX = "[DelayedWakeLock] ";
     private final Handler mHandler;
     private final WakeLock mInner;
 
@@ -12,41 +15,34 @@ public class DelayedWakeLock implements WakeLock {
         this.mInner = wakeLock;
     }
 
-    @Override // com.android.systemui.util.wakelock.WakeLock
     public void acquire(String str) {
         this.mInner.acquire(str);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$release$0(String str) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$release$0$com-android-systemui-util-wakelock-DelayedWakeLock */
+    public /* synthetic */ void mo47179x7da1638c(String str) {
         this.mInner.release(str);
     }
 
-    @Override // com.android.systemui.util.wakelock.WakeLock
-    public void release(final String str) {
-        this.mHandler.postDelayed(new Runnable() { // from class: com.android.systemui.util.wakelock.DelayedWakeLock$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                DelayedWakeLock.this.lambda$release$0(str);
-            }
-        }, 100L);
+    public void release(String str) {
+        this.mHandler.postDelayed(new DelayedWakeLock$$ExternalSyntheticLambda0(this, str), 100);
     }
 
-    @Override // com.android.systemui.util.wakelock.WakeLock
     public Runnable wrap(Runnable runnable) {
         return WakeLock.wrapImpl(this, runnable);
     }
 
     public String toString() {
-        return "[DelayedWakeLock] " + this.mInner;
+        return TO_STRING_PREFIX + this.mInner;
     }
 
-    /* loaded from: classes2.dex */
     public static class Builder {
         private final Context mContext;
         private Handler mHandler;
         private String mTag;
 
+        @Inject
         public Builder(Context context) {
             this.mContext = context;
         }

@@ -5,7 +5,7 @@ import android.hardware.display.DisplayManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideDisplayManagerFactory implements Factory<DisplayManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideDisplayManagerFactory implemen
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DisplayManager mo1933get() {
-        return provideDisplayManager(this.contextProvider.mo1933get());
+    public DisplayManager get() {
+        return provideDisplayManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideDisplayManagerFactory create(Provider<Context> provider) {

@@ -1,49 +1,44 @@
 package androidx.dynamicanimation.animation;
 
-import android.os.Build;
+import android.animation.ValueAnimator;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.view.Choreographer;
 import androidx.collection.SimpleArrayMap;
-import androidx.dynamicanimation.animation.AnimationHandler;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
-public final class AnimationHandler {
+
+public class AnimationHandler {
+    private static final long FRAME_DELAY_MS = 10;
     private static final ThreadLocal<AnimationHandler> sAnimatorHandler = new ThreadLocal<>();
-    private FrameCallbackScheduler mScheduler;
-    private final SimpleArrayMap<AnimationFrameCallback, Long> mDelayedCallbackStartTime = new SimpleArrayMap<>();
     final ArrayList<AnimationFrameCallback> mAnimationCallbacks = new ArrayList<>();
     private final AnimationCallbackDispatcher mCallbackDispatcher = new AnimationCallbackDispatcher();
-    private final Runnable mRunnable = new Runnable() { // from class: androidx.dynamicanimation.animation.AnimationHandler$$ExternalSyntheticLambda0
-        @Override // java.lang.Runnable
-        public final void run() {
-            AnimationHandler.this.lambda$new$0();
-        }
-    };
     long mCurrentFrameTime = 0;
+    private final SimpleArrayMap<AnimationFrameCallback, Long> mDelayedCallbackStartTime = new SimpleArrayMap<>();
+    public float mDurationScale = 1.0f;
+    public DurationScaleChangeListener mDurationScaleChangeListener;
     private boolean mListDirty = false;
+    /* access modifiers changed from: private */
+    public final Runnable mRunnable = new AnimationHandler$$ExternalSyntheticLambda0(this);
+    /* access modifiers changed from: private */
+    public FrameCallbackScheduler mScheduler;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface AnimationFrameCallback {
-        boolean doAnimationFrame(long frameTime);
+    interface AnimationFrameCallback {
+        boolean doAnimationFrame(long j);
     }
 
-    /* loaded from: classes.dex */
-    public interface FrameCallbackScheduler {
-        boolean isCurrentThread();
+    public interface DurationScaleChangeListener {
+        boolean register();
 
-        void postFrameCallback(Runnable frameCallback);
+        boolean unregister();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class AnimationCallbackDispatcher {
+    private class AnimationCallbackDispatcher {
         private AnimationCallbackDispatcher() {
         }
 
-        void dispatchAnimationFrame() {
+        /* access modifiers changed from: package-private */
+        public void dispatchAnimationFrame() {
             AnimationHandler.this.mCurrentFrameTime = SystemClock.uptimeMillis();
             AnimationHandler animationHandler = AnimationHandler.this;
             animationHandler.doAnimationFrame(animationHandler.mCurrentFrameTime);
@@ -53,78 +48,78 @@ public final class AnimationHandler {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$androidx-dynamicanimation-animation-AnimationHandler */
+    public /* synthetic */ void mo14204x83fff5a8() {
         this.mCallbackDispatcher.dispatchAnimationFrame();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static AnimationHandler getInstance() {
-        FrameCallbackScheduler frameCallbackScheduler14;
+    static AnimationHandler getInstance() {
         ThreadLocal<AnimationHandler> threadLocal = sAnimatorHandler;
         if (threadLocal.get() == null) {
-            if (Build.VERSION.SDK_INT >= 16) {
-                frameCallbackScheduler14 = new FrameCallbackScheduler16();
-            } else {
-                frameCallbackScheduler14 = new FrameCallbackScheduler14();
-            }
-            threadLocal.set(new AnimationHandler(frameCallbackScheduler14));
+            threadLocal.set(new AnimationHandler(new FrameCallbackScheduler16()));
         }
         return threadLocal.get();
     }
 
-    public AnimationHandler(FrameCallbackScheduler scheduler) {
-        this.mScheduler = scheduler;
+    public AnimationHandler(FrameCallbackScheduler frameCallbackScheduler) {
+        this.mScheduler = frameCallbackScheduler;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void addAnimationFrameCallback(final AnimationFrameCallback callback, long delay) {
+    /* access modifiers changed from: package-private */
+    public void addAnimationFrameCallback(AnimationFrameCallback animationFrameCallback, long j) {
         if (this.mAnimationCallbacks.size() == 0) {
             this.mScheduler.postFrameCallback(this.mRunnable);
+            this.mDurationScale = ValueAnimator.getDurationScale();
+            if (this.mDurationScaleChangeListener == null) {
+                this.mDurationScaleChangeListener = new DurationScaleChangeListener33();
+            }
+            this.mDurationScaleChangeListener.register();
         }
-        if (!this.mAnimationCallbacks.contains(callback)) {
-            this.mAnimationCallbacks.add(callback);
+        if (!this.mAnimationCallbacks.contains(animationFrameCallback)) {
+            this.mAnimationCallbacks.add(animationFrameCallback);
         }
-        if (delay > 0) {
-            this.mDelayedCallbackStartTime.put(callback, Long.valueOf(SystemClock.uptimeMillis() + delay));
+        if (j > 0) {
+            this.mDelayedCallbackStartTime.put(animationFrameCallback, Long.valueOf(SystemClock.uptimeMillis() + j));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void removeCallback(AnimationFrameCallback callback) {
-        this.mDelayedCallbackStartTime.remove(callback);
-        int indexOf = this.mAnimationCallbacks.indexOf(callback);
+    /* access modifiers changed from: package-private */
+    public void removeCallback(AnimationFrameCallback animationFrameCallback) {
+        this.mDelayedCallbackStartTime.remove(animationFrameCallback);
+        int indexOf = this.mAnimationCallbacks.indexOf(animationFrameCallback);
         if (indexOf >= 0) {
             this.mAnimationCallbacks.set(indexOf, null);
             this.mListDirty = true;
         }
     }
 
-    void doAnimationFrame(long frameTime) {
+    /* access modifiers changed from: package-private */
+    public void doAnimationFrame(long j) {
         long uptimeMillis = SystemClock.uptimeMillis();
         for (int i = 0; i < this.mAnimationCallbacks.size(); i++) {
             AnimationFrameCallback animationFrameCallback = this.mAnimationCallbacks.get(i);
             if (animationFrameCallback != null && isCallbackDue(animationFrameCallback, uptimeMillis)) {
-                animationFrameCallback.doAnimationFrame(frameTime);
+                animationFrameCallback.doAnimationFrame(j);
             }
         }
         cleanUpList();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isCurrentThread() {
         return this.mScheduler.isCurrentThread();
     }
 
-    private boolean isCallbackDue(AnimationFrameCallback callback, long currentTime) {
-        Long l = this.mDelayedCallbackStartTime.get(callback);
+    private boolean isCallbackDue(AnimationFrameCallback animationFrameCallback, long j) {
+        Long l = this.mDelayedCallbackStartTime.get(animationFrameCallback);
         if (l == null) {
             return true;
         }
-        if (l.longValue() >= currentTime) {
+        if (l.longValue() >= j) {
             return false;
         }
-        this.mDelayedCallbackStartTime.remove(callback);
+        this.mDelayedCallbackStartTime.remove(animationFrameCallback);
         return true;
     }
 
@@ -135,71 +130,86 @@ public final class AnimationHandler {
                     this.mAnimationCallbacks.remove(size);
                 }
             }
+            if (this.mAnimationCallbacks.size() == 0) {
+                this.mDurationScaleChangeListener.unregister();
+            }
             this.mListDirty = false;
         }
     }
 
-    public void setScheduler(FrameCallbackScheduler scheduler) {
-        this.mScheduler = scheduler;
-    }
-
+    /* access modifiers changed from: package-private */
     public FrameCallbackScheduler getScheduler() {
         return this.mScheduler;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static final class FrameCallbackScheduler16 implements FrameCallbackScheduler {
+    static final class FrameCallbackScheduler16 implements FrameCallbackScheduler {
         private final Choreographer mChoreographer = Choreographer.getInstance();
         private final Looper mLooper = Looper.myLooper();
 
         FrameCallbackScheduler16() {
         }
 
-        @Override // androidx.dynamicanimation.animation.AnimationHandler.FrameCallbackScheduler
-        public void postFrameCallback(final Runnable frameCallback) {
-            this.mChoreographer.postFrameCallback(new Choreographer.FrameCallback() { // from class: androidx.dynamicanimation.animation.AnimationHandler$FrameCallbackScheduler16$$ExternalSyntheticLambda0
-                @Override // android.view.Choreographer.FrameCallback
-                public final void doFrame(long j) {
-                    frameCallback.run();
-                }
-            });
+        public void postFrameCallback(Runnable runnable) {
+            this.mChoreographer.postFrameCallback(new C0634xde8d857b(runnable));
         }
 
-        @Override // androidx.dynamicanimation.animation.AnimationHandler.FrameCallbackScheduler
         public boolean isCurrentThread() {
             return Thread.currentThread() == this.mLooper.getThread();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class FrameCallbackScheduler14 implements FrameCallbackScheduler {
+    static class FrameCallbackScheduler14 implements FrameCallbackScheduler {
         private final Handler mHandler = new Handler(Looper.myLooper());
         private long mLastFrameTime;
 
         FrameCallbackScheduler14() {
         }
 
-        @Override // androidx.dynamicanimation.animation.AnimationHandler.FrameCallbackScheduler
-        public void postFrameCallback(final Runnable frameCallback) {
-            this.mHandler.postDelayed(new Runnable() { // from class: androidx.dynamicanimation.animation.AnimationHandler$FrameCallbackScheduler14$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    AnimationHandler.FrameCallbackScheduler14.this.lambda$postFrameCallback$0(frameCallback);
-                }
-            }, Math.max(10 - (SystemClock.uptimeMillis() - this.mLastFrameTime), 0L));
+        public void postFrameCallback(Runnable runnable) {
+            this.mHandler.postDelayed(new C0633x6beb63f9(this, runnable), Math.max(AnimationHandler.FRAME_DELAY_MS - (SystemClock.uptimeMillis() - this.mLastFrameTime), 0));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$postFrameCallback$0(Runnable runnable) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$postFrameCallback$0$androidx-dynamicanimation-animation-AnimationHandler$FrameCallbackScheduler14 */
+        public /* synthetic */ void mo14212x7ba8ba(Runnable runnable) {
             this.mLastFrameTime = SystemClock.uptimeMillis();
             runnable.run();
         }
 
-        @Override // androidx.dynamicanimation.animation.AnimationHandler.FrameCallbackScheduler
         public boolean isCurrentThread() {
             return Thread.currentThread() == this.mHandler.getLooper().getThread();
+        }
+    }
+
+    public float getDurationScale() {
+        return this.mDurationScale;
+    }
+
+    public class DurationScaleChangeListener33 implements DurationScaleChangeListener {
+        ValueAnimator.DurationScaleChangeListener mListener;
+
+        public DurationScaleChangeListener33() {
+        }
+
+        public boolean register() {
+            if (this.mListener != null) {
+                return true;
+            }
+            C0632xf577eeeb animationHandler$DurationScaleChangeListener33$$ExternalSyntheticLambda0 = new C0632xf577eeeb(this);
+            this.mListener = animationHandler$DurationScaleChangeListener33$$ExternalSyntheticLambda0;
+            return ValueAnimator.registerDurationScaleChangeListener(animationHandler$DurationScaleChangeListener33$$ExternalSyntheticLambda0);
+        }
+
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$register$0$androidx-dynamicanimation-animation-AnimationHandler$DurationScaleChangeListener33 */
+        public /* synthetic */ void mo14210xb804c881(float f) {
+            AnimationHandler.this.mDurationScale = f;
+        }
+
+        public boolean unregister() {
+            boolean unregisterDurationScaleChangeListener = ValueAnimator.unregisterDurationScaleChangeListener(this.mListener);
+            this.mListener = null;
+            return unregisterDurationScaleChangeListener;
         }
     }
 }

@@ -1,34 +1,38 @@
 package com.android.systemui.util.leak;
 
 import android.content.Context;
-import android.os.Looper;
+import com.android.systemui.dump.DumpManager;
+import com.android.systemui.util.concurrency.DelayableExecutor;
+import com.android.systemui.util.concurrency.MessageRouter;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class GarbageMonitor_Factory implements Factory<GarbageMonitor> {
-    private final Provider<Looper> bgLooperProvider;
     private final Provider<Context> contextProvider;
+    private final Provider<DelayableExecutor> delayableExecutorProvider;
+    private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<LeakDetector> leakDetectorProvider;
     private final Provider<LeakReporter> leakReporterProvider;
+    private final Provider<MessageRouter> messageRouterProvider;
 
-    public GarbageMonitor_Factory(Provider<Context> provider, Provider<Looper> provider2, Provider<LeakDetector> provider3, Provider<LeakReporter> provider4) {
+    public GarbageMonitor_Factory(Provider<Context> provider, Provider<DelayableExecutor> provider2, Provider<MessageRouter> provider3, Provider<LeakDetector> provider4, Provider<LeakReporter> provider5, Provider<DumpManager> provider6) {
         this.contextProvider = provider;
-        this.bgLooperProvider = provider2;
-        this.leakDetectorProvider = provider3;
-        this.leakReporterProvider = provider4;
+        this.delayableExecutorProvider = provider2;
+        this.messageRouterProvider = provider3;
+        this.leakDetectorProvider = provider4;
+        this.leakReporterProvider = provider5;
+        this.dumpManagerProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public GarbageMonitor mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.bgLooperProvider.mo1933get(), this.leakDetectorProvider.mo1933get(), this.leakReporterProvider.mo1933get());
+    public GarbageMonitor get() {
+        return newInstance(this.contextProvider.get(), this.delayableExecutorProvider.get(), this.messageRouterProvider.get(), this.leakDetectorProvider.get(), this.leakReporterProvider.get(), this.dumpManagerProvider.get());
     }
 
-    public static GarbageMonitor_Factory create(Provider<Context> provider, Provider<Looper> provider2, Provider<LeakDetector> provider3, Provider<LeakReporter> provider4) {
-        return new GarbageMonitor_Factory(provider, provider2, provider3, provider4);
+    public static GarbageMonitor_Factory create(Provider<Context> provider, Provider<DelayableExecutor> provider2, Provider<MessageRouter> provider3, Provider<LeakDetector> provider4, Provider<LeakReporter> provider5, Provider<DumpManager> provider6) {
+        return new GarbageMonitor_Factory(provider, provider2, provider3, provider4, provider5, provider6);
     }
 
-    public static GarbageMonitor newInstance(Context context, Looper looper, LeakDetector leakDetector, LeakReporter leakReporter) {
-        return new GarbageMonitor(context, looper, leakDetector, leakReporter);
+    public static GarbageMonitor newInstance(Context context, DelayableExecutor delayableExecutor, MessageRouter messageRouter, LeakDetector leakDetector, LeakReporter leakReporter, DumpManager dumpManager) {
+        return new GarbageMonitor(context, delayableExecutor, messageRouter, leakDetector, leakReporter, dumpManager);
     }
 }

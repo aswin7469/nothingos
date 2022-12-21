@@ -6,34 +6,30 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.p026io.IOException;
+import java.p026io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 public final class JsonTreeWriter extends JsonWriter {
-    private String pendingName;
-    private static final Writer UNWRITABLE_WRITER = new Writer() { // from class: com.google.gson.internal.bind.JsonTreeWriter.1
-        @Override // java.io.Writer
+    private static final JsonPrimitive SENTINEL_CLOSED = new JsonPrimitive("closed");
+    private static final Writer UNWRITABLE_WRITER = new Writer() {
         public void write(char[] cArr, int i, int i2) {
             throw new AssertionError();
         }
 
-        @Override // java.io.Writer, java.io.Flushable
         public void flush() throws IOException {
             throw new AssertionError();
         }
 
-        @Override // java.io.Writer, java.io.Closeable, java.lang.AutoCloseable
         public void close() throws IOException {
             throw new AssertionError();
         }
     };
-    private static final JsonPrimitive SENTINEL_CLOSED = new JsonPrimitive("closed");
-    private final List<JsonElement> stack = new ArrayList();
+    private String pendingName;
     private JsonElement product = JsonNull.INSTANCE;
+    private final List<JsonElement> stack = new ArrayList();
 
-    @Override // com.google.gson.stream.JsonWriter, java.io.Flushable
     public void flush() throws IOException {
     }
 
@@ -42,10 +38,10 @@ public final class JsonTreeWriter extends JsonWriter {
     }
 
     public JsonElement get() {
-        if (!this.stack.isEmpty()) {
-            throw new IllegalStateException("Expected one JSON element but was " + this.stack);
+        if (this.stack.isEmpty()) {
+            return this.product;
         }
-        return this.product;
+        throw new IllegalStateException("Expected one JSON element but was " + this.stack);
     }
 
     private JsonElement peek() {
@@ -71,7 +67,6 @@ public final class JsonTreeWriter extends JsonWriter {
         }
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter beginArray() throws IOException {
         JsonArray jsonArray = new JsonArray();
         put(jsonArray);
@@ -79,20 +74,18 @@ public final class JsonTreeWriter extends JsonWriter {
         return this;
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter endArray() throws IOException {
         if (this.stack.isEmpty() || this.pendingName != null) {
             throw new IllegalStateException();
-        }
-        if (peek() instanceof JsonArray) {
+        } else if (peek() instanceof JsonArray) {
             List<JsonElement> list = this.stack;
             list.remove(list.size() - 1);
             return this;
+        } else {
+            throw new IllegalStateException();
         }
-        throw new IllegalStateException();
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter beginObject() throws IOException {
         JsonObject jsonObject = new JsonObject();
         put(jsonObject);
@@ -100,32 +93,29 @@ public final class JsonTreeWriter extends JsonWriter {
         return this;
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter endObject() throws IOException {
         if (this.stack.isEmpty() || this.pendingName != null) {
             throw new IllegalStateException();
-        }
-        if (peek() instanceof JsonObject) {
+        } else if (peek() instanceof JsonObject) {
             List<JsonElement> list = this.stack;
             list.remove(list.size() - 1);
             return this;
+        } else {
+            throw new IllegalStateException();
         }
-        throw new IllegalStateException();
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter name(String str) throws IOException {
         if (this.stack.isEmpty() || this.pendingName != null) {
             throw new IllegalStateException();
-        }
-        if (peek() instanceof JsonObject) {
+        } else if (peek() instanceof JsonObject) {
             this.pendingName = str;
             return this;
+        } else {
+            throw new IllegalStateException();
         }
-        throw new IllegalStateException();
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter value(String str) throws IOException {
         if (str == null) {
             return nullValue();
@@ -134,19 +124,16 @@ public final class JsonTreeWriter extends JsonWriter {
         return this;
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter nullValue() throws IOException {
         put(JsonNull.INSTANCE);
         return this;
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter value(boolean z) throws IOException {
         put(new JsonPrimitive(Boolean.valueOf(z)));
         return this;
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter value(Boolean bool) throws IOException {
         if (bool == null) {
             return nullValue();
@@ -155,13 +142,19 @@ public final class JsonTreeWriter extends JsonWriter {
         return this;
     }
 
-    @Override // com.google.gson.stream.JsonWriter
+    public JsonWriter value(double d) throws IOException {
+        if (isLenient() || (!Double.isNaN(d) && !Double.isInfinite(d))) {
+            put(new JsonPrimitive((Number) Double.valueOf(d)));
+            return this;
+        }
+        throw new IllegalArgumentException("JSON forbids NaN and infinities: " + d);
+    }
+
     public JsonWriter value(long j) throws IOException {
-        put(new JsonPrimitive(Long.valueOf(j)));
+        put(new JsonPrimitive((Number) Long.valueOf(j)));
         return this;
     }
 
-    @Override // com.google.gson.stream.JsonWriter
     public JsonWriter value(Number number) throws IOException {
         if (number == null) {
             return nullValue();
@@ -176,11 +169,11 @@ public final class JsonTreeWriter extends JsonWriter {
         return this;
     }
 
-    @Override // com.google.gson.stream.JsonWriter, java.io.Closeable, java.lang.AutoCloseable
     public void close() throws IOException {
-        if (!this.stack.isEmpty()) {
-            throw new IOException("Incomplete document");
+        if (this.stack.isEmpty()) {
+            this.stack.add(SENTINEL_CLOSED);
+            return;
         }
-        this.stack.add(SENTINEL_CLOSED);
+        throw new IOException("Incomplete document");
     }
 }

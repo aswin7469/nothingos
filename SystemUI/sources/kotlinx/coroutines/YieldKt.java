@@ -1,50 +1,40 @@
 package kotlinx.coroutines;
 
+import kotlin.Metadata;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.CoroutineContext;
-import kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsJvmKt;
-import kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsKt;
+import kotlin.coroutines.intrinsics.IntrinsicsKt;
 import kotlin.coroutines.jvm.internal.DebugProbesKt;
-import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import kotlinx.coroutines.internal.DispatchedContinuation;
+import kotlinx.coroutines.internal.DispatchedContinuationKt;
+
+@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\u001a\u0011\u0010\u0000\u001a\u00020\u0001H@ø\u0001\u0000¢\u0006\u0002\u0010\u0002\u0002\u0004\n\u0002\b\u0019¨\u0006\u0003"}, mo64987d2 = {"yield", "", "(Lkotlin/coroutines/Continuation;)Ljava/lang/Object;", "kotlinx-coroutines-core"}, mo64988k = 2, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: Yield.kt */
-/* loaded from: classes2.dex */
 public final class YieldKt {
-    @Nullable
-    public static final Object yield(@NotNull Continuation<? super Unit> continuation) {
-        Continuation intercepted;
+    public static final Object yield(Continuation<? super Unit> continuation) {
         Object obj;
-        Object coroutine_suspended;
         CoroutineContext context = continuation.getContext();
-        checkCompletion(context);
-        intercepted = IntrinsicsKt__IntrinsicsJvmKt.intercepted(continuation);
-        if (!(intercepted instanceof DispatchedContinuation)) {
-            intercepted = null;
-        }
-        DispatchedContinuation dispatchedContinuation = (DispatchedContinuation) intercepted;
+        JobKt.ensureActive(context);
+        Continuation<? super Unit> intercepted = IntrinsicsKt.intercepted(continuation);
+        DispatchedContinuation dispatchedContinuation = intercepted instanceof DispatchedContinuation ? (DispatchedContinuation) intercepted : null;
         if (dispatchedContinuation == null) {
             obj = Unit.INSTANCE;
-        } else if (!dispatchedContinuation.dispatcher.isDispatchNeeded(context)) {
-            obj = DispatchedKt.yieldUndispatched(dispatchedContinuation) ? IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED() : Unit.INSTANCE;
         } else {
-            dispatchedContinuation.dispatchYield$kotlinx_coroutines_core(Unit.INSTANCE);
-            obj = IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED();
+            if (dispatchedContinuation.dispatcher.isDispatchNeeded(context)) {
+                dispatchedContinuation.dispatchYield$kotlinx_coroutines_core(context, Unit.INSTANCE);
+            } else {
+                YieldContext yieldContext = new YieldContext();
+                dispatchedContinuation.dispatchYield$kotlinx_coroutines_core(context.plus(yieldContext), Unit.INSTANCE);
+                if (yieldContext.dispatcherWasUnconfined) {
+                    obj = DispatchedContinuationKt.yieldUndispatched(dispatchedContinuation) ? IntrinsicsKt.getCOROUTINE_SUSPENDED() : Unit.INSTANCE;
+                }
+            }
+            obj = IntrinsicsKt.getCOROUTINE_SUSPENDED();
         }
-        coroutine_suspended = IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED();
-        if (obj == coroutine_suspended) {
+        if (obj == IntrinsicsKt.getCOROUTINE_SUSPENDED()) {
             DebugProbesKt.probeCoroutineSuspended(continuation);
         }
-        return obj;
-    }
-
-    public static final void checkCompletion(@NotNull CoroutineContext checkCompletion) {
-        Intrinsics.checkParameterIsNotNull(checkCompletion, "$this$checkCompletion");
-        Job job = (Job) checkCompletion.get(Job.Key);
-        if (job == null || job.isActive()) {
-            return;
-        }
-        throw job.getCancellationException();
+        return obj == IntrinsicsKt.getCOROUTINE_SUSPENDED() ? obj : Unit.INSTANCE;
     }
 }

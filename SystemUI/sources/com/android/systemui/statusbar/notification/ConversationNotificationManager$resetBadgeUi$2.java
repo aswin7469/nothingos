@@ -2,11 +2,12 @@ package com.android.systemui.statusbar.notification;
 
 import android.view.View;
 import com.android.internal.widget.ConversationLayout;
+import kotlin.Metadata;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u0000\u0010\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\u0010\u0000\u001a\u0004\u0018\u00010\u00012\u000e\u0010\u0002\u001a\n \u0004*\u0004\u0018\u00010\u00030\u0003H\n¢\u0006\u0002\b\u0005"}, mo64987d2 = {"<anonymous>", "Lcom/android/internal/widget/ConversationLayout;", "view", "Landroid/view/View;", "kotlin.jvm.PlatformType", "invoke"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ConversationNotifications.kt */
-/* loaded from: classes.dex */
 final class ConversationNotificationManager$resetBadgeUi$2 extends Lambda implements Function1<View, ConversationLayout> {
     public static final ConversationNotificationManager$resetBadgeUi$2 INSTANCE = new ConversationNotificationManager$resetBadgeUi$2();
 
@@ -14,10 +15,7 @@ final class ConversationNotificationManager$resetBadgeUi$2 extends Lambda implem
         super(1);
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    @Nullable
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final ConversationLayout mo1949invoke(View view) {
+    public final ConversationLayout invoke(View view) {
         if (view instanceof ConversationLayout) {
             return (ConversationLayout) view;
         }

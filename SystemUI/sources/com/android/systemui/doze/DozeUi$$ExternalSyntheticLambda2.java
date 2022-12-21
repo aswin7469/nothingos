@@ -1,13 +1,16 @@
 package com.android.systemui.doze;
-/* loaded from: classes.dex */
-public final /* synthetic */ class DozeUi$$ExternalSyntheticLambda2 implements Runnable {
-    public static final /* synthetic */ DozeUi$$ExternalSyntheticLambda2 INSTANCE = new DozeUi$$ExternalSyntheticLambda2();
 
-    private /* synthetic */ DozeUi$$ExternalSyntheticLambda2() {
+import android.app.AlarmManager;
+
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class DozeUi$$ExternalSyntheticLambda2 implements AlarmManager.OnAlarmListener {
+    public final /* synthetic */ DozeUi f$0;
+
+    public /* synthetic */ DozeUi$$ExternalSyntheticLambda2(DozeUi dozeUi) {
+        this.f$0 = dozeUi;
     }
 
-    @Override // java.lang.Runnable
-    public final void run() {
-        DozeUi.lambda$onTimeTick$0();
+    public final void onAlarm() {
+        this.f$0.onTimeTick();
     }
 }

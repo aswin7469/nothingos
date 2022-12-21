@@ -2,181 +2,177 @@ package com.android.systemui.statusbar.phone;
 
 import android.graphics.Rect;
 import android.view.View;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.widget.ViewClippingUtil;
-import com.android.systemui.Dependency;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.HeadsUpStatusBarView;
-import com.android.systemui.statusbar.StatusBarIconView;
-import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayoutController;
+import com.android.systemui.statusbar.phone.fragment.dagger.StatusBarFragmentScope;
+import com.android.systemui.statusbar.policy.Clock;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
+import com.android.systemui.util.ViewController;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, DarkIconDispatcher.DarkReceiver, NotificationWakeUpCoordinator.WakeUpListener {
-    private boolean mAnimationsEnabled;
-    @VisibleForTesting
+import javax.inject.Inject;
+import javax.inject.Named;
+
+@StatusBarFragmentScope
+public class HeadsUpAppearanceController extends ViewController<HeadsUpStatusBarView> implements OnHeadsUpChangedListener, DarkIconDispatcher.DarkReceiver, NotificationWakeUpCoordinator.WakeUpListener {
+    public static final int CONTENT_FADE_DELAY = 100;
+    public static final int CONTENT_FADE_DURATION = 110;
+    private boolean mAnimationsEnabled = true;
     float mAppearFraction;
     private final KeyguardBypassController mBypassController;
-    private final View mCenteredIconView;
     private final View mClockView;
     private final CommandQueue mCommandQueue;
     private final DarkIconDispatcher mDarkIconDispatcher;
-    @VisibleForTesting
     float mExpandedHeight;
     private final HeadsUpManagerPhone mHeadsUpManager;
-    private final HeadsUpStatusBarView mHeadsUpStatusBarView;
-    @VisibleForTesting
-    boolean mIsExpanded;
-    private KeyguardStateController mKeyguardStateController;
+    private final KeyguardStateController mKeyguardStateController;
     private final NotificationIconAreaController mNotificationIconAreaController;
     private final NotificationPanelViewController mNotificationPanelViewController;
-    private final View mOperatorNameView;
-    private final ViewClippingUtil.ClippingParameters mParentClippingParams;
-    private final BiConsumer<Float, Float> mSetExpandedHeight;
-    private final Consumer<ExpandableNotificationRow> mSetTrackingHeadsUp;
+    private final Optional<View> mOperatorNameViewOptional;
+    private final ViewClippingUtil.ClippingParameters mParentClippingParams = new ViewClippingUtil.ClippingParameters() {
+        public boolean shouldFinish(View view) {
+            return view.getId() == C1893R.C1897id.status_bar;
+        }
+    };
+    private final BiConsumer<Float, Float> mSetExpandedHeight = new HeadsUpAppearanceController$$ExternalSyntheticLambda3(this);
+    private final Consumer<ExpandableNotificationRow> mSetTrackingHeadsUp = new HeadsUpAppearanceController$$ExternalSyntheticLambda2(this);
     private boolean mShown;
-    private final NotificationStackScrollLayoutController mStackScrollerController;
+    /* access modifiers changed from: private */
+    public final NotificationStackScrollLayoutController mStackScrollerController;
     private final StatusBarStateController mStatusBarStateController;
     private ExpandableNotificationRow mTrackedChild;
     private final NotificationWakeUpCoordinator mWakeUpCoordinator;
 
-    public HeadsUpAppearanceController(NotificationIconAreaController notificationIconAreaController, HeadsUpManagerPhone headsUpManagerPhone, NotificationStackScrollLayoutController notificationStackScrollLayoutController, SysuiStatusBarStateController sysuiStatusBarStateController, KeyguardBypassController keyguardBypassController, KeyguardStateController keyguardStateController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, CommandQueue commandQueue, NotificationPanelViewController notificationPanelViewController, View view) {
-        this(notificationIconAreaController, headsUpManagerPhone, sysuiStatusBarStateController, keyguardBypassController, notificationWakeUpCoordinator, keyguardStateController, commandQueue, notificationStackScrollLayoutController, notificationPanelViewController, (HeadsUpStatusBarView) view.findViewById(R$id.heads_up_status_bar_view), view.findViewById(R$id.clock), view.findViewById(R$id.operator_name_frame), view.findViewById(R$id.centered_icon_area));
-    }
-
-    @VisibleForTesting
-    public HeadsUpAppearanceController(NotificationIconAreaController notificationIconAreaController, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, KeyguardBypassController keyguardBypassController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, KeyguardStateController keyguardStateController, CommandQueue commandQueue, NotificationStackScrollLayoutController notificationStackScrollLayoutController, NotificationPanelViewController notificationPanelViewController, HeadsUpStatusBarView headsUpStatusBarView, View view, View view2, View view3) {
-        Consumer<ExpandableNotificationRow> consumer = new Consumer() { // from class: com.android.systemui.statusbar.phone.HeadsUpAppearanceController$$ExternalSyntheticLambda5
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                HeadsUpAppearanceController.this.setTrackingHeadsUp((ExpandableNotificationRow) obj);
-            }
-        };
-        this.mSetTrackingHeadsUp = consumer;
-        BiConsumer<Float, Float> biConsumer = new BiConsumer() { // from class: com.android.systemui.statusbar.phone.HeadsUpAppearanceController$$ExternalSyntheticLambda3
-            @Override // java.util.function.BiConsumer
-            public final void accept(Object obj, Object obj2) {
-                HeadsUpAppearanceController.this.setAppearFraction(((Float) obj).floatValue(), ((Float) obj2).floatValue());
-            }
-        };
-        this.mSetExpandedHeight = biConsumer;
-        this.mParentClippingParams = new ViewClippingUtil.ClippingParameters() { // from class: com.android.systemui.statusbar.phone.HeadsUpAppearanceController.1
-            public boolean shouldFinish(View view4) {
-                return view4.getId() == R$id.status_bar;
-            }
-        };
-        this.mAnimationsEnabled = true;
+    @Inject
+    public HeadsUpAppearanceController(NotificationIconAreaController notificationIconAreaController, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, KeyguardBypassController keyguardBypassController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, DarkIconDispatcher darkIconDispatcher, KeyguardStateController keyguardStateController, CommandQueue commandQueue, NotificationStackScrollLayoutController notificationStackScrollLayoutController, NotificationPanelViewController notificationPanelViewController, HeadsUpStatusBarView headsUpStatusBarView, Clock clock, @Named("operator_name_frame_view") Optional<View> optional) {
+        super(headsUpStatusBarView);
         this.mNotificationIconAreaController = notificationIconAreaController;
         this.mHeadsUpManager = headsUpManagerPhone;
-        headsUpManagerPhone.addListener(this);
-        this.mHeadsUpStatusBarView = headsUpStatusBarView;
-        this.mCenteredIconView = view3;
-        headsUpStatusBarView.setOnDrawingRectChangedListener(new Runnable() { // from class: com.android.systemui.statusbar.phone.HeadsUpAppearanceController$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                HeadsUpAppearanceController.this.lambda$new$0();
-            }
-        });
+        this.mTrackedChild = notificationPanelViewController.getTrackedHeadsUpNotification();
+        this.mAppearFraction = notificationStackScrollLayoutController.getAppearFraction();
+        this.mExpandedHeight = notificationStackScrollLayoutController.getExpandedHeight();
         this.mStackScrollerController = notificationStackScrollLayoutController;
         this.mNotificationPanelViewController = notificationPanelViewController;
-        notificationPanelViewController.addTrackingHeadsUpListener(consumer);
-        notificationPanelViewController.setHeadsUpAppearanceController(this);
-        notificationStackScrollLayoutController.addOnExpandedHeightChangedListener(biConsumer);
         notificationStackScrollLayoutController.setHeadsUpAppearanceController(this);
-        this.mClockView = view;
-        this.mOperatorNameView = view2;
-        DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
+        this.mClockView = clock;
+        this.mOperatorNameViewOptional = optional;
         this.mDarkIconDispatcher = darkIconDispatcher;
-        darkIconDispatcher.addDarkReceiver(this);
-        headsUpStatusBarView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() { // from class: com.android.systemui.statusbar.phone.HeadsUpAppearanceController.2
-            @Override // android.view.View.OnLayoutChangeListener
-            public void onLayoutChange(View view4, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
+        ((HeadsUpStatusBarView) this.mView).addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                 if (HeadsUpAppearanceController.this.shouldBeVisible()) {
                     HeadsUpAppearanceController.this.updateTopEntry();
                     HeadsUpAppearanceController.this.mStackScrollerController.requestLayout();
                 }
-                HeadsUpAppearanceController.this.mHeadsUpStatusBarView.removeOnLayoutChangeListener(this);
+                ((HeadsUpStatusBarView) HeadsUpAppearanceController.this.mView).removeOnLayoutChangeListener(this);
             }
         });
         this.mBypassController = keyguardBypassController;
         this.mStatusBarStateController = statusBarStateController;
         this.mWakeUpCoordinator = notificationWakeUpCoordinator;
-        notificationWakeUpCoordinator.addListener(this);
         this.mCommandQueue = commandQueue;
         this.mKeyguardStateController = keyguardStateController;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: protected */
+    public void onViewAttached() {
+        this.mHeadsUpManager.addListener(this);
+        ((HeadsUpStatusBarView) this.mView).setOnDrawingRectChangedListener(new HeadsUpAppearanceController$$ExternalSyntheticLambda1(this));
+        this.mWakeUpCoordinator.addListener(this);
+        this.mNotificationPanelViewController.addTrackingHeadsUpListener(this.mSetTrackingHeadsUp);
+        this.mNotificationPanelViewController.setHeadsUpAppearanceController(this);
+        this.mStackScrollerController.addOnExpandedHeightChangedListener(this.mSetExpandedHeight);
+        this.mDarkIconDispatcher.addDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onViewAttached$0$com-android-systemui-statusbar-phone-HeadsUpAppearanceController */
+    public /* synthetic */ void mo44043x76ccce16() {
         updateIsolatedIconLocation(true);
     }
 
-    public void destroy() {
+    /* access modifiers changed from: protected */
+    public void onViewDetached() {
         this.mHeadsUpManager.removeListener(this);
-        this.mHeadsUpStatusBarView.setOnDrawingRectChangedListener(null);
+        ((HeadsUpStatusBarView) this.mView).setOnDrawingRectChangedListener((Runnable) null);
         this.mWakeUpCoordinator.removeListener(this);
         this.mNotificationPanelViewController.removeTrackingHeadsUpListener(this.mSetTrackingHeadsUp);
-        this.mNotificationPanelViewController.setVerticalTranslationListener(null);
-        this.mNotificationPanelViewController.setHeadsUpAppearanceController(null);
+        this.mNotificationPanelViewController.setHeadsUpAppearanceController((HeadsUpAppearanceController) null);
         this.mStackScrollerController.removeOnExpandedHeightChangedListener(this.mSetExpandedHeight);
-        this.mDarkIconDispatcher.removeDarkReceiver(this);
+        this.mDarkIconDispatcher.removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
     }
 
     private void updateIsolatedIconLocation(boolean z) {
-        this.mNotificationIconAreaController.setIsolatedIconLocation(this.mHeadsUpStatusBarView.getIconDrawingRect(), z);
+        this.mNotificationIconAreaController.setIsolatedIconLocation(((HeadsUpStatusBarView) this.mView).getIconDrawingRect(), z);
     }
 
-    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpPinned(NotificationEntry notificationEntry) {
         updateTopEntry();
-        lambda$updateHeadsUpHeaders$3(notificationEntry);
+        mo44046x1d186c59(notificationEntry);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Removed duplicated region for block: B:12:0x0038  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Removed duplicated region for block: B:15:0x0040  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateTopEntry() {
-        boolean z;
-        boolean z2;
-        StatusBarIconView statusBarIconView = null;
-        NotificationEntry topEntry = shouldBeVisible() ? this.mHeadsUpManager.getTopEntry() : null;
-        NotificationEntry showingEntry = this.mHeadsUpStatusBarView.getShowingEntry();
-        this.mHeadsUpStatusBarView.setEntry(topEntry);
-        if (topEntry != showingEntry) {
-            if (topEntry == null) {
-                setShown(false);
-                z2 = this.mIsExpanded;
-            } else if (showingEntry == null) {
-                setShown(true);
-                z2 = this.mIsExpanded;
-            } else {
-                z = false;
-                updateIsolatedIconLocation(false);
-                NotificationIconAreaController notificationIconAreaController = this.mNotificationIconAreaController;
-                if (topEntry != null) {
-                    statusBarIconView = topEntry.getIcons().getStatusBarIcon();
-                }
-                notificationIconAreaController.showIconIsolated(statusBarIconView, z);
-            }
-            z = !z2;
-            updateIsolatedIconLocation(false);
-            NotificationIconAreaController notificationIconAreaController2 = this.mNotificationIconAreaController;
-            if (topEntry != null) {
-            }
-            notificationIconAreaController2.showIconIsolated(statusBarIconView, z);
-        }
+        /*
+            r5 = this;
+            boolean r0 = r5.shouldBeVisible()
+            r1 = 0
+            if (r0 == 0) goto L_0x000e
+            com.android.systemui.statusbar.phone.HeadsUpManagerPhone r0 = r5.mHeadsUpManager
+            com.android.systemui.statusbar.notification.collection.NotificationEntry r0 = r0.getTopEntry()
+            goto L_0x000f
+        L_0x000e:
+            r0 = r1
+        L_0x000f:
+            android.view.View r2 = r5.mView
+            com.android.systemui.statusbar.HeadsUpStatusBarView r2 = (com.android.systemui.statusbar.HeadsUpStatusBarView) r2
+            com.android.systemui.statusbar.notification.collection.NotificationEntry r2 = r2.getShowingEntry()
+            android.view.View r3 = r5.mView
+            com.android.systemui.statusbar.HeadsUpStatusBarView r3 = (com.android.systemui.statusbar.HeadsUpStatusBarView) r3
+            r3.setEntry(r0)
+            if (r0 == r2) goto L_0x004b
+            r3 = 1
+            r4 = 0
+            if (r0 != 0) goto L_0x002d
+            r5.setShown(r4)
+            boolean r2 = r5.isExpanded()
+        L_0x002b:
+            r2 = r2 ^ r3
+            goto L_0x0038
+        L_0x002d:
+            if (r2 != 0) goto L_0x0037
+            r5.setShown(r3)
+            boolean r2 = r5.isExpanded()
+            goto L_0x002b
+        L_0x0037:
+            r2 = r4
+        L_0x0038:
+            r5.updateIsolatedIconLocation(r4)
+            com.android.systemui.statusbar.phone.NotificationIconAreaController r5 = r5.mNotificationIconAreaController
+            if (r0 != 0) goto L_0x0040
+            goto L_0x0048
+        L_0x0040:
+            com.android.systemui.statusbar.notification.icon.IconPack r0 = r0.getIcons()
+            com.android.systemui.statusbar.StatusBarIconView r1 = r0.getStatusBarIcon()
+        L_0x0048:
+            r5.showIconIsolated(r1, r2)
+        L_0x004b:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.HeadsUpAppearanceController.updateTopEntry():void");
     }
 
     private void setShown(boolean z) {
@@ -184,123 +180,103 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
             this.mShown = z;
             if (z) {
                 updateParentClipping(false);
-                this.mHeadsUpStatusBarView.setVisibility(0);
-                show(this.mHeadsUpStatusBarView);
+                ((HeadsUpStatusBarView) this.mView).setVisibility(0);
+                show(this.mView);
                 hide(this.mClockView, 4);
-                if (this.mCenteredIconView.getVisibility() != 8) {
-                    hide(this.mCenteredIconView, 4);
-                }
-                View view = this.mOperatorNameView;
-                if (view != null) {
-                    hide(view, 4);
-                }
+                this.mOperatorNameViewOptional.ifPresent(new HeadsUpAppearanceController$$ExternalSyntheticLambda5(this));
             } else {
                 show(this.mClockView);
-                if (this.mCenteredIconView.getVisibility() != 8) {
-                    show(this.mCenteredIconView);
-                }
-                View view2 = this.mOperatorNameView;
-                if (view2 != null) {
-                    show(view2);
-                }
-                hide(this.mHeadsUpStatusBarView, 8, new Runnable() { // from class: com.android.systemui.statusbar.phone.HeadsUpAppearanceController$$ExternalSyntheticLambda2
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        HeadsUpAppearanceController.this.lambda$setShown$1();
-                    }
-                });
+                this.mOperatorNameViewOptional.ifPresent(new HeadsUpAppearanceController$$ExternalSyntheticLambda6(this));
+                hide(this.mView, 8, new HeadsUpAppearanceController$$ExternalSyntheticLambda7(this));
             }
-            if (this.mStatusBarStateController.getState() == 0) {
-                return;
+            if (this.mStatusBarStateController.getState() != 0) {
+                this.mCommandQueue.recomputeDisableFlags(((HeadsUpStatusBarView) this.mView).getContext().getDisplayId(), false);
             }
-            this.mCommandQueue.recomputeDisableFlags(this.mHeadsUpStatusBarView.getContext().getDisplayId(), false);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setShown$1() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setShown$1$com-android-systemui-statusbar-phone-HeadsUpAppearanceController */
+    public /* synthetic */ void mo44044xc052842e(View view) {
+        hide(view, 4);
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setShown$2$com-android-systemui-statusbar-phone-HeadsUpAppearanceController */
+    public /* synthetic */ void mo44045x2a820c4d() {
         updateParentClipping(true);
     }
 
     private void updateParentClipping(boolean z) {
-        ViewClippingUtil.setClippingDeactivated(this.mHeadsUpStatusBarView, !z, this.mParentClippingParams);
+        ViewClippingUtil.setClippingDeactivated(this.mView, !z, this.mParentClippingParams);
     }
 
     private void hide(View view, int i) {
-        hide(view, i, null);
+        hide(view, i, (Runnable) null);
     }
 
-    private void hide(final View view, final int i, final Runnable runnable) {
+    private void hide(View view, int i, Runnable runnable) {
         if (this.mAnimationsEnabled) {
-            CrossFadeHelper.fadeOut(view, 110L, 0, new Runnable() { // from class: com.android.systemui.statusbar.phone.HeadsUpAppearanceController$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    HeadsUpAppearanceController.lambda$hide$2(view, i, runnable);
-                }
-            });
+            CrossFadeHelper.fadeOut(view, 110, 0, new HeadsUpAppearanceController$$ExternalSyntheticLambda0(view, i, runnable));
             return;
         }
-        view.setVisibility(i);
-        if (runnable == null) {
-            return;
-        }
-        runnable.run();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$hide$2(View view, int i, Runnable runnable) {
         view.setVisibility(i);
         if (runnable != null) {
             runnable.run();
         }
     }
 
-    private void show(View view) {
+    static /* synthetic */ void lambda$hide$3(View view, int i, Runnable runnable) {
+        view.setVisibility(i);
+        if (runnable != null) {
+            runnable.run();
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void show(View view) {
         if (this.mAnimationsEnabled) {
-            CrossFadeHelper.fadeIn(view, 110L, 100);
+            CrossFadeHelper.fadeIn(view, 110, 100);
         } else {
             view.setVisibility(0);
         }
     }
 
-    @VisibleForTesting
-    void setAnimationsEnabled(boolean z) {
+    /* access modifiers changed from: package-private */
+    public void setAnimationsEnabled(boolean z) {
         this.mAnimationsEnabled = z;
     }
 
-    @VisibleForTesting
     public boolean isShown() {
         return this.mShown;
     }
 
     public boolean shouldBeVisible() {
         boolean z = !this.mWakeUpCoordinator.getNotificationsFullyHidden();
-        boolean z2 = !this.mIsExpanded && z;
+        boolean z2 = !isExpanded() && z;
         if (this.mBypassController.getBypassEnabled() && ((this.mStatusBarStateController.getState() == 1 || this.mKeyguardStateController.isKeyguardGoingAway()) && z)) {
             z2 = true;
         }
-        return z2 && this.mHeadsUpManager.hasPinnedHeadsUp();
+        if (!z2 || !this.mHeadsUpManager.hasPinnedHeadsUp()) {
+            return false;
+        }
+        return true;
     }
 
-    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpUnPinned(NotificationEntry notificationEntry) {
         updateTopEntry();
-        lambda$updateHeadsUpHeaders$3(notificationEntry);
+        mo44046x1d186c59(notificationEntry);
     }
 
     public void setAppearFraction(float f, float f2) {
-        boolean z = true;
-        boolean z2 = f != this.mExpandedHeight;
+        boolean z = f != this.mExpandedHeight;
+        boolean isExpanded = isExpanded();
         this.mExpandedHeight = f;
         this.mAppearFraction = f2;
-        if (f <= 0.0f) {
-            z = false;
-        }
-        if (z2) {
+        if (z) {
             updateHeadsUpHeaders();
         }
-        if (z != this.mIsExpanded) {
-            this.mIsExpanded = z;
+        if (isExpanded() != isExpanded) {
             updateTopEntry();
         }
     }
@@ -309,45 +285,38 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         ExpandableNotificationRow expandableNotificationRow2 = this.mTrackedChild;
         this.mTrackedChild = expandableNotificationRow;
         if (expandableNotificationRow2 != null) {
-            lambda$updateHeadsUpHeaders$3(expandableNotificationRow2.getEntry());
+            mo44046x1d186c59(expandableNotificationRow2.getEntry());
         }
     }
 
+    private boolean isExpanded() {
+        return this.mExpandedHeight > 0.0f;
+    }
+
     private void updateHeadsUpHeaders() {
-        this.mHeadsUpManager.getAllEntries().forEach(new Consumer() { // from class: com.android.systemui.statusbar.phone.HeadsUpAppearanceController$$ExternalSyntheticLambda4
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                HeadsUpAppearanceController.this.lambda$updateHeadsUpHeaders$3((NotificationEntry) obj);
-            }
-        });
+        this.mHeadsUpManager.getAllEntries().forEach(new HeadsUpAppearanceController$$ExternalSyntheticLambda4(this));
     }
 
     /* renamed from: updateHeader */
-    public void lambda$updateHeadsUpHeaders$3(NotificationEntry notificationEntry) {
+    public void mo44046x1d186c59(NotificationEntry notificationEntry) {
+        float f;
         ExpandableNotificationRow row = notificationEntry.getRow();
-        row.setHeaderVisibleAmount((row.isPinned() || row.isHeadsUpAnimatingAway() || row == this.mTrackedChild || row.showingPulsing()) ? this.mAppearFraction : 1.0f);
+        if (row.isPinned() || row.isHeadsUpAnimatingAway() || row == this.mTrackedChild || row.showingPulsing()) {
+            f = this.mAppearFraction;
+        } else {
+            f = 1.0f;
+        }
+        row.setHeaderVisibleAmount(f);
     }
 
-    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
-    public void onDarkChanged(Rect rect, float f, int i) {
-        this.mHeadsUpStatusBarView.onDarkChanged(rect, f, i);
+    public void onDarkChanged(ArrayList<Rect> arrayList, float f, int i) {
+        ((HeadsUpStatusBarView) this.mView).onDarkChanged(arrayList, f, i);
     }
 
     public void onStateChanged() {
         updateTopEntry();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void readFrom(HeadsUpAppearanceController headsUpAppearanceController) {
-        if (headsUpAppearanceController != null) {
-            this.mTrackedChild = headsUpAppearanceController.mTrackedChild;
-            this.mExpandedHeight = headsUpAppearanceController.mExpandedHeight;
-            this.mIsExpanded = headsUpAppearanceController.mIsExpanded;
-            this.mAppearFraction = headsUpAppearanceController.mAppearFraction;
-        }
-    }
-
-    @Override // com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator.WakeUpListener
     public void onFullyHiddenChanged(boolean z) {
         updateTopEntry();
     }

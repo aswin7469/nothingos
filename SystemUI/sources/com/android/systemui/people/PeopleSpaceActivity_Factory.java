@@ -3,7 +3,7 @@ package com.android.systemui.people;
 import com.android.systemui.people.widget.PeopleSpaceWidgetManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class PeopleSpaceActivity_Factory implements Factory<PeopleSpaceActivity> {
     private final Provider<PeopleSpaceWidgetManager> peopleSpaceWidgetManagerProvider;
 
@@ -11,10 +11,8 @@ public final class PeopleSpaceActivity_Factory implements Factory<PeopleSpaceAct
         this.peopleSpaceWidgetManagerProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PeopleSpaceActivity mo1933get() {
-        return newInstance(this.peopleSpaceWidgetManagerProvider.mo1933get());
+    public PeopleSpaceActivity get() {
+        return newInstance(this.peopleSpaceWidgetManagerProvider.get());
     }
 
     public static PeopleSpaceActivity_Factory create(Provider<PeopleSpaceWidgetManager> provider) {

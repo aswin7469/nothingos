@@ -4,11 +4,11 @@ import android.graphics.Path;
 import com.airbnb.lottie.utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class CompoundTrimPathContent {
     private List<TrimPathContent> contents = new ArrayList();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void addTrimPath(TrimPathContent trimPathContent) {
         this.contents.add(trimPathContent);
     }

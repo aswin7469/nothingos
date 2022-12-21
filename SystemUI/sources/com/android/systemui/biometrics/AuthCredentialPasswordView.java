@@ -7,40 +7,33 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImeAwareEditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternChecker;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.internal.widget.VerifyCredentialResponse;
-import com.android.systemui.R$id;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+
 public class AuthCredentialPasswordView extends AuthCredentialView implements TextView.OnEditorActionListener {
-    private final InputMethodManager mImm = (InputMethodManager) ((LinearLayout) this).mContext.getSystemService(InputMethodManager.class);
+    private static final String TAG = "BiometricPrompt/AuthCredentialPasswordView";
+    private final InputMethodManager mImm = ((InputMethodManager) this.mContext.getSystemService(InputMethodManager.class));
     private ImeAwareEditText mPasswordField;
 
     public AuthCredentialPasswordView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.biometrics.AuthCredentialView, android.view.View
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        ImeAwareEditText findViewById = findViewById(R$id.lockPassword);
+        ImeAwareEditText findViewById = findViewById(C1893R.C1897id.lockPassword);
         this.mPasswordField = findViewById;
         findViewById.setOnEditorActionListener(this);
-        this.mPasswordField.setOnKeyListener(new View.OnKeyListener() { // from class: com.android.systemui.biometrics.AuthCredentialPasswordView$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnKeyListener
-            public final boolean onKey(View view, int i, KeyEvent keyEvent) {
-                boolean lambda$onFinishInflate$0;
-                lambda$onFinishInflate$0 = AuthCredentialPasswordView.this.lambda$onFinishInflate$0(view, i, keyEvent);
-                return lambda$onFinishInflate$0;
-            }
-        });
+        this.mPasswordField.setOnKeyListener(new AuthCredentialPasswordView$$ExternalSyntheticLambda0(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$onFinishInflate$0(View view, int i, KeyEvent keyEvent) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onFinishInflate$0$com-android-systemui-biometrics-AuthCredentialPasswordView */
+    public /* synthetic */ boolean mo30639xb42b1a51(View view, int i, KeyEvent keyEvent) {
         if (i != 4) {
             return false;
         }
@@ -51,8 +44,7 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.biometrics.AuthCredentialView, android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mPasswordField.setTextOperationUser(UserHandle.of(this.mUserId));
@@ -63,49 +55,44 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
         this.mPasswordField.scheduleShowSoftInput();
     }
 
-    @Override // android.widget.TextView.OnEditorActionListener
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
         boolean z = keyEvent == null && (i == 0 || i == 6 || i == 5);
         boolean z2 = keyEvent != null && KeyEvent.isConfirmKey(keyEvent.getKeyCode()) && keyEvent.getAction() == 0;
-        if (z || z2) {
-            checkPasswordAndUnlock();
-            return true;
+        if (!z && !z2) {
+            return false;
         }
-        return false;
+        checkPasswordAndUnlock();
+        return true;
     }
 
     private void checkPasswordAndUnlock() {
-        LockscreenCredential createPasswordOrNone;
+        LockscreenCredential lockscreenCredential;
         if (this.mCredentialType == 1) {
-            createPasswordOrNone = LockscreenCredential.createPinOrNone(this.mPasswordField.getText());
+            lockscreenCredential = LockscreenCredential.createPinOrNone(this.mPasswordField.getText());
         } else {
-            createPasswordOrNone = LockscreenCredential.createPasswordOrNone(this.mPasswordField.getText());
+            lockscreenCredential = LockscreenCredential.createPasswordOrNone(this.mPasswordField.getText());
         }
         try {
-            if (!createPasswordOrNone.isNone()) {
-                this.mPendingLockCheck = LockPatternChecker.verifyCredential(this.mLockPatternUtils, createPasswordOrNone, this.mEffectiveUserId, 1, new LockPatternChecker.OnVerifyCallback() { // from class: com.android.systemui.biometrics.AuthCredentialPasswordView$$ExternalSyntheticLambda1
-                    public final void onVerified(VerifyCredentialResponse verifyCredentialResponse, int i) {
-                        AuthCredentialPasswordView.this.onCredentialVerified(verifyCredentialResponse, i);
-                    }
-                });
-                createPasswordOrNone.close();
+            if (!lockscreenCredential.isNone()) {
+                this.mPendingLockCheck = LockPatternChecker.verifyCredential(this.mLockPatternUtils, lockscreenCredential, this.mEffectiveUserId, 1, new AuthCredentialPasswordView$$ExternalSyntheticLambda1(this));
+                if (lockscreenCredential != null) {
+                    lockscreenCredential.close();
+                    return;
+                }
+                return;
+            } else if (lockscreenCredential != null) {
+                lockscreenCredential.close();
+                return;
+            } else {
                 return;
             }
-            createPasswordOrNone.close();
         } catch (Throwable th) {
-            if (createPasswordOrNone != null) {
-                try {
-                    createPasswordOrNone.close();
-                } catch (Throwable th2) {
-                    th.addSuppressed(th2);
-                }
-            }
-            throw th;
+            th.addSuppressed(th);
         }
+        throw th;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.biometrics.AuthCredentialView
+    /* access modifiers changed from: protected */
     public void onCredentialVerified(VerifyCredentialResponse verifyCredentialResponse, int i) {
         super.onCredentialVerified(verifyCredentialResponse, i);
         if (verifyCredentialResponse.isMatched()) {

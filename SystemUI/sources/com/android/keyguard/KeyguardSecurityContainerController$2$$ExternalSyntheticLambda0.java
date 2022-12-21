@@ -1,15 +1,10 @@
 package com.android.keyguard;
 
 import com.android.keyguard.KeyguardSecurityContainerController;
-/* loaded from: classes.dex */
+
+/* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class KeyguardSecurityContainerController$2$$ExternalSyntheticLambda0 implements Runnable {
-    public static final /* synthetic */ KeyguardSecurityContainerController$2$$ExternalSyntheticLambda0 INSTANCE = new KeyguardSecurityContainerController$2$$ExternalSyntheticLambda0();
-
-    private /* synthetic */ KeyguardSecurityContainerController$2$$ExternalSyntheticLambda0() {
-    }
-
-    @Override // java.lang.Runnable
     public final void run() {
-        KeyguardSecurityContainerController.AnonymousClass2.lambda$reportUnlockAttempt$0();
+        KeyguardSecurityContainerController.C16272.lambda$reportUnlockAttempt$0();
     }
 }

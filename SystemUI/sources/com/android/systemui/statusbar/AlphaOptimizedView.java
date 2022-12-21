@@ -3,9 +3,8 @@ package com.android.systemui.statusbar;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-/* loaded from: classes.dex */
+
 public class AlphaOptimizedView extends View {
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
     }

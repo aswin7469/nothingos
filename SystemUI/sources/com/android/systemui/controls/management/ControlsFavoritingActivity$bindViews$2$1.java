@@ -1,40 +1,31 @@
 package com.android.systemui.controls.management;
 
 import com.android.systemui.controls.TooltipManager;
+import kotlin.Metadata;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
-/* JADX INFO: Access modifiers changed from: package-private */
+
+@Metadata(mo64986d1 = {"\u0000\u000e\n\u0000\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\b\n\u0000\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0003H\n¢\u0006\u0002\b\u0004"}, mo64987d2 = {"<anonymous>", "", "it", "", "invoke"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ControlsFavoritingActivity.kt */
-/* loaded from: classes.dex */
-public final class ControlsFavoritingActivity$bindViews$2$1 extends Lambda implements Function1<Integer, Unit> {
+final class ControlsFavoritingActivity$bindViews$2$1 extends Lambda implements Function1<Integer, Unit> {
     final /* synthetic */ ControlsFavoritingActivity this$0;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public ControlsFavoritingActivity$bindViews$2$1(ControlsFavoritingActivity controlsFavoritingActivity) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    ControlsFavoritingActivity$bindViews$2$1(ControlsFavoritingActivity controlsFavoritingActivity) {
         super(1);
         this.this$0 = controlsFavoritingActivity;
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    /* renamed from: invoke */
-    public /* bridge */ /* synthetic */ Unit mo1949invoke(Integer num) {
-        invoke(num.intValue());
+    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
+        invoke(((Number) obj).intValue());
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:2:0x0002, code lost:
-        r0 = r0.this$0.mTooltipManager;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     public final void invoke(int i) {
-        TooltipManager tooltipManager;
-        if (i == 0 || tooltipManager == null) {
-            return;
+        TooltipManager access$getMTooltipManager$p;
+        if (i != 0 && (access$getMTooltipManager$p = this.this$0.mTooltipManager) != null) {
+            access$getMTooltipManager$p.hide(true);
         }
-        tooltipManager.hide(true);
     }
 }

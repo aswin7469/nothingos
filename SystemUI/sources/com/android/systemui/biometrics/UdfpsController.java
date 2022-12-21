@@ -1,1015 +1,1072 @@
 package com.android.systemui.biometrics;
 
-import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Point;
-import android.graphics.RectF;
+import android.hardware.biometrics.BiometricFingerprintConstants;
 import android.hardware.biometrics.BiometricSourceType;
 import android.hardware.display.DisplayManager;
 import android.hardware.fingerprint.FingerprintManager;
-import android.hardware.fingerprint.FingerprintSensorPropertiesInternal;
 import android.hardware.fingerprint.IUdfpsOverlayController;
 import android.hardware.fingerprint.IUdfpsOverlayControllerCallback;
-import android.media.AudioAttributes;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.Process;
-import android.os.RemoteException;
+import android.os.SystemProperties;
 import android.os.Trace;
+import android.os.VibrationAttributes;
 import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.Log;
+import android.util.RotationUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
-import android.widget.FrameLayout;
-import com.android.internal.annotations.VisibleForTesting;
+import com.android.internal.util.LatencyTracker;
 import com.android.internal.util.Preconditions;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$layout;
-import com.android.systemui.biometrics.UdfpsController;
+import com.android.systemui.animation.ActivityLaunchAnimator;
+import com.android.systemui.biometrics.BiometricDisplayListener;
 import com.android.systemui.biometrics.UdfpsView;
+import com.android.systemui.biometrics.dagger.BiometricsBackground;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.doze.DozeReceiver;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.keyguard.ScreenLifecycle;
+import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.LockscreenShadeTransitionController;
-import com.android.systemui.statusbar.phone.KeyguardBypassController;
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.VibratorHelper;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
+import com.android.systemui.statusbar.phone.SystemUIDialogManager;
 import com.android.systemui.statusbar.phone.UnlockedScreenOffAnimationController;
+import com.android.systemui.statusbar.phone.panelstate.PanelExpansionStateManager;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.concurrency.Execution;
 import com.android.systemui.util.time.SystemClock;
-import com.nothingos.keyguard.NTColorController;
-import com.nothingos.keyguard.fingerprint.NTFingerprintBrightnessController;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.biometrics.NTColorController;
+import com.nothing.systemui.biometrics.NTFingerprintBrightnessController;
+import com.nothing.systemui.keyguard.KeyguardUpdateMonitorEx;
+import com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx;
+import com.nothing.systemui.util.NTLogUtil;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import javax.inject.Inject;
 import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
-/* loaded from: classes.dex */
+
+@SysUISingleton
 public class UdfpsController implements DozeReceiver {
-    private final AccessibilityManager mAccessibilityManager;
-    private Runnable mAodInterruptRunnable;
+    private static final int AOD_FINGER_DOWN_DELAY = SystemProperties.getInt("persist.sysui.finger.down.delay", 30);
+    private static final long AOD_INTERRUPT_TIMEOUT_MILLIS = 1000;
+    private static final int BREATHE_ANIM_DELAY = 3000;
+    private static final long DISABLE_ORIENTATION_LISTENER_TIME = 5000;
+    public static final VibrationEffect EFFECT_CLICK = VibrationEffect.get(0);
+    private static final int FPS_SCNNING_ANIM_SIZE = 295;
+    private static final long MIN_TOUCH_LOG_INTERVAL = 50;
+    private static final String TAG = "UdfpsController";
+    public static final VibrationAttributes VIBRATION_ATTRIBUTES = new VibrationAttributes.Builder().setUsage(65).build();
+    private final Runnable disableOrientationListenerRunnable;
+    private final Runnable enableOrientationListenerRunnable;
+    /* access modifiers changed from: private */
+    public final AccessibilityManager mAccessibilityManager;
+    /* access modifiers changed from: private */
+    public boolean mAcquiredReceived;
+    private int mActivePointerId = -1;
+    /* access modifiers changed from: private */
+    public final ActivityLaunchAnimator mActivityLaunchAnimator;
+    private NTFingerprintBrightnessController.AlphaCallback mAlphaCallback;
+    private final AlternateUdfpsTouchProvider mAlternateTouchProvider;
+    /* access modifiers changed from: private */
+    public Runnable mAodInterruptRunnable;
     private boolean mAttemptedToDismissKeyguard;
-    private boolean mBouncerVisibility;
+    private Runnable mAuthControllerUpdateUdfpsLocation;
+    /* access modifiers changed from: private */
+    public boolean mAuthFailed;
+    private final Executor mBiometricExecutor;
+    /* access modifiers changed from: private */
+    public boolean mBouncerVisibility;
     private final BroadcastReceiver mBroadcastReceiver;
+    private final Set<Callback> mCallbacks = new HashSet();
     private Runnable mCancelAodTimeoutAction;
-    private final ConfigurationController mConfigurationController;
-    private final Context mContext;
-    private final WindowManager.LayoutParams mCoreLayoutParams;
-    private final DumpManager mDumpManager;
+    /* access modifiers changed from: private */
+    public final ConfigurationController mConfigurationController;
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    /* access modifiers changed from: private */
+    public final SystemUIDialogManager mDialogManager;
+    private final Runnable mDismissFingerprintIconRunnable;
+    /* access modifiers changed from: private */
+    public final DumpManager mDumpManager;
     private final Execution mExecution;
     private final FalsingManager mFalsingManager;
-    private final DelayableExecutor mFgExecutor;
-    private final FingerprintManager mFingerprintManager;
-    private boolean mGoodCaptureReceived;
+    /* access modifiers changed from: private */
+    public final DelayableExecutor mFgExecutor;
+    /* access modifiers changed from: private */
+    public final FingerprintManager mFingerprintManager;
+    /* access modifiers changed from: private */
+    public boolean mHalControlsIllumination;
     private Handler mHandler;
-    private final UdfpsHbmProvider mHbmProvider;
-    private final LayoutInflater mInflater;
+    /* access modifiers changed from: private */
+    public final UdfpsHbmProvider mHbmProvider;
+    /* access modifiers changed from: private */
+    public final LayoutInflater mInflater;
     private boolean mIsAodInterruptActive;
-    private final KeyguardBypassController mKeyguardBypassController;
-    private final KeyguardStateController mKeyguardStateController;
-    private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
-    private final StatusBarKeyguardViewManager mKeyguardViewManager;
-    private final LockscreenShadeTransitionController mLockscreenShadeTransitionController;
+    /* access modifiers changed from: private */
+    public boolean mIsIconVisible;
+    /* access modifiers changed from: private */
+    public final KeyguardStateController mKeyguardStateController;
+    /* access modifiers changed from: private */
+    public final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    /* access modifiers changed from: private */
+    public KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
+    /* access modifiers changed from: private */
+    public final StatusBarKeyguardViewManager mKeyguardViewManager;
+    private final LatencyTracker mLatencyTracker;
+    private final Object mLock;
+    /* access modifiers changed from: private */
+    public final LockscreenShadeTransitionController mLockscreenShadeTransitionController;
     private NTFingerprintBrightnessController mNTBrightnessController;
     private NTColorController mNTColorController;
-    private boolean mOnFingerDown;
-    @VisibleForTesting
-    final BiometricOrientationEventListener mOrientationListener;
+    /* access modifiers changed from: private */
+    public boolean mOnFingerDown;
+    private boolean mOnFingerDownOver;
+    final BiometricDisplayListener mOrientationListener;
+    UdfpsControllerOverlay mOverlay;
+    UdfpsOverlayParams mOverlayParams = new UdfpsOverlayParams();
+    /* access modifiers changed from: private */
+    public final PanelExpansionStateManager mPanelExpansionStateManager;
+    /* access modifiers changed from: private */
+    public boolean mPendingShowDimlayer;
+    /* access modifiers changed from: private */
+    public long mPendingShowDimlayerTime;
     private final PowerManager mPowerManager;
     private final ScreenLifecycle.Observer mScreenObserver;
-    private boolean mScreenOn;
-    @VisibleForTesting
-    final FingerprintSensorPropertiesInternal mSensorProps;
-    ServerRequest mServerRequest;
-    private final StatusBar mStatusBar;
-    private final StatusBarStateController mStatusBarStateController;
-    private final SystemClock mSystemClock;
+    /* access modifiers changed from: private */
+    public boolean mScreenOn;
+    int mSensorId;
+    private final Runnable mShowFingerprintIconRunnable;
+    /* access modifiers changed from: private */
+    public final StatusBarStateController mStatusBarStateController;
+    private StatusBarStateController.StateListener mStatusBarStateListener;
+    /* access modifiers changed from: private */
+    public final SystemClock mSystemClock;
     private long mTouchLogTime;
-    private final UnlockedScreenOffAnimationController mUnlockedScreenOffAnimationController;
+    /* access modifiers changed from: private */
+    public int mUdfpsViewVisibility;
+    /* access modifiers changed from: private */
+    public final UnlockedScreenOffAnimationController mUnlockedScreenOffAnimationController;
     private VelocityTracker mVelocityTracker;
-    private final Vibrator mVibrator;
-    private UdfpsView mView;
-    private final WindowManager mWindowManager;
-    @VisibleForTesting
-    public static final AudioAttributes VIBRATION_SONIFICATION_ATTRIBUTES = new AudioAttributes.Builder().setContentType(4).setUsage(11).build();
-    public static final VibrationEffect EFFECT_CLICK = VibrationEffect.get(0);
-    private int mActivePointerId = -1;
-    private Set<Callback> mCallbacks = new HashSet();
-    @SuppressLint({"ClickableViewAccessibility"})
-    private final View.OnTouchListener mOnTouchListener = new View.OnTouchListener() { // from class: com.android.systemui.biometrics.UdfpsController$$ExternalSyntheticLambda1
-        @Override // android.view.View.OnTouchListener
-        public final boolean onTouch(View view, MotionEvent motionEvent) {
-            boolean lambda$new$0;
-            lambda$new$0 = UdfpsController.this.lambda$new$0(view, motionEvent);
-            return lambda$new$0;
-        }
-    };
-    @SuppressLint({"ClickableViewAccessibility"})
-    private final View.OnHoverListener mOnHoverListener = new View.OnHoverListener() { // from class: com.android.systemui.biometrics.UdfpsController$$ExternalSyntheticLambda0
-        @Override // android.view.View.OnHoverListener
-        public final boolean onHover(View view, MotionEvent motionEvent) {
-            boolean lambda$new$1;
-            lambda$new$1 = UdfpsController.this.lambda$new$1(view, motionEvent);
-            return lambda$new$1;
-        }
-    };
-    private final AccessibilityManager.TouchExplorationStateChangeListener mTouchExplorationStateChangeListener = new AccessibilityManager.TouchExplorationStateChangeListener() { // from class: com.android.systemui.biometrics.UdfpsController$$ExternalSyntheticLambda2
-        @Override // android.view.accessibility.AccessibilityManager.TouchExplorationStateChangeListener
-        public final void onTouchExplorationStateChanged(boolean z) {
-            UdfpsController.this.lambda$new$2(z);
-        }
-    };
-    private final Object mLock = new Object();
-    private int mUdfpsViewVisibility = 0;
-    private boolean mOnFingerDownOver = false;
-    private boolean mAuthFailed = false;
-    private boolean mPendingShowDimlayer = false;
-    private long mPendingShowDimlayerTime = 0;
-    private final Runnable startAnimRunnable = new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController.7
-        @Override // java.lang.Runnable
-        public void run() {
-            Log.i("UdfpsController", "handleStartAnim");
-            if (UdfpsController.this.mView == null || UdfpsController.this.mView.getAnimationViewController() == null || !(UdfpsController.this.mView.getAnimationViewController() instanceof UdfpsKeyguardViewController) || !UdfpsController.this.mScreenOn) {
-                return;
-            }
-            ((UdfpsKeyguardViewController) UdfpsController.this.mView.getAnimationViewController()).startFpsBreatheAnim();
-        }
-    };
-    private final Runnable stopAnimRunnable = new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController.8
-        @Override // java.lang.Runnable
-        public void run() {
-            Log.i("UdfpsController", "handleStopAnim mView=" + UdfpsController.this.mView);
-            if (UdfpsController.this.mView == null || UdfpsController.this.mView.getAnimationViewController() == null || !(UdfpsController.this.mView.getAnimationViewController() instanceof UdfpsKeyguardViewController)) {
-                return;
-            }
-            ((UdfpsKeyguardViewController) UdfpsController.this.mView.getAnimationViewController()).stopFpsBreatheAnim();
-        }
-    };
-    private StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() { // from class: com.android.systemui.biometrics.UdfpsController.9
-        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
-        public void onDozingChanged(boolean z) {
-            Log.i("UdfpsController", "HBM  onDozingChanged dozing=" + z + ", shouldStartHBM=" + UdfpsController.this.shouldStartHBM());
-            if (z) {
-                if (UdfpsController.this.mView == null) {
-                    return;
-                }
-                UdfpsController.this.hideDimLayer();
-                if (UdfpsController.this.mView.getAnimationViewController() != null) {
-                    Log.i("UdfpsController", "onDozingChanged update icon Alpha");
-                    UdfpsController.this.mView.getAnimationViewController().updateAlpha(1.0f);
-                }
-                UdfpsController.this.mWindowManager.removeView(UdfpsController.this.mView);
-                UdfpsController.this.mWindowManager.addView(UdfpsController.this.mView, UdfpsController.this.mCoreLayoutParams);
-            } else if (!UdfpsController.this.shouldStartHBM()) {
-            } else {
-                UdfpsController.this.showDimLayer();
-            }
-        }
-    };
-    private final Runnable mDismissFingerprintIconRunnable = new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController.10
-        @Override // java.lang.Runnable
-        public void run() {
-            Log.i("UdfpsController", "hideUdfpsOverlay from mDismissFingerprintIconRunnable" + UdfpsController.this.mView);
-            if (UdfpsController.this.mView != null) {
-                UdfpsController.this.mIsIconVisible = false;
-                UdfpsController.this.mView.setAlpha(0.0f);
-            }
-        }
-    };
-    private final Runnable mShowFingerprintIconRunnable = new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController.11
-        @Override // java.lang.Runnable
-        public void run() {
-            Log.i("UdfpsController", "updateOverlay from mShowFingerprintIconRunnable");
-            if (UdfpsController.this.mView != null) {
-                UdfpsController.this.mIsIconVisible = true;
-                UdfpsController.this.mView.setAlpha(1.0f);
-            }
-            if (UdfpsController.this.mView != null) {
-                Log.i("UdfpsController", "showDimLayer from mShowFingerprintIconRunnable");
-                UdfpsController.this.showDimLayer();
-            }
-        }
-    };
-    private KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.systemui.biometrics.UdfpsController.12
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
-        public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
-            Log.i("UdfpsController", "onBiometricAuthFailed biometricSourceType=" + biometricSourceType + ", mOnFingerDown=" + UdfpsController.this.mOnFingerDown);
-            if (biometricSourceType != BiometricSourceType.FINGERPRINT || !UdfpsController.this.mOnFingerDown) {
-                return;
-            }
-            UdfpsController.this.mAuthFailed = true;
-            UdfpsController.this.onFingerUp();
-        }
+    private final VibratorHelper mVibrator;
+    private final WakefulnessLifecycle.Observer mWakefulnessObserver;
+    /* access modifiers changed from: private */
+    public final WindowManager mWindowManager;
+    private final Runnable startAnimRunnable;
+    private final Runnable stopAnimRunnable;
 
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
-        public void onKeyguardBouncerChanged(boolean z) {
-            Log.i("UdfpsController", "onKeyguardBouncerChanged bouncerVisibility=" + UdfpsController.this.mKeyguardViewManager.isBouncerShowing());
-            UdfpsController udfpsController = UdfpsController.this;
-            udfpsController.mBouncerVisibility = udfpsController.mKeyguardViewManager.isBouncerShowing();
-        }
-
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
-        public void onKeyguardVisibilityChangedRaw(boolean z) {
-            boolean z2 = System.currentTimeMillis() - UdfpsController.this.mPendingShowDimlayerTime < 1000;
-            Log.i("UdfpsController", "onKeyguardVisibilityChangedRaw showing=" + z + ", shouldStartHBM=" + UdfpsController.this.shouldStartHBM());
-            if (!z || !UdfpsController.this.mPendingShowDimlayer || !z2) {
-                return;
-            }
-            Log.i("UdfpsController", "onKeyguardVisibilityChangedRaw showDimLayer");
-            UdfpsController.this.showDimLayer();
-            UdfpsController.this.mPendingShowDimlayer = false;
-            UdfpsController.this.mPendingShowDimlayerTime = 0L;
-        }
-    };
-    private boolean mIsIconVisible = false;
-    private NTFingerprintBrightnessController.AlphaCallback mAlphaCallback = new NTFingerprintBrightnessController.AlphaCallback() { // from class: com.android.systemui.biometrics.UdfpsController.13
-        @Override // com.nothingos.keyguard.fingerprint.NTFingerprintBrightnessController.AlphaCallback
-        public void onAlpha(float f) {
-            Log.d("UdfpsController", "onAlpha:" + f);
-            if (UdfpsController.this.mView == null || UdfpsController.this.mView.getAnimationViewController() == null) {
-                return;
-            }
-            StringBuilder sb = new StringBuilder();
-            sb.append("updateAlpha:");
-            float f2 = 1.0f - f;
-            sb.append(f2);
-            Log.d("UdfpsController", sb.toString());
-            UdfpsController.this.mView.getAnimationViewController().updateAlpha(f2);
-        }
-    };
-
-    /* loaded from: classes.dex */
     public interface Callback {
         void onFingerDown();
 
         void onFingerUp();
     }
 
-    private int getCoreLayoutParamFlags() {
-        return 16777512;
+    public static boolean exceedsVelocityThreshold(float f) {
+        return f > 750.0f;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class ServerRequest {
-        final IUdfpsOverlayControllerCallback mCallback;
-        final UdfpsEnrollHelper mEnrollHelper;
-        final int mRequestReason;
-
-        ServerRequest(int i, IUdfpsOverlayControllerCallback iUdfpsOverlayControllerCallback, UdfpsEnrollHelper udfpsEnrollHelper) {
-            this.mRequestReason = i;
-            this.mCallback = iUdfpsOverlayControllerCallback;
-            this.mEnrollHelper = udfpsEnrollHelper;
-        }
-
-        void onEnrollmentProgress(int i) {
-            UdfpsEnrollHelper udfpsEnrollHelper = this.mEnrollHelper;
-            if (udfpsEnrollHelper != null) {
-                udfpsEnrollHelper.onEnrollmentProgress(i);
-            }
-        }
-
-        void onAcquiredGood() {
-            Log.d("UdfpsController", "onAcquiredGood");
-            UdfpsEnrollHelper udfpsEnrollHelper = this.mEnrollHelper;
-            if (udfpsEnrollHelper != null) {
-                udfpsEnrollHelper.animateIfLastStep();
-            }
-        }
-
-        void onEnrollmentHelp() {
-            Log.d("UdfpsController", "onEnrollmentHelp");
-            UdfpsEnrollHelper udfpsEnrollHelper = this.mEnrollHelper;
-            if (udfpsEnrollHelper != null) {
-                udfpsEnrollHelper.onEnrollmentHelp();
-            }
-        }
-
-        void onUserCanceled() {
-            try {
-                this.mCallback.onUserCanceled();
-            } catch (RemoteException e) {
-                Log.e("UdfpsController", "Remote exception", e);
-            }
-        }
-    }
-
-    /* loaded from: classes.dex */
     public class UdfpsOverlayController extends IUdfpsOverlayController.Stub {
         public UdfpsOverlayController() {
         }
 
-        public void showUdfpsOverlay(int i, final int i2, final IUdfpsOverlayControllerCallback iUdfpsOverlayControllerCallback) {
-            UdfpsController.this.mFgExecutor.execute(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda4
-                @Override // java.lang.Runnable
-                public final void run() {
-                    UdfpsController.UdfpsOverlayController.this.lambda$showUdfpsOverlay$0(i2, iUdfpsOverlayControllerCallback);
-                }
-            });
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$showUdfpsOverlay$1$com-android-systemui-biometrics-UdfpsController$UdfpsOverlayController */
+        public /* synthetic */ void mo30846x2b496fb9(long j, int i, IUdfpsOverlayControllerCallback iUdfpsOverlayControllerCallback) {
+            IUdfpsOverlayControllerCallback iUdfpsOverlayControllerCallback2 = iUdfpsOverlayControllerCallback;
+            UdfpsController udfpsController = UdfpsController.this;
+            Context access$700 = UdfpsController.this.mContext;
+            FingerprintManager access$800 = UdfpsController.this.mFingerprintManager;
+            LayoutInflater access$900 = UdfpsController.this.mInflater;
+            WindowManager access$1000 = UdfpsController.this.mWindowManager;
+            AccessibilityManager access$1100 = UdfpsController.this.mAccessibilityManager;
+            StatusBarStateController access$1200 = UdfpsController.this.mStatusBarStateController;
+            PanelExpansionStateManager access$1300 = UdfpsController.this.mPanelExpansionStateManager;
+            StatusBarKeyguardViewManager access$1400 = UdfpsController.this.mKeyguardViewManager;
+            KeyguardUpdateMonitor access$500 = UdfpsController.this.mKeyguardUpdateMonitor;
+            SystemUIDialogManager access$1500 = UdfpsController.this.mDialogManager;
+            DumpManager access$1600 = UdfpsController.this.mDumpManager;
+            LockscreenShadeTransitionController access$1700 = UdfpsController.this.mLockscreenShadeTransitionController;
+            ConfigurationController access$1800 = UdfpsController.this.mConfigurationController;
+            UdfpsController udfpsController2 = udfpsController;
+            SystemClock access$1900 = UdfpsController.this.mSystemClock;
+            UdfpsController udfpsController3 = udfpsController2;
+            KeyguardStateController access$2000 = UdfpsController.this.mKeyguardStateController;
+            UnlockedScreenOffAnimationController access$2100 = UdfpsController.this.mUnlockedScreenOffAnimationController;
+            boolean access$2200 = UdfpsController.this.mHalControlsIllumination;
+            UdfpsHbmProvider access$2300 = UdfpsController.this.mHbmProvider;
+            UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda4 udfpsController$UdfpsOverlayController$$ExternalSyntheticLambda4 = r1;
+            UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda4 udfpsController$UdfpsOverlayController$$ExternalSyntheticLambda42 = new UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda4(this, j);
+            Context context = access$700;
+            FingerprintManager fingerprintManager = access$800;
+            UdfpsControllerOverlay udfpsControllerOverlay = new UdfpsControllerOverlay(context, fingerprintManager, access$900, access$1000, access$1100, access$1200, access$1300, access$1400, access$500, access$1500, access$1600, access$1700, access$1800, access$1900, access$2000, access$2100, access$2200, access$2300, j, i, iUdfpsOverlayControllerCallback2, udfpsController$UdfpsOverlayController$$ExternalSyntheticLambda4, UdfpsController.this.mActivityLaunchAnimator);
+            udfpsController3.showUdfpsOverlay(udfpsControllerOverlay);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$showUdfpsOverlay$0(int i, IUdfpsOverlayControllerCallback iUdfpsOverlayControllerCallback) {
-            UdfpsController.this.mServerRequest = new ServerRequest(i, iUdfpsOverlayControllerCallback, (i == 1 || i == 2) ? new UdfpsEnrollHelper(UdfpsController.this.mContext, UdfpsController.this.mFingerprintManager, i) : null);
-            Log.i("UdfpsController", "showUdfpsOverlay from Framework");
-            UdfpsController.this.updateOverlay();
+        public void showUdfpsOverlay(long j, int i, int i2, IUdfpsOverlayControllerCallback iUdfpsOverlayControllerCallback) {
+            UdfpsController.this.mFgExecutor.execute(new UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda2(this, j, i2, iUdfpsOverlayControllerCallback));
+        }
+
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$showUdfpsOverlay$0$com-android-systemui-biometrics-UdfpsController$UdfpsOverlayController */
+        public /* synthetic */ Boolean mo30845xa8febada(long j, View view, MotionEvent motionEvent, Boolean bool) {
+            return Boolean.valueOf(UdfpsController.this.onTouch(j, motionEvent, bool.booleanValue()));
         }
 
         public void hideUdfpsOverlay(int i) {
-            Log.i("UdfpsController", "hideUdfpsOverlay from framework:" + i);
-            UdfpsController.this.mFgExecutor.execute(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    UdfpsController.UdfpsOverlayController.this.lambda$hideUdfpsOverlay$1();
-                }
-            });
+            UdfpsController.this.mFgExecutor.execute(new UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda0(this));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$hideUdfpsOverlay$1() {
-            UdfpsController.this.mServerRequest = null;
-            Log.i("UdfpsController", "hideUdfpsOverlay from Framework");
-            UdfpsController.this.updateOverlay();
-        }
-
-        public void onAcquiredGood(final int i) {
-            UdfpsController.this.mFgExecutor.execute(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    UdfpsController.UdfpsOverlayController.this.lambda$onAcquiredGood$2(i);
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onAcquiredGood$2(int i) {
-            if (UdfpsController.this.mView != null) {
-                UdfpsController.this.mGoodCaptureReceived = true;
-                UdfpsController.this.mView.stopIlluminationNT();
-                ServerRequest serverRequest = UdfpsController.this.mServerRequest;
-                if (serverRequest != null) {
-                    serverRequest.onAcquiredGood();
-                    return;
-                } else {
-                    Log.e("UdfpsController", "Null serverRequest when onAcquiredGood");
-                    return;
-                }
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$hideUdfpsOverlay$2$com-android-systemui-biometrics-UdfpsController$UdfpsOverlayController */
+        public /* synthetic */ void mo30840x67755773() {
+            if (UdfpsController.this.mKeyguardUpdateMonitor.isFingerprintDetectionRunning()) {
+                Log.d(UdfpsController.TAG, "hiding udfps overlay when mKeyguardUpdateMonitor.isFingerprintDetectionRunning()=true");
             }
-            Log.e("UdfpsController", "Null view when onAcquiredGood for sensorId: " + i);
+            UdfpsController.this.hideUdfpsOverlay(false);
         }
 
-        public void onEnrollmentProgress(int i, final int i2) {
-            UdfpsController.this.mFgExecutor.execute(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda3
-                @Override // java.lang.Runnable
-                public final void run() {
-                    UdfpsController.UdfpsOverlayController.this.lambda$onEnrollmentProgress$3(i2);
-                }
-            });
+        public void onAcquired(int i, int i2) {
+            if (BiometricFingerprintConstants.shouldTurnOffHbm(i2)) {
+                UdfpsController.this.mFgExecutor.execute(new UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda5(this, i, i2, i2 == 0));
+            }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onEnrollmentProgress$3(int i) {
-            ServerRequest serverRequest = UdfpsController.this.mServerRequest;
-            if (serverRequest == null) {
-                Log.e("UdfpsController", "onEnrollProgress received but serverRequest is null");
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onAcquired$3$com-android-systemui-biometrics-UdfpsController$UdfpsOverlayController */
+        public /* synthetic */ void mo30841xcb946e3d(int i, int i2, boolean z) {
+            if (UdfpsController.this.mOverlay == null) {
+                Log.e(UdfpsController.TAG, "Null request when onAcquired for sensorId: " + i + " acquiredInfo=" + i2);
+                return;
+            }
+            boolean unused = UdfpsController.this.mAcquiredReceived = true;
+            UdfpsView overlayView = UdfpsController.this.mOverlay.getOverlayView();
+            if (overlayView != null) {
+                overlayView.stopIllumination();
+            }
+            if (z) {
+                UdfpsController.this.mOverlay.onAcquiredGood();
+            }
+        }
+
+        public void onEnrollmentProgress(int i, int i2) {
+            UdfpsController.this.mFgExecutor.execute(new UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda3(this, i2));
+        }
+
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onEnrollmentProgress$4$com-android-systemui-biometrics-UdfpsController$UdfpsOverlayController */
+        public /* synthetic */ void mo30843xfafc4e79(int i) {
+            if (UdfpsController.this.mOverlay == null) {
+                Log.e(UdfpsController.TAG, "onEnrollProgress received but serverRequest is null");
             } else {
-                serverRequest.onEnrollmentProgress(i);
+                UdfpsController.this.mOverlay.onEnrollmentProgress(i);
             }
         }
 
         public void onEnrollmentHelp(int i) {
-            UdfpsController.this.mFgExecutor.execute(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    UdfpsController.UdfpsOverlayController.this.lambda$onEnrollmentHelp$4();
-                }
-            });
+            UdfpsController.this.mFgExecutor.execute(new UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda6(this));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onEnrollmentHelp$4() {
-            ServerRequest serverRequest = UdfpsController.this.mServerRequest;
-            if (serverRequest == null) {
-                Log.e("UdfpsController", "onEnrollmentHelp received but serverRequest is null");
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onEnrollmentHelp$5$com-android-systemui-biometrics-UdfpsController$UdfpsOverlayController */
+        public /* synthetic */ void mo30842xd165fcc4() {
+            if (UdfpsController.this.mOverlay == null) {
+                Log.e(UdfpsController.TAG, "onEnrollmentHelp received but serverRequest is null");
             } else {
-                serverRequest.onEnrollmentHelp();
+                UdfpsController.this.mOverlay.onEnrollmentHelp();
             }
         }
 
-        public void setDebugMessage(int i, final String str) {
-            UdfpsController.this.mFgExecutor.execute(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda5
-                @Override // java.lang.Runnable
-                public final void run() {
-                    UdfpsController.UdfpsOverlayController.this.lambda$setDebugMessage$5(str);
-                }
-            });
+        public void setDebugMessage(int i, String str) {
+            UdfpsController.this.mFgExecutor.execute(new UdfpsController$UdfpsOverlayController$$ExternalSyntheticLambda1(this, str));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$setDebugMessage$5(String str) {
-            if (UdfpsController.this.mView == null) {
-                return;
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$setDebugMessage$6$com-android-systemui-biometrics-UdfpsController$UdfpsOverlayController */
+        public /* synthetic */ void mo30844x1f7db2b(String str) {
+            if (UdfpsController.this.mOverlay != null && !UdfpsController.this.mOverlay.isHiding()) {
+                UdfpsController.this.mOverlay.getOverlayView().setDebugMessage(str);
             }
-            UdfpsController.this.mView.setDebugMessage(str);
         }
     }
 
-    private static float computePointerSpeed(VelocityTracker velocityTracker, int i) {
-        return (float) Math.sqrt(Math.pow(velocityTracker.getXVelocity(i), 2.0d) + Math.pow(velocityTracker.getYVelocity(i), 2.0d));
+    public void updateOverlayParams(int i, UdfpsOverlayParams udfpsOverlayParams) {
+        if (i != this.mSensorId) {
+            this.mSensorId = i;
+            Log.w(TAG, "updateUdfpsParams | sensorId has changed");
+        }
+        if (!this.mOverlayParams.equals(udfpsOverlayParams)) {
+            this.mOverlayParams = udfpsOverlayParams;
+            boolean isShowingAlternateAuth = this.mKeyguardViewManager.isShowingAlternateAuth();
+            redrawOverlay();
+            if (isShowingAlternateAuth) {
+                this.mKeyguardViewManager.showGenericBouncer(true);
+            }
+        }
+    }
+
+    public void setAuthControllerUpdateUdfpsLocation(Runnable runnable) {
+        this.mAuthControllerUpdateUdfpsLocation = runnable;
+    }
+
+    public void setHalControlsIllumination(boolean z) {
+        this.mHalControlsIllumination = z;
+    }
+
+    public static float computePointerSpeed(VelocityTracker velocityTracker, int i) {
+        return (float) Math.sqrt(Math.pow((double) velocityTracker.getXVelocity(i), 2.0d) + Math.pow((double) velocityTracker.getYVelocity(i), 2.0d));
     }
 
     public boolean onTouch(MotionEvent motionEvent) {
-        UdfpsView udfpsView = this.mView;
-        if (udfpsView == null) {
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (udfpsControllerOverlay == null || udfpsControllerOverlay.isHiding()) {
             return false;
         }
-        return onTouch(udfpsView, motionEvent, false);
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$new$0(View view, MotionEvent motionEvent) {
-        return onTouch(view, motionEvent, true);
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$new$1(View view, MotionEvent motionEvent) {
-        return onTouch(view, motionEvent, true);
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$2(boolean z) {
-        updateTouchListener();
+        return onTouch(this.mOverlay.getRequestId(), motionEvent, false);
     }
 
     private boolean isWithinSensorArea(UdfpsView udfpsView, float f, float f2, boolean z) {
         if (z) {
             return udfpsView.isWithinSensorArea(f, f2);
         }
-        UdfpsView udfpsView2 = this.mView;
-        return udfpsView2 != null && udfpsView2.getAnimationViewController() != null && !this.mView.getAnimationViewController().shouldPauseAuth() && getSensorLocation().contains(f, f2);
-    }
-
-    private boolean onTouch(View view, MotionEvent motionEvent, boolean z) {
-        boolean z2;
-        int findPointerIndex;
-        int findPointerIndex2;
-        UdfpsView udfpsView = (UdfpsView) view;
-        int actionMasked = motionEvent.getActionMasked();
-        boolean z3 = true;
-        boolean z4 = false;
-        if (actionMasked != 0) {
-            if (actionMasked != 1) {
-                if (actionMasked != 2) {
-                    if (actionMasked != 3) {
-                        if (actionMasked == 4) {
-                            udfpsView.onTouchOutsideView();
-                            return true;
-                        } else if (actionMasked != 7) {
-                            if (actionMasked != 9) {
-                                if (actionMasked != 10) {
-                                    return false;
-                                }
-                            }
-                        }
-                    }
-                }
-                Trace.beginSection("UdfpsController.onTouch.ACTION_MOVE");
-                int i = this.mActivePointerId;
-                if (i == -1) {
-                    findPointerIndex2 = motionEvent.getPointerId(0);
-                } else {
-                    findPointerIndex2 = motionEvent.findPointerIndex(i);
-                }
-                if (findPointerIndex2 == motionEvent.getActionIndex()) {
-                    boolean isWithinSensorArea = isWithinSensorArea(udfpsView, motionEvent.getX(findPointerIndex2), motionEvent.getY(findPointerIndex2), z);
-                    if ((z || isWithinSensorArea) && shouldTryToDismissKeyguard()) {
-                        Log.v("UdfpsController", "onTouch | dismiss keyguard ACTION_MOVE");
-                        if (!this.mOnFingerDown) {
-                            playStartHaptic();
-                        }
-                        this.mKeyguardViewManager.notifyKeyguardAuthenticated(false);
-                        this.mAttemptedToDismissKeyguard = true;
-                        return false;
-                    } else if (isWithinSensorArea) {
-                        if (this.mVelocityTracker == null) {
-                            this.mVelocityTracker = VelocityTracker.obtain();
-                        }
-                        this.mVelocityTracker.addMovement(motionEvent);
-                        this.mVelocityTracker.computeCurrentVelocity(1000);
-                        float computePointerSpeed = computePointerSpeed(this.mVelocityTracker, this.mActivePointerId);
-                        float touchMinor = motionEvent.getTouchMinor(findPointerIndex2);
-                        float touchMajor = motionEvent.getTouchMajor(findPointerIndex2);
-                        boolean z5 = computePointerSpeed > 750.0f;
-                        String format = String.format("minor: %.1f, major: %.1f, v: %.1f, exceedsVelocityThreshold: %b", Float.valueOf(touchMinor), Float.valueOf(touchMajor), Float.valueOf(computePointerSpeed), Boolean.valueOf(z5));
-                        long elapsedRealtime = this.mSystemClock.elapsedRealtime() - this.mTouchLogTime;
-                        if (this.mGoodCaptureReceived || z5) {
-                            if (elapsedRealtime >= 50) {
-                                Log.v("UdfpsController", "onTouch | finger move: " + format);
-                                this.mTouchLogTime = this.mSystemClock.elapsedRealtime();
-                            }
-                            z3 = false;
-                        } else {
-                            Log.i("UdfpsController", "ACTION_MOVE mOnFingerDown=" + this.mOnFingerDown + ", mOnFingerDownOver=" + this.mOnFingerDownOver + ", mAuthFailed=" + this.mAuthFailed);
-                            if (!this.mOnFingerDown && !this.mOnFingerDownOver && !this.mAuthFailed) {
-                                onFingerDown((int) motionEvent.getRawX(), (int) motionEvent.getRawY(), touchMinor, touchMajor);
-                                this.mOnFingerDownOver = true;
-                            }
-                            Log.v("UdfpsController", "onTouch | finger down: " + format);
-                            this.mTouchLogTime = this.mSystemClock.elapsedRealtime();
-                            this.mPowerManager.userActivity(this.mSystemClock.uptimeMillis(), 2, 0);
-                        }
-                        z4 = z3;
-                    } else {
-                        Log.v("UdfpsController", "onTouch | finger outside");
-                        onFingerUp();
-                    }
-                }
-                Trace.endSection();
-                return z4;
-            }
-            Trace.beginSection("UdfpsController.onTouch.ACTION_UP");
-            this.mActivePointerId = -1;
-            VelocityTracker velocityTracker = this.mVelocityTracker;
-            if (velocityTracker != null) {
-                velocityTracker.recycle();
-                this.mVelocityTracker = null;
-            }
-            Log.v("UdfpsController", "onTouch | finger up");
-            this.mAttemptedToDismissKeyguard = false;
-            onFingerUp();
-            this.mFalsingManager.isFalseTouch(13);
-            Trace.endSection();
-            this.mOnFingerDownOver = false;
-            this.mAuthFailed = false;
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (udfpsControllerOverlay == null || udfpsControllerOverlay.getAnimationViewController() == null || this.mOverlay.getAnimationViewController().shouldPauseAuth() || !this.mOverlayParams.getSensorBounds().contains((int) f, (int) f2)) {
             return false;
         }
-        Trace.beginSection("UdfpsController.onTouch.ACTION_DOWN");
-        VelocityTracker velocityTracker2 = this.mVelocityTracker;
-        if (velocityTracker2 == null) {
-            this.mVelocityTracker = VelocityTracker.obtain();
-        } else {
-            velocityTracker2.clear();
+        return true;
+    }
+
+    private Point getTouchInNativeCoordinates(MotionEvent motionEvent, int i) {
+        Point point = new Point((int) motionEvent.getRawX(i), (int) motionEvent.getRawY(i));
+        int rotation = this.mOverlayParams.getRotation();
+        if (rotation == 1 || rotation == 3) {
+            RotationUtils.rotatePoint(point, RotationUtils.deltaRotation(rotation, 0), this.mOverlayParams.getLogicalDisplayWidth(), this.mOverlayParams.getLogicalDisplayHeight());
         }
-        boolean isWithinSensorArea2 = isWithinSensorArea(udfpsView, motionEvent.getX(), motionEvent.getY(), z);
-        Log.v("UdfpsController", "onTouch | action down | withinSensorArea=" + isWithinSensorArea2);
-        if (isWithinSensorArea2) {
-            Trace.beginAsyncSection("UdfpsController.e2e.onPointerDown", 0);
-            Log.v("UdfpsController", "onTouch | action down");
-            this.mActivePointerId = motionEvent.getPointerId(0);
-            this.mVelocityTracker.addMovement(motionEvent);
-            int i2 = this.mActivePointerId;
-            if (i2 == -1) {
-                findPointerIndex = motionEvent.getPointerId(0);
-            } else {
-                findPointerIndex = motionEvent.findPointerIndex(i2);
-            }
-            if (findPointerIndex == motionEvent.getActionIndex()) {
-                onFingerDown((int) motionEvent.getRawX(), (int) motionEvent.getRawY(), motionEvent.getTouchMinor(findPointerIndex), motionEvent.getTouchMajor(findPointerIndex));
-            }
-            z2 = true;
-        } else {
-            Log.v("UdfpsController", "onTouch | action down | withinSensorArea=false , getX=" + motionEvent.getX() + ", getY" + motionEvent.getY() + ", fromUdfpsView=" + z);
-            z2 = false;
+        float scaleFactor = this.mOverlayParams.getScaleFactor();
+        point.x = (int) (((float) point.x) / scaleFactor);
+        point.y = (int) (((float) point.y) / scaleFactor);
+        return point;
+    }
+
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Code restructure failed: missing block: B:20:0x0060, code lost:
+        if (r4 != 10) goto L_0x01e9;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public boolean onTouch(long r17, android.view.MotionEvent r19, boolean r20) {
+        /*
+            r16 = this;
+            r7 = r16
+            r1 = r17
+            r0 = r19
+            r8 = r20
+            com.android.systemui.biometrics.UdfpsControllerOverlay r3 = r7.mOverlay
+            java.lang.String r9 = "UdfpsController"
+            r10 = 0
+            if (r3 != 0) goto L_0x0015
+            java.lang.String r0 = "ignoring onTouch with null overlay"
+            android.util.Log.w(r9, r0)
+            return r10
+        L_0x0015:
+            boolean r3 = r3.matchesRequestId(r1)
+            if (r3 != 0) goto L_0x003e
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            java.lang.String r3 = "ignoring stale touch event: "
+            r0.<init>((java.lang.String) r3)
+            java.lang.StringBuilder r0 = r0.append((long) r1)
+            java.lang.String r1 = " current: "
+            java.lang.StringBuilder r0 = r0.append((java.lang.String) r1)
+            com.android.systemui.biometrics.UdfpsControllerOverlay r1 = r7.mOverlay
+            long r1 = r1.getRequestId()
+            java.lang.StringBuilder r0 = r0.append((long) r1)
+            java.lang.String r0 = r0.toString()
+            android.util.Log.w(r9, r0)
+            return r10
+        L_0x003e:
+            com.android.systemui.biometrics.UdfpsControllerOverlay r3 = r7.mOverlay
+            com.android.systemui.biometrics.UdfpsView r3 = r3.getOverlayView()
+            int r4 = r19.getActionMasked()
+            r5 = -1
+            r11 = 1
+            if (r4 == 0) goto L_0x01ec
+            if (r4 == r11) goto L_0x01be
+            r6 = 4
+            r12 = 3
+            r13 = 2
+            if (r4 == r13) goto L_0x0068
+            if (r4 == r12) goto L_0x01be
+            if (r4 == r6) goto L_0x0064
+            r14 = 7
+            if (r4 == r14) goto L_0x0068
+            r6 = 9
+            if (r4 == r6) goto L_0x01ec
+            r0 = 10
+            if (r4 == r0) goto L_0x01be
+            goto L_0x01e9
+        L_0x0064:
+            r3.onTouchOutsideView()
+            return r11
+        L_0x0068:
+            java.lang.String r4 = "UdfpsController.onTouch.ACTION_MOVE"
+            android.os.Trace.beginSection(r4)
+            int r4 = r7.mActivePointerId
+            if (r4 != r5) goto L_0x0076
+            int r4 = r0.getPointerId(r10)
+            goto L_0x007a
+        L_0x0076:
+            int r4 = r0.findPointerIndex(r4)
+        L_0x007a:
+            int r5 = r19.getActionIndex()
+            if (r4 != r5) goto L_0x01b8
+            float r5 = r0.getX(r4)
+            float r14 = r0.getY(r4)
+            boolean r5 = r7.isWithinSensorArea(r3, r5, r14, r8)
+            if (r8 != 0) goto L_0x0090
+            if (r5 == 0) goto L_0x00ac
+        L_0x0090:
+            boolean r8 = r16.shouldTryToDismissKeyguard()
+            if (r8 == 0) goto L_0x00ac
+            java.lang.String r0 = "onTouch | dismiss keyguard ACTION_MOVE"
+            android.util.Log.v(r9, r0)
+            boolean r0 = r7.mOnFingerDown
+            if (r0 != 0) goto L_0x00a3
+            r16.playStartHaptic()
+        L_0x00a3:
+            com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager r0 = r7.mKeyguardViewManager
+            r0.notifyKeyguardAuthenticated(r10)
+            r7.mAttemptedToDismissKeyguard = r11
+            goto L_0x01e9
+        L_0x00ac:
+            android.graphics.Point r8 = r7.getTouchInNativeCoordinates(r0, r4)
+            if (r5 == 0) goto L_0x01a5
+            android.view.VelocityTracker r3 = r7.mVelocityTracker
+            if (r3 != 0) goto L_0x00bc
+            android.view.VelocityTracker r3 = android.view.VelocityTracker.obtain()
+            r7.mVelocityTracker = r3
+        L_0x00bc:
+            android.view.VelocityTracker r3 = r7.mVelocityTracker
+            r3.addMovement(r0)
+            android.view.VelocityTracker r3 = r7.mVelocityTracker
+            r5 = 1000(0x3e8, float:1.401E-42)
+            r3.computeCurrentVelocity(r5)
+            android.view.VelocityTracker r3 = r7.mVelocityTracker
+            int r5 = r7.mActivePointerId
+            float r3 = computePointerSpeed(r3, r5)
+            float r5 = r0.getTouchMinor(r4)
+            float r0 = r0.getTouchMajor(r4)
+            boolean r4 = exceedsVelocityThreshold(r3)
+            java.lang.Object[] r6 = new java.lang.Object[r6]
+            java.lang.Float r14 = java.lang.Float.valueOf((float) r5)
+            r6[r10] = r14
+            java.lang.Float r14 = java.lang.Float.valueOf((float) r0)
+            r6[r11] = r14
+            java.lang.Float r3 = java.lang.Float.valueOf((float) r3)
+            r6[r13] = r3
+            java.lang.Boolean r3 = java.lang.Boolean.valueOf((boolean) r4)
+            r6[r12] = r3
+            java.lang.String r3 = "minor: %.1f, major: %.1f, v: %.1f, exceedsVelocityThreshold: %b"
+            java.lang.String r12 = java.lang.String.format(r3, r6)
+            com.android.systemui.util.time.SystemClock r3 = r7.mSystemClock
+            long r14 = r3.elapsedRealtime()
+            long r10 = r7.mTouchLogTime
+            long r14 = r14 - r10
+            boolean r3 = r7.mAcquiredReceived
+            if (r3 != 0) goto L_0x0183
+            if (r4 != 0) goto L_0x0183
+            com.android.systemui.biometrics.UdfpsOverlayParams r3 = r7.mOverlayParams
+            float r3 = r3.getScaleFactor()
+            float r5 = r5 / r3
+            float r6 = r0 / r3
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            java.lang.String r3 = "ACTION_MOVE mOnFingerDown="
+            r0.<init>((java.lang.String) r3)
+            boolean r3 = r7.mOnFingerDown
+            java.lang.StringBuilder r0 = r0.append((boolean) r3)
+            java.lang.String r3 = ", mOnFingerDownOver="
+            java.lang.StringBuilder r0 = r0.append((java.lang.String) r3)
+            boolean r3 = r7.mOnFingerDownOver
+            java.lang.StringBuilder r0 = r0.append((boolean) r3)
+            java.lang.String r3 = ", mAuthFailed="
+            java.lang.StringBuilder r0 = r0.append((java.lang.String) r3)
+            boolean r3 = r7.mAuthFailed
+            java.lang.StringBuilder r0 = r0.append((boolean) r3)
+            java.lang.String r0 = r0.toString()
+            com.nothing.systemui.util.NTLogUtil.m1682i(r9, r0)
+            boolean r0 = r7.mOnFingerDown
+            if (r0 != 0) goto L_0x015a
+            boolean r0 = r7.mOnFingerDownOver
+            if (r0 != 0) goto L_0x015a
+            boolean r0 = r7.mAuthFailed
+            if (r0 != 0) goto L_0x015a
+            int r3 = r8.x
+            int r4 = r8.y
+            r0 = r16
+            r1 = r17
+            r0.mo30815xd7243b17(r1, r3, r4, r5, r6)
+            r0 = 1
+            r7.mOnFingerDownOver = r0
+        L_0x015a:
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            java.lang.String r1 = "onTouch | finger down: "
+            r0.<init>((java.lang.String) r1)
+            java.lang.StringBuilder r0 = r0.append((java.lang.String) r12)
+            java.lang.String r0 = r0.toString()
+            android.util.Log.v(r9, r0)
+            com.android.systemui.util.time.SystemClock r0 = r7.mSystemClock
+            long r0 = r0.elapsedRealtime()
+            r7.mTouchLogTime = r0
+            android.os.PowerManager r0 = r7.mPowerManager
+            com.android.systemui.util.time.SystemClock r1 = r7.mSystemClock
+            long r1 = r1.uptimeMillis()
+            r3 = 0
+            r0.userActivity(r1, r13, r3)
+            r10 = 1
+            goto L_0x01b9
+        L_0x0183:
+            r0 = 50
+            int r0 = (r14 > r0 ? 1 : (r14 == r0 ? 0 : -1))
+            if (r0 < 0) goto L_0x01b8
+            java.lang.StringBuilder r0 = new java.lang.StringBuilder
+            java.lang.String r1 = "onTouch | finger move: "
+            r0.<init>((java.lang.String) r1)
+            java.lang.StringBuilder r0 = r0.append((java.lang.String) r12)
+            java.lang.String r0 = r0.toString()
+            android.util.Log.v(r9, r0)
+            com.android.systemui.util.time.SystemClock r0 = r7.mSystemClock
+            long r0 = r0.elapsedRealtime()
+            r7.mTouchLogTime = r0
+            goto L_0x01b8
+        L_0x01a5:
+            java.lang.String r0 = "onTouch | finger outside"
+            android.util.Log.v(r9, r0)
+            r7.onFingerUp(r1, r3)
+            com.android.systemui.util.concurrency.DelayableExecutor r0 = r7.mFgExecutor
+            com.android.systemui.biometrics.UdfpsController$$ExternalSyntheticLambda6 r1 = new com.android.systemui.biometrics.UdfpsController$$ExternalSyntheticLambda6
+            r1.<init>(r7, r8)
+            r0.execute(r1)
+        L_0x01b8:
+            r10 = 0
+        L_0x01b9:
+            android.os.Trace.endSection()
+            goto L_0x02c2
+        L_0x01be:
+            java.lang.String r0 = "UdfpsController.onTouch.ACTION_UP"
+            android.os.Trace.beginSection(r0)
+            r7.mActivePointerId = r5
+            android.view.VelocityTracker r0 = r7.mVelocityTracker
+            if (r0 == 0) goto L_0x01cf
+            r0.recycle()
+            r0 = 0
+            r7.mVelocityTracker = r0
+        L_0x01cf:
+            java.lang.String r0 = "onTouch | finger up"
+            android.util.Log.v(r9, r0)
+            r0 = 0
+            r7.mAttemptedToDismissKeyguard = r0
+            r7.onFingerUp(r1, r3)
+            com.android.systemui.plugins.FalsingManager r1 = r7.mFalsingManager
+            r2 = 13
+            r1.isFalseTouch(r2)
+            android.os.Trace.endSection()
+            r7.mOnFingerDownOver = r0
+            r7.mAuthFailed = r0
+        L_0x01e9:
+            r10 = 0
+            goto L_0x02c2
+        L_0x01ec:
+            java.lang.String r4 = "UdfpsController.onTouch.ACTION_DOWN"
+            android.os.Trace.beginSection(r4)
+            android.view.VelocityTracker r4 = r7.mVelocityTracker
+            if (r4 != 0) goto L_0x01fc
+            android.view.VelocityTracker r4 = android.view.VelocityTracker.obtain()
+            r7.mVelocityTracker = r4
+            goto L_0x01ff
+        L_0x01fc:
+            r4.clear()
+        L_0x01ff:
+            float r4 = r19.getX()
+            float r6 = r19.getY()
+            boolean r10 = r7.isWithinSensorArea(r3, r4, r6, r8)
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder
+            java.lang.String r4 = "onTouch | action down | withinSensorArea="
+            r3.<init>((java.lang.String) r4)
+            java.lang.StringBuilder r3 = r3.append((boolean) r10)
+            java.lang.String r3 = r3.toString()
+            com.nothing.systemui.util.NTLogUtil.m1683v(r9, r3)
+            if (r10 == 0) goto L_0x026e
+            java.lang.String r3 = "UdfpsController.e2e.onPointerDown"
+            r4 = 0
+            android.os.Trace.beginAsyncSection(r3, r4)
+            java.lang.String r3 = "onTouch | action down"
+            android.util.Log.v(r9, r3)
+            int r3 = r0.getPointerId(r4)
+            r7.mActivePointerId = r3
+            android.view.VelocityTracker r3 = r7.mVelocityTracker
+            r3.addMovement(r0)
+            r7.mAcquiredReceived = r4
+            int r3 = r7.mActivePointerId
+            if (r3 != r5) goto L_0x0242
+            int r3 = r0.getPointerId(r4)
+            goto L_0x0246
+        L_0x0242:
+            int r3 = r0.findPointerIndex(r3)
+        L_0x0246:
+            int r4 = r19.getActionIndex()
+            if (r3 != r4) goto L_0x026c
+            android.graphics.Point r4 = r7.getTouchInNativeCoordinates(r0, r3)
+            float r5 = r0.getTouchMinor(r3)
+            float r0 = r0.getTouchMajor(r3)
+            com.android.systemui.biometrics.UdfpsOverlayParams r3 = r7.mOverlayParams
+            float r3 = r3.getScaleFactor()
+            float r5 = r5 / r3
+            float r6 = r0 / r3
+            int r3 = r4.x
+            int r4 = r4.y
+            r0 = r16
+            r1 = r17
+            r0.mo30815xd7243b17(r1, r3, r4, r5, r6)
+        L_0x026c:
+            r0 = 1
+            goto L_0x029e
+        L_0x026e:
+            java.lang.StringBuilder r1 = new java.lang.StringBuilder
+            java.lang.String r2 = "onTouch | action down | withinSensorArea=false , getX="
+            r1.<init>((java.lang.String) r2)
+            float r2 = r19.getX()
+            java.lang.StringBuilder r1 = r1.append((float) r2)
+            java.lang.String r2 = ", getY"
+            java.lang.StringBuilder r1 = r1.append((java.lang.String) r2)
+            float r0 = r19.getY()
+            java.lang.StringBuilder r0 = r1.append((float) r0)
+            java.lang.String r1 = ", fromUdfpsView="
+            java.lang.StringBuilder r0 = r0.append((java.lang.String) r1)
+            java.lang.StringBuilder r0 = r0.append((boolean) r8)
+            java.lang.String r0 = r0.toString()
+            com.nothing.systemui.util.NTLogUtil.m1683v(r9, r0)
+            r0 = 0
+        L_0x029e:
+            if (r10 != 0) goto L_0x02a2
+            if (r8 == 0) goto L_0x02be
+        L_0x02a2:
+            boolean r1 = r16.shouldTryToDismissKeyguard()
+            if (r1 == 0) goto L_0x02be
+            java.lang.String r1 = "onTouch | dismiss keyguard ACTION_DOWN"
+            android.util.Log.v(r9, r1)
+            boolean r1 = r7.mOnFingerDown
+            if (r1 != 0) goto L_0x02b5
+            r16.playStartHaptic()
+        L_0x02b5:
+            com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager r1 = r7.mKeyguardViewManager
+            r2 = 0
+            r1.notifyKeyguardAuthenticated(r2)
+            r1 = 1
+            r7.mAttemptedToDismissKeyguard = r1
+        L_0x02be:
+            android.os.Trace.endSection()
+            r10 = r0
+        L_0x02c2:
+            return r10
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.biometrics.UdfpsController.onTouch(long, android.view.MotionEvent, boolean):boolean");
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onTouch$0$com-android-systemui-biometrics-UdfpsController  reason: not valid java name */
+    public /* synthetic */ void m2583lambda$onTouch$0$comandroidsystemuibiometricsUdfpsController(Point point) {
+        if (this.mOverlay == null) {
+            Log.e(TAG, "touch outside sensor area receivedbut serverRequest is null");
+            return;
         }
-        if ((isWithinSensorArea2 || z) && shouldTryToDismissKeyguard()) {
-            Log.v("UdfpsController", "onTouch | dismiss keyguard ACTION_DOWN");
-            if (!this.mOnFingerDown) {
-                playStartHaptic();
-            }
-            this.mKeyguardViewManager.notifyKeyguardAuthenticated(false);
-            this.mAttemptedToDismissKeyguard = true;
-        }
-        Trace.endSection();
-        return z2;
+        float scaleFactor = this.mOverlayParams.getScaleFactor();
+        this.mOverlay.onTouchOutsideOfSensorArea((float) point.x, (float) point.y, ((float) this.mOverlayParams.getSensorBounds().centerX()) / scaleFactor, ((float) this.mOverlayParams.getSensorBounds().centerY()) / scaleFactor, this.mOverlayParams.getRotation());
     }
 
     private boolean shouldTryToDismissKeyguard() {
-        return this.mView.getAnimationViewController() != null && (this.mView.getAnimationViewController() instanceof UdfpsKeyguardViewController) && this.mKeyguardStateController.canDismissLockScreen() && !this.mAttemptedToDismissKeyguard;
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        return udfpsControllerOverlay != null && (udfpsControllerOverlay.getAnimationViewController() instanceof UdfpsKeyguardViewController) && this.mKeyguardStateController.canDismissLockScreen() && !this.mAttemptedToDismissKeyguard;
     }
 
-    public UdfpsController(Context context, Execution execution, LayoutInflater layoutInflater, FingerprintManager fingerprintManager, WindowManager windowManager, StatusBarStateController statusBarStateController, DelayableExecutor delayableExecutor, StatusBar statusBar, StatusBarKeyguardViewManager statusBarKeyguardViewManager, DumpManager dumpManager, KeyguardUpdateMonitor keyguardUpdateMonitor, FalsingManager falsingManager, PowerManager powerManager, AccessibilityManager accessibilityManager, LockscreenShadeTransitionController lockscreenShadeTransitionController, ScreenLifecycle screenLifecycle, Vibrator vibrator, UdfpsHapticsSimulator udfpsHapticsSimulator, Optional<UdfpsHbmProvider> optional, KeyguardStateController keyguardStateController, KeyguardBypassController keyguardBypassController, DisplayManager displayManager, Handler handler, ConfigurationController configurationController, SystemClock systemClock, UnlockedScreenOffAnimationController unlockedScreenOffAnimationController) {
-        ScreenLifecycle.Observer observer = new ScreenLifecycle.Observer() { // from class: com.android.systemui.biometrics.UdfpsController.1
-            @Override // com.android.systemui.keyguard.ScreenLifecycle.Observer
+    @Inject
+    public UdfpsController(Context context, Execution execution, LayoutInflater layoutInflater, FingerprintManager fingerprintManager, WindowManager windowManager, StatusBarStateController statusBarStateController, @Main DelayableExecutor delayableExecutor, PanelExpansionStateManager panelExpansionStateManager, StatusBarKeyguardViewManager statusBarKeyguardViewManager, DumpManager dumpManager, KeyguardUpdateMonitor keyguardUpdateMonitor, FalsingManager falsingManager, PowerManager powerManager, AccessibilityManager accessibilityManager, LockscreenShadeTransitionController lockscreenShadeTransitionController, ScreenLifecycle screenLifecycle, VibratorHelper vibratorHelper, UdfpsHapticsSimulator udfpsHapticsSimulator, UdfpsShell udfpsShell, Optional<UdfpsHbmProvider> optional, KeyguardStateController keyguardStateController, DisplayManager displayManager, @Main Handler handler, ConfigurationController configurationController, SystemClock systemClock, UnlockedScreenOffAnimationController unlockedScreenOffAnimationController, SystemUIDialogManager systemUIDialogManager, LatencyTracker latencyTracker, ActivityLaunchAnimator activityLaunchAnimator, Optional<AlternateUdfpsTouchProvider> optional2, @BiometricsBackground Executor executor) {
+        StatusBarStateController statusBarStateController2 = statusBarStateController;
+        C19751 r3 = new ScreenLifecycle.Observer() {
             public void onScreenTurnedOn() {
-                Log.i("UdfpsController", "HBM  onScreenTurnedOn shouldStartHBM()=" + UdfpsController.this.shouldStartHBM());
-                UdfpsController.this.mScreenOn = true;
+                boolean unused = UdfpsController.this.mScreenOn = true;
                 if (UdfpsController.this.mAodInterruptRunnable != null) {
                     UdfpsController.this.mAodInterruptRunnable.run();
-                    UdfpsController.this.mAodInterruptRunnable = null;
+                    Runnable unused2 = UdfpsController.this.mAodInterruptRunnable = null;
                 }
-                UdfpsController.this.startFpsBreatheAnim();
                 if (UdfpsController.this.shouldStartHBM()) {
-                    UdfpsController.this.showDimLayer();
+                    UdfpsController.this.showDimLayer(true, "onScreenTurnedOn");
                 }
             }
 
-            @Override // com.android.systemui.keyguard.ScreenLifecycle.Observer
             public void onScreenTurnedOff() {
-                Log.i("UdfpsController", "HBM  onScreenTurnedOff shouldStartHBM()=" + UdfpsController.this.shouldStartHBM());
-                UdfpsController.this.mScreenOn = false;
+                boolean unused = UdfpsController.this.mScreenOn = false;
+            }
+        };
+        this.mScreenObserver = r3;
+        C19822 r4 = new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                if (UdfpsController.this.mOverlay != null && UdfpsController.this.mOverlay.getRequestReason() != 4 && "android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
+                    Log.d(UdfpsController.TAG, "ACTION_CLOSE_SYSTEM_DIALOGS received, mRequestReason: " + UdfpsController.this.mOverlay.getRequestReason());
+                    UdfpsController.this.mOverlay.cancel();
+                    UdfpsController.this.hideUdfpsOverlay(false);
+                }
+            }
+        };
+        this.mBroadcastReceiver = r4;
+        this.mLock = new Object();
+        this.mUdfpsViewVisibility = 0;
+        this.mOnFingerDownOver = false;
+        this.mAuthFailed = false;
+        this.mPendingShowDimlayer = false;
+        this.mPendingShowDimlayerTime = 0;
+        this.startAnimRunnable = new Runnable() {
+            public void run() {
+                if (UdfpsController.this.mOverlay != null && UdfpsController.this.mOverlay.getOverlayView() != null) {
+                    UdfpsView overlayView = UdfpsController.this.mOverlay.getOverlayView();
+                    NTLogUtil.m1682i(UdfpsController.TAG, "handleStartAnim");
+                    if (overlayView != null && overlayView.getAnimationViewController() != null && (overlayView.getAnimationViewController() instanceof UdfpsKeyguardViewController) && UdfpsController.this.mScreenOn) {
+                        ((UdfpsKeyguardViewController) overlayView.getAnimationViewController()).startFpsBreatheAnim();
+                    }
+                }
+            }
+        };
+        this.stopAnimRunnable = new Runnable() {
+            public void run() {
+                if (UdfpsController.this.mOverlay != null && UdfpsController.this.mOverlay.getOverlayView() != null) {
+                    UdfpsView overlayView = UdfpsController.this.mOverlay.getOverlayView();
+                    NTLogUtil.m1682i(UdfpsController.TAG, "handleStopAnim mView=" + overlayView);
+                    if (overlayView != null && overlayView.getAnimationViewController() != null && (overlayView.getAnimationViewController() instanceof UdfpsKeyguardViewController)) {
+                        ((UdfpsKeyguardViewController) overlayView.getAnimationViewController()).stopFpsBreatheAnim();
+                    }
+                }
+            }
+        };
+        this.mStatusBarStateListener = new StatusBarStateController.StateListener() {
+            public void onDozingChanged(boolean z) {
+                NTLogUtil.m1682i(UdfpsController.TAG, "HBM  onDozingChanged dozing=" + z + ", shouldStartHBM=" + UdfpsController.this.shouldStartHBM());
+                if (z) {
+                    if (UdfpsController.this.mOverlay != null) {
+                        UdfpsController.this.showDimLayer(false, "dozing");
+                        UdfpsController.this.mOverlay.onDozingChanged(true);
+                    }
+                } else if (UdfpsController.this.shouldStartHBM()) {
+                    UdfpsController.this.showDimLayer(true, "not dozing");
+                }
+            }
+        };
+        this.mDismissFingerprintIconRunnable = new Runnable() {
+            public void run() {
+                if (UdfpsController.this.mOverlay != null && UdfpsController.this.mOverlay.getOverlayView() != null) {
+                    UdfpsView overlayView = UdfpsController.this.mOverlay.getOverlayView();
+                    NTLogUtil.m1682i(UdfpsController.TAG, "hideUdfpsOverlay from mDismissFingerprintIconRunnable" + overlayView);
+                    if (overlayView != null) {
+                        boolean unused = UdfpsController.this.mIsIconVisible = false;
+                        overlayView.setAlpha(0.0f);
+                    }
+                }
+            }
+        };
+        this.mShowFingerprintIconRunnable = new Runnable() {
+            public void run() {
+                if (UdfpsController.this.mOverlay != null && UdfpsController.this.mOverlay.getOverlayView() != null) {
+                    NTLogUtil.m1682i(UdfpsController.TAG, "updateOverlay from mShowFingerprintIconRunnable");
+                    UdfpsView overlayView = UdfpsController.this.mOverlay.getOverlayView();
+                    if (overlayView != null) {
+                        boolean unused = UdfpsController.this.mIsIconVisible = true;
+                        NTLogUtil.m1680d(UdfpsController.TAG, "alpha=" + overlayView.getAlpha() + ", setAlpha=1");
+                        overlayView.setAlpha(1.0f);
+                    }
+                }
+            }
+        };
+        this.mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+            public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
+                NTLogUtil.m1682i(UdfpsController.TAG, "onBiometricAuthFailed biometricSourceType=" + biometricSourceType + ", mOnFingerDown=" + UdfpsController.this.mOnFingerDown);
+                if (biometricSourceType == BiometricSourceType.FINGERPRINT && UdfpsController.this.mOnFingerDown) {
+                    boolean unused = UdfpsController.this.mAuthFailed = true;
+                    if (UdfpsController.this.mOverlay != null && UdfpsController.this.mOverlay.getOverlayView() != null) {
+                        UdfpsController udfpsController = UdfpsController.this;
+                        udfpsController.onFingerUp(udfpsController.mOverlay.getRequestId(), UdfpsController.this.mOverlay.getOverlayView());
+                    }
+                }
+            }
+
+            public void onKeyguardBouncerStateChanged(boolean z) {
+                UdfpsController udfpsController = UdfpsController.this;
+                boolean unused = udfpsController.mBouncerVisibility = udfpsController.mKeyguardViewManager.isBouncerShowing();
+            }
+
+            public void onKeyguardVisibilityChangedRaw(boolean z) {
+                boolean z2 = System.currentTimeMillis() - UdfpsController.this.mPendingShowDimlayerTime < 1000;
+                NTLogUtil.m1682i(UdfpsController.TAG, "onKeyguardVisibilityChangedRaw showing=" + z + ", shouldStartHBM=" + UdfpsController.this.shouldStartHBM());
+                if (z && UdfpsController.this.mPendingShowDimlayer && z2) {
+                    UdfpsController.this.showDimLayer(true, "onKeyguardVisibilityChangedRaw");
+                    boolean unused = UdfpsController.this.mPendingShowDimlayer = false;
+                    long unused2 = UdfpsController.this.mPendingShowDimlayerTime = 0;
+                }
+            }
+        };
+        this.mIsIconVisible = false;
+        this.mAlphaCallback = new NTFingerprintBrightnessController.AlphaCallback() {
+            public void onAlpha(float f) {
+                UdfpsView overlayView;
+                NTLogUtil.m1680d(UdfpsController.TAG, "onAlpha:" + f);
+                if (UdfpsController.this.mOverlay != null && UdfpsController.this.mOverlay.getOverlayView() != null && (overlayView = UdfpsController.this.mOverlay.getOverlayView()) != null && overlayView.getAnimationViewController() != null) {
+                    float f2 = 1.0f - f;
+                    NTLogUtil.m1680d(UdfpsController.TAG, "updateAlpha:" + f2);
+                    overlayView.getAnimationViewController().updateAlpha(f2);
+                }
+            }
+        };
+        this.disableOrientationListenerRunnable = new Runnable() {
+            public void run() {
+                NTLogUtil.m1682i(UdfpsController.TAG, "do disableOrientationListener");
+                UdfpsController.this.mOrientationListener.disable();
+            }
+        };
+        this.enableOrientationListenerRunnable = new Runnable() {
+            public void run() {
+                NTLogUtil.m1682i(UdfpsController.TAG, "do enableOrientationListener");
+                UdfpsController.this.mOrientationListener.enable();
+            }
+        };
+        C198014 r6 = new WakefulnessLifecycle.Observer() {
+            public void onFinishedWakingUp() {
+                NTLogUtil.m1680d(UdfpsController.TAG, "onFinishedWakingUp");
+                UdfpsController.this.startFpsBreatheAnim();
+            }
+
+            public void onStartedWakingUp() {
+                UdfpsView overlayView;
+                if (UdfpsController.this.mOverlay != null && UdfpsController.this.mOverlay.getOverlayView() != null && (overlayView = UdfpsController.this.mOverlay.getOverlayView()) != null) {
+                    NTLogUtil.m1680d(UdfpsController.TAG, "onStartedWakingUp,mView Visible:" + overlayView.getVisibility());
+                    UdfpsController.this.resetDisplaySetting(overlayView.getVisibility());
+                }
+            }
+
+            public void onFinishedGoingToSleep() {
+                NTLogUtil.m1680d(UdfpsController.TAG, "onFinishedGoingToSleep");
                 UdfpsController.this.stopFpsBreatheAnim();
             }
-
-            @Override // com.android.systemui.keyguard.ScreenLifecycle.Observer
-            public void onScreenTurningOff() {
-                Log.i("UdfpsController", "HBM stopHbm from onScreenTurningOff");
-            }
-
-            @Override // com.android.systemui.keyguard.ScreenLifecycle.Observer
-            public void onScreenTurningOn() {
-                Log.i("UdfpsController", "HBM  onScreenTurningOn shouldStartHBM()=" + UdfpsController.this.shouldStartHBM());
-            }
         };
-        this.mScreenObserver = observer;
-        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() { // from class: com.android.systemui.biometrics.UdfpsController.2
-            @Override // android.content.BroadcastReceiver
-            public void onReceive(Context context2, Intent intent) {
-                ServerRequest serverRequest = UdfpsController.this.mServerRequest;
-                if (serverRequest == null || serverRequest.mRequestReason == 4 || !"android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
-                    return;
-                }
-                Log.d("UdfpsController", "ACTION_CLOSE_SYSTEM_DIALOGS received, mRequestReason: " + UdfpsController.this.mServerRequest.mRequestReason);
-                UdfpsController.this.mServerRequest.onUserCanceled();
-                UdfpsController.this.mServerRequest = null;
-                Log.i("UdfpsController", "updateOverlay from ACTION_CLOSE_SYSTEM_DIALOGS");
-                UdfpsController.this.updateOverlay();
-            }
-        };
-        this.mBroadcastReceiver = broadcastReceiver;
+        this.mWakefulnessObserver = r6;
         this.mContext = context;
         this.mExecution = execution;
-        this.mVibrator = vibrator;
+        this.mVibrator = vibratorHelper;
         this.mInflater = layoutInflater;
         FingerprintManager fingerprintManager2 = (FingerprintManager) Preconditions.checkNotNull(fingerprintManager);
         this.mFingerprintManager = fingerprintManager2;
         this.mWindowManager = windowManager;
         this.mFgExecutor = delayableExecutor;
-        this.mStatusBar = statusBar;
-        this.mStatusBarStateController = statusBarStateController;
+        this.mPanelExpansionStateManager = panelExpansionStateManager;
+        this.mStatusBarStateController = statusBarStateController2;
         this.mKeyguardStateController = keyguardStateController;
         this.mKeyguardViewManager = statusBarKeyguardViewManager;
         this.mDumpManager = dumpManager;
+        this.mDialogManager = systemUIDialogManager;
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
         this.mFalsingManager = falsingManager;
         this.mPowerManager = powerManager;
         this.mAccessibilityManager = accessibilityManager;
         this.mLockscreenShadeTransitionController = lockscreenShadeTransitionController;
         this.mHbmProvider = optional.orElse(null);
-        screenLifecycle.addObserver(observer);
-        boolean z = true;
+        screenLifecycle.addObserver(r3);
+        ((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)).addObserver(r6);
         this.mScreenOn = screenLifecycle.getScreenState() == 2;
-        this.mOrientationListener = new BiometricOrientationEventListener(context, new Function0() { // from class: com.android.systemui.biometrics.UdfpsController$$ExternalSyntheticLambda6
-            @Override // kotlin.jvm.functions.Function0
-            /* renamed from: invoke */
-            public final Object mo1951invoke() {
-                Unit lambda$new$3;
-                lambda$new$3 = UdfpsController.this.lambda$new$3();
-                return lambda$new$3;
-            }
-        }, displayManager, handler);
-        this.mKeyguardBypassController = keyguardBypassController;
         this.mConfigurationController = configurationController;
         this.mSystemClock = systemClock;
         this.mUnlockedScreenOffAnimationController = unlockedScreenOffAnimationController;
-        FingerprintSensorPropertiesInternal findFirstUdfps = findFirstUdfps();
-        this.mSensorProps = findFirstUdfps;
-        Log.i("UdfpsController", "UdfpsController mSensorProps: sensorLocationX=" + findFirstUdfps.sensorLocationX + ", sensorLocationY=" + findFirstUdfps.sensorLocationY + ", sensorRadius=" + findFirstUdfps.sensorRadius);
-        Preconditions.checkArgument(findFirstUdfps == null ? false : z);
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(2009, getCoreLayoutParamFlags(), -3);
-        this.mCoreLayoutParams = layoutParams;
-        layoutParams.setTitle("UdfpsController");
-        layoutParams.setFitInsetsTypes(0);
-        layoutParams.gravity = 51;
-        layoutParams.layoutInDisplayCutoutMode = 3;
-        layoutParams.privateFlags = 536870912;
-        fingerprintManager2.setUdfpsOverlayController(new UdfpsOverlayController());
+        this.mLatencyTracker = latencyTracker;
+        this.mActivityLaunchAnimator = activityLaunchAnimator;
+        this.mAlternateTouchProvider = optional2.orElse(null);
+        this.mBiometricExecutor = executor;
+        this.mOrientationListener = new BiometricDisplayListener(context, displayManager, handler, BiometricDisplayListener.SensorType.UnderDisplayFingerprint.INSTANCE, new UdfpsController$$ExternalSyntheticLambda4(this));
+        UdfpsOverlayController udfpsOverlayController = new UdfpsOverlayController();
+        fingerprintManager2.setUdfpsOverlayController(udfpsOverlayController);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
-        context.registerReceiver(broadcastReceiver, intentFilter);
+        context.registerReceiver(r4, intentFilter, 2);
         udfpsHapticsSimulator.setUdfpsController(this);
+        udfpsShell.setUdfpsOverlayController(udfpsOverlayController);
         this.mHandler = handler;
-        statusBarStateController.addCallback(this.mStatusBarStateListener);
+        statusBarStateController2.addCallback(this.mStatusBarStateListener);
         this.mBouncerVisibility = false;
-        this.mHandler.post(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController.3
-            @Override // java.lang.Runnable
+        this.mHandler.post(new Runnable() {
             public void run() {
                 UdfpsController.this.mKeyguardUpdateMonitor.registerCallback(UdfpsController.this.mKeyguardUpdateMonitorCallback);
             }
         });
-        this.mNTColorController = (NTColorController) Dependency.get(NTColorController.class);
+        this.mNTColorController = (NTColorController) NTDependencyEx.get(NTColorController.class);
         NTFingerprintBrightnessController nTFingerprintBrightnessController = new NTFingerprintBrightnessController(context, this);
         this.mNTBrightnessController = nTFingerprintBrightnessController;
         nTFingerprintBrightnessController.setAlphaCallback(this.mAlphaCallback);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ Unit lambda$new$3() {
-        onOrientationChanged();
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$1$com-android-systemui-biometrics-UdfpsController  reason: not valid java name */
+    public /* synthetic */ Unit m2582lambda$new$1$comandroidsystemuibiometricsUdfpsController() {
+        Runnable runnable = this.mAuthControllerUpdateUdfpsLocation;
+        if (runnable != null) {
+            runnable.run();
+        }
         return Unit.INSTANCE;
     }
 
-    @VisibleForTesting
     public void playStartHaptic() {
-        Vibrator vibrator = this.mVibrator;
-        if (vibrator != null) {
-            vibrator.vibrate(Process.myUid(), this.mContext.getOpPackageName(), EFFECT_CLICK, "udfps-onStart", VIBRATION_SONIFICATION_ATTRIBUTES);
+        if (this.mAccessibilityManager.isTouchExplorationEnabled()) {
+            this.mVibrator.vibrate(Process.myUid(), this.mContext.getOpPackageName(), EFFECT_CLICK, "udfps-onStart-click", VIBRATION_ATTRIBUTES);
         }
     }
 
-    private FingerprintSensorPropertiesInternal findFirstUdfps() {
-        for (FingerprintSensorPropertiesInternal fingerprintSensorPropertiesInternal : this.mFingerprintManager.getSensorPropertiesInternal()) {
-            if (fingerprintSensorPropertiesInternal.isAnyUdfpsType()) {
-                return fingerprintSensorPropertiesInternal;
-            }
-        }
-        return null;
-    }
-
-    @Override // com.android.systemui.doze.DozeReceiver
     public void dozeTimeTick() {
-        UdfpsView udfpsView = this.mView;
-        if (udfpsView != null) {
-            udfpsView.dozeTimeTick();
+        UdfpsView overlayView;
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (udfpsControllerOverlay != null && (overlayView = udfpsControllerOverlay.getOverlayView()) != null) {
+            overlayView.dozeTimeTick();
         }
     }
 
-    public RectF getSensorLocation() {
-        FingerprintSensorPropertiesInternal fingerprintSensorPropertiesInternal = this.mSensorProps;
-        int i = fingerprintSensorPropertiesInternal.sensorLocationX;
-        int i2 = fingerprintSensorPropertiesInternal.sensorRadius;
-        int i3 = fingerprintSensorPropertiesInternal.sensorLocationY;
-        return new RectF(i - i2, i3 - i2, i + i2, i3 + i2);
+    private void redrawOverlay() {
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (udfpsControllerOverlay != null) {
+            hideUdfpsOverlay(true);
+            showUdfpsOverlay(udfpsControllerOverlay);
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void updateOverlay() {
+    /* access modifiers changed from: private */
+    public void showUdfpsOverlay(UdfpsControllerOverlay udfpsControllerOverlay) {
         this.mExecution.assertIsMainThread();
-        Log.d("UdfpsController", "updateOverlay:  mServerRequest = " + this.mServerRequest);
-        ServerRequest serverRequest = this.mServerRequest;
-        if (serverRequest != null) {
-            showUdfpsOverlay(serverRequest);
-        } else {
-            hideUdfpsOverlay();
-        }
-    }
-
-    private boolean shouldRotate(UdfpsAnimationViewController udfpsAnimationViewController) {
-        if (!(udfpsAnimationViewController instanceof UdfpsKeyguardViewController)) {
-            return true;
-        }
-        return !this.mKeyguardUpdateMonitor.isGoingToSleep() && this.mKeyguardStateController.isOccluded();
-    }
-
-    private WindowManager.LayoutParams computeLayoutParams(UdfpsAnimationViewController udfpsAnimationViewController) {
-        int i = 0;
-        int paddingX = udfpsAnimationViewController != null ? udfpsAnimationViewController.getPaddingX() : 0;
-        if (udfpsAnimationViewController != null) {
-            i = udfpsAnimationViewController.getPaddingY();
-        }
-        this.mCoreLayoutParams.flags = getCoreLayoutParamFlags();
-        if (udfpsAnimationViewController != null && udfpsAnimationViewController.listenForTouchesOutsideView()) {
-            this.mCoreLayoutParams.flags |= 262144;
-        }
-        Log.i("UdfpsController", "computeLayoutParams sensorLocationX=" + this.mSensorProps.sensorLocationX + ", sensorLocationY=" + this.mSensorProps.sensorLocationY + ", sensorRadius=" + this.mSensorProps.sensorRadius + ", padding=" + paddingX);
-        WindowManager.LayoutParams layoutParams = this.mCoreLayoutParams;
-        FingerprintSensorPropertiesInternal fingerprintSensorPropertiesInternal = this.mSensorProps;
-        layoutParams.x = fingerprintSensorPropertiesInternal.sensorLocationX + (-147);
-        layoutParams.y = fingerprintSensorPropertiesInternal.sensorLocationY + (-147);
-        layoutParams.height = 295;
-        layoutParams.width = 295;
-        View ghbmView = this.mView.getGhbmView();
-        FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) ghbmView.getLayoutParams();
-        int i2 = this.mSensorProps.sensorRadius;
-        layoutParams2.width = (i2 * 2) + (paddingX * 2);
-        layoutParams2.height = (i2 * 2) + (i * 2);
-        layoutParams2.topMargin = 147 - i2;
-        layoutParams2.setMarginStart(147 - i2);
-        ghbmView.setLayoutParams(layoutParams2);
-        Point point = new Point();
-        this.mContext.getDisplay().getRealSize(point);
-        int rotation = this.mContext.getDisplay().getRotation();
-        if (rotation != 1) {
-            if (rotation == 3) {
-                if (!shouldRotate(udfpsAnimationViewController)) {
-                    Log.v("UdfpsController", "skip rotating udfps location ROTATION_270");
-                } else {
-                    Log.v("UdfpsController", "rotate udfps location ROTATION_270");
-                    WindowManager.LayoutParams layoutParams3 = this.mCoreLayoutParams;
-                    int i3 = point.x;
-                    FingerprintSensorPropertiesInternal fingerprintSensorPropertiesInternal2 = this.mSensorProps;
-                    layoutParams3.x = (i3 - fingerprintSensorPropertiesInternal2.sensorLocationY) - 147;
-                    layoutParams3.y = fingerprintSensorPropertiesInternal2.sensorLocationX - 147;
-                }
+        this.mOverlay = udfpsControllerOverlay;
+        final int requestReason = udfpsControllerOverlay.getRequestReason();
+        if (requestReason == 4 && !this.mKeyguardUpdateMonitor.isFingerprintDetectionRunning()) {
+            Log.d(TAG, "Attempting to showUdfpsOverlay when fingerprint detection isn't running on keyguard. Skip show.");
+            showDimLayer(false, "showUdfpsOverlay skip");
+        } else if (udfpsControllerOverlay.show(this, this.mOverlayParams)) {
+            Log.v(TAG, "showUdfpsOverlay | adding window reason=" + requestReason);
+            this.mOnFingerDown = false;
+            this.mAttemptedToDismissKeyguard = false;
+            enableOrientationListener();
+            resetDisplaySetting(0);
+            this.mOnFingerDownOver = false;
+            this.mAuthFailed = false;
+            if (!this.mStatusBarStateController.isDozing()) {
+                showDimLayer(true, "showUdfpsOverlay");
             }
-        } else if (!shouldRotate(udfpsAnimationViewController)) {
-            Log.v("UdfpsController", "skip rotating udfps location ROTATION_90");
-        } else {
-            Log.v("UdfpsController", "rotate udfps location ROTATION_90");
-            WindowManager.LayoutParams layoutParams4 = this.mCoreLayoutParams;
-            FingerprintSensorPropertiesInternal fingerprintSensorPropertiesInternal3 = this.mSensorProps;
-            layoutParams4.x = fingerprintSensorPropertiesInternal3.sensorLocationY - 147;
-            layoutParams4.y = (point.y - fingerprintSensorPropertiesInternal3.sensorLocationX) - 147;
-        }
-        WindowManager.LayoutParams layoutParams5 = this.mCoreLayoutParams;
-        layoutParams5.accessibilityTitle = " ";
-        return layoutParams5;
-    }
-
-    private void onOrientationChanged() {
-        boolean isShowingAlternateAuth = this.mKeyguardViewManager.isShowingAlternateAuth();
-        hideUdfpsOverlay();
-        Log.i("UdfpsController", "updateOverlay from onOrientationChanged");
-        updateOverlay();
-        if (isShowingAlternateAuth) {
-            this.mKeyguardViewManager.showGenericBouncer(true);
-        }
-    }
-
-    private void showUdfpsOverlay(ServerRequest serverRequest) {
-        this.mExecution.assertIsMainThread();
-        final int i = serverRequest.mRequestReason;
-        if (this.mView == null) {
-            try {
-                Log.v("UdfpsController", "showUdfpsOverlay | adding window reason=" + i);
-                UdfpsView udfpsView = (UdfpsView) this.mInflater.inflate(R$layout.udfps_view, (ViewGroup) null, false);
-                this.mView = udfpsView;
-                this.mOnFingerDown = false;
-                udfpsView.setSensorProperties(this.mSensorProps);
-                this.mView.setHbmProvider(this.mHbmProvider);
-                UdfpsAnimationViewController inflateUdfpsAnimation = inflateUdfpsAnimation(i);
-                this.mAttemptedToDismissKeyguard = false;
-                inflateUdfpsAnimation.init();
-                this.mView.setAnimationViewController(inflateUdfpsAnimation);
-                this.mOrientationListener.enable();
-                if (i == 1 || i == 2 || i == 3) {
-                    this.mView.setImportantForAccessibility(2);
-                }
-                this.mNTColorController.resetDisplaySettingsIfNeeded();
-                this.mOnFingerDownOver = false;
-                this.mAuthFailed = false;
-                this.mWindowManager.addView(this.mView, computeLayoutParams(inflateUdfpsAnimation));
-                this.mUdfpsViewVisibility = 0;
-                this.mView.postDelayed(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController.4
-                    @Override // java.lang.Runnable
+            this.mUdfpsViewVisibility = 0;
+            final UdfpsView overlayView = udfpsControllerOverlay.getOverlayView();
+            if (overlayView != null) {
+                overlayView.post(new Runnable() {
                     public void run() {
-                        Log.i("UdfpsController", "HBM showDimLayer from reason=" + i + ", shouldStartHBM=" + UdfpsController.this.shouldStartHBM());
-                        int i2 = i;
-                        if (i2 == 2 || i2 == 3) {
-                            UdfpsController.this.drawDimLayer(true);
-                            if (UdfpsController.this.mView == null) {
-                                return;
-                            }
-                            UdfpsController.this.mView.setVisibilityListener(new UdfpsView.UdfpsViewVisibilityListener() { // from class: com.android.systemui.biometrics.UdfpsController.4.1
-                                @Override // com.android.systemui.biometrics.UdfpsView.UdfpsViewVisibilityListener
-                                public void onVisibilityChanged(int i3) {
-                                    Log.i("UdfpsController", "onVisibilityChanged=" + i3);
-                                    if (UdfpsController.this.mUdfpsViewVisibility != 0 && i3 == 0) {
-                                        UdfpsController.this.drawDimLayer(true);
-                                    }
-                                    if (i3 != 0) {
-                                        UdfpsController.this.hideDimLayer();
-                                    }
-                                    UdfpsController.this.mUdfpsViewVisibility = i3;
-                                }
-                            });
-                        } else if (i2 != 4) {
-                        } else {
-                            UdfpsController.this.showDimLayer();
-                            if (UdfpsController.this.mView == null) {
-                                return;
-                            }
-                            UdfpsController.this.mView.setVisibilityListener(new UdfpsView.UdfpsViewVisibilityListener() { // from class: com.android.systemui.biometrics.UdfpsController.4.2
-                                @Override // com.android.systemui.biometrics.UdfpsView.UdfpsViewVisibilityListener
-                                public void onVisibilityChanged(int i3) {
-                                    Log.i("UdfpsController", "onVisibilityChanged=" + i3);
-                                    if (UdfpsController.this.mUdfpsViewVisibility != 0 && i3 == 0) {
-                                        UdfpsController.this.showDimLayer();
-                                    }
-                                    if (i3 != 0) {
-                                        UdfpsController.this.hideDimLayer();
-                                    }
-                                    UdfpsController.this.mUdfpsViewVisibility = i3;
-                                }
-                            });
+                        NTLogUtil.m1682i(UdfpsController.TAG, "HBM showDimLayer from reason=" + requestReason + ", shouldStartHBM=" + UdfpsController.this.shouldStartHBM());
+                        int i = requestReason;
+                        if (i == 2 || i == 3 || i == 4) {
+                            overlayView.setVisibilityListener(new UdfpsController$4$$ExternalSyntheticLambda0(this));
                         }
                     }
-                }, 0L);
-                this.mAccessibilityManager.addTouchExplorationStateChangeListener(this.mTouchExplorationStateChangeListener);
-                updateTouchListener();
-                return;
-            } catch (RuntimeException e) {
-                Log.e("UdfpsController", "showUdfpsOverlay | failed to add window", e);
-                return;
+
+                    /* access modifiers changed from: package-private */
+                    /* renamed from: lambda$run$0$com-android-systemui-biometrics-UdfpsController$4  reason: not valid java name */
+                    public /* synthetic */ void m2584lambda$run$0$comandroidsystemuibiometricsUdfpsController$4(int i) {
+                        NTLogUtil.m1682i(UdfpsController.TAG, "onVisibilityChanged=" + i);
+                        UdfpsController.this.resetDisplaySetting(i);
+                        int unused = UdfpsController.this.mUdfpsViewVisibility = i;
+                    }
+                });
             }
-        }
-        Log.v("UdfpsController", "showUdfpsOverlay | the overlay is already showing");
-    }
-
-    private UdfpsAnimationViewController inflateUdfpsAnimation(int i) {
-        if (i == 1 || i == 2) {
-            UdfpsEnrollView udfpsEnrollView = (UdfpsEnrollView) this.mInflater.inflate(R$layout.udfps_enroll_view, (ViewGroup) null);
-            this.mView.addView(udfpsEnrollView);
-            Log.i("UdfpsController", "inflateUdfpsAnimation sensorLocationX=" + this.mSensorProps.sensorLocationX + ", sensorLocationY=" + this.mSensorProps.sensorLocationY + ", sensorRadius=" + this.mSensorProps.sensorRadius);
-            updateInnerViewLayoutParams(udfpsEnrollView);
-            this.mView.enableScanningAnim(false);
-            udfpsEnrollView.updateSensorLocation(this.mSensorProps);
-            return new UdfpsEnrollViewController(udfpsEnrollView, this.mServerRequest.mEnrollHelper, this.mStatusBarStateController, this.mStatusBar, this.mDumpManager);
-        } else if (i == 3) {
-            UdfpsBpView udfpsBpView = (UdfpsBpView) this.mInflater.inflate(R$layout.udfps_bp_view, (ViewGroup) null);
-            this.mView.addView(udfpsBpView);
-            updateInnerViewLayoutParams(udfpsBpView);
-            this.mView.enableScanningAnim(false);
-            return new UdfpsBpViewController(udfpsBpView, this.mStatusBarStateController, this.mStatusBar, this.mDumpManager);
-        } else if (i == 4) {
-            UdfpsKeyguardView udfpsKeyguardView = (UdfpsKeyguardView) this.mInflater.inflate(R$layout.udfps_keyguard_view, (ViewGroup) null);
-            this.mView.addView(udfpsKeyguardView);
-            updateInnerViewLayoutParams(udfpsKeyguardView);
-            this.mView.enableScanningAnim(true);
-            return new UdfpsKeyguardViewController(udfpsKeyguardView, this.mStatusBarStateController, this.mStatusBar, this.mKeyguardViewManager, this.mKeyguardUpdateMonitor, this.mDumpManager, this.mLockscreenShadeTransitionController, this.mConfigurationController, this.mSystemClock, this.mKeyguardStateController, this.mUnlockedScreenOffAnimationController, this);
-        } else if (i == 5) {
-            UdfpsFpmOtherView udfpsFpmOtherView = (UdfpsFpmOtherView) this.mInflater.inflate(R$layout.udfps_fpm_other_view, (ViewGroup) null);
-            this.mView.addView(udfpsFpmOtherView);
-            updateInnerViewLayoutParams(udfpsFpmOtherView);
-            this.mView.enableScanningAnim(false);
-            return new UdfpsFpmOtherViewController(udfpsFpmOtherView, this.mStatusBarStateController, this.mStatusBar, this.mDumpManager);
         } else {
-            Log.d("UdfpsController", "Animation for reason " + i + " not supported yet");
-            return null;
+            Log.v(TAG, "showUdfpsOverlay | the overlay is already showing");
         }
     }
 
-    private void hideUdfpsOverlay() {
+    /* access modifiers changed from: private */
+    public void hideUdfpsOverlay(boolean z) {
         this.mExecution.assertIsMainThread();
-        if (this.mView != null) {
-            Log.v("UdfpsController", "hideUdfpsOverlay | removing window");
-            onFingerUp();
-            boolean isShowingAlternateAuth = this.mKeyguardViewManager.isShowingAlternateAuth();
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (udfpsControllerOverlay != null) {
+            UdfpsView overlayView = udfpsControllerOverlay.getOverlayView();
+            if (overlayView != null) {
+                onFingerUp(this.mOverlay.getRequestId(), overlayView);
+            }
             stopFpsBreatheAnim();
-            Log.i("UdfpsController", "HBM stopHbm from hideUdfpsOverlay");
+            NTLogUtil.m1682i(TAG, "HBM stopHbm from hideUdfpsOverlay");
+            if (!z) {
+                showDimLayer(false, "hideUdfpsOverlay");
+            }
             this.mNTColorController.restoreDisplaySettingsIfNeeded();
-            hideDimLayer();
-            this.mView.setVisibilityListener(null);
-            this.mWindowManager.removeView(this.mView);
-            this.mView.setOnTouchListener(null);
-            this.mView.setOnHoverListener(null);
-            this.mView.setAnimationViewController(null);
-            if (isShowingAlternateAuth) {
+            if (overlayView != null) {
+                overlayView.setVisibilityListener((UdfpsView.UdfpsViewVisibilityListener) null);
+            }
+            boolean hide = this.mOverlay.hide();
+            if (this.mKeyguardViewManager.isShowingAlternateAuth()) {
                 this.mKeyguardViewManager.resetAlternateAuth(true);
             }
-            this.mAccessibilityManager.removeTouchExplorationStateChangeListener(this.mTouchExplorationStateChangeListener);
-            this.mView = null;
+            Log.v(TAG, "hideUdfpsOverlay | removing window: " + hide);
         } else {
-            Log.v("UdfpsController", "hideUdfpsOverlay | the overlay is already hidden");
+            Log.v(TAG, "hideUdfpsOverlay | the overlay is already hidden");
         }
-        this.mOrientationListener.disable();
+        this.mOverlay = null;
+        disableOrientationListener();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void onAodInterrupt(final int i, final int i2, final float f, final float f2) {
-        Log.d("UdfpsController", "onAodInterrupt: mIsAodInterruptActive = " + this.mIsAodInterruptActive);
-        if (!this.mIsAodInterruptActive && this.mKeyguardUpdateMonitor.isFingerprintDetectionRunning()) {
-            this.mAodInterruptRunnable = new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$$ExternalSyntheticLambda4
-                @Override // java.lang.Runnable
-                public final void run() {
-                    UdfpsController.this.lambda$onAodInterrupt$4(i, i2, f2, f);
-                }
-            };
-            Log.d("UdfpsController", "onAodInterrupt: mScreenOn = " + this.mScreenOn);
-            Runnable runnable = this.mAodInterruptRunnable;
-            if (runnable == null) {
+    /* access modifiers changed from: package-private */
+    public void onAodInterrupt(int i, int i2, float f, float f2) {
+        if (!this.mIsAodInterruptActive) {
+            if (!this.mKeyguardUpdateMonitor.isFingerprintDetectionRunning()) {
+                this.mKeyguardViewManager.showBouncer(true);
                 return;
             }
-            runnable.run();
-            this.mAodInterruptRunnable = null;
+            UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+            UdfpsController$$ExternalSyntheticLambda5 udfpsController$$ExternalSyntheticLambda5 = new UdfpsController$$ExternalSyntheticLambda5(this, udfpsControllerOverlay != null ? udfpsControllerOverlay.getRequestId() : -1, i, i2, f2, f);
+            this.mAodInterruptRunnable = udfpsController$$ExternalSyntheticLambda5;
+            if (this.mScreenOn) {
+                udfpsController$$ExternalSyntheticLambda5.run();
+                this.mAodInterruptRunnable = null;
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onAodInterrupt$4(int i, int i2, float f, float f2) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onAodInterrupt$3$com-android-systemui-biometrics-UdfpsController */
+    public /* synthetic */ void mo30816xd6add518(long j, int i, int i2, float f, float f2) {
         this.mIsAodInterruptActive = true;
-        this.mCancelAodTimeoutAction = this.mFgExecutor.executeDelayed(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$$ExternalSyntheticLambda3
-            @Override // java.lang.Runnable
-            public final void run() {
-                UdfpsController.this.onCancelUdfps();
-            }
-        }, 1000L);
-        onFingerDown(i, i2, f, f2);
+        this.mCancelAodTimeoutAction = this.mFgExecutor.executeDelayed(new UdfpsController$$ExternalSyntheticLambda7(this), 1000);
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (udfpsControllerOverlay == null) {
+            NTLogUtil.m1680d(TAG, "Null request in onAodInterrupt");
+            return;
+        }
+        UdfpsView overlayView = udfpsControllerOverlay.getOverlayView();
+        if (overlayView != null) {
+            overlayView.startIllumination((Runnable) null);
+        }
+        StringBuilder sb = new StringBuilder("onAodInterrupt onFingerDown delay ");
+        int i3 = AOD_FINGER_DOWN_DELAY;
+        NTLogUtil.m1680d(TAG, sb.append(i3).toString());
+        this.mHandler.postDelayed(new UdfpsController$$ExternalSyntheticLambda8(this, j, i, i2, f, f2), (long) i3);
     }
 
     public void addCallback(Callback callback) {
@@ -1020,229 +1077,187 @@ public class UdfpsController implements DozeReceiver {
         this.mCallbacks.remove(callback);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onCancelUdfps() {
-        Log.d("UdfpsController", "onCancelUdfps: ");
-        onFingerUp();
-        if (!this.mIsAodInterruptActive) {
-            return;
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (!(udfpsControllerOverlay == null || udfpsControllerOverlay.getOverlayView() == null)) {
+            onFingerUp(this.mOverlay.getRequestId(), this.mOverlay.getOverlayView());
         }
-        Runnable runnable = this.mCancelAodTimeoutAction;
-        if (runnable != null) {
-            runnable.run();
-            this.mCancelAodTimeoutAction = null;
+        if (this.mIsAodInterruptActive) {
+            Runnable runnable = this.mCancelAodTimeoutAction;
+            if (runnable != null) {
+                runnable.run();
+                this.mCancelAodTimeoutAction = null;
+            }
+            this.mIsAodInterruptActive = false;
         }
-        this.mIsAodInterruptActive = false;
     }
 
     public boolean isFingerDown() {
         return this.mOnFingerDown;
     }
 
-    private void onFingerDown(final int i, final int i2, final float f, final float f2) {
+    /* access modifiers changed from: private */
+    /* renamed from: onFingerDown */
+    public void mo30815xd7243b17(long j, int i, int i2, float f, float f2) {
+        long j2 = j;
         this.mExecution.assertIsMainThread();
-        UdfpsView udfpsView = this.mView;
-        if (udfpsView == null) {
-            Log.w("UdfpsController", "Null view in onFingerDown");
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (udfpsControllerOverlay == null) {
+            Log.w(TAG, "Null request in onFingerDown");
+        } else if (!udfpsControllerOverlay.matchesRequestId(j2)) {
+            Log.w(TAG, "Mismatched fingerDown: " + j2 + " current: " + this.mOverlay.getRequestId());
+        } else {
+            this.mLatencyTracker.onActionStart(14);
+            if (!this.mOnFingerDown) {
+                playStartHaptic();
+                if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
+                    this.mKeyguardUpdateMonitor.requestFaceAuth(false);
+                }
+            }
+            this.mOnFingerDown = true;
+            if (this.mAlternateTouchProvider != null) {
+                this.mBiometricExecutor.execute(new UdfpsController$$ExternalSyntheticLambda0(this, j, i, i2, f, f2));
+            } else {
+                this.mFingerprintManager.onPointerDown(j, this.mSensorId, i, i2, f, f2);
+            }
+            Trace.endAsyncSection("UdfpsController.e2e.onPointerDown", 0);
+            UdfpsView overlayView = this.mOverlay.getOverlayView();
+            if (overlayView != null) {
+                if (shouldDozingFingerDownEnableHBM()) {
+                    ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).setNotificationPanelViewAlpha(0.0f);
+                    showDimLayer(true, "onFingerDown");
+                }
+                overlayView.startIllumination(new UdfpsController$$ExternalSyntheticLambda1(this, j2));
+            }
+            for (Callback onFingerDown : this.mCallbacks) {
+                onFingerDown.onFingerDown();
+            }
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onFingerDown$4$com-android-systemui-biometrics-UdfpsController */
+    public /* synthetic */ void mo30817x35f27137(long j, int i, int i2, float f, float f2) {
+        this.mAlternateTouchProvider.onPointerDown(j, i, i2, f, f2);
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onFingerDown$6$com-android-systemui-biometrics-UdfpsController */
+    public /* synthetic */ void mo30819x3505a539(long j) {
+        if (this.mAlternateTouchProvider != null) {
+            this.mBiometricExecutor.execute(new UdfpsController$$ExternalSyntheticLambda3(this));
             return;
         }
-        boolean z = true;
-        if ((udfpsView.getAnimationViewController() instanceof UdfpsKeyguardViewController) && !this.mStatusBarStateController.isDozing()) {
-            this.mKeyguardBypassController.setUserHasDeviceEntryIntent(true);
-        }
-        if (!this.mOnFingerDown && !this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
-            this.mKeyguardUpdateMonitor.requestFaceAuth(false);
-        }
-        this.mOnFingerDown = true;
-        Trace.endAsyncSection("UdfpsController.e2e.onPointerDown", 0);
-        Trace.beginAsyncSection("UdfpsController.e2e.startIllumination", 0);
-        final long currentTimeMillis = System.currentTimeMillis();
-        Log.i("UdfpsController", "onFingerDown begin startT=" + currentTimeMillis);
-        StringBuilder sb = new StringBuilder();
-        sb.append("HBM isHbmEnabled=");
-        UdfpsHbmProvider udfpsHbmProvider = this.mHbmProvider;
-        if (udfpsHbmProvider == null || !udfpsHbmProvider.isHbmEnabled()) {
-            z = false;
-        }
-        sb.append(z);
-        Log.i("UdfpsController", sb.toString());
-        Log.i("UdfpsController", "dozing = " + this.mStatusBarStateController.isDozing() + " screenOn = " + this.mScreenOn + " lowPowerState = " + ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isLowPowerState());
-        if (shouldDozingFingerDownEnableHBM()) {
-            ((StatusBar) Dependency.get(StatusBar.class)).setNotificationPanelViewAlpha(0.0f);
-            this.mView.postDelayed(new AnonymousClass5(currentTimeMillis, i, i2, f, f2), 50L);
-        } else {
-            this.mView.startIlluminationNT(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$$ExternalSyntheticLambda5
-                @Override // java.lang.Runnable
-                public final void run() {
-                    UdfpsController.this.lambda$onFingerDown$5(currentTimeMillis, i, i2, f, f2);
-                }
-            });
-        }
-        for (Callback callback : this.mCallbacks) {
-            callback.onFingerDown();
-        }
+        this.mFingerprintManager.onUiReady(j, this.mSensorId);
+        this.mLatencyTracker.onActionEnd(14);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.biometrics.UdfpsController$5  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass5 implements Runnable {
-        final /* synthetic */ float val$major;
-        final /* synthetic */ float val$minor;
-        final /* synthetic */ long val$startT;
-        final /* synthetic */ int val$x;
-        final /* synthetic */ int val$y;
-
-        AnonymousClass5(long j, int i, int i2, float f, float f2) {
-            this.val$startT = j;
-            this.val$x = i;
-            this.val$y = i2;
-            this.val$minor = f;
-            this.val$major = f2;
-        }
-
-        @Override // java.lang.Runnable
-        public void run() {
-            UdfpsView udfpsView = UdfpsController.this.mView;
-            final long j = this.val$startT;
-            final int i = this.val$x;
-            final int i2 = this.val$y;
-            final float f = this.val$minor;
-            final float f2 = this.val$major;
-            udfpsView.startIllumination(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController$5$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    UdfpsController.AnonymousClass5.this.lambda$run$0(j, i, i2, f, f2);
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$run$0(long j, int i, int i2, float f, float f2) {
-            long currentTimeMillis = System.currentTimeMillis();
-            Log.i("UdfpsController", "onFingerDown  endT=" + currentTimeMillis);
-            Log.i("UdfpsController", "onFingerDown call onPointerDown===costTime=" + (currentTimeMillis - j));
-            UdfpsController.this.mFingerprintManager.onPointerDown(UdfpsController.this.mSensorProps.sensorId, i, i2, f, f2);
-            UdfpsController.this.mFingerprintManager.onUiReady(UdfpsController.this.mSensorProps.sensorId);
-            Trace.endAsyncSection("UdfpsController.e2e.startIllumination", 0);
-        }
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onFingerDown$5$com-android-systemui-biometrics-UdfpsController */
+    public /* synthetic */ void mo30818x357c0b38() {
+        this.mAlternateTouchProvider.onUiReady();
+        this.mLatencyTracker.onActionEnd(14);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onFingerDown$5(long j, int i, int i2, float f, float f2) {
-        long currentTimeMillis = System.currentTimeMillis();
-        Log.i("UdfpsController", "onFingerDown2  endT=" + currentTimeMillis);
-        Log.i("UdfpsController", "onFingerDown2 call onPointerDown===costTime=" + (currentTimeMillis - j));
-        int min = Math.min(i, i2);
-        int max = Math.max(i, i2);
-        Log.i("UdfpsController", "onFingerDown2 call onPointerDown===xx=" + min + ", yy=" + max);
-        this.mFingerprintManager.onPointerDown(this.mSensorProps.sensorId, min, max, f, f2);
-        this.mFingerprintManager.onUiReady(this.mSensorProps.sensorId);
-        Trace.endAsyncSection("UdfpsController.e2e.startIllumination", 0);
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public void onFingerUp() {
+    /* access modifiers changed from: private */
+    public void onFingerUp(long j, UdfpsView udfpsView) {
         this.mExecution.assertIsMainThread();
         this.mActivePointerId = -1;
-        this.mGoodCaptureReceived = false;
-        if (this.mView == null) {
-            Log.w("UdfpsController", "Null view in onFingerUp");
-            return;
-        }
+        this.mAcquiredReceived = false;
         if (this.mOnFingerDown) {
-            Log.i("UdfpsController", "onFingerUp  endT=" + System.currentTimeMillis());
-            this.mFingerprintManager.onPointerUp(this.mSensorProps.sensorId);
-            for (Callback callback : this.mCallbacks) {
-                callback.onFingerUp();
+            if (this.mAlternateTouchProvider != null) {
+                this.mBiometricExecutor.execute(new UdfpsController$$ExternalSyntheticLambda2(this, j));
+            } else {
+                this.mFingerprintManager.onPointerUp(j, this.mSensorId);
+            }
+            for (Callback onFingerUp : this.mCallbacks) {
+                onFingerUp.onFingerUp();
             }
         }
         this.mOnFingerDown = false;
-        this.mView.stopIlluminationNT();
-        if (!shouldDozingFingerDownEnableHBM()) {
-            return;
+        if (udfpsView.isIlluminationRequested()) {
+            udfpsView.stopIllumination();
         }
-        this.mView.postDelayed(new Runnable() { // from class: com.android.systemui.biometrics.UdfpsController.6
-            @Override // java.lang.Runnable
-            public void run() {
-                if (UdfpsController.this.mView != null) {
-                    UdfpsController.this.mView.stopIllumination();
-                }
-                if (!((StatusBar) Dependency.get(StatusBar.class)).isWakeAndUnlock()) {
-                    ((StatusBar) Dependency.get(StatusBar.class)).setNotificationPanelViewAlpha(1.0f);
-                }
+        if (shouldDozingFingerDownEnableHBM()) {
+            showDimLayer(false, "onFingerUp");
+            if (!((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).isWakeAndUnlock()) {
+                ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).setNotificationPanelViewAlpha(1.0f);
             }
-        }, 50L);
+        }
     }
 
-    private void updateTouchListener() {
-        if (this.mView == null) {
-            return;
-        }
-        if (this.mAccessibilityManager.isTouchExplorationEnabled()) {
-            this.mView.setOnHoverListener(this.mOnHoverListener);
-            this.mView.setOnTouchListener(null);
-            return;
-        }
-        this.mView.setOnHoverListener(null);
-        this.mView.setOnTouchListener(this.mOnTouchListener);
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onFingerUp$7$com-android-systemui-biometrics-UdfpsController */
+    public /* synthetic */ void mo30820x41374633(long j) {
+        this.mAlternateTouchProvider.onPointerUp(j);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void startFpsBreatheAnim() {
         Handler handler = this.mHandler;
-        if (handler == null) {
-            return;
+        if (handler != null) {
+            handler.removeCallbacks(this.startAnimRunnable);
+            this.mHandler.postDelayed(this.startAnimRunnable, 3000);
         }
-        handler.removeCallbacks(this.startAnimRunnable);
-        this.mHandler.postDelayed(this.startAnimRunnable, 3000L);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void stopFpsBreatheAnim() {
         Handler handler = this.mHandler;
-        if (handler == null) {
-            return;
-        }
-        handler.removeCallbacks(this.startAnimRunnable);
-        this.mHandler.post(this.stopAnimRunnable);
-    }
-
-    private void startHBM() {
-        UdfpsHbmProvider udfpsHbmProvider = this.mHbmProvider;
-        if (udfpsHbmProvider != null) {
-            udfpsHbmProvider.enableHbm();
+        if (handler != null) {
+            handler.removeCallbacks(this.startAnimRunnable);
+            this.mHandler.post(this.stopAnimRunnable);
         }
     }
 
-    private void stopHBM() {
-        UdfpsHbmProvider udfpsHbmProvider = this.mHbmProvider;
-        if (udfpsHbmProvider != null) {
-            udfpsHbmProvider.disableHbm(null);
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:13:0x003d, code lost:
+        return;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void showDimLayer(boolean r5, java.lang.String r6) {
+        /*
+            r4 = this;
+            java.lang.String r0 = "Show DimLayer open= "
+            java.lang.Object r1 = r4.mLock
+            monitor-enter(r1)
+            com.nothing.systemui.biometrics.NTFingerprintBrightnessController r2 = r4.mNTBrightnessController     // Catch:{ all -> 0x003e }
+            if (r2 != 0) goto L_0x0012
+            java.lang.String r4 = "UdfpsController"
+            java.lang.String r5 = "mNTBrightnessController is null"
+            com.nothing.systemui.util.NTLogUtil.m1681e(r4, r5)     // Catch:{ all -> 0x003e }
+            monitor-exit(r1)     // Catch:{ all -> 0x003e }
+            return
+        L_0x0012:
+            java.lang.String r2 = "UdfpsController"
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ all -> 0x003e }
+            r3.<init>((java.lang.String) r0)     // Catch:{ all -> 0x003e }
+            java.lang.StringBuilder r0 = r3.append((boolean) r5)     // Catch:{ all -> 0x003e }
+            java.lang.String r3 = " reason= "
+            java.lang.StringBuilder r0 = r0.append((java.lang.String) r3)     // Catch:{ all -> 0x003e }
+            java.lang.StringBuilder r6 = r0.append((java.lang.String) r6)     // Catch:{ all -> 0x003e }
+            java.lang.String r6 = r6.toString()     // Catch:{ all -> 0x003e }
+            com.nothing.systemui.util.NTLogUtil.m1682i(r2, r6)     // Catch:{ all -> 0x003e }
+            if (r5 == 0) goto L_0x0037
+            com.nothing.systemui.biometrics.NTFingerprintBrightnessController r4 = r4.mNTBrightnessController     // Catch:{ all -> 0x003e }
+            r5 = 1
+            r4.drawDimLayer(r5)     // Catch:{ all -> 0x003e }
+            goto L_0x003c
+        L_0x0037:
+            com.nothing.systemui.biometrics.NTFingerprintBrightnessController r4 = r4.mNTBrightnessController     // Catch:{ all -> 0x003e }
+            r4.dismiss()     // Catch:{ all -> 0x003e }
+        L_0x003c:
+            monitor-exit(r1)     // Catch:{ all -> 0x003e }
+            return
+        L_0x003e:
+            r4 = move-exception
+            monitor-exit(r1)     // Catch:{ all -> 0x003e }
+            throw r4
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.biometrics.UdfpsController.showDimLayer(boolean, java.lang.String):void");
     }
 
-    public void closeHBM() {
-        UdfpsHbmProvider udfpsHbmProvider = this.mHbmProvider;
-        if (udfpsHbmProvider != null) {
-            udfpsHbmProvider.disableHbm();
-        }
-    }
-
-    public void doHBM(boolean z) {
-        synchronized (this.mLock) {
-            if (this.mHbmProvider != null) {
-                Log.i("UdfpsController", "HBM doHBM open=" + z);
-                if (z) {
-                    startHBM();
-                } else {
-                    stopHBM();
-                }
-            }
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean shouldStartHBM() {
         boolean isUdfpsEnrolled = this.mKeyguardUpdateMonitor.isUdfpsEnrolled();
         boolean isDozing = this.mStatusBarStateController.isDozing();
@@ -1251,80 +1266,80 @@ public class UdfpsController implements DozeReceiver {
         boolean isKeyguardVisible = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isKeyguardVisible();
         boolean isDeviceInteractive = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive();
         boolean isGoingToSleep = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isGoingToSleep();
-        if (this.mView == null || !isUdfpsEnrolled || isDozing || z2 || !isKeyguardVisible || !isDeviceInteractive || isGoingToSleep || this.mBouncerVisibility) {
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (udfpsControllerOverlay == null || udfpsControllerOverlay.getOverlayView() == null || !isUdfpsEnrolled || isDozing || z2 || !isKeyguardVisible || !isDeviceInteractive || isGoingToSleep || this.mBouncerVisibility) {
             z = false;
         }
-        Log.i("UdfpsController", "HBM shouldStartHBM:" + z + ",  hasFingerprintEnrolled=" + isUdfpsEnrolled + ",getState=" + this.mStatusBarStateController.getState() + ", isDozing =" + isDozing + ", statusBarShadeLocked=" + z2 + ", keyguardVisible=" + isKeyguardVisible + ", deviceInteractive=" + isDeviceInteractive + ", isGoingToSleep=" + isGoingToSleep + ", mBouncerVisibility=" + this.mBouncerVisibility + ", mView=" + this.mView);
+        NTLogUtil.m1682i(TAG, "HBM shouldStartHBM:" + z + ",  hasFingerprintEnrolled=" + isUdfpsEnrolled + ",getState=" + this.mStatusBarStateController.getState() + ", isDozing =" + isDozing + ", statusBarShadeLocked=" + z2 + ", keyguardVisible=" + isKeyguardVisible + ", deviceInteractive=" + isDeviceInteractive + ", isGoingToSleep=" + isGoingToSleep + ", mBouncerVisibility=" + this.mBouncerVisibility);
         return z;
     }
 
     public void dismissFingerprintIcon() {
         Handler handler = this.mHandler;
-        if (handler == null) {
-            return;
+        if (handler != null) {
+            handler.removeCallbacks(this.mShowFingerprintIconRunnable);
+            this.mHandler.post(this.mDismissFingerprintIconRunnable);
         }
-        handler.removeCallbacks(this.mShowFingerprintIconRunnable);
-        this.mHandler.post(this.mDismissFingerprintIconRunnable);
     }
 
     public void showFingerprintIcon() {
         Handler handler = this.mHandler;
-        if (handler == null) {
-            return;
+        if (handler != null) {
+            handler.removeCallbacks(this.mDismissFingerprintIconRunnable);
+            this.mHandler.post(this.mShowFingerprintIconRunnable);
         }
-        handler.removeCallbacks(this.mDismissFingerprintIconRunnable);
-        this.mHandler.post(this.mShowFingerprintIconRunnable);
     }
 
     public boolean isFpIconVisible() {
         return this.mIsIconVisible;
     }
 
-    public FingerprintSensorPropertiesInternal getSensorProps() {
-        return this.mSensorProps;
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public void showDimLayer() {
-        Log.i("UdfpsController", "showDimLayer mScreenOn=" + this.mScreenOn + ", isDozing=" + this.mStatusBarStateController.isDozing() + ", isGoingToSleep=" + this.mKeyguardUpdateMonitor.isGoingToSleep() + ", isKeyguardVisible=" + this.mKeyguardUpdateMonitor.isKeyguardVisible());
-        if (!this.mScreenOn || this.mStatusBarStateController.isDozing()) {
-            return;
-        }
-        if (!this.mKeyguardUpdateMonitor.isKeyguardVisible()) {
-            this.mPendingShowDimlayer = true;
-            this.mPendingShowDimlayerTime = System.currentTimeMillis();
-            return;
-        }
-        drawDimLayer(true);
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public void hideDimLayer() {
-        Log.i("UdfpsController", "hideDimLayer");
-        this.mNTBrightnessController.dismiss();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public void drawDimLayer(boolean z) {
-        Log.d("UdfpsController", "drawDimLayer, forceDrawDimlayer:" + z);
-        this.mNTBrightnessController.drawDimLayer(z);
-    }
-
-    private void updateInnerViewLayoutParams(View view) {
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) view.getLayoutParams();
-        int i = this.mSensorProps.sensorRadius;
-        layoutParams.width = i * 2;
-        layoutParams.height = i * 2;
-        layoutParams.topMargin = 147 - i;
-        layoutParams.setMarginStart(147 - i);
-        view.setLayoutParams(layoutParams);
-    }
-
     public View getView() {
-        return this.mView;
+        UdfpsControllerOverlay udfpsControllerOverlay = this.mOverlay;
+        if (udfpsControllerOverlay != null) {
+            return udfpsControllerOverlay.getOverlayView();
+        }
+        return null;
     }
 
     private boolean shouldDozingFingerDownEnableHBM() {
-        return this.mStatusBarStateController.isDozing() && !((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isLowPowerState();
+        return this.mStatusBarStateController.isDozing() && !((KeyguardUpdateMonitorEx) NTDependencyEx.get(KeyguardUpdateMonitorEx.class)).isLowPowerState();
+    }
+
+    private void disableOrientationListener() {
+        if (this.mHandler != null) {
+            NTLogUtil.m1682i(TAG, "disableOrientationListener");
+            this.mHandler.removeCallbacks(this.startAnimRunnable);
+            this.mHandler.removeCallbacks(this.disableOrientationListenerRunnable);
+            this.mHandler.postDelayed(this.disableOrientationListenerRunnable, 5000);
+        }
+    }
+
+    private void enableOrientationListener() {
+        if (this.mHandler != null) {
+            NTLogUtil.m1682i(TAG, "enableOrientationListener");
+            this.mHandler.removeCallbacks(this.disableOrientationListenerRunnable);
+            this.mHandler.post(this.enableOrientationListenerRunnable);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    public void resetDisplaySetting(int i) {
+        if (i == 0) {
+            this.mNTColorController.resetDisplaySettingsIfNeeded();
+        }
+    }
+
+    public void checkToReattachView() {
+        Handler handler = this.mHandler;
+        if (handler != null) {
+            handler.post(new Runnable() {
+                public void run() {
+                    if (UdfpsController.this.mOverlay != null) {
+                        UdfpsController.this.mOverlay.reattachToWM("checkToReAttach");
+                    }
+                }
+            });
+        }
     }
 }

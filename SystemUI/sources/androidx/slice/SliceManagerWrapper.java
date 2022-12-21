@@ -1,35 +1,41 @@
 package androidx.slice;
 
+import android.app.slice.SliceManager;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Process;
 import android.os.UserHandle;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 class SliceManagerWrapper extends SliceManager {
-    private final android.app.slice.SliceManager mManager;
+    private final SliceManager mManager;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public SliceManagerWrapper(Context context) {
-        this((android.app.slice.SliceManager) context.getSystemService(android.app.slice.SliceManager.class));
+    SliceManagerWrapper(Context context) {
+        this((SliceManager) context.getSystemService(SliceManager.class));
     }
 
-    SliceManagerWrapper(android.app.slice.SliceManager manager) {
-        this.mManager = manager;
+    SliceManagerWrapper(SliceManager sliceManager) {
+        this.mManager = sliceManager;
     }
 
-    @Override // androidx.slice.SliceManager
     public Set<SliceSpec> getPinnedSpecs(Uri uri) {
-        if (Build.VERSION.SDK_INT == 28) {
-            uri = maybeAddCurrentUserId(uri);
-        }
         return SliceConvert.wrap(this.mManager.getPinnedSpecs(uri));
     }
 
-    @Override // androidx.slice.SliceManager
+    public int checkSlicePermission(Uri uri, int i, int i2) {
+        return this.mManager.checkSlicePermission(uri, i, i2);
+    }
+
+    public void grantSlicePermission(String str, Uri uri) {
+        this.mManager.grantSlicePermission(str, uri);
+    }
+
+    public void revokeSlicePermission(String str, Uri uri) {
+        this.mManager.revokeSlicePermission(str, uri);
+    }
+
     public List<Uri> getPinnedSlices() {
         return this.mManager.getPinnedSlices();
     }
@@ -38,9 +44,7 @@ class SliceManagerWrapper extends SliceManager {
         if (uri == null || uri.getAuthority().contains("@")) {
             return uri;
         }
-        String authority = uri.getAuthority();
-        Uri.Builder buildUpon = uri.buildUpon();
-        return buildUpon.encodedAuthority(getCurrentUserId() + "@" + authority).build();
+        return uri.buildUpon().encodedAuthority(getCurrentUserId() + "@" + uri.getAuthority()).build();
     }
 
     private int getCurrentUserId() {

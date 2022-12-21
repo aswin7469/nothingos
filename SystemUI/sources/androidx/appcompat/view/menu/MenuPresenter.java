@@ -2,10 +2,10 @@ package androidx.appcompat.view.menu;
 
 import android.content.Context;
 import android.os.Parcelable;
-/* loaded from: classes.dex */
+import android.view.ViewGroup;
+
 public interface MenuPresenter {
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onCloseMenu(MenuBuilder menuBuilder, boolean z);
 
@@ -19,6 +19,8 @@ public interface MenuPresenter {
     boolean flagActionItems();
 
     int getId();
+
+    MenuView getMenuView(ViewGroup viewGroup);
 
     void initForMenu(Context context, MenuBuilder menuBuilder);
 

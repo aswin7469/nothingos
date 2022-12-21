@@ -1,21 +1,32 @@
 package com.android.launcher3.icons;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.os.UserHandle;
-/* loaded from: classes.dex */
+import com.android.launcher3.util.FlagOp;
+
 public class BitmapInfo {
+    static final int FLAG_INSTANT = 2;
+    public static final int FLAG_NO_BADGE = 2;
+    public static final int FLAG_THEMED = 1;
+    static final int FLAG_WORK = 1;
     public static final Bitmap LOW_RES_ICON;
     public static final BitmapInfo LOW_RES_INFO;
+    public static final String TAG = "BitmapInfo";
+    private BitmapInfo badgeInfo;
     public final int color;
+    public int flags;
     public final Bitmap icon;
+    protected Bitmap mMono;
+    protected Bitmap mWhiteShadowLayer;
 
-    /* loaded from: classes.dex */
+    public @interface DrawableCreationFlags {
+    }
+
     public interface Extender {
         void drawForPersistence(Canvas canvas);
 
-        /* renamed from: getExtendedInfo */
-        BitmapInfo mo253getExtendedInfo(Bitmap bitmap, int i, BaseIconFactory baseIconFactory, float f, UserHandle userHandle);
+        BitmapInfo getExtendedInfo(Bitmap bitmap, int i, BaseIconFactory baseIconFactory, float f);
     }
 
     static {
@@ -29,11 +40,97 @@ public class BitmapInfo {
         this.color = i;
     }
 
-    public static BitmapInfo fromBitmap(Bitmap bitmap) {
-        return of(bitmap, 0);
+    public BitmapInfo withBadgeInfo(BitmapInfo bitmapInfo) {
+        BitmapInfo clone = clone();
+        clone.badgeInfo = bitmapInfo;
+        return clone;
     }
 
-    public static BitmapInfo of(Bitmap bitmap, int i) {
+    public BitmapInfo withFlags(FlagOp flagOp) {
+        if (flagOp == FlagOp.NO_OP) {
+            return this;
+        }
+        BitmapInfo clone = clone();
+        clone.flags = flagOp.apply(clone.flags);
+        return clone;
+    }
+
+    /* access modifiers changed from: protected */
+    public BitmapInfo copyInternalsTo(BitmapInfo bitmapInfo) {
+        bitmapInfo.mMono = this.mMono;
+        bitmapInfo.mWhiteShadowLayer = this.mWhiteShadowLayer;
+        bitmapInfo.flags = this.flags;
+        bitmapInfo.badgeInfo = this.badgeInfo;
+        return bitmapInfo;
+    }
+
+    public BitmapInfo clone() {
+        return copyInternalsTo(new BitmapInfo(this.icon, this.color));
+    }
+
+    public void setMonoIcon(Bitmap bitmap, BaseIconFactory baseIconFactory) {
+        this.mMono = bitmap;
+        this.mWhiteShadowLayer = baseIconFactory.getWhiteShadowLayer();
+    }
+
+    public final boolean isNullOrLowRes() {
+        Bitmap bitmap = this.icon;
+        return bitmap == null || bitmap == LOW_RES_ICON;
+    }
+
+    public final boolean isLowRes() {
+        return LOW_RES_ICON == this.icon;
+    }
+
+    public boolean canPersist() {
+        return !isNullOrLowRes();
+    }
+
+    public Bitmap getMono() {
+        return this.mMono;
+    }
+
+    public FastBitmapDrawable newIcon(Context context) {
+        return newIcon(context, 0);
+    }
+
+    public FastBitmapDrawable newIcon(Context context, int i) {
+        FastBitmapDrawable fastBitmapDrawable;
+        if (isLowRes()) {
+            fastBitmapDrawable = new PlaceHolderIconDrawable(this, context);
+        } else if ((i & 1) == 0 || this.mMono == null) {
+            fastBitmapDrawable = new FastBitmapDrawable(this);
+        } else {
+            fastBitmapDrawable = ThemedIconDrawable.newDrawable(this, context);
+        }
+        applyFlags(context, fastBitmapDrawable, i);
+        return fastBitmapDrawable;
+    }
+
+    /* access modifiers changed from: protected */
+    public void applyFlags(Context context, FastBitmapDrawable fastBitmapDrawable, int i) {
+        fastBitmapDrawable.mDisabledAlpha = GraphicsUtils.getFloat(context, C1693R.attr.disabledIconAlpha, 1.0f);
+        if ((i & 2) == 0) {
+            BitmapInfo bitmapInfo = this.badgeInfo;
+            if (bitmapInfo != null) {
+                fastBitmapDrawable.setBadge(bitmapInfo.newIcon(context, i));
+                return;
+            }
+            int i2 = this.flags;
+            if ((i2 & 2) != 0) {
+                fastBitmapDrawable.setBadge(context.getDrawable(C1693R.C1695drawable.ic_instant_app_badge));
+            } else if ((i2 & 1) != 0) {
+                fastBitmapDrawable.setBadge(context.getDrawable(C1693R.C1695drawable.ic_work_app_badge));
+            }
+        }
+    }
+
+    public static BitmapInfo fromBitmap(Bitmap bitmap) {
+        return m188of(bitmap, 0);
+    }
+
+    /* renamed from: of */
+    public static BitmapInfo m188of(Bitmap bitmap, int i) {
         return new BitmapInfo(bitmap, i);
     }
 }

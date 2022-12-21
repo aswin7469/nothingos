@@ -12,10 +12,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.shared.system.TaskStackChangeListeners;
-/* loaded from: classes.dex */
+
 public class WorkLockActivityController {
     private static final String TAG = "WorkLockActivityController";
     private final Context mContext;
@@ -26,42 +25,30 @@ public class WorkLockActivityController {
         this(context, TaskStackChangeListeners.getInstance(), ActivityTaskManager.getService());
     }
 
-    @VisibleForTesting
     WorkLockActivityController(Context context, TaskStackChangeListeners taskStackChangeListeners, IActivityTaskManager iActivityTaskManager) {
-        TaskStackChangeListener taskStackChangeListener = new TaskStackChangeListener() { // from class: com.android.systemui.keyguard.WorkLockActivityController.1
-            @Override // com.android.systemui.shared.system.TaskStackChangeListener
-            public void onTaskProfileLocked(int i, int i2) {
-                WorkLockActivityController.this.startWorkChallengeInTask(i, i2);
+        C21751 r0 = new TaskStackChangeListener() {
+            public void onTaskProfileLocked(ActivityManager.RunningTaskInfo runningTaskInfo) {
+                WorkLockActivityController.this.startWorkChallengeInTask(runningTaskInfo);
             }
         };
-        this.mLockListener = taskStackChangeListener;
+        this.mLockListener = r0;
         this.mContext = context;
         this.mIatm = iActivityTaskManager;
-        taskStackChangeListeners.registerTaskStackListener(taskStackChangeListener);
+        taskStackChangeListeners.registerTaskStackListener(r0);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void startWorkChallengeInTask(int i, int i2) {
-        ActivityManager.TaskDescription taskDescription;
-        try {
-            taskDescription = this.mIatm.getTaskDescription(i);
-        } catch (RemoteException unused) {
-            String str = TAG;
-            Log.w(str, "Failed to get description for task=" + i);
-            taskDescription = null;
-        }
-        Intent addFlags = new Intent("android.app.action.CONFIRM_DEVICE_CREDENTIAL_WITH_USER").setComponent(new ComponentName(this.mContext, WorkLockActivity.class)).putExtra("android.intent.extra.USER_ID", i2).putExtra("com.android.systemui.keyguard.extra.TASK_DESCRIPTION", taskDescription).addFlags(67239936);
+    /* access modifiers changed from: private */
+    public void startWorkChallengeInTask(ActivityManager.RunningTaskInfo runningTaskInfo) {
+        Intent addFlags = new Intent("android.app.action.CONFIRM_DEVICE_CREDENTIAL_WITH_USER").setComponent(new ComponentName(this.mContext, WorkLockActivity.class)).putExtra("android.intent.extra.USER_ID", runningTaskInfo.userId).putExtra("android.intent.extra.PACKAGE_NAME", runningTaskInfo.baseActivity != null ? runningTaskInfo.baseActivity.getPackageName() : "").addFlags(67239936);
         ActivityOptions makeBasic = ActivityOptions.makeBasic();
-        makeBasic.setLaunchTaskId(i);
+        makeBasic.setLaunchTaskId(runningTaskInfo.taskId);
         makeBasic.setTaskOverlay(true, false);
-        if (ActivityManager.isStartResultSuccessful(startActivityAsUser(addFlags, makeBasic.toBundle(), -2))) {
-            return;
-        }
-        try {
-            this.mIatm.removeTask(i);
-        } catch (RemoteException unused2) {
-            String str2 = TAG;
-            Log.w(str2, "Failed to get description for task=" + i);
+        if (!ActivityManager.isStartResultSuccessful(startActivityAsUser(addFlags, makeBasic.toBundle(), -2))) {
+            try {
+                this.mIatm.removeTask(runningTaskInfo.taskId);
+            } catch (RemoteException unused) {
+                Log.w(TAG, "Failed to get description for task=" + runningTaskInfo.taskId);
+            }
         }
     }
 

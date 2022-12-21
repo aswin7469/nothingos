@@ -7,54 +7,64 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.util.MathUtils;
 import android.util.TimeUtils;
-import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
+import com.android.systemui.shared.system.QuickStepContract;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-/* loaded from: classes.dex */
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedFactory;
+import dagger.assisted.AssistedInject;
+import java.p026io.PrintWriter;
+
 public class LightBarTransitionsController implements Dumpable, CommandQueue.Callbacks, StatusBarStateController.StateListener {
+    public static final int DEFAULT_TINT_ANIMATION_DURATION = 120;
+    private static final String EXTRA_DARK_INTENSITY = "dark_intensity";
     private final DarkIntensityApplier mApplier;
     private final CommandQueue mCommandQueue;
     private final Context mContext;
     private float mDarkIntensity;
     private int mDisplayId;
     private float mDozeAmount;
+    private final Handler mHandler;
+    private final KeyguardStateController mKeyguardStateController;
     private float mNextDarkIntensity;
+    private Boolean mOverrideIconTintForNavMode;
     private float mPendingDarkIntensity;
     private final StatusBarStateController mStatusBarStateController;
     private ValueAnimator mTintAnimator;
     private boolean mTintChangePending;
-    private boolean mTransitionDeferring;
+    /* access modifiers changed from: private */
+    public boolean mTransitionDeferring;
+    private final Runnable mTransitionDeferringDoneRunnable = new Runnable() {
+        public void run() {
+            boolean unused = LightBarTransitionsController.this.mTransitionDeferring = false;
+        }
+    };
     private long mTransitionDeferringDuration;
     private long mTransitionDeferringStartTime;
     private boolean mTransitionPending;
-    private final Runnable mTransitionDeferringDoneRunnable = new Runnable() { // from class: com.android.systemui.statusbar.phone.LightBarTransitionsController.1
-        @Override // java.lang.Runnable
-        public void run() {
-            LightBarTransitionsController.this.mTransitionDeferring = false;
-        }
-    };
-    private final Handler mHandler = new Handler();
-    private final KeyguardStateController mKeyguardStateController = (KeyguardStateController) Dependency.get(KeyguardStateController.class);
 
-    /* loaded from: classes.dex */
     public interface DarkIntensityApplier {
         void applyDarkIntensity(float f);
 
         int getTintAnimationDuration();
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
+    @AssistedFactory
+    public interface Factory {
+        LightBarTransitionsController create(DarkIntensityApplier darkIntensityApplier);
+    }
+
     public void onStateChanged(int i) {
     }
 
-    public LightBarTransitionsController(Context context, DarkIntensityApplier darkIntensityApplier, CommandQueue commandQueue) {
+    @AssistedInject
+    public LightBarTransitionsController(Context context, @Assisted DarkIntensityApplier darkIntensityApplier, CommandQueue commandQueue, KeyguardStateController keyguardStateController, StatusBarStateController statusBarStateController) {
         this.mApplier = darkIntensityApplier;
-        StatusBarStateController statusBarStateController = (StatusBarStateController) Dependency.get(StatusBarStateController.class);
+        this.mHandler = new Handler();
+        this.mKeyguardStateController = keyguardStateController;
         this.mStatusBarStateController = statusBarStateController;
         this.mCommandQueue = commandQueue;
         commandQueue.addCallback((CommandQueue.Callbacks) this);
@@ -64,53 +74,49 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
         this.mDisplayId = context.getDisplayId();
     }
 
-    public void destroy(Context context) {
+    public void destroy() {
         this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
         this.mStatusBarStateController.removeCallback(this);
     }
 
     public void saveState(Bundle bundle) {
         ValueAnimator valueAnimator = this.mTintAnimator;
-        bundle.putFloat("dark_intensity", (valueAnimator == null || !valueAnimator.isRunning()) ? this.mDarkIntensity : this.mNextDarkIntensity);
+        bundle.putFloat(EXTRA_DARK_INTENSITY, (valueAnimator == null || !valueAnimator.isRunning()) ? this.mDarkIntensity : this.mNextDarkIntensity);
     }
 
     public void restoreState(Bundle bundle) {
-        setIconTintInternal(bundle.getFloat("dark_intensity", 0.0f));
+        setIconTintInternal(bundle.getFloat(EXTRA_DARK_INTENSITY, 0.0f));
         this.mNextDarkIntensity = this.mDarkIntensity;
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void appTransitionPending(int i, boolean z) {
-        if (this.mDisplayId == i) {
-            if (this.mKeyguardStateController.isKeyguardGoingAway() && !z) {
-                return;
-            }
+        if (this.mDisplayId != i) {
+            return;
+        }
+        if (!this.mKeyguardStateController.isKeyguardGoingAway() || z) {
             this.mTransitionPending = true;
         }
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void appTransitionCancelled(int i) {
+        if (this.mDisplayId == i) {
+            if (this.mTransitionPending && this.mTintChangePending) {
+                this.mTintChangePending = false;
+                animateIconTint(this.mPendingDarkIntensity, 0, (long) this.mApplier.getTintAnimationDuration());
+            }
+            this.mTransitionPending = false;
+        }
+    }
+
+    public void appTransitionStarting(int i, long j, long j2, boolean z) {
         if (this.mDisplayId != i) {
             return;
         }
-        if (this.mTransitionPending && this.mTintChangePending) {
-            this.mTintChangePending = false;
-            animateIconTint(this.mPendingDarkIntensity, 0L, this.mApplier.getTintAnimationDuration());
-        }
-        this.mTransitionPending = false;
-    }
-
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
-    public void appTransitionStarting(int i, long j, long j2, boolean z) {
-        if (this.mDisplayId == i) {
-            if (this.mKeyguardStateController.isKeyguardGoingAway() && !z) {
-                return;
-            }
+        if (!this.mKeyguardStateController.isKeyguardGoingAway() || z) {
             boolean z2 = this.mTransitionPending;
             if (z2 && this.mTintChangePending) {
                 this.mTintChangePending = false;
-                animateIconTint(this.mPendingDarkIntensity, Math.max(0L, j - SystemClock.uptimeMillis()), j2);
+                animateIconTint(this.mPendingDarkIntensity, Math.max(0, j - SystemClock.uptimeMillis()), j2);
             } else if (z2) {
                 this.mTransitionDeferring = true;
                 this.mTransitionDeferringStartTime = j;
@@ -139,12 +145,12 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
             if (!z) {
                 f = 0.0f;
             }
-            animateIconTint(f, Math.max(0L, this.mTransitionDeferringStartTime - SystemClock.uptimeMillis()), this.mTransitionDeferringDuration);
+            animateIconTint(f, Math.max(0, this.mTransitionDeferringStartTime - SystemClock.uptimeMillis()), this.mTransitionDeferringDuration);
         } else {
             if (!z) {
                 f = 0.0f;
             }
-            animateIconTint(f, 0L, this.mApplier.getTintAnimationDuration());
+            animateIconTint(f, 0, (long) this.mApplier.getTintAnimationDuration());
         }
     }
 
@@ -160,30 +166,25 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
     }
 
     private void animateIconTint(float f, long j, long j2) {
-        if (this.mNextDarkIntensity == f) {
-            return;
-        }
-        ValueAnimator valueAnimator = this.mTintAnimator;
-        if (valueAnimator != null) {
-            valueAnimator.cancel();
-        }
-        this.mNextDarkIntensity = f;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mDarkIntensity, f);
-        this.mTintAnimator = ofFloat;
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.phone.LightBarTransitionsController$$ExternalSyntheticLambda0
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator2) {
-                LightBarTransitionsController.this.lambda$animateIconTint$0(valueAnimator2);
+        if (this.mNextDarkIntensity != f) {
+            ValueAnimator valueAnimator = this.mTintAnimator;
+            if (valueAnimator != null) {
+                valueAnimator.cancel();
             }
-        });
-        this.mTintAnimator.setDuration(j2);
-        this.mTintAnimator.setStartDelay(j);
-        this.mTintAnimator.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
-        this.mTintAnimator.start();
+            this.mNextDarkIntensity = f;
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mDarkIntensity, f});
+            this.mTintAnimator = ofFloat;
+            ofFloat.addUpdateListener(new LightBarTransitionsController$$ExternalSyntheticLambda0(this));
+            this.mTintAnimator.setDuration(j2);
+            this.mTintAnimator.setStartDelay(j);
+            this.mTintAnimator.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
+            this.mTintAnimator.start();
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$animateIconTint$0(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$animateIconTint$0$com-android-systemui-statusbar-phone-LightBarTransitionsController */
+    public /* synthetic */ void mo44383x56438732(ValueAnimator valueAnimator) {
         setIconTintInternal(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
@@ -196,8 +197,7 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
         this.mApplier.applyDarkIntensity(MathUtils.lerp(this.mDarkIntensity, 0.0f, this.mDozeAmount));
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.print("  mTransitionDeferring=");
         printWriter.print(this.mTransitionDeferring);
         if (this.mTransitionDeferring) {
@@ -220,9 +220,20 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
         printWriter.println(this.mNextDarkIntensity);
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozeAmountChanged(float f, float f2) {
         this.mDozeAmount = f2;
         dispatchDark();
+    }
+
+    public void overrideIconTintForNavMode(boolean z) {
+        this.mOverrideIconTintForNavMode = Boolean.valueOf(z);
+    }
+
+    public boolean supportsIconTintForNavMode(int i) {
+        Boolean bool = this.mOverrideIconTintForNavMode;
+        if (bool != null) {
+            return bool.booleanValue();
+        }
+        return !QuickStepContract.isGesturalMode(i);
     }
 }

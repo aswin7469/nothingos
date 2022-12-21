@@ -6,15 +6,15 @@ import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.animatable.AnimatableValue;
 import com.airbnb.lottie.model.content.PolystarShape;
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class PolystarShapeParser {
-    private static final JsonReader.Options NAMES = JsonReader.Options.of("nm", "sy", "pt", "p", "r", "or", "os", "ir", "is", "hd");
+import java.p026io.IOException;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static PolystarShape parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
-        boolean z = false;
+class PolystarShapeParser {
+    private static final JsonReader.Options NAMES = JsonReader.Options.m137of("nm", "sy", "pt", "p", "r", "or", "os", "ir", "is", "hd");
+
+    private PolystarShapeParser() {
+    }
+
+    static PolystarShape parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         String str = null;
         PolystarShape.Type type = null;
         AnimatableFloatValue animatableFloatValue = null;
@@ -24,6 +24,7 @@ public class PolystarShapeParser {
         AnimatableFloatValue animatableFloatValue4 = null;
         AnimatableFloatValue animatableFloatValue5 = null;
         AnimatableFloatValue animatableFloatValue6 = null;
+        boolean z = false;
         while (jsonReader.hasNext()) {
             switch (jsonReader.selectName(NAMES)) {
                 case 0:

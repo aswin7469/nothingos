@@ -11,79 +11,79 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Parcelable;
+import android.os.Trace;
 import android.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.android.settingslib.applications.InterestingConfigChanges;
 import com.android.systemui.Dependency;
-import com.android.systemui.fragments.FragmentHostManager;
+import com.android.systemui.fragments.FragmentService;
 import com.android.systemui.plugins.Plugin;
 import com.android.systemui.util.leak.LeakDetector;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.p026io.FileDescriptor;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
+
 public class FragmentHostManager {
     private final InterestingConfigChanges mConfigChanges;
-    private final Context mContext;
+    /* access modifiers changed from: private */
+    public final Context mContext;
     private FragmentController mFragments;
+    /* access modifiers changed from: private */
+    public final Handler mHandler = new Handler(Looper.getMainLooper());
     private FragmentManager.FragmentLifecycleCallbacks mLifecycleCallbacks;
-    private final FragmentService mManager;
-    private final View mRootView;
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final HashMap<String, ArrayList<FragmentListener>> mListeners = new HashMap<>();
-    private final ExtensionFragmentManager mPlugins = new ExtensionFragmentManager();
+    /* access modifiers changed from: private */
+    public final FragmentService mManager;
+    /* access modifiers changed from: private */
+    public final ExtensionFragmentManager mPlugins;
+    private final View mRootView;
 
-    /* loaded from: classes.dex */
     public interface FragmentListener {
         void onFragmentViewCreated(String str, Fragment fragment);
 
-        default void onFragmentViewDestroyed(String str, Fragment fragment) {
+        void onFragmentViewDestroyed(String str, Fragment fragment) {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void dump(String str, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public FragmentHostManager(FragmentService fragmentService, View view) {
-        InterestingConfigChanges interestingConfigChanges = new InterestingConfigChanges(-1073741564);
+    FragmentHostManager(FragmentService fragmentService, View view) {
+        InterestingConfigChanges interestingConfigChanges = new InterestingConfigChanges(-1073741820);
         this.mConfigChanges = interestingConfigChanges;
+        this.mPlugins = new ExtensionFragmentManager();
         Context context = view.getContext();
         this.mContext = context;
         this.mManager = fragmentService;
         this.mRootView = view;
         interestingConfigChanges.applyNewConfig(context.getResources());
-        createFragmentHost(null);
+        createFragmentHost((Parcelable) null);
     }
 
     private void createFragmentHost(Parcelable parcelable) {
         FragmentController createController = FragmentController.createController(new HostCallbacks());
         this.mFragments = createController;
-        createController.attachHost(null);
-        this.mLifecycleCallbacks = new FragmentManager.FragmentLifecycleCallbacks() { // from class: com.android.systemui.fragments.FragmentHostManager.1
-            @Override // android.app.FragmentManager.FragmentLifecycleCallbacks
+        createController.attachHost((Fragment) null);
+        this.mLifecycleCallbacks = new FragmentManager.FragmentLifecycleCallbacks() {
             public void onFragmentViewCreated(FragmentManager fragmentManager, Fragment fragment, View view, Bundle bundle) {
                 FragmentHostManager.this.onFragmentViewCreated(fragment);
             }
 
-            @Override // android.app.FragmentManager.FragmentLifecycleCallbacks
             public void onFragmentViewDestroyed(FragmentManager fragmentManager, Fragment fragment) {
                 FragmentHostManager.this.onFragmentViewDestroyed(fragment);
             }
 
-            @Override // android.app.FragmentManager.FragmentLifecycleCallbacks
             public void onFragmentDestroyed(FragmentManager fragmentManager, Fragment fragment) {
                 ((LeakDetector) Dependency.get(LeakDetector.class)).trackGarbage(fragment);
             }
         };
         this.mFragments.getFragmentManager().registerFragmentLifecycleCallbacks(this.mLifecycleCallbacks, true);
         if (parcelable != null) {
+            FragmentManagerNonConfig fragmentManagerNonConfig = null;
             this.mFragments.restoreAllState(parcelable, (FragmentManagerNonConfig) null);
         }
         this.mFragments.dispatchCreate();
@@ -101,56 +101,45 @@ public class FragmentHostManager {
     }
 
     public FragmentHostManager addTagListener(String str, FragmentListener fragmentListener) {
-        ArrayList<FragmentListener> arrayList = this.mListeners.get(str);
+        ArrayList arrayList = this.mListeners.get(str);
         if (arrayList == null) {
-            arrayList = new ArrayList<>();
+            arrayList = new ArrayList();
             this.mListeners.put(str, arrayList);
         }
         arrayList.add(fragmentListener);
         Fragment findFragmentByTag = getFragmentManager().findFragmentByTag(str);
-        if (findFragmentByTag != null && findFragmentByTag.getView() != null) {
+        if (!(findFragmentByTag == null || findFragmentByTag.getView() == null)) {
             fragmentListener.onFragmentViewCreated(str, findFragmentByTag);
         }
         return this;
     }
 
     public void removeTagListener(String str, FragmentListener fragmentListener) {
-        ArrayList<FragmentListener> arrayList = this.mListeners.get(str);
-        if (arrayList == null || !arrayList.remove(fragmentListener) || arrayList.size() != 0) {
-            return;
+        ArrayList arrayList = this.mListeners.get(str);
+        if (arrayList != null && arrayList.remove((Object) fragmentListener) && arrayList.size() == 0) {
+            this.mListeners.remove(str);
         }
-        this.mListeners.remove(str);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void onFragmentViewCreated(final Fragment fragment) {
-        final String tag = fragment.getTag();
-        ArrayList<FragmentListener> arrayList = this.mListeners.get(tag);
+    /* access modifiers changed from: private */
+    public void onFragmentViewCreated(Fragment fragment) {
+        String tag = fragment.getTag();
+        ArrayList arrayList = this.mListeners.get(tag);
         if (arrayList != null) {
-            arrayList.forEach(new Consumer() { // from class: com.android.systemui.fragments.FragmentHostManager$$ExternalSyntheticLambda0
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    ((FragmentHostManager.FragmentListener) obj).onFragmentViewCreated(tag, fragment);
-                }
-            });
+            arrayList.forEach(new FragmentHostManager$$ExternalSyntheticLambda1(tag, fragment));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void onFragmentViewDestroyed(final Fragment fragment) {
-        final String tag = fragment.getTag();
-        ArrayList<FragmentListener> arrayList = this.mListeners.get(tag);
+    /* access modifiers changed from: private */
+    public void onFragmentViewDestroyed(Fragment fragment) {
+        String tag = fragment.getTag();
+        ArrayList arrayList = this.mListeners.get(tag);
         if (arrayList != null) {
-            arrayList.forEach(new Consumer() { // from class: com.android.systemui.fragments.FragmentHostManager$$ExternalSyntheticLambda1
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    ((FragmentHostManager.FragmentListener) obj).onFragmentViewDestroyed(tag, fragment);
-                }
-            });
+            arrayList.forEach(new FragmentHostManager$$ExternalSyntheticLambda0(tag, fragment));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         if (this.mConfigChanges.applyNewConfig(this.mContext.getResources())) {
             reloadFragments();
@@ -159,27 +148,27 @@ public class FragmentHostManager {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public <T extends View> T findViewById(int i) {
-        return (T) this.mRootView.findViewById(i);
+        return this.mRootView.findViewById(i);
     }
 
     public FragmentManager getFragmentManager() {
         return this.mFragments.getFragmentManager();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public ExtensionFragmentManager getExtensionManager() {
         return this.mPlugins;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void destroy() {
         this.mFragments.dispatchDestroy();
     }
 
     public <T> T create(Class<T> cls) {
-        return (T) this.mPlugins.instantiate(this.mContext, cls.getName(), null);
+        return this.mPlugins.instantiate(this.mContext, cls.getName(), (Bundle) null);
     }
 
     public static FragmentHostManager get(View view) {
@@ -190,38 +179,36 @@ public class FragmentHostManager {
         }
     }
 
-    public void reloadFragments() {
-        createFragmentHost(destroyFragmentHost());
+    public static void removeAndDestroy(View view) {
+        ((FragmentService) Dependency.get(FragmentService.class)).removeAndDestroy(view);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class HostCallbacks extends FragmentHostCallback<FragmentHostManager> {
-        @Override // android.app.FragmentHostCallback
+    public void reloadFragments() {
+        Trace.beginSection("FrargmentHostManager#reloadFragments");
+        createFragmentHost(destroyFragmentHost());
+        Trace.endSection();
+    }
+
+    class HostCallbacks extends FragmentHostCallback<FragmentHostManager> {
         public void onAttachFragment(Fragment fragment) {
         }
 
-        @Override // android.app.FragmentHostCallback
         public int onGetWindowAnimations() {
             return 0;
         }
 
-        @Override // android.app.FragmentHostCallback, android.app.FragmentContainer
         public boolean onHasView() {
             return true;
         }
 
-        @Override // android.app.FragmentHostCallback
         public boolean onHasWindowAnimations() {
             return false;
         }
 
-        @Override // android.app.FragmentHostCallback
         public boolean onShouldSaveFragmentState(Fragment fragment) {
             return true;
         }
 
-        @Override // android.app.FragmentHostCallback
         public boolean onUseFragmentManagerInflaterFactory() {
             return true;
         }
@@ -230,14 +217,10 @@ public class FragmentHostManager {
             super(FragmentHostManager.this.mContext, FragmentHostManager.this.mHandler, 0);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.app.FragmentHostCallback
-        /* renamed from: onGetHost */
-        public FragmentHostManager mo593onGetHost() {
+        public FragmentHostManager onGetHost() {
             return FragmentHostManager.this;
         }
 
-        @Override // android.app.FragmentHostCallback
         public void onDump(String str, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
             FragmentHostManager.this.dump(str, fileDescriptor, printWriter, strArr);
         }
@@ -246,20 +229,16 @@ public class FragmentHostManager {
             return FragmentHostManager.this.mPlugins.instantiate(context, str, bundle);
         }
 
-        @Override // android.app.FragmentHostCallback
         public LayoutInflater onGetLayoutInflater() {
             return LayoutInflater.from(FragmentHostManager.this.mContext);
         }
 
-        @Override // android.app.FragmentHostCallback, android.app.FragmentContainer
         public <T extends View> T onFindViewById(int i) {
-            return (T) FragmentHostManager.this.findViewById(i);
+            return FragmentHostManager.this.findViewById(i);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class ExtensionFragmentManager {
+    class ExtensionFragmentManager {
         private final ArrayMap<String, Context> mExtensionLookup = new ArrayMap<>();
 
         ExtensionFragmentManager() {
@@ -270,39 +249,48 @@ public class FragmentHostManager {
                 this.mExtensionLookup.remove(str2);
             }
             this.mExtensionLookup.put(str3, context);
-            FragmentHostManager.this.getFragmentManager().beginTransaction().replace(i, instantiate(context, str3, null), str).commit();
+            FragmentHostManager.this.getFragmentManager().beginTransaction().replace(i, instantiate(context, str3, (Bundle) null), str).commit();
             FragmentHostManager.this.reloadFragments();
         }
 
-        Fragment instantiate(Context context, String str, Bundle bundle) {
+        /* access modifiers changed from: package-private */
+        public Fragment instantiate(Context context, String str, Bundle bundle) {
             Context context2 = this.mExtensionLookup.get(str);
-            if (context2 != null) {
-                Fragment instantiateWithInjections = instantiateWithInjections(context2, str, bundle);
-                if (instantiateWithInjections instanceof Plugin) {
-                    ((Plugin) instantiateWithInjections).onCreate(FragmentHostManager.this.mContext, context2);
-                }
-                return instantiateWithInjections;
+            if (context2 == null) {
+                return instantiateWithInjections(context, str, bundle);
             }
-            return instantiateWithInjections(context, str, bundle);
+            Fragment instantiateWithInjections = instantiateWithInjections(context2, str, bundle);
+            if (instantiateWithInjections instanceof Plugin) {
+                ((Plugin) instantiateWithInjections).onCreate(FragmentHostManager.this.mContext, context2);
+            }
+            return instantiateWithInjections;
         }
 
         private Fragment instantiateWithInjections(Context context, String str, Bundle bundle) {
-            Method method = FragmentHostManager.this.mManager.getInjectionMap().get(str);
-            if (method != null) {
-                try {
-                    Fragment fragment = (Fragment) method.invoke(FragmentHostManager.this.mManager.getFragmentCreator(), new Object[0]);
-                    if (bundle != null) {
-                        bundle.setClassLoader(fragment.getClass().getClassLoader());
-                        fragment.setArguments(bundle);
-                    }
-                    return fragment;
-                } catch (IllegalAccessException e) {
-                    throw new Fragment.InstantiationException("Unable to instantiate " + str, e);
-                } catch (InvocationTargetException e2) {
-                    throw new Fragment.InstantiationException("Unable to instantiate " + str, e2);
-                }
+            FragmentService.FragmentInstantiationInfo fragmentInstantiationInfo = FragmentHostManager.this.mManager.getInjectionMap().get(str);
+            if (fragmentInstantiationInfo == null) {
+                return Fragment.instantiate(context, str, bundle);
             }
-            return Fragment.instantiate(context, str, bundle);
+            try {
+                Fragment fragment = (Fragment) fragmentInstantiationInfo.mMethod.invoke(fragmentInstantiationInfo.mDaggerComponent, new Object[0]);
+                if (bundle != null) {
+                    bundle.setClassLoader(fragment.getClass().getClassLoader());
+                    fragment.setArguments(bundle);
+                }
+                return fragment;
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new Fragment.InstantiationException("Unable to instantiate " + str, e);
+            }
+        }
+    }
+
+    private static class PluginState {
+        String mCls;
+        Context mContext;
+
+        private PluginState(String str, Context context) {
+            this.mCls = str;
+            this.mContext = context;
         }
     }
 }

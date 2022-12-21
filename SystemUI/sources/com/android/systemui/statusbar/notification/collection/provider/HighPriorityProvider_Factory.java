@@ -4,7 +4,7 @@ import com.android.systemui.statusbar.notification.collection.render.GroupMember
 import com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifier;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class HighPriorityProvider_Factory implements Factory<HighPriorityProvider> {
     private final Provider<GroupMembershipManager> groupManagerProvider;
     private final Provider<PeopleNotificationIdentifier> peopleNotificationIdentifierProvider;
@@ -14,10 +14,8 @@ public final class HighPriorityProvider_Factory implements Factory<HighPriorityP
         this.groupManagerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public HighPriorityProvider mo1933get() {
-        return newInstance(this.peopleNotificationIdentifierProvider.mo1933get(), this.groupManagerProvider.mo1933get());
+    public HighPriorityProvider get() {
+        return newInstance(this.peopleNotificationIdentifierProvider.get(), this.groupManagerProvider.get());
     }
 
     public static HighPriorityProvider_Factory create(Provider<PeopleNotificationIdentifier> provider, Provider<GroupMembershipManager> provider2) {

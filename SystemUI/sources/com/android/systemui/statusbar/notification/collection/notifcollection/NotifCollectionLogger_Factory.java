@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.collection.notifcollection;
 import com.android.systemui.log.LogBuffer;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotifCollectionLogger_Factory implements Factory<NotifCollectionLogger> {
     private final Provider<LogBuffer> bufferProvider;
 
@@ -11,10 +11,8 @@ public final class NotifCollectionLogger_Factory implements Factory<NotifCollect
         this.bufferProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotifCollectionLogger mo1933get() {
-        return newInstance(this.bufferProvider.mo1933get());
+    public NotifCollectionLogger get() {
+        return newInstance(this.bufferProvider.get());
     }
 
     public static NotifCollectionLogger_Factory create(Provider<LogBuffer> provider) {

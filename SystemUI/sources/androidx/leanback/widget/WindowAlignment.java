@@ -1,5 +1,7 @@
 package androidx.leanback.widget;
-/* loaded from: classes.dex */
+
+import android.net.wifi.WifiEnterpriseConfig;
+
 class WindowAlignment {
     public final Axis horizontal;
     private Axis mMainAxis;
@@ -7,8 +9,7 @@ class WindowAlignment {
     private Axis mSecondAxis;
     public final Axis vertical;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public WindowAlignment() {
+    WindowAlignment() {
         Axis axis = new Axis("vertical");
         this.vertical = axis;
         Axis axis2 = new Axis("horizontal");
@@ -17,39 +18,88 @@ class WindowAlignment {
         this.mSecondAxis = axis;
     }
 
-    /* loaded from: classes.dex */
     public static class Axis {
+        static final int PF_KEYLINE_OVER_HIGH_EDGE = 2;
+        static final int PF_KEYLINE_OVER_LOW_EDGE = 1;
         private int mMaxEdge;
         private int mMaxScroll;
         private int mMinEdge;
         private int mMinScroll;
         private int mPaddingMax;
         private int mPaddingMin;
+        private int mPreferredKeyLine = 2;
         private boolean mReversedFlow;
         private int mSize;
-        private int mPreferredKeyLine = 2;
         private int mWindowAlignment = 3;
         private int mWindowAlignmentOffset = 0;
         private float mWindowAlignmentOffsetPercent = 50.0f;
 
-        final int calculateScrollToKeyLine(int viewCenterPosition, int keyLine) {
-            return viewCenterPosition - keyLine;
+        /* access modifiers changed from: package-private */
+        public final int calculateScrollToKeyLine(int i, int i2) {
+            return i - i2;
         }
 
-        public Axis(String name) {
+        public Axis(String str) {
             reset();
         }
 
-        public final void setWindowAlignment(int windowAlignment) {
-            this.mWindowAlignment = windowAlignment;
+        public final int getWindowAlignment() {
+            return this.mWindowAlignment;
         }
 
-        final boolean isPreferKeylineOverHighEdge() {
+        public final void setWindowAlignment(int i) {
+            this.mWindowAlignment = i;
+        }
+
+        /* access modifiers changed from: package-private */
+        public final void setPreferKeylineOverLowEdge(boolean z) {
+            int i;
+            if (z) {
+                i = this.mPreferredKeyLine | 1;
+            } else {
+                i = this.mPreferredKeyLine & -2;
+            }
+            this.mPreferredKeyLine = i;
+        }
+
+        /* access modifiers changed from: package-private */
+        public final void setPreferKeylineOverHighEdge(boolean z) {
+            int i;
+            if (z) {
+                i = this.mPreferredKeyLine | 2;
+            } else {
+                i = this.mPreferredKeyLine & -3;
+            }
+            this.mPreferredKeyLine = i;
+        }
+
+        /* access modifiers changed from: package-private */
+        public final boolean isPreferKeylineOverHighEdge() {
             return (this.mPreferredKeyLine & 2) != 0;
         }
 
-        final boolean isPreferKeylineOverLowEdge() {
+        /* access modifiers changed from: package-private */
+        public final boolean isPreferKeylineOverLowEdge() {
             return (this.mPreferredKeyLine & 1) != 0;
+        }
+
+        public final int getWindowAlignmentOffset() {
+            return this.mWindowAlignmentOffset;
+        }
+
+        public final void setWindowAlignmentOffset(int i) {
+            this.mWindowAlignmentOffset = i;
+        }
+
+        public final void setWindowAlignmentOffsetPercent(float f) {
+            if ((f < 0.0f || f > 100.0f) && f != -1.0f) {
+                throw new IllegalArgumentException();
+            }
+            this.mWindowAlignmentOffsetPercent = f;
+        }
+
+        public final float getWindowAlignmentOffsetPercent() {
+            return this.mWindowAlignmentOffsetPercent;
         }
 
         public final int getMinScroll() {
@@ -70,7 +120,8 @@ class WindowAlignment {
             this.mMaxScroll = Integer.MAX_VALUE;
         }
 
-        void reset() {
+        /* access modifiers changed from: package-private */
+        public void reset() {
             this.mMinEdge = Integer.MIN_VALUE;
             this.mMaxEdge = Integer.MAX_VALUE;
         }
@@ -83,17 +134,17 @@ class WindowAlignment {
             return this.mMaxEdge == Integer.MAX_VALUE;
         }
 
-        public final void setSize(int size) {
-            this.mSize = size;
+        public final void setSize(int i) {
+            this.mSize = i;
         }
 
         public final int getSize() {
             return this.mSize;
         }
 
-        public final void setPadding(int paddingMin, int paddingMax) {
-            this.mPaddingMin = paddingMin;
-            this.mPaddingMax = paddingMax;
+        public final void setPadding(int i, int i2) {
+            this.mPaddingMin = i;
+            this.mPaddingMax = i2;
         }
 
         public final int getPaddingMin() {
@@ -108,125 +159,152 @@ class WindowAlignment {
             return (this.mSize - this.mPaddingMin) - this.mPaddingMax;
         }
 
-        final int calculateKeyline() {
+        /* access modifiers changed from: package-private */
+        public final int calculateKeyline() {
             if (!this.mReversedFlow) {
                 int i = this.mWindowAlignmentOffset;
                 if (i < 0) {
                     i += this.mSize;
                 }
                 float f = this.mWindowAlignmentOffsetPercent;
-                return f != -1.0f ? i + ((int) ((this.mSize * f) / 100.0f)) : i;
+                if (f != -1.0f) {
+                    return i + ((int) ((((float) this.mSize) * f) / 100.0f));
+                }
+                return i;
             }
             int i2 = this.mWindowAlignmentOffset;
             int i3 = i2 >= 0 ? this.mSize - i2 : -i2;
             float f2 = this.mWindowAlignmentOffsetPercent;
-            return f2 != -1.0f ? i3 - ((int) ((this.mSize * f2) / 100.0f)) : i3;
+            return f2 != -1.0f ? i3 - ((int) ((((float) this.mSize) * f2) / 100.0f)) : i3;
         }
 
-        /* JADX WARN: Code restructure failed: missing block: B:17:0x0048, code lost:
-            r4.mMaxScroll = (r4.mMaxEdge - r4.mPaddingMin) - r5;
-         */
-        /* JADX WARN: Code restructure failed: missing block: B:8:0x0027, code lost:
-            r4.mMinScroll = r4.mMinEdge - r4.mPaddingMin;
-         */
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public final void updateMinMax(int minEdge, int maxEdge, int minChildViewCenter, int maxChildViewCenter) {
-            this.mMinEdge = minEdge;
-            this.mMaxEdge = maxEdge;
+        public final void updateMinMax(int i, int i2, int i3, int i4) {
+            this.mMinEdge = i;
+            this.mMaxEdge = i2;
             int clientSize = getClientSize();
             int calculateKeyline = calculateKeyline();
             boolean isMinUnknown = isMinUnknown();
             boolean isMaxUnknown = isMaxUnknown();
             if (!isMinUnknown) {
-                if (!this.mReversedFlow) {
-                    this.mMinScroll = calculateScrollToKeyLine(minChildViewCenter, calculateKeyline);
+                if (this.mReversedFlow ? (this.mWindowAlignment & 2) == 0 : (this.mWindowAlignment & 1) == 0) {
+                    this.mMinScroll = calculateScrollToKeyLine(i3, calculateKeyline);
                 } else {
-                    this.mMinScroll = calculateScrollToKeyLine(minChildViewCenter, calculateKeyline);
+                    this.mMinScroll = this.mMinEdge - this.mPaddingMin;
                 }
             }
             if (!isMaxUnknown) {
+                if (this.mReversedFlow ? (this.mWindowAlignment & 1) == 0 : (this.mWindowAlignment & 2) == 0) {
+                    this.mMaxScroll = calculateScrollToKeyLine(i4, calculateKeyline);
+                } else {
+                    this.mMaxScroll = (this.mMaxEdge - this.mPaddingMin) - clientSize;
+                }
+            }
+            if (!isMaxUnknown && !isMinUnknown) {
                 if (!this.mReversedFlow) {
-                    this.mMaxScroll = calculateScrollToKeyLine(maxChildViewCenter, calculateKeyline);
-                } else {
-                    this.mMaxScroll = calculateScrollToKeyLine(maxChildViewCenter, calculateKeyline);
-                }
-            }
-            if (isMaxUnknown || isMinUnknown) {
-                return;
-            }
-            if (!this.mReversedFlow) {
-                int i = this.mWindowAlignment;
-                if ((i & 1) != 0) {
-                    if (isPreferKeylineOverLowEdge()) {
-                        this.mMinScroll = Math.min(this.mMinScroll, calculateScrollToKeyLine(maxChildViewCenter, calculateKeyline));
+                    int i5 = this.mWindowAlignment;
+                    if ((i5 & 1) != 0) {
+                        if (isPreferKeylineOverLowEdge()) {
+                            this.mMinScroll = Math.min(this.mMinScroll, calculateScrollToKeyLine(i4, calculateKeyline));
+                        }
+                        this.mMaxScroll = Math.max(this.mMinScroll, this.mMaxScroll);
+                    } else if ((i5 & 2) != 0) {
+                        if (isPreferKeylineOverHighEdge()) {
+                            this.mMaxScroll = Math.max(this.mMaxScroll, calculateScrollToKeyLine(i3, calculateKeyline));
+                        }
+                        this.mMinScroll = Math.min(this.mMinScroll, this.mMaxScroll);
                     }
-                    this.mMaxScroll = Math.max(this.mMinScroll, this.mMaxScroll);
-                    return;
-                } else if ((i & 2) == 0) {
-                    return;
                 } else {
-                    if (isPreferKeylineOverHighEdge()) {
-                        this.mMaxScroll = Math.max(this.mMaxScroll, calculateScrollToKeyLine(minChildViewCenter, calculateKeyline));
+                    int i6 = this.mWindowAlignment;
+                    if ((i6 & 1) != 0) {
+                        if (isPreferKeylineOverLowEdge()) {
+                            this.mMaxScroll = Math.max(this.mMaxScroll, calculateScrollToKeyLine(i3, calculateKeyline));
+                        }
+                        this.mMinScroll = Math.min(this.mMinScroll, this.mMaxScroll);
+                    } else if ((i6 & 2) != 0) {
+                        if (isPreferKeylineOverHighEdge()) {
+                            this.mMinScroll = Math.min(this.mMinScroll, calculateScrollToKeyLine(i4, calculateKeyline));
+                        }
+                        this.mMaxScroll = Math.max(this.mMinScroll, this.mMaxScroll);
                     }
-                    this.mMinScroll = Math.min(this.mMinScroll, this.mMaxScroll);
-                    return;
                 }
-            }
-            int i2 = this.mWindowAlignment;
-            if ((i2 & 1) != 0) {
-                if (isPreferKeylineOverLowEdge()) {
-                    this.mMaxScroll = Math.max(this.mMaxScroll, calculateScrollToKeyLine(minChildViewCenter, calculateKeyline));
-                }
-                this.mMinScroll = Math.min(this.mMinScroll, this.mMaxScroll);
-            } else if ((i2 & 2) == 0) {
-            } else {
-                if (isPreferKeylineOverHighEdge()) {
-                    this.mMinScroll = Math.min(this.mMinScroll, calculateScrollToKeyLine(maxChildViewCenter, calculateKeyline));
-                }
-                this.mMaxScroll = Math.max(this.mMinScroll, this.mMaxScroll);
             }
         }
 
-        public final int getScroll(int viewCenter) {
-            int i;
-            int i2;
-            int size = getSize();
-            int calculateKeyline = calculateKeyline();
-            boolean isMinUnknown = isMinUnknown();
-            boolean isMaxUnknown = isMaxUnknown();
-            if (!isMinUnknown) {
-                int i3 = this.mPaddingMin;
-                int i4 = calculateKeyline - i3;
-                if (this.mReversedFlow ? (this.mWindowAlignment & 2) != 0 : (this.mWindowAlignment & 1) != 0) {
-                    int i5 = this.mMinEdge;
-                    if (viewCenter - i5 <= i4) {
-                        int i6 = i5 - i3;
-                        return (isMaxUnknown || i6 <= (i2 = this.mMaxScroll)) ? i6 : i2;
-                    }
-                }
-            }
-            if (!isMaxUnknown) {
-                int i7 = this.mPaddingMax;
-                int i8 = (size - calculateKeyline) - i7;
-                if (this.mReversedFlow ? (this.mWindowAlignment & 1) != 0 : (this.mWindowAlignment & 2) != 0) {
-                    int i9 = this.mMaxEdge;
-                    if (i9 - viewCenter <= i8) {
-                        int i10 = i9 - (size - i7);
-                        return (isMinUnknown || i10 >= (i = this.mMinScroll)) ? i10 : i;
-                    }
-                }
-            }
-            return calculateScrollToKeyLine(viewCenter, calculateKeyline);
+        /* JADX WARNING: Code restructure failed: missing block: B:12:0x0030, code lost:
+            r8 = r8.mMaxScroll;
+         */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public final int getScroll(int r9) {
+            /*
+                r8 = this;
+                int r0 = r8.getSize()
+                int r1 = r8.calculateKeyline()
+                boolean r2 = r8.isMinUnknown()
+                boolean r3 = r8.isMaxUnknown()
+                if (r2 != 0) goto L_0x0036
+                int r4 = r8.mPaddingMin
+                int r5 = r1 - r4
+                boolean r6 = r8.mReversedFlow
+                if (r6 != 0) goto L_0x0021
+                int r6 = r8.mWindowAlignment
+                r6 = r6 & 1
+                if (r6 == 0) goto L_0x0036
+                goto L_0x0027
+            L_0x0021:
+                int r6 = r8.mWindowAlignment
+                r6 = r6 & 2
+                if (r6 == 0) goto L_0x0036
+            L_0x0027:
+                int r6 = r8.mMinEdge
+                int r7 = r9 - r6
+                if (r7 > r5) goto L_0x0036
+                int r6 = r6 - r4
+                if (r3 != 0) goto L_0x0035
+                int r8 = r8.mMaxScroll
+                if (r6 <= r8) goto L_0x0035
+                r6 = r8
+            L_0x0035:
+                return r6
+            L_0x0036:
+                if (r3 != 0) goto L_0x005e
+                int r3 = r0 - r1
+                int r4 = r8.mPaddingMax
+                int r3 = r3 - r4
+                boolean r5 = r8.mReversedFlow
+                if (r5 != 0) goto L_0x0048
+                int r5 = r8.mWindowAlignment
+                r5 = r5 & 2
+                if (r5 == 0) goto L_0x005e
+                goto L_0x004e
+            L_0x0048:
+                int r5 = r8.mWindowAlignment
+                r5 = r5 & 1
+                if (r5 == 0) goto L_0x005e
+            L_0x004e:
+                int r5 = r8.mMaxEdge
+                int r6 = r5 - r9
+                if (r6 > r3) goto L_0x005e
+                int r0 = r0 - r4
+                int r5 = r5 - r0
+                if (r2 != 0) goto L_0x005d
+                int r8 = r8.mMinScroll
+                if (r5 >= r8) goto L_0x005d
+                r5 = r8
+            L_0x005d:
+                return r5
+            L_0x005e:
+                int r8 = r8.calculateScrollToKeyLine(r9, r1)
+                return r8
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.leanback.widget.WindowAlignment.Axis.getScroll(int):int");
         }
 
-        public final void setReversedFlow(boolean reversedFlow) {
-            this.mReversedFlow = reversedFlow;
+        public final void setReversedFlow(boolean z) {
+            this.mReversedFlow = z;
         }
 
         public String toString() {
-            return " min:" + this.mMinEdge + " " + this.mMinScroll + " max:" + this.mMaxEdge + " " + this.mMaxScroll;
+            return " min:" + this.mMinEdge + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mMinScroll + " max:" + this.mMaxEdge + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mMaxScroll;
         }
     }
 
@@ -238,15 +316,19 @@ class WindowAlignment {
         return this.mSecondAxis;
     }
 
-    public final void setOrientation(int orientation) {
-        this.mOrientation = orientation;
-        if (orientation == 0) {
+    public final void setOrientation(int i) {
+        this.mOrientation = i;
+        if (i == 0) {
             this.mMainAxis = this.horizontal;
             this.mSecondAxis = this.vertical;
             return;
         }
         this.mMainAxis = this.vertical;
         this.mSecondAxis = this.horizontal;
+    }
+
+    public final int getOrientation() {
+        return this.mOrientation;
     }
 
     public final void reset() {

@@ -1,0 +1,6 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/NetworkInfo;-><init>(Landroid/net/NetworkInfo;)V,packages/modules/Connectivity/framework/src/android/net/NetworkInfo.java,182,5,182,25,
+Landroid/net/NetworkInfo;->setSubtype(ILjava/lang/String;)V,packages/modules/Connectivity/framework/src/android/net/NetworkInfo.java,253,5,253,25,
+Landroid/net/NetworkInfo;->setIsAvailable(Z)V,packages/modules/Connectivity/framework/src/android/net/NetworkInfo.java,372,5,372,25,
+Landroid/net/NetworkInfo;->setFailover(Z)V,packages/modules/Connectivity/framework/src/android/net/NetworkInfo.java,403,5,403,25,
+Landroid/net/NetworkInfo;->setRoaming(Z)V,packages/modules/Connectivity/framework/src/android/net/NetworkInfo.java,434,5,434,25,

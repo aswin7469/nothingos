@@ -1,20 +1,40 @@
 package com.android.systemui.tuner;
 
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
+import com.android.systemui.Dependency;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.tuner.TunerService;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
 public class TunablePadding implements TunerService.Tunable {
+    public static final int FLAG_BOTTOM = 8;
+    public static final int FLAG_END = 2;
+    public static final int FLAG_START = 1;
+    public static final int FLAG_TOP = 4;
     private final int mDefaultSize;
     private final float mDensity;
     private final int mFlags;
+    private final TunerService mTunerService;
     private final View mView;
 
-    @Override // com.android.systemui.tuner.TunerService.Tunable
+    private TunablePadding(String str, int i, int i2, View view, TunerService tunerService) {
+        this.mDefaultSize = i;
+        this.mFlags = i2;
+        this.mView = view;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((WindowManager) view.getContext().getSystemService(WindowManager.class)).getDefaultDisplay().getMetrics(displayMetrics);
+        this.mDensity = displayMetrics.density;
+        this.mTunerService = tunerService;
+        tunerService.addTunable(this, str);
+    }
+
     public void onTuningChanged(String str, String str2) {
         int i = this.mDefaultSize;
         if (str2 != null) {
             try {
-                i = (int) (Integer.parseInt(str2) * this.mDensity);
+                i = (int) (((float) Integer.parseInt(str2)) * this.mDensity);
             } catch (NumberFormatException unused) {
             }
         }
@@ -33,12 +53,28 @@ public class TunablePadding implements TunerService.Tunable {
         return 0;
     }
 
-    /* loaded from: classes2.dex */
+    public void destroy() {
+        this.mTunerService.removeTunable(this);
+    }
+
+    @SysUISingleton
     public static class TunablePaddingService {
         private final TunerService mTunerService;
 
+        @Inject
         public TunablePaddingService(TunerService tunerService) {
             this.mTunerService = tunerService;
         }
+
+        public TunablePadding add(View view, String str, int i, int i2) {
+            if (view != null) {
+                return new TunablePadding(str, i, i2, view, this.mTunerService);
+            }
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public static TunablePadding addTunablePadding(View view, String str, int i, int i2) {
+        return ((TunablePaddingService) Dependency.get(TunablePaddingService.class)).add(view, str, i, i2);
     }
 }

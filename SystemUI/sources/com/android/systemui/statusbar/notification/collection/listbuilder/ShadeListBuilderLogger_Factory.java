@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.collection.listbuilder;
 import com.android.systemui.log.LogBuffer;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ShadeListBuilderLogger_Factory implements Factory<ShadeListBuilderLogger> {
     private final Provider<LogBuffer> bufferProvider;
 
@@ -11,10 +11,8 @@ public final class ShadeListBuilderLogger_Factory implements Factory<ShadeListBu
         this.bufferProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ShadeListBuilderLogger mo1933get() {
-        return newInstance(this.bufferProvider.mo1933get());
+    public ShadeListBuilderLogger get() {
+        return newInstance(this.bufferProvider.get());
     }
 
     public static ShadeListBuilderLogger_Factory create(Provider<LogBuffer> provider) {

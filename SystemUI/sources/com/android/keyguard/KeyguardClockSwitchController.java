@@ -1,83 +1,97 @@
 package com.android.keyguard;
 
 import android.content.res.Resources;
+import android.database.ContentObserver;
+import android.os.Handler;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.keyguard.clock.ClockManager;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
+import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
+import com.android.systemui.dagger.qualifiers.Main;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.keyguard.KeyguardUnlockAnimationController;
 import com.android.systemui.plugins.ClockPlugin;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
-import com.android.systemui.shared.system.smartspace.SmartspaceTransitionController;
 import com.android.systemui.statusbar.lockscreen.LockscreenSmartspaceController;
 import com.android.systemui.statusbar.notification.AnimatableProperty;
 import com.android.systemui.statusbar.notification.PropertyAnimator;
 import com.android.systemui.statusbar.notification.stack.AnimationProperties;
-import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import com.android.systemui.statusbar.phone.NotificationIconAreaController;
 import com.android.systemui.statusbar.phone.NotificationIconContainer;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.util.ViewController;
-import com.nothingos.keyguard.NothingKeyguardClockView;
-import com.nothingos.keyguard.NothingKeyguardClockViewController;
-import com.nothingos.keyguard.NothingKeyguardClockViewLarge;
-import com.nothingos.keyguard.NothingKeyguardClockViewLargeController;
-import java.util.HashSet;
+import com.android.systemui.util.settings.SecureSettings;
+import com.nothing.systemui.keyguard.NTKeyguardClockView;
+import com.nothing.systemui.keyguard.NTKeyguardClockViewController;
+import com.nothing.systemui.keyguard.NTKeyguardClockViewLarge;
+import com.nothing.systemui.keyguard.NTKeyguardClockViewLargeController;
+import java.p026io.PrintWriter;
 import java.util.Locale;
-import java.util.Set;
 import java.util.TimeZone;
-/* loaded from: classes.dex */
-public class KeyguardClockSwitchController extends ViewController<KeyguardClockSwitch> {
+import java.util.concurrent.Executor;
+import javax.inject.Inject;
+
+public class KeyguardClockSwitchController extends ViewController<KeyguardClockSwitch> implements Dumpable {
+    private static final boolean CUSTOM_CLOCKS_ENABLED = true;
     private final BatteryController mBatteryController;
     private final BroadcastDispatcher mBroadcastDispatcher;
-    private final KeyguardBypassController mBypassController;
+    private boolean mCanShowDoubleLineClock = true;
+    private final ClockManager.ClockChangedListener mClockChangedListener = new KeyguardClockSwitchController$$ExternalSyntheticLambda2(this);
     private FrameLayout mClockFrame;
     private final ClockManager mClockManager;
     private AnimatableClockController mClockViewController;
     private final SysuiColorExtractor mColorExtractor;
+    private final ColorExtractor.OnColorsChangedListener mColorsListener = new KeyguardClockSwitchController$$ExternalSyntheticLambda1(this);
+    private int mCurrentClockSize = 1;
+    private ContentObserver mDoubleLineClockObserver = new ContentObserver((Handler) null) {
+        public void onChange(boolean z) {
+            KeyguardClockSwitchController.this.updateDoubleLineClock();
+        }
+    };
+    private final DumpManager mDumpManager;
+    private int mKeyguardClockTopMargin = 0;
     private final KeyguardSliceViewController mKeyguardSliceViewController;
     private final KeyguardUnlockAnimationController mKeyguardUnlockAnimationController;
+    private final KeyguardUnlockAnimationController.KeyguardUnlockAnimationListener mKeyguardUnlockAnimationListener = new KeyguardUnlockAnimationController.KeyguardUnlockAnimationListener() {
+        public void onUnlockAnimationFinished() {
+            KeyguardClockSwitchController.this.setClipChildrenForUnlock(true);
+        }
+    };
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private FrameLayout mLargeClockFrame;
     private AnimatableClockController mLargeClockViewController;
-    private NothingKeyguardClockViewController mNothingClockViewController;
-    private NothingKeyguardClockViewLargeController mNothingClockViewLargeController;
+    private NTKeyguardClockViewController mNothingClockViewController;
+    private NTKeyguardClockViewLargeController mNothingClockViewLargeController;
     private final NotificationIconAreaController mNotificationIconAreaController;
-    private final Resources mResources;
-    private final LockscreenSmartspaceController mSmartspaceController;
-    private SmartspaceTransitionController mSmartspaceTransitionController;
-    private View mSmartspaceView;
-    private final StatusBarStateController mStatusBarStateController;
-    private int mLargeClockTopMargin = 0;
-    private int mKeyguardClockTopMargin = 0;
-    private final ColorExtractor.OnColorsChangedListener mColorsListener = new ColorExtractor.OnColorsChangedListener() { // from class: com.android.keyguard.KeyguardClockSwitchController$$ExternalSyntheticLambda0
-        public final void onColorsChanged(ColorExtractor colorExtractor, int i) {
-            KeyguardClockSwitchController.this.lambda$new$0(colorExtractor, i);
-        }
-    };
-    private final ClockManager.ClockChangedListener mClockChangedListener = new ClockManager.ClockChangedListener() { // from class: com.android.keyguard.KeyguardClockSwitchController$$ExternalSyntheticLambda1
-        @Override // com.android.keyguard.clock.ClockManager.ClockChangedListener
-        public final void onClockChanged(ClockPlugin clockPlugin) {
-            KeyguardClockSwitchController.this.setClockPlugin(clockPlugin);
-        }
-    };
     private boolean mOnlyClock = false;
+    private final Resources mResources;
+    private final SecureSettings mSecureSettings;
+    private final LockscreenSmartspaceController mSmartspaceController;
+    private View mSmartspaceView;
+    private ViewGroup mStatusArea;
+    private final StatusBarStateController mStatusBarStateController;
+    private Executor mUiExecutor;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(ColorExtractor colorExtractor, int i) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-keyguard-KeyguardClockSwitchController  reason: not valid java name */
+    public /* synthetic */ void m2284lambda$new$0$comandroidkeyguardKeyguardClockSwitchController(ColorExtractor colorExtractor, int i) {
         if ((i & 2) != 0) {
             ((KeyguardClockSwitch) this.mView).updateColors(getGradientColors());
         }
     }
 
-    public KeyguardClockSwitchController(KeyguardClockSwitch keyguardClockSwitch, StatusBarStateController statusBarStateController, SysuiColorExtractor sysuiColorExtractor, ClockManager clockManager, KeyguardSliceViewController keyguardSliceViewController, NotificationIconAreaController notificationIconAreaController, BroadcastDispatcher broadcastDispatcher, BatteryController batteryController, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardBypassController keyguardBypassController, LockscreenSmartspaceController lockscreenSmartspaceController, KeyguardUnlockAnimationController keyguardUnlockAnimationController, SmartspaceTransitionController smartspaceTransitionController, Resources resources) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    @Inject
+    public KeyguardClockSwitchController(KeyguardClockSwitch keyguardClockSwitch, StatusBarStateController statusBarStateController, SysuiColorExtractor sysuiColorExtractor, ClockManager clockManager, KeyguardSliceViewController keyguardSliceViewController, NotificationIconAreaController notificationIconAreaController, BroadcastDispatcher broadcastDispatcher, BatteryController batteryController, KeyguardUpdateMonitor keyguardUpdateMonitor, LockscreenSmartspaceController lockscreenSmartspaceController, KeyguardUnlockAnimationController keyguardUnlockAnimationController, SecureSettings secureSettings, @Main Executor executor, @Main Resources resources, DumpManager dumpManager) {
         super(keyguardClockSwitch);
         this.mStatusBarStateController = statusBarStateController;
         this.mColorExtractor = sysuiColorExtractor;
@@ -87,107 +101,121 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mBatteryController = batteryController;
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
-        this.mBypassController = keyguardBypassController;
         this.mSmartspaceController = lockscreenSmartspaceController;
         this.mResources = resources;
+        this.mSecureSettings = secureSettings;
+        this.mUiExecutor = executor;
         this.mKeyguardUnlockAnimationController = keyguardUnlockAnimationController;
-        this.mSmartspaceTransitionController = smartspaceTransitionController;
+        this.mDumpManager = dumpManager;
     }
 
     public void setOnlyClock(boolean z) {
         this.mOnlyClock = z;
     }
 
-    @Override // com.android.systemui.util.ViewController
     public void onInit() {
         this.mKeyguardSliceViewController.init();
-        this.mClockFrame = (FrameLayout) ((KeyguardClockSwitch) this.mView).findViewById(R$id.lockscreen_clock_view);
-        this.mLargeClockFrame = (FrameLayout) ((KeyguardClockSwitch) this.mView).findViewById(R$id.lockscreen_clock_view_large);
-        AnimatableClockController animatableClockController = new AnimatableClockController((AnimatableClockView) ((KeyguardClockSwitch) this.mView).findViewById(R$id.animatable_clock_view), this.mStatusBarStateController, this.mBroadcastDispatcher, this.mBatteryController, this.mKeyguardUpdateMonitor, this.mBypassController, this.mResources);
+        this.mClockFrame = (FrameLayout) ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.lockscreen_clock_view);
+        this.mLargeClockFrame = (FrameLayout) ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.lockscreen_clock_view_large);
+        AnimatableClockController animatableClockController = new AnimatableClockController((AnimatableClockView) ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.animatable_clock_view), this.mStatusBarStateController, this.mBroadcastDispatcher, this.mBatteryController, this.mKeyguardUpdateMonitor, this.mResources);
         this.mClockViewController = animatableClockController;
         animatableClockController.init();
-        NothingKeyguardClockViewController nothingKeyguardClockViewController = new NothingKeyguardClockViewController((NothingKeyguardClockView) ((KeyguardClockSwitch) this.mView).findViewById(R$id.nothing_keyguard_clock_view), this.mStatusBarStateController, this.mBroadcastDispatcher, this.mBatteryController, this.mKeyguardUpdateMonitor, this.mBypassController);
-        this.mNothingClockViewController = nothingKeyguardClockViewController;
-        nothingKeyguardClockViewController.init();
-        NothingKeyguardClockViewLargeController nothingKeyguardClockViewLargeController = new NothingKeyguardClockViewLargeController((NothingKeyguardClockViewLarge) ((KeyguardClockSwitch) this.mView).findViewById(R$id.nothing_keyguard_clock_view_large), this.mStatusBarStateController, this.mBroadcastDispatcher, this.mBatteryController, this.mKeyguardUpdateMonitor, this.mBypassController);
-        this.mNothingClockViewLargeController = nothingKeyguardClockViewLargeController;
-        nothingKeyguardClockViewLargeController.init();
-        AnimatableClockController animatableClockController2 = new AnimatableClockController((AnimatableClockView) ((KeyguardClockSwitch) this.mView).findViewById(R$id.animatable_clock_view_large), this.mStatusBarStateController, this.mBroadcastDispatcher, this.mBatteryController, this.mKeyguardUpdateMonitor, this.mBypassController, this.mResources);
+        AnimatableClockController animatableClockController2 = new AnimatableClockController((AnimatableClockView) ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.animatable_clock_view_large), this.mStatusBarStateController, this.mBroadcastDispatcher, this.mBatteryController, this.mKeyguardUpdateMonitor, this.mResources);
         this.mLargeClockViewController = animatableClockController2;
         animatableClockController2.init();
+        NTKeyguardClockViewController nTKeyguardClockViewController = new NTKeyguardClockViewController((NTKeyguardClockView) ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.nothing_keyguard_clock_view), this.mStatusBarStateController, this.mBroadcastDispatcher, this.mBatteryController, this.mKeyguardUpdateMonitor);
+        this.mNothingClockViewController = nTKeyguardClockViewController;
+        nTKeyguardClockViewController.init();
+        NTKeyguardClockViewLargeController nTKeyguardClockViewLargeController = new NTKeyguardClockViewLargeController((NTKeyguardClockViewLarge) ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.nothing_keyguard_clock_view_large), this.mStatusBarStateController, this.mBroadcastDispatcher, this.mBatteryController, this.mKeyguardUpdateMonitor);
+        this.mNothingClockViewLargeController = nTKeyguardClockViewLargeController;
+        nTKeyguardClockViewLargeController.init();
+        this.mDumpManager.unregisterDumpable(getClass().toString());
+        this.mDumpManager.registerDumpable(getClass().toString(), this);
     }
 
-    @Override // com.android.systemui.util.ViewController
-    protected void onViewAttached() {
+    /* access modifiers changed from: protected */
+    public void onViewAttached() {
         this.mClockManager.addOnClockChangedListener(this.mClockChangedListener);
         this.mColorExtractor.addOnColorsChangedListener(this.mColorsListener);
         ((KeyguardClockSwitch) this.mView).updateColors(getGradientColors());
-        this.mKeyguardClockTopMargin = ((KeyguardClockSwitch) this.mView).getResources().getDimensionPixelSize(R$dimen.keyguard_clock_top_margin);
+        this.mKeyguardClockTopMargin = ((KeyguardClockSwitch) this.mView).getResources().getDimensionPixelSize(C1893R.dimen.keyguard_clock_top_margin);
         if (this.mOnlyClock) {
-            ((KeyguardClockSwitch) this.mView).findViewById(R$id.keyguard_status_area).setVisibility(8);
-            ((KeyguardClockSwitch) this.mView).findViewById(R$id.left_aligned_notification_icon_container).setVisibility(8);
+            ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.keyguard_slice_view).setVisibility(8);
+            ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.left_aligned_notification_icon_container).setVisibility(8);
             return;
         }
         updateAodIcons();
-        if (!this.mSmartspaceController.isEnabled()) {
-            return;
+        this.mStatusArea = (ViewGroup) ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.keyguard_status_area);
+        if (this.mSmartspaceController.isEnabled()) {
+            View findViewById = ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.keyguard_slice_view);
+            int indexOfChild = this.mStatusArea.indexOfChild(findViewById);
+            findViewById.setVisibility(8);
+            addSmartspaceView(indexOfChild);
+            updateClockLayout();
         }
-        this.mSmartspaceView = this.mSmartspaceController.buildAndConnectView((ViewGroup) this.mView);
-        View findViewById = ((KeyguardClockSwitch) this.mView).findViewById(R$id.keyguard_status_area);
-        int indexOfChild = ((KeyguardClockSwitch) this.mView).indexOfChild(findViewById);
-        findViewById.setVisibility(8);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, -2);
-        layoutParams.addRule(3, R$id.lockscreen_clock_view);
-        ((KeyguardClockSwitch) this.mView).addView(this.mSmartspaceView, indexOfChild, layoutParams);
-        this.mSmartspaceView.setPaddingRelative(getContext().getResources().getDimensionPixelSize(R$dimen.below_clock_padding_start), 0, getContext().getResources().getDimensionPixelSize(R$dimen.below_clock_padding_end), 0);
-        updateClockLayout();
-        View findViewById2 = ((KeyguardClockSwitch) this.mView).findViewById(R$id.left_aligned_notification_icon_container);
-        RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) findViewById2.getLayoutParams();
-        layoutParams2.addRule(3, this.mSmartspaceView.getId());
-        findViewById2.setLayoutParams(layoutParams2);
-        ((KeyguardClockSwitch) this.mView).setSmartspaceView(this.mSmartspaceView);
-        this.mSmartspaceTransitionController.setLockscreenSmartspace(this.mSmartspaceView);
+        this.mSecureSettings.registerContentObserverForUser(Settings.Secure.getUriFor("lockscreen_use_double_line_clock"), false, this.mDoubleLineClockObserver, -1);
+        updateDoubleLineClock();
+        this.mKeyguardUnlockAnimationController.addKeyguardUnlockAnimationListener(this.mKeyguardUnlockAnimationListener);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getNotificationIconAreaHeight() {
         return this.mNotificationIconAreaController.getHeight();
     }
 
-    @Override // com.android.systemui.util.ViewController
-    protected void onViewDetached() {
+    /* access modifiers changed from: protected */
+    public void onViewDetached() {
         this.mClockManager.removeOnClockChangedListener(this.mClockChangedListener);
         this.mColorExtractor.removeOnColorsChangedListener(this.mColorsListener);
-        ((KeyguardClockSwitch) this.mView).setClockPlugin(null, this.mStatusBarStateController.getState());
-        this.mSmartspaceController.disconnect();
-        View view = this.mSmartspaceView;
-        if (view != null) {
-            ((KeyguardClockSwitch) this.mView).removeView(view);
-            this.mSmartspaceView = null;
+        ((KeyguardClockSwitch) this.mView).setClockPlugin((ClockPlugin) null, this.mStatusBarStateController.getState());
+        this.mSecureSettings.unregisterContentObserver(this.mDoubleLineClockObserver);
+        this.mKeyguardUnlockAnimationController.removeKeyguardUnlockAnimationListener(this.mKeyguardUnlockAnimationListener);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void onLocaleListChanged() {
+        int indexOfChild;
+        if (this.mSmartspaceController.isEnabled() && (indexOfChild = this.mStatusArea.indexOfChild(this.mSmartspaceView)) >= 0) {
+            this.mStatusArea.removeView(this.mSmartspaceView);
+            addSmartspaceView(indexOfChild);
         }
+    }
+
+    private void addSmartspaceView(int i) {
+        this.mSmartspaceView = this.mSmartspaceController.buildAndConnectView((ViewGroup) this.mView);
+        this.mStatusArea.addView(this.mSmartspaceView, i, new LinearLayout.LayoutParams(-1, -2));
+        this.mSmartspaceView.setPaddingRelative(getContext().getResources().getDimensionPixelSize(C1893R.dimen.below_clock_padding_start), 0, getContext().getResources().getDimensionPixelSize(C1893R.dimen.below_clock_padding_end), 0);
+        this.mKeyguardUnlockAnimationController.setLockscreenSmartspace(this.mSmartspaceView);
     }
 
     public void onDensityOrFontScaleChanged() {
         ((KeyguardClockSwitch) this.mView).onDensityOrFontScaleChanged();
-        this.mKeyguardClockTopMargin = ((KeyguardClockSwitch) this.mView).getResources().getDimensionPixelSize(R$dimen.keyguard_clock_top_margin);
+        this.mKeyguardClockTopMargin = ((KeyguardClockSwitch) this.mView).getResources().getDimensionPixelSize(C1893R.dimen.keyguard_clock_top_margin);
         updateClockLayout();
     }
 
     private void updateClockLayout() {
-        if (this.mSmartspaceController.isEnabled()) {
-            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, -1);
-            int dimensionPixelSize = getContext().getResources().getDimensionPixelSize(R$dimen.keyguard_large_clock_top_margin);
-            this.mLargeClockTopMargin = dimensionPixelSize;
-            layoutParams.topMargin = dimensionPixelSize;
-            this.mLargeClockFrame.setLayoutParams(layoutParams);
-            return;
-        }
-        this.mLargeClockTopMargin = 0;
+        int dimensionPixelSize = getContext().getResources().getDimensionPixelSize(C1893R.dimen.keyguard_large_clock_top_margin) - ((int) this.mLargeClockViewController.getBottom());
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, -1);
+        layoutParams.topMargin = dimensionPixelSize;
+        this.mLargeClockFrame.setLayoutParams(layoutParams);
     }
 
-    public void setHasVisibleNotifications(boolean z) {
-        if (((KeyguardClockSwitch) this.mView).willSwitchToLargeClock(z)) {
-            this.mLargeClockViewController.animateAppear();
+    public void displayClock(int i, boolean z) {
+        if (this.mCanShowDoubleLineClock || i != 0) {
+            this.mCurrentClockSize = i;
+            boolean switchToClock = ((KeyguardClockSwitch) this.mView).switchToClock(i, z);
+            if (z && switchToClock && i == 0) {
+                this.mLargeClockViewController.animateAppear();
+            }
+        }
+    }
+
+    public void animateFoldToAod() {
+        AnimatableClockController animatableClockController = this.mClockViewController;
+        if (animatableClockController != null) {
+            animatableClockController.animateFoldAppear();
+            this.mLargeClockViewController.animateFoldAppear();
         }
     }
 
@@ -199,7 +227,7 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
         return ((KeyguardClockSwitch) this.mView).getTextSize();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void refresh() {
         AnimatableClockController animatableClockController = this.mClockViewController;
         if (animatableClockController != null) {
@@ -210,59 +238,33 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
         if (lockscreenSmartspaceController != null) {
             lockscreenSmartspaceController.requestSmartspaceUpdate();
         }
-        NothingKeyguardClockViewController nothingKeyguardClockViewController = this.mNothingClockViewController;
-        if (nothingKeyguardClockViewController != null) {
-            nothingKeyguardClockViewController.refreshTime();
+        NTKeyguardClockViewController nTKeyguardClockViewController = this.mNothingClockViewController;
+        if (nTKeyguardClockViewController != null) {
+            nTKeyguardClockViewController.refreshTime();
         }
-        NothingKeyguardClockViewLargeController nothingKeyguardClockViewLargeController = this.mNothingClockViewLargeController;
-        if (nothingKeyguardClockViewLargeController != null) {
-            nothingKeyguardClockViewLargeController.refreshTime();
+        NTKeyguardClockViewLargeController nTKeyguardClockViewLargeController = this.mNothingClockViewLargeController;
+        if (nTKeyguardClockViewLargeController != null) {
+            nTKeyguardClockViewLargeController.refreshTime();
         }
         ((KeyguardClockSwitch) this.mView).refresh();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updatePosition(int i, float f, AnimationProperties animationProperties, boolean z) {
         if (getCurrentLayoutDirection() == 1) {
             i = -i;
         }
-        FrameLayout frameLayout = this.mClockFrame;
-        AnimatableProperty animatableProperty = AnimatableProperty.TRANSLATION_X;
-        float f2 = i;
-        PropertyAnimator.setProperty(frameLayout, animatableProperty, f2, animationProperties, z);
+        float f2 = (float) i;
+        PropertyAnimator.setProperty(this.mClockFrame, AnimatableProperty.TRANSLATION_X, f2, animationProperties, z);
         PropertyAnimator.setProperty(this.mLargeClockFrame, AnimatableProperty.SCALE_X, f, animationProperties, z);
         PropertyAnimator.setProperty(this.mLargeClockFrame, AnimatableProperty.SCALE_Y, f, animationProperties, z);
-        View view = this.mSmartspaceView;
-        if (view != null) {
-            PropertyAnimator.setProperty(view, animatableProperty, f2, animationProperties, z);
-            if (this.mKeyguardUnlockAnimationController.isUnlockingWithSmartSpaceTransition()) {
-                this.mKeyguardUnlockAnimationController.updateLockscreenSmartSpacePosition();
-            }
-        }
-        this.mKeyguardSliceViewController.updatePosition(i, animationProperties, z);
-        this.mNotificationIconAreaController.updatePosition(i, animationProperties, z);
-        this.mNothingClockViewController.updatePosition(i, animationProperties, z);
-    }
-
-    public void setChildrenAlphaExcludingSmartspace(float f) {
-        HashSet hashSet = new HashSet();
-        View view = this.mSmartspaceView;
-        if (view != null) {
-            hashSet.add(view);
-        }
-        setChildrenAlphaExcluding(f, hashSet);
-    }
-
-    public void setChildrenAlphaExcluding(float f, Set<View> set) {
-        for (int i = 0; i < ((KeyguardClockSwitch) this.mView).getChildCount(); i++) {
-            View childAt = ((KeyguardClockSwitch) this.mView).getChildAt(i);
-            if (!set.contains(childAt)) {
-                childAt.setAlpha(f);
-            }
+        ViewGroup viewGroup = this.mStatusArea;
+        if (viewGroup != null) {
+            PropertyAnimator.setProperty(viewGroup, AnimatableProperty.TRANSLATION_X, f2, animationProperties, z);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateTimeZone(TimeZone timeZone) {
         ((KeyguardClockSwitch) this.mView).onTimeZoneChanged(timeZone);
         AnimatableClockController animatableClockController = this.mClockViewController;
@@ -270,52 +272,52 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
             animatableClockController.onTimeZoneChanged(timeZone);
             this.mLargeClockViewController.onTimeZoneChanged(timeZone);
         }
-        NothingKeyguardClockViewController nothingKeyguardClockViewController = this.mNothingClockViewController;
-        if (nothingKeyguardClockViewController != null) {
-            nothingKeyguardClockViewController.onTimeZoneChanged(timeZone);
+        NTKeyguardClockViewController nTKeyguardClockViewController = this.mNothingClockViewController;
+        if (nTKeyguardClockViewController != null) {
+            nTKeyguardClockViewController.onTimeZoneChanged(timeZone);
         }
-        NothingKeyguardClockViewLargeController nothingKeyguardClockViewLargeController = this.mNothingClockViewLargeController;
-        if (nothingKeyguardClockViewLargeController != null) {
-            nothingKeyguardClockViewLargeController.onTimeZoneChanged(timeZone);
+        NTKeyguardClockViewLargeController nTKeyguardClockViewLargeController = this.mNothingClockViewLargeController;
+        if (nTKeyguardClockViewLargeController != null) {
+            nTKeyguardClockViewLargeController.onTimeZoneChanged(timeZone);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void refreshFormat() {
         AnimatableClockController animatableClockController = this.mClockViewController;
         if (animatableClockController != null) {
             animatableClockController.refreshFormat();
             this.mLargeClockViewController.refreshFormat();
         }
-        NothingKeyguardClockViewController nothingKeyguardClockViewController = this.mNothingClockViewController;
-        if (nothingKeyguardClockViewController != null) {
-            nothingKeyguardClockViewController.refreshFormat();
+        NTKeyguardClockViewController nTKeyguardClockViewController = this.mNothingClockViewController;
+        if (nTKeyguardClockViewController != null) {
+            nTKeyguardClockViewController.refreshFormat();
         }
-        NothingKeyguardClockViewLargeController nothingKeyguardClockViewLargeController = this.mNothingClockViewLargeController;
-        if (nothingKeyguardClockViewLargeController != null) {
-            nothingKeyguardClockViewLargeController.refreshFormat();
+        NTKeyguardClockViewLargeController nTKeyguardClockViewLargeController = this.mNothingClockViewLargeController;
+        if (nTKeyguardClockViewLargeController != null) {
+            nTKeyguardClockViewLargeController.refreshFormat();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getClockBottom(int i) {
-        if (this.mLargeClockFrame.getVisibility() == 0) {
-            View findViewById = this.mLargeClockFrame.findViewById(R$id.animatable_clock_view_large);
-            return (this.mLargeClockFrame.getHeight() / 2) + (findViewById.getHeight() / 2);
+        if (this.mLargeClockFrame.getVisibility() != 0) {
+            return this.mClockFrame.findViewById(C1893R.C1897id.animatable_clock_view).getHeight() + i + this.mKeyguardClockTopMargin;
         }
-        return this.mClockFrame.findViewById(R$id.animatable_clock_view).getHeight() + i + this.mKeyguardClockTopMargin;
+        View findViewById = this.mLargeClockFrame.findViewById(C1893R.C1897id.animatable_clock_view_large);
+        return (this.mLargeClockFrame.getHeight() / 2) + (findViewById.getHeight() / 2);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isClockTopAligned() {
         return this.mLargeClockFrame.getVisibility() != 0;
     }
 
     private void updateAodIcons() {
-        this.mNotificationIconAreaController.setupAodIcons((NotificationIconContainer) ((KeyguardClockSwitch) this.mView).findViewById(R$id.left_aligned_notification_icon_container));
+        this.mNotificationIconAreaController.setupAodIcons((NotificationIconContainer) ((KeyguardClockSwitch) this.mView).findViewById(C1893R.C1897id.left_aligned_notification_icon_container));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setClockPlugin(ClockPlugin clockPlugin) {
         ((KeyguardClockSwitch) this.mView).setClockPlugin(clockPlugin, this.mStatusBarStateController.getState());
     }
@@ -326,5 +328,39 @@ public class KeyguardClockSwitchController extends ViewController<KeyguardClockS
 
     private int getCurrentLayoutDirection() {
         return TextUtils.getLayoutDirectionFromLocale(Locale.getDefault());
+    }
+
+    /* access modifiers changed from: private */
+    public void updateDoubleLineClock() {
+        boolean z = true;
+        if (this.mSecureSettings.getIntForUser("lockscreen_use_double_line_clock", 1, -2) == 0) {
+            z = false;
+        }
+        this.mCanShowDoubleLineClock = z;
+        if (!z) {
+            this.mUiExecutor.execute(new KeyguardClockSwitchController$$ExternalSyntheticLambda0(this));
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateDoubleLineClock$1$com-android-keyguard-KeyguardClockSwitchController */
+    public /* synthetic */ void mo25717xba64efcf() {
+        displayClock(1, true);
+    }
+
+    /* access modifiers changed from: private */
+    public void setClipChildrenForUnlock(boolean z) {
+        ((KeyguardClockSwitch) this.mView).setClipChildren(z);
+        ViewGroup viewGroup = this.mStatusArea;
+        if (viewGroup != null) {
+            viewGroup.setClipChildren(z);
+        }
+    }
+
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        printWriter.println("currentClockSizeLarge=" + (this.mCurrentClockSize == 0));
+        printWriter.println("mCanShowDoubleLineClock=" + this.mCanShowDoubleLineClock);
+        this.mClockViewController.dump(printWriter);
+        this.mLargeClockViewController.dump(printWriter);
     }
 }

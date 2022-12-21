@@ -2,15 +2,10 @@ package com.android.systemui.keyguard;
 
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
+
+/* compiled from: D8$$SyntheticClass */
 public final /* synthetic */ class WakefulnessLifecycle$$ExternalSyntheticLambda1 implements Consumer {
-    public static final /* synthetic */ WakefulnessLifecycle$$ExternalSyntheticLambda1 INSTANCE = new WakefulnessLifecycle$$ExternalSyntheticLambda1();
-
-    private /* synthetic */ WakefulnessLifecycle$$ExternalSyntheticLambda1() {
-    }
-
-    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
-        ((WakefulnessLifecycle.Observer) obj).onFinishedWakingUp();
+        ((WakefulnessLifecycle.Observer) obj).onFinishedGoingToSleep();
     }
 }

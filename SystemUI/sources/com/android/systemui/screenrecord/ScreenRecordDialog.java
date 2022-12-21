@@ -1,6 +1,5 @@
 package com.android.systemui.screenrecord;
 
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Bundle;
@@ -8,83 +7,70 @@ import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.settings.UserContextProvider;
-import java.util.ArrayList;
+import com.android.systemui.statusbar.phone.SystemUIDialog;
+import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
-public class ScreenRecordDialog extends Activity {
+
+public class ScreenRecordDialog extends SystemUIDialog {
+    private static final long DELAY_MS = 3000;
+    private static final long INTERVAL_MS = 1000;
+    private static final List<ScreenRecordingAudioSource> MODES = Arrays.asList(ScreenRecordingAudioSource.INTERNAL, ScreenRecordingAudioSource.MIC, ScreenRecordingAudioSource.MIC_AND_INTERNAL);
     private Switch mAudioSwitch;
     private final RecordingController mController;
-    private List<ScreenRecordingAudioSource> mModes;
+    private final Runnable mOnStartRecordingClicked;
     private Spinner mOptions;
     private Switch mTapsSwitch;
     private final UserContextProvider mUserContextProvider;
 
-    public ScreenRecordDialog(RecordingController recordingController, UserContextProvider userContextProvider) {
+    public ScreenRecordDialog(Context context, RecordingController recordingController, UserContextProvider userContextProvider, Runnable runnable) {
+        super(context);
         this.mController = recordingController;
         this.mUserContextProvider = userContextProvider;
+        this.mOnStartRecordingClicked = runnable;
     }
 
-    @Override // android.app.Activity
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Window window = getWindow();
-        window.getDecorView();
-        window.setLayout(-1, -2);
         window.addPrivateFlags(16);
-        window.setGravity(48);
-        setTitle(R$string.screenrecord_name);
-        setContentView(R$layout.screen_record_dialog);
-        ((TextView) findViewById(R$id.button_cancel)).setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.screenrecord.ScreenRecordDialog$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                ScreenRecordDialog.this.lambda$onCreate$0(view);
-            }
-        });
-        ((TextView) findViewById(R$id.button_start)).setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.screenrecord.ScreenRecordDialog$$ExternalSyntheticLambda1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                ScreenRecordDialog.this.lambda$onCreate$1(view);
-            }
-        });
-        ArrayList arrayList = new ArrayList();
-        this.mModes = arrayList;
-        arrayList.add(ScreenRecordingAudioSource.INTERNAL);
-        this.mModes.add(ScreenRecordingAudioSource.MIC);
-        this.mModes.add(ScreenRecordingAudioSource.MIC_AND_INTERNAL);
-        this.mAudioSwitch = (Switch) findViewById(R$id.screenrecord_audio_switch);
-        this.mTapsSwitch = (Switch) findViewById(R$id.screenrecord_taps_switch);
-        this.mOptions = (Spinner) findViewById(R$id.screen_recording_options);
-        ScreenRecordingAdapter screenRecordingAdapter = new ScreenRecordingAdapter(getApplicationContext(), 17367049, this.mModes);
+        window.setGravity(17);
+        setTitle(C1893R.string.screenrecord_name);
+        setContentView(C1893R.layout.screen_record_dialog);
+        ((TextView) findViewById(C1893R.C1897id.button_cancel)).setOnClickListener(new ScreenRecordDialog$$ExternalSyntheticLambda0(this));
+        ((TextView) findViewById(C1893R.C1897id.button_start)).setOnClickListener(new ScreenRecordDialog$$ExternalSyntheticLambda1(this));
+        this.mAudioSwitch = (Switch) findViewById(C1893R.C1897id.screenrecord_audio_switch);
+        this.mTapsSwitch = (Switch) findViewById(C1893R.C1897id.screenrecord_taps_switch);
+        this.mOptions = (Spinner) findViewById(C1893R.C1897id.screen_recording_options);
+        ScreenRecordingAdapter screenRecordingAdapter = new ScreenRecordingAdapter(getContext().getApplicationContext(), 17367049, MODES);
         screenRecordingAdapter.setDropDownViewResource(17367049);
-        this.mOptions.setAdapter((SpinnerAdapter) screenRecordingAdapter);
-        this.mOptions.setOnItemClickListenerInt(new AdapterView.OnItemClickListener() { // from class: com.android.systemui.screenrecord.ScreenRecordDialog$$ExternalSyntheticLambda2
-            @Override // android.widget.AdapterView.OnItemClickListener
-            public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
-                ScreenRecordDialog.this.lambda$onCreate$2(adapterView, view, i, j);
-            }
-        });
+        this.mOptions.setAdapter(screenRecordingAdapter);
+        this.mOptions.setOnItemClickListenerInt(new ScreenRecordDialog$$ExternalSyntheticLambda2(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCreate$0(View view) {
-        finish();
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onCreate$0$com-android-systemui-screenrecord-ScreenRecordDialog */
+    public /* synthetic */ void mo37271x1b01bd75(View view) {
+        dismiss();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCreate$1(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onCreate$1$com-android-systemui-screenrecord-ScreenRecordDialog */
+    public /* synthetic */ void mo37272x351d3c14(View view) {
+        Runnable runnable = this.mOnStartRecordingClicked;
+        if (runnable != null) {
+            runnable.run();
+        }
         requestScreenCapture();
-        finish();
+        dismiss();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCreate$2(AdapterView adapterView, View view, int i, long j) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onCreate$2$com-android-systemui-screenrecord-ScreenRecordDialog */
+    public /* synthetic */ void mo37273x4f38bab3(AdapterView adapterView, View view, int i, long j) {
         this.mAudioSwitch.setChecked(true);
     }
 
@@ -97,6 +83,6 @@ public class ScreenRecordDialog extends Activity {
         } else {
             screenRecordingAudioSource = ScreenRecordingAudioSource.NONE;
         }
-        this.mController.startCountdown(3000L, 1000L, PendingIntent.getForegroundService(userContext, 2, RecordingService.getStartIntent(userContext, -1, screenRecordingAudioSource.ordinal(), isChecked), 201326592), PendingIntent.getService(userContext, 2, RecordingService.getStopIntent(userContext), 201326592));
+        this.mController.startCountdown(3000, 1000, PendingIntent.getForegroundService(userContext, 2, RecordingService.getStartIntent(userContext, -1, screenRecordingAudioSource.ordinal(), isChecked), 201326592), PendingIntent.getService(userContext, 2, RecordingService.getStopIntent(userContext), 201326592));
     }
 }

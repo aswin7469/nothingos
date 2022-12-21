@@ -3,28 +3,29 @@ package com.android.systemui;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import java.util.Arrays;
-/* loaded from: classes.dex */
+
 public class ForegroundServicesUserState {
+    private static final long FG_SERVICE_GRACE_MILLIS = 5000;
+    private ArrayMap<String, ArraySet<Integer>> mAppOps = new ArrayMap<>(1);
+    private ArrayMap<String, ArraySet<String>> mImportantNotifications = new ArrayMap<>(1);
     private String[] mRunning = null;
     private long mServiceStartTime = 0;
-    private ArrayMap<String, ArraySet<String>> mImportantNotifications = new ArrayMap<>(1);
     private ArrayMap<String, ArraySet<String>> mStandardLayoutNotifications = new ArrayMap<>(1);
-    private ArrayMap<String, ArraySet<Integer>> mAppOps = new ArrayMap<>(1);
 
     public void setRunningServices(String[] strArr, long j) {
-        this.mRunning = strArr != null ? (String[]) Arrays.copyOf(strArr, strArr.length) : null;
+        this.mRunning = strArr != null ? (String[]) Arrays.copyOf((T[]) strArr, strArr.length) : null;
         this.mServiceStartTime = j;
     }
 
     public void addOp(String str, int i) {
         if (this.mAppOps.get(str) == null) {
-            this.mAppOps.put(str, new ArraySet<>(3));
+            this.mAppOps.put(str, new ArraySet(3));
         }
         this.mAppOps.get(str).add(Integer.valueOf(i));
     }
 
     public boolean removeOp(String str, int i) {
-        ArraySet<Integer> arraySet = this.mAppOps.get(str);
+        ArraySet arraySet = this.mAppOps.get(str);
         if (arraySet == null) {
             return false;
         }
@@ -57,13 +58,13 @@ public class ForegroundServicesUserState {
 
     public void addNotification(ArrayMap<String, ArraySet<String>> arrayMap, String str, String str2) {
         if (arrayMap.get(str) == null) {
-            arrayMap.put(str, new ArraySet<>());
+            arrayMap.put(str, new ArraySet());
         }
         arrayMap.get(str).add(str2);
     }
 
     public boolean removeNotification(ArrayMap<String, ArraySet<String>> arrayMap, String str, String str2) {
-        ArraySet<String> arraySet = arrayMap.get(str);
+        ArraySet arraySet = arrayMap.get(str);
         if (arraySet == null) {
             return false;
         }
@@ -77,7 +78,7 @@ public class ForegroundServicesUserState {
     public boolean isDisclosureNeeded() {
         if (this.mRunning != null && System.currentTimeMillis() - this.mServiceStartTime >= 5000) {
             for (String str : this.mRunning) {
-                ArraySet<String> arraySet = this.mImportantNotifications.get(str);
+                ArraySet arraySet = this.mImportantNotifications.get(str);
                 if (arraySet == null || arraySet.size() == 0) {
                     return true;
                 }
@@ -86,7 +87,19 @@ public class ForegroundServicesUserState {
         return false;
     }
 
+    public ArraySet<Integer> getFeatures(String str) {
+        return this.mAppOps.get(str);
+    }
+
+    public ArraySet<String> getStandardLayoutKeys(String str) {
+        ArraySet<String> arraySet = this.mStandardLayoutNotifications.get(str);
+        if (arraySet == null || arraySet.size() == 0) {
+            return null;
+        }
+        return arraySet;
+    }
+
     public String toString() {
-        return "UserServices{mRunning=" + Arrays.toString(this.mRunning) + ", mServiceStartTime=" + this.mServiceStartTime + ", mImportantNotifications=" + this.mImportantNotifications + ", mStandardLayoutNotifications=" + this.mStandardLayoutNotifications + '}';
+        return "UserServices{mRunning=" + Arrays.toString((Object[]) this.mRunning) + ", mServiceStartTime=" + this.mServiceStartTime + ", mImportantNotifications=" + this.mImportantNotifications + ", mStandardLayoutNotifications=" + this.mStandardLayoutNotifications + '}';
     }
 }

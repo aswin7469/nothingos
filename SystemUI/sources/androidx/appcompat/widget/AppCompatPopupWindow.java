@@ -1,19 +1,19 @@
 package androidx.appcompat.widget;
 
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.PopupWindow;
-import androidx.appcompat.R$styleable;
+import androidx.appcompat.C0329R;
 import androidx.core.widget.PopupWindowCompat;
-/* loaded from: classes.dex */
+
 class AppCompatPopupWindow extends PopupWindow {
-    private static final boolean COMPAT_OVERLAP_ANCHOR;
+    private static final boolean COMPAT_OVERLAP_ANCHOR = false;
     private boolean mOverlapAnchor;
 
-    static {
-        COMPAT_OVERLAP_ANCHOR = Build.VERSION.SDK_INT < 21;
+    public AppCompatPopupWindow(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
+        init(context, attributeSet, i, 0);
     }
 
     public AppCompatPopupWindow(Context context, AttributeSet attributeSet, int i, int i2) {
@@ -22,16 +22,14 @@ class AppCompatPopupWindow extends PopupWindow {
     }
 
     private void init(Context context, AttributeSet attributeSet, int i, int i2) {
-        TintTypedArray obtainStyledAttributes = TintTypedArray.obtainStyledAttributes(context, attributeSet, R$styleable.PopupWindow, i, i2);
-        int i3 = R$styleable.PopupWindow_overlapAnchor;
-        if (obtainStyledAttributes.hasValue(i3)) {
-            setSupportOverlapAnchor(obtainStyledAttributes.getBoolean(i3, false));
+        TintTypedArray obtainStyledAttributes = TintTypedArray.obtainStyledAttributes(context, attributeSet, C0329R.styleable.PopupWindow, i, i2);
+        if (obtainStyledAttributes.hasValue(C0329R.styleable.PopupWindow_overlapAnchor)) {
+            setSupportOverlapAnchor(obtainStyledAttributes.getBoolean(C0329R.styleable.PopupWindow_overlapAnchor, false));
         }
-        setBackgroundDrawable(obtainStyledAttributes.getDrawable(R$styleable.PopupWindow_android_popupBackground));
+        setBackgroundDrawable(obtainStyledAttributes.getDrawable(C0329R.styleable.PopupWindow_android_popupBackground));
         obtainStyledAttributes.recycle();
     }
 
-    @Override // android.widget.PopupWindow
     public void showAsDropDown(View view, int i, int i2) {
         if (COMPAT_OVERLAP_ANCHOR && this.mOverlapAnchor) {
             i2 -= view.getHeight();
@@ -39,7 +37,6 @@ class AppCompatPopupWindow extends PopupWindow {
         super.showAsDropDown(view, i, i2);
     }
 
-    @Override // android.widget.PopupWindow
     public void showAsDropDown(View view, int i, int i2, int i3) {
         if (COMPAT_OVERLAP_ANCHOR && this.mOverlapAnchor) {
             i2 -= view.getHeight();
@@ -47,7 +44,6 @@ class AppCompatPopupWindow extends PopupWindow {
         super.showAsDropDown(view, i, i2, i3);
     }
 
-    @Override // android.widget.PopupWindow
     public void update(View view, int i, int i2, int i3, int i4) {
         if (COMPAT_OVERLAP_ANCHOR && this.mOverlapAnchor) {
             i2 -= view.getHeight();

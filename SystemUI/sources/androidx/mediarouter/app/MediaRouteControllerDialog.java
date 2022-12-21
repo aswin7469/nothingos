@@ -4,20 +4,17 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v4.media.MediaDescriptionCompat;
-import android.support.v4.media.MediaMetadataCompat;
-import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
-import android.text.TextUtils;
+import android.support.p001v4.media.MediaDescriptionCompat;
+import android.support.p001v4.media.MediaMetadataCompat;
+import android.support.p001v4.media.session.MediaControllerCompat;
+import android.support.p001v4.media.session.MediaSessionCompat;
+import android.support.p001v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -26,11 +23,9 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.view.animation.Transformation;
 import android.view.animation.TranslateAnimation;
@@ -40,28 +35,21 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.util.ObjectsCompat;
-import androidx.mediarouter.R$attr;
-import androidx.mediarouter.R$dimen;
-import androidx.mediarouter.R$id;
-import androidx.mediarouter.R$integer;
-import androidx.mediarouter.R$interpolator;
-import androidx.mediarouter.R$layout;
-import androidx.mediarouter.R$string;
+import androidx.mediarouter.C1159R;
 import androidx.mediarouter.app.OverlayListView;
 import androidx.mediarouter.media.MediaRouteSelector;
 import androidx.mediarouter.media.MediaRouter;
-import androidx.palette.graphics.Palette;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.net.URL;
 import java.net.URLConnection;
+import java.p026io.BufferedInputStream;
+import java.p026io.IOException;
+import java.p026io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,8 +57,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-/* loaded from: classes.dex */
+
 public class MediaRouteControllerDialog extends AlertDialog {
+    static final int BUTTON_DISCONNECT_RES_ID = 16908314;
+    private static final int BUTTON_NEUTRAL_RES_ID = 16908315;
+    static final int BUTTON_STOP_RES_ID = 16908313;
+    static final int CONNECTION_TIMEOUT_MILLIS = ((int) TimeUnit.SECONDS.toMillis(30));
+    static final boolean DEBUG = Log.isLoggable(TAG, 3);
+    static final String TAG = "MediaRouteCtrlDialog";
+    static final int VOLUME_UPDATE_DELAY_MILLIS = 500;
     private Interpolator mAccelerateDecelerateInterpolator;
     final AccessibilityManager mAccessibilityManager;
     int mArtIconBackgroundColor;
@@ -135,10 +130,8 @@ public class MediaRouteControllerDialog extends AlertDialog {
     private final int mVolumeGroupListPaddingTop;
     SeekBar mVolumeSlider;
     Map<MediaRouter.RouteInfo, SeekBar> mVolumeSliderMap;
-    static final boolean DEBUG = Log.isLoggable("MediaRouteCtrlDialog", 3);
-    static final int CONNECTION_TIMEOUT_MILLIS = (int) TimeUnit.SECONDS.toMillis(30);
 
-    public View onCreateMediaControlView(Bundle savedInstanceState) {
+    public View onCreateMediaControlView(Bundle bundle) {
         return null;
     }
 
@@ -146,45 +139,88 @@ public class MediaRouteControllerDialog extends AlertDialog {
         this(context, 0);
     }
 
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public MediaRouteControllerDialog(Context context, int theme) {
-        super(r2, MediaRouterThemeHelper.createThemedDialogStyle(r2));
-        Context createThemedDialogContext = MediaRouterThemeHelper.createThemedDialogContext(context, theme, true);
-        this.mVolumeControlEnabled = true;
-        this.mGroupListFadeInAnimation = new Runnable() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.1
-            @Override // java.lang.Runnable
-            public void run() {
-                MediaRouteControllerDialog.this.startGroupListFadeInAnimation();
-            }
-        };
-        this.mContext = getContext();
-        this.mControllerCallback = new MediaControllerCallback();
-        MediaRouter mediaRouter = MediaRouter.getInstance(this.mContext);
-        this.mRouter = mediaRouter;
-        this.mCallback = new MediaRouterCallback();
-        this.mRoute = mediaRouter.getSelectedRoute();
-        setMediaSession(mediaRouter.getMediaSessionToken());
-        this.mVolumeGroupListPaddingTop = this.mContext.getResources().getDimensionPixelSize(R$dimen.mr_controller_volume_group_list_padding_top);
-        this.mAccessibilityManager = (AccessibilityManager) this.mContext.getSystemService("accessibility");
-        if (Build.VERSION.SDK_INT >= 21) {
-            this.mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(createThemedDialogContext, R$interpolator.mr_linear_out_slow_in);
-            this.mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(createThemedDialogContext, R$interpolator.mr_fast_out_slow_in);
-        }
-        this.mAccelerateDecelerateInterpolator = new AccelerateDecelerateInterpolator();
+    /* JADX WARNING: Illegal instructions before constructor call */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public MediaRouteControllerDialog(android.content.Context r2, int r3) {
+        /*
+            r1 = this;
+            r0 = 1
+            android.content.Context r2 = androidx.mediarouter.app.MediaRouterThemeHelper.createThemedDialogContext(r2, r3, r0)
+            int r3 = androidx.mediarouter.app.MediaRouterThemeHelper.createThemedDialogStyle(r2)
+            r1.<init>(r2, r3)
+            r1.mVolumeControlEnabled = r0
+            androidx.mediarouter.app.MediaRouteControllerDialog$1 r3 = new androidx.mediarouter.app.MediaRouteControllerDialog$1
+            r3.<init>()
+            r1.mGroupListFadeInAnimation = r3
+            android.content.Context r3 = r1.getContext()
+            r1.mContext = r3
+            androidx.mediarouter.app.MediaRouteControllerDialog$MediaControllerCallback r3 = new androidx.mediarouter.app.MediaRouteControllerDialog$MediaControllerCallback
+            r3.<init>()
+            r1.mControllerCallback = r3
+            android.content.Context r3 = r1.mContext
+            androidx.mediarouter.media.MediaRouter r3 = androidx.mediarouter.media.MediaRouter.getInstance(r3)
+            r1.mRouter = r3
+            androidx.mediarouter.app.MediaRouteControllerDialog$MediaRouterCallback r0 = new androidx.mediarouter.app.MediaRouteControllerDialog$MediaRouterCallback
+            r0.<init>()
+            r1.mCallback = r0
+            androidx.mediarouter.media.MediaRouter$RouteInfo r0 = r3.getSelectedRoute()
+            r1.mRoute = r0
+            android.support.v4.media.session.MediaSessionCompat$Token r3 = r3.getMediaSessionToken()
+            r1.setMediaSession(r3)
+            android.content.Context r3 = r1.mContext
+            android.content.res.Resources r3 = r3.getResources()
+            int r0 = androidx.mediarouter.C1159R.dimen.mr_controller_volume_group_list_padding_top
+            int r3 = r3.getDimensionPixelSize(r0)
+            r1.mVolumeGroupListPaddingTop = r3
+            android.content.Context r3 = r1.mContext
+            java.lang.String r0 = "accessibility"
+            java.lang.Object r3 = r3.getSystemService(r0)
+            android.view.accessibility.AccessibilityManager r3 = (android.view.accessibility.AccessibilityManager) r3
+            r1.mAccessibilityManager = r3
+            int r3 = androidx.mediarouter.C1159R.C1163interpolator.mr_linear_out_slow_in
+            android.view.animation.Interpolator r3 = android.view.animation.AnimationUtils.loadInterpolator(r2, r3)
+            r1.mLinearOutSlowInInterpolator = r3
+            int r3 = androidx.mediarouter.C1159R.C1163interpolator.mr_fast_out_slow_in
+            android.view.animation.Interpolator r2 = android.view.animation.AnimationUtils.loadInterpolator(r2, r3)
+            r1.mFastOutSlowInInterpolator = r2
+            android.view.animation.AccelerateDecelerateInterpolator r2 = new android.view.animation.AccelerateDecelerateInterpolator
+            r2.<init>()
+            r1.mAccelerateDecelerateInterpolator = r2
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.mediarouter.app.MediaRouteControllerDialog.<init>(android.content.Context, int):void");
     }
 
-    private void setMediaSession(MediaSessionCompat.Token sessionToken) {
+    public MediaRouter.RouteInfo getRoute() {
+        return this.mRoute;
+    }
+
+    public View getMediaControlView() {
+        return this.mCustomControlView;
+    }
+
+    public void setVolumeControlEnabled(boolean z) {
+        if (this.mVolumeControlEnabled != z) {
+            this.mVolumeControlEnabled = z;
+            if (this.mCreated) {
+                update(false);
+            }
+        }
+    }
+
+    public boolean isVolumeControlEnabled() {
+        return this.mVolumeControlEnabled;
+    }
+
+    private void setMediaSession(MediaSessionCompat.Token token) {
         MediaControllerCompat mediaControllerCompat = this.mMediaController;
         MediaDescriptionCompat mediaDescriptionCompat = null;
         if (mediaControllerCompat != null) {
             mediaControllerCompat.unregisterCallback(this.mControllerCallback);
             this.mMediaController = null;
         }
-        if (sessionToken != null && this.mAttachedToWindow) {
-            MediaControllerCompat mediaControllerCompat2 = new MediaControllerCompat(this.mContext, sessionToken);
+        if (token != null && this.mAttachedToWindow) {
+            MediaControllerCompat mediaControllerCompat2 = new MediaControllerCompat(this.mContext, token);
             this.mMediaController = mediaControllerCompat2;
             mediaControllerCompat2.registerCallback(this.mControllerCallback);
             MediaMetadataCompat metadata = this.mMediaController.getMetadata();
@@ -198,114 +234,114 @@ public class MediaRouteControllerDialog extends AlertDialog {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.appcompat.app.AlertDialog, androidx.appcompat.app.AppCompatDialog, android.app.Dialog
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public MediaSessionCompat.Token getMediaSession() {
+        MediaControllerCompat mediaControllerCompat = this.mMediaController;
+        if (mediaControllerCompat == null) {
+            return null;
+        }
+        return mediaControllerCompat.getSessionToken();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
         getWindow().setBackgroundDrawableResource(17170445);
-        setContentView(R$layout.mr_controller_material_dialog_b);
-        findViewById(16908315).setVisibility(8);
+        setContentView(C1159R.layout.mr_controller_material_dialog_b);
+        findViewById(BUTTON_NEUTRAL_RES_ID).setVisibility(8);
         ClickListener clickListener = new ClickListener();
-        FrameLayout frameLayout = (FrameLayout) findViewById(R$id.mr_expandable_area);
+        FrameLayout frameLayout = (FrameLayout) findViewById(C1159R.C1162id.mr_expandable_area);
         this.mExpandableAreaLayout = frameLayout;
-        frameLayout.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.2
-            @Override // android.view.View.OnClickListener
-            public void onClick(View v) {
+        frameLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 MediaRouteControllerDialog.this.dismiss();
             }
         });
-        LinearLayout linearLayout = (LinearLayout) findViewById(R$id.mr_dialog_area);
+        LinearLayout linearLayout = (LinearLayout) findViewById(C1159R.C1162id.mr_dialog_area);
         this.mDialogAreaLayout = linearLayout;
-        linearLayout.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.3
-            @Override // android.view.View.OnClickListener
-            public void onClick(View v) {
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
             }
         });
         int buttonTextColor = MediaRouterThemeHelper.getButtonTextColor(this.mContext);
-        Button button = (Button) findViewById(16908314);
+        Button button = (Button) findViewById(BUTTON_DISCONNECT_RES_ID);
         this.mDisconnectButton = button;
-        button.setText(R$string.mr_controller_disconnect);
+        button.setText(C1159R.string.mr_controller_disconnect);
         this.mDisconnectButton.setTextColor(buttonTextColor);
         this.mDisconnectButton.setOnClickListener(clickListener);
-        Button button2 = (Button) findViewById(16908313);
+        Button button2 = (Button) findViewById(BUTTON_STOP_RES_ID);
         this.mStopCastingButton = button2;
-        button2.setText(R$string.mr_controller_stop_casting);
+        button2.setText(C1159R.string.mr_controller_stop_casting);
         this.mStopCastingButton.setTextColor(buttonTextColor);
         this.mStopCastingButton.setOnClickListener(clickListener);
-        this.mRouteNameTextView = (TextView) findViewById(R$id.mr_name);
-        ImageButton imageButton = (ImageButton) findViewById(R$id.mr_close);
+        this.mRouteNameTextView = (TextView) findViewById(C1159R.C1162id.mr_name);
+        ImageButton imageButton = (ImageButton) findViewById(C1159R.C1162id.mr_close);
         this.mCloseButton = imageButton;
         imageButton.setOnClickListener(clickListener);
-        this.mCustomControlLayout = (FrameLayout) findViewById(R$id.mr_custom_control);
-        this.mDefaultControlLayout = (FrameLayout) findViewById(R$id.mr_default_control);
-        View.OnClickListener onClickListener = new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.4
-            @Override // android.view.View.OnClickListener
-            public void onClick(View v) {
+        this.mCustomControlLayout = (FrameLayout) findViewById(C1159R.C1162id.mr_custom_control);
+        this.mDefaultControlLayout = (FrameLayout) findViewById(C1159R.C1162id.mr_default_control);
+        C11714 r2 = new View.OnClickListener() {
+            public void onClick(View view) {
                 PendingIntent sessionActivity;
-                MediaControllerCompat mediaControllerCompat = MediaRouteControllerDialog.this.mMediaController;
-                if (mediaControllerCompat == null || (sessionActivity = mediaControllerCompat.getSessionActivity()) == null) {
-                    return;
-                }
-                try {
-                    sessionActivity.send();
-                    MediaRouteControllerDialog.this.dismiss();
-                } catch (PendingIntent.CanceledException unused) {
-                    Log.e("MediaRouteCtrlDialog", sessionActivity + " was not sent, it had been canceled.");
+                if (MediaRouteControllerDialog.this.mMediaController != null && (sessionActivity = MediaRouteControllerDialog.this.mMediaController.getSessionActivity()) != null) {
+                    try {
+                        sessionActivity.send();
+                        MediaRouteControllerDialog.this.dismiss();
+                    } catch (PendingIntent.CanceledException unused) {
+                        Log.e(MediaRouteControllerDialog.TAG, sessionActivity + " was not sent, it had been canceled.");
+                    }
                 }
             }
         };
-        ImageView imageView = (ImageView) findViewById(R$id.mr_art);
+        ImageView imageView = (ImageView) findViewById(C1159R.C1162id.mr_art);
         this.mArtView = imageView;
-        imageView.setOnClickListener(onClickListener);
-        findViewById(R$id.mr_control_title_container).setOnClickListener(onClickListener);
-        this.mMediaMainControlLayout = (LinearLayout) findViewById(R$id.mr_media_main_control);
-        this.mDividerView = findViewById(R$id.mr_control_divider);
-        this.mPlaybackControlLayout = (RelativeLayout) findViewById(R$id.mr_playback_control);
-        this.mTitleView = (TextView) findViewById(R$id.mr_control_title);
-        this.mSubtitleView = (TextView) findViewById(R$id.mr_control_subtitle);
-        ImageButton imageButton2 = (ImageButton) findViewById(R$id.mr_control_playback_ctrl);
+        imageView.setOnClickListener(r2);
+        findViewById(C1159R.C1162id.mr_control_title_container).setOnClickListener(r2);
+        this.mMediaMainControlLayout = (LinearLayout) findViewById(C1159R.C1162id.mr_media_main_control);
+        this.mDividerView = findViewById(C1159R.C1162id.mr_control_divider);
+        this.mPlaybackControlLayout = (RelativeLayout) findViewById(C1159R.C1162id.mr_playback_control);
+        this.mTitleView = (TextView) findViewById(C1159R.C1162id.mr_control_title);
+        this.mSubtitleView = (TextView) findViewById(C1159R.C1162id.mr_control_subtitle);
+        ImageButton imageButton2 = (ImageButton) findViewById(C1159R.C1162id.mr_control_playback_ctrl);
         this.mPlaybackControlButton = imageButton2;
         imageButton2.setOnClickListener(clickListener);
-        LinearLayout linearLayout2 = (LinearLayout) findViewById(R$id.mr_volume_control);
+        LinearLayout linearLayout2 = (LinearLayout) findViewById(C1159R.C1162id.mr_volume_control);
         this.mVolumeControlLayout = linearLayout2;
         linearLayout2.setVisibility(8);
-        SeekBar seekBar = (SeekBar) findViewById(R$id.mr_volume_slider);
+        SeekBar seekBar = (SeekBar) findViewById(C1159R.C1162id.mr_volume_slider);
         this.mVolumeSlider = seekBar;
         seekBar.setTag(this.mRoute);
         VolumeChangeListener volumeChangeListener = new VolumeChangeListener();
         this.mVolumeChangeListener = volumeChangeListener;
         this.mVolumeSlider.setOnSeekBarChangeListener(volumeChangeListener);
-        this.mVolumeGroupList = (OverlayListView) findViewById(R$id.mr_volume_group_list);
+        this.mVolumeGroupList = (OverlayListView) findViewById(C1159R.C1162id.mr_volume_group_list);
         this.mGroupMemberRoutes = new ArrayList();
         VolumeGroupAdapter volumeGroupAdapter = new VolumeGroupAdapter(this.mVolumeGroupList.getContext(), this.mGroupMemberRoutes);
         this.mVolumeGroupAdapter = volumeGroupAdapter;
-        this.mVolumeGroupList.setAdapter((ListAdapter) volumeGroupAdapter);
+        this.mVolumeGroupList.setAdapter(volumeGroupAdapter);
         this.mGroupMemberRoutesAnimatingWithBitmap = new HashSet();
         MediaRouterThemeHelper.setMediaControlsBackgroundColor(this.mContext, this.mMediaMainControlLayout, this.mVolumeGroupList, this.mRoute.isGroup());
         MediaRouterThemeHelper.setVolumeSliderColor(this.mContext, (MediaRouteVolumeSlider) this.mVolumeSlider, this.mMediaMainControlLayout);
         HashMap hashMap = new HashMap();
         this.mVolumeSliderMap = hashMap;
         hashMap.put(this.mRoute, this.mVolumeSlider);
-        MediaRouteExpandCollapseButton mediaRouteExpandCollapseButton = (MediaRouteExpandCollapseButton) findViewById(R$id.mr_group_expand_collapse);
+        MediaRouteExpandCollapseButton mediaRouteExpandCollapseButton = (MediaRouteExpandCollapseButton) findViewById(C1159R.C1162id.mr_group_expand_collapse);
         this.mGroupExpandCollapseButton = mediaRouteExpandCollapseButton;
-        mediaRouteExpandCollapseButton.setOnClickListener(new View.OnClickListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.5
-            @Override // android.view.View.OnClickListener
-            public void onClick(View v) {
+        mediaRouteExpandCollapseButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
                 MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
-                boolean z = !mediaRouteControllerDialog.mIsGroupExpanded;
-                mediaRouteControllerDialog.mIsGroupExpanded = z;
-                if (z) {
-                    mediaRouteControllerDialog.mVolumeGroupList.setVisibility(0);
+                mediaRouteControllerDialog.mIsGroupExpanded = !mediaRouteControllerDialog.mIsGroupExpanded;
+                if (MediaRouteControllerDialog.this.mIsGroupExpanded) {
+                    MediaRouteControllerDialog.this.mVolumeGroupList.setVisibility(0);
                 }
                 MediaRouteControllerDialog.this.loadInterpolator();
                 MediaRouteControllerDialog.this.updateLayoutHeight(true);
             }
         });
         loadInterpolator();
-        this.mGroupListAnimationDurationMs = this.mContext.getResources().getInteger(R$integer.mr_controller_volume_group_list_animation_duration_ms);
-        this.mGroupListFadeInDurationMs = this.mContext.getResources().getInteger(R$integer.mr_controller_volume_group_list_fade_in_duration_ms);
-        this.mGroupListFadeOutDurationMs = this.mContext.getResources().getInteger(R$integer.mr_controller_volume_group_list_fade_out_duration_ms);
-        View onCreateMediaControlView = onCreateMediaControlView(savedInstanceState);
+        this.mGroupListAnimationDurationMs = this.mContext.getResources().getInteger(C1159R.integer.mr_controller_volume_group_list_animation_duration_ms);
+        this.mGroupListFadeInDurationMs = this.mContext.getResources().getInteger(C1159R.integer.mr_controller_volume_group_list_fade_in_duration_ms);
+        this.mGroupListFadeOutDurationMs = this.mContext.getResources().getInteger(C1159R.integer.mr_controller_volume_group_list_fade_out_duration_ms);
+        View onCreateMediaControlView = onCreateMediaControlView(bundle);
         this.mCustomControlView = onCreateMediaControlView;
         if (onCreateMediaControlView != null) {
             this.mCustomControlLayout.addView(onCreateMediaControlView);
@@ -315,23 +351,22 @@ public class MediaRouteControllerDialog extends AlertDialog {
         updateLayout();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateLayout() {
         int dialogWidth = MediaRouteDialogHelper.getDialogWidth(this.mContext);
         getWindow().setLayout(dialogWidth, -2);
         View decorView = getWindow().getDecorView();
         this.mDialogContentWidth = (dialogWidth - decorView.getPaddingLeft()) - decorView.getPaddingRight();
         Resources resources = this.mContext.getResources();
-        this.mVolumeGroupListItemIconSize = resources.getDimensionPixelSize(R$dimen.mr_controller_volume_group_list_item_icon_size);
-        this.mVolumeGroupListItemHeight = resources.getDimensionPixelSize(R$dimen.mr_controller_volume_group_list_item_height);
-        this.mVolumeGroupListMaxHeight = resources.getDimensionPixelSize(R$dimen.mr_controller_volume_group_list_max_height);
+        this.mVolumeGroupListItemIconSize = resources.getDimensionPixelSize(C1159R.dimen.mr_controller_volume_group_list_item_icon_size);
+        this.mVolumeGroupListItemHeight = resources.getDimensionPixelSize(C1159R.dimen.mr_controller_volume_group_list_item_height);
+        this.mVolumeGroupListMaxHeight = resources.getDimensionPixelSize(C1159R.dimen.mr_controller_volume_group_list_max_height);
         this.mArtIconBitmap = null;
         this.mArtIconUri = null;
         updateArtIconIfNeeded();
         update(false);
     }
 
-    @Override // android.app.Dialog, android.view.Window.Callback
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mAttachedToWindow = true;
@@ -339,35 +374,33 @@ public class MediaRouteControllerDialog extends AlertDialog {
         setMediaSession(this.mRouter.getMediaSessionToken());
     }
 
-    @Override // android.app.Dialog, android.view.Window.Callback
     public void onDetachedFromWindow() {
         this.mRouter.removeCallback(this.mCallback);
-        setMediaSession(null);
+        setMediaSession((MediaSessionCompat.Token) null);
         this.mAttachedToWindow = false;
         super.onDetachedFromWindow();
     }
 
-    @Override // androidx.appcompat.app.AlertDialog, android.app.Dialog, android.view.KeyEvent.Callback
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == 25 || keyCode == 24) {
-            this.mRoute.requestUpdateVolume(keyCode == 25 ? -1 : 1);
-            return true;
+    public boolean onKeyDown(int i, KeyEvent keyEvent) {
+        if (i != 25 && i != 24) {
+            return super.onKeyDown(i, keyEvent);
         }
-        return super.onKeyDown(keyCode, event);
+        this.mRoute.requestUpdateVolume(i == 25 ? -1 : 1);
+        return true;
     }
 
-    @Override // androidx.appcompat.app.AlertDialog, android.app.Dialog, android.view.KeyEvent.Callback
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode == 25 || keyCode == 24) {
+    public boolean onKeyUp(int i, KeyEvent keyEvent) {
+        if (i == 25 || i == 24) {
             return true;
         }
-        return super.onKeyUp(keyCode, event);
+        return super.onKeyUp(i, keyEvent);
     }
 
-    void update(boolean animate) {
+    /* access modifiers changed from: package-private */
+    public void update(boolean z) {
         if (this.mRouteInVolumeSliderTouched != null) {
             this.mHasPendingUpdate = true;
-            this.mPendingUpdateAnimationNeeded = animate | this.mPendingUpdateAnimationNeeded;
+            this.mPendingUpdateAnimationNeeded = z | this.mPendingUpdateAnimationNeeded;
             return;
         }
         int i = 0;
@@ -375,8 +408,7 @@ public class MediaRouteControllerDialog extends AlertDialog {
         this.mPendingUpdateAnimationNeeded = false;
         if (!this.mRoute.isSelected() || this.mRoute.isDefaultOrBluetooth()) {
             dismiss();
-        } else if (!this.mCreated) {
-        } else {
+        } else if (this.mCreated) {
             this.mRouteNameTextView.setText(this.mRoute.getName());
             Button button = this.mDisconnectButton;
             if (!this.mRoute.canDisconnect()) {
@@ -385,7 +417,7 @@ public class MediaRouteControllerDialog extends AlertDialog {
             button.setVisibility(i);
             if (this.mCustomControlView == null && this.mArtIconIsLoaded) {
                 if (isBitmapRecycled(this.mArtIconLoadedBitmap)) {
-                    Log.w("MediaRouteCtrlDialog", "Can't set artwork image with recycled bitmap: " + this.mArtIconLoadedBitmap);
+                    Log.w(TAG, "Can't set artwork image with recycled bitmap: " + this.mArtIconLoadedBitmap);
                 } else {
                     this.mArtView.setImageBitmap(this.mArtIconLoadedBitmap);
                     this.mArtView.setBackgroundColor(this.mArtIconBackgroundColor);
@@ -394,7 +426,7 @@ public class MediaRouteControllerDialog extends AlertDialog {
             }
             updateVolumeControlLayout();
             updatePlaybackControlLayout();
-            updateLayoutHeight(animate);
+            updateLayoutHeight(z);
         }
     }
 
@@ -406,54 +438,54 @@ public class MediaRouteControllerDialog extends AlertDialog {
         return this.mCustomControlView == null && !(this.mDescription == null && this.mState == null);
     }
 
-    private int getMainControllerHeight(boolean showPlaybackControl) {
-        if (showPlaybackControl || this.mVolumeControlLayout.getVisibility() == 0) {
-            int paddingTop = 0 + this.mMediaMainControlLayout.getPaddingTop() + this.mMediaMainControlLayout.getPaddingBottom();
-            if (showPlaybackControl) {
-                paddingTop += this.mPlaybackControlLayout.getMeasuredHeight();
-            }
-            if (this.mVolumeControlLayout.getVisibility() == 0) {
-                paddingTop += this.mVolumeControlLayout.getMeasuredHeight();
-            }
-            return (!showPlaybackControl || this.mVolumeControlLayout.getVisibility() != 0) ? paddingTop : paddingTop + this.mDividerView.getMeasuredHeight();
+    private int getMainControllerHeight(boolean z) {
+        if (!z && this.mVolumeControlLayout.getVisibility() != 0) {
+            return 0;
         }
-        return 0;
+        int paddingTop = 0 + this.mMediaMainControlLayout.getPaddingTop() + this.mMediaMainControlLayout.getPaddingBottom();
+        if (z) {
+            paddingTop += this.mPlaybackControlLayout.getMeasuredHeight();
+        }
+        if (this.mVolumeControlLayout.getVisibility() == 0) {
+            paddingTop += this.mVolumeControlLayout.getMeasuredHeight();
+        }
+        return (!z || this.mVolumeControlLayout.getVisibility() != 0) ? paddingTop : paddingTop + this.mDividerView.getMeasuredHeight();
     }
 
-    private void updateMediaControlVisibility(boolean canShowPlaybackControlLayout) {
+    private void updateMediaControlVisibility(boolean z) {
         int i = 0;
-        this.mDividerView.setVisibility((this.mVolumeControlLayout.getVisibility() != 0 || !canShowPlaybackControlLayout) ? 8 : 0);
+        this.mDividerView.setVisibility((this.mVolumeControlLayout.getVisibility() != 0 || !z) ? 8 : 0);
         LinearLayout linearLayout = this.mMediaMainControlLayout;
-        if (this.mVolumeControlLayout.getVisibility() == 8 && !canShowPlaybackControlLayout) {
+        if (this.mVolumeControlLayout.getVisibility() == 8 && !z) {
             i = 8;
         }
         linearLayout.setVisibility(i);
     }
 
-    void updateLayoutHeight(final boolean animate) {
+    /* access modifiers changed from: package-private */
+    public void updateLayoutHeight(final boolean z) {
         this.mDefaultControlLayout.requestLayout();
-        this.mDefaultControlLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.6
-            @Override // android.view.ViewTreeObserver.OnGlobalLayoutListener
+        this.mDefaultControlLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
                 MediaRouteControllerDialog.this.mDefaultControlLayout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
-                if (mediaRouteControllerDialog.mIsGroupListAnimating) {
-                    mediaRouteControllerDialog.mIsGroupListAnimationPending = true;
+                if (MediaRouteControllerDialog.this.mIsGroupListAnimating) {
+                    MediaRouteControllerDialog.this.mIsGroupListAnimationPending = true;
                 } else {
-                    mediaRouteControllerDialog.updateLayoutHeightInternal(animate);
+                    MediaRouteControllerDialog.this.updateLayoutHeightInternal(z);
                 }
             }
         });
     }
 
-    void updateLayoutHeightInternal(boolean animate) {
+    /* access modifiers changed from: package-private */
+    public void updateLayoutHeightInternal(boolean z) {
         int i;
         Bitmap bitmap;
         int layoutHeight = getLayoutHeight(this.mMediaMainControlLayout);
         setLayoutHeight(this.mMediaMainControlLayout, -1);
         updateMediaControlVisibility(canShowPlaybackControlLayout());
         View decorView = getWindow().getDecorView();
-        boolean z = false;
+        boolean z2 = false;
         decorView.measure(View.MeasureSpec.makeMeasureSpec(getWindow().getAttributes().width, 1073741824), 0);
         setLayoutHeight(this.mMediaMainControlLayout, layoutHeight);
         if (this.mCustomControlView != null || !(this.mArtView.getDrawable() instanceof BitmapDrawable) || (bitmap = ((BitmapDrawable) this.mArtView.getDrawable()).getBitmap()) == null) {
@@ -476,26 +508,26 @@ public class MediaRouteControllerDialog extends AlertDialog {
         Rect rect = new Rect();
         decorView.getWindowVisibleDisplayFrame(rect);
         int height = rect.height() - (this.mDialogAreaLayout.getMeasuredHeight() - this.mDefaultControlLayout.getMeasuredHeight());
-        if (this.mCustomControlView == null && i > 0 && max <= height) {
-            this.mArtView.setVisibility(0);
-            setLayoutHeight(this.mArtView, i);
-        } else {
+        if (this.mCustomControlView != null || i <= 0 || max > height) {
             if (getLayoutHeight(this.mVolumeGroupList) + this.mMediaMainControlLayout.getMeasuredHeight() >= this.mDefaultControlLayout.getMeasuredHeight()) {
                 this.mArtView.setVisibility(8);
             }
             max = min + mainControllerHeight;
             i = 0;
-        }
-        if (canShowPlaybackControlLayout() && max <= height) {
-            this.mPlaybackControlLayout.setVisibility(0);
         } else {
+            this.mArtView.setVisibility(0);
+            setLayoutHeight(this.mArtView, i);
+        }
+        if (!canShowPlaybackControlLayout() || max > height) {
             this.mPlaybackControlLayout.setVisibility(8);
+        } else {
+            this.mPlaybackControlLayout.setVisibility(0);
         }
         updateMediaControlVisibility(this.mPlaybackControlLayout.getVisibility() == 0);
         if (this.mPlaybackControlLayout.getVisibility() == 0) {
-            z = true;
+            z2 = true;
         }
-        int mainControllerHeight2 = getMainControllerHeight(z);
+        int mainControllerHeight2 = getMainControllerHeight(z2);
         int max2 = Math.max(i, min) + mainControllerHeight2;
         if (max2 > height) {
             min -= max2 - height;
@@ -505,7 +537,7 @@ public class MediaRouteControllerDialog extends AlertDialog {
         this.mMediaMainControlLayout.clearAnimation();
         this.mVolumeGroupList.clearAnimation();
         this.mDefaultControlLayout.clearAnimation();
-        if (animate) {
+        if (z) {
             animateLayoutHeight(this.mMediaMainControlLayout, mainControllerHeight2);
             animateLayoutHeight(this.mVolumeGroupList, min);
             animateLayoutHeight(this.mDefaultControlLayout, height);
@@ -515,49 +547,49 @@ public class MediaRouteControllerDialog extends AlertDialog {
             setLayoutHeight(this.mDefaultControlLayout, height);
         }
         setLayoutHeight(this.mExpandableAreaLayout, rect.height());
-        rebuildVolumeGroupList(animate);
+        rebuildVolumeGroupList(z);
     }
 
-    void updateVolumeGroupItemHeight(View item) {
-        setLayoutHeight((LinearLayout) item.findViewById(R$id.volume_item_container), this.mVolumeGroupListItemHeight);
-        View findViewById = item.findViewById(R$id.mr_volume_item_icon);
+    /* access modifiers changed from: package-private */
+    public void updateVolumeGroupItemHeight(View view) {
+        setLayoutHeight((LinearLayout) view.findViewById(C1159R.C1162id.volume_item_container), this.mVolumeGroupListItemHeight);
+        View findViewById = view.findViewById(C1159R.C1162id.mr_volume_item_icon);
         ViewGroup.LayoutParams layoutParams = findViewById.getLayoutParams();
-        int i = this.mVolumeGroupListItemIconSize;
-        layoutParams.width = i;
-        layoutParams.height = i;
+        layoutParams.width = this.mVolumeGroupListItemIconSize;
+        layoutParams.height = this.mVolumeGroupListItemIconSize;
         findViewById.setLayoutParams(layoutParams);
     }
 
-    private void animateLayoutHeight(final View view, final int targetHeight) {
+    private void animateLayoutHeight(final View view, final int i) {
         final int layoutHeight = getLayoutHeight(view);
-        Animation animation = new Animation() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.7
-            @Override // android.view.animation.Animation
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
+        C11747 r1 = new Animation() {
+            /* access modifiers changed from: protected */
+            public void applyTransformation(float f, Transformation transformation) {
                 int i = layoutHeight;
-                MediaRouteControllerDialog.setLayoutHeight(view, i - ((int) ((i - targetHeight) * interpolatedTime)));
+                MediaRouteControllerDialog.setLayoutHeight(view, i - ((int) (((float) (i - i)) * f)));
             }
         };
-        animation.setDuration(this.mGroupListAnimationDurationMs);
-        if (Build.VERSION.SDK_INT >= 21) {
-            animation.setInterpolator(this.mInterpolator);
-        }
-        view.startAnimation(animation);
+        r1.setDuration((long) this.mGroupListAnimationDurationMs);
+        r1.setInterpolator(this.mInterpolator);
+        view.startAnimation(r1);
     }
 
-    void loadInterpolator() {
-        if (Build.VERSION.SDK_INT >= 21) {
-            this.mInterpolator = this.mIsGroupExpanded ? this.mLinearOutSlowInInterpolator : this.mFastOutSlowInInterpolator;
+    /* access modifiers changed from: package-private */
+    public void loadInterpolator() {
+        Interpolator interpolator;
+        if (this.mIsGroupExpanded) {
+            interpolator = this.mLinearOutSlowInInterpolator;
         } else {
-            this.mInterpolator = this.mAccelerateDecelerateInterpolator;
+            interpolator = this.mFastOutSlowInInterpolator;
         }
+        this.mInterpolator = interpolator;
     }
 
     private void updateVolumeControlLayout() {
         int i = 8;
-        if (isVolumeControlAvailable(this.mRoute)) {
-            if (this.mVolumeControlLayout.getVisibility() != 8) {
-                return;
-            }
+        if (!isVolumeControlAvailable(this.mRoute)) {
+            this.mVolumeControlLayout.setVisibility(8);
+        } else if (this.mVolumeControlLayout.getVisibility() == 8) {
             this.mVolumeControlLayout.setVisibility(0);
             this.mVolumeSlider.setMax(this.mRoute.getVolumeMax());
             this.mVolumeSlider.setProgress(this.mRoute.getVolume());
@@ -566,12 +598,10 @@ public class MediaRouteControllerDialog extends AlertDialog {
                 i = 0;
             }
             mediaRouteExpandCollapseButton.setVisibility(i);
-            return;
         }
-        this.mVolumeControlLayout.setVisibility(8);
     }
 
-    private void rebuildVolumeGroupList(boolean animate) {
+    private void rebuildVolumeGroupList(boolean z) {
         List<MediaRouter.RouteInfo> memberRoutes = this.mRoute.getMemberRoutes();
         if (memberRoutes.isEmpty()) {
             this.mGroupMemberRoutes.clear();
@@ -579,119 +609,115 @@ public class MediaRouteControllerDialog extends AlertDialog {
         } else if (MediaRouteDialogHelper.listUnorderedEquals(this.mGroupMemberRoutes, memberRoutes)) {
             this.mVolumeGroupAdapter.notifyDataSetChanged();
         } else {
-            HashMap itemBoundMap = animate ? MediaRouteDialogHelper.getItemBoundMap(this.mVolumeGroupList, this.mVolumeGroupAdapter) : null;
-            HashMap itemBitmapMap = animate ? MediaRouteDialogHelper.getItemBitmapMap(this.mContext, this.mVolumeGroupList, this.mVolumeGroupAdapter) : null;
+            HashMap itemBoundMap = z ? MediaRouteDialogHelper.getItemBoundMap(this.mVolumeGroupList, this.mVolumeGroupAdapter) : null;
+            HashMap itemBitmapMap = z ? MediaRouteDialogHelper.getItemBitmapMap(this.mContext, this.mVolumeGroupList, this.mVolumeGroupAdapter) : null;
             this.mGroupMemberRoutesAdded = MediaRouteDialogHelper.getItemsAdded(this.mGroupMemberRoutes, memberRoutes);
             this.mGroupMemberRoutesRemoved = MediaRouteDialogHelper.getItemsRemoved(this.mGroupMemberRoutes, memberRoutes);
             this.mGroupMemberRoutes.addAll(0, this.mGroupMemberRoutesAdded);
             this.mGroupMemberRoutes.removeAll(this.mGroupMemberRoutesRemoved);
             this.mVolumeGroupAdapter.notifyDataSetChanged();
-            if (animate && this.mIsGroupExpanded && this.mGroupMemberRoutesAdded.size() + this.mGroupMemberRoutesRemoved.size() > 0) {
-                animateGroupListItems(itemBoundMap, itemBitmapMap);
+            if (!z || !this.mIsGroupExpanded || this.mGroupMemberRoutesAdded.size() + this.mGroupMemberRoutesRemoved.size() <= 0) {
+                this.mGroupMemberRoutesAdded = null;
+                this.mGroupMemberRoutesRemoved = null;
                 return;
             }
-            this.mGroupMemberRoutesAdded = null;
-            this.mGroupMemberRoutesRemoved = null;
+            animateGroupListItems(itemBoundMap, itemBitmapMap);
         }
     }
 
-    private void animateGroupListItems(final Map<MediaRouter.RouteInfo, Rect> previousRouteBoundMap, final Map<MediaRouter.RouteInfo, BitmapDrawable> previousRouteBitmapMap) {
+    private void animateGroupListItems(final Map<MediaRouter.RouteInfo, Rect> map, final Map<MediaRouter.RouteInfo, BitmapDrawable> map2) {
         this.mVolumeGroupList.setEnabled(false);
         this.mVolumeGroupList.requestLayout();
         this.mIsGroupListAnimating = true;
-        this.mVolumeGroupList.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.8
-            @Override // android.view.ViewTreeObserver.OnGlobalLayoutListener
+        this.mVolumeGroupList.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
                 MediaRouteControllerDialog.this.mVolumeGroupList.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                MediaRouteControllerDialog.this.animateGroupListItemsInternal(previousRouteBoundMap, previousRouteBitmapMap);
+                MediaRouteControllerDialog.this.animateGroupListItemsInternal(map, map2);
             }
         });
     }
 
-    void animateGroupListItemsInternal(Map<MediaRouter.RouteInfo, Rect> previousRouteBoundMap, Map<MediaRouter.RouteInfo, BitmapDrawable> previousRouteBitmapMap) {
-        OverlayListView.OverlayObject animationEndListener;
+    /* access modifiers changed from: package-private */
+    public void animateGroupListItemsInternal(Map<MediaRouter.RouteInfo, Rect> map, Map<MediaRouter.RouteInfo, BitmapDrawable> map2) {
+        OverlayListView.OverlayObject overlayObject;
         int i;
+        Map<MediaRouter.RouteInfo, Rect> map3 = map;
         Set<MediaRouter.RouteInfo> set = this.mGroupMemberRoutesAdded;
-        if (set == null || this.mGroupMemberRoutesRemoved == null) {
-            return;
-        }
-        int size = set.size() - this.mGroupMemberRoutesRemoved.size();
-        Animation.AnimationListener animationListener = new Animation.AnimationListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.9
-            @Override // android.view.animation.Animation.AnimationListener
-            public void onAnimationEnd(Animation animation) {
-            }
+        if (set != null && this.mGroupMemberRoutesRemoved != null) {
+            int size = set.size() - this.mGroupMemberRoutesRemoved.size();
+            C11769 r3 = new Animation.AnimationListener() {
+                public void onAnimationEnd(Animation animation) {
+                }
 
-            @Override // android.view.animation.Animation.AnimationListener
-            public void onAnimationRepeat(Animation animation) {
-            }
+                public void onAnimationRepeat(Animation animation) {
+                }
 
-            @Override // android.view.animation.Animation.AnimationListener
-            public void onAnimationStart(Animation animation) {
-                MediaRouteControllerDialog.this.mVolumeGroupList.startAnimationAll();
-                MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
-                mediaRouteControllerDialog.mVolumeGroupList.postDelayed(mediaRouteControllerDialog.mGroupListFadeInAnimation, mediaRouteControllerDialog.mGroupListAnimationDurationMs);
+                public void onAnimationStart(Animation animation) {
+                    MediaRouteControllerDialog.this.mVolumeGroupList.startAnimationAll();
+                    MediaRouteControllerDialog.this.mVolumeGroupList.postDelayed(MediaRouteControllerDialog.this.mGroupListFadeInAnimation, (long) MediaRouteControllerDialog.this.mGroupListAnimationDurationMs);
+                }
+            };
+            int firstVisiblePosition = this.mVolumeGroupList.getFirstVisiblePosition();
+            boolean z = false;
+            for (int i2 = 0; i2 < this.mVolumeGroupList.getChildCount(); i2++) {
+                View childAt = this.mVolumeGroupList.getChildAt(i2);
+                MediaRouter.RouteInfo routeInfo = (MediaRouter.RouteInfo) this.mVolumeGroupAdapter.getItem(firstVisiblePosition + i2);
+                Rect rect = map3.get(routeInfo);
+                int top = childAt.getTop();
+                if (rect != null) {
+                    i = rect.top;
+                } else {
+                    i = (this.mVolumeGroupListItemHeight * size) + top;
+                }
+                AnimationSet animationSet = new AnimationSet(true);
+                Set<MediaRouter.RouteInfo> set2 = this.mGroupMemberRoutesAdded;
+                if (set2 != null && set2.contains(routeInfo)) {
+                    AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 0.0f);
+                    alphaAnimation.setDuration((long) this.mGroupListFadeInDurationMs);
+                    animationSet.addAnimation(alphaAnimation);
+                    i = top;
+                }
+                TranslateAnimation translateAnimation = new TranslateAnimation(0.0f, 0.0f, (float) (i - top), 0.0f);
+                translateAnimation.setDuration((long) this.mGroupListAnimationDurationMs);
+                animationSet.addAnimation(translateAnimation);
+                animationSet.setFillAfter(true);
+                animationSet.setFillEnabled(true);
+                animationSet.setInterpolator(this.mInterpolator);
+                if (!z) {
+                    animationSet.setAnimationListener(r3);
+                    z = true;
+                }
+                childAt.clearAnimation();
+                childAt.startAnimation(animationSet);
+                map3.remove(routeInfo);
+                map2.remove(routeInfo);
             }
-        };
-        int firstVisiblePosition = this.mVolumeGroupList.getFirstVisiblePosition();
-        boolean z = false;
-        for (int i2 = 0; i2 < this.mVolumeGroupList.getChildCount(); i2++) {
-            View childAt = this.mVolumeGroupList.getChildAt(i2);
-            MediaRouter.RouteInfo item = this.mVolumeGroupAdapter.getItem(firstVisiblePosition + i2);
-            Rect rect = previousRouteBoundMap.get(item);
-            int top = childAt.getTop();
-            if (rect != null) {
-                i = rect.top;
-            } else {
-                i = (this.mVolumeGroupListItemHeight * size) + top;
+            Map<MediaRouter.RouteInfo, BitmapDrawable> map4 = map2;
+            for (Map.Entry next : map2.entrySet()) {
+                final MediaRouter.RouteInfo routeInfo2 = (MediaRouter.RouteInfo) next.getKey();
+                BitmapDrawable bitmapDrawable = (BitmapDrawable) next.getValue();
+                Rect rect2 = map3.get(routeInfo2);
+                if (this.mGroupMemberRoutesRemoved.contains(routeInfo2)) {
+                    overlayObject = new OverlayListView.OverlayObject(bitmapDrawable, rect2).setAlphaAnimation(1.0f, 0.0f).setDuration((long) this.mGroupListFadeOutDurationMs).setInterpolator(this.mInterpolator);
+                } else {
+                    overlayObject = new OverlayListView.OverlayObject(bitmapDrawable, rect2).setTranslateYAnimation(this.mVolumeGroupListItemHeight * size).setDuration((long) this.mGroupListAnimationDurationMs).setInterpolator(this.mInterpolator).setAnimationEndListener(new OverlayListView.OverlayObject.OnAnimationEndListener() {
+                        public void onAnimationEnd() {
+                            MediaRouteControllerDialog.this.mGroupMemberRoutesAnimatingWithBitmap.remove(routeInfo2);
+                            MediaRouteControllerDialog.this.mVolumeGroupAdapter.notifyDataSetChanged();
+                        }
+                    });
+                    this.mGroupMemberRoutesAnimatingWithBitmap.add(routeInfo2);
+                }
+                this.mVolumeGroupList.addOverlayObject(overlayObject);
             }
-            AnimationSet animationSet = new AnimationSet(true);
-            Set<MediaRouter.RouteInfo> set2 = this.mGroupMemberRoutesAdded;
-            if (set2 != null && set2.contains(item)) {
-                AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 0.0f);
-                alphaAnimation.setDuration(this.mGroupListFadeInDurationMs);
-                animationSet.addAnimation(alphaAnimation);
-                i = top;
-            }
-            TranslateAnimation translateAnimation = new TranslateAnimation(0.0f, 0.0f, i - top, 0.0f);
-            translateAnimation.setDuration(this.mGroupListAnimationDurationMs);
-            animationSet.addAnimation(translateAnimation);
-            animationSet.setFillAfter(true);
-            animationSet.setFillEnabled(true);
-            animationSet.setInterpolator(this.mInterpolator);
-            if (!z) {
-                animationSet.setAnimationListener(animationListener);
-                z = true;
-            }
-            childAt.clearAnimation();
-            childAt.startAnimation(animationSet);
-            previousRouteBoundMap.remove(item);
-            previousRouteBitmapMap.remove(item);
-        }
-        for (Map.Entry<MediaRouter.RouteInfo, BitmapDrawable> entry : previousRouteBitmapMap.entrySet()) {
-            final MediaRouter.RouteInfo key = entry.getKey();
-            BitmapDrawable value = entry.getValue();
-            Rect rect2 = previousRouteBoundMap.get(key);
-            if (this.mGroupMemberRoutesRemoved.contains(key)) {
-                animationEndListener = new OverlayListView.OverlayObject(value, rect2).setAlphaAnimation(1.0f, 0.0f).setDuration(this.mGroupListFadeOutDurationMs).setInterpolator(this.mInterpolator);
-            } else {
-                animationEndListener = new OverlayListView.OverlayObject(value, rect2).setTranslateYAnimation(this.mVolumeGroupListItemHeight * size).setDuration(this.mGroupListAnimationDurationMs).setInterpolator(this.mInterpolator).setAnimationEndListener(new OverlayListView.OverlayObject.OnAnimationEndListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.10
-                    @Override // androidx.mediarouter.app.OverlayListView.OverlayObject.OnAnimationEndListener
-                    public void onAnimationEnd() {
-                        MediaRouteControllerDialog.this.mGroupMemberRoutesAnimatingWithBitmap.remove(key);
-                        MediaRouteControllerDialog.this.mVolumeGroupAdapter.notifyDataSetChanged();
-                    }
-                });
-                this.mGroupMemberRoutesAnimatingWithBitmap.add(key);
-            }
-            this.mVolumeGroupList.addOverlayObject(animationEndListener);
         }
     }
 
-    void startGroupListFadeInAnimation() {
+    /* access modifiers changed from: package-private */
+    public void startGroupListFadeInAnimation() {
         clearGroupListAnimation(true);
         this.mVolumeGroupList.requestLayout();
-        this.mVolumeGroupList.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.11
-            @Override // android.view.ViewTreeObserver.OnGlobalLayoutListener
+        this.mVolumeGroupList.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
                 MediaRouteControllerDialog.this.mVolumeGroupList.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                 MediaRouteControllerDialog.this.startGroupListFadeInAnimationInternal();
@@ -699,37 +725,36 @@ public class MediaRouteControllerDialog extends AlertDialog {
         });
     }
 
-    void startGroupListFadeInAnimationInternal() {
+    /* access modifiers changed from: package-private */
+    public void startGroupListFadeInAnimationInternal() {
         Set<MediaRouter.RouteInfo> set = this.mGroupMemberRoutesAdded;
-        if (set != null && set.size() != 0) {
-            fadeInAddedRoutes();
-        } else {
+        if (set == null || set.size() == 0) {
             finishAnimation(true);
+        } else {
+            fadeInAddedRoutes();
         }
     }
 
-    void finishAnimation(boolean animate) {
+    /* access modifiers changed from: package-private */
+    public void finishAnimation(boolean z) {
         this.mGroupMemberRoutesAdded = null;
         this.mGroupMemberRoutesRemoved = null;
         this.mIsGroupListAnimating = false;
         if (this.mIsGroupListAnimationPending) {
             this.mIsGroupListAnimationPending = false;
-            updateLayoutHeight(animate);
+            updateLayoutHeight(z);
         }
         this.mVolumeGroupList.setEnabled(true);
     }
 
     private void fadeInAddedRoutes() {
-        Animation.AnimationListener animationListener = new Animation.AnimationListener() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.12
-            @Override // android.view.animation.Animation.AnimationListener
+        C116812 r0 = new Animation.AnimationListener() {
             public void onAnimationRepeat(Animation animation) {
             }
 
-            @Override // android.view.animation.Animation.AnimationListener
             public void onAnimationStart(Animation animation) {
             }
 
-            @Override // android.view.animation.Animation.AnimationListener
             public void onAnimationEnd(Animation animation) {
                 MediaRouteControllerDialog.this.finishAnimation(true);
             }
@@ -738,13 +763,13 @@ public class MediaRouteControllerDialog extends AlertDialog {
         boolean z = false;
         for (int i = 0; i < this.mVolumeGroupList.getChildCount(); i++) {
             View childAt = this.mVolumeGroupList.getChildAt(i);
-            if (this.mGroupMemberRoutesAdded.contains(this.mVolumeGroupAdapter.getItem(firstVisiblePosition + i))) {
+            if (this.mGroupMemberRoutesAdded.contains((MediaRouter.RouteInfo) this.mVolumeGroupAdapter.getItem(firstVisiblePosition + i))) {
                 AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-                alphaAnimation.setDuration(this.mGroupListFadeInDurationMs);
+                alphaAnimation.setDuration((long) this.mGroupListFadeInDurationMs);
                 alphaAnimation.setFillEnabled(true);
                 alphaAnimation.setFillAfter(true);
                 if (!z) {
-                    alphaAnimation.setAnimationListener(animationListener);
+                    alphaAnimation.setAnimationListener(r0);
                     z = true;
                 }
                 childAt.clearAnimation();
@@ -753,20 +778,20 @@ public class MediaRouteControllerDialog extends AlertDialog {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void clearGroupListAnimation(boolean exceptAddedRoutes) {
+    /* access modifiers changed from: package-private */
+    public void clearGroupListAnimation(boolean z) {
         Set<MediaRouter.RouteInfo> set;
         int firstVisiblePosition = this.mVolumeGroupList.getFirstVisiblePosition();
         for (int i = 0; i < this.mVolumeGroupList.getChildCount(); i++) {
             View childAt = this.mVolumeGroupList.getChildAt(i);
-            MediaRouter.RouteInfo item = this.mVolumeGroupAdapter.getItem(firstVisiblePosition + i);
-            if (!exceptAddedRoutes || (set = this.mGroupMemberRoutesAdded) == null || !set.contains(item)) {
-                ((LinearLayout) childAt.findViewById(R$id.volume_item_container)).setVisibility(0);
+            MediaRouter.RouteInfo routeInfo = (MediaRouter.RouteInfo) this.mVolumeGroupAdapter.getItem(firstVisiblePosition + i);
+            if (!z || (set = this.mGroupMemberRoutesAdded) == null || !set.contains(routeInfo)) {
+                ((LinearLayout) childAt.findViewById(C1159R.C1162id.volume_item_container)).setVisibility(0);
                 AnimationSet animationSet = new AnimationSet(true);
                 AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 1.0f);
-                alphaAnimation.setDuration(0L);
+                alphaAnimation.setDuration(0);
                 animationSet.addAnimation(alphaAnimation);
-                new TranslateAnimation(0.0f, 0.0f, 0.0f, 0.0f).setDuration(0L);
+                new TranslateAnimation(0.0f, 0.0f, 0.0f, 0.0f).setDuration(0);
                 animationSet.setFillAfter(true);
                 animationSet.setFillEnabled(true);
                 childAt.clearAnimation();
@@ -774,168 +799,235 @@ public class MediaRouteControllerDialog extends AlertDialog {
             }
         }
         this.mVolumeGroupList.stopAnimationAll();
-        if (!exceptAddedRoutes) {
+        if (!z) {
             finishAnimation(false);
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:16:0x0071  */
-    /* JADX WARN: Removed duplicated region for block: B:19:0x007b  */
-    /* JADX WARN: Removed duplicated region for block: B:22:0x0085  */
-    /* JADX WARN: Removed duplicated region for block: B:51:? A[RETURN, SYNTHETIC] */
-    /* JADX WARN: Removed duplicated region for block: B:52:0x007d  */
-    /* JADX WARN: Removed duplicated region for block: B:53:0x0073  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
+    /* JADX WARNING: Removed duplicated region for block: B:29:0x0071  */
+    /* JADX WARNING: Removed duplicated region for block: B:30:0x0073  */
+    /* JADX WARNING: Removed duplicated region for block: B:33:0x007b  */
+    /* JADX WARNING: Removed duplicated region for block: B:34:0x007d  */
+    /* JADX WARNING: Removed duplicated region for block: B:37:0x0085  */
+    /* JADX WARNING: Removed duplicated region for block: B:65:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updatePlaybackControlLayout() {
-        boolean z;
-        boolean z2;
-        PlaybackStateCompat playbackStateCompat;
-        int i;
-        int i2;
-        if (canShowPlaybackControlLayout()) {
-            MediaDescriptionCompat mediaDescriptionCompat = this.mDescription;
-            CharSequence charSequence = null;
-            CharSequence title = mediaDescriptionCompat == null ? null : mediaDescriptionCompat.getTitle();
-            boolean z3 = true;
-            boolean z4 = !TextUtils.isEmpty(title);
-            MediaDescriptionCompat mediaDescriptionCompat2 = this.mDescription;
-            if (mediaDescriptionCompat2 != null) {
-                charSequence = mediaDescriptionCompat2.getSubtitle();
-            }
-            boolean z5 = !TextUtils.isEmpty(charSequence);
-            int i3 = 0;
-            if (this.mRoute.getPresentationDisplayId() != -1) {
-                this.mTitleView.setText(R$string.mr_controller_casting_screen);
-            } else {
-                PlaybackStateCompat playbackStateCompat2 = this.mState;
-                if (playbackStateCompat2 == null || playbackStateCompat2.getState() == 0) {
-                    this.mTitleView.setText(R$string.mr_controller_no_media_selected);
-                } else if (!z4 && !z5) {
-                    this.mTitleView.setText(R$string.mr_controller_no_info_available);
-                } else {
-                    if (z4) {
-                        this.mTitleView.setText(title);
-                        z = true;
-                    } else {
-                        z = false;
-                    }
-                    if (z5) {
-                        this.mSubtitleView.setText(charSequence);
-                        z2 = true;
-                        this.mTitleView.setVisibility(z ? 0 : 8);
-                        this.mSubtitleView.setVisibility(z2 ? 0 : 8);
-                        playbackStateCompat = this.mState;
-                        if (playbackStateCompat == null) {
-                            return;
-                        }
-                        boolean z6 = playbackStateCompat.getState() == 6 || this.mState.getState() == 3;
-                        Context context = this.mPlaybackControlButton.getContext();
-                        if (z6 && isPauseActionSupported()) {
-                            i = R$attr.mediaRoutePauseDrawable;
-                            i2 = R$string.mr_controller_pause;
-                        } else if (z6 && isStopActionSupported()) {
-                            i = R$attr.mediaRouteStopDrawable;
-                            i2 = R$string.mr_controller_stop;
-                        } else if (z6 || !isPlayActionSupported()) {
-                            i = 0;
-                            i2 = 0;
-                            z3 = false;
-                        } else {
-                            i = R$attr.mediaRoutePlayDrawable;
-                            i2 = R$string.mr_controller_play;
-                        }
-                        ImageButton imageButton = this.mPlaybackControlButton;
-                        if (!z3) {
-                            i3 = 8;
-                        }
-                        imageButton.setVisibility(i3);
-                        if (!z3) {
-                            return;
-                        }
-                        this.mPlaybackControlButton.setImageResource(MediaRouterThemeHelper.getThemeResource(context, i));
-                        this.mPlaybackControlButton.setContentDescription(context.getResources().getText(i2));
-                        return;
-                    }
-                    z2 = false;
-                    this.mTitleView.setVisibility(z ? 0 : 8);
-                    this.mSubtitleView.setVisibility(z2 ? 0 : 8);
-                    playbackStateCompat = this.mState;
-                    if (playbackStateCompat == null) {
-                    }
-                }
-            }
-            z = true;
-            z2 = false;
-            this.mTitleView.setVisibility(z ? 0 : 8);
-            this.mSubtitleView.setVisibility(z2 ? 0 : 8);
-            playbackStateCompat = this.mState;
-            if (playbackStateCompat == null) {
-            }
-        }
+        /*
+            r8 = this;
+            boolean r0 = r8.canShowPlaybackControlLayout()
+            if (r0 == 0) goto L_0x00ea
+            android.support.v4.media.MediaDescriptionCompat r0 = r8.mDescription
+            r1 = 0
+            if (r0 != 0) goto L_0x000d
+            r0 = r1
+            goto L_0x0011
+        L_0x000d:
+            java.lang.CharSequence r0 = r0.getTitle()
+        L_0x0011:
+            boolean r2 = android.text.TextUtils.isEmpty(r0)
+            r3 = 1
+            r2 = r2 ^ r3
+            android.support.v4.media.MediaDescriptionCompat r4 = r8.mDescription
+            if (r4 != 0) goto L_0x001c
+            goto L_0x0020
+        L_0x001c:
+            java.lang.CharSequence r1 = r4.getSubtitle()
+        L_0x0020:
+            boolean r4 = android.text.TextUtils.isEmpty(r1)
+            r4 = r4 ^ r3
+            androidx.mediarouter.media.MediaRouter$RouteInfo r5 = r8.mRoute
+            int r5 = r5.getPresentationDisplayId()
+            r6 = -1
+            r7 = 0
+            if (r5 == r6) goto L_0x0039
+            android.widget.TextView r0 = r8.mTitleView
+            int r1 = androidx.mediarouter.C1159R.string.mr_controller_casting_screen
+            r0.setText(r1)
+        L_0x0036:
+            r0 = r3
+        L_0x0037:
+            r1 = r7
+            goto L_0x006b
+        L_0x0039:
+            android.support.v4.media.session.PlaybackStateCompat r5 = r8.mState
+            if (r5 == 0) goto L_0x0063
+            int r5 = r5.getState()
+            if (r5 != 0) goto L_0x0044
+            goto L_0x0063
+        L_0x0044:
+            if (r2 != 0) goto L_0x0050
+            if (r4 != 0) goto L_0x0050
+            android.widget.TextView r0 = r8.mTitleView
+            int r1 = androidx.mediarouter.C1159R.string.mr_controller_no_info_available
+            r0.setText(r1)
+            goto L_0x0036
+        L_0x0050:
+            if (r2 == 0) goto L_0x0059
+            android.widget.TextView r2 = r8.mTitleView
+            r2.setText(r0)
+            r0 = r3
+            goto L_0x005a
+        L_0x0059:
+            r0 = r7
+        L_0x005a:
+            if (r4 == 0) goto L_0x0037
+            android.widget.TextView r2 = r8.mSubtitleView
+            r2.setText(r1)
+            r1 = r3
+            goto L_0x006b
+        L_0x0063:
+            android.widget.TextView r0 = r8.mTitleView
+            int r1 = androidx.mediarouter.C1159R.string.mr_controller_no_media_selected
+            r0.setText(r1)
+            goto L_0x0036
+        L_0x006b:
+            android.widget.TextView r2 = r8.mTitleView
+            r4 = 8
+            if (r0 == 0) goto L_0x0073
+            r0 = r7
+            goto L_0x0074
+        L_0x0073:
+            r0 = r4
+        L_0x0074:
+            r2.setVisibility(r0)
+            android.widget.TextView r0 = r8.mSubtitleView
+            if (r1 == 0) goto L_0x007d
+            r1 = r7
+            goto L_0x007e
+        L_0x007d:
+            r1 = r4
+        L_0x007e:
+            r0.setVisibility(r1)
+            android.support.v4.media.session.PlaybackStateCompat r0 = r8.mState
+            if (r0 == 0) goto L_0x00ea
+            int r0 = r0.getState()
+            r1 = 6
+            if (r0 == r1) goto L_0x0098
+            android.support.v4.media.session.PlaybackStateCompat r0 = r8.mState
+            int r0 = r0.getState()
+            r1 = 3
+            if (r0 != r1) goto L_0x0096
+            goto L_0x0098
+        L_0x0096:
+            r0 = r7
+            goto L_0x0099
+        L_0x0098:
+            r0 = r3
+        L_0x0099:
+            android.widget.ImageButton r1 = r8.mPlaybackControlButton
+            android.content.Context r1 = r1.getContext()
+            if (r0 == 0) goto L_0x00ac
+            boolean r2 = r8.isPauseActionSupported()
+            if (r2 == 0) goto L_0x00ac
+            int r0 = androidx.mediarouter.C1159R.attr.mediaRoutePauseDrawable
+            int r2 = androidx.mediarouter.C1159R.string.mr_controller_pause
+            goto L_0x00c9
+        L_0x00ac:
+            if (r0 == 0) goto L_0x00b9
+            boolean r2 = r8.isStopActionSupported()
+            if (r2 == 0) goto L_0x00b9
+            int r0 = androidx.mediarouter.C1159R.attr.mediaRouteStopDrawable
+            int r2 = androidx.mediarouter.C1159R.string.mr_controller_stop
+            goto L_0x00c9
+        L_0x00b9:
+            if (r0 != 0) goto L_0x00c6
+            boolean r0 = r8.isPlayActionSupported()
+            if (r0 == 0) goto L_0x00c6
+            int r0 = androidx.mediarouter.C1159R.attr.mediaRoutePlayDrawable
+            int r2 = androidx.mediarouter.C1159R.string.mr_controller_play
+            goto L_0x00c9
+        L_0x00c6:
+            r0 = r7
+            r2 = r0
+            r3 = r2
+        L_0x00c9:
+            android.widget.ImageButton r5 = r8.mPlaybackControlButton
+            if (r3 == 0) goto L_0x00ce
+            goto L_0x00cf
+        L_0x00ce:
+            r7 = r4
+        L_0x00cf:
+            r5.setVisibility(r7)
+            if (r3 == 0) goto L_0x00ea
+            android.widget.ImageButton r3 = r8.mPlaybackControlButton
+            int r0 = androidx.mediarouter.app.MediaRouterThemeHelper.getThemeResource(r1, r0)
+            r3.setImageResource(r0)
+            android.widget.ImageButton r8 = r8.mPlaybackControlButton
+            android.content.res.Resources r0 = r1.getResources()
+            java.lang.CharSequence r0 = r0.getText(r2)
+            r8.setContentDescription(r0)
+        L_0x00ea:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.mediarouter.app.MediaRouteControllerDialog.updatePlaybackControlLayout():void");
     }
 
-    boolean isPlayActionSupported() {
+    /* access modifiers changed from: package-private */
+    public boolean isPlayActionSupported() {
         return (this.mState.getActions() & 516) != 0;
     }
 
-    boolean isPauseActionSupported() {
+    /* access modifiers changed from: package-private */
+    public boolean isPauseActionSupported() {
         return (this.mState.getActions() & 514) != 0;
     }
 
-    boolean isStopActionSupported() {
+    /* access modifiers changed from: package-private */
+    public boolean isStopActionSupported() {
         return (this.mState.getActions() & 1) != 0;
     }
 
-    boolean isVolumeControlAvailable(MediaRouter.RouteInfo route) {
-        return this.mVolumeControlEnabled && route.getVolumeHandling() == 1;
+    /* access modifiers changed from: package-private */
+    public boolean isVolumeControlAvailable(MediaRouter.RouteInfo routeInfo) {
+        return this.mVolumeControlEnabled && routeInfo.getVolumeHandling() == 1;
     }
 
     private static int getLayoutHeight(View view) {
         return view.getLayoutParams().height;
     }
 
-    static void setLayoutHeight(View view, int height) {
+    static void setLayoutHeight(View view, int i) {
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-        layoutParams.height = height;
+        layoutParams.height = i;
         view.setLayoutParams(layoutParams);
     }
 
-    private static boolean uriEquals(Uri uri1, Uri uri2) {
-        if (uri1 == null || !uri1.equals(uri2)) {
-            return uri1 == null && uri2 == null;
+    private static boolean uriEquals(Uri uri, Uri uri2) {
+        if (uri == null || !uri.equals(uri2)) {
+            return uri == null && uri2 == null;
         }
         return true;
     }
 
-    int getDesiredArtHeight(int originalWidth, int originalHeight) {
+    /* access modifiers changed from: package-private */
+    public int getDesiredArtHeight(int i, int i2) {
         float f;
         float f2;
-        if (originalWidth >= originalHeight) {
-            f = this.mDialogContentWidth * originalHeight;
-            f2 = originalWidth;
+        if (i >= i2) {
+            f = ((float) this.mDialogContentWidth) * ((float) i2);
+            f2 = (float) i;
         } else {
-            f = this.mDialogContentWidth * 9.0f;
+            f = ((float) this.mDialogContentWidth) * 9.0f;
             f2 = 16.0f;
         }
         return (int) ((f / f2) + 0.5f);
     }
 
-    void updateArtIconIfNeeded() {
-        if (this.mCustomControlView != null || !isIconChanged()) {
-            return;
+    /* access modifiers changed from: package-private */
+    public void updateArtIconIfNeeded() {
+        if (this.mCustomControlView == null && isIconChanged()) {
+            FetchArtTask fetchArtTask = this.mFetchArtTask;
+            if (fetchArtTask != null) {
+                fetchArtTask.cancel(true);
+            }
+            FetchArtTask fetchArtTask2 = new FetchArtTask();
+            this.mFetchArtTask = fetchArtTask2;
+            fetchArtTask2.execute(new Void[0]);
         }
-        FetchArtTask fetchArtTask = this.mFetchArtTask;
-        if (fetchArtTask != null) {
-            fetchArtTask.cancel(true);
-        }
-        FetchArtTask fetchArtTask2 = new FetchArtTask();
-        this.mFetchArtTask = fetchArtTask2;
-        fetchArtTask2.execute(new Void[0]);
     }
 
-    void clearLoadedBitmap() {
+    /* access modifiers changed from: package-private */
+    public void clearLoadedBitmap() {
         this.mArtIconIsLoaded = false;
         this.mArtIconLoadedBitmap = null;
         this.mArtIconBackgroundColor = 0;
@@ -956,135 +1048,113 @@ public class MediaRouteControllerDialog extends AlertDialog {
         if (iconBitmap2 != iconBitmap) {
             return true;
         }
-        return iconBitmap2 == null && !uriEquals(iconUri, uri);
+        if (iconBitmap2 != null || uriEquals(iconUri, uri)) {
+            return false;
+        }
+        return true;
     }
 
-    /* loaded from: classes.dex */
     private final class MediaRouterCallback extends MediaRouter.Callback {
         MediaRouterCallback() {
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteUnselected(MediaRouter router, MediaRouter.RouteInfo route) {
+        public void onRouteUnselected(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteControllerDialog.this.update(false);
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteChanged(MediaRouter router, MediaRouter.RouteInfo route) {
+        public void onRouteChanged(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             MediaRouteControllerDialog.this.update(true);
         }
 
-        @Override // androidx.mediarouter.media.MediaRouter.Callback
-        public void onRouteVolumeChanged(MediaRouter router, MediaRouter.RouteInfo route) {
-            SeekBar seekBar = MediaRouteControllerDialog.this.mVolumeSliderMap.get(route);
-            int volume = route.getVolume();
+        public void onRouteVolumeChanged(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
+            SeekBar seekBar = MediaRouteControllerDialog.this.mVolumeSliderMap.get(routeInfo);
+            int volume = routeInfo.getVolume();
             if (MediaRouteControllerDialog.DEBUG) {
-                Log.d("MediaRouteCtrlDialog", "onRouteVolumeChanged(), route.getVolume:" + volume);
+                Log.d(MediaRouteControllerDialog.TAG, "onRouteVolumeChanged(), route.getVolume:" + volume);
             }
-            if (seekBar == null || MediaRouteControllerDialog.this.mRouteInVolumeSliderTouched == route) {
-                return;
+            if (seekBar != null && MediaRouteControllerDialog.this.mRouteInVolumeSliderTouched != routeInfo) {
+                seekBar.setProgress(volume);
             }
-            seekBar.setProgress(volume);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class MediaControllerCallback extends MediaControllerCompat.Callback {
+    private final class MediaControllerCallback extends MediaControllerCompat.Callback {
         MediaControllerCallback() {
         }
 
-        @Override // android.support.v4.media.session.MediaControllerCompat.Callback
         public void onSessionDestroyed() {
-            MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
-            MediaControllerCompat mediaControllerCompat = mediaRouteControllerDialog.mMediaController;
-            if (mediaControllerCompat != null) {
-                mediaControllerCompat.unregisterCallback(mediaRouteControllerDialog.mControllerCallback);
+            if (MediaRouteControllerDialog.this.mMediaController != null) {
+                MediaRouteControllerDialog.this.mMediaController.unregisterCallback(MediaRouteControllerDialog.this.mControllerCallback);
                 MediaRouteControllerDialog.this.mMediaController = null;
             }
         }
 
-        @Override // android.support.v4.media.session.MediaControllerCompat.Callback
-        public void onPlaybackStateChanged(PlaybackStateCompat state) {
-            MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
-            mediaRouteControllerDialog.mState = state;
-            mediaRouteControllerDialog.update(false);
+        public void onPlaybackStateChanged(PlaybackStateCompat playbackStateCompat) {
+            MediaRouteControllerDialog.this.mState = playbackStateCompat;
+            MediaRouteControllerDialog.this.update(false);
         }
 
-        @Override // android.support.v4.media.session.MediaControllerCompat.Callback
-        public void onMetadataChanged(MediaMetadataCompat metadata) {
-            MediaRouteControllerDialog.this.mDescription = metadata == null ? null : metadata.getDescription();
+        public void onMetadataChanged(MediaMetadataCompat mediaMetadataCompat) {
+            MediaRouteControllerDialog.this.mDescription = mediaMetadataCompat == null ? null : mediaMetadataCompat.getDescription();
             MediaRouteControllerDialog.this.updateArtIconIfNeeded();
             MediaRouteControllerDialog.this.update(false);
         }
     }
 
-    /* loaded from: classes.dex */
     private final class ClickListener implements View.OnClickListener {
         ClickListener() {
         }
 
-        @Override // android.view.View.OnClickListener
-        public void onClick(View v) {
-            PlaybackStateCompat playbackStateCompat;
-            int id = v.getId();
+        public void onClick(View view) {
+            int id = view.getId();
             int i = 1;
-            if (id == 16908313 || id == 16908314) {
+            if (id == MediaRouteControllerDialog.BUTTON_STOP_RES_ID || id == MediaRouteControllerDialog.BUTTON_DISCONNECT_RES_ID) {
                 if (MediaRouteControllerDialog.this.mRoute.isSelected()) {
                     MediaRouter mediaRouter = MediaRouteControllerDialog.this.mRouter;
-                    if (id == 16908313) {
+                    if (id == MediaRouteControllerDialog.BUTTON_STOP_RES_ID) {
                         i = 2;
                     }
                     mediaRouter.unselect(i);
                 }
                 MediaRouteControllerDialog.this.dismiss();
-            } else if (id == R$id.mr_control_playback_ctrl) {
-                MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
-                if (mediaRouteControllerDialog.mMediaController == null || (playbackStateCompat = mediaRouteControllerDialog.mState) == null) {
-                    return;
+            } else if (id == C1159R.C1162id.mr_control_playback_ctrl) {
+                if (MediaRouteControllerDialog.this.mMediaController != null && MediaRouteControllerDialog.this.mState != null) {
+                    int i2 = 0;
+                    if (MediaRouteControllerDialog.this.mState.getState() != 3) {
+                        i = 0;
+                    }
+                    if (i != 0 && MediaRouteControllerDialog.this.isPauseActionSupported()) {
+                        MediaRouteControllerDialog.this.mMediaController.getTransportControls().pause();
+                        i2 = C1159R.string.mr_controller_pause;
+                    } else if (i != 0 && MediaRouteControllerDialog.this.isStopActionSupported()) {
+                        MediaRouteControllerDialog.this.mMediaController.getTransportControls().stop();
+                        i2 = C1159R.string.mr_controller_stop;
+                    } else if (i == 0 && MediaRouteControllerDialog.this.isPlayActionSupported()) {
+                        MediaRouteControllerDialog.this.mMediaController.getTransportControls().play();
+                        i2 = C1159R.string.mr_controller_play;
+                    }
+                    if (MediaRouteControllerDialog.this.mAccessibilityManager != null && MediaRouteControllerDialog.this.mAccessibilityManager.isEnabled() && i2 != 0) {
+                        AccessibilityEvent obtain = AccessibilityEvent.obtain(16384);
+                        obtain.setPackageName(MediaRouteControllerDialog.this.mContext.getPackageName());
+                        obtain.setClassName(getClass().getName());
+                        obtain.getText().add(MediaRouteControllerDialog.this.mContext.getString(i2));
+                        MediaRouteControllerDialog.this.mAccessibilityManager.sendAccessibilityEvent(obtain);
+                    }
                 }
-                int i2 = 0;
-                if (playbackStateCompat.getState() != 3) {
-                    i = 0;
-                }
-                if (i != 0 && MediaRouteControllerDialog.this.isPauseActionSupported()) {
-                    MediaRouteControllerDialog.this.mMediaController.getTransportControls().pause();
-                    i2 = R$string.mr_controller_pause;
-                } else if (i != 0 && MediaRouteControllerDialog.this.isStopActionSupported()) {
-                    MediaRouteControllerDialog.this.mMediaController.getTransportControls().stop();
-                    i2 = R$string.mr_controller_stop;
-                } else if (i == 0 && MediaRouteControllerDialog.this.isPlayActionSupported()) {
-                    MediaRouteControllerDialog.this.mMediaController.getTransportControls().play();
-                    i2 = R$string.mr_controller_play;
-                }
-                AccessibilityManager accessibilityManager = MediaRouteControllerDialog.this.mAccessibilityManager;
-                if (accessibilityManager == null || !accessibilityManager.isEnabled() || i2 == 0) {
-                    return;
-                }
-                AccessibilityEvent obtain = AccessibilityEvent.obtain(16384);
-                obtain.setPackageName(MediaRouteControllerDialog.this.mContext.getPackageName());
-                obtain.setClassName(ClickListener.class.getName());
-                obtain.getText().add(MediaRouteControllerDialog.this.mContext.getString(i2));
-                MediaRouteControllerDialog.this.mAccessibilityManager.sendAccessibilityEvent(obtain);
-            } else if (id != R$id.mr_close) {
-            } else {
+            } else if (id == C1159R.C1162id.mr_close) {
                 MediaRouteControllerDialog.this.dismiss();
             }
         }
     }
 
-    /* loaded from: classes.dex */
     private class VolumeChangeListener implements SeekBar.OnSeekBarChangeListener {
-        private final Runnable mStopTrackingTouch = new Runnable() { // from class: androidx.mediarouter.app.MediaRouteControllerDialog.VolumeChangeListener.1
-            @Override // java.lang.Runnable
+        private final Runnable mStopTrackingTouch = new Runnable() {
             public void run() {
-                MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
-                if (mediaRouteControllerDialog.mRouteInVolumeSliderTouched != null) {
-                    mediaRouteControllerDialog.mRouteInVolumeSliderTouched = null;
-                    if (!mediaRouteControllerDialog.mHasPendingUpdate) {
-                        return;
+                if (MediaRouteControllerDialog.this.mRouteInVolumeSliderTouched != null) {
+                    MediaRouteControllerDialog.this.mRouteInVolumeSliderTouched = null;
+                    if (MediaRouteControllerDialog.this.mHasPendingUpdate) {
+                        MediaRouteControllerDialog.this.update(MediaRouteControllerDialog.this.mPendingUpdateAnimationNeeded);
                     }
-                    mediaRouteControllerDialog.update(mediaRouteControllerDialog.mPendingUpdateAnimationNeeded);
                 }
             }
         };
@@ -1092,71 +1162,64 @@ public class MediaRouteControllerDialog extends AlertDialog {
         VolumeChangeListener() {
         }
 
-        @Override // android.widget.SeekBar.OnSeekBarChangeListener
         public void onStartTrackingTouch(SeekBar seekBar) {
-            MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
-            if (mediaRouteControllerDialog.mRouteInVolumeSliderTouched != null) {
-                mediaRouteControllerDialog.mVolumeSlider.removeCallbacks(this.mStopTrackingTouch);
+            if (MediaRouteControllerDialog.this.mRouteInVolumeSliderTouched != null) {
+                MediaRouteControllerDialog.this.mVolumeSlider.removeCallbacks(this.mStopTrackingTouch);
             }
             MediaRouteControllerDialog.this.mRouteInVolumeSliderTouched = (MediaRouter.RouteInfo) seekBar.getTag();
         }
 
-        @Override // android.widget.SeekBar.OnSeekBarChangeListener
         public void onStopTrackingTouch(SeekBar seekBar) {
-            MediaRouteControllerDialog.this.mVolumeSlider.postDelayed(this.mStopTrackingTouch, 500L);
+            MediaRouteControllerDialog.this.mVolumeSlider.postDelayed(this.mStopTrackingTouch, 500);
         }
 
-        @Override // android.widget.SeekBar.OnSeekBarChangeListener
-        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            if (fromUser) {
+        public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
+            if (z) {
                 MediaRouter.RouteInfo routeInfo = (MediaRouter.RouteInfo) seekBar.getTag();
                 if (MediaRouteControllerDialog.DEBUG) {
-                    Log.d("MediaRouteCtrlDialog", "onProgressChanged(): calling MediaRouter.RouteInfo.requestSetVolume(" + progress + ")");
+                    Log.d(MediaRouteControllerDialog.TAG, "onProgressChanged(): calling MediaRouter.RouteInfo.requestSetVolume(" + i + NavigationBarInflaterView.KEY_CODE_END);
                 }
-                routeInfo.requestSetVolume(progress);
+                routeInfo.requestSetVolume(i);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class VolumeGroupAdapter extends ArrayAdapter<MediaRouter.RouteInfo> {
+    private class VolumeGroupAdapter extends ArrayAdapter<MediaRouter.RouteInfo> {
         final float mDisabledAlpha;
 
-        @Override // android.widget.BaseAdapter, android.widget.ListAdapter
-        public boolean isEnabled(int position) {
+        public boolean isEnabled(int i) {
             return false;
         }
 
-        public VolumeGroupAdapter(Context context, List<MediaRouter.RouteInfo> objects) {
-            super(context, 0, objects);
+        public VolumeGroupAdapter(Context context, List<MediaRouter.RouteInfo> list) {
+            super(context, 0, list);
             this.mDisabledAlpha = MediaRouterThemeHelper.getDisabledAlpha(context);
         }
 
-        @Override // android.widget.ArrayAdapter, android.widget.Adapter
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            int i = 0;
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R$layout.mr_controller_volume_item, parent, false);
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            int i2;
+            int i3 = 0;
+            if (view == null) {
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(C1159R.layout.mr_controller_volume_item, viewGroup, false);
             } else {
-                MediaRouteControllerDialog.this.updateVolumeGroupItemHeight(convertView);
+                MediaRouteControllerDialog.this.updateVolumeGroupItemHeight(view);
             }
-            MediaRouter.RouteInfo item = getItem(position);
-            if (item != null) {
-                boolean isEnabled = item.isEnabled();
-                TextView textView = (TextView) convertView.findViewById(R$id.mr_name);
+            MediaRouter.RouteInfo routeInfo = (MediaRouter.RouteInfo) getItem(i);
+            if (routeInfo != null) {
+                boolean isEnabled = routeInfo.isEnabled();
+                TextView textView = (TextView) view.findViewById(C1159R.C1162id.mr_name);
                 textView.setEnabled(isEnabled);
-                textView.setText(item.getName());
-                MediaRouteVolumeSlider mediaRouteVolumeSlider = (MediaRouteVolumeSlider) convertView.findViewById(R$id.mr_volume_slider);
-                MediaRouterThemeHelper.setVolumeSliderColor(parent.getContext(), mediaRouteVolumeSlider, MediaRouteControllerDialog.this.mVolumeGroupList);
-                mediaRouteVolumeSlider.setTag(item);
-                MediaRouteControllerDialog.this.mVolumeSliderMap.put(item, mediaRouteVolumeSlider);
+                textView.setText(routeInfo.getName());
+                MediaRouteVolumeSlider mediaRouteVolumeSlider = (MediaRouteVolumeSlider) view.findViewById(C1159R.C1162id.mr_volume_slider);
+                MediaRouterThemeHelper.setVolumeSliderColor(viewGroup.getContext(), mediaRouteVolumeSlider, MediaRouteControllerDialog.this.mVolumeGroupList);
+                mediaRouteVolumeSlider.setTag(routeInfo);
+                MediaRouteControllerDialog.this.mVolumeSliderMap.put(routeInfo, mediaRouteVolumeSlider);
                 mediaRouteVolumeSlider.setHideThumb(!isEnabled);
                 mediaRouteVolumeSlider.setEnabled(isEnabled);
                 if (isEnabled) {
-                    if (MediaRouteControllerDialog.this.isVolumeControlAvailable(item)) {
-                        mediaRouteVolumeSlider.setMax(item.getVolumeMax());
-                        mediaRouteVolumeSlider.setProgress(item.getVolume());
+                    if (MediaRouteControllerDialog.this.isVolumeControlAvailable(routeInfo)) {
+                        mediaRouteVolumeSlider.setMax(routeInfo.getVolumeMax());
+                        mediaRouteVolumeSlider.setProgress(routeInfo.getVolume());
                         mediaRouteVolumeSlider.setOnSeekBarChangeListener(MediaRouteControllerDialog.this.mVolumeChangeListener);
                     } else {
                         mediaRouteVolumeSlider.setMax(100);
@@ -1164,45 +1227,47 @@ public class MediaRouteControllerDialog extends AlertDialog {
                         mediaRouteVolumeSlider.setEnabled(false);
                     }
                 }
-                ((ImageView) convertView.findViewById(R$id.mr_volume_item_icon)).setAlpha(isEnabled ? 255 : (int) (this.mDisabledAlpha * 255.0f));
-                LinearLayout linearLayout = (LinearLayout) convertView.findViewById(R$id.volume_item_container);
-                if (MediaRouteControllerDialog.this.mGroupMemberRoutesAnimatingWithBitmap.contains(item)) {
-                    i = 4;
+                ImageView imageView = (ImageView) view.findViewById(C1159R.C1162id.mr_volume_item_icon);
+                if (isEnabled) {
+                    i2 = 255;
+                } else {
+                    i2 = (int) (this.mDisabledAlpha * 255.0f);
                 }
-                linearLayout.setVisibility(i);
-                Set<MediaRouter.RouteInfo> set = MediaRouteControllerDialog.this.mGroupMemberRoutesAdded;
-                if (set != null && set.contains(item)) {
+                imageView.setAlpha(i2);
+                LinearLayout linearLayout = (LinearLayout) view.findViewById(C1159R.C1162id.volume_item_container);
+                if (MediaRouteControllerDialog.this.mGroupMemberRoutesAnimatingWithBitmap.contains(routeInfo)) {
+                    i3 = 4;
+                }
+                linearLayout.setVisibility(i3);
+                if (MediaRouteControllerDialog.this.mGroupMemberRoutesAdded != null && MediaRouteControllerDialog.this.mGroupMemberRoutesAdded.contains(routeInfo)) {
                     AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 0.0f);
-                    alphaAnimation.setDuration(0L);
+                    alphaAnimation.setDuration(0);
                     alphaAnimation.setFillEnabled(true);
                     alphaAnimation.setFillAfter(true);
-                    convertView.clearAnimation();
-                    convertView.startAnimation(alphaAnimation);
+                    view.clearAnimation();
+                    view.startAnimation(alphaAnimation);
                 }
             }
-            return convertView;
+            return view;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class FetchArtTask extends AsyncTask<Void, Void, Bitmap> {
+    private class FetchArtTask extends AsyncTask<Void, Void, Bitmap> {
+        private static final long SHOW_ANIM_TIME_THRESHOLD_MILLIS = 120;
         private int mBackgroundColor;
         private final Bitmap mIconBitmap;
         private final Uri mIconUri;
         private long mStartTimeMillis;
 
         FetchArtTask() {
-            MediaDescriptionCompat mediaDescriptionCompat = MediaRouteControllerDialog.this.mDescription;
             Uri uri = null;
-            Bitmap iconBitmap = mediaDescriptionCompat == null ? null : mediaDescriptionCompat.getIconBitmap();
+            Bitmap iconBitmap = MediaRouteControllerDialog.this.mDescription == null ? null : MediaRouteControllerDialog.this.mDescription.getIconBitmap();
             if (MediaRouteControllerDialog.isBitmapRecycled(iconBitmap)) {
-                Log.w("MediaRouteCtrlDialog", "Can't fetch the given art bitmap because it's already recycled.");
+                Log.w(MediaRouteControllerDialog.TAG, "Can't fetch the given art bitmap because it's already recycled.");
                 iconBitmap = null;
             }
             this.mIconBitmap = iconBitmap;
-            MediaDescriptionCompat mediaDescriptionCompat2 = MediaRouteControllerDialog.this.mDescription;
-            this.mIconUri = mediaDescriptionCompat2 != null ? mediaDescriptionCompat2.getIconUri() : uri;
+            this.mIconUri = MediaRouteControllerDialog.this.mDescription != null ? MediaRouteControllerDialog.this.mDescription.getIconUri() : uri;
         }
 
         public Bitmap getIconBitmap() {
@@ -1213,170 +1278,202 @@ public class MediaRouteControllerDialog extends AlertDialog {
             return this.mIconUri;
         }
 
-        @Override // android.os.AsyncTask
-        protected void onPreExecute() {
+        /* access modifiers changed from: protected */
+        public void onPreExecute() {
             this.mStartTimeMillis = SystemClock.uptimeMillis();
             MediaRouteControllerDialog.this.clearLoadedBitmap();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        /* JADX WARN: Multi-variable type inference failed */
-        /* JADX WARN: Removed duplicated region for block: B:74:0x00cc  */
-        /* JADX WARN: Removed duplicated region for block: B:76:0x00e1  */
-        /* JADX WARN: Type inference failed for: r4v0 */
-        /* JADX WARN: Type inference failed for: r4v1 */
-        /* JADX WARN: Type inference failed for: r4v2, types: [java.io.InputStream] */
-        @Override // android.os.AsyncTask
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
-        public Bitmap doInBackground(Void... arg) {
-            InputStream inputStream;
-            Bitmap bitmap = this.mIconBitmap;
-            int i = 0;
-            ?? r4 = 0;
-            if (bitmap == null) {
-                Uri uri = this.mIconUri;
-                try {
-                    if (uri != null) {
-                        try {
-                            inputStream = openInputStreamByScheme(uri);
-                            try {
-                                if (inputStream == null) {
-                                    Log.w("MediaRouteCtrlDialog", "Unable to open: " + this.mIconUri);
-                                    if (inputStream != null) {
-                                        try {
-                                            inputStream.close();
-                                        } catch (IOException unused) {
-                                        }
-                                    }
-                                    return null;
-                                }
-                                BitmapFactory.Options options = new BitmapFactory.Options();
-                                options.inJustDecodeBounds = true;
-                                BitmapFactory.decodeStream(inputStream, null, options);
-                                if (options.outWidth == 0 || options.outHeight == 0) {
-                                    try {
-                                        inputStream.close();
-                                    } catch (IOException unused2) {
-                                    }
-                                    return null;
-                                }
-                                try {
-                                    inputStream.reset();
-                                } catch (IOException unused3) {
-                                    inputStream.close();
-                                    inputStream = openInputStreamByScheme(this.mIconUri);
-                                    if (inputStream == null) {
-                                        Log.w("MediaRouteCtrlDialog", "Unable to open: " + this.mIconUri);
-                                        if (inputStream != null) {
-                                            try {
-                                                inputStream.close();
-                                            } catch (IOException unused4) {
-                                            }
-                                        }
-                                        return null;
-                                    }
-                                }
-                                options.inJustDecodeBounds = false;
-                                options.inSampleSize = Math.max(1, Integer.highestOneBit(options.outHeight / MediaRouteControllerDialog.this.getDesiredArtHeight(options.outWidth, options.outHeight)));
-                                if (isCancelled()) {
-                                    try {
-                                        inputStream.close();
-                                    } catch (IOException unused5) {
-                                    }
-                                    return null;
-                                }
-                                Bitmap decodeStream = BitmapFactory.decodeStream(inputStream, null, options);
-                                try {
-                                    inputStream.close();
-                                } catch (IOException unused6) {
-                                }
-                                bitmap = decodeStream;
-                            } catch (IOException e) {
-                                e = e;
-                                Log.w("MediaRouteCtrlDialog", "Unable to open: " + this.mIconUri, e);
-                                if (inputStream != null) {
-                                    try {
-                                        inputStream.close();
-                                    } catch (IOException unused7) {
-                                    }
-                                }
-                                bitmap = null;
-                                if (!MediaRouteControllerDialog.isBitmapRecycled(bitmap)) {
-                                }
-                            }
-                        } catch (IOException e2) {
-                            e = e2;
-                            inputStream = null;
-                        } catch (Throwable th) {
-                            th = th;
-                            if (r4 != 0) {
-                                try {
-                                    r4.close();
-                                } catch (IOException unused8) {
-                                }
-                            }
-                            throw th;
-                        }
-                    }
-                    bitmap = null;
-                } catch (Throwable th2) {
-                    th = th2;
-                    r4 = uri;
-                }
-            }
-            if (!MediaRouteControllerDialog.isBitmapRecycled(bitmap)) {
-                Log.w("MediaRouteCtrlDialog", "Can't use recycled bitmap: " + bitmap);
-                return null;
-            }
-            if (bitmap != null && bitmap.getWidth() < bitmap.getHeight()) {
-                Palette generate = new Palette.Builder(bitmap).maximumColorCount(1).generate();
-                if (!generate.getSwatches().isEmpty()) {
-                    i = generate.getSwatches().get(0).getRgb();
-                }
-                this.mBackgroundColor = i;
-            }
-            return bitmap;
+        /* access modifiers changed from: protected */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:21:0x0046 */
+        /* JADX WARNING: Removed duplicated region for block: B:24:0x0051 A[Catch:{ IOException -> 0x009f }] */
+        /* JADX WARNING: Removed duplicated region for block: B:57:0x00b9 A[SYNTHETIC, Splitter:B:57:0x00b9] */
+        /* JADX WARNING: Removed duplicated region for block: B:62:0x00c1 A[SYNTHETIC, Splitter:B:62:0x00c1] */
+        /* JADX WARNING: Removed duplicated region for block: B:70:0x00cc  */
+        /* JADX WARNING: Removed duplicated region for block: B:72:0x00df A[ADDED_TO_REGION] */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
+        public android.graphics.Bitmap doInBackground(java.lang.Void... r10) {
+            /*
+                r9 = this;
+                java.lang.String r10 = "Unable to open: "
+                android.graphics.Bitmap r0 = r9.mIconBitmap
+                r1 = 0
+                r2 = 1
+                java.lang.String r3 = "MediaRouteCtrlDialog"
+                r4 = 0
+                if (r0 == 0) goto L_0x000d
+                goto L_0x00c6
+            L_0x000d:
+                android.net.Uri r0 = r9.mIconUri
+                if (r0 == 0) goto L_0x00c5
+                java.io.InputStream r0 = r9.openInputStreamByScheme(r0)     // Catch:{ IOException -> 0x00a3, all -> 0x00a1 }
+                if (r0 != 0) goto L_0x002f
+                java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ IOException -> 0x009f }
+                r5.<init>((java.lang.String) r10)     // Catch:{ IOException -> 0x009f }
+                android.net.Uri r6 = r9.mIconUri     // Catch:{ IOException -> 0x009f }
+                java.lang.StringBuilder r5 = r5.append((java.lang.Object) r6)     // Catch:{ IOException -> 0x009f }
+                java.lang.String r5 = r5.toString()     // Catch:{ IOException -> 0x009f }
+                android.util.Log.w(r3, r5)     // Catch:{ IOException -> 0x009f }
+                if (r0 == 0) goto L_0x002e
+                r0.close()     // Catch:{ IOException -> 0x002e }
+            L_0x002e:
+                return r4
+            L_0x002f:
+                android.graphics.BitmapFactory$Options r5 = new android.graphics.BitmapFactory$Options     // Catch:{ IOException -> 0x009f }
+                r5.<init>()     // Catch:{ IOException -> 0x009f }
+                r5.inJustDecodeBounds = r2     // Catch:{ IOException -> 0x009f }
+                android.graphics.BitmapFactory.decodeStream(r0, r4, r5)     // Catch:{ IOException -> 0x009f }
+                int r6 = r5.outWidth     // Catch:{ IOException -> 0x009f }
+                if (r6 == 0) goto L_0x0099
+                int r6 = r5.outHeight     // Catch:{ IOException -> 0x009f }
+                if (r6 != 0) goto L_0x0042
+                goto L_0x0099
+            L_0x0042:
+                r0.reset()     // Catch:{ IOException -> 0x0046 }
+                goto L_0x0069
+            L_0x0046:
+                r0.close()     // Catch:{ IOException -> 0x009f }
+                android.net.Uri r6 = r9.mIconUri     // Catch:{ IOException -> 0x009f }
+                java.io.InputStream r0 = r9.openInputStreamByScheme(r6)     // Catch:{ IOException -> 0x009f }
+                if (r0 != 0) goto L_0x0069
+                java.lang.StringBuilder r5 = new java.lang.StringBuilder     // Catch:{ IOException -> 0x009f }
+                r5.<init>((java.lang.String) r10)     // Catch:{ IOException -> 0x009f }
+                android.net.Uri r6 = r9.mIconUri     // Catch:{ IOException -> 0x009f }
+                java.lang.StringBuilder r5 = r5.append((java.lang.Object) r6)     // Catch:{ IOException -> 0x009f }
+                java.lang.String r5 = r5.toString()     // Catch:{ IOException -> 0x009f }
+                android.util.Log.w(r3, r5)     // Catch:{ IOException -> 0x009f }
+                if (r0 == 0) goto L_0x0068
+                r0.close()     // Catch:{ IOException -> 0x0068 }
+            L_0x0068:
+                return r4
+            L_0x0069:
+                r5.inJustDecodeBounds = r1     // Catch:{ IOException -> 0x009f }
+                androidx.mediarouter.app.MediaRouteControllerDialog r6 = androidx.mediarouter.app.MediaRouteControllerDialog.this     // Catch:{ IOException -> 0x009f }
+                int r7 = r5.outWidth     // Catch:{ IOException -> 0x009f }
+                int r8 = r5.outHeight     // Catch:{ IOException -> 0x009f }
+                int r6 = r6.getDesiredArtHeight(r7, r8)     // Catch:{ IOException -> 0x009f }
+                int r7 = r5.outHeight     // Catch:{ IOException -> 0x009f }
+                int r7 = r7 / r6
+                int r6 = java.lang.Integer.highestOneBit(r7)     // Catch:{ IOException -> 0x009f }
+                int r6 = java.lang.Math.max((int) r2, (int) r6)     // Catch:{ IOException -> 0x009f }
+                r5.inSampleSize = r6     // Catch:{ IOException -> 0x009f }
+                boolean r6 = r9.isCancelled()     // Catch:{ IOException -> 0x009f }
+                if (r6 == 0) goto L_0x008e
+                if (r0 == 0) goto L_0x008d
+                r0.close()     // Catch:{ IOException -> 0x008d }
+            L_0x008d:
+                return r4
+            L_0x008e:
+                android.graphics.Bitmap r10 = android.graphics.BitmapFactory.decodeStream(r0, r4, r5)     // Catch:{ IOException -> 0x009f }
+                if (r0 == 0) goto L_0x0097
+                r0.close()     // Catch:{ IOException -> 0x0097 }
+            L_0x0097:
+                r0 = r10
+                goto L_0x00c6
+            L_0x0099:
+                if (r0 == 0) goto L_0x009e
+                r0.close()     // Catch:{ IOException -> 0x009e }
+            L_0x009e:
+                return r4
+            L_0x009f:
+                r5 = move-exception
+                goto L_0x00a5
+            L_0x00a1:
+                r9 = move-exception
+                goto L_0x00bf
+            L_0x00a3:
+                r5 = move-exception
+                r0 = r4
+            L_0x00a5:
+                java.lang.StringBuilder r6 = new java.lang.StringBuilder     // Catch:{ all -> 0x00bd }
+                r6.<init>((java.lang.String) r10)     // Catch:{ all -> 0x00bd }
+                android.net.Uri r10 = r9.mIconUri     // Catch:{ all -> 0x00bd }
+                java.lang.StringBuilder r10 = r6.append((java.lang.Object) r10)     // Catch:{ all -> 0x00bd }
+                java.lang.String r10 = r10.toString()     // Catch:{ all -> 0x00bd }
+                android.util.Log.w(r3, r10, r5)     // Catch:{ all -> 0x00bd }
+                if (r0 == 0) goto L_0x00c5
+                r0.close()     // Catch:{ IOException -> 0x00c5 }
+                goto L_0x00c5
+            L_0x00bd:
+                r9 = move-exception
+                r4 = r0
+            L_0x00bf:
+                if (r4 == 0) goto L_0x00c4
+                r4.close()     // Catch:{ IOException -> 0x00c4 }
+            L_0x00c4:
+                throw r9
+            L_0x00c5:
+                r0 = r4
+            L_0x00c6:
+                boolean r10 = androidx.mediarouter.app.MediaRouteControllerDialog.isBitmapRecycled(r0)
+                if (r10 == 0) goto L_0x00df
+                java.lang.StringBuilder r9 = new java.lang.StringBuilder
+                java.lang.String r10 = "Can't use recycled bitmap: "
+                r9.<init>((java.lang.String) r10)
+                java.lang.StringBuilder r9 = r9.append((java.lang.Object) r0)
+                java.lang.String r9 = r9.toString()
+                android.util.Log.w(r3, r9)
+                return r4
+            L_0x00df:
+                if (r0 == 0) goto L_0x0113
+                int r10 = r0.getWidth()
+                int r3 = r0.getHeight()
+                if (r10 >= r3) goto L_0x0113
+                androidx.palette.graphics.Palette$Builder r10 = new androidx.palette.graphics.Palette$Builder
+                r10.<init>((android.graphics.Bitmap) r0)
+                androidx.palette.graphics.Palette$Builder r10 = r10.maximumColorCount(r2)
+                androidx.palette.graphics.Palette r10 = r10.generate()
+                java.util.List r2 = r10.getSwatches()
+                boolean r2 = r2.isEmpty()
+                if (r2 == 0) goto L_0x0103
+                goto L_0x0111
+            L_0x0103:
+                java.util.List r10 = r10.getSwatches()
+                java.lang.Object r10 = r10.get(r1)
+                androidx.palette.graphics.Palette$Swatch r10 = (androidx.palette.graphics.Palette.Swatch) r10
+                int r1 = r10.getRgb()
+            L_0x0111:
+                r9.mBackgroundColor = r1
+            L_0x0113:
+                return r0
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.mediarouter.app.MediaRouteControllerDialog.FetchArtTask.doInBackground(java.lang.Void[]):android.graphics.Bitmap");
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // android.os.AsyncTask
-        public void onPostExecute(Bitmap art) {
-            MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
-            mediaRouteControllerDialog.mFetchArtTask = null;
-            if (!ObjectsCompat.equals(mediaRouteControllerDialog.mArtIconBitmap, this.mIconBitmap) || !ObjectsCompat.equals(MediaRouteControllerDialog.this.mArtIconUri, this.mIconUri)) {
-                MediaRouteControllerDialog mediaRouteControllerDialog2 = MediaRouteControllerDialog.this;
-                mediaRouteControllerDialog2.mArtIconBitmap = this.mIconBitmap;
-                mediaRouteControllerDialog2.mArtIconLoadedBitmap = art;
-                mediaRouteControllerDialog2.mArtIconUri = this.mIconUri;
-                mediaRouteControllerDialog2.mArtIconBackgroundColor = this.mBackgroundColor;
+        /* access modifiers changed from: protected */
+        public void onPostExecute(Bitmap bitmap) {
+            MediaRouteControllerDialog.this.mFetchArtTask = null;
+            if (!ObjectsCompat.equals(MediaRouteControllerDialog.this.mArtIconBitmap, this.mIconBitmap) || !ObjectsCompat.equals(MediaRouteControllerDialog.this.mArtIconUri, this.mIconUri)) {
+                MediaRouteControllerDialog.this.mArtIconBitmap = this.mIconBitmap;
+                MediaRouteControllerDialog.this.mArtIconLoadedBitmap = bitmap;
+                MediaRouteControllerDialog.this.mArtIconUri = this.mIconUri;
+                MediaRouteControllerDialog.this.mArtIconBackgroundColor = this.mBackgroundColor;
                 boolean z = true;
-                mediaRouteControllerDialog2.mArtIconIsLoaded = true;
-                MediaRouteControllerDialog mediaRouteControllerDialog3 = MediaRouteControllerDialog.this;
-                if (SystemClock.uptimeMillis() - this.mStartTimeMillis <= 120) {
+                MediaRouteControllerDialog.this.mArtIconIsLoaded = true;
+                MediaRouteControllerDialog mediaRouteControllerDialog = MediaRouteControllerDialog.this;
+                if (SystemClock.uptimeMillis() - this.mStartTimeMillis <= SHOW_ANIM_TIME_THRESHOLD_MILLIS) {
                     z = false;
                 }
-                mediaRouteControllerDialog3.update(z);
+                mediaRouteControllerDialog.update(z);
             }
         }
 
         private InputStream openInputStreamByScheme(Uri uri) throws IOException {
-            InputStream openInputStream;
+            InputStream inputStream;
             String lowerCase = uri.getScheme().toLowerCase();
             if ("android.resource".equals(lowerCase) || "content".equals(lowerCase) || "file".equals(lowerCase)) {
-                openInputStream = MediaRouteControllerDialog.this.mContext.getContentResolver().openInputStream(uri);
+                inputStream = MediaRouteControllerDialog.this.mContext.getContentResolver().openInputStream(uri);
             } else {
                 URLConnection openConnection = new URL(uri.toString()).openConnection();
-                int i = MediaRouteControllerDialog.CONNECTION_TIMEOUT_MILLIS;
-                openConnection.setConnectTimeout(i);
-                openConnection.setReadTimeout(i);
-                openInputStream = openConnection.getInputStream();
+                openConnection.setConnectTimeout(MediaRouteControllerDialog.CONNECTION_TIMEOUT_MILLIS);
+                openConnection.setReadTimeout(MediaRouteControllerDialog.CONNECTION_TIMEOUT_MILLIS);
+                inputStream = openConnection.getInputStream();
             }
-            if (openInputStream == null) {
+            if (inputStream == null) {
                 return null;
             }
-            return new BufferedInputStream(openInputStream);
+            return new BufferedInputStream(inputStream);
         }
     }
 }

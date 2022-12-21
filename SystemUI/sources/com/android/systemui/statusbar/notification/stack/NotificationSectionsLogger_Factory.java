@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.stack;
 import com.android.systemui.log.LogBuffer;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationSectionsLogger_Factory implements Factory<NotificationSectionsLogger> {
     private final Provider<LogBuffer> logBufferProvider;
 
@@ -11,10 +11,8 @@ public final class NotificationSectionsLogger_Factory implements Factory<Notific
         this.logBufferProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationSectionsLogger mo1933get() {
-        return newInstance(this.logBufferProvider.mo1933get());
+    public NotificationSectionsLogger get() {
+        return newInstance(this.logBufferProvider.get());
     }
 
     public static NotificationSectionsLogger_Factory create(Provider<LogBuffer> provider) {

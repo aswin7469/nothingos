@@ -4,7 +4,7 @@ import com.android.systemui.biometrics.AuthRippleView;
 import com.android.systemui.statusbar.phone.NotificationShadeWindowView;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class StatusBarViewModule_GetAuthRippleViewFactory implements Factory<AuthRippleView> {
     private final Provider<NotificationShadeWindowView> notificationShadeWindowViewProvider;
 
@@ -12,10 +12,8 @@ public final class StatusBarViewModule_GetAuthRippleViewFactory implements Facto
         this.notificationShadeWindowViewProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AuthRippleView mo1933get() {
-        return getAuthRippleView(this.notificationShadeWindowViewProvider.mo1933get());
+    public AuthRippleView get() {
+        return getAuthRippleView(this.notificationShadeWindowViewProvider.get());
     }
 
     public static StatusBarViewModule_GetAuthRippleViewFactory create(Provider<NotificationShadeWindowView> provider) {

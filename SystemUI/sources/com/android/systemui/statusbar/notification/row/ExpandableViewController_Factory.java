@@ -2,7 +2,7 @@ package com.android.systemui.statusbar.notification.row;
 
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ExpandableViewController_Factory implements Factory<ExpandableViewController> {
     private final Provider<ExpandableView> viewProvider;
 
@@ -10,10 +10,8 @@ public final class ExpandableViewController_Factory implements Factory<Expandabl
         this.viewProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ExpandableViewController mo1933get() {
-        return newInstance(this.viewProvider.mo1933get());
+    public ExpandableViewController get() {
+        return newInstance(this.viewProvider.get());
     }
 
     public static ExpandableViewController_Factory create(Provider<ExpandableView> provider) {

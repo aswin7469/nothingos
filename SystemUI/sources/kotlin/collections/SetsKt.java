@@ -1,11 +1,9 @@
 package kotlin.collections;
 
-import java.util.Set;
-import org.jetbrains.annotations.NotNull;
-/* loaded from: classes2.dex */
+import kotlin.Metadata;
+
+@Metadata(mo64986d1 = {"kotlin/collections/SetsKt__SetsJVMKt", "kotlin/collections/SetsKt__SetsKt", "kotlin/collections/SetsKt___SetsKt"}, mo64988k = 4, mo64989mv = {1, 7, 1}, mo64991xi = 49)
 public final class SetsKt extends SetsKt___SetsKt {
-    @NotNull
-    public static /* bridge */ /* synthetic */ <T> Set<T> setOf(@NotNull T... tArr) {
-        return SetsKt__SetsKt.setOf((Object[]) tArr);
+    private SetsKt() {
     }
 }

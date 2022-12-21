@@ -3,16 +3,19 @@ package com.android.keyguard.dagger;
 import com.android.keyguard.KeyguardClockSwitch;
 import com.android.keyguard.KeyguardSliceView;
 import com.android.keyguard.KeyguardStatusView;
-import com.android.systemui.R$id;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+import dagger.Module;
+import dagger.Provides;
+
+@Module
 public abstract class KeyguardStatusViewModule {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static KeyguardClockSwitch getKeyguardClockSwitch(KeyguardStatusView keyguardStatusView) {
-        return (KeyguardClockSwitch) keyguardStatusView.findViewById(R$id.keyguard_clock_container);
+    @Provides
+    static KeyguardClockSwitch getKeyguardClockSwitch(KeyguardStatusView keyguardStatusView) {
+        return (KeyguardClockSwitch) keyguardStatusView.findViewById(C1893R.C1897id.keyguard_clock_container);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static KeyguardSliceView getKeyguardSliceView(KeyguardClockSwitch keyguardClockSwitch) {
-        return (KeyguardSliceView) keyguardClockSwitch.findViewById(R$id.keyguard_status_area);
+    @Provides
+    static KeyguardSliceView getKeyguardSliceView(KeyguardClockSwitch keyguardClockSwitch) {
+        return (KeyguardSliceView) keyguardClockSwitch.findViewById(C1893R.C1897id.keyguard_slice_view);
     }
 }

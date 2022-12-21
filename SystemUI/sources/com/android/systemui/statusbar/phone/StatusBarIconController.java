@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.view.View;
@@ -9,22 +10,31 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.internal.statusbar.StatusBarIcon;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$array;
-import com.android.systemui.R$dimen;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.demomode.DemoModeCommandReceiver;
+import com.android.systemui.flags.FeatureFlags;
+import com.android.systemui.flags.Flags;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.plugins.DarkIconDispatcher;
-import com.android.systemui.statusbar.FeatureFlags;
 import com.android.systemui.statusbar.StatusBarIconView;
 import com.android.systemui.statusbar.StatusBarMobileView;
 import com.android.systemui.statusbar.StatusBarWifiView;
 import com.android.systemui.statusbar.StatusIconDisplayable;
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
+import com.android.systemui.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public interface StatusBarIconController {
+    public static final String ICON_HIDE_LIST = "icon_blacklist";
+    public static final int TAG_PRIMARY = 0;
+
     void addIconGroup(IconManager iconManager);
+
+    void refreshIconGroup(IconManager iconManager);
 
     void removeAllIconsForSlot(String str);
 
@@ -51,14 +61,14 @@ public interface StatusBarIconController {
     void setSignalIcon(String str, StatusBarSignalPolicy.WifiIconState wifiIconState);
 
     static ArraySet<String> getIconHideList(Context context, String str) {
-        String[] split;
+        String[] strArr;
         ArraySet<String> arraySet = new ArraySet<>();
         if (str == null) {
-            split = context.getResources().getStringArray(R$array.config_statusBarIconsToExclude);
+            strArr = context.getResources().getStringArray(C1893R.array.config_statusBarIconsToExclude);
         } else {
-            split = str.split(",");
+            strArr = str.split(NavigationBarInflaterView.BUTTON_SEPARATOR);
         }
-        for (String str2 : split) {
+        for (String str2 : strArr) {
             if (!TextUtils.isEmpty(str2)) {
                 arraySet.add(str2);
             }
@@ -66,65 +76,60 @@ public interface StatusBarIconController {
         return arraySet;
     }
 
-    /* loaded from: classes.dex */
     public static class DarkIconManager extends IconManager {
-        private int mIconHPadding = this.mContext.getResources().getDimensionPixelSize(R$dimen.status_bar_icon_padding);
-        private final DarkIconDispatcher mDarkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
+        private final DarkIconDispatcher mDarkIconDispatcher = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class));
+        private int mIconHPadding = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.status_bar_icon_padding);
 
         public DarkIconManager(LinearLayout linearLayout, FeatureFlags featureFlags) {
             super(linearLayout, featureFlags);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
+        /* access modifiers changed from: protected */
         public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
-            this.mDarkIconDispatcher.addDarkReceiver(addHolder(i, str, z, statusBarIconHolder));
+            this.mDarkIconDispatcher.addDarkReceiver((DarkIconDispatcher.DarkReceiver) addHolder(i, str, z, statusBarIconHolder));
         }
 
-        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
-        protected LinearLayout.LayoutParams onCreateLayoutParams() {
+        /* access modifiers changed from: protected */
+        public LinearLayout.LayoutParams onCreateLayoutParams() {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, this.mIconSize);
             int i = this.mIconHPadding;
             layoutParams.setMargins(i, 0, i, 0);
             return layoutParams;
         }
 
-        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
-        protected void destroy() {
+        /* access modifiers changed from: protected */
+        public void destroy() {
             for (int i = 0; i < this.mGroup.getChildCount(); i++) {
                 this.mDarkIconDispatcher.removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mGroup.getChildAt(i));
             }
             this.mGroup.removeAllViews();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
+        /* access modifiers changed from: protected */
         public void onRemoveIcon(int i) {
             this.mDarkIconDispatcher.removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mGroup.getChildAt(i));
             super.onRemoveIcon(i);
         }
 
-        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
         public void onSetIcon(int i, StatusBarIcon statusBarIcon) {
             super.onSetIcon(i, statusBarIcon);
             this.mDarkIconDispatcher.applyDark((DarkIconDispatcher.DarkReceiver) this.mGroup.getChildAt(i));
         }
 
-        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
-        protected DemoStatusIcons createDemoStatusIcons() {
+        /* access modifiers changed from: protected */
+        public DemoStatusIcons createDemoStatusIcons() {
             DemoStatusIcons createDemoStatusIcons = super.createDemoStatusIcons();
-            this.mDarkIconDispatcher.addDarkReceiver(createDemoStatusIcons);
+            this.mDarkIconDispatcher.addDarkReceiver((DarkIconDispatcher.DarkReceiver) createDemoStatusIcons);
             return createDemoStatusIcons;
         }
 
-        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
-        protected void exitDemoMode() {
-            this.mDarkIconDispatcher.removeDarkReceiver(this.mDemoStatusIcons);
+        /* access modifiers changed from: protected */
+        public void exitDemoMode() {
+            this.mDarkIconDispatcher.removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDemoStatusIcons);
             super.exitDemoMode();
         }
     }
 
-    /* loaded from: classes.dex */
     public static class TintedIconManager extends IconManager {
         private int mColor;
 
@@ -132,8 +137,7 @@ public interface StatusBarIconController {
             super(viewGroup, featureFlags);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
+        /* access modifiers changed from: protected */
         public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
             StatusIconDisplayable addHolder = addHolder(i, str, z, statusBarIconHolder);
             addHolder.setStaticDrawableColor(this.mColor);
@@ -152,44 +156,69 @@ public interface StatusBarIconController {
             }
         }
 
-        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
-        protected DemoStatusIcons createDemoStatusIcons() {
+        /* access modifiers changed from: protected */
+        public DemoStatusIcons createDemoStatusIcons() {
             DemoStatusIcons createDemoStatusIcons = super.createDemoStatusIcons();
             createDemoStatusIcons.setColor(this.mColor);
             return createDemoStatusIcons;
         }
+
+        @SysUISingleton
+        public static class Factory {
+            private final FeatureFlags mFeatureFlags;
+
+            @Inject
+            public Factory(FeatureFlags featureFlags) {
+                this.mFeatureFlags = featureFlags;
+            }
+
+            public TintedIconManager create(ViewGroup viewGroup) {
+                return new TintedIconManager(viewGroup, this.mFeatureFlags);
+            }
+        }
     }
 
-    /* loaded from: classes.dex */
     public static class IconManager implements DemoModeCommandReceiver {
+        protected ArrayList<String> mBlockList = new ArrayList<>();
         protected final Context mContext;
+        private StatusBarIconController mController;
         protected DemoStatusIcons mDemoStatusIcons;
+        protected boolean mDemoable = true;
         private final FeatureFlags mFeatureFlags;
         protected final ViewGroup mGroup;
         protected final int mIconSize;
         private boolean mIsInDemoMode;
         protected boolean mShouldLog = false;
-        protected boolean mDemoable = true;
-        protected ArrayList<String> mBlockList = new ArrayList<>();
 
         public IconManager(ViewGroup viewGroup, FeatureFlags featureFlags) {
             this.mFeatureFlags = featureFlags;
             this.mGroup = viewGroup;
             Context context = viewGroup.getContext();
             this.mContext = context;
-            this.mIconSize = context.getResources().getDimensionPixelSize(17105529);
+            this.mIconSize = context.getResources().getDimensionPixelSize(17105552);
         }
 
         public boolean isDemoable() {
             return this.mDemoable;
         }
 
+        public void setIsDemoable(boolean z) {
+            this.mDemoable = z;
+        }
+
+        /* access modifiers changed from: package-private */
+        public void setController(StatusBarIconController statusBarIconController) {
+            this.mController = statusBarIconController;
+        }
+
         public void setBlockList(List<String> list) {
+            Assert.isMainThread();
             this.mBlockList.clear();
-            if (list == null || list.isEmpty()) {
-                return;
-            }
             this.mBlockList.addAll(list);
+            StatusBarIconController statusBarIconController = this.mController;
+            if (statusBarIconController != null) {
+                statusBarIconController.refreshIconGroup(this);
+            }
         }
 
         public void setShouldLog(boolean z) {
@@ -200,36 +229,39 @@ public interface StatusBarIconController {
             return this.mShouldLog;
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
             addHolder(i, str, z, statusBarIconHolder);
         }
 
-        protected StatusIconDisplayable addHolder(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
+        /* access modifiers changed from: protected */
+        public StatusIconDisplayable addHolder(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
             if (this.mBlockList.contains(str)) {
                 z = true;
             }
             int type = statusBarIconHolder.getType();
-            if (type != 0) {
-                if (type == 1) {
-                    return addSignalIcon(i, str, statusBarIconHolder.getWifiState());
-                }
-                if (type == 2) {
-                    return addMobileIcon(i, str, statusBarIconHolder.getMobileState());
-                }
+            if (type == 0) {
+                return addIcon(i, str, z, statusBarIconHolder.getIcon());
+            }
+            if (type == 1) {
+                return addSignalIcon(i, str, statusBarIconHolder.getWifiState());
+            }
+            if (type != 2) {
                 return null;
             }
-            return addIcon(i, str, z, statusBarIconHolder.getIcon());
+            return addMobileIcon(i, str, statusBarIconHolder.getMobileState());
         }
 
-        protected StatusBarIconView addIcon(int i, String str, boolean z, StatusBarIcon statusBarIcon) {
+        /* access modifiers changed from: protected */
+        public StatusBarIconView addIcon(int i, String str, boolean z, StatusBarIcon statusBarIcon) {
             StatusBarIconView onCreateStatusBarIconView = onCreateStatusBarIconView(str, z);
             onCreateStatusBarIconView.set(statusBarIcon);
             this.mGroup.addView(onCreateStatusBarIconView, i, onCreateLayoutParams());
             return onCreateStatusBarIconView;
         }
 
-        protected StatusBarWifiView addSignalIcon(int i, String str, StatusBarSignalPolicy.WifiIconState wifiIconState) {
+        /* access modifiers changed from: protected */
+        public StatusBarWifiView addSignalIcon(int i, String str, StatusBarSignalPolicy.WifiIconState wifiIconState) {
             StatusBarWifiView onCreateStatusBarWifiView = onCreateStatusBarWifiView(str);
             onCreateStatusBarWifiView.applyWifiState(wifiIconState);
             this.mGroup.addView(onCreateStatusBarWifiView, i, onCreateLayoutParams());
@@ -239,7 +271,8 @@ public interface StatusBarIconController {
             return onCreateStatusBarWifiView;
         }
 
-        protected StatusBarMobileView addMobileIcon(int i, String str, StatusBarSignalPolicy.MobileIconState mobileIconState) {
+        /* access modifiers changed from: protected */
+        public StatusBarMobileView addMobileIcon(int i, String str, StatusBarSignalPolicy.MobileIconState mobileIconState) {
             StatusBarMobileView onCreateStatusBarMobileView = onCreateStatusBarMobileView(str);
             onCreateStatusBarMobileView.applyMobileState(mobileIconState);
             this.mGroup.addView(onCreateStatusBarMobileView, i, onCreateLayoutParams());
@@ -250,7 +283,7 @@ public interface StatusBarIconController {
         }
 
         private StatusBarIconView onCreateStatusBarIconView(String str, boolean z) {
-            return new StatusBarIconView(this.mContext, str, null, z);
+            return new StatusBarIconView(this.mContext, str, (StatusBarNotification) null, z);
         }
 
         private StatusBarWifiView onCreateStatusBarWifiView(String str) {
@@ -258,24 +291,32 @@ public interface StatusBarIconController {
         }
 
         private StatusBarMobileView onCreateStatusBarMobileView(String str) {
-            return StatusBarMobileView.fromContext(this.mContext, str, this.mFeatureFlags.isCombinedStatusBarSignalIconsEnabled());
+            return StatusBarMobileView.fromContext(this.mContext, str, this.mFeatureFlags.isEnabled(Flags.COMBINED_STATUS_BAR_SIGNAL_ICONS));
         }
 
-        protected LinearLayout.LayoutParams onCreateLayoutParams() {
+        /* access modifiers changed from: protected */
+        public LinearLayout.LayoutParams onCreateLayoutParams() {
             return new LinearLayout.LayoutParams(-2, this.mIconSize);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public void destroy() {
             this.mGroup.removeAllViews();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public void onIconExternal(int i, int i2) {
             ImageView imageView = (ImageView) this.mGroup.getChildAt(i);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setAdjustViewBounds(true);
             setHeightAndCenter(imageView, i2);
+        }
+
+        /* access modifiers changed from: protected */
+        public void onDensityOrFontScaleChanged() {
+            for (int i = 0; i < this.mGroup.getChildCount(); i++) {
+                this.mGroup.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(-2, this.mIconSize));
+            }
         }
 
         private void setHeightAndCenter(ImageView imageView, int i) {
@@ -287,7 +328,7 @@ public interface StatusBarIconController {
             imageView.setLayoutParams(layoutParams);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
+        /* access modifiers changed from: protected */
         public void onRemoveIcon(int i) {
             if (this.mIsInDemoMode) {
                 this.mDemoStatusIcons.onRemoveIcon((StatusIconDisplayable) this.mGroup.getChildAt(i));
@@ -305,8 +346,7 @@ public interface StatusBarIconController {
                 onSetIcon(i, statusBarIconHolder.getIcon());
             } else if (type == 1) {
                 onSetSignalIcon(i, statusBarIconHolder.getWifiState());
-            } else if (type != 2) {
-            } else {
+            } else if (type == 2) {
                 onSetMobileIcon(i, statusBarIconHolder.getMobileState());
             }
         }
@@ -331,15 +371,12 @@ public interface StatusBarIconController {
             }
         }
 
-        @Override // com.android.systemui.demomode.DemoModeCommandReceiver
         public void dispatchDemoCommand(String str, Bundle bundle) {
-            if (!this.mDemoable) {
-                return;
+            if (this.mDemoable) {
+                this.mDemoStatusIcons.dispatchDemoCommand(str, bundle);
             }
-            this.mDemoStatusIcons.dispatchDemoCommand(str, bundle);
         }
 
-        @Override // com.android.systemui.demomode.DemoModeCommandReceiver
         public void onDemoModeStarted() {
             this.mIsInDemoMode = true;
             if (this.mDemoStatusIcons == null) {
@@ -348,7 +385,6 @@ public interface StatusBarIconController {
             this.mDemoStatusIcons.onDemoModeStarted();
         }
 
-        @Override // com.android.systemui.demomode.DemoModeCommandReceiver
         public void onDemoModeFinished() {
             DemoStatusIcons demoStatusIcons = this.mDemoStatusIcons;
             if (demoStatusIcons != null) {
@@ -358,12 +394,14 @@ public interface StatusBarIconController {
             }
         }
 
-        protected void exitDemoMode() {
+        /* access modifiers changed from: protected */
+        public void exitDemoMode() {
             this.mDemoStatusIcons.remove();
             this.mDemoStatusIcons = null;
         }
 
-        protected DemoStatusIcons createDemoStatusIcons() {
+        /* access modifiers changed from: protected */
+        public DemoStatusIcons createDemoStatusIcons() {
             return new DemoStatusIcons((LinearLayout) this.mGroup, this.mIconSize, this.mFeatureFlags);
         }
     }

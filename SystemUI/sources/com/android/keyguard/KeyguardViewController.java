@@ -1,8 +1,14 @@
 package com.android.keyguard;
 
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewRootImpl;
-/* loaded from: classes.dex */
+import com.android.systemui.statusbar.phone.BiometricUnlockController;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
+import com.android.systemui.statusbar.phone.KeyguardBypassController;
+import com.android.systemui.statusbar.phone.NotificationPanelViewController;
+import com.android.systemui.statusbar.phone.panelstate.PanelExpansionStateManager;
+
 public interface KeyguardViewController {
     void blockPanelExpansionFromCurrentTouch();
 
@@ -30,22 +36,22 @@ public interface KeyguardViewController {
 
     void onCancelClicked();
 
-    default void onFinishedGoingToSleep() {
+    void onFinishedGoingToSleep() {
     }
 
-    default void onScreenTurnedOn() {
+    void onStartedGoingToSleep() {
     }
 
-    default void onScreenTurningOn() {
+    void onStartedWakingUp() {
     }
 
-    default void onStartedGoingToSleep() {
-    }
-
-    default void onStartedWakingUp() {
-    }
+    void registerCentralSurfaces(CentralSurfaces centralSurfaces, NotificationPanelViewController notificationPanelViewController, PanelExpansionStateManager panelExpansionStateManager, BiometricUnlockController biometricUnlockController, View view, KeyguardBypassController keyguardBypassController);
 
     void reset(boolean z);
+
+    void resetAlternateAuth(boolean z);
+
+    void setFaceRecognitionBrightness(int i);
 
     void setKeyguardGoingAwayState(boolean z);
 

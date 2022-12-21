@@ -2,64 +2,85 @@ package com.android.systemui.statusbar.notification.stack;
 
 import android.content.Context;
 import android.util.MathUtils;
-import com.android.systemui.R$dimen;
+import com.android.systemui.C1893R;
+import com.android.systemui.Dumpable;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.statusbar.NotificationShelf;
+import com.android.systemui.statusbar.notification.NotificationUtils;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ActivatableNotificationView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm;
-/* loaded from: classes.dex */
-public class AmbientState {
+import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
+import java.p026io.PrintWriter;
+import javax.inject.Inject;
+
+@SysUISingleton
+public class AmbientState implements Dumpable {
+    private static final float MAX_PULSE_HEIGHT = 100000.0f;
+    private static final boolean NOTIFICATIONS_HAVE_SHADOWS = false;
     private ActivatableNotificationView mActivatedChild;
-    private float mAlphaFraction;
     private float mAppearFraction;
     private boolean mAppearing;
     private int mBaseZHeight;
     private final StackScrollAlgorithm.BypassController mBypassController;
+    private boolean mClearAllInProgress;
     private int mContentHeight;
     private float mCurrentScrollVelocity;
     private boolean mDimmed;
-    private boolean mDismissAllInProgress;
+    private float mDozeAmount = 0.0f;
     private boolean mDozing;
     private float mExpandingVelocity;
     private boolean mExpansionChanging;
     private float mExpansionFraction;
+    private float mFractionToShade;
     private boolean mHasAlertEntries;
     private float mHideAmount;
     private boolean mHideSensitive;
-    private int mIntrinsicPadding;
-    private boolean mIsShadeOpening;
+    private boolean mIsFlinging;
+    private boolean mIsSwipingUp;
     private ExpandableView mLastVisibleBackgroundChild;
     private int mLayoutHeight;
+    private int mLayoutMaxHeight;
     private int mLayoutMinHeight;
     private float mMaxHeadsUpTranslation;
+    private boolean mNeedFlingAfterLockscreenSwipeUp = false;
     private Runnable mOnPulseHeightChangedListener;
     private float mOverExpansion;
     private float mOverScrollBottomAmount;
     private float mOverScrollTopAmount;
     private boolean mPanelFullWidth;
     private boolean mPanelTracking;
+    private float mPulseHeight = MAX_PULSE_HEIGHT;
     private boolean mPulsing;
-    private boolean mQsCustomizerShowing;
     private int mScrollY;
     private final StackScrollAlgorithm.SectionProvider mSectionProvider;
     private boolean mShadeExpanded;
     private NotificationShelf mShelf;
     private float mStackEndHeight;
+    private float mStackHeight = 0.0f;
+    private int mStackTopMargin;
     private float mStackTranslation;
+    private float mStackY = 0.0f;
+    private StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
     private int mStatusBarState;
     private int mTopPadding;
     private ExpandableNotificationRow mTrackedHeadsUpRow;
     private boolean mUnlockHintRunning;
     private int mZDistanceBetweenElements;
-    private float mPulseHeight = 100000.0f;
-    private float mDozeAmount = 0.0f;
-    private float mStackY = 0.0f;
-    private float mStackHeight = 0.0f;
 
     private static int getBaseHeight(int i) {
         return 0;
+    }
+
+    public void setFractionToShade(float f) {
+        this.mFractionToShade = f;
+    }
+
+    public float getFractionToShade() {
+        return this.mFractionToShade;
     }
 
     public float getStackEndHeight() {
@@ -82,6 +103,24 @@ public class AmbientState {
         this.mExpansionFraction = f;
     }
 
+    public void setSwipingUp(boolean z) {
+        if (!z && this.mIsSwipingUp) {
+            this.mNeedFlingAfterLockscreenSwipeUp = true;
+        }
+        this.mIsSwipingUp = z;
+    }
+
+    public boolean isSwipingUp() {
+        return this.mIsSwipingUp;
+    }
+
+    public void setIsFlinging(boolean z) {
+        if (isOnKeyguard() && !z && this.mIsFlinging) {
+            this.mNeedFlingAfterLockscreenSwipeUp = false;
+        }
+        this.mIsFlinging = z;
+    }
+
     public float getExpansionFraction() {
         return this.mExpansionFraction;
     }
@@ -94,10 +133,13 @@ public class AmbientState {
         return this.mStackHeight;
     }
 
-    public AmbientState(Context context, StackScrollAlgorithm.SectionProvider sectionProvider, StackScrollAlgorithm.BypassController bypassController) {
+    @Inject
+    public AmbientState(Context context, DumpManager dumpManager, StackScrollAlgorithm.SectionProvider sectionProvider, StackScrollAlgorithm.BypassController bypassController, StatusBarKeyguardViewManager statusBarKeyguardViewManager) {
         this.mSectionProvider = sectionProvider;
         this.mBypassController = bypassController;
+        this.mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
         reload(context);
+        dumpManager.registerDumpable(this);
     }
 
     public void reload(Context context) {
@@ -106,26 +148,18 @@ public class AmbientState {
         this.mBaseZHeight = getBaseHeight(zDistanceBetweenElements);
     }
 
-    public void setIsShadeOpening(boolean z) {
-        this.mIsShadeOpening = z;
-    }
-
-    public boolean isShadeOpening() {
-        return this.mIsShadeOpening;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setOverExpansion(float f) {
         this.mOverExpansion = f;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getOverExpansion() {
         return this.mOverExpansion;
     }
 
     private static int getZDistanceBetweenElements(Context context) {
-        return Math.max(1, context.getResources().getDimensionPixelSize(R$dimen.z_distance_between_notifications));
+        return Math.max(1, context.getResources().getDimensionPixelSize(C1893R.dimen.z_distance_between_notifications));
     }
 
     public static int getNotificationLaunchHeight(Context context) {
@@ -158,7 +192,7 @@ public class AmbientState {
 
     public void setHideAmount(float f) {
         if (f == 1.0f && this.mHideAmount != f) {
-            setPulseHeight(100000.0f);
+            setPulseHeight(MAX_PULSE_HEIGHT);
         }
         this.mHideAmount = f;
     }
@@ -223,8 +257,16 @@ public class AmbientState {
         this.mLayoutHeight = i;
     }
 
+    public void setLayoutMaxHeight(int i) {
+        this.mLayoutMaxHeight = i;
+    }
+
+    public int getLayoutMaxHeight() {
+        return this.mLayoutMaxHeight;
+    }
+
     public float getTopPadding() {
-        return this.mTopPadding;
+        return (float) this.mTopPadding;
     }
 
     public void setTopPadding(int i) {
@@ -243,12 +285,12 @@ public class AmbientState {
         if (z) {
             return max;
         }
-        float f = max;
+        float f = (float) max;
         return (int) MathUtils.lerp(f, Math.min(this.mPulseHeight, f), this.mDozeAmount);
     }
 
     public boolean isPulseExpanding() {
-        return (this.mPulseHeight == 100000.0f || this.mDozeAmount == 0.0f || this.mHideAmount == 1.0f) ? false : true;
+        return (this.mPulseHeight == MAX_PULSE_HEIGHT || this.mDozeAmount == 0.0f || this.mHideAmount == 1.0f) ? false : true;
     }
 
     public boolean isShadeExpanded() {
@@ -267,12 +309,12 @@ public class AmbientState {
         return this.mMaxHeadsUpTranslation;
     }
 
-    public void setDismissAllInProgress(boolean z) {
-        this.mDismissAllInProgress = z;
+    public void setClearAllInProgress(boolean z) {
+        this.mClearAllInProgress = z;
     }
 
-    public boolean isDismissAllInProgress() {
-        return this.mDismissAllInProgress;
+    public boolean isClearAllInProgress() {
+        return this.mClearAllInProgress;
     }
 
     public void setLayoutMinHeight(int i) {
@@ -289,6 +331,10 @@ public class AmbientState {
 
     public void setContentHeight(int i) {
         this.mContentHeight = i;
+    }
+
+    public float getContentHeight() {
+        return (float) this.mContentHeight;
     }
 
     public void setLastVisibleBackgroundChild(ExpandableView expandableView) {
@@ -312,6 +358,9 @@ public class AmbientState {
     }
 
     public void setStatusBarState(int i) {
+        if (this.mStatusBarState != 1) {
+            this.mNeedFlingAfterLockscreenSwipeUp = false;
+        }
         this.mStatusBarState = i;
     }
 
@@ -335,6 +384,10 @@ public class AmbientState {
         this.mPanelTracking = z;
     }
 
+    public boolean hasPulsingNotifications() {
+        return this.mPulsing && this.mHasAlertEntries;
+    }
+
     public void setPulsing(boolean z) {
         this.mPulsing = z;
     }
@@ -351,6 +404,10 @@ public class AmbientState {
         return this.mPanelTracking;
     }
 
+    public boolean isPanelFullWidth() {
+        return this.mPanelFullWidth;
+    }
+
     public void setPanelFullWidth(boolean z) {
         this.mPanelFullWidth = z;
     }
@@ -363,16 +420,8 @@ public class AmbientState {
         return this.mUnlockHintRunning;
     }
 
-    public boolean isQsCustomizerShowing() {
-        return this.mQsCustomizerShowing;
-    }
-
-    public void setQsCustomizerShowing(boolean z) {
-        this.mQsCustomizerShowing = z;
-    }
-
-    public void setIntrinsicPadding(int i) {
-        this.mIntrinsicPadding = i;
+    public boolean isFlingingAfterSwipeUpOnLockscreen() {
+        return this.mIsFlinging && this.mNeedFlingAfterLockscreenSwipeUp;
     }
 
     public boolean isDozingAndNotPulsing(ExpandableView expandableView) {
@@ -398,20 +447,23 @@ public class AmbientState {
         this.mAppearing = z;
     }
 
+    public boolean isAppearing() {
+        return this.mAppearing;
+    }
+
     public void setPulseHeight(float f) {
         if (f != this.mPulseHeight) {
             this.mPulseHeight = f;
             Runnable runnable = this.mOnPulseHeightChangedListener;
-            if (runnable == null) {
-                return;
+            if (runnable != null) {
+                runnable.run();
             }
-            runnable.run();
         }
     }
 
     public float getPulseHeight() {
         float f = this.mPulseHeight;
-        if (f == 100000.0f) {
+        if (f == MAX_PULSE_HEIGHT) {
             return 0.0f;
         }
         return f;
@@ -420,11 +472,14 @@ public class AmbientState {
     public void setDozeAmount(float f) {
         if (f != this.mDozeAmount) {
             this.mDozeAmount = f;
-            if (f != 0.0f && f != 1.0f) {
-                return;
+            if (f == 0.0f || f == 1.0f) {
+                setPulseHeight(MAX_PULSE_HEIGHT);
             }
-            setPulseHeight(100000.0f);
         }
+    }
+
+    public float getDozeAmount() {
+        return this.mDozeAmount;
     }
 
     public boolean isFullyAwake() {
@@ -459,11 +514,60 @@ public class AmbientState {
         this.mHasAlertEntries = z;
     }
 
-    public void setAlphaFraction(float f) {
-        this.mAlphaFraction = f;
+    public void setStackTopMargin(int i) {
+        this.mStackTopMargin = i;
     }
 
-    public float getAlphaFraction() {
-        return this.mAlphaFraction;
+    public int getStackTopMargin() {
+        return this.mStackTopMargin;
+    }
+
+    public boolean isBouncerInTransit() {
+        StatusBarKeyguardViewManager statusBarKeyguardViewManager = this.mStatusBarKeyguardViewManager;
+        return statusBarKeyguardViewManager != null && statusBarKeyguardViewManager.isBouncerInTransit();
+    }
+
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        printWriter.println("mTopPadding=" + this.mTopPadding);
+        printWriter.println("mStackTopMargin=" + this.mStackTopMargin);
+        printWriter.println("mStackTranslation=" + this.mStackTranslation);
+        printWriter.println("mLayoutMinHeight=" + this.mLayoutMinHeight);
+        printWriter.println("mLayoutMaxHeight=" + this.mLayoutMaxHeight);
+        printWriter.println("mLayoutHeight=" + this.mLayoutHeight);
+        printWriter.println("mContentHeight=" + this.mContentHeight);
+        printWriter.println("mHideSensitive=" + this.mHideSensitive);
+        printWriter.println("mShadeExpanded=" + this.mShadeExpanded);
+        printWriter.println("mClearAllInProgress=" + this.mClearAllInProgress);
+        printWriter.println("mDimmed=" + this.mDimmed);
+        printWriter.println("mStatusBarState=" + this.mStatusBarState);
+        printWriter.println("mExpansionChanging=" + this.mExpansionChanging);
+        printWriter.println("mPanelFullWidth=" + this.mPanelFullWidth);
+        printWriter.println("mPulsing=" + this.mPulsing);
+        printWriter.println("mPulseHeight=" + this.mPulseHeight);
+        printWriter.println("mTrackedHeadsUpRow.key=" + NotificationUtils.logKey(this.mTrackedHeadsUpRow));
+        printWriter.println("mMaxHeadsUpTranslation=" + this.mMaxHeadsUpTranslation);
+        printWriter.println("mUnlockHintRunning=" + this.mUnlockHintRunning);
+        printWriter.println("mDozeAmount=" + this.mDozeAmount);
+        printWriter.println("mDozing=" + this.mDozing);
+        printWriter.println("mFractionToShade=" + this.mFractionToShade);
+        printWriter.println("mHideAmount=" + this.mHideAmount);
+        printWriter.println("mAppearFraction=" + this.mAppearFraction);
+        printWriter.println("mAppearing=" + this.mAppearing);
+        printWriter.println("mExpansionFraction=" + this.mExpansionFraction);
+        printWriter.println("mExpandingVelocity=" + this.mExpandingVelocity);
+        printWriter.println("mOverScrollTopAmount=" + this.mOverScrollTopAmount);
+        printWriter.println("mOverScrollBottomAmount=" + this.mOverScrollBottomAmount);
+        printWriter.println("mOverExpansion=" + this.mOverExpansion);
+        printWriter.println("mStackHeight=" + this.mStackHeight);
+        printWriter.println("mStackEndHeight=" + this.mStackEndHeight);
+        printWriter.println("mStackY=" + this.mStackY);
+        printWriter.println("mScrollY=" + this.mScrollY);
+        printWriter.println("mCurrentScrollVelocity=" + this.mCurrentScrollVelocity);
+        printWriter.println("mIsSwipingUp=" + this.mIsSwipingUp);
+        printWriter.println("mPanelTracking=" + this.mPanelTracking);
+        printWriter.println("mIsFlinging=" + this.mIsFlinging);
+        printWriter.println("mNeedFlingAfterLockscreenSwipeUp=" + this.mNeedFlingAfterLockscreenSwipeUp);
+        printWriter.println("mZDistanceBetweenElements=" + this.mZDistanceBetweenElements);
+        printWriter.println("mBaseZHeight=" + this.mBaseZHeight);
     }
 }

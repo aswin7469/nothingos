@@ -16,7 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import androidx.appcompat.R$styleable;
+import androidx.appcompat.C0329R;
 import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.view.menu.MenuItemWrapperICS;
 import androidx.appcompat.widget.DrawableUtils;
@@ -24,24 +24,39 @@ import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.internal.view.SupportMenu;
 import androidx.core.view.ActionProvider;
 import androidx.core.view.MenuItemCompat;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+import java.p026io.IOException;
+import org.xmlpull.p032v1.XmlPullParser;
+import org.xmlpull.p032v1.XmlPullParserException;
+
 public class SupportMenuInflater extends MenuInflater {
     static final Class<?>[] ACTION_PROVIDER_CONSTRUCTOR_SIGNATURE;
     static final Class<?>[] ACTION_VIEW_CONSTRUCTOR_SIGNATURE;
+    static final String LOG_TAG = "SupportMenuInflater";
+    static final int NO_ID = 0;
+    private static final String XML_GROUP = "group";
+    private static final String XML_ITEM = "item";
+    private static final String XML_MENU = "menu";
     final Object[] mActionProviderConstructorArguments;
     final Object[] mActionViewConstructorArguments;
     Context mContext;
     private Object mRealOwner;
 
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v1, resolved type: java.lang.Class<?>[]} */
+    /* JADX WARNING: Multi-variable type inference failed */
     static {
-        Class<?>[] clsArr = {Context.class};
-        ACTION_VIEW_CONSTRUCTOR_SIGNATURE = clsArr;
-        ACTION_PROVIDER_CONSTRUCTOR_SIGNATURE = clsArr;
+        /*
+            r0 = 1
+            java.lang.Class[] r0 = new java.lang.Class[r0]
+            r1 = 0
+            java.lang.Class<android.content.Context> r2 = android.content.Context.class
+            r0[r1] = r2
+            ACTION_VIEW_CONSTRUCTOR_SIGNATURE = r0
+            ACTION_PROVIDER_CONSTRUCTOR_SIGNATURE = r0
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.appcompat.view.SupportMenuInflater.<clinit>():void");
     }
 
     public SupportMenuInflater(Context context) {
@@ -52,7 +67,6 @@ public class SupportMenuInflater extends MenuInflater {
         this.mActionProviderConstructorArguments = objArr;
     }
 
-    @Override // android.view.MenuInflater
     public void inflate(int i, Menu menu) {
         if (!(menu instanceof SupportMenu)) {
             super.inflate(i, menu);
@@ -60,147 +74,88 @@ public class SupportMenuInflater extends MenuInflater {
         }
         XmlResourceParser xmlResourceParser = null;
         try {
-            try {
-                try {
-                    xmlResourceParser = this.mContext.getResources().getLayout(i);
-                    parseMenu(xmlResourceParser, Xml.asAttributeSet(xmlResourceParser), menu);
-                } catch (XmlPullParserException e) {
-                    throw new InflateException("Error inflating menu XML", e);
-                }
-            } catch (IOException e2) {
-                throw new InflateException("Error inflating menu XML", e2);
-            }
-        } finally {
+            xmlResourceParser = this.mContext.getResources().getLayout(i);
+            parseMenu(xmlResourceParser, Xml.asAttributeSet(xmlResourceParser), menu);
             if (xmlResourceParser != null) {
                 xmlResourceParser.close();
             }
+        } catch (XmlPullParserException e) {
+            throw new InflateException("Error inflating menu XML", e);
+        } catch (IOException e2) {
+            throw new InflateException("Error inflating menu XML", e2);
+        } catch (Throwable th) {
+            if (xmlResourceParser != null) {
+                xmlResourceParser.close();
+            }
+            throw th;
         }
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:11:0x0048, code lost:
-        if (r15 == 2) goto L44;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x004b, code lost:
-        if (r15 == 3) goto L14;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:14:0x004f, code lost:
-        r15 = r13.getName();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x0053, code lost:
-        if (r7 == false) goto L21;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x0059, code lost:
-        if (r15.equals(r8) == false) goto L21;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:18:0x005b, code lost:
-        r8 = null;
-        r7 = false;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:20:0x00b9, code lost:
-        r15 = r13.next();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:22:0x0062, code lost:
-        if (r15.equals("group") == false) goto L25;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:23:0x0064, code lost:
-        r0.resetGroup();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:26:0x006c, code lost:
-        if (r15.equals("item") == false) goto L38;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:28:0x0072, code lost:
-        if (r0.hasAddedItem() != false) goto L37;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:29:0x0074, code lost:
-        r15 = r0.itemActionProvider;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:30:0x0076, code lost:
-        if (r15 == null) goto L35;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:32:0x007c, code lost:
-        if (r15.hasSubMenu() == false) goto L35;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:33:0x007e, code lost:
-        r0.addSubMenuItem();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:35:0x0082, code lost:
-        r0.addItem();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:39:0x008a, code lost:
-        if (r15.equals("menu") == false) goto L42;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:40:0x008c, code lost:
-        r6 = true;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:44:0x008e, code lost:
-        if (r7 == false) goto L45;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:45:0x0091, code lost:
-        r15 = r13.getName();
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:46:0x0099, code lost:
-        if (r15.equals("group") == false) goto L49;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:47:0x009b, code lost:
-        r0.readGroup(r14);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:50:0x00a3, code lost:
-        if (r15.equals("item") == false) goto L53;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:51:0x00a5, code lost:
-        r0.readItem(r14);
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:54:0x00ad, code lost:
-        if (r15.equals("menu") == false) goto L57;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:55:0x00af, code lost:
-        parseMenu(r13, r14, r0.addSubMenuItem());
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:57:0x00b7, code lost:
-        r8 = r15;
-        r7 = true;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:62:0x00c5, code lost:
-        throw new java.lang.RuntimeException("Unexpected end of document");
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:65:0x00c6, code lost:
-        return;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:7:0x003b, code lost:
-        r8 = null;
-        r6 = false;
-        r7 = false;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:8:0x0040, code lost:
-        if (r6 != false) goto L64;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x0042, code lost:
-        if (r15 == 1) goto L60;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     private void parseMenu(XmlPullParser xmlPullParser, AttributeSet attributeSet, Menu menu) throws XmlPullParserException, IOException {
         MenuState menuState = new MenuState(menu);
         int eventType = xmlPullParser.getEventType();
         while (true) {
-            if (eventType == 2) {
-                String name = xmlPullParser.getName();
-                if (name.equals("menu")) {
-                    eventType = xmlPullParser.next();
-                } else {
-                    throw new RuntimeException("Expecting menu, got " + name);
-                }
-            } else {
+            if (eventType != 2) {
                 eventType = xmlPullParser.next();
                 if (eventType == 1) {
                     break;
                 }
+            } else {
+                String name = xmlPullParser.getName();
+                if (name.equals(XML_MENU)) {
+                    eventType = xmlPullParser.next();
+                } else {
+                    throw new RuntimeException("Expecting menu, got " + name);
+                }
+            }
+        }
+        boolean z = false;
+        boolean z2 = false;
+        String str = null;
+        while (!z) {
+            if (eventType != 1) {
+                if (eventType != 2) {
+                    if (eventType == 3) {
+                        String name2 = xmlPullParser.getName();
+                        if (z2 && name2.equals(str)) {
+                            z2 = false;
+                            str = null;
+                        } else if (name2.equals("group")) {
+                            menuState.resetGroup();
+                        } else if (name2.equals(XML_ITEM)) {
+                            if (!menuState.hasAddedItem()) {
+                                if (menuState.itemActionProvider == null || !menuState.itemActionProvider.hasSubMenu()) {
+                                    menuState.addItem();
+                                } else {
+                                    menuState.addSubMenuItem();
+                                }
+                            }
+                        } else if (name2.equals(XML_MENU)) {
+                            z = true;
+                        }
+                    }
+                } else if (!z2) {
+                    String name3 = xmlPullParser.getName();
+                    if (name3.equals("group")) {
+                        menuState.readGroup(attributeSet);
+                    } else if (name3.equals(XML_ITEM)) {
+                        menuState.readItem(attributeSet);
+                    } else if (name3.equals(XML_MENU)) {
+                        parseMenu(xmlPullParser, attributeSet, menuState.addSubMenuItem());
+                    } else {
+                        str = name3;
+                        z2 = true;
+                    }
+                }
+                eventType = xmlPullParser.next();
+            } else {
+                throw new RuntimeException("Unexpected end of document");
             }
         }
     }
 
-    Object getRealOwner() {
+    /* access modifiers changed from: package-private */
+    public Object getRealOwner() {
         if (this.mRealOwner == null) {
             this.mRealOwner = findRealOwner(this.mContext);
         }
@@ -211,9 +166,7 @@ public class SupportMenuInflater extends MenuInflater {
         return (!(obj instanceof Activity) && (obj instanceof ContextWrapper)) ? findRealOwner(((ContextWrapper) obj).getBaseContext()) : obj;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class InflatedOnMenuItemClickListener implements MenuItem.OnMenuItemClickListener {
+    private static class InflatedOnMenuItemClickListener implements MenuItem.OnMenuItemClickListener {
         private static final Class<?>[] PARAM_TYPES = {MenuItem.class};
         private Method mMethod;
         private Object mRealOwner;
@@ -230,7 +183,6 @@ public class SupportMenuInflater extends MenuInflater {
             }
         }
 
-        @Override // android.view.MenuItem.OnMenuItemClickListener
         public boolean onMenuItemClick(MenuItem menuItem) {
             try {
                 if (this.mMethod.getReturnType() == Boolean.TYPE) {
@@ -239,14 +191,20 @@ public class SupportMenuInflater extends MenuInflater {
                 this.mMethod.invoke(this.mRealOwner, menuItem);
                 return true;
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException((Throwable) e);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class MenuState {
+    private class MenuState {
+        private static final int defaultGroupId = 0;
+        private static final int defaultItemCategory = 0;
+        private static final int defaultItemCheckable = 0;
+        private static final boolean defaultItemChecked = false;
+        private static final boolean defaultItemEnabled = true;
+        private static final int defaultItemId = 0;
+        private static final int defaultItemOrder = 0;
+        private static final boolean defaultItemVisible = true;
         private int groupCategory;
         private int groupCheckable;
         private boolean groupEnabled;
@@ -279,8 +237,8 @@ public class SupportMenuInflater extends MenuInflater {
         private boolean itemVisible;
         private Menu menu;
 
-        public MenuState(Menu menu) {
-            this.menu = menu;
+        public MenuState(Menu menu2) {
+            this.menu = menu2;
             resetGroup();
         }
 
@@ -294,62 +252,59 @@ public class SupportMenuInflater extends MenuInflater {
         }
 
         public void readGroup(AttributeSet attributeSet) {
-            TypedArray obtainStyledAttributes = SupportMenuInflater.this.mContext.obtainStyledAttributes(attributeSet, R$styleable.MenuGroup);
-            this.groupId = obtainStyledAttributes.getResourceId(R$styleable.MenuGroup_android_id, 0);
-            this.groupCategory = obtainStyledAttributes.getInt(R$styleable.MenuGroup_android_menuCategory, 0);
-            this.groupOrder = obtainStyledAttributes.getInt(R$styleable.MenuGroup_android_orderInCategory, 0);
-            this.groupCheckable = obtainStyledAttributes.getInt(R$styleable.MenuGroup_android_checkableBehavior, 0);
-            this.groupVisible = obtainStyledAttributes.getBoolean(R$styleable.MenuGroup_android_visible, true);
-            this.groupEnabled = obtainStyledAttributes.getBoolean(R$styleable.MenuGroup_android_enabled, true);
+            TypedArray obtainStyledAttributes = SupportMenuInflater.this.mContext.obtainStyledAttributes(attributeSet, C0329R.styleable.MenuGroup);
+            this.groupId = obtainStyledAttributes.getResourceId(C0329R.styleable.MenuGroup_android_id, 0);
+            this.groupCategory = obtainStyledAttributes.getInt(C0329R.styleable.MenuGroup_android_menuCategory, 0);
+            this.groupOrder = obtainStyledAttributes.getInt(C0329R.styleable.MenuGroup_android_orderInCategory, 0);
+            this.groupCheckable = obtainStyledAttributes.getInt(C0329R.styleable.MenuGroup_android_checkableBehavior, 0);
+            this.groupVisible = obtainStyledAttributes.getBoolean(C0329R.styleable.MenuGroup_android_visible, true);
+            this.groupEnabled = obtainStyledAttributes.getBoolean(C0329R.styleable.MenuGroup_android_enabled, true);
             obtainStyledAttributes.recycle();
         }
 
         public void readItem(AttributeSet attributeSet) {
-            TintTypedArray obtainStyledAttributes = TintTypedArray.obtainStyledAttributes(SupportMenuInflater.this.mContext, attributeSet, R$styleable.MenuItem);
-            this.itemId = obtainStyledAttributes.getResourceId(R$styleable.MenuItem_android_id, 0);
-            this.itemCategoryOrder = (obtainStyledAttributes.getInt(R$styleable.MenuItem_android_menuCategory, this.groupCategory) & (-65536)) | (obtainStyledAttributes.getInt(R$styleable.MenuItem_android_orderInCategory, this.groupOrder) & 65535);
-            this.itemTitle = obtainStyledAttributes.getText(R$styleable.MenuItem_android_title);
-            this.itemTitleCondensed = obtainStyledAttributes.getText(R$styleable.MenuItem_android_titleCondensed);
-            this.itemIconResId = obtainStyledAttributes.getResourceId(R$styleable.MenuItem_android_icon, 0);
-            this.itemAlphabeticShortcut = getShortcut(obtainStyledAttributes.getString(R$styleable.MenuItem_android_alphabeticShortcut));
-            this.itemAlphabeticModifiers = obtainStyledAttributes.getInt(R$styleable.MenuItem_alphabeticModifiers, 4096);
-            this.itemNumericShortcut = getShortcut(obtainStyledAttributes.getString(R$styleable.MenuItem_android_numericShortcut));
-            this.itemNumericModifiers = obtainStyledAttributes.getInt(R$styleable.MenuItem_numericModifiers, 4096);
-            int i = R$styleable.MenuItem_android_checkable;
-            if (obtainStyledAttributes.hasValue(i)) {
-                this.itemCheckable = obtainStyledAttributes.getBoolean(i, false) ? 1 : 0;
+            TintTypedArray obtainStyledAttributes = TintTypedArray.obtainStyledAttributes(SupportMenuInflater.this.mContext, attributeSet, C0329R.styleable.MenuItem);
+            this.itemId = obtainStyledAttributes.getResourceId(C0329R.styleable.MenuItem_android_id, 0);
+            this.itemCategoryOrder = (obtainStyledAttributes.getInt(C0329R.styleable.MenuItem_android_menuCategory, this.groupCategory) & -65536) | (obtainStyledAttributes.getInt(C0329R.styleable.MenuItem_android_orderInCategory, this.groupOrder) & 65535);
+            this.itemTitle = obtainStyledAttributes.getText(C0329R.styleable.MenuItem_android_title);
+            this.itemTitleCondensed = obtainStyledAttributes.getText(C0329R.styleable.MenuItem_android_titleCondensed);
+            this.itemIconResId = obtainStyledAttributes.getResourceId(C0329R.styleable.MenuItem_android_icon, 0);
+            this.itemAlphabeticShortcut = getShortcut(obtainStyledAttributes.getString(C0329R.styleable.MenuItem_android_alphabeticShortcut));
+            this.itemAlphabeticModifiers = obtainStyledAttributes.getInt(C0329R.styleable.MenuItem_alphabeticModifiers, 4096);
+            this.itemNumericShortcut = getShortcut(obtainStyledAttributes.getString(C0329R.styleable.MenuItem_android_numericShortcut));
+            this.itemNumericModifiers = obtainStyledAttributes.getInt(C0329R.styleable.MenuItem_numericModifiers, 4096);
+            if (obtainStyledAttributes.hasValue(C0329R.styleable.MenuItem_android_checkable)) {
+                this.itemCheckable = obtainStyledAttributes.getBoolean(C0329R.styleable.MenuItem_android_checkable, false) ? 1 : 0;
             } else {
                 this.itemCheckable = this.groupCheckable;
             }
-            this.itemChecked = obtainStyledAttributes.getBoolean(R$styleable.MenuItem_android_checked, false);
-            this.itemVisible = obtainStyledAttributes.getBoolean(R$styleable.MenuItem_android_visible, this.groupVisible);
-            this.itemEnabled = obtainStyledAttributes.getBoolean(R$styleable.MenuItem_android_enabled, this.groupEnabled);
-            this.itemShowAsAction = obtainStyledAttributes.getInt(R$styleable.MenuItem_showAsAction, -1);
-            this.itemListenerMethodName = obtainStyledAttributes.getString(R$styleable.MenuItem_android_onClick);
-            this.itemActionViewLayout = obtainStyledAttributes.getResourceId(R$styleable.MenuItem_actionLayout, 0);
-            this.itemActionViewClassName = obtainStyledAttributes.getString(R$styleable.MenuItem_actionViewClass);
-            String string = obtainStyledAttributes.getString(R$styleable.MenuItem_actionProviderClass);
+            this.itemChecked = obtainStyledAttributes.getBoolean(C0329R.styleable.MenuItem_android_checked, false);
+            this.itemVisible = obtainStyledAttributes.getBoolean(C0329R.styleable.MenuItem_android_visible, this.groupVisible);
+            this.itemEnabled = obtainStyledAttributes.getBoolean(C0329R.styleable.MenuItem_android_enabled, this.groupEnabled);
+            this.itemShowAsAction = obtainStyledAttributes.getInt(C0329R.styleable.MenuItem_showAsAction, -1);
+            this.itemListenerMethodName = obtainStyledAttributes.getString(C0329R.styleable.MenuItem_android_onClick);
+            this.itemActionViewLayout = obtainStyledAttributes.getResourceId(C0329R.styleable.MenuItem_actionLayout, 0);
+            this.itemActionViewClassName = obtainStyledAttributes.getString(C0329R.styleable.MenuItem_actionViewClass);
+            String string = obtainStyledAttributes.getString(C0329R.styleable.MenuItem_actionProviderClass);
             this.itemActionProviderClassName = string;
             boolean z = string != null;
             if (z && this.itemActionViewLayout == 0 && this.itemActionViewClassName == null) {
                 this.itemActionProvider = (ActionProvider) newInstance(string, SupportMenuInflater.ACTION_PROVIDER_CONSTRUCTOR_SIGNATURE, SupportMenuInflater.this.mActionProviderConstructorArguments);
             } else {
                 if (z) {
-                    Log.w("SupportMenuInflater", "Ignoring attribute 'actionProviderClass'. Action view already specified.");
+                    Log.w(SupportMenuInflater.LOG_TAG, "Ignoring attribute 'actionProviderClass'. Action view already specified.");
                 }
                 this.itemActionProvider = null;
             }
-            this.itemContentDescription = obtainStyledAttributes.getText(R$styleable.MenuItem_contentDescription);
-            this.itemTooltipText = obtainStyledAttributes.getText(R$styleable.MenuItem_tooltipText);
-            int i2 = R$styleable.MenuItem_iconTintMode;
-            if (obtainStyledAttributes.hasValue(i2)) {
-                this.itemIconTintMode = DrawableUtils.parseTintMode(obtainStyledAttributes.getInt(i2, -1), this.itemIconTintMode);
+            this.itemContentDescription = obtainStyledAttributes.getText(C0329R.styleable.MenuItem_contentDescription);
+            this.itemTooltipText = obtainStyledAttributes.getText(C0329R.styleable.MenuItem_tooltipText);
+            if (obtainStyledAttributes.hasValue(C0329R.styleable.MenuItem_iconTintMode)) {
+                this.itemIconTintMode = DrawableUtils.parseTintMode(obtainStyledAttributes.getInt(C0329R.styleable.MenuItem_iconTintMode, -1), this.itemIconTintMode);
             } else {
                 this.itemIconTintMode = null;
             }
-            int i3 = R$styleable.MenuItem_iconTint;
-            if (obtainStyledAttributes.hasValue(i3)) {
-                this.itemIconTintList = obtainStyledAttributes.getColorStateList(i3);
+            if (obtainStyledAttributes.hasValue(C0329R.styleable.MenuItem_iconTint)) {
+                this.itemIconTintList = obtainStyledAttributes.getColorStateList(C0329R.styleable.MenuItem_iconTint);
             } else {
                 this.itemIconTintList = null;
             }
@@ -359,7 +314,7 @@ public class SupportMenuInflater extends MenuInflater {
 
         private char getShortcut(String str) {
             if (str == null) {
-                return (char) 0;
+                return 0;
             }
             return str.charAt(0);
         }
@@ -372,10 +327,11 @@ public class SupportMenuInflater extends MenuInflater {
                 menuItem.setShowAsAction(i);
             }
             if (this.itemListenerMethodName != null) {
-                if (SupportMenuInflater.this.mContext.isRestricted()) {
+                if (!SupportMenuInflater.this.mContext.isRestricted()) {
+                    menuItem.setOnMenuItemClickListener(new InflatedOnMenuItemClickListener(SupportMenuInflater.this.getRealOwner(), this.itemListenerMethodName));
+                } else {
                     throw new IllegalStateException("The android:onClick attribute cannot be used within a restricted context");
                 }
-                menuItem.setOnMenuItemClickListener(new InflatedOnMenuItemClickListener(SupportMenuInflater.this.getRealOwner(), this.itemListenerMethodName));
             }
             if (this.itemCheckable >= 2) {
                 if (menuItem instanceof MenuItemImpl) {
@@ -394,7 +350,7 @@ public class SupportMenuInflater extends MenuInflater {
                 if (!z) {
                     menuItem.setActionView(i2);
                 } else {
-                    Log.w("SupportMenuInflater", "Ignoring attribute 'itemActionViewLayout'. Action view already specified.");
+                    Log.w(SupportMenuInflater.LOG_TAG, "Ignoring attribute 'itemActionViewLayout'. Action view already specified.");
                 }
             }
             ActionProvider actionProvider = this.itemActionProvider;
@@ -435,9 +391,9 @@ public class SupportMenuInflater extends MenuInflater {
             try {
                 Constructor<?> constructor = Class.forName(str, false, SupportMenuInflater.this.mContext.getClassLoader()).getConstructor(clsArr);
                 constructor.setAccessible(true);
-                return (T) constructor.newInstance(objArr);
+                return constructor.newInstance(objArr);
             } catch (Exception e) {
-                Log.w("SupportMenuInflater", "Cannot instantiate class: " + str, e);
+                Log.w(SupportMenuInflater.LOG_TAG, "Cannot instantiate class: " + str, e);
                 return null;
             }
         }

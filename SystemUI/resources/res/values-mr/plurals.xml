@@ -16,6 +16,10 @@
         <item quantity="one">%s नियंत्रण जोडले.</item>
         <item quantity="other">%s नियंत्रणे जोडली.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s अ‍ॅप अ‍ॅक्टिव्ह आहे</item>
+        <item quantity="other">%s अ‍ॅप्स अ‍ॅक्टिव्ह आहेत</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">सिम पिन एंटर करा. तुम्ही तुमचे डिव्‍हाइस अनलॉक करण्‍यासाठी तुमच्या वाहकाशी संपर्क साधण्‍यापूर्वी, तुमच्याकडे %d प्रयत्न शिल्लक आहे.</item>
         <item quantity="other">सिम पिन एंटर करा, तुमच्याकडे %d प्रयत्न शिल्लक आहेत.</item>
@@ -28,25 +32,13 @@
         <item quantity="one">चुकीचा सिम पिन कोड, तुमचे डिव्हाइस अनलॉक करण्‍यासाठी तुमच्या वाहकाशी संपर्क साधण्‍यापूर्वी तुमच्याकडे %d प्रयत्न शिल्लक आहेत.</item>
         <item quantity="other">चुकीचा सिम पिन कोड, तुमच्याकडे %d प्रयत्न शिल्लक आहेत.</item>
     </plurals>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">चुकीचा SIM%d PIN कोड, तुमचे %d डिव्‍हाइस अनलॉक करण्‍यासाठी तुमच्‍या वाहकाशी संपर्क साधण्‍यापूर्वी तुमच्‍याकडे प्रयत्न शिल्लक आहेत.</item>
+        <item quantity="other">चुकीचा SIM%d PIN कोड, तुमचे %d प्रयत्न बाकी आहेत.</item>
+    </plurals>
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">चुकीचा सिम PUK कोड, सिम कायमचे निरुपयोगी होण्यापूर्वी आपल्याकडे %d प्रयत्न शिल्लक आहे.</item>
         <item quantity="other">चुकीचा सिम PUK कोड, सिम कायमचे निरुपयोगी होण्यापूर्वी आपल्याकडे %d प्रयत्न शिल्लक आहेत.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">डिव्हाइस %d तासासाठी अनलॉक केले गेले नाही. पासवर्डची खात्री करा.</item>
-        <item quantity="other">डिव्हाइस %d तासांसाठी अनलॉक केले गेले नाही. पासवर्डची खात्री करा.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">डिव्हाइस %d तासासाठी अनलॉक केले गेले नाही. पॅटर्नची खात्री करा.</item>
-        <item quantity="other">डिव्हाइस %d तासांसाठी अनलॉक केले गेले नाही. पॅटर्नची खात्री करा.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">डिव्हाइस %d तासासाठी अनलॉक केले गेले नाही. पिनची खात्री करा.</item>
-        <item quantity="other">डिव्हाइस %d तासांसाठी अनलॉक केले गेले नाही. पिन ची खात्री करा.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">एका सेकंदात पुन्‍हा प्रयत्न करा.</item>
-        <item quantity="other">%d सेकंदांत पुन्हा प्रयत्न करा.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d नवीन सूचना</item>
@@ -71,9 +63,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">फक्त एक वापरकर्ता तयार केला जाऊ शकतो.</item>
         <item quantity="other">तुम्ही %d वापरकर्त्यांपर्यंत जोडू शकता.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d डिव्हाइस कनेक्ट केले आहे</item>
-        <item quantity="other">%1$d डिव्हाइस कनेक्ट केली आहेत</item>
     </plurals>
 </resources>

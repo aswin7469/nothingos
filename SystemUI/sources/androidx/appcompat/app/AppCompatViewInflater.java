@@ -3,12 +3,11 @@ package androidx.appcompat.app;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.View;
-import androidx.appcompat.R$styleable;
+import androidx.appcompat.C0329R;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
@@ -30,21 +29,29 @@ import androidx.core.view.ViewCompat;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-/* loaded from: classes.dex */
+
 public class AppCompatViewInflater {
-    private final Object[] mConstructorArgs = new Object[2];
-    private static final Class<?>[] sConstructorSignature = {Context.class, AttributeSet.class};
-    private static final int[] sOnClickAttrs = {16843375};
+    private static final String LOG_TAG = "AppCompatViewInflater";
+    private static final int[] sAccessibilityHeading = {16844160};
+    private static final int[] sAccessibilityPaneTitle = {16844156};
     private static final String[] sClassPrefixList = {"android.widget.", "android.view.", "android.webkit."};
     private static final SimpleArrayMap<String, Constructor<? extends View>> sConstructorMap = new SimpleArrayMap<>();
+    private static final Class<?>[] sConstructorSignature = {Context.class, AttributeSet.class};
+    private static final int[] sOnClickAttrs = {16843375};
+    private static final int[] sScreenReaderFocusable = {16844148};
+    private final Object[] mConstructorArgs = new Object[2];
 
-    protected View createView(Context context, String str, AttributeSet attributeSet) {
+    private void backportAccessibilityAttributes(Context context, View view, AttributeSet attributeSet) {
+    }
+
+    /* access modifiers changed from: protected */
+    public View createView(Context context, String str, AttributeSet attributeSet) {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final View createView(View view, String str, Context context, AttributeSet attributeSet, boolean z, boolean z2, boolean z3, boolean z4) {
-        View createRatingBar;
+        View view2;
         Context context2 = (!z || view == null) ? context : view.getContext();
         if (z2 || z3) {
             context2 = themifyContext(context2, attributeSet, z2, z3);
@@ -105,19 +112,19 @@ public class AppCompatViewInflater {
                 break;
             case 799298502:
                 if (str.equals("ToggleButton")) {
-                    c = '\b';
+                    c = 8;
                     break;
                 }
                 break;
             case 1125864064:
                 if (str.equals("ImageView")) {
-                    c = '\t';
+                    c = 9;
                     break;
                 }
                 break;
             case 1413872058:
                 if (str.equals("AutoCompleteTextView")) {
-                    c = '\n';
+                    c = 10;
                     break;
                 }
                 break;
@@ -129,188 +136,208 @@ public class AppCompatViewInflater {
                 break;
             case 1666676343:
                 if (str.equals("EditText")) {
-                    c = '\f';
+                    c = 12;
                     break;
                 }
                 break;
             case 2001146706:
                 if (str.equals("Button")) {
-                    c = '\r';
+                    c = 13;
                     break;
                 }
                 break;
         }
         switch (c) {
             case 0:
-                createRatingBar = createRatingBar(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+                view2 = createRatingBar(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
             case 1:
-                createRatingBar = createCheckedTextView(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+                view2 = createCheckedTextView(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
             case 2:
-                createRatingBar = createMultiAutoCompleteTextView(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+                view2 = createMultiAutoCompleteTextView(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
             case 3:
-                createRatingBar = createTextView(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+                view2 = createTextView(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
             case 4:
-                createRatingBar = createImageButton(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+                view2 = createImageButton(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
             case 5:
-                createRatingBar = createSeekBar(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+                view2 = createSeekBar(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
             case 6:
-                createRatingBar = createSpinner(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+                view2 = createSpinner(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
             case 7:
-                createRatingBar = createRadioButton(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+                view2 = createRadioButton(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
-            case '\b':
-                createRatingBar = createToggleButton(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+            case 8:
+                view2 = createToggleButton(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
-            case '\t':
-                createRatingBar = createImageView(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+            case 9:
+                view2 = createImageView(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
-            case '\n':
-                createRatingBar = createAutoCompleteTextView(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+            case 10:
+                view2 = createAutoCompleteTextView(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
             case 11:
-                createRatingBar = createCheckBox(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+                view2 = createCheckBox(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
-            case '\f':
-                createRatingBar = createEditText(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+            case 12:
+                view2 = createEditText(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
-            case '\r':
-                createRatingBar = createButton(context2, attributeSet);
-                verifyNotNull(createRatingBar, str);
+            case 13:
+                view2 = createButton(context2, attributeSet);
+                verifyNotNull(view2, str);
                 break;
             default:
-                createRatingBar = createView(context2, str, attributeSet);
+                view2 = createView(context2, str, attributeSet);
                 break;
         }
-        if (createRatingBar == null && context != context2) {
-            createRatingBar = createViewFromTag(context2, str, attributeSet);
+        if (view2 == null && context != context2) {
+            view2 = createViewFromTag(context2, str, attributeSet);
         }
-        if (createRatingBar != null) {
-            checkOnClickListener(createRatingBar, attributeSet);
+        if (view2 != null) {
+            checkOnClickListener(view2, attributeSet);
+            backportAccessibilityAttributes(context2, view2, attributeSet);
         }
-        return createRatingBar;
+        return view2;
     }
 
-    protected AppCompatTextView createTextView(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatTextView createTextView(Context context, AttributeSet attributeSet) {
         return new AppCompatTextView(context, attributeSet);
     }
 
-    protected AppCompatImageView createImageView(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatImageView createImageView(Context context, AttributeSet attributeSet) {
         return new AppCompatImageView(context, attributeSet);
     }
 
-    protected AppCompatButton createButton(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatButton createButton(Context context, AttributeSet attributeSet) {
         return new AppCompatButton(context, attributeSet);
     }
 
-    protected AppCompatEditText createEditText(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatEditText createEditText(Context context, AttributeSet attributeSet) {
         return new AppCompatEditText(context, attributeSet);
     }
 
-    protected AppCompatSpinner createSpinner(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatSpinner createSpinner(Context context, AttributeSet attributeSet) {
         return new AppCompatSpinner(context, attributeSet);
     }
 
-    protected AppCompatImageButton createImageButton(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatImageButton createImageButton(Context context, AttributeSet attributeSet) {
         return new AppCompatImageButton(context, attributeSet);
     }
 
-    protected AppCompatCheckBox createCheckBox(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatCheckBox createCheckBox(Context context, AttributeSet attributeSet) {
         return new AppCompatCheckBox(context, attributeSet);
     }
 
-    protected AppCompatRadioButton createRadioButton(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatRadioButton createRadioButton(Context context, AttributeSet attributeSet) {
         return new AppCompatRadioButton(context, attributeSet);
     }
 
-    protected AppCompatCheckedTextView createCheckedTextView(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatCheckedTextView createCheckedTextView(Context context, AttributeSet attributeSet) {
         return new AppCompatCheckedTextView(context, attributeSet);
     }
 
-    protected AppCompatAutoCompleteTextView createAutoCompleteTextView(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatAutoCompleteTextView createAutoCompleteTextView(Context context, AttributeSet attributeSet) {
         return new AppCompatAutoCompleteTextView(context, attributeSet);
     }
 
-    protected AppCompatMultiAutoCompleteTextView createMultiAutoCompleteTextView(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatMultiAutoCompleteTextView createMultiAutoCompleteTextView(Context context, AttributeSet attributeSet) {
         return new AppCompatMultiAutoCompleteTextView(context, attributeSet);
     }
 
-    protected AppCompatRatingBar createRatingBar(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatRatingBar createRatingBar(Context context, AttributeSet attributeSet) {
         return new AppCompatRatingBar(context, attributeSet);
     }
 
-    protected AppCompatSeekBar createSeekBar(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatSeekBar createSeekBar(Context context, AttributeSet attributeSet) {
         return new AppCompatSeekBar(context, attributeSet);
     }
 
-    protected AppCompatToggleButton createToggleButton(Context context, AttributeSet attributeSet) {
+    /* access modifiers changed from: protected */
+    public AppCompatToggleButton createToggleButton(Context context, AttributeSet attributeSet) {
         return new AppCompatToggleButton(context, attributeSet);
     }
 
     private void verifyNotNull(View view, String str) {
-        if (view != null) {
-            return;
+        if (view == null) {
+            throw new IllegalStateException(getClass().getName() + " asked to inflate view for <" + str + ">, but returned null");
         }
-        throw new IllegalStateException(getClass().getName() + " asked to inflate view for <" + str + ">, but returned null");
     }
 
     private View createViewFromTag(Context context, String str, AttributeSet attributeSet) {
         if (str.equals("view")) {
-            str = attributeSet.getAttributeValue(null, "class");
+            str = attributeSet.getAttributeValue((String) null, "class");
         }
         try {
             Object[] objArr = this.mConstructorArgs;
             objArr[0] = context;
             objArr[1] = attributeSet;
-            if (-1 != str.indexOf(46)) {
-                return createViewByPrefix(context, str, null);
-            }
-            int i = 0;
-            while (true) {
-                String[] strArr = sClassPrefixList;
-                if (i >= strArr.length) {
-                    return null;
+            if (-1 == str.indexOf(46)) {
+                int i = 0;
+                while (true) {
+                    String[] strArr = sClassPrefixList;
+                    if (i < strArr.length) {
+                        View createViewByPrefix = createViewByPrefix(context, str, strArr[i]);
+                        if (createViewByPrefix != null) {
+                            return createViewByPrefix;
+                        }
+                        i++;
+                    } else {
+                        Object[] objArr2 = this.mConstructorArgs;
+                        objArr2[0] = null;
+                        objArr2[1] = null;
+                        return null;
+                    }
                 }
-                View createViewByPrefix = createViewByPrefix(context, str, strArr[i]);
-                if (createViewByPrefix != null) {
-                    return createViewByPrefix;
-                }
-                i++;
+            } else {
+                View createViewByPrefix2 = createViewByPrefix(context, str, (String) null);
+                Object[] objArr3 = this.mConstructorArgs;
+                objArr3[0] = null;
+                objArr3[1] = null;
+                return createViewByPrefix2;
             }
         } catch (Exception unused) {
             return null;
         } finally {
-            Object[] objArr2 = this.mConstructorArgs;
-            objArr2[0] = null;
-            objArr2[1] = null;
+            Object[] objArr4 = this.mConstructorArgs;
+            objArr4[0] = null;
+            objArr4[1] = null;
         }
     }
 
     private void checkOnClickListener(View view, AttributeSet attributeSet) {
         Context context = view.getContext();
-        if (context instanceof ContextWrapper) {
-            if (Build.VERSION.SDK_INT >= 15 && !ViewCompat.hasOnClickListeners(view)) {
-                return;
-            }
+        if ((context instanceof ContextWrapper) && ViewCompat.hasOnClickListeners(view)) {
             TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, sOnClickAttrs);
             String string = obtainStyledAttributes.getString(0);
             if (string != null) {
@@ -323,7 +350,7 @@ public class AppCompatViewInflater {
     private View createViewByPrefix(Context context, String str, String str2) throws ClassNotFoundException, InflateException {
         String str3;
         SimpleArrayMap<String, Constructor<? extends View>> simpleArrayMap = sConstructorMap;
-        Constructor<? extends View> constructor = simpleArrayMap.get(str);
+        Constructor<? extends U> constructor = simpleArrayMap.get(str);
         if (constructor == null) {
             if (str2 != null) {
                 try {
@@ -338,22 +365,23 @@ public class AppCompatViewInflater {
             simpleArrayMap.put(str, constructor);
         }
         constructor.setAccessible(true);
-        return constructor.newInstance(this.mConstructorArgs);
+        return (View) constructor.newInstance(this.mConstructorArgs);
     }
 
     private static Context themifyContext(Context context, AttributeSet attributeSet, boolean z, boolean z2) {
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.View, 0, 0);
-        int resourceId = z ? obtainStyledAttributes.getResourceId(R$styleable.View_android_theme, 0) : 0;
-        if (z2 && resourceId == 0 && (resourceId = obtainStyledAttributes.getResourceId(R$styleable.View_theme, 0)) != 0) {
-            Log.i("AppCompatViewInflater", "app:theme is now deprecated. Please move to using android:theme instead.");
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0329R.styleable.View, 0, 0);
+        int resourceId = z ? obtainStyledAttributes.getResourceId(C0329R.styleable.View_android_theme, 0) : 0;
+        if (z2 && resourceId == 0 && (resourceId = obtainStyledAttributes.getResourceId(C0329R.styleable.View_theme, 0)) != 0) {
+            Log.i(LOG_TAG, "app:theme is now deprecated. Please move to using android:theme instead.");
         }
         obtainStyledAttributes.recycle();
-        return resourceId != 0 ? (!(context instanceof ContextThemeWrapper) || ((ContextThemeWrapper) context).getThemeResId() != resourceId) ? new ContextThemeWrapper(context, resourceId) : context : context;
+        if (resourceId != 0) {
+            return (!(context instanceof ContextThemeWrapper) || ((ContextThemeWrapper) context).getThemeResId() != resourceId) ? new ContextThemeWrapper(context, resourceId) : context;
+        }
+        return context;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class DeclaredOnClickListener implements View.OnClickListener {
+    private static class DeclaredOnClickListener implements View.OnClickListener {
         private final View mHostView;
         private final String mMethodName;
         private Context mResolvedContext;
@@ -364,7 +392,6 @@ public class AppCompatViewInflater {
             this.mMethodName = str;
         }
 
-        @Override // android.view.View.OnClickListener
         public void onClick(View view) {
             if (this.mResolvedMethod == null) {
                 resolveMethod(this.mHostView.getContext());
@@ -379,7 +406,6 @@ public class AppCompatViewInflater {
         }
 
         private void resolveMethod(Context context) {
-            int id;
             String str;
             Method method;
             while (context != null) {
@@ -393,7 +419,8 @@ public class AppCompatViewInflater {
                 }
                 context = context instanceof ContextWrapper ? ((ContextWrapper) context).getBaseContext() : null;
             }
-            if (this.mHostView.getId() == -1) {
+            int id = this.mHostView.getId();
+            if (id == -1) {
                 str = "";
             } else {
                 str = " with id '" + this.mHostView.getContext().getResources().getResourceEntryName(id) + "'";

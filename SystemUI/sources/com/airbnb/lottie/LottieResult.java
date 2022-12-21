@@ -1,7 +1,7 @@
 package com.airbnb.lottie;
 
 import java.util.Arrays;
-/* loaded from: classes.dex */
+
 public final class LottieResult<V> {
     private final Throwable exception;
     private final V value;
@@ -35,10 +35,10 @@ public final class LottieResult<V> {
         if (getValue() != null && getValue().equals(lottieResult.getValue())) {
             return true;
         }
-        if (getException() != null && lottieResult.getException() != null) {
-            return getException().toString().equals(getException().toString());
+        if (getException() == null || lottieResult.getException() == null) {
+            return false;
         }
-        return false;
+        return getException().toString().equals(getException().toString());
     }
 
     public int hashCode() {

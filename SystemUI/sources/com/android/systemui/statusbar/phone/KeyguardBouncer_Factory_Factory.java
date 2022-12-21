@@ -12,7 +12,7 @@ import com.android.systemui.statusbar.phone.KeyguardBouncer;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardBouncer_Factory_Factory implements Factory<KeyguardBouncer.Factory> {
     private final Provider<ViewMediatorCallback> callbackProvider;
     private final Provider<Context> contextProvider;
@@ -38,10 +38,8 @@ public final class KeyguardBouncer_Factory_Factory implements Factory<KeyguardBo
         this.keyguardBouncerComponentFactoryProvider = provider10;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardBouncer.Factory mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.callbackProvider.mo1933get(), this.dismissCallbackRegistryProvider.mo1933get(), this.falsingCollectorProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.keyguardUpdateMonitorProvider.mo1933get(), this.keyguardBypassControllerProvider.mo1933get(), this.handlerProvider.mo1933get(), this.keyguardSecurityModelProvider.mo1933get(), this.keyguardBouncerComponentFactoryProvider.mo1933get());
+    public KeyguardBouncer.Factory get() {
+        return newInstance(this.contextProvider.get(), this.callbackProvider.get(), this.dismissCallbackRegistryProvider.get(), this.falsingCollectorProvider.get(), this.keyguardStateControllerProvider.get(), this.keyguardUpdateMonitorProvider.get(), this.keyguardBypassControllerProvider.get(), this.handlerProvider.get(), this.keyguardSecurityModelProvider.get(), this.keyguardBouncerComponentFactoryProvider.get());
     }
 
     public static KeyguardBouncer_Factory_Factory create(Provider<Context> provider, Provider<ViewMediatorCallback> provider2, Provider<DismissCallbackRegistry> provider3, Provider<FalsingCollector> provider4, Provider<KeyguardStateController> provider5, Provider<KeyguardUpdateMonitor> provider6, Provider<KeyguardBypassController> provider7, Provider<Handler> provider8, Provider<KeyguardSecurityModel> provider9, Provider<KeyguardBouncerComponent.Factory> provider10) {

@@ -6,60 +6,61 @@ import android.content.res.Configuration;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.IndentingPrintWriter;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
+import android.view.ViewParent;
 import android.widget.FrameLayout;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dumpable;
-import com.android.systemui.R$dimen;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.StatusBarIconView;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import com.android.systemui.util.DumpUtilsKt;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public abstract class ExpandableView extends FrameLayout implements Dumpable {
+    private static final String TAG = "ExpandableView";
     private static Rect mClipRect = new Rect();
     private int mActualHeight;
+    private boolean mChangingPosition = false;
     protected int mClipBottomAmount;
+    private boolean mClipToActualHeight = true;
     protected int mClipTopAmount;
     protected int mContentShift;
     protected float mContentTransformationAmount;
     private float mContentTranslation;
+    protected float mExtraWidthForClipping = 0.0f;
     protected boolean mFirstInSection;
     private boolean mInShelf;
     protected boolean mIsLastChild;
     protected boolean mLastInSection;
+    private ArrayList<View> mMatchParentViews = new ArrayList<>();
+    private int mMinClipTopAmount = 0;
+    protected int mMinimumHeightForClipping = 0;
     protected OnHeightChangedListener mOnHeightChangedListener;
     private boolean mTransformingInShelf;
     private ViewGroup mTransientContainer;
-    private boolean mWillBeGone;
-    protected int mMinimumHeightForClipping = 0;
-    protected float mExtraWidthForClipping = 0.0f;
-    private ArrayList<View> mMatchParentViews = new ArrayList<>();
-    private int mMinClipTopAmount = 0;
-    private boolean mClipToActualHeight = true;
-    private boolean mChangingPosition = false;
     private final ExpandableViewState mViewState = createExpandableViewState();
+    private boolean mWillBeGone;
 
-    /* loaded from: classes.dex */
     public interface OnHeightChangedListener {
         void onHeightChanged(ExpandableView expandableView, boolean z);
 
         void onReset(ExpandableView expandableView);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void applyContentTransformation(float f, float f2) {
     }
 
     public boolean areChildrenExpanded() {
         return false;
-    }
-
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
     }
 
     public int getExtraBottomPadding() {
@@ -146,7 +147,7 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         return true;
     }
 
-    public abstract void performAddAnimation(long j, long j2, boolean z);
+    public abstract void performAddAnimation(long j, long j2, boolean z, Runnable runnable);
 
     public abstract long performRemoveAnimation(long j, long j2, float f, boolean z, float f2, Runnable runnable, AnimatorListenerAdapter animatorListenerAdapter);
 
@@ -179,7 +180,7 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean shouldClipToActualHeight() {
         return true;
     }
@@ -188,29 +189,41 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         return false;
     }
 
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
+
     public ExpandableView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         initDimens();
     }
 
     private void initDimens() {
-        this.mContentShift = getResources().getDimensionPixelSize(R$dimen.shelf_transform_content_shift);
+        this.mContentShift = getResources().getDimensionPixelSize(C1893R.dimen.shelf_transform_content_shift);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.View
+    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         initDimens();
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         int size = View.MeasureSpec.getSize(i2);
         int paddingStart = getPaddingStart() + getPaddingEnd();
         int mode = View.MeasureSpec.getMode(i2);
         int i3 = Integer.MAX_VALUE;
-        if (mode != 0 && size != 0) {
+        if (!(mode == 0 || size == 0)) {
             i3 = Math.min(size, Integer.MAX_VALUE);
         }
         int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(i3, Integer.MIN_VALUE);
@@ -220,9 +233,8 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
             View childAt = getChildAt(i5);
             if (childAt.getVisibility() != 8) {
                 ViewGroup.LayoutParams layoutParams = childAt.getLayoutParams();
-                int i6 = layoutParams.height;
-                if (i6 != -1) {
-                    childAt.measure(FrameLayout.getChildMeasureSpec(i, paddingStart, layoutParams.width), i6 >= 0 ? View.MeasureSpec.makeMeasureSpec(Math.min(i6, i3), 1073741824) : makeMeasureSpec);
+                if (layoutParams.height != -1) {
+                    childAt.measure(getChildMeasureSpec(i, paddingStart, layoutParams.width), layoutParams.height >= 0 ? View.MeasureSpec.makeMeasureSpec(Math.min(layoutParams.height, i3), 1073741824) : makeMeasureSpec);
                     i4 = Math.max(i4, childAt.getMeasuredHeight());
                 } else {
                     this.mMatchParentViews.add(childAt);
@@ -236,21 +248,25 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         Iterator<View> it = this.mMatchParentViews.iterator();
         while (it.hasNext()) {
             View next = it.next();
-            next.measure(FrameLayout.getChildMeasureSpec(i, paddingStart, next.getLayoutParams().width), makeMeasureSpec2);
+            next.measure(getChildMeasureSpec(i, paddingStart, next.getLayoutParams().width), makeMeasureSpec2);
         }
         this.mMatchParentViews.clear();
         setMeasuredDimension(View.MeasureSpec.getSize(i), size);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         updateClipping();
     }
 
     public boolean pointInView(float f, float f2, float f3) {
-        return f >= (-f3) && f2 >= ((float) this.mClipTopAmount) - f3 && f < ((float) (((FrameLayout) this).mRight - ((FrameLayout) this).mLeft)) + f3 && f2 < ((float) this.mActualHeight) + f3;
+        float max = (float) Math.max(0, this.mClipTopAmount);
+        float f4 = (float) this.mActualHeight;
+        if (f < (-f3) || f2 < max - f3 || f >= ((float) (this.mRight - this.mLeft)) + f3 || f2 >= f4 + f3) {
+            return false;
+        }
+        return true;
     }
 
     public void setActualHeight(int i, boolean z) {
@@ -318,6 +334,10 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         }
     }
 
+    public void performAddAnimation(long j, long j2, boolean z) {
+        performAddAnimation(j, j2, z, (Runnable) null);
+    }
+
     public int getPinnedHeadsUpHeight() {
         return getIntrinsicHeight();
     }
@@ -337,35 +357,34 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         }
     }
 
-    @Override // android.view.View
     public void getDrawingRect(Rect rect) {
         super.getDrawingRect(rect);
-        rect.left = (int) (rect.left + getTranslationX());
-        rect.right = (int) (rect.right + getTranslationX());
-        rect.bottom = (int) (rect.top + getTranslationY() + getActualHeight());
-        rect.top = (int) (rect.top + getTranslationY() + getClipTopAmount());
+        rect.left = (int) (((float) rect.left) + getTranslationX());
+        rect.right = (int) (((float) rect.right) + getTranslationX());
+        rect.bottom = (int) (((float) rect.top) + getTranslationY() + ((float) getActualHeight()));
+        rect.top = (int) (((float) rect.top) + getTranslationY() + ((float) getClipTopAmount()));
     }
 
     public void getBoundsOnScreen(Rect rect, boolean z) {
         super.getBoundsOnScreen(rect, z);
-        if (getTop() + getTranslationY() < 0.0f) {
-            rect.top = (int) (rect.top + getTop() + getTranslationY());
+        if (((float) getTop()) + getTranslationY() < 0.0f) {
+            rect.top = (int) (((float) rect.top) + ((float) getTop()) + getTranslationY());
         }
         rect.bottom = rect.top + getActualHeight();
-        rect.top += getClipTopAmount();
+        rect.top += Math.max(0, getClipTopAmount());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void updateClipping() {
-        if (this.mClipToActualHeight && shouldClipToActualHeight()) {
-            int clipTopAmount = getClipTopAmount();
-            int max = Math.max(Math.max((getActualHeight() + getExtraBottomPadding()) - this.mClipBottomAmount, clipTopAmount), this.mMinimumHeightForClipping);
-            int i = (int) (this.mExtraWidthForClipping / 2.0f);
-            mClipRect.set(-i, clipTopAmount, getWidth() + i, max);
-            setClipBounds(mClipRect);
+        if (!this.mClipToActualHeight || !shouldClipToActualHeight()) {
+            setClipBounds((Rect) null);
             return;
         }
-        setClipBounds(null);
+        int clipTopAmount = getClipTopAmount();
+        int max = Math.max(Math.max((getActualHeight() + getExtraBottomPadding()) - this.mClipBottomAmount, clipTopAmount), this.mMinimumHeightForClipping);
+        int i = (int) (this.mExtraWidthForClipping / 2.0f);
+        mClipRect.set(-i, clipTopAmount, getWidth() + i, max);
+        setClipBounds(mClipRect);
     }
 
     public void setMinimumHeightForClipping(int i) {
@@ -391,18 +410,20 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         this.mWillBeGone = z;
     }
 
+    public int getMinClipTopAmount() {
+        return this.mMinClipTopAmount;
+    }
+
     public void setMinClipTopAmount(int i) {
         this.mMinClipTopAmount = i;
     }
 
-    @Override // android.view.View
     public void setLayerType(int i, Paint paint) {
         if (i == 0 || hasOverlappingRendering()) {
             super.setLayerType(i, paint);
         }
     }
 
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return super.hasOverlappingRendering() && getActualHeight() <= getHeight();
     }
@@ -415,6 +436,36 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         return this.mChangingPosition;
     }
 
+    public void removeFromTransientContainer() {
+        ViewGroup transientContainer = getTransientContainer();
+        if (transientContainer != null) {
+            ViewParent parent = getParent();
+            if (parent != transientContainer) {
+                Log.w(TAG, "Expandable view " + this + " has transient container " + transientContainer + " but different parent " + parent);
+                setTransientContainer((ViewGroup) null);
+                return;
+            }
+            transientContainer.removeTransientView(this);
+            setTransientContainer((ViewGroup) null);
+        }
+    }
+
+    public void removeFromTransientContainerForAdditionTo(ViewGroup viewGroup) {
+        ViewParent parent = getParent();
+        ViewGroup transientContainer = getTransientContainer();
+        if (parent == null || parent == viewGroup) {
+            removeFromTransientContainer();
+        } else if (transientContainer == null) {
+            throw new IllegalStateException("Can't add view " + this + " to container " + viewGroup + "; current parent " + parent + " is not a transient container");
+        } else if (transientContainer == parent) {
+            Log.w(TAG, "Removing view " + this + " from transient container " + transientContainer + " in preparation for moving to parent " + viewGroup);
+            transientContainer.removeTransientView(this);
+            setTransientContainer((ViewGroup) null);
+        } else {
+            throw new IllegalStateException("Expandable view " + this + " has transient container " + transientContainer + " but different parent " + parent);
+        }
+    }
+
     public void setTransientContainer(ViewGroup viewGroup) {
         this.mTransientContainer = viewGroup;
     }
@@ -423,30 +474,28 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         return this.mTransientContainer;
     }
 
-    protected ExpandableViewState createExpandableViewState() {
+    /* access modifiers changed from: protected */
+    public ExpandableViewState createExpandableViewState() {
         return new ExpandableViewState();
     }
 
     public ExpandableViewState resetViewState() {
         this.mViewState.height = getIntrinsicHeight();
         this.mViewState.gone = getVisibility() == 8;
-        ExpandableViewState expandableViewState = this.mViewState;
-        expandableViewState.alpha = 1.0f;
-        expandableViewState.notGoneIndex = -1;
-        expandableViewState.xTranslation = getTranslationX();
-        ExpandableViewState expandableViewState2 = this.mViewState;
-        expandableViewState2.hidden = false;
-        expandableViewState2.scaleX = getScaleX();
+        this.mViewState.alpha = 1.0f;
+        this.mViewState.notGoneIndex = -1;
+        this.mViewState.xTranslation = getTranslationX();
+        this.mViewState.hidden = false;
+        this.mViewState.scaleX = getScaleX();
         this.mViewState.scaleY = getScaleY();
-        ExpandableViewState expandableViewState3 = this.mViewState;
-        expandableViewState3.inShelf = false;
-        expandableViewState3.headsUpIsVisible = false;
+        this.mViewState.inShelf = false;
+        this.mViewState.headsUpIsVisible = false;
         if (this instanceof ExpandableNotificationRow) {
             ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) this;
             List<ExpandableNotificationRow> attachedChildren = expandableNotificationRow.getAttachedChildren();
             if (expandableNotificationRow.isSummaryWithChildren() && attachedChildren != null) {
-                for (ExpandableNotificationRow expandableNotificationRow2 : attachedChildren) {
-                    expandableNotificationRow2.resetViewState();
+                for (ExpandableNotificationRow resetViewState : attachedChildren) {
+                    resetViewState.resetViewState();
                 }
             }
         }
@@ -458,9 +507,8 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
     }
 
     public void applyViewState() {
-        ExpandableViewState expandableViewState = this.mViewState;
-        if (!expandableViewState.gone) {
-            expandableViewState.applyToView(this);
+        if (!this.mViewState.gone) {
+            this.mViewState.applyToView(this);
         }
     }
 
@@ -484,6 +532,20 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         return i;
     }
 
+    public int getRelativeStartPadding(View view) {
+        boolean isLayoutRtl = isLayoutRtl();
+        int i = 0;
+        while (view.getParent() instanceof ViewGroup) {
+            View view2 = (View) view.getParent();
+            i += isLayoutRtl ? view2.getWidth() - view.getRight() : view.getLeft();
+            if (view2 == this) {
+                return i;
+            }
+            view = view2;
+        }
+        return i;
+    }
+
     public void setContentTransformationAmount(float f, boolean z) {
         boolean z2 = true;
         boolean z3 = z != this.mIsLastChild;
@@ -498,7 +560,7 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void updateContentTransformation() {
         float contentTransformationShift = (-this.mContentTransformationAmount) * getContentTransformationShift();
         float interpolation = Interpolators.ALPHA_OUT.getInterpolation(Math.min((1.0f - this.mContentTransformationAmount) / 0.5f, 1.0f));
@@ -509,8 +571,9 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         applyContentTransformation(interpolation, contentTransformationShift);
     }
 
-    protected float getContentTransformationShift() {
-        return this.mContentShift;
+    /* access modifiers changed from: protected */
+    public float getContentTransformationShift() {
+        return (float) this.mContentShift;
     }
 
     public void setTransformingInShelf(boolean z) {
@@ -519,6 +582,24 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
 
     public boolean isTransformingIntoShelf() {
         return this.mTransformingInShelf;
+    }
+
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        IndentingPrintWriter asIndenting = DumpUtilsKt.asIndenting(printWriter);
+        asIndenting.println(getClass().getSimpleName());
+        DumpUtilsKt.withIncreasedIndent(asIndenting, (Runnable) new ExpandableView$$ExternalSyntheticLambda0(this, asIndenting, strArr));
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$dump$0$com-android-systemui-statusbar-notification-row-ExpandableView */
+    public /* synthetic */ void mo41303x734e989(IndentingPrintWriter indentingPrintWriter, String[] strArr) {
+        ExpandableViewState viewState = getViewState();
+        if (viewState == null) {
+            indentingPrintWriter.println("no viewState!!!");
+            return;
+        }
+        viewState.dump(indentingPrintWriter, strArr);
+        indentingPrintWriter.println();
     }
 
     public float getContentTranslation() {

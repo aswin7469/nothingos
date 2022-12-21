@@ -4,121 +4,180 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Build;
+import android.net.wifi.WifiEnterpriseConfig;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+import android.widget.TextView;
+import androidx.constraintlayout.core.motion.utils.KeyCache;
+import androidx.constraintlayout.core.widgets.Barrier;
+import androidx.constraintlayout.core.widgets.ConstraintAnchor;
+import androidx.constraintlayout.core.widgets.ConstraintWidget;
+import androidx.constraintlayout.core.widgets.ConstraintWidgetContainer;
+import androidx.constraintlayout.core.widgets.Flow;
+import androidx.constraintlayout.core.widgets.Guideline;
+import androidx.constraintlayout.core.widgets.Helper;
+import androidx.constraintlayout.core.widgets.HelperWidget;
+import androidx.constraintlayout.core.widgets.VirtualLayout;
 import androidx.constraintlayout.motion.utils.StopLogic;
+import androidx.constraintlayout.motion.utils.ViewState;
 import androidx.constraintlayout.motion.widget.MotionScene;
-import androidx.constraintlayout.solver.widgets.Barrier;
-import androidx.constraintlayout.solver.widgets.ConstraintWidget;
-import androidx.constraintlayout.solver.widgets.ConstraintWidgetContainer;
-import androidx.constraintlayout.solver.widgets.Flow;
-import androidx.constraintlayout.solver.widgets.Guideline;
-import androidx.constraintlayout.solver.widgets.Helper;
-import androidx.constraintlayout.solver.widgets.HelperWidget;
-import androidx.constraintlayout.solver.widgets.VirtualLayout;
+import androidx.constraintlayout.widget.C0483R;
 import androidx.constraintlayout.widget.ConstraintHelper;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.constraintlayout.widget.Constraints;
-import androidx.constraintlayout.widget.R$styleable;
-import androidx.constraintlayout.widget.StateSet;
 import androidx.core.view.NestedScrollingParent3;
+import androidx.core.view.ViewCompat;
+import androidx.exifinterface.media.ExifInterface;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+import sun.util.locale.BaseLocale;
+
 public class MotionLayout extends ConstraintLayout implements NestedScrollingParent3 {
-    public static boolean IS_IN_EDIT_MODE;
+    private static final boolean DEBUG = false;
+    public static final int DEBUG_SHOW_NONE = 0;
+    public static final int DEBUG_SHOW_PATH = 2;
+    public static final int DEBUG_SHOW_PROGRESS = 1;
+    private static final float EPSILON = 1.0E-5f;
+    public static boolean IS_IN_EDIT_MODE = false;
+    static final int MAX_KEY_FRAMES = 50;
+    static final String TAG = "MotionLayout";
+    public static final int TOUCH_UP_COMPLETE = 0;
+    public static final int TOUCH_UP_COMPLETE_TO_END = 2;
+    public static final int TOUCH_UP_COMPLETE_TO_START = 1;
+    public static final int TOUCH_UP_DECELERATE = 4;
+    public static final int TOUCH_UP_DECELERATE_AND_COMPLETE = 5;
+    public static final int TOUCH_UP_NEVER_TO_END = 7;
+    public static final int TOUCH_UP_NEVER_TO_START = 6;
+    public static final int TOUCH_UP_STOP = 3;
+    public static final int VELOCITY_LAYOUT = 1;
+    public static final int VELOCITY_POST_LAYOUT = 0;
+    public static final int VELOCITY_STATIC_LAYOUT = 3;
+    public static final int VELOCITY_STATIC_POST_LAYOUT = 2;
+    boolean firstDown = true;
     private float lastPos;
     private float lastY;
+    private long mAnimationStartTime = 0;
+    /* access modifiers changed from: private */
+    public int mBeginState = -1;
+    private RectF mBoundsCheck = new RectF();
+    int mCurrentState = -1;
+    int mDebugPath = 0;
+    private DecelerateInterpolator mDecelerateLogic = new DecelerateInterpolator();
+    private ArrayList<MotionHelper> mDecoratorsHelpers = null;
+    private DesignTool mDesignTool;
     DevModeDraw mDevModeDraw;
+    /* access modifiers changed from: private */
+    public int mEndState = -1;
     int mEndWrapHeight;
     int mEndWrapWidth;
+    HashMap<View, MotionController> mFrameArrayList = new HashMap<>();
+    private int mFrames = 0;
     int mHeightMeasureMode;
+    private boolean mInLayout = false;
+    /* access modifiers changed from: private */
+    public boolean mInRotation = false;
+    boolean mInTransition = false;
+    boolean mIndirectTransition = false;
+    private boolean mInteractionEnabled = true;
     Interpolator mInterpolator;
+    private Matrix mInverseMatrix = null;
+    boolean mIsAnimating = false;
+    private boolean mKeepAnimating = false;
+    private KeyCache mKeyCache = new KeyCache();
+    private long mLastDrawTime = -1;
+    private float mLastFps = 0.0f;
+    /* access modifiers changed from: private */
+    public int mLastHeightMeasureSpec = 0;
     int mLastLayoutHeight;
     int mLastLayoutWidth;
+    float mLastVelocity = 0.0f;
+    /* access modifiers changed from: private */
+    public int mLastWidthMeasureSpec = 0;
+    private float mListenerPosition = 0.0f;
+    private int mListenerState = 0;
+    protected boolean mMeasureDuringTransition = false;
+    Model mModel = new Model();
+    private boolean mNeedsFireTransitionCompleted = false;
     int mOldHeight;
     int mOldWidth;
+    private Runnable mOnComplete = null;
+    private ArrayList<MotionHelper> mOnHideHelpers = null;
+    private ArrayList<MotionHelper> mOnShowHelpers = null;
     float mPostInterpolationPosition;
+    HashMap<View, ViewState> mPreRotate = new HashMap<>();
+    /* access modifiers changed from: private */
+    public int mPreRotateHeight;
+    /* access modifiers changed from: private */
+    public int mPreRotateWidth;
+    private int mPreviouseRotation;
+    Interpolator mProgressInterpolator = null;
+    private View mRegionView = null;
+    int mRotatMode = 0;
     MotionScene mScene;
-    View mScrollTarget;
+    private int[] mScheduledTransitionTo = null;
+    int mScheduledTransitions = 0;
     float mScrollTargetDT;
     float mScrollTargetDX;
     float mScrollTargetDY;
     long mScrollTargetTime;
     int mStartWrapHeight;
     int mStartWrapWidth;
+    private StateCache mStateCache;
+    private StopLogic mStopLogic = new StopLogic();
+    Rect mTempRect = new Rect();
+    private boolean mTemporalInterpolator = false;
+    ArrayList<Integer> mTransitionCompleted = new ArrayList<>();
+    private float mTransitionDuration = 1.0f;
+    float mTransitionGoalPosition = 0.0f;
     private boolean mTransitionInstantly;
+    float mTransitionLastPosition = 0.0f;
     private long mTransitionLastTime;
     private TransitionListener mTransitionListener;
-    int mWidthMeasureMode;
-    float mLastVelocity = 0.0f;
-    private int mBeginState = -1;
-    int mCurrentState = -1;
-    private int mEndState = -1;
-    private int mLastWidthMeasureSpec = 0;
-    private int mLastHeightMeasureSpec = 0;
-    private boolean mInteractionEnabled = true;
-    HashMap<View, MotionController> mFrameArrayList = new HashMap<>();
-    private long mAnimationStartTime = 0;
-    private float mTransitionDuration = 1.0f;
-    float mTransitionPosition = 0.0f;
-    float mTransitionLastPosition = 0.0f;
-    float mTransitionGoalPosition = 0.0f;
-    boolean mInTransition = false;
-    boolean mIndirectTransition = false;
-    int mDebugPath = 0;
-    private boolean mTemporalInterpolator = false;
-    private StopLogic mStopLogic = new StopLogic();
-    private DecelerateInterpolator mDecelerateLogic = new DecelerateInterpolator();
-    boolean firstDown = true;
-    boolean mUndergoingMotion = false;
-    private boolean mKeepAnimating = false;
-    private ArrayList<MotionHelper> mOnShowHelpers = null;
-    private ArrayList<MotionHelper> mOnHideHelpers = null;
     private ArrayList<TransitionListener> mTransitionListeners = null;
-    private int mFrames = 0;
-    private long mLastDrawTime = -1;
-    private float mLastFps = 0.0f;
-    private int mListenerState = 0;
-    private float mListenerPosition = 0.0f;
-    boolean mIsAnimating = false;
-    protected boolean mMeasureDuringTransition = false;
-    private KeyCache mKeyCache = new KeyCache();
-    Model mModel = new Model();
-    private boolean mNeedsFireTransitionCompleted = false;
-    private RectF mBoundsCheck = new RectF();
-    private View mRegionView = null;
-    ArrayList<Integer> mTransitionCompleted = new ArrayList<>();
+    float mTransitionPosition = 0.0f;
+    TransitionState mTransitionState = TransitionState.UNDEFINED;
+    boolean mUndergoingMotion = false;
+    int mWidthMeasureMode;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public interface MotionTracker {
+    protected interface MotionTracker {
         void addMovement(MotionEvent motionEvent);
+
+        void clear();
 
         void computeCurrentVelocity(int i);
 
+        void computeCurrentVelocity(int i, float f);
+
         float getXVelocity();
 
+        float getXVelocity(int i);
+
         float getYVelocity();
+
+        float getYVelocity(int i);
 
         void recycle();
     }
 
-    /* loaded from: classes.dex */
     public interface TransitionListener {
         void onTransitionChange(MotionLayout motionLayout, int i, int i2, float f);
 
@@ -127,6 +186,13 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         void onTransitionStarted(MotionLayout motionLayout, int i, int i2);
 
         void onTransitionTrigger(MotionLayout motionLayout, int i, boolean z, float f);
+    }
+
+    enum TransitionState {
+        UNDEFINED,
+        SETUP,
+        MOVING,
+        FINISHED
     }
 
     private static boolean willJump(float f, float f2, float f3) {
@@ -138,22 +204,25 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         return f2 + ((f * f5) + (((f3 * f5) * f5) / 2.0f)) < 0.0f;
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewParent, androidx.core.view.NestedScrollingParent
     public boolean onNestedFling(View view, float f, float f2, boolean z) {
         return false;
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewParent, androidx.core.view.NestedScrollingParent
     public boolean onNestedPreFling(View view, float f, float f2) {
         return false;
     }
 
-    @Override // androidx.core.view.NestedScrollingParent2
     public void onNestedScroll(View view, int i, int i2, int i3, int i4, int i5) {
     }
 
-    @Override // androidx.core.view.NestedScrollingParent2
-    public void onNestedScrollAccepted(View view, View view2, int i, int i2) {
+    /* access modifiers changed from: package-private */
+    public MotionController getMotionController(int i) {
+        return this.mFrameArrayList.get(findViewById(i));
+    }
+
+    public MotionLayout(Context context) {
+        super(context);
+        init((AttributeSet) null);
     }
 
     public MotionLayout(Context context, AttributeSet attributeSet) {
@@ -161,35 +230,140 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         init(attributeSet);
     }
 
-    protected long getNanoTime() {
+    public MotionLayout(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
+        init(attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public long getNanoTime() {
         return System.nanoTime();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public MotionTracker obtainVelocityTracker() {
         return MyTracker.obtain();
     }
 
-    /* loaded from: classes.dex */
+    public void enableTransition(int i, boolean z) {
+        MotionScene.Transition transition = getTransition(i);
+        if (z) {
+            transition.setEnabled(true);
+            return;
+        }
+        if (transition == this.mScene.mCurrentTransition) {
+            Iterator<MotionScene.Transition> it = this.mScene.getTransitionsWithState(this.mCurrentState).iterator();
+            while (true) {
+                if (!it.hasNext()) {
+                    break;
+                }
+                MotionScene.Transition next = it.next();
+                if (next.isEnabled()) {
+                    this.mScene.mCurrentTransition = next;
+                    break;
+                }
+            }
+        }
+        transition.setEnabled(false);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setState(TransitionState transitionState) {
+        if (transitionState != TransitionState.FINISHED || this.mCurrentState != -1) {
+            TransitionState transitionState2 = this.mTransitionState;
+            this.mTransitionState = transitionState;
+            if (transitionState2 == TransitionState.MOVING && transitionState == TransitionState.MOVING) {
+                fireTransitionChange();
+            }
+            int i = C04673.f103xabc7e4ac[transitionState2.ordinal()];
+            if (i == 1 || i == 2) {
+                if (transitionState == TransitionState.MOVING) {
+                    fireTransitionChange();
+                }
+                if (transitionState == TransitionState.FINISHED) {
+                    fireTransitionCompleted();
+                }
+            } else if (i == 3 && transitionState == TransitionState.FINISHED) {
+                fireTransitionCompleted();
+            }
+        }
+    }
+
+    /* renamed from: androidx.constraintlayout.motion.widget.MotionLayout$3 */
+    static /* synthetic */ class C04673 {
+
+        /* renamed from: $SwitchMap$androidx$constraintlayout$motion$widget$MotionLayout$TransitionState */
+        static final /* synthetic */ int[] f103xabc7e4ac;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(8:0|1|2|3|4|5|6|(3:7|8|10)) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        static {
+            /*
+                androidx.constraintlayout.motion.widget.MotionLayout$TransitionState[] r0 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                f103xabc7e4ac = r0
+                androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r1 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.UNDEFINED     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = f103xabc7e4ac     // Catch:{ NoSuchFieldError -> 0x001d }
+                androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r1 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.SETUP     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = f103xabc7e4ac     // Catch:{ NoSuchFieldError -> 0x0028 }
+                androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r1 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.MOVING     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = f103xabc7e4ac     // Catch:{ NoSuchFieldError -> 0x0033 }
+                androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r1 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.FINISHED     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.motion.widget.MotionLayout.C04673.<clinit>():void");
+        }
+    }
+
     private static class MyTracker implements MotionTracker {
-        private static MyTracker me = new MyTracker();
+
+        /* renamed from: me */
+        private static MyTracker f104me = new MyTracker();
         VelocityTracker tracker;
 
         private MyTracker() {
         }
 
         public static MyTracker obtain() {
-            me.tracker = VelocityTracker.obtain();
-            return me;
+            f104me.tracker = VelocityTracker.obtain();
+            return f104me;
         }
 
-        @Override // androidx.constraintlayout.motion.widget.MotionLayout.MotionTracker
         public void recycle() {
-            this.tracker.recycle();
-            this.tracker = null;
+            VelocityTracker velocityTracker = this.tracker;
+            if (velocityTracker != null) {
+                velocityTracker.recycle();
+                this.tracker = null;
+            }
         }
 
-        @Override // androidx.constraintlayout.motion.widget.MotionLayout.MotionTracker
+        public void clear() {
+            VelocityTracker velocityTracker = this.tracker;
+            if (velocityTracker != null) {
+                velocityTracker.clear();
+            }
+        }
+
         public void addMovement(MotionEvent motionEvent) {
             VelocityTracker velocityTracker = this.tracker;
             if (velocityTracker != null) {
@@ -197,23 +371,61 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             }
         }
 
-        @Override // androidx.constraintlayout.motion.widget.MotionLayout.MotionTracker
         public void computeCurrentVelocity(int i) {
-            this.tracker.computeCurrentVelocity(i);
+            VelocityTracker velocityTracker = this.tracker;
+            if (velocityTracker != null) {
+                velocityTracker.computeCurrentVelocity(i);
+            }
         }
 
-        @Override // androidx.constraintlayout.motion.widget.MotionLayout.MotionTracker
+        public void computeCurrentVelocity(int i, float f) {
+            VelocityTracker velocityTracker = this.tracker;
+            if (velocityTracker != null) {
+                velocityTracker.computeCurrentVelocity(i, f);
+            }
+        }
+
         public float getXVelocity() {
-            return this.tracker.getXVelocity();
+            VelocityTracker velocityTracker = this.tracker;
+            if (velocityTracker != null) {
+                return velocityTracker.getXVelocity();
+            }
+            return 0.0f;
         }
 
-        @Override // androidx.constraintlayout.motion.widget.MotionLayout.MotionTracker
         public float getYVelocity() {
-            return this.tracker.getYVelocity();
+            VelocityTracker velocityTracker = this.tracker;
+            if (velocityTracker != null) {
+                return velocityTracker.getYVelocity();
+            }
+            return 0.0f;
+        }
+
+        public float getXVelocity(int i) {
+            VelocityTracker velocityTracker = this.tracker;
+            if (velocityTracker != null) {
+                return velocityTracker.getXVelocity(i);
+            }
+            return 0.0f;
+        }
+
+        public float getYVelocity(int i) {
+            if (this.tracker != null) {
+                return getYVelocity(i);
+            }
+            return 0.0f;
         }
     }
 
     public void setTransition(int i, int i2) {
+        if (!isAttachedToWindow()) {
+            if (this.mStateCache == null) {
+                this.mStateCache = new StateCache();
+            }
+            this.mStateCache.setStartState(i);
+            this.mStateCache.setEndState(i2);
+            return;
+        }
         MotionScene motionScene = this.mScene;
         if (motionScene != null) {
             this.mBeginState = i;
@@ -226,9 +438,56 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    public void setTransition(int i) {
+        float f;
+        if (this.mScene != null) {
+            MotionScene.Transition transition = getTransition(i);
+            this.mBeginState = transition.getStartConstraintSetId();
+            this.mEndState = transition.getEndConstraintSetId();
+            if (!isAttachedToWindow()) {
+                if (this.mStateCache == null) {
+                    this.mStateCache = new StateCache();
+                }
+                this.mStateCache.setStartState(this.mBeginState);
+                this.mStateCache.setEndState(this.mEndState);
+                return;
+            }
+            int i2 = this.mCurrentState;
+            float f2 = 0.0f;
+            if (i2 == this.mBeginState) {
+                f = 0.0f;
+            } else {
+                f = i2 == this.mEndState ? 1.0f : Float.NaN;
+            }
+            this.mScene.setTransition(transition);
+            this.mModel.initFrom(this.mLayoutWidget, this.mScene.getConstraintSet(this.mBeginState), this.mScene.getConstraintSet(this.mEndState));
+            rebuildScene();
+            if (this.mTransitionLastPosition != f) {
+                if (f == 0.0f) {
+                    endTrigger(true);
+                    this.mScene.getConstraintSet(this.mBeginState).applyTo(this);
+                } else if (f == 1.0f) {
+                    endTrigger(false);
+                    this.mScene.getConstraintSet(this.mEndState).applyTo(this);
+                }
+            }
+            if (!Float.isNaN(f)) {
+                f2 = f;
+            }
+            this.mTransitionLastPosition = f2;
+            if (Float.isNaN(f)) {
+                Log.v(TAG, Debug.getLocation() + " transitionToStart ");
+                transitionToStart();
+                return;
+            }
+            setProgress(f);
+        }
+    }
+
+    /* access modifiers changed from: protected */
     public void setTransition(MotionScene.Transition transition) {
         this.mScene.setTransition(transition);
+        setState(TransitionState.SETUP);
         if (this.mCurrentState == this.mScene.getEndId()) {
             this.mTransitionLastPosition = 1.0f;
             this.mTransitionPosition = 1.0f;
@@ -238,66 +497,335 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             this.mTransitionPosition = 0.0f;
             this.mTransitionGoalPosition = 0.0f;
         }
-        this.mTransitionLastTime = -1L;
+        this.mTransitionLastTime = transition.isTransitionFlag(1) ? -1 : getNanoTime();
         int startId = this.mScene.getStartId();
         int endId = this.mScene.getEndId();
-        if (startId == this.mBeginState && endId == this.mEndState) {
+        if (startId != this.mBeginState || endId != this.mEndState) {
+            this.mBeginState = startId;
+            this.mEndState = endId;
+            this.mScene.setTransition(startId, endId);
+            this.mModel.initFrom(this.mLayoutWidget, this.mScene.getConstraintSet(this.mBeginState), this.mScene.getConstraintSet(this.mEndState));
+            this.mModel.setMeasuredId(this.mBeginState, this.mEndState);
+            this.mModel.reEvaluateState();
+            rebuildScene();
+        }
+    }
+
+    public void loadLayoutDescription(int i) {
+        int i2;
+        if (i != 0) {
+            try {
+                MotionScene motionScene = new MotionScene(getContext(), this, i);
+                this.mScene = motionScene;
+                if (this.mCurrentState == -1) {
+                    this.mCurrentState = motionScene.getStartId();
+                    this.mBeginState = this.mScene.getStartId();
+                    this.mEndState = this.mScene.getEndId();
+                }
+                if (isAttachedToWindow()) {
+                    Display display = getDisplay();
+                    if (display == null) {
+                        i2 = 0;
+                    } else {
+                        i2 = display.getRotation();
+                    }
+                    this.mPreviouseRotation = i2;
+                    MotionScene motionScene2 = this.mScene;
+                    if (motionScene2 != null) {
+                        ConstraintSet constraintSet = motionScene2.getConstraintSet(this.mCurrentState);
+                        this.mScene.readFallback(this);
+                        ArrayList<MotionHelper> arrayList = this.mDecoratorsHelpers;
+                        if (arrayList != null) {
+                            Iterator<MotionHelper> it = arrayList.iterator();
+                            while (it.hasNext()) {
+                                it.next().onFinishedMotionScene(this);
+                            }
+                        }
+                        if (constraintSet != null) {
+                            constraintSet.applyTo(this);
+                        }
+                        this.mBeginState = this.mCurrentState;
+                    }
+                    onNewStateAttachHandlers();
+                    StateCache stateCache = this.mStateCache;
+                    if (stateCache != null) {
+                        stateCache.apply();
+                        return;
+                    }
+                    MotionScene motionScene3 = this.mScene;
+                    if (motionScene3 != null && motionScene3.mCurrentTransition != null && this.mScene.mCurrentTransition.getAutoTransition() == 4) {
+                        transitionToEnd();
+                        setState(TransitionState.SETUP);
+                        setState(TransitionState.MOVING);
+                        return;
+                    }
+                    return;
+                }
+                this.mScene = null;
+            } catch (Exception e) {
+                throw new IllegalArgumentException("unable to parse MotionScene file", e);
+            } catch (Exception e2) {
+                throw new IllegalArgumentException("unable to parse MotionScene file", e2);
+            }
+        } else {
+            this.mScene = null;
+        }
+    }
+
+    public boolean isAttachedToWindow() {
+        return super.isAttachedToWindow();
+    }
+
+    public void setState(int i, int i2, int i3) {
+        setState(TransitionState.SETUP);
+        this.mCurrentState = i;
+        this.mBeginState = -1;
+        this.mEndState = -1;
+        if (this.mConstraintLayoutSpec != null) {
+            this.mConstraintLayoutSpec.updateConstraints(i, (float) i2, (float) i3);
             return;
         }
-        this.mBeginState = startId;
-        this.mEndState = endId;
-        this.mScene.setTransition(startId, endId);
-        this.mModel.initFrom(this.mLayoutWidget, this.mScene.getConstraintSet(this.mBeginState), this.mScene.getConstraintSet(this.mEndState));
-        this.mModel.setMeasuredId(this.mBeginState, this.mEndState);
-        this.mModel.reEvaluateState();
-        rebuildScene();
-        fireTransitionStarted(this, this.mBeginState, this.mEndState);
+        MotionScene motionScene = this.mScene;
+        if (motionScene != null) {
+            motionScene.getConstraintSet(i).applyTo(this);
+        }
+    }
+
+    public void setInterpolatedProgress(float f) {
+        if (this.mScene != null) {
+            setState(TransitionState.MOVING);
+            Interpolator interpolator = this.mScene.getInterpolator();
+            if (interpolator != null) {
+                setProgress(interpolator.getInterpolation(f));
+                return;
+            }
+        }
+        setProgress(f);
+    }
+
+    public void setProgress(float f, float f2) {
+        if (!isAttachedToWindow()) {
+            if (this.mStateCache == null) {
+                this.mStateCache = new StateCache();
+            }
+            this.mStateCache.setProgress(f);
+            this.mStateCache.setVelocity(f2);
+            return;
+        }
+        setProgress(f);
+        setState(TransitionState.MOVING);
+        this.mLastVelocity = f2;
+        animateTo(1.0f);
+    }
+
+    class StateCache {
+        final String KeyEndState = "motion.EndState";
+        final String KeyProgress = "motion.progress";
+        final String KeyStartState = "motion.StartState";
+        final String KeyVelocity = "motion.velocity";
+        int endState = -1;
+        float mProgress = Float.NaN;
+        float mVelocity = Float.NaN;
+        int startState = -1;
+
+        StateCache() {
+        }
+
+        /* access modifiers changed from: package-private */
+        public void apply() {
+            int i = this.startState;
+            if (!(i == -1 && this.endState == -1)) {
+                if (i == -1) {
+                    MotionLayout.this.transitionToState(this.endState);
+                } else {
+                    int i2 = this.endState;
+                    if (i2 == -1) {
+                        MotionLayout.this.setState(i, -1, -1);
+                    } else {
+                        MotionLayout.this.setTransition(i, i2);
+                    }
+                }
+                MotionLayout.this.setState(TransitionState.SETUP);
+            }
+            if (!Float.isNaN(this.mVelocity)) {
+                MotionLayout.this.setProgress(this.mProgress, this.mVelocity);
+                this.mProgress = Float.NaN;
+                this.mVelocity = Float.NaN;
+                this.startState = -1;
+                this.endState = -1;
+            } else if (!Float.isNaN(this.mProgress)) {
+                MotionLayout.this.setProgress(this.mProgress);
+            }
+        }
+
+        public Bundle getTransitionState() {
+            Bundle bundle = new Bundle();
+            bundle.putFloat("motion.progress", this.mProgress);
+            bundle.putFloat("motion.velocity", this.mVelocity);
+            bundle.putInt("motion.StartState", this.startState);
+            bundle.putInt("motion.EndState", this.endState);
+            return bundle;
+        }
+
+        public void setTransitionState(Bundle bundle) {
+            this.mProgress = bundle.getFloat("motion.progress");
+            this.mVelocity = bundle.getFloat("motion.velocity");
+            this.startState = bundle.getInt("motion.StartState");
+            this.endState = bundle.getInt("motion.EndState");
+        }
+
+        public void setProgress(float f) {
+            this.mProgress = f;
+        }
+
+        public void setEndState(int i) {
+            this.endState = i;
+        }
+
+        public void setVelocity(float f) {
+            this.mVelocity = f;
+        }
+
+        public void setStartState(int i) {
+            this.startState = i;
+        }
+
+        public void recordState() {
+            this.endState = MotionLayout.this.mEndState;
+            this.startState = MotionLayout.this.mBeginState;
+            this.mVelocity = MotionLayout.this.getVelocity();
+            this.mProgress = MotionLayout.this.getProgress();
+        }
+    }
+
+    public void setTransitionState(Bundle bundle) {
+        if (this.mStateCache == null) {
+            this.mStateCache = new StateCache();
+        }
+        this.mStateCache.setTransitionState(bundle);
+        if (isAttachedToWindow()) {
+            this.mStateCache.apply();
+        }
+    }
+
+    public Bundle getTransitionState() {
+        if (this.mStateCache == null) {
+            this.mStateCache = new StateCache();
+        }
+        this.mStateCache.recordState();
+        return this.mStateCache.getTransitionState();
     }
 
     public void setProgress(float f) {
-        if (f <= 0.0f) {
-            this.mCurrentState = this.mBeginState;
-        } else if (f >= 1.0f) {
-            this.mCurrentState = this.mEndState;
-        } else {
-            this.mCurrentState = -1;
+        int i = (f > 0.0f ? 1 : (f == 0.0f ? 0 : -1));
+        if (i < 0 || f > 1.0f) {
+            Log.w(TAG, "Warning! Progress is defined for values between 0.0 and 1.0 inclusive");
         }
-        if (this.mScene == null) {
+        if (!isAttachedToWindow()) {
+            if (this.mStateCache == null) {
+                this.mStateCache = new StateCache();
+            }
+            this.mStateCache.setProgress(f);
             return;
         }
-        this.mTransitionInstantly = true;
-        this.mTransitionGoalPosition = f;
-        this.mTransitionPosition = f;
-        this.mTransitionLastTime = -1L;
-        this.mAnimationStartTime = -1L;
-        this.mInterpolator = null;
-        this.mInTransition = true;
-        invalidate();
+        if (i <= 0) {
+            if (this.mTransitionLastPosition == 1.0f && this.mCurrentState == this.mEndState) {
+                setState(TransitionState.MOVING);
+            }
+            this.mCurrentState = this.mBeginState;
+            if (this.mTransitionLastPosition == 0.0f) {
+                setState(TransitionState.FINISHED);
+            }
+        } else if (f >= 1.0f) {
+            if (this.mTransitionLastPosition == 0.0f && this.mCurrentState == this.mBeginState) {
+                setState(TransitionState.MOVING);
+            }
+            this.mCurrentState = this.mEndState;
+            if (this.mTransitionLastPosition == 1.0f) {
+                setState(TransitionState.FINISHED);
+            }
+        } else {
+            this.mCurrentState = -1;
+            setState(TransitionState.MOVING);
+        }
+        if (this.mScene != null) {
+            this.mTransitionInstantly = true;
+            this.mTransitionGoalPosition = f;
+            this.mTransitionPosition = f;
+            this.mTransitionLastTime = -1;
+            this.mAnimationStartTime = -1;
+            this.mInterpolator = null;
+            this.mInTransition = true;
+            invalidate();
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setupMotionViews() {
         int childCount = getChildCount();
         this.mModel.build();
         boolean z = true;
         this.mInTransition = true;
+        SparseArray sparseArray = new SparseArray();
+        int i = 0;
+        for (int i2 = 0; i2 < childCount; i2++) {
+            View childAt = getChildAt(i2);
+            sparseArray.put(childAt.getId(), this.mFrameArrayList.get(childAt));
+        }
         int width = getWidth();
         int height = getHeight();
         int gatPathMotionArc = this.mScene.gatPathMotionArc();
-        int i = 0;
         if (gatPathMotionArc != -1) {
-            for (int i2 = 0; i2 < childCount; i2++) {
-                MotionController motionController = this.mFrameArrayList.get(getChildAt(i2));
+            for (int i3 = 0; i3 < childCount; i3++) {
+                MotionController motionController = this.mFrameArrayList.get(getChildAt(i3));
                 if (motionController != null) {
                     motionController.setPathMotionArc(gatPathMotionArc);
                 }
             }
         }
-        for (int i3 = 0; i3 < childCount; i3++) {
-            MotionController motionController2 = this.mFrameArrayList.get(getChildAt(i3));
-            if (motionController2 != null) {
-                this.mScene.getKeyFrames(motionController2);
-                motionController2.setup(width, height, this.mTransitionDuration, getNanoTime());
+        SparseBooleanArray sparseBooleanArray = new SparseBooleanArray();
+        int[] iArr = new int[this.mFrameArrayList.size()];
+        int i4 = 0;
+        for (int i5 = 0; i5 < childCount; i5++) {
+            MotionController motionController2 = this.mFrameArrayList.get(getChildAt(i5));
+            if (motionController2.getAnimateRelativeTo() != -1) {
+                sparseBooleanArray.put(motionController2.getAnimateRelativeTo(), true);
+                iArr[i4] = motionController2.getAnimateRelativeTo();
+                i4++;
+            }
+        }
+        if (this.mDecoratorsHelpers != null) {
+            for (int i6 = 0; i6 < i4; i6++) {
+                MotionController motionController3 = this.mFrameArrayList.get(findViewById(iArr[i6]));
+                if (motionController3 != null) {
+                    this.mScene.getKeyFrames(motionController3);
+                }
+            }
+            Iterator<MotionHelper> it = this.mDecoratorsHelpers.iterator();
+            while (it.hasNext()) {
+                it.next().onPreSetup(this, this.mFrameArrayList);
+            }
+            for (int i7 = 0; i7 < i4; i7++) {
+                MotionController motionController4 = this.mFrameArrayList.get(findViewById(iArr[i7]));
+                if (motionController4 != null) {
+                    motionController4.setup(width, height, this.mTransitionDuration, getNanoTime());
+                }
+            }
+        } else {
+            for (int i8 = 0; i8 < i4; i8++) {
+                MotionController motionController5 = this.mFrameArrayList.get(findViewById(iArr[i8]));
+                if (motionController5 != null) {
+                    this.mScene.getKeyFrames(motionController5);
+                    motionController5.setup(width, height, this.mTransitionDuration, getNanoTime());
+                }
+            }
+        }
+        for (int i9 = 0; i9 < childCount; i9++) {
+            View childAt2 = getChildAt(i9);
+            MotionController motionController6 = this.mFrameArrayList.get(childAt2);
+            if (!sparseBooleanArray.get(childAt2.getId()) && motionController6 != null) {
+                this.mScene.getKeyFrames(motionController6);
+                motionController6.setup(width, height, this.mTransitionDuration, getNanoTime());
             }
         }
         float staggered = this.mScene.getStaggered();
@@ -306,113 +834,224 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             float abs = Math.abs(staggered);
             float f = -3.4028235E38f;
             float f2 = Float.MAX_VALUE;
+            int i10 = 0;
             float f3 = -3.4028235E38f;
             float f4 = Float.MAX_VALUE;
-            int i4 = 0;
             while (true) {
-                if (i4 >= childCount) {
+                if (i10 >= childCount) {
                     z = false;
                     break;
                 }
-                MotionController motionController3 = this.mFrameArrayList.get(getChildAt(i4));
-                if (!Float.isNaN(motionController3.mMotionStagger)) {
+                MotionController motionController7 = this.mFrameArrayList.get(getChildAt(i10));
+                if (!Float.isNaN(motionController7.mMotionStagger)) {
                     break;
                 }
-                float finalX = motionController3.getFinalX();
-                float finalY = motionController3.getFinalY();
+                float finalX = motionController7.getFinalX();
+                float finalY = motionController7.getFinalY();
                 float f5 = z2 ? finalY - finalX : finalY + finalX;
                 f4 = Math.min(f4, f5);
                 f3 = Math.max(f3, f5);
-                i4++;
+                i10++;
             }
-            if (!z) {
+            if (z) {
+                for (int i11 = 0; i11 < childCount; i11++) {
+                    MotionController motionController8 = this.mFrameArrayList.get(getChildAt(i11));
+                    if (!Float.isNaN(motionController8.mMotionStagger)) {
+                        f2 = Math.min(f2, motionController8.mMotionStagger);
+                        f = Math.max(f, motionController8.mMotionStagger);
+                    }
+                }
                 while (i < childCount) {
-                    MotionController motionController4 = this.mFrameArrayList.get(getChildAt(i));
-                    float finalX2 = motionController4.getFinalX();
-                    float finalY2 = motionController4.getFinalY();
-                    float f6 = z2 ? finalY2 - finalX2 : finalY2 + finalX2;
-                    motionController4.mStaggerScale = 1.0f / (1.0f - abs);
-                    motionController4.mStaggerOffset = abs - (((f6 - f4) * abs) / (f3 - f4));
+                    MotionController motionController9 = this.mFrameArrayList.get(getChildAt(i));
+                    if (!Float.isNaN(motionController9.mMotionStagger)) {
+                        motionController9.mStaggerScale = 1.0f / (1.0f - abs);
+                        if (z2) {
+                            motionController9.mStaggerOffset = abs - (((f - motionController9.mMotionStagger) / (f - f2)) * abs);
+                        } else {
+                            motionController9.mStaggerOffset = abs - (((motionController9.mMotionStagger - f2) * abs) / (f - f2));
+                        }
+                    }
                     i++;
                 }
                 return;
             }
-            for (int i5 = 0; i5 < childCount; i5++) {
-                MotionController motionController5 = this.mFrameArrayList.get(getChildAt(i5));
-                if (!Float.isNaN(motionController5.mMotionStagger)) {
-                    f2 = Math.min(f2, motionController5.mMotionStagger);
-                    f = Math.max(f, motionController5.mMotionStagger);
-                }
-            }
             while (i < childCount) {
-                MotionController motionController6 = this.mFrameArrayList.get(getChildAt(i));
-                if (!Float.isNaN(motionController6.mMotionStagger)) {
-                    motionController6.mStaggerScale = 1.0f / (1.0f - abs);
-                    if (z2) {
-                        motionController6.mStaggerOffset = abs - (((f - motionController6.mMotionStagger) / (f - f2)) * abs);
-                    } else {
-                        motionController6.mStaggerOffset = abs - (((motionController6.mMotionStagger - f2) * abs) / (f - f2));
-                    }
-                }
+                MotionController motionController10 = this.mFrameArrayList.get(getChildAt(i));
+                float finalX2 = motionController10.getFinalX();
+                float finalY2 = motionController10.getFinalY();
+                float f6 = z2 ? finalY2 - finalX2 : finalY2 + finalX2;
+                motionController10.mStaggerScale = 1.0f / (1.0f - abs);
+                motionController10.mStaggerOffset = abs - (((f6 - f4) * abs) / (f3 - f4));
                 i++;
             }
         }
     }
 
-    public void touchAnimateTo(int i, float f, float f2) {
-        if (this.mScene == null || this.mTransitionLastPosition == f) {
-            return;
-        }
-        this.mTemporalInterpolator = true;
-        this.mAnimationStartTime = getNanoTime();
-        float duration = this.mScene.getDuration() / 1000.0f;
-        this.mTransitionDuration = duration;
-        this.mTransitionGoalPosition = f;
-        this.mInTransition = true;
-        float f3 = 1.0f;
-        if (i == 0 || i == 1 || i == 2) {
-            if (i == 1) {
-                f = 0.0f;
-            } else if (i == 2) {
-                f = 1.0f;
-            }
-            this.mStopLogic.config(this.mTransitionLastPosition, f, f2, duration, this.mScene.getMaxAcceleration(), this.mScene.getMaxVelocity());
-            int i2 = this.mCurrentState;
-            if (f != 0.0f) {
-                f3 = 0.0f;
-            }
-            setProgress(f3);
-            this.mCurrentState = i2;
-            this.mInterpolator = this.mStopLogic;
-        } else if (i == 4) {
-            this.mDecelerateLogic.config(f2, this.mTransitionLastPosition, this.mScene.getMaxAcceleration());
-            this.mInterpolator = this.mDecelerateLogic;
-        } else if (i == 5) {
-            if (willJump(f2, this.mTransitionLastPosition, this.mScene.getMaxAcceleration())) {
-                this.mDecelerateLogic.config(f2, this.mTransitionLastPosition, this.mScene.getMaxAcceleration());
-                this.mInterpolator = this.mDecelerateLogic;
-            } else {
-                this.mStopLogic.config(this.mTransitionLastPosition, f, f2, this.mTransitionDuration, this.mScene.getMaxAcceleration(), this.mScene.getMaxVelocity());
-                this.mLastVelocity = 0.0f;
-                int i3 = this.mCurrentState;
-                if (f != 0.0f) {
-                    f3 = 0.0f;
-                }
-                setProgress(f3);
-                this.mCurrentState = i3;
-                this.mInterpolator = this.mStopLogic;
-            }
-        }
-        this.mTransitionInstantly = false;
-        this.mAnimationStartTime = getNanoTime();
-        invalidate();
+    /* JADX WARNING: Code restructure failed: missing block: B:15:0x0037, code lost:
+        if (r10 != 7) goto L_0x00f1;
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void touchAnimateTo(int r10, float r11, float r12) {
+        /*
+            r9 = this;
+            androidx.constraintlayout.motion.widget.MotionScene r0 = r9.mScene
+            if (r0 != 0) goto L_0x0005
+            return
+        L_0x0005:
+            float r0 = r9.mTransitionLastPosition
+            int r0 = (r0 > r11 ? 1 : (r0 == r11 ? 0 : -1))
+            if (r0 != 0) goto L_0x000c
+            return
+        L_0x000c:
+            r0 = 1
+            r9.mTemporalInterpolator = r0
+            long r1 = r9.getNanoTime()
+            r9.mAnimationStartTime = r1
+            androidx.constraintlayout.motion.widget.MotionScene r1 = r9.mScene
+            int r1 = r1.getDuration()
+            float r1 = (float) r1
+            r2 = 1148846080(0x447a0000, float:1000.0)
+            float r1 = r1 / r2
+            r9.mTransitionDuration = r1
+            r9.mTransitionGoalPosition = r11
+            r9.mInTransition = r0
+            r1 = 0
+            r2 = 7
+            r3 = 6
+            r4 = 2
+            if (r10 == 0) goto L_0x0093
+            if (r10 == r0) goto L_0x0093
+            if (r10 == r4) goto L_0x0093
+            r5 = 4
+            if (r10 == r5) goto L_0x0081
+            r5 = 5
+            if (r10 == r5) goto L_0x003b
+            if (r10 == r3) goto L_0x0093
+            if (r10 == r2) goto L_0x0093
+            goto L_0x00f1
+        L_0x003b:
+            float r10 = r9.mTransitionLastPosition
+            androidx.constraintlayout.motion.widget.MotionScene r0 = r9.mScene
+            float r0 = r0.getMaxAcceleration()
+            boolean r10 = willJump(r12, r10, r0)
+            if (r10 == 0) goto L_0x005c
+            androidx.constraintlayout.motion.widget.MotionLayout$DecelerateInterpolator r10 = r9.mDecelerateLogic
+            float r11 = r9.mTransitionLastPosition
+            androidx.constraintlayout.motion.widget.MotionScene r0 = r9.mScene
+            float r0 = r0.getMaxAcceleration()
+            r10.config(r12, r11, r0)
+            androidx.constraintlayout.motion.widget.MotionLayout$DecelerateInterpolator r10 = r9.mDecelerateLogic
+            r9.mInterpolator = r10
+            goto L_0x00f1
+        L_0x005c:
+            androidx.constraintlayout.motion.utils.StopLogic r2 = r9.mStopLogic
+            float r3 = r9.mTransitionLastPosition
+            float r6 = r9.mTransitionDuration
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            float r7 = r10.getMaxAcceleration()
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            float r8 = r10.getMaxVelocity()
+            r4 = r11
+            r5 = r12
+            r2.config(r3, r4, r5, r6, r7, r8)
+            r9.mLastVelocity = r1
+            int r10 = r9.mCurrentState
+            r9.mTransitionGoalPosition = r11
+            r9.mCurrentState = r10
+            androidx.constraintlayout.motion.utils.StopLogic r10 = r9.mStopLogic
+            r9.mInterpolator = r10
+            goto L_0x00f1
+        L_0x0081:
+            androidx.constraintlayout.motion.widget.MotionLayout$DecelerateInterpolator r10 = r9.mDecelerateLogic
+            float r11 = r9.mTransitionLastPosition
+            androidx.constraintlayout.motion.widget.MotionScene r0 = r9.mScene
+            float r0 = r0.getMaxAcceleration()
+            r10.config(r12, r11, r0)
+            androidx.constraintlayout.motion.widget.MotionLayout$DecelerateInterpolator r10 = r9.mDecelerateLogic
+            r9.mInterpolator = r10
+            goto L_0x00f1
+        L_0x0093:
+            if (r10 == r0) goto L_0x009f
+            if (r10 != r2) goto L_0x0098
+            goto L_0x009f
+        L_0x0098:
+            if (r10 == r4) goto L_0x009c
+            if (r10 != r3) goto L_0x00a0
+        L_0x009c:
+            r11 = 1065353216(0x3f800000, float:1.0)
+            goto L_0x00a0
+        L_0x009f:
+            r11 = r1
+        L_0x00a0:
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            int r10 = r10.getAutoCompleteMode()
+            if (r10 != 0) goto L_0x00c0
+            androidx.constraintlayout.motion.utils.StopLogic r0 = r9.mStopLogic
+            float r1 = r9.mTransitionLastPosition
+            float r4 = r9.mTransitionDuration
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            float r5 = r10.getMaxAcceleration()
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            float r6 = r10.getMaxVelocity()
+            r2 = r11
+            r3 = r12
+            r0.config(r1, r2, r3, r4, r5, r6)
+            goto L_0x00e7
+        L_0x00c0:
+            androidx.constraintlayout.motion.utils.StopLogic r0 = r9.mStopLogic
+            float r1 = r9.mTransitionLastPosition
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            float r4 = r10.getSpringMass()
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            float r5 = r10.getSpringStiffiness()
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            float r6 = r10.getSpringDamping()
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            float r7 = r10.getSpringStopThreshold()
+            androidx.constraintlayout.motion.widget.MotionScene r10 = r9.mScene
+            int r8 = r10.getSpringBoundary()
+            r2 = r11
+            r3 = r12
+            r0.springConfig(r1, r2, r3, r4, r5, r6, r7, r8)
+        L_0x00e7:
+            int r10 = r9.mCurrentState
+            r9.mTransitionGoalPosition = r11
+            r9.mCurrentState = r10
+            androidx.constraintlayout.motion.utils.StopLogic r10 = r9.mStopLogic
+            r9.mInterpolator = r10
+        L_0x00f1:
+            r10 = 0
+            r9.mTransitionInstantly = r10
+            long r10 = r9.getNanoTime()
+            r9.mAnimationStartTime = r10
+            r9.invalidate()
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.motion.widget.MotionLayout.touchAnimateTo(int, float, float):void");
     }
 
-    /* loaded from: classes.dex */
+    public void touchSpringTo(float f, float f2) {
+        if (this.mScene != null && this.mTransitionLastPosition != f) {
+            this.mTemporalInterpolator = true;
+            this.mAnimationStartTime = getNanoTime();
+            this.mTransitionDuration = ((float) this.mScene.getDuration()) / 1000.0f;
+            this.mTransitionGoalPosition = f;
+            this.mInTransition = true;
+            this.mStopLogic.springConfig(this.mTransitionLastPosition, f, f2, this.mScene.getSpringMass(), this.mScene.getSpringStiffiness(), this.mScene.getSpringDamping(), this.mScene.getSpringStopThreshold(), this.mScene.getSpringBoundary());
+            int i = this.mCurrentState;
+            this.mTransitionGoalPosition = f;
+            this.mCurrentState = i;
+            this.mInterpolator = this.mStopLogic;
+            this.mTransitionInstantly = false;
+            this.mAnimationStartTime = getNanoTime();
+            invalidate();
+        }
+    }
+
     class DecelerateInterpolator extends MotionInterpolator {
-        float maxA;
-        float initalV = 0.0f;
         float currentP = 0.0f;
+        float initalV = 0.0f;
+        float maxA;
 
         DecelerateInterpolator() {
         }
@@ -423,7 +1062,6 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             this.maxA = f3;
         }
 
-        @Override // android.animation.TimeInterpolator
         public float getInterpolation(float f) {
             float f2;
             float f3;
@@ -434,51 +1072,50 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
                     f = f4 / f5;
                 }
                 MotionLayout.this.mLastVelocity = f4 - (f5 * f);
-                f2 = (f4 * f) - (((f5 * f) * f) / 2.0f);
+                f2 = (this.initalV * f) - (((this.maxA * f) * f) / 2.0f);
                 f3 = this.currentP;
             } else {
                 float f6 = this.maxA;
                 if ((-f4) / f6 < f) {
                     f = (-f4) / f6;
                 }
-                MotionLayout.this.mLastVelocity = (f6 * f) + f4;
-                f2 = (f4 * f) + (((f6 * f) * f) / 2.0f);
+                MotionLayout.this.mLastVelocity = f4 + (f6 * f);
+                f2 = (this.initalV * f) + (((this.maxA * f) * f) / 2.0f);
                 f3 = this.currentP;
             }
             return f2 + f3;
         }
 
-        @Override // androidx.constraintlayout.motion.widget.MotionInterpolator
         public float getVelocity() {
             return MotionLayout.this.mLastVelocity;
         }
     }
 
-    void animateTo(float f) {
+    /* access modifiers changed from: package-private */
+    public void animateTo(float f) {
         MotionScene motionScene = this.mScene;
-        if (motionScene == null) {
-            return;
+        if (motionScene != null) {
+            float f2 = this.mTransitionLastPosition;
+            float f3 = this.mTransitionPosition;
+            if (f2 != f3 && this.mTransitionInstantly) {
+                this.mTransitionLastPosition = f3;
+            }
+            float f4 = this.mTransitionLastPosition;
+            if (f4 != f) {
+                this.mTemporalInterpolator = false;
+                this.mTransitionGoalPosition = f;
+                this.mTransitionDuration = ((float) motionScene.getDuration()) / 1000.0f;
+                setProgress(this.mTransitionGoalPosition);
+                this.mInterpolator = null;
+                this.mProgressInterpolator = this.mScene.getInterpolator();
+                this.mTransitionInstantly = false;
+                this.mAnimationStartTime = getNanoTime();
+                this.mInTransition = true;
+                this.mTransitionPosition = f4;
+                this.mTransitionLastPosition = f4;
+                invalidate();
+            }
         }
-        float f2 = this.mTransitionLastPosition;
-        float f3 = this.mTransitionPosition;
-        if (f2 != f3 && this.mTransitionInstantly) {
-            this.mTransitionLastPosition = f3;
-        }
-        float f4 = this.mTransitionLastPosition;
-        if (f4 == f) {
-            return;
-        }
-        this.mTemporalInterpolator = false;
-        this.mTransitionGoalPosition = f;
-        this.mTransitionDuration = motionScene.getDuration() / 1000.0f;
-        setProgress(this.mTransitionGoalPosition);
-        this.mInterpolator = this.mScene.getInterpolator();
-        this.mTransitionInstantly = false;
-        this.mAnimationStartTime = getNanoTime();
-        this.mInTransition = true;
-        this.mTransitionPosition = f4;
-        this.mTransitionLastPosition = f4;
-        invalidate();
     }
 
     private void computeCurrentPositions() {
@@ -498,89 +1135,210 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
 
     public void transitionToEnd() {
         animateTo(1.0f);
+        this.mOnComplete = null;
+    }
+
+    public void transitionToEnd(Runnable runnable) {
+        animateTo(1.0f);
+        this.mOnComplete = runnable;
     }
 
     public void transitionToState(int i) {
+        if (!isAttachedToWindow()) {
+            if (this.mStateCache == null) {
+                this.mStateCache = new StateCache();
+            }
+            this.mStateCache.setEndState(i);
+            return;
+        }
         transitionToState(i, -1, -1);
     }
 
-    public void transitionToState(int i, int i2, int i3) {
-        StateSet stateSet;
-        int convertToConstraintSet;
-        MotionScene motionScene = this.mScene;
-        if (motionScene != null && (stateSet = motionScene.mStateSet) != null && (convertToConstraintSet = stateSet.convertToConstraintSet(this.mCurrentState, i, i2, i3)) != -1) {
-            i = convertToConstraintSet;
-        }
-        int i4 = this.mCurrentState;
-        if (i4 == i) {
+    public void transitionToState(int i, int i2) {
+        if (!isAttachedToWindow()) {
+            if (this.mStateCache == null) {
+                this.mStateCache = new StateCache();
+            }
+            this.mStateCache.setEndState(i);
             return;
         }
-        if (this.mBeginState == i) {
-            animateTo(0.0f);
-        } else if (this.mEndState == i) {
-            animateTo(1.0f);
-        } else {
-            this.mEndState = i;
-            if (i4 != -1) {
-                setTransition(i4, i);
-                animateTo(1.0f);
-                this.mTransitionLastPosition = 0.0f;
-                transitionToEnd();
-                return;
-            }
-            this.mTemporalInterpolator = false;
-            this.mTransitionGoalPosition = 1.0f;
-            this.mTransitionPosition = 0.0f;
-            this.mTransitionLastPosition = 0.0f;
-            this.mTransitionLastTime = getNanoTime();
-            this.mAnimationStartTime = getNanoTime();
-            this.mTransitionInstantly = false;
-            this.mInterpolator = null;
-            this.mTransitionDuration = this.mScene.getDuration() / 1000.0f;
-            this.mBeginState = -1;
-            this.mScene.setTransition(-1, this.mEndState);
-            this.mScene.getStartId();
-            int childCount = getChildCount();
-            this.mFrameArrayList.clear();
-            for (int i5 = 0; i5 < childCount; i5++) {
-                View childAt = getChildAt(i5);
-                this.mFrameArrayList.put(childAt, new MotionController(childAt));
-            }
-            this.mInTransition = true;
-            this.mModel.initFrom(this.mLayoutWidget, null, this.mScene.getConstraintSet(i));
-            rebuildScene();
-            this.mModel.build();
-            computeCurrentPositions();
-            int width = getWidth();
-            int height = getHeight();
-            for (int i6 = 0; i6 < childCount; i6++) {
-                MotionController motionController = this.mFrameArrayList.get(getChildAt(i6));
-                this.mScene.getKeyFrames(motionController);
-                motionController.setup(width, height, this.mTransitionDuration, getNanoTime());
-            }
-            float staggered = this.mScene.getStaggered();
-            if (staggered != 0.0f) {
-                float f = Float.MAX_VALUE;
-                float f2 = -3.4028235E38f;
-                for (int i7 = 0; i7 < childCount; i7++) {
-                    MotionController motionController2 = this.mFrameArrayList.get(getChildAt(i7));
-                    float finalY = motionController2.getFinalY() + motionController2.getFinalX();
-                    f = Math.min(f, finalY);
-                    f2 = Math.max(f2, finalY);
-                }
-                for (int i8 = 0; i8 < childCount; i8++) {
-                    MotionController motionController3 = this.mFrameArrayList.get(getChildAt(i8));
-                    float finalX = motionController3.getFinalX();
-                    float finalY2 = motionController3.getFinalY();
-                    motionController3.mStaggerScale = 1.0f / (1.0f - staggered);
-                    motionController3.mStaggerOffset = staggered - ((((finalX + finalY2) - f) * staggered) / (f2 - f));
-                }
-            }
-            this.mTransitionPosition = 0.0f;
-            this.mTransitionLastPosition = 0.0f;
-            this.mInTransition = true;
-            invalidate();
+        transitionToState(i, -1, -1, i2);
+    }
+
+    public void transitionToState(int i, int i2, int i3) {
+        transitionToState(i, i2, i3, -1);
+    }
+
+    public void rotateTo(int i, int i2) {
+        int i3 = 1;
+        this.mInRotation = true;
+        this.mPreRotateWidth = getWidth();
+        this.mPreRotateHeight = getHeight();
+        int rotation = getDisplay().getRotation();
+        if ((rotation + 1) % 4 <= (this.mPreviouseRotation + 1) % 4) {
+            i3 = 2;
         }
+        this.mRotatMode = i3;
+        this.mPreviouseRotation = rotation;
+        int childCount = getChildCount();
+        for (int i4 = 0; i4 < childCount; i4++) {
+            View childAt = getChildAt(i4);
+            ViewState viewState = this.mPreRotate.get(childAt);
+            if (viewState == null) {
+                viewState = new ViewState();
+                this.mPreRotate.put(childAt, viewState);
+            }
+            viewState.getState(childAt);
+        }
+        this.mBeginState = -1;
+        this.mEndState = i;
+        this.mScene.setTransition(-1, i);
+        this.mModel.initFrom(this.mLayoutWidget, (ConstraintSet) null, this.mScene.getConstraintSet(this.mEndState));
+        this.mTransitionPosition = 0.0f;
+        this.mTransitionLastPosition = 0.0f;
+        invalidate();
+        transitionToEnd(new Runnable() {
+            public void run() {
+                boolean unused = MotionLayout.this.mInRotation = false;
+            }
+        });
+        if (i2 > 0) {
+            this.mTransitionDuration = ((float) i2) / 1000.0f;
+        }
+    }
+
+    public boolean isInRotation() {
+        return this.mInRotation;
+    }
+
+    public void jumpToState(int i) {
+        if (this.mBeginState == i) {
+            setProgress(0.0f);
+        } else if (this.mEndState == i) {
+            setProgress(1.0f);
+        } else {
+            setTransition(i, i);
+        }
+    }
+
+    public void transitionToState(int i, int i2, int i3, int i4) {
+        int convertToConstraintSet;
+        MotionScene motionScene = this.mScene;
+        if (!(motionScene == null || motionScene.mStateSet == null || (convertToConstraintSet = this.mScene.mStateSet.convertToConstraintSet(this.mCurrentState, i, (float) i2, (float) i3)) == -1)) {
+            i = convertToConstraintSet;
+        }
+        int i5 = this.mCurrentState;
+        if (i5 != i) {
+            if (this.mBeginState == i) {
+                animateTo(0.0f);
+                if (i4 > 0) {
+                    this.mTransitionDuration = ((float) i4) / 1000.0f;
+                }
+            } else if (this.mEndState == i) {
+                animateTo(1.0f);
+                if (i4 > 0) {
+                    this.mTransitionDuration = ((float) i4) / 1000.0f;
+                }
+            } else {
+                this.mEndState = i;
+                if (i5 != -1) {
+                    setTransition(i5, i);
+                    animateTo(1.0f);
+                    this.mTransitionLastPosition = 0.0f;
+                    transitionToEnd();
+                    if (i4 > 0) {
+                        this.mTransitionDuration = ((float) i4) / 1000.0f;
+                        return;
+                    }
+                    return;
+                }
+                this.mTemporalInterpolator = false;
+                this.mTransitionGoalPosition = 1.0f;
+                this.mTransitionPosition = 0.0f;
+                this.mTransitionLastPosition = 0.0f;
+                this.mTransitionLastTime = getNanoTime();
+                this.mAnimationStartTime = getNanoTime();
+                this.mTransitionInstantly = false;
+                this.mInterpolator = null;
+                if (i4 == -1) {
+                    this.mTransitionDuration = ((float) this.mScene.getDuration()) / 1000.0f;
+                }
+                this.mBeginState = -1;
+                this.mScene.setTransition(-1, this.mEndState);
+                SparseArray sparseArray = new SparseArray();
+                if (i4 == 0) {
+                    this.mTransitionDuration = ((float) this.mScene.getDuration()) / 1000.0f;
+                } else if (i4 > 0) {
+                    this.mTransitionDuration = ((float) i4) / 1000.0f;
+                }
+                int childCount = getChildCount();
+                this.mFrameArrayList.clear();
+                for (int i6 = 0; i6 < childCount; i6++) {
+                    View childAt = getChildAt(i6);
+                    this.mFrameArrayList.put(childAt, new MotionController(childAt));
+                    sparseArray.put(childAt.getId(), this.mFrameArrayList.get(childAt));
+                }
+                this.mInTransition = true;
+                this.mModel.initFrom(this.mLayoutWidget, (ConstraintSet) null, this.mScene.getConstraintSet(i));
+                rebuildScene();
+                this.mModel.build();
+                computeCurrentPositions();
+                int width = getWidth();
+                int height = getHeight();
+                if (this.mDecoratorsHelpers != null) {
+                    for (int i7 = 0; i7 < childCount; i7++) {
+                        MotionController motionController = this.mFrameArrayList.get(getChildAt(i7));
+                        if (motionController != null) {
+                            this.mScene.getKeyFrames(motionController);
+                        }
+                    }
+                    Iterator<MotionHelper> it = this.mDecoratorsHelpers.iterator();
+                    while (it.hasNext()) {
+                        it.next().onPreSetup(this, this.mFrameArrayList);
+                    }
+                    for (int i8 = 0; i8 < childCount; i8++) {
+                        MotionController motionController2 = this.mFrameArrayList.get(getChildAt(i8));
+                        if (motionController2 != null) {
+                            motionController2.setup(width, height, this.mTransitionDuration, getNanoTime());
+                        }
+                    }
+                } else {
+                    for (int i9 = 0; i9 < childCount; i9++) {
+                        MotionController motionController3 = this.mFrameArrayList.get(getChildAt(i9));
+                        if (motionController3 != null) {
+                            this.mScene.getKeyFrames(motionController3);
+                            motionController3.setup(width, height, this.mTransitionDuration, getNanoTime());
+                        }
+                    }
+                }
+                float staggered = this.mScene.getStaggered();
+                if (staggered != 0.0f) {
+                    float f = Float.MAX_VALUE;
+                    float f2 = -3.4028235E38f;
+                    for (int i10 = 0; i10 < childCount; i10++) {
+                        MotionController motionController4 = this.mFrameArrayList.get(getChildAt(i10));
+                        float finalY = motionController4.getFinalY() + motionController4.getFinalX();
+                        f = Math.min(f, finalY);
+                        f2 = Math.max(f2, finalY);
+                    }
+                    for (int i11 = 0; i11 < childCount; i11++) {
+                        MotionController motionController5 = this.mFrameArrayList.get(getChildAt(i11));
+                        float finalX = motionController5.getFinalX();
+                        float finalY2 = motionController5.getFinalY();
+                        motionController5.mStaggerScale = 1.0f / (1.0f - staggered);
+                        motionController5.mStaggerOffset = staggered - ((((finalX + finalY2) - f) * staggered) / (f2 - f));
+                    }
+                }
+                this.mTransitionPosition = 0.0f;
+                this.mTransitionLastPosition = 0.0f;
+                this.mInTransition = true;
+                invalidate();
+            }
+        }
+    }
+
+    public float getVelocity() {
+        return this.mLastVelocity;
     }
 
     public void getViewVelocity(View view, float f, float f2, float[] fArr, int i) {
@@ -589,10 +1347,9 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         float f5 = this.mTransitionLastPosition;
         if (this.mInterpolator != null) {
             float signum = Math.signum(this.mTransitionGoalPosition - f5);
-            float interpolation = this.mInterpolator.getInterpolation(this.mTransitionLastPosition + 1.0E-5f);
-            float interpolation2 = this.mInterpolator.getInterpolation(this.mTransitionLastPosition);
-            f4 = (signum * ((interpolation - interpolation2) / 1.0E-5f)) / this.mTransitionDuration;
-            f3 = interpolation2;
+            float interpolation = this.mInterpolator.getInterpolation(this.mTransitionLastPosition + EPSILON);
+            f3 = this.mInterpolator.getInterpolation(this.mTransitionLastPosition);
+            f4 = (signum * ((interpolation - f3) / EPSILON)) / this.mTransitionDuration;
         } else {
             f3 = f5;
         }
@@ -612,23 +1369,22 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class Model {
-        int mEndId;
-        int mStartId;
-        ConstraintWidgetContainer mLayoutStart = new ConstraintWidgetContainer();
-        ConstraintWidgetContainer mLayoutEnd = new ConstraintWidgetContainer();
-        ConstraintSet mStart = null;
+    class Model {
         ConstraintSet mEnd = null;
+        int mEndId;
+        ConstraintWidgetContainer mLayoutEnd = new ConstraintWidgetContainer();
+        ConstraintWidgetContainer mLayoutStart = new ConstraintWidgetContainer();
+        ConstraintSet mStart = null;
+        int mStartId;
 
         Model() {
         }
 
-        void copy(ConstraintWidgetContainer constraintWidgetContainer, ConstraintWidgetContainer constraintWidgetContainer2) {
+        /* access modifiers changed from: package-private */
+        public void copy(ConstraintWidgetContainer constraintWidgetContainer, ConstraintWidgetContainer constraintWidgetContainer2) {
             ConstraintWidget constraintWidget;
             ArrayList<ConstraintWidget> children = constraintWidgetContainer.getChildren();
-            HashMap<ConstraintWidget, ConstraintWidget> hashMap = new HashMap<>();
+            HashMap hashMap = new HashMap();
             hashMap.put(constraintWidgetContainer, constraintWidgetContainer2);
             constraintWidgetContainer2.getChildren().clear();
             constraintWidgetContainer2.copy(constraintWidgetContainer, hashMap);
@@ -652,23 +1408,33 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             Iterator<ConstraintWidget> it2 = children.iterator();
             while (it2.hasNext()) {
                 ConstraintWidget next2 = it2.next();
-                hashMap.get(next2).copy(next2, hashMap);
+                ((ConstraintWidget) hashMap.get(next2)).copy(next2, hashMap);
             }
         }
 
-        void initFrom(ConstraintWidgetContainer constraintWidgetContainer, ConstraintSet constraintSet, ConstraintSet constraintSet2) {
+        /* access modifiers changed from: package-private */
+        public void initFrom(ConstraintWidgetContainer constraintWidgetContainer, ConstraintSet constraintSet, ConstraintSet constraintSet2) {
             this.mStart = constraintSet;
             this.mEnd = constraintSet2;
-            this.mLayoutStart.setMeasurer(((ConstraintLayout) MotionLayout.this).mLayoutWidget.getMeasurer());
-            this.mLayoutEnd.setMeasurer(((ConstraintLayout) MotionLayout.this).mLayoutWidget.getMeasurer());
+            this.mLayoutStart = new ConstraintWidgetContainer();
+            this.mLayoutEnd = new ConstraintWidgetContainer();
+            this.mLayoutStart.setMeasurer(MotionLayout.this.mLayoutWidget.getMeasurer());
+            this.mLayoutEnd.setMeasurer(MotionLayout.this.mLayoutWidget.getMeasurer());
             this.mLayoutStart.removeAllChildren();
             this.mLayoutEnd.removeAllChildren();
-            copy(((ConstraintLayout) MotionLayout.this).mLayoutWidget, this.mLayoutStart);
-            copy(((ConstraintLayout) MotionLayout.this).mLayoutWidget, this.mLayoutEnd);
-            if (constraintSet != null) {
-                setupConstraintWidget(this.mLayoutStart, constraintSet);
+            copy(MotionLayout.this.mLayoutWidget, this.mLayoutStart);
+            copy(MotionLayout.this.mLayoutWidget, this.mLayoutEnd);
+            if (((double) MotionLayout.this.mTransitionLastPosition) > 0.5d) {
+                if (constraintSet != null) {
+                    setupConstraintWidget(this.mLayoutStart, constraintSet);
+                }
+                setupConstraintWidget(this.mLayoutEnd, constraintSet2);
+            } else {
+                setupConstraintWidget(this.mLayoutEnd, constraintSet2);
+                if (constraintSet != null) {
+                    setupConstraintWidget(this.mLayoutStart, constraintSet);
+                }
             }
-            setupConstraintWidget(this.mLayoutEnd, constraintSet2);
             this.mLayoutStart.setRtl(MotionLayout.this.isRtl());
             this.mLayoutStart.updateHierarchy();
             this.mLayoutEnd.setRtl(MotionLayout.this.isRtl());
@@ -676,27 +1442,26 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             ViewGroup.LayoutParams layoutParams = MotionLayout.this.getLayoutParams();
             if (layoutParams != null) {
                 if (layoutParams.width == -2) {
-                    ConstraintWidgetContainer constraintWidgetContainer2 = this.mLayoutStart;
-                    ConstraintWidget.DimensionBehaviour dimensionBehaviour = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
-                    constraintWidgetContainer2.setHorizontalDimensionBehaviour(dimensionBehaviour);
-                    this.mLayoutEnd.setHorizontalDimensionBehaviour(dimensionBehaviour);
+                    this.mLayoutStart.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.WRAP_CONTENT);
+                    this.mLayoutEnd.setHorizontalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.WRAP_CONTENT);
                 }
-                if (layoutParams.height != -2) {
-                    return;
+                if (layoutParams.height == -2) {
+                    this.mLayoutStart.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.WRAP_CONTENT);
+                    this.mLayoutEnd.setVerticalDimensionBehaviour(ConstraintWidget.DimensionBehaviour.WRAP_CONTENT);
                 }
-                ConstraintWidgetContainer constraintWidgetContainer3 = this.mLayoutStart;
-                ConstraintWidget.DimensionBehaviour dimensionBehaviour2 = ConstraintWidget.DimensionBehaviour.WRAP_CONTENT;
-                constraintWidgetContainer3.setVerticalDimensionBehaviour(dimensionBehaviour2);
-                this.mLayoutEnd.setVerticalDimensionBehaviour(dimensionBehaviour2);
             }
         }
 
         private void setupConstraintWidget(ConstraintWidgetContainer constraintWidgetContainer, ConstraintSet constraintSet) {
-            SparseArray<ConstraintWidget> sparseArray = new SparseArray<>();
+            SparseArray sparseArray = new SparseArray();
             Constraints.LayoutParams layoutParams = new Constraints.LayoutParams(-2, -2);
             sparseArray.clear();
             sparseArray.put(0, constraintWidgetContainer);
             sparseArray.put(MotionLayout.this.getId(), constraintWidgetContainer);
+            if (constraintSet.mRotate != 0) {
+                MotionLayout motionLayout = MotionLayout.this;
+                motionLayout.resolveSystem(this.mLayoutEnd, motionLayout.getOptimizationLevel(), View.MeasureSpec.makeMeasureSpec(MotionLayout.this.getHeight(), 1073741824), View.MeasureSpec.makeMeasureSpec(MotionLayout.this.getWidth(), 1073741824));
+            }
             Iterator<ConstraintWidget> it = constraintWidgetContainer.getChildren().iterator();
             while (it.hasNext()) {
                 ConstraintWidget next = it.next();
@@ -715,11 +1480,7 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
                         ((androidx.constraintlayout.widget.Barrier) view).validateParams();
                     }
                 }
-                if (Build.VERSION.SDK_INT >= 17) {
-                    layoutParams.resolveLayoutDirection(MotionLayout.this.getLayoutDirection());
-                } else {
-                    layoutParams.resolveLayoutDirection(0);
-                }
+                layoutParams.resolveLayoutDirection(MotionLayout.this.getLayoutDirection());
                 MotionLayout.this.applyConstraintsFromLayoutParams(false, view, next2, layoutParams, sparseArray);
                 if (constraintSet.getVisibilityMode(view.getId()) == 1) {
                     next2.setVisibility(view.getVisibility());
@@ -730,18 +1491,16 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             Iterator<ConstraintWidget> it3 = constraintWidgetContainer.getChildren().iterator();
             while (it3.hasNext()) {
                 ConstraintWidget next3 = it3.next();
-                if (next3 instanceof Helper) {
+                if (next3 instanceof VirtualLayout) {
                     Helper helper = (Helper) next3;
-                    helper.removeAllIds();
                     ((ConstraintHelper) next3.getCompanionWidget()).updatePreLayout(constraintWidgetContainer, helper, sparseArray);
-                    if (helper instanceof VirtualLayout) {
-                        ((VirtualLayout) helper).captureWidgets();
-                    }
+                    ((VirtualLayout) helper).captureWidgets();
                 }
             }
         }
 
-        ConstraintWidget getWidget(ConstraintWidgetContainer constraintWidgetContainer, View view) {
+        /* access modifiers changed from: package-private */
+        public ConstraintWidget getWidget(ConstraintWidgetContainer constraintWidgetContainer, View view) {
             if (constraintWidgetContainer.getCompanionWidget() == view) {
                 return constraintWidgetContainer;
             }
@@ -756,82 +1515,309 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             return null;
         }
 
+        private void debugLayoutParam(String str, ConstraintLayout.LayoutParams layoutParams) {
+            String str2 = "|__";
+            StringBuilder append = new StringBuilder().append(((((((((((WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + (layoutParams.startToStart != -1 ? "SS" : "__")) + (layoutParams.startToEnd != -1 ? "|SE" : str2)) + (layoutParams.endToStart != -1 ? "|ES" : str2)) + (layoutParams.endToEnd != -1 ? "|EE" : str2)) + (layoutParams.leftToLeft != -1 ? "|LL" : str2)) + (layoutParams.leftToRight != -1 ? "|LR" : str2)) + (layoutParams.rightToLeft != -1 ? "|RL" : str2)) + (layoutParams.rightToRight != -1 ? "|RR" : str2)) + (layoutParams.topToTop != -1 ? "|TT" : str2)) + (layoutParams.topToBottom != -1 ? "|TB" : str2)) + (layoutParams.bottomToTop != -1 ? "|BT" : str2));
+            if (layoutParams.bottomToBottom != -1) {
+                str2 = "|BB";
+            }
+            Log.v(MotionLayout.TAG, str + append.append(str2).toString());
+        }
+
+        private void debugWidget(String str, ConstraintWidget constraintWidget) {
+            String str2;
+            String str3;
+            String str4;
+            StringBuilder sb = new StringBuilder(WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER);
+            String str5 = "B";
+            String str6 = "__";
+            if (constraintWidget.mTop.mTarget != null) {
+                str2 = ExifInterface.GPS_DIRECTION_TRUE + (constraintWidget.mTop.mTarget.mType == ConstraintAnchor.Type.TOP ? ExifInterface.GPS_DIRECTION_TRUE : str5);
+            } else {
+                str2 = str6;
+            }
+            StringBuilder append = new StringBuilder().append(sb.append(str2).toString());
+            if (constraintWidget.mBottom.mTarget != null) {
+                StringBuilder sb2 = new StringBuilder(str5);
+                if (constraintWidget.mBottom.mTarget.mType == ConstraintAnchor.Type.TOP) {
+                    str5 = ExifInterface.GPS_DIRECTION_TRUE;
+                }
+                str3 = sb2.append(str5).toString();
+            } else {
+                str3 = str6;
+            }
+            StringBuilder append2 = new StringBuilder().append(append.append(str3).toString());
+            String str7 = "R";
+            if (constraintWidget.mLeft.mTarget != null) {
+                str4 = "L" + (constraintWidget.mLeft.mTarget.mType == ConstraintAnchor.Type.LEFT ? "L" : str7);
+            } else {
+                str4 = str6;
+            }
+            StringBuilder append3 = new StringBuilder().append(append2.append(str4).toString());
+            if (constraintWidget.mRight.mTarget != null) {
+                StringBuilder sb3 = new StringBuilder(str7);
+                if (constraintWidget.mRight.mTarget.mType == ConstraintAnchor.Type.LEFT) {
+                    str7 = "L";
+                }
+                str6 = sb3.append(str7).toString();
+            }
+            Log.v(MotionLayout.TAG, str + append3.append(str6).toString() + " ---  " + constraintWidget);
+        }
+
+        private void debugLayout(String str, ConstraintWidgetContainer constraintWidgetContainer) {
+            String str2 = str + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + Debug.getName((View) constraintWidgetContainer.getCompanionWidget());
+            Log.v(MotionLayout.TAG, str2 + "  ========= " + constraintWidgetContainer);
+            int size = constraintWidgetContainer.getChildren().size();
+            for (int i = 0; i < size; i++) {
+                String str3 = str2 + NavigationBarInflaterView.SIZE_MOD_START + i + "] ";
+                ConstraintWidget constraintWidget = constraintWidgetContainer.getChildren().get(i);
+                StringBuilder sb = new StringBuilder("");
+                ConstraintAnchor constraintAnchor = constraintWidget.mTop.mTarget;
+                String str4 = BaseLocale.SEP;
+                StringBuilder append = new StringBuilder().append((sb.append(constraintAnchor != null ? ExifInterface.GPS_DIRECTION_TRUE : str4).toString() + (constraintWidget.mBottom.mTarget != null ? "B" : str4)) + (constraintWidget.mLeft.mTarget != null ? "L" : str4));
+                if (constraintWidget.mRight.mTarget != null) {
+                    str4 = "R";
+                }
+                String sb2 = append.append(str4).toString();
+                View view = (View) constraintWidget.getCompanionWidget();
+                String name = Debug.getName(view);
+                if (view instanceof TextView) {
+                    name = name + NavigationBarInflaterView.KEY_CODE_START + ((TextView) view).getText() + NavigationBarInflaterView.KEY_CODE_END;
+                }
+                Log.v(MotionLayout.TAG, str3 + "  " + name + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + constraintWidget + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + sb2);
+            }
+            Log.v(MotionLayout.TAG, str2 + " done. ");
+        }
+
         public void reEvaluateState() {
             measure(MotionLayout.this.mLastWidthMeasureSpec, MotionLayout.this.mLastHeightMeasureSpec);
             MotionLayout.this.setupMotionViews();
         }
 
         public void measure(int i, int i2) {
-            int i3;
             int mode = View.MeasureSpec.getMode(i);
             int mode2 = View.MeasureSpec.getMode(i2);
-            MotionLayout motionLayout = MotionLayout.this;
-            motionLayout.mWidthMeasureMode = mode;
-            motionLayout.mHeightMeasureMode = mode2;
-            int optimizationLevel = motionLayout.getOptimizationLevel();
-            MotionLayout motionLayout2 = MotionLayout.this;
-            if (motionLayout2.mCurrentState == motionLayout2.getStartState()) {
-                MotionLayout.this.resolveSystem(this.mLayoutEnd, optimizationLevel, i, i2);
-                if (this.mStart != null) {
-                    MotionLayout.this.resolveSystem(this.mLayoutStart, optimizationLevel, i, i2);
+            MotionLayout.this.mWidthMeasureMode = mode;
+            MotionLayout.this.mHeightMeasureMode = mode2;
+            int optimizationLevel = MotionLayout.this.getOptimizationLevel();
+            if (MotionLayout.this.mCurrentState == MotionLayout.this.getStartState()) {
+                MotionLayout.this.resolveSystem(this.mLayoutEnd, optimizationLevel, this.mEnd.mRotate == 0 ? i : i2, this.mEnd.mRotate == 0 ? i2 : i);
+                ConstraintSet constraintSet = this.mStart;
+                if (constraintSet != null) {
+                    MotionLayout.this.resolveSystem(this.mLayoutStart, optimizationLevel, constraintSet.mRotate == 0 ? i : i2, this.mStart.mRotate == 0 ? i2 : i);
                 }
             } else {
-                if (this.mStart != null) {
-                    MotionLayout.this.resolveSystem(this.mLayoutStart, optimizationLevel, i, i2);
+                ConstraintSet constraintSet2 = this.mStart;
+                if (constraintSet2 != null) {
+                    MotionLayout.this.resolveSystem(this.mLayoutStart, optimizationLevel, constraintSet2.mRotate == 0 ? i : i2, this.mStart.mRotate == 0 ? i2 : i);
                 }
-                MotionLayout.this.resolveSystem(this.mLayoutEnd, optimizationLevel, i, i2);
+                MotionLayout.this.resolveSystem(this.mLayoutEnd, optimizationLevel, this.mEnd.mRotate == 0 ? i : i2, this.mEnd.mRotate == 0 ? i2 : i);
             }
-            MotionLayout.this.mStartWrapWidth = this.mLayoutStart.getWidth();
-            MotionLayout.this.mStartWrapHeight = this.mLayoutStart.getHeight();
-            MotionLayout.this.mEndWrapWidth = this.mLayoutEnd.getWidth();
-            MotionLayout.this.mEndWrapHeight = this.mLayoutEnd.getHeight();
-            MotionLayout motionLayout3 = MotionLayout.this;
-            int i4 = motionLayout3.mStartWrapWidth;
-            boolean z = false;
-            motionLayout3.mMeasureDuringTransition = (i4 == motionLayout3.mEndWrapWidth && motionLayout3.mStartWrapHeight == motionLayout3.mEndWrapHeight) ? false : true;
-            int i5 = motionLayout3.mStartWrapHeight;
-            if (motionLayout3.mWidthMeasureMode == Integer.MIN_VALUE) {
-                i4 = (int) (i4 + (motionLayout3.mPostInterpolationPosition * (i3 - i4)));
+            if (((MotionLayout.this.getParent() instanceof MotionLayout) && mode == 1073741824 && mode2 == 1073741824) ? false : true) {
+                MotionLayout.this.mWidthMeasureMode = mode;
+                MotionLayout.this.mHeightMeasureMode = mode2;
+                if (MotionLayout.this.mCurrentState == MotionLayout.this.getStartState()) {
+                    MotionLayout.this.resolveSystem(this.mLayoutEnd, optimizationLevel, this.mEnd.mRotate == 0 ? i : i2, this.mEnd.mRotate == 0 ? i2 : i);
+                    ConstraintSet constraintSet3 = this.mStart;
+                    if (constraintSet3 != null) {
+                        MotionLayout.this.resolveSystem(this.mLayoutStart, optimizationLevel, constraintSet3.mRotate == 0 ? i : i2, this.mStart.mRotate == 0 ? i2 : i);
+                    }
+                } else {
+                    ConstraintSet constraintSet4 = this.mStart;
+                    if (constraintSet4 != null) {
+                        MotionLayout.this.resolveSystem(this.mLayoutStart, optimizationLevel, constraintSet4.mRotate == 0 ? i : i2, this.mStart.mRotate == 0 ? i2 : i);
+                    }
+                    MotionLayout.this.resolveSystem(this.mLayoutEnd, optimizationLevel, this.mEnd.mRotate == 0 ? i : i2, this.mEnd.mRotate == 0 ? i2 : i);
+                }
+                MotionLayout.this.mStartWrapWidth = this.mLayoutStart.getWidth();
+                MotionLayout.this.mStartWrapHeight = this.mLayoutStart.getHeight();
+                MotionLayout.this.mEndWrapWidth = this.mLayoutEnd.getWidth();
+                MotionLayout.this.mEndWrapHeight = this.mLayoutEnd.getHeight();
+                MotionLayout motionLayout = MotionLayout.this;
+                motionLayout.mMeasureDuringTransition = (motionLayout.mStartWrapWidth == MotionLayout.this.mEndWrapWidth && MotionLayout.this.mStartWrapHeight == MotionLayout.this.mEndWrapHeight) ? false : true;
             }
-            if (motionLayout3.mHeightMeasureMode == Integer.MIN_VALUE) {
-                i5 = (int) (i5 + (motionLayout3.mPostInterpolationPosition * (motionLayout3.mEndWrapHeight - i5)));
+            int i3 = MotionLayout.this.mStartWrapWidth;
+            int i4 = MotionLayout.this.mStartWrapHeight;
+            if (MotionLayout.this.mWidthMeasureMode == Integer.MIN_VALUE || MotionLayout.this.mWidthMeasureMode == 0) {
+                i3 = (int) (((float) MotionLayout.this.mStartWrapWidth) + (MotionLayout.this.mPostInterpolationPosition * ((float) (MotionLayout.this.mEndWrapWidth - MotionLayout.this.mStartWrapWidth))));
             }
-            boolean z2 = this.mLayoutStart.isWidthMeasuredTooSmall() || this.mLayoutEnd.isWidthMeasuredTooSmall();
-            if (this.mLayoutStart.isHeightMeasuredTooSmall() || this.mLayoutEnd.isHeightMeasuredTooSmall()) {
-                z = true;
+            int i5 = i3;
+            if (MotionLayout.this.mHeightMeasureMode == Integer.MIN_VALUE || MotionLayout.this.mHeightMeasureMode == 0) {
+                i4 = (int) (((float) MotionLayout.this.mStartWrapHeight) + (MotionLayout.this.mPostInterpolationPosition * ((float) (MotionLayout.this.mEndWrapHeight - MotionLayout.this.mStartWrapHeight))));
             }
-            MotionLayout.this.resolveMeasuredDimension(i, i2, i4, i5, z2, z);
+            MotionLayout.this.resolveMeasuredDimension(i, i2, i5, i4, this.mLayoutStart.isWidthMeasuredTooSmall() || this.mLayoutEnd.isWidthMeasuredTooSmall(), this.mLayoutStart.isHeightMeasuredTooSmall() || this.mLayoutEnd.isHeightMeasuredTooSmall());
         }
 
+        /* JADX WARNING: Removed duplicated region for block: B:22:0x00f2  */
+        /* JADX WARNING: Removed duplicated region for block: B:40:0x014c A[SYNTHETIC] */
+        /* Code decompiled incorrectly, please refer to instructions dump. */
         public void build() {
-            int childCount = MotionLayout.this.getChildCount();
-            MotionLayout.this.mFrameArrayList.clear();
-            for (int i = 0; i < childCount; i++) {
-                View childAt = MotionLayout.this.getChildAt(i);
-                MotionLayout.this.mFrameArrayList.put(childAt, new MotionController(childAt));
-            }
-            for (int i2 = 0; i2 < childCount; i2++) {
-                View childAt2 = MotionLayout.this.getChildAt(i2);
-                MotionController motionController = MotionLayout.this.mFrameArrayList.get(childAt2);
-                if (motionController != null) {
-                    if (this.mStart != null) {
-                        ConstraintWidget widget = getWidget(this.mLayoutStart, childAt2);
-                        if (widget != null) {
-                            motionController.setStartState(widget, this.mStart);
-                        } else {
-                            Log.e("MotionLayout", Debug.getLocation() + "no widget for  " + Debug.getName(childAt2) + " (" + childAt2.getClass().getName() + ")");
-                        }
-                    }
-                    if (this.mEnd != null) {
-                        ConstraintWidget widget2 = getWidget(this.mLayoutEnd, childAt2);
-                        if (widget2 != null) {
-                            motionController.setEndState(widget2, this.mEnd);
-                        } else {
-                            Log.e("MotionLayout", Debug.getLocation() + "no widget for  " + Debug.getName(childAt2) + " (" + childAt2.getClass().getName() + ")");
-                        }
-                    }
-                }
-            }
+            /*
+                r18 = this;
+                r0 = r18
+                androidx.constraintlayout.motion.widget.MotionLayout r1 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r1 = r1.getChildCount()
+                androidx.constraintlayout.motion.widget.MotionLayout r2 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                java.util.HashMap<android.view.View, androidx.constraintlayout.motion.widget.MotionController> r2 = r2.mFrameArrayList
+                r2.clear()
+                android.util.SparseArray r2 = new android.util.SparseArray
+                r2.<init>()
+                int[] r3 = new int[r1]
+                r5 = 0
+            L_0x0017:
+                if (r5 >= r1) goto L_0x0037
+                androidx.constraintlayout.motion.widget.MotionLayout r6 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                android.view.View r6 = r6.getChildAt(r5)
+                androidx.constraintlayout.motion.widget.MotionController r7 = new androidx.constraintlayout.motion.widget.MotionController
+                r7.<init>(r6)
+                int r8 = r6.getId()
+                r3[r5] = r8
+                r2.put(r8, r7)
+                androidx.constraintlayout.motion.widget.MotionLayout r8 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                java.util.HashMap<android.view.View, androidx.constraintlayout.motion.widget.MotionController> r8 = r8.mFrameArrayList
+                r8.put(r6, r7)
+                int r5 = r5 + 1
+                goto L_0x0017
+            L_0x0037:
+                r5 = 0
+            L_0x0038:
+                if (r5 >= r1) goto L_0x0152
+                androidx.constraintlayout.motion.widget.MotionLayout r6 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                android.view.View r6 = r6.getChildAt(r5)
+                androidx.constraintlayout.motion.widget.MotionLayout r7 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                java.util.HashMap<android.view.View, androidx.constraintlayout.motion.widget.MotionController> r7 = r7.mFrameArrayList
+                java.lang.Object r7 = r7.get(r6)
+                r13 = r7
+                androidx.constraintlayout.motion.widget.MotionController r13 = (androidx.constraintlayout.motion.widget.MotionController) r13
+                if (r13 != 0) goto L_0x0051
+                r16 = r2
+                goto L_0x014c
+            L_0x0051:
+                androidx.constraintlayout.widget.ConstraintSet r7 = r0.mStart
+                java.lang.String r14 = ")"
+                java.lang.String r15 = " ("
+                java.lang.String r12 = "no widget for  "
+                java.lang.String r11 = "MotionLayout"
+                if (r7 == 0) goto L_0x00b9
+                androidx.constraintlayout.core.widgets.ConstraintWidgetContainer r7 = r0.mLayoutStart
+                androidx.constraintlayout.core.widgets.ConstraintWidget r7 = r0.getWidget(r7, r6)
+                if (r7 == 0) goto L_0x007e
+                androidx.constraintlayout.motion.widget.MotionLayout r8 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                android.graphics.Rect r7 = r8.toRect(r7)
+                androidx.constraintlayout.widget.ConstraintSet r8 = r0.mStart
+                androidx.constraintlayout.motion.widget.MotionLayout r9 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r9 = r9.getWidth()
+                androidx.constraintlayout.motion.widget.MotionLayout r10 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r10 = r10.getHeight()
+                r13.setStartState(r7, r8, r9, r10)
+                goto L_0x00ea
+            L_0x007e:
+                androidx.constraintlayout.motion.widget.MotionLayout r7 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r7 = r7.mDebugPath
+                if (r7 == 0) goto L_0x00ea
+                java.lang.StringBuilder r7 = new java.lang.StringBuilder
+                r7.<init>()
+                java.lang.String r8 = androidx.constraintlayout.motion.widget.Debug.getLocation()
+                java.lang.StringBuilder r7 = r7.append((java.lang.String) r8)
+                java.lang.StringBuilder r7 = r7.append((java.lang.String) r12)
+                java.lang.String r8 = androidx.constraintlayout.motion.widget.Debug.getName(r6)
+                java.lang.StringBuilder r7 = r7.append((java.lang.String) r8)
+                java.lang.StringBuilder r7 = r7.append((java.lang.String) r15)
+                java.lang.Class r8 = r6.getClass()
+                java.lang.String r8 = r8.getName()
+                java.lang.StringBuilder r7 = r7.append((java.lang.String) r8)
+                java.lang.StringBuilder r7 = r7.append((java.lang.String) r14)
+                java.lang.String r7 = r7.toString()
+                android.util.Log.e(r11, r7)
+                goto L_0x00ea
+            L_0x00b9:
+                androidx.constraintlayout.motion.widget.MotionLayout r7 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                boolean r7 = r7.mInRotation
+                if (r7 == 0) goto L_0x00ea
+                androidx.constraintlayout.motion.widget.MotionLayout r7 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                java.util.HashMap<android.view.View, androidx.constraintlayout.motion.utils.ViewState> r7 = r7.mPreRotate
+                java.lang.Object r7 = r7.get(r6)
+                r8 = r7
+                androidx.constraintlayout.motion.utils.ViewState r8 = (androidx.constraintlayout.motion.utils.ViewState) r8
+                androidx.constraintlayout.motion.widget.MotionLayout r7 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r10 = r7.mRotatMode
+                androidx.constraintlayout.motion.widget.MotionLayout r7 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r16 = r7.mPreRotateWidth
+                androidx.constraintlayout.motion.widget.MotionLayout r7 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r17 = r7.mPreRotateHeight
+                r7 = r13
+                r9 = r6
+                r4 = r11
+                r11 = r16
+                r16 = r2
+                r2 = r12
+                r12 = r17
+                r7.setStartState(r8, r9, r10, r11, r12)
+                goto L_0x00ee
+            L_0x00ea:
+                r16 = r2
+                r4 = r11
+                r2 = r12
+            L_0x00ee:
+                androidx.constraintlayout.widget.ConstraintSet r7 = r0.mEnd
+                if (r7 == 0) goto L_0x014c
+                androidx.constraintlayout.core.widgets.ConstraintWidgetContainer r7 = r0.mLayoutEnd
+                androidx.constraintlayout.core.widgets.ConstraintWidget r7 = r0.getWidget(r7, r6)
+                if (r7 == 0) goto L_0x0112
+                androidx.constraintlayout.motion.widget.MotionLayout r2 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                android.graphics.Rect r2 = r2.toRect(r7)
+                androidx.constraintlayout.widget.ConstraintSet r4 = r0.mEnd
+                androidx.constraintlayout.motion.widget.MotionLayout r6 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r6 = r6.getWidth()
+                androidx.constraintlayout.motion.widget.MotionLayout r7 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r7 = r7.getHeight()
+                r13.setEndState(r2, r4, r6, r7)
+                goto L_0x014c
+            L_0x0112:
+                androidx.constraintlayout.motion.widget.MotionLayout r7 = androidx.constraintlayout.motion.widget.MotionLayout.this
+                int r7 = r7.mDebugPath
+                if (r7 == 0) goto L_0x014c
+                java.lang.StringBuilder r7 = new java.lang.StringBuilder
+                r7.<init>()
+                java.lang.String r8 = androidx.constraintlayout.motion.widget.Debug.getLocation()
+                java.lang.StringBuilder r7 = r7.append((java.lang.String) r8)
+                java.lang.StringBuilder r2 = r7.append((java.lang.String) r2)
+                java.lang.String r7 = androidx.constraintlayout.motion.widget.Debug.getName(r6)
+                java.lang.StringBuilder r2 = r2.append((java.lang.String) r7)
+                java.lang.StringBuilder r2 = r2.append((java.lang.String) r15)
+                java.lang.Class r6 = r6.getClass()
+                java.lang.String r6 = r6.getName()
+                java.lang.StringBuilder r2 = r2.append((java.lang.String) r6)
+                java.lang.StringBuilder r2 = r2.append((java.lang.String) r14)
+                java.lang.String r2 = r2.toString()
+                android.util.Log.e(r4, r2)
+            L_0x014c:
+                int r5 = r5 + 1
+                r2 = r16
+                goto L_0x0038
+            L_0x0152:
+                r16 = r2
+                r4 = 0
+            L_0x0155:
+                if (r4 >= r1) goto L_0x0176
+                r0 = r3[r4]
+                r2 = r16
+                java.lang.Object r0 = r2.get(r0)
+                androidx.constraintlayout.motion.widget.MotionController r0 = (androidx.constraintlayout.motion.widget.MotionController) r0
+                int r5 = r0.getAnimateRelativeTo()
+                r6 = -1
+                if (r5 == r6) goto L_0x0171
+                java.lang.Object r5 = r2.get(r5)
+                androidx.constraintlayout.motion.widget.MotionController r5 = (androidx.constraintlayout.motion.widget.MotionController) r5
+                r0.setupRelative(r5)
+            L_0x0171:
+                int r4 = r4 + 1
+                r16 = r2
+                goto L_0x0155
+            L_0x0176:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.motion.widget.MotionLayout.Model.build():void");
         }
 
         public void setMeasuredId(int i, int i2) {
@@ -844,55 +1830,73 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintLayout, android.view.View, android.view.ViewParent
+    /* access modifiers changed from: private */
+    public Rect toRect(ConstraintWidget constraintWidget) {
+        this.mTempRect.top = constraintWidget.getY();
+        this.mTempRect.left = constraintWidget.getX();
+        this.mTempRect.right = constraintWidget.getWidth() + this.mTempRect.left;
+        this.mTempRect.bottom = constraintWidget.getHeight() + this.mTempRect.top;
+        return this.mTempRect;
+    }
+
     public void requestLayout() {
         MotionScene motionScene;
-        MotionScene.Transition transition;
-        if (this.mMeasureDuringTransition || this.mCurrentState != -1 || (motionScene = this.mScene) == null || (transition = motionScene.mCurrentTransition) == null || transition.getLayoutDuringTransition() != 0) {
+        if (this.mMeasureDuringTransition || this.mCurrentState != -1 || (motionScene = this.mScene) == null || motionScene.mCurrentTransition == null || this.mScene.mCurrentTransition.getLayoutDuringTransition() != 0) {
             super.requestLayout();
         }
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
-        int i3;
-        int i4;
+    public String toString() {
+        Context context = getContext();
+        return Debug.getName(context, this.mBeginState) + "->" + Debug.getName(context, this.mEndState) + " (pos:" + this.mTransitionLastPosition + " Dpos/Dt:" + this.mLastVelocity;
+    }
+
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         if (this.mScene == null) {
             super.onMeasure(i, i2);
             return;
         }
-        boolean z = true;
+        boolean z = false;
         boolean z2 = (this.mLastWidthMeasureSpec == i && this.mLastHeightMeasureSpec == i2) ? false : true;
         if (this.mNeedsFireTransitionCompleted) {
             this.mNeedsFireTransitionCompleted = false;
             onNewStateAttachHandlers();
-            if (this.mIsAnimating) {
-                processTransitionCompleted();
-            }
+            processTransitionCompleted();
             z2 = true;
         }
-        if (!this.mDirtyHierarchy) {
-            z = z2;
+        if (this.mDirtyHierarchy) {
+            z2 = true;
         }
         this.mLastWidthMeasureSpec = i;
         this.mLastHeightMeasureSpec = i2;
         int startId = this.mScene.getStartId();
         int endId = this.mScene.getEndId();
-        if ((z || this.mModel.isNotConfiguredWith(startId, endId)) && this.mBeginState != -1) {
+        if ((z2 || this.mModel.isNotConfiguredWith(startId, endId)) && this.mBeginState != -1) {
             super.onMeasure(i, i2);
             this.mModel.initFrom(this.mLayoutWidget, this.mScene.getConstraintSet(startId), this.mScene.getConstraintSet(endId));
             this.mModel.reEvaluateState();
             this.mModel.setMeasuredId(startId, endId);
         } else {
+            if (z2) {
+                super.onMeasure(i, i2);
+            }
+            z = true;
+        }
+        if (this.mMeasureDuringTransition || z) {
             int paddingTop = getPaddingTop() + getPaddingBottom();
             int width = this.mLayoutWidget.getWidth() + getPaddingLeft() + getPaddingRight();
             int height = this.mLayoutWidget.getHeight() + paddingTop;
-            if (this.mWidthMeasureMode == Integer.MIN_VALUE) {
-                width = (int) (this.mStartWrapWidth + (this.mPostInterpolationPosition * (this.mEndWrapWidth - i4)));
+            int i3 = this.mWidthMeasureMode;
+            if (i3 == Integer.MIN_VALUE || i3 == 0) {
+                int i4 = this.mStartWrapWidth;
+                width = (int) (((float) i4) + (this.mPostInterpolationPosition * ((float) (this.mEndWrapWidth - i4))));
                 requestLayout();
             }
-            if (this.mHeightMeasureMode == Integer.MIN_VALUE) {
-                height = (int) (this.mStartWrapHeight + (this.mPostInterpolationPosition * (this.mEndWrapHeight - i3)));
+            int i5 = this.mHeightMeasureMode;
+            if (i5 == Integer.MIN_VALUE || i5 == 0) {
+                int i6 = this.mStartWrapHeight;
+                height = (int) (((float) i6) + (this.mPostInterpolationPosition * ((float) (this.mEndWrapHeight - i6))));
                 requestLayout();
             }
             setMeasuredDimension(width, height);
@@ -900,117 +1904,107 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         evaluateLayout();
     }
 
-    @Override // androidx.core.view.NestedScrollingParent2
     public boolean onStartNestedScroll(View view, View view2, int i, int i2) {
-        MotionScene.Transition transition;
-        this.mScrollTarget = view2;
         MotionScene motionScene = this.mScene;
-        return (motionScene == null || (transition = motionScene.mCurrentTransition) == null || transition.getTouchResponse() == null || (this.mScene.mCurrentTransition.getTouchResponse().getFlags() & 2) != 0) ? false : true;
+        return (motionScene == null || motionScene.mCurrentTransition == null || this.mScene.mCurrentTransition.getTouchResponse() == null || (this.mScene.mCurrentTransition.getTouchResponse().getFlags() & 2) != 0) ? false : true;
     }
 
-    @Override // androidx.core.view.NestedScrollingParent2
+    public void onNestedScrollAccepted(View view, View view2, int i, int i2) {
+        this.mScrollTargetTime = getNanoTime();
+        this.mScrollTargetDT = 0.0f;
+        this.mScrollTargetDX = 0.0f;
+        this.mScrollTargetDY = 0.0f;
+    }
+
     public void onStopNestedScroll(View view, int i) {
-        this.mScrollTarget = null;
         MotionScene motionScene = this.mScene;
-        if (motionScene == null) {
-            return;
+        if (motionScene != null) {
+            float f = this.mScrollTargetDT;
+            if (f != 0.0f) {
+                motionScene.processScrollUp(this.mScrollTargetDX / f, this.mScrollTargetDY / f);
+            }
         }
-        float f = this.mScrollTargetDX;
-        float f2 = this.mScrollTargetDT;
-        motionScene.processScrollUp(f / f2, this.mScrollTargetDY / f2);
     }
 
-    @Override // androidx.core.view.NestedScrollingParent3
     public void onNestedScroll(View view, int i, int i2, int i3, int i4, int i5, int[] iArr) {
-        if (this.mUndergoingMotion || i != 0 || i2 != 0) {
+        if (!(!this.mUndergoingMotion && i == 0 && i2 == 0)) {
             iArr[0] = iArr[0] + i3;
             iArr[1] = iArr[1] + i4;
         }
         this.mUndergoingMotion = false;
     }
 
-    @Override // androidx.core.view.NestedScrollingParent2
-    public void onNestedPreScroll(View view, int i, int i2, int[] iArr, int i3) {
+    public void onNestedPreScroll(final View view, int i, int i2, int[] iArr, int i3) {
         MotionScene.Transition transition;
         TouchResponse touchResponse;
         int touchRegionId;
         MotionScene motionScene = this.mScene;
-        if (motionScene == null || (transition = motionScene.mCurrentTransition) == null || !transition.isEnabled()) {
-            return;
-        }
-        MotionScene.Transition transition2 = this.mScene.mCurrentTransition;
-        if (transition2 != null && transition2.isEnabled() && (touchResponse = transition2.getTouchResponse()) != null && (touchRegionId = touchResponse.getTouchRegionId()) != -1 && this.mScrollTarget.getId() != touchRegionId) {
-            return;
-        }
-        MotionScene motionScene2 = this.mScene;
-        if (motionScene2 != null && motionScene2.getMoveWhenScrollAtTop()) {
-            float f = this.mTransitionPosition;
-            if ((f == 1.0f || f == 0.0f) && view.canScrollVertically(-1)) {
-                return;
-            }
-        }
-        if (transition2.getTouchResponse() != null && (this.mScene.mCurrentTransition.getTouchResponse().getFlags() & 1) != 0) {
-            float progressDirection = this.mScene.getProgressDirection(i, i2);
-            float f2 = this.mTransitionLastPosition;
-            if ((f2 <= 0.0f && progressDirection < 0.0f) || (f2 >= 1.0f && progressDirection > 0.0f)) {
-                if (Build.VERSION.SDK_INT < 21) {
-                    return;
-                }
-                this.mScrollTarget.setNestedScrollingEnabled(false);
-                this.mScrollTarget.post(new Runnable() { // from class: androidx.constraintlayout.motion.widget.MotionLayout.1
-                    @Override // java.lang.Runnable
-                    public void run() {
-                        MotionLayout.this.mScrollTarget.setNestedScrollingEnabled(true);
+        if (motionScene != null && (transition = motionScene.mCurrentTransition) != null && transition.isEnabled()) {
+            if (!transition.isEnabled() || (touchResponse = transition.getTouchResponse()) == null || (touchRegionId = touchResponse.getTouchRegionId()) == -1 || view.getId() == touchRegionId) {
+                if (motionScene.getMoveWhenScrollAtTop()) {
+                    float f = this.mTransitionPosition;
+                    if ((f == 1.0f || f == 0.0f) && view.canScrollVertically(i2)) {
+                        return;
                     }
-                });
-                return;
+                }
+                if (!(transition.getTouchResponse() == null || (transition.getTouchResponse().getFlags() & 1) == 0)) {
+                    float progressDirection = motionScene.getProgressDirection((float) i, (float) i2);
+                    float f2 = this.mTransitionLastPosition;
+                    if ((f2 <= 0.0f && progressDirection < 0.0f) || (f2 >= 1.0f && progressDirection > 0.0f)) {
+                        view.setNestedScrollingEnabled(false);
+                        view.post(new Runnable() {
+                            public void run() {
+                                view.setNestedScrollingEnabled(true);
+                            }
+                        });
+                        return;
+                    }
+                }
+                float f3 = this.mTransitionPosition;
+                long nanoTime = getNanoTime();
+                float f4 = (float) i;
+                this.mScrollTargetDX = f4;
+                float f5 = (float) i2;
+                this.mScrollTargetDY = f5;
+                this.mScrollTargetDT = (float) (((double) (nanoTime - this.mScrollTargetTime)) * 1.0E-9d);
+                this.mScrollTargetTime = nanoTime;
+                motionScene.processScrollMove(f4, f5);
+                if (f3 != this.mTransitionPosition) {
+                    iArr[0] = i;
+                    iArr[1] = i2;
+                }
+                evaluate(false);
+                if (iArr[0] != 0 || iArr[1] != 0) {
+                    this.mUndergoingMotion = true;
+                }
             }
         }
-        float f3 = this.mTransitionPosition;
-        long nanoTime = getNanoTime();
-        float f4 = i;
-        this.mScrollTargetDX = f4;
-        float f5 = i2;
-        this.mScrollTargetDY = f5;
-        this.mScrollTargetDT = (float) ((nanoTime - this.mScrollTargetTime) * 1.0E-9d);
-        this.mScrollTargetTime = nanoTime;
-        this.mScene.processScrollMove(f4, f5);
-        if (f3 != this.mTransitionPosition) {
-            iArr[0] = i;
-            iArr[1] = i2;
-        }
-        evaluate(false);
-        if (iArr[0] == 0 && iArr[1] == 0) {
-            return;
-        }
-        this.mUndergoingMotion = true;
     }
 
-    /* loaded from: classes.dex */
     private class DevModeDraw {
+        private static final int DEBUG_PATH_TICKS_PER_MS = 16;
+        final int DIAMOND_SIZE = 10;
+        final int GRAPH_COLOR = -13391360;
+        final int KEYFRAME_COLOR = -2067046;
+        final int RED_COLOR = -21965;
+        final int SHADOW_COLOR = 1996488704;
+        Rect mBounds = new Rect();
         DashPathEffect mDashPathEffect;
         Paint mFillPaint;
         int mKeyFrameCount;
+        float[] mKeyFramePoints;
         Paint mPaint;
         Paint mPaintGraph;
         Paint mPaintKeyframes;
         Path mPath;
+        int[] mPathMode;
         float[] mPoints;
-        int mShadowTranslate;
-        Paint mTextPaint;
-        final int RED_COLOR = -21965;
-        final int KEYFRAME_COLOR = -2067046;
-        final int GRAPH_COLOR = -13391360;
-        final int SHADOW_COLOR = 1996488704;
-        final int DIAMOND_SIZE = 10;
-        Rect mBounds = new Rect();
         boolean mPresentationMode = false;
-        private float[] mRectangle = new float[8];
-        float[] mKeyFramePoints = new float[100];
-        int[] mPathMode = new int[50];
+        private float[] mRectangle;
+        int mShadowTranslate = 1;
+        Paint mTextPaint;
 
         public DevModeDraw() {
-            this.mShadowTranslate = 1;
             Paint paint = new Paint();
             this.mPaint = paint;
             paint.setAntiAlias(true);
@@ -1034,12 +2028,15 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             paint4.setAntiAlias(true);
             this.mTextPaint.setColor(-13391360);
             this.mTextPaint.setTextSize(MotionLayout.this.getContext().getResources().getDisplayMetrics().density * 12.0f);
+            this.mRectangle = new float[8];
             Paint paint5 = new Paint();
             this.mFillPaint = paint5;
             paint5.setAntiAlias(true);
             DashPathEffect dashPathEffect = new DashPathEffect(new float[]{4.0f, 8.0f}, 0.0f);
             this.mDashPathEffect = dashPathEffect;
             this.mPaintGraph.setPathEffect(dashPathEffect);
+            this.mKeyFramePoints = new float[100];
+            this.mPathMode = new int[50];
             if (this.mPresentationMode) {
                 this.mPaint.setStrokeWidth(8.0f);
                 this.mFillPaint.setStrokeWidth(8.0f);
@@ -1049,51 +2046,50 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
 
         public void draw(Canvas canvas, HashMap<View, MotionController> hashMap, int i, int i2) {
-            if (hashMap == null || hashMap.size() == 0) {
-                return;
-            }
-            canvas.save();
-            if (!MotionLayout.this.isInEditMode() && (i2 & 1) == 2) {
-                String str = MotionLayout.this.getContext().getResources().getResourceName(MotionLayout.this.mEndState) + ":" + MotionLayout.this.getProgress();
-                canvas.drawText(str, 10.0f, MotionLayout.this.getHeight() - 30, this.mTextPaint);
-                canvas.drawText(str, 11.0f, MotionLayout.this.getHeight() - 29, this.mPaint);
-            }
-            for (MotionController motionController : hashMap.values()) {
-                int drawPath = motionController.getDrawPath();
-                if (i2 > 0 && drawPath == 0) {
-                    drawPath = 1;
+            if (hashMap != null && hashMap.size() != 0) {
+                canvas.save();
+                if (!MotionLayout.this.isInEditMode() && (i2 & 1) == 2) {
+                    String str = MotionLayout.this.getContext().getResources().getResourceName(MotionLayout.this.mEndState) + ":" + MotionLayout.this.getProgress();
+                    canvas.drawText(str, 10.0f, (float) (MotionLayout.this.getHeight() - 30), this.mTextPaint);
+                    canvas.drawText(str, 11.0f, (float) (MotionLayout.this.getHeight() - 29), this.mPaint);
                 }
-                if (drawPath != 0) {
-                    this.mKeyFrameCount = motionController.buildKeyFrames(this.mKeyFramePoints, this.mPathMode);
-                    if (drawPath >= 1) {
-                        int i3 = i / 16;
-                        float[] fArr = this.mPoints;
-                        if (fArr == null || fArr.length != i3 * 2) {
-                            this.mPoints = new float[i3 * 2];
-                            this.mPath = new Path();
-                        }
-                        int i4 = this.mShadowTranslate;
-                        canvas.translate(i4, i4);
-                        this.mPaint.setColor(1996488704);
-                        this.mFillPaint.setColor(1996488704);
-                        this.mPaintKeyframes.setColor(1996488704);
-                        this.mPaintGraph.setColor(1996488704);
-                        motionController.buildPath(this.mPoints, i3);
-                        drawAll(canvas, drawPath, this.mKeyFrameCount, motionController);
-                        this.mPaint.setColor(-21965);
-                        this.mPaintKeyframes.setColor(-2067046);
-                        this.mFillPaint.setColor(-2067046);
-                        this.mPaintGraph.setColor(-13391360);
-                        int i5 = this.mShadowTranslate;
-                        canvas.translate(-i5, -i5);
-                        drawAll(canvas, drawPath, this.mKeyFrameCount, motionController);
-                        if (drawPath == 5) {
-                            drawRectangle(canvas, motionController);
+                for (MotionController next : hashMap.values()) {
+                    int drawPath = next.getDrawPath();
+                    if (i2 > 0 && drawPath == 0) {
+                        drawPath = 1;
+                    }
+                    if (drawPath != 0) {
+                        this.mKeyFrameCount = next.buildKeyFrames(this.mKeyFramePoints, this.mPathMode);
+                        if (drawPath >= 1) {
+                            int i3 = i / 16;
+                            float[] fArr = this.mPoints;
+                            if (fArr == null || fArr.length != i3 * 2) {
+                                this.mPoints = new float[(i3 * 2)];
+                                this.mPath = new Path();
+                            }
+                            int i4 = this.mShadowTranslate;
+                            canvas.translate((float) i4, (float) i4);
+                            this.mPaint.setColor(1996488704);
+                            this.mFillPaint.setColor(1996488704);
+                            this.mPaintKeyframes.setColor(1996488704);
+                            this.mPaintGraph.setColor(1996488704);
+                            next.buildPath(this.mPoints, i3);
+                            drawAll(canvas, drawPath, this.mKeyFrameCount, next);
+                            this.mPaint.setColor(-21965);
+                            this.mPaintKeyframes.setColor(-2067046);
+                            this.mFillPaint.setColor(-2067046);
+                            this.mPaintGraph.setColor(-13391360);
+                            int i5 = this.mShadowTranslate;
+                            canvas.translate((float) (-i5), (float) (-i5));
+                            drawAll(canvas, drawPath, this.mKeyFrameCount, next);
+                            if (drawPath == 5) {
+                                drawRectangle(canvas, next);
+                            }
                         }
                     }
                 }
+                canvas.restore();
             }
-            canvas.restore();
         }
 
         public void drawAll(Canvas canvas, int i, int i2, MotionController motionController) {
@@ -1117,19 +2113,20 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         private void drawTicks(Canvas canvas, int i, int i2, MotionController motionController) {
             int i3;
             int i4;
-            int i5;
             float f;
             float f2;
-            View view = motionController.mView;
-            if (view != null) {
-                i3 = view.getWidth();
-                i4 = motionController.mView.getHeight();
+            Canvas canvas2 = canvas;
+            int i5 = i;
+            MotionController motionController2 = motionController;
+            if (motionController2.mView != null) {
+                i4 = motionController2.mView.getWidth();
+                i3 = motionController2.mView.getHeight();
             } else {
-                i3 = 0;
                 i4 = 0;
+                i3 = 0;
             }
             for (int i6 = 1; i6 < i2 - 1; i6++) {
-                if (i != 4 || this.mPathMode[i6 - 1] != 0) {
+                if (i5 != 4 || this.mPathMode[i6 - 1] != 0) {
                     float[] fArr = this.mKeyFramePoints;
                     int i7 = i6 * 2;
                     float f3 = fArr[i7];
@@ -1141,47 +2138,49 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
                     this.mPath.lineTo(f3 - 10.0f, f4);
                     this.mPath.close();
                     int i8 = i6 - 1;
-                    motionController.getKeyFrame(i8);
-                    if (i == 4) {
-                        int[] iArr = this.mPathMode;
-                        if (iArr[i8] == 1) {
-                            drawPathRelativeTicks(canvas, f3 - 0.0f, f4 - 0.0f);
-                        } else if (iArr[i8] == 2) {
-                            drawPathCartesianTicks(canvas, f3 - 0.0f, f4 - 0.0f);
-                        } else if (iArr[i8] == 3) {
-                            i5 = 3;
-                            f = f4;
-                            f2 = f3;
-                            drawPathScreenTicks(canvas, f3 - 0.0f, f4 - 0.0f, i3, i4);
-                            canvas.drawPath(this.mPath, this.mFillPaint);
+                    motionController2.getKeyFrame(i8);
+                    if (i5 == 4) {
+                        int i9 = this.mPathMode[i8];
+                        if (i9 == 1) {
+                            drawPathRelativeTicks(canvas2, f3 - 0.0f, f4 - 0.0f);
+                        } else if (i9 == 0) {
+                            drawPathCartesianTicks(canvas2, f3 - 0.0f, f4 - 0.0f);
+                        } else if (i9 == 2) {
+                            f2 = f4;
+                            f = f3;
+                            drawPathScreenTicks(canvas, f3 - 0.0f, f4 - 0.0f, i4, i3);
+                            canvas2.drawPath(this.mPath, this.mFillPaint);
                         }
-                        i5 = 3;
-                        f = f4;
-                        f2 = f3;
-                        canvas.drawPath(this.mPath, this.mFillPaint);
+                        f2 = f4;
+                        f = f3;
+                        canvas2.drawPath(this.mPath, this.mFillPaint);
                     } else {
-                        i5 = 3;
-                        f = f4;
-                        f2 = f3;
+                        f2 = f4;
+                        f = f3;
                     }
-                    if (i == 2) {
-                        drawPathRelativeTicks(canvas, f2 - 0.0f, f - 0.0f);
+                    if (i5 == 2) {
+                        drawPathRelativeTicks(canvas2, f - 0.0f, f2 - 0.0f);
                     }
-                    if (i == i5) {
-                        drawPathCartesianTicks(canvas, f2 - 0.0f, f - 0.0f);
+                    if (i5 == 3) {
+                        drawPathCartesianTicks(canvas2, f - 0.0f, f2 - 0.0f);
                     }
-                    if (i == 6) {
-                        drawPathScreenTicks(canvas, f2 - 0.0f, f - 0.0f, i3, i4);
+                    if (i5 == 6) {
+                        drawPathScreenTicks(canvas, f - 0.0f, f2 - 0.0f, i4, i3);
                     }
-                    canvas.drawPath(this.mPath, this.mFillPaint);
+                    canvas2.drawPath(this.mPath, this.mFillPaint);
                 }
             }
             float[] fArr2 = this.mPoints;
             if (fArr2.length > 1) {
-                canvas.drawCircle(fArr2[0], fArr2[1], 8.0f, this.mPaintKeyframes);
+                canvas2.drawCircle(fArr2[0], fArr2[1], 8.0f, this.mPaintKeyframes);
                 float[] fArr3 = this.mPoints;
-                canvas.drawCircle(fArr3[fArr3.length - 2], fArr3[fArr3.length - 1], 8.0f, this.mPaintKeyframes);
+                canvas2.drawCircle(fArr3[fArr3.length - 2], fArr3[fArr3.length - 1], 8.0f, this.mPaintKeyframes);
             }
+        }
+
+        private void drawTranslation(Canvas canvas, float f, float f2, float f3, float f4) {
+            canvas.drawRect(f, f2, f3, f4, this.mPaintGraph);
+            canvas.drawLine(f, f2, f3, f4, this.mPaintGraph);
         }
 
         private void drawPathRelative(Canvas canvas) {
@@ -1193,11 +2192,11 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             boolean z = false;
             boolean z2 = false;
             for (int i = 0; i < this.mKeyFrameCount; i++) {
-                int[] iArr = this.mPathMode;
-                if (iArr[i] == 1) {
+                int i2 = this.mPathMode[i];
+                if (i2 == 1) {
                     z = true;
                 }
-                if (iArr[i] == 2) {
+                if (i2 == 0) {
                     z2 = true;
                 }
             }
@@ -1215,7 +2214,7 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             float f4 = fArr[1];
             float f5 = fArr[fArr.length - 2];
             float f6 = fArr[fArr.length - 1];
-            float hypot = (float) Math.hypot(f3 - f5, f4 - f6);
+            float hypot = (float) Math.hypot((double) (f3 - f5), (double) (f4 - f6));
             float f7 = f5 - f3;
             float f8 = f6 - f4;
             float f9 = (((f - f3) * f7) + ((f2 - f4) * f8)) / (hypot * hypot);
@@ -1224,14 +2223,15 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             Path path = new Path();
             path.moveTo(f, f2);
             path.lineTo(f10, f11);
-            float hypot2 = (float) Math.hypot(f10 - f, f11 - f2);
-            String str = "" + (((int) ((hypot2 * 100.0f) / hypot)) / 100.0f);
+            float hypot2 = (float) Math.hypot((double) (f10 - f), (double) (f11 - f2));
+            String str = "" + (((float) ((int) ((hypot2 * 100.0f) / hypot))) / 100.0f);
             getTextBounds(str, this.mTextPaint);
-            canvas.drawTextOnPath(str, path, (hypot2 / 2.0f) - (this.mBounds.width() / 2), -20.0f, this.mTextPaint);
+            canvas.drawTextOnPath(str, path, (hypot2 / 2.0f) - ((float) (this.mBounds.width() / 2)), -20.0f, this.mTextPaint);
             canvas.drawLine(f, f2, f10, f11, this.mPaintGraph);
         }
 
-        void getTextBounds(String str, Paint paint) {
+        /* access modifiers changed from: package-private */
+        public void getTextBounds(String str, Paint paint) {
             paint.getTextBounds(str, 0, str.length(), this.mBounds);
         }
 
@@ -1246,6 +2246,7 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
 
         private void drawPathCartesianTicks(Canvas canvas, float f, float f2) {
+            Canvas canvas2 = canvas;
             float[] fArr = this.mPoints;
             float f3 = fArr[0];
             float f4 = fArr[1];
@@ -1255,31 +2256,32 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             float max = Math.max(f4, f6);
             float min2 = f - Math.min(f3, f5);
             float max2 = Math.max(f4, f6) - f2;
-            String str = "" + (((int) (((min2 * 100.0f) / Math.abs(f5 - f3)) + 0.5d)) / 100.0f);
+            String str = "" + (((float) ((int) (((double) ((min2 * 100.0f) / Math.abs(f5 - f3))) + 0.5d))) / 100.0f);
             getTextBounds(str, this.mTextPaint);
-            canvas.drawText(str, ((min2 / 2.0f) - (this.mBounds.width() / 2)) + min, f2 - 20.0f, this.mTextPaint);
+            canvas2.drawText(str, ((min2 / 2.0f) - ((float) (this.mBounds.width() / 2))) + min, f2 - 20.0f, this.mTextPaint);
             canvas.drawLine(f, f2, Math.min(f3, f5), f2, this.mPaintGraph);
-            String str2 = "" + (((int) (((max2 * 100.0f) / Math.abs(f6 - f4)) + 0.5d)) / 100.0f);
+            String str2 = "" + (((float) ((int) (((double) ((max2 * 100.0f) / Math.abs(f6 - f4))) + 0.5d))) / 100.0f);
             getTextBounds(str2, this.mTextPaint);
-            canvas.drawText(str2, f + 5.0f, max - ((max2 / 2.0f) - (this.mBounds.height() / 2)), this.mTextPaint);
+            canvas2.drawText(str2, f + 5.0f, max - ((max2 / 2.0f) - ((float) (this.mBounds.height() / 2))), this.mTextPaint);
             canvas.drawLine(f, f2, f, Math.max(f4, f6), this.mPaintGraph);
         }
 
         private void drawPathScreenTicks(Canvas canvas, float f, float f2, int i, int i2) {
-            String str = "" + (((int) ((((f - (i / 2)) * 100.0f) / (MotionLayout.this.getWidth() - i)) + 0.5d)) / 100.0f);
+            Canvas canvas2 = canvas;
+            String str = "" + (((float) ((int) (((double) (((f - ((float) (i / 2))) * 100.0f) / ((float) (MotionLayout.this.getWidth() - i)))) + 0.5d))) / 100.0f);
             getTextBounds(str, this.mTextPaint);
-            canvas.drawText(str, ((f / 2.0f) - (this.mBounds.width() / 2)) + 0.0f, f2 - 20.0f, this.mTextPaint);
+            canvas2.drawText(str, ((f / 2.0f) - ((float) (this.mBounds.width() / 2))) + 0.0f, f2 - 20.0f, this.mTextPaint);
             canvas.drawLine(f, f2, Math.min(0.0f, 1.0f), f2, this.mPaintGraph);
-            String str2 = "" + (((int) ((((f2 - (i2 / 2)) * 100.0f) / (MotionLayout.this.getHeight() - i2)) + 0.5d)) / 100.0f);
+            String str2 = "" + (((float) ((int) (((double) (((f2 - ((float) (i2 / 2))) * 100.0f) / ((float) (MotionLayout.this.getHeight() - i2)))) + 0.5d))) / 100.0f);
             getTextBounds(str2, this.mTextPaint);
-            canvas.drawText(str2, f + 5.0f, 0.0f - ((f2 / 2.0f) - (this.mBounds.height() / 2)), this.mTextPaint);
+            canvas2.drawText(str2, f + 5.0f, 0.0f - ((f2 / 2.0f) - ((float) (this.mBounds.height() / 2))), this.mTextPaint);
             canvas.drawLine(f, f2, f, Math.max(0.0f, 1.0f), this.mPaintGraph);
         }
 
         private void drawRectangle(Canvas canvas, MotionController motionController) {
             this.mPath.reset();
             for (int i = 0; i <= 50; i++) {
-                motionController.buildRect(i / 50, this.mRectangle, 0);
+                motionController.buildRect(((float) i) / ((float) 50), this.mRectangle, 0);
                 Path path = this.mPath;
                 float[] fArr = this.mRectangle;
                 path.moveTo(fArr[0], fArr[1]);
@@ -1303,50 +2305,67 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintLayout, android.view.ViewGroup, android.view.View
-    protected void dispatchDraw(Canvas canvas) {
-        long j;
-        evaluate(false);
-        super.dispatchDraw(canvas);
-        if (this.mScene == null) {
-            return;
+    private void debugPos() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View childAt = getChildAt(i);
+            Log.v(TAG, WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + Debug.getLocation() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + Debug.getName(this) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + Debug.getName(getContext(), this.mCurrentState) + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + Debug.getName(childAt) + childAt.getLeft() + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + childAt.getTop());
         }
-        if ((this.mDebugPath & 1) == 1 && !isInEditMode()) {
-            this.mFrames++;
-            long nanoTime = getNanoTime();
-            long j2 = this.mLastDrawTime;
-            if (j2 != -1) {
-                if (nanoTime - j2 > 200000000) {
-                    this.mLastFps = ((int) ((this.mFrames / (((float) j) * 1.0E-9f)) * 100.0f)) / 100.0f;
-                    this.mFrames = 0;
+    }
+
+    /* access modifiers changed from: protected */
+    public void dispatchDraw(Canvas canvas) {
+        ArrayList<MotionHelper> arrayList = this.mDecoratorsHelpers;
+        if (arrayList != null) {
+            Iterator<MotionHelper> it = arrayList.iterator();
+            while (it.hasNext()) {
+                it.next().onPreDraw(canvas);
+            }
+        }
+        evaluate(false);
+        MotionScene motionScene = this.mScene;
+        if (!(motionScene == null || motionScene.mViewTransitionController == null)) {
+            this.mScene.mViewTransitionController.animate();
+        }
+        super.dispatchDraw(canvas);
+        if (this.mScene != null) {
+            if ((this.mDebugPath & 1) == 1 && !isInEditMode()) {
+                this.mFrames++;
+                long nanoTime = getNanoTime();
+                long j = this.mLastDrawTime;
+                if (j != -1) {
+                    long j2 = nanoTime - j;
+                    if (j2 > 200000000) {
+                        this.mLastFps = ((float) ((int) ((((float) this.mFrames) / (((float) j2) * 1.0E-9f)) * 100.0f))) / 100.0f;
+                        this.mFrames = 0;
+                        this.mLastDrawTime = nanoTime;
+                    }
+                } else {
                     this.mLastDrawTime = nanoTime;
                 }
-            } else {
-                this.mLastDrawTime = nanoTime;
+                Paint paint = new Paint();
+                paint.setTextSize(42.0f);
+                StringBuilder append = new StringBuilder().append(this.mLastFps + " fps " + Debug.getState(this, this.mBeginState) + " -> ").append(Debug.getState(this, this.mEndState)).append(" (progress: ").append(((float) ((int) (getProgress() * 1000.0f))) / 10.0f).append(" ) state=");
+                int i = this.mCurrentState;
+                String sb = append.append(i == -1 ? "undefined" : Debug.getState(this, i)).toString();
+                paint.setColor(ViewCompat.MEASURED_STATE_MASK);
+                canvas.drawText(sb, 11.0f, (float) (getHeight() - 29), paint);
+                paint.setColor(-7864184);
+                canvas.drawText(sb, 10.0f, (float) (getHeight() - 30), paint);
             }
-            Paint paint = new Paint();
-            paint.setTextSize(42.0f);
-            StringBuilder sb = new StringBuilder();
-            sb.append(this.mLastFps + " fps " + Debug.getState(this, this.mBeginState) + " -> ");
-            sb.append(Debug.getState(this, this.mEndState));
-            sb.append(" (progress: ");
-            sb.append(((int) (getProgress() * 1000.0f)) / 10.0f);
-            sb.append(" ) state=");
-            int i = this.mCurrentState;
-            sb.append(i == -1 ? "undefined" : Debug.getState(this, i));
-            String sb2 = sb.toString();
-            paint.setColor(-16777216);
-            canvas.drawText(sb2, 11.0f, getHeight() - 29, paint);
-            paint.setColor(-7864184);
-            canvas.drawText(sb2, 10.0f, getHeight() - 30, paint);
+            if (this.mDebugPath > 1) {
+                if (this.mDevModeDraw == null) {
+                    this.mDevModeDraw = new DevModeDraw();
+                }
+                this.mDevModeDraw.draw(canvas, this.mFrameArrayList, this.mScene.getDuration(), this.mDebugPath);
+            }
+            ArrayList<MotionHelper> arrayList2 = this.mDecoratorsHelpers;
+            if (arrayList2 != null) {
+                Iterator<MotionHelper> it2 = arrayList2.iterator();
+                while (it2.hasNext()) {
+                    it2.next().onPostDraw(canvas);
+                }
+            }
         }
-        if (this.mDebugPath <= 1) {
-            return;
-        }
-        if (this.mDevModeDraw == null) {
-            this.mDevModeDraw = new DevModeDraw();
-        }
-        this.mDevModeDraw.draw(canvas, this.mFrameArrayList, this.mScene.getDuration(), this.mDebugPath);
     }
 
     private void evaluateLayout() {
@@ -1378,6 +2397,10 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         this.mPostInterpolationPosition = f;
         int childCount = getChildCount();
         long nanoTime2 = getNanoTime();
+        Interpolator interpolator2 = this.mProgressInterpolator;
+        if (interpolator2 != null) {
+            f = interpolator2.getInterpolation(f);
+        }
         for (int i2 = 0; i2 < childCount; i2++) {
             View childAt = getChildAt(i2);
             MotionController motionController = this.mFrameArrayList.get(childAt);
@@ -1390,192 +2413,439 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:48:0x01e1  */
-    /* JADX WARN: Removed duplicated region for block: B:50:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    void evaluate(boolean z) {
-        boolean z2;
-        int i;
-        ArrayList<TransitionListener> arrayList;
-        boolean z3;
-        if (this.mTransitionLastTime == -1) {
-            this.mTransitionLastTime = getNanoTime();
-        }
-        float f = this.mTransitionLastPosition;
-        if (f > 0.0f && f < 1.0f) {
-            this.mCurrentState = -1;
-        }
-        boolean z4 = false;
-        if (this.mKeepAnimating || (this.mInTransition && (z || this.mTransitionGoalPosition != f))) {
-            float signum = Math.signum(this.mTransitionGoalPosition - f);
-            long nanoTime = getNanoTime();
-            float f2 = this.mTransitionLastPosition + (!(this.mInterpolator instanceof MotionInterpolator) ? ((((float) (nanoTime - this.mTransitionLastTime)) * signum) * 1.0E-9f) / this.mTransitionDuration : 0.0f);
-            if (this.mTransitionInstantly) {
-                f2 = this.mTransitionGoalPosition;
-            }
-            int i2 = (signum > 0.0f ? 1 : (signum == 0.0f ? 0 : -1));
-            if ((i2 <= 0 || f2 < this.mTransitionGoalPosition) && (signum > 0.0f || f2 > this.mTransitionGoalPosition)) {
-                z2 = false;
-            } else {
-                f2 = this.mTransitionGoalPosition;
-                this.mInTransition = false;
-                z2 = true;
-            }
-            this.mTransitionLastPosition = f2;
-            this.mTransitionPosition = f2;
-            this.mTransitionLastTime = nanoTime;
-            if (this.mTransitionListener != null || ((arrayList = this.mTransitionListeners) != null && !arrayList.isEmpty())) {
-                fireTransitionChange();
-                this.mIsAnimating = true;
-                if (z2) {
-                    fireTransitionCompleted();
-                }
-            }
-            Interpolator interpolator = this.mInterpolator;
-            if (interpolator != null && !z2) {
-                if (this.mTemporalInterpolator) {
-                    float interpolation = interpolator.getInterpolation(((float) (nanoTime - this.mAnimationStartTime)) * 1.0E-9f);
-                    this.mTransitionLastPosition = interpolation;
-                    this.mTransitionLastTime = nanoTime;
-                    Interpolator interpolator2 = this.mInterpolator;
-                    if (interpolator2 instanceof MotionInterpolator) {
-                        float velocity = ((MotionInterpolator) interpolator2).getVelocity();
-                        if (Math.abs(velocity) <= 1.0E-4f) {
-                            this.mInTransition = false;
-                        }
-                        if (velocity > 0.0f && interpolation >= 1.0f) {
-                            this.mTransitionLastPosition = 1.0f;
-                            this.mInTransition = false;
-                            interpolation = 1.0f;
-                        }
-                        if (velocity < 0.0f && interpolation <= 0.0f) {
-                            this.mTransitionLastPosition = 0.0f;
-                            this.mInTransition = false;
-                            f2 = 0.0f;
-                        }
-                    }
-                    f2 = interpolation;
-                } else {
-                    f2 = interpolator.getInterpolation(f2);
-                }
-            }
-            if ((i2 > 0 && f2 >= this.mTransitionGoalPosition) || (signum <= 0.0f && f2 <= this.mTransitionGoalPosition)) {
-                f2 = this.mTransitionGoalPosition;
-                this.mInTransition = false;
-            }
-            if (f2 >= 1.0f || f2 <= 0.0f) {
-                this.mInTransition = false;
-            }
-            int childCount = getChildCount();
-            this.mKeepAnimating = false;
-            long nanoTime2 = getNanoTime();
-            this.mPostInterpolationPosition = f2;
-            for (int i3 = 0; i3 < childCount; i3++) {
-                View childAt = getChildAt(i3);
-                MotionController motionController = this.mFrameArrayList.get(childAt);
-                if (motionController != null) {
-                    this.mKeepAnimating = motionController.interpolate(childAt, f2, nanoTime2, this.mKeyCache) | this.mKeepAnimating;
-                }
-            }
-            if (this.mMeasureDuringTransition) {
-                requestLayout();
-            }
-            if (this.mKeepAnimating) {
-                invalidate();
-            }
-            if (this.mInTransition) {
-                invalidate();
-            }
-            if (f2 <= 0.0f && (i = this.mBeginState) != -1) {
-                if (this.mCurrentState != i) {
-                    z4 = true;
-                }
-                this.mCurrentState = i;
-                this.mScene.getConstraintSet(i).applyCustomAttributes(this);
-            }
-            if (f2 >= 1.0d) {
-                int i4 = this.mCurrentState;
-                int i5 = this.mEndState;
-                if (i4 != i5) {
-                    z4 = true;
-                }
-                this.mCurrentState = i5;
-                this.mScene.getConstraintSet(i5).applyCustomAttributes(this);
+    /* access modifiers changed from: package-private */
+    public void endTrigger(boolean z) {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            MotionController motionController = this.mFrameArrayList.get(getChildAt(i));
+            if (motionController != null) {
+                motionController.endTrigger(z);
             }
         }
-        float f3 = this.mTransitionLastPosition;
-        if (f3 >= 1.0f) {
-            int i6 = this.mCurrentState;
-            int i7 = this.mEndState;
-            if (i6 != i7) {
-                z4 = true;
-            }
-            this.mCurrentState = i7;
-        } else if (f3 <= 0.0f) {
-            int i8 = this.mCurrentState;
-            int i9 = this.mBeginState;
-            if (i8 != i9) {
-                z4 = true;
-            }
-            this.mCurrentState = i9;
-        }
-        if (this.mIsAnimating) {
-            if (f3 <= 0.0d && this.mListenerState == this.mBeginState) {
-                z4 = true;
-            }
-            if (f3 >= 1.0d && this.mListenerState == this.mEndState) {
-                z3 = true;
-                this.mNeedsFireTransitionCompleted |= z3;
-                if (Build.VERSION.SDK_INT >= 18 && z3 && !isInLayout()) {
-                    requestLayout();
-                }
-                this.mTransitionPosition = this.mTransitionLastPosition;
-                if (z3 && !this.mIsAnimating) {
-                    return;
-                }
-                fireTransitionChange();
-                if (z3) {
-                    return;
-                }
-                fireTransitionCompleted();
+    }
+
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Removed duplicated region for block: B:105:0x01a7  */
+    /* JADX WARNING: Removed duplicated region for block: B:106:0x01a9  */
+    /* JADX WARNING: Removed duplicated region for block: B:115:0x01bd  */
+    /* JADX WARNING: Removed duplicated region for block: B:132:0x020b A[ADDED_TO_REGION] */
+    /* JADX WARNING: Removed duplicated region for block: B:140:0x0221  */
+    /* JADX WARNING: Removed duplicated region for block: B:70:0x0110  */
+    /* JADX WARNING: Removed duplicated region for block: B:72:0x0117 A[ADDED_TO_REGION] */
+    /* JADX WARNING: Removed duplicated region for block: B:87:0x014e  */
+    /* JADX WARNING: Removed duplicated region for block: B:88:0x0150  */
+    /* JADX WARNING: Removed duplicated region for block: B:91:0x0158  */
+    /* JADX WARNING: Removed duplicated region for block: B:94:0x016f  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void evaluate(boolean r23) {
+        /*
+            r22 = this;
+            r0 = r22
+            long r1 = r0.mTransitionLastTime
+            r3 = -1
+            int r1 = (r1 > r3 ? 1 : (r1 == r3 ? 0 : -1))
+            if (r1 != 0) goto L_0x0010
+            long r1 = r22.getNanoTime()
+            r0.mTransitionLastTime = r1
+        L_0x0010:
+            float r1 = r0.mTransitionLastPosition
+            r2 = 0
+            int r3 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
+            r4 = -1
+            r5 = 1065353216(0x3f800000, float:1.0)
+            if (r3 <= 0) goto L_0x0020
+            int r3 = (r1 > r5 ? 1 : (r1 == r5 ? 0 : -1))
+            if (r3 >= 0) goto L_0x0020
+            r0.mCurrentState = r4
+        L_0x0020:
+            boolean r3 = r0.mKeepAnimating
+            r6 = 1
+            r7 = 0
+            if (r3 != 0) goto L_0x0032
+            boolean r3 = r0.mInTransition
+            if (r3 == 0) goto L_0x023f
+            if (r23 != 0) goto L_0x0032
+            float r3 = r0.mTransitionGoalPosition
+            int r3 = (r3 > r1 ? 1 : (r3 == r1 ? 0 : -1))
+            if (r3 == 0) goto L_0x023f
+        L_0x0032:
+            float r3 = r0.mTransitionGoalPosition
+            float r3 = r3 - r1
+            float r1 = java.lang.Math.signum((float) r3)
+            long r8 = r22.getNanoTime()
+            android.view.animation.Interpolator r3 = r0.mInterpolator
+            boolean r10 = r3 instanceof androidx.constraintlayout.motion.widget.MotionInterpolator
+            r11 = 814313567(0x3089705f, float:1.0E-9)
+            if (r10 != 0) goto L_0x0051
+            long r12 = r0.mTransitionLastTime
+            long r12 = r8 - r12
+            float r10 = (float) r12
+            float r10 = r10 * r1
+            float r10 = r10 * r11
+            float r12 = r0.mTransitionDuration
+            float r10 = r10 / r12
+            goto L_0x0052
+        L_0x0051:
+            r10 = r2
+        L_0x0052:
+            float r12 = r0.mTransitionLastPosition
+            float r12 = r12 + r10
+            boolean r13 = r0.mTransitionInstantly
+            if (r13 == 0) goto L_0x005b
+            float r12 = r0.mTransitionGoalPosition
+        L_0x005b:
+            int r13 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
+            if (r13 <= 0) goto L_0x0065
+            float r14 = r0.mTransitionGoalPosition
+            int r14 = (r12 > r14 ? 1 : (r12 == r14 ? 0 : -1))
+            if (r14 >= 0) goto L_0x006f
+        L_0x0065:
+            int r14 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
+            if (r14 > 0) goto L_0x0075
+            float r14 = r0.mTransitionGoalPosition
+            int r14 = (r12 > r14 ? 1 : (r12 == r14 ? 0 : -1))
+            if (r14 > 0) goto L_0x0075
+        L_0x006f:
+            float r12 = r0.mTransitionGoalPosition
+            r0.mInTransition = r7
+            r14 = r6
+            goto L_0x0076
+        L_0x0075:
+            r14 = r7
+        L_0x0076:
+            r0.mTransitionLastPosition = r12
+            r0.mTransitionPosition = r12
+            r0.mTransitionLastTime = r8
+            r15 = 925353388(0x3727c5ac, float:1.0E-5)
+            if (r3 == 0) goto L_0x0103
+            if (r14 != 0) goto L_0x0103
+            boolean r14 = r0.mTemporalInterpolator
+            if (r14 == 0) goto L_0x00e4
+            long r4 = r0.mAnimationStartTime
+            long r4 = r8 - r4
+            float r4 = (float) r4
+            float r4 = r4 * r11
+            float r3 = r3.getInterpolation(r4)
+            android.view.animation.Interpolator r4 = r0.mInterpolator
+            androidx.constraintlayout.motion.utils.StopLogic r5 = r0.mStopLogic
+            r10 = 2
+            if (r4 != r5) goto L_0x00a2
+            boolean r4 = r5.isStopped()
+            if (r4 == 0) goto L_0x00a0
+            r4 = r10
+            goto L_0x00a3
+        L_0x00a0:
+            r4 = r6
+            goto L_0x00a3
+        L_0x00a2:
+            r4 = r7
+        L_0x00a3:
+            r0.mTransitionLastPosition = r3
+            r0.mTransitionLastTime = r8
+            android.view.animation.Interpolator r5 = r0.mInterpolator
+            boolean r8 = r5 instanceof androidx.constraintlayout.motion.widget.MotionInterpolator
+            if (r8 == 0) goto L_0x00e2
+            androidx.constraintlayout.motion.widget.MotionInterpolator r5 = (androidx.constraintlayout.motion.widget.MotionInterpolator) r5
+            float r5 = r5.getVelocity()
+            r0.mLastVelocity = r5
+            float r8 = java.lang.Math.abs((float) r5)
+            float r9 = r0.mTransitionDuration
+            float r8 = r8 * r9
+            int r8 = (r8 > r15 ? 1 : (r8 == r15 ? 0 : -1))
+            if (r8 > 0) goto L_0x00c4
+            if (r4 != r10) goto L_0x00c4
+            r0.mInTransition = r7
+        L_0x00c4:
+            int r8 = (r5 > r2 ? 1 : (r5 == r2 ? 0 : -1))
+            if (r8 <= 0) goto L_0x00d4
+            r8 = 1065353216(0x3f800000, float:1.0)
+            int r9 = (r3 > r8 ? 1 : (r3 == r8 ? 0 : -1))
+            if (r9 < 0) goto L_0x00d4
+            r0.mTransitionLastPosition = r8
+            r0.mInTransition = r7
+            r3 = 1065353216(0x3f800000, float:1.0)
+        L_0x00d4:
+            int r5 = (r5 > r2 ? 1 : (r5 == r2 ? 0 : -1))
+            if (r5 >= 0) goto L_0x00e2
+            int r5 = (r3 > r2 ? 1 : (r3 == r2 ? 0 : -1))
+            if (r5 > 0) goto L_0x00e2
+            r0.mTransitionLastPosition = r2
+            r0.mInTransition = r7
+            r12 = r2
+            goto L_0x0106
+        L_0x00e2:
+            r12 = r3
+            goto L_0x0106
+        L_0x00e4:
+            float r3 = r3.getInterpolation(r12)
+            android.view.animation.Interpolator r4 = r0.mInterpolator
+            boolean r5 = r4 instanceof androidx.constraintlayout.motion.widget.MotionInterpolator
+            if (r5 == 0) goto L_0x00f7
+            androidx.constraintlayout.motion.widget.MotionInterpolator r4 = (androidx.constraintlayout.motion.widget.MotionInterpolator) r4
+            float r4 = r4.getVelocity()
+            r0.mLastVelocity = r4
+            goto L_0x0101
+        L_0x00f7:
+            float r12 = r12 + r10
+            float r4 = r4.getInterpolation(r12)
+            float r4 = r4 - r3
+            float r4 = r4 * r1
+            float r4 = r4 / r10
+            r0.mLastVelocity = r4
+        L_0x0101:
+            r12 = r3
+            goto L_0x0105
+        L_0x0103:
+            r0.mLastVelocity = r10
+        L_0x0105:
+            r4 = r7
+        L_0x0106:
+            float r3 = r0.mLastVelocity
+            float r3 = java.lang.Math.abs((float) r3)
+            int r3 = (r3 > r15 ? 1 : (r3 == r15 ? 0 : -1))
+            if (r3 <= 0) goto L_0x0115
+            androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r3 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.MOVING
+            r0.setState(r3)
+        L_0x0115:
+            if (r4 == r6) goto L_0x013e
+            if (r13 <= 0) goto L_0x011f
+            float r3 = r0.mTransitionGoalPosition
+            int r3 = (r12 > r3 ? 1 : (r12 == r3 ? 0 : -1))
+            if (r3 >= 0) goto L_0x0129
+        L_0x011f:
+            int r3 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
+            if (r3 > 0) goto L_0x012d
+            float r3 = r0.mTransitionGoalPosition
+            int r3 = (r12 > r3 ? 1 : (r12 == r3 ? 0 : -1))
+            if (r3 > 0) goto L_0x012d
+        L_0x0129:
+            float r12 = r0.mTransitionGoalPosition
+            r0.mInTransition = r7
+        L_0x012d:
+            r3 = 1065353216(0x3f800000, float:1.0)
+            int r4 = (r12 > r3 ? 1 : (r12 == r3 ? 0 : -1))
+            if (r4 >= 0) goto L_0x0137
+            int r3 = (r12 > r2 ? 1 : (r12 == r2 ? 0 : -1))
+            if (r3 > 0) goto L_0x013e
+        L_0x0137:
+            r0.mInTransition = r7
+            androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r3 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.FINISHED
+            r0.setState(r3)
+        L_0x013e:
+            int r3 = r22.getChildCount()
+            r0.mKeepAnimating = r7
+            long r4 = r22.getNanoTime()
+            r0.mPostInterpolationPosition = r12
+            android.view.animation.Interpolator r8 = r0.mProgressInterpolator
+            if (r8 != 0) goto L_0x0150
+            r8 = r12
+            goto L_0x0154
+        L_0x0150:
+            float r8 = r8.getInterpolation(r12)
+        L_0x0154:
+            android.view.animation.Interpolator r9 = r0.mProgressInterpolator
+            if (r9 == 0) goto L_0x016c
+            float r10 = r0.mTransitionDuration
+            float r10 = r1 / r10
+            float r10 = r10 + r12
+            float r9 = r9.getInterpolation(r10)
+            r0.mLastVelocity = r9
+            android.view.animation.Interpolator r10 = r0.mProgressInterpolator
+            float r10 = r10.getInterpolation(r12)
+            float r9 = r9 - r10
+            r0.mLastVelocity = r9
+        L_0x016c:
+            r9 = r7
+        L_0x016d:
+            if (r9 >= r3) goto L_0x0195
+            android.view.View r10 = r0.getChildAt(r9)
+            java.util.HashMap<android.view.View, androidx.constraintlayout.motion.widget.MotionController> r11 = r0.mFrameArrayList
+            java.lang.Object r11 = r11.get(r10)
+            r16 = r11
+            androidx.constraintlayout.motion.widget.MotionController r16 = (androidx.constraintlayout.motion.widget.MotionController) r16
+            if (r16 == 0) goto L_0x0192
+            boolean r11 = r0.mKeepAnimating
+            androidx.constraintlayout.core.motion.utils.KeyCache r15 = r0.mKeyCache
+            r17 = r10
+            r18 = r8
+            r19 = r4
+            r21 = r15
+            boolean r10 = r16.interpolate(r17, r18, r19, r21)
+            r10 = r10 | r11
+            r0.mKeepAnimating = r10
+        L_0x0192:
+            int r9 = r9 + 1
+            goto L_0x016d
+        L_0x0195:
+            if (r13 <= 0) goto L_0x019d
+            float r3 = r0.mTransitionGoalPosition
+            int r3 = (r12 > r3 ? 1 : (r12 == r3 ? 0 : -1))
+            if (r3 >= 0) goto L_0x01a7
+        L_0x019d:
+            int r3 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
+            if (r3 > 0) goto L_0x01a9
+            float r3 = r0.mTransitionGoalPosition
+            int r3 = (r12 > r3 ? 1 : (r12 == r3 ? 0 : -1))
+            if (r3 > 0) goto L_0x01a9
+        L_0x01a7:
+            r3 = r6
+            goto L_0x01aa
+        L_0x01a9:
+            r3 = r7
+        L_0x01aa:
+            boolean r4 = r0.mKeepAnimating
+            if (r4 != 0) goto L_0x01b9
+            boolean r4 = r0.mInTransition
+            if (r4 != 0) goto L_0x01b9
+            if (r3 == 0) goto L_0x01b9
+            androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r4 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.FINISHED
+            r0.setState(r4)
+        L_0x01b9:
+            boolean r4 = r0.mMeasureDuringTransition
+            if (r4 == 0) goto L_0x01c0
+            r22.requestLayout()
+        L_0x01c0:
+            boolean r4 = r0.mKeepAnimating
+            r3 = r3 ^ r6
+            r3 = r3 | r4
+            r0.mKeepAnimating = r3
+            int r3 = (r12 > r2 ? 1 : (r12 == r2 ? 0 : -1))
+            if (r3 > 0) goto L_0x01e4
+            int r3 = r0.mBeginState
+            r4 = -1
+            if (r3 == r4) goto L_0x01e4
+            int r4 = r0.mCurrentState
+            if (r4 == r3) goto L_0x01e4
+            r0.mCurrentState = r3
+            androidx.constraintlayout.motion.widget.MotionScene r4 = r0.mScene
+            androidx.constraintlayout.widget.ConstraintSet r3 = r4.getConstraintSet(r3)
+            r3.applyCustomAttributes(r0)
+            androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r3 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.FINISHED
+            r0.setState(r3)
+            r7 = r6
+        L_0x01e4:
+            double r3 = (double) r12
+            r8 = 4607182418800017408(0x3ff0000000000000, double:1.0)
+            int r3 = (r3 > r8 ? 1 : (r3 == r8 ? 0 : -1))
+            if (r3 < 0) goto L_0x0202
+            int r3 = r0.mCurrentState
+            int r4 = r0.mEndState
+            if (r3 == r4) goto L_0x0202
+            r0.mCurrentState = r4
+            androidx.constraintlayout.motion.widget.MotionScene r3 = r0.mScene
+            androidx.constraintlayout.widget.ConstraintSet r3 = r3.getConstraintSet(r4)
+            r3.applyCustomAttributes(r0)
+            androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r3 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.FINISHED
+            r0.setState(r3)
+            r7 = r6
+        L_0x0202:
+            boolean r3 = r0.mKeepAnimating
+            if (r3 != 0) goto L_0x0221
+            boolean r3 = r0.mInTransition
+            if (r3 == 0) goto L_0x020b
+            goto L_0x0221
+        L_0x020b:
+            if (r13 <= 0) goto L_0x0213
+            r3 = 1065353216(0x3f800000, float:1.0)
+            int r4 = (r12 > r3 ? 1 : (r12 == r3 ? 0 : -1))
+            if (r4 == 0) goto L_0x021b
+        L_0x0213:
+            int r3 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
+            if (r3 >= 0) goto L_0x0224
+            int r3 = (r12 > r2 ? 1 : (r12 == r2 ? 0 : -1))
+            if (r3 != 0) goto L_0x0224
+        L_0x021b:
+            androidx.constraintlayout.motion.widget.MotionLayout$TransitionState r3 = androidx.constraintlayout.motion.widget.MotionLayout.TransitionState.FINISHED
+            r0.setState(r3)
+            goto L_0x0224
+        L_0x0221:
+            r22.invalidate()
+        L_0x0224:
+            boolean r3 = r0.mKeepAnimating
+            if (r3 != 0) goto L_0x023f
+            boolean r3 = r0.mInTransition
+            if (r3 != 0) goto L_0x023f
+            if (r13 <= 0) goto L_0x0234
+            r3 = 1065353216(0x3f800000, float:1.0)
+            int r4 = (r12 > r3 ? 1 : (r12 == r3 ? 0 : -1))
+            if (r4 == 0) goto L_0x023c
+        L_0x0234:
+            int r1 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
+            if (r1 >= 0) goto L_0x023f
+            int r1 = (r12 > r2 ? 1 : (r12 == r2 ? 0 : -1))
+            if (r1 != 0) goto L_0x023f
+        L_0x023c:
+            r22.onNewStateAttachHandlers()
+        L_0x023f:
+            float r1 = r0.mTransitionLastPosition
+            r3 = 1065353216(0x3f800000, float:1.0)
+            int r3 = (r1 > r3 ? 1 : (r1 == r3 ? 0 : -1))
+            if (r3 < 0) goto L_0x0253
+            int r1 = r0.mCurrentState
+            int r2 = r0.mEndState
+            if (r1 == r2) goto L_0x024e
+            goto L_0x024f
+        L_0x024e:
+            r6 = r7
+        L_0x024f:
+            r0.mCurrentState = r2
+        L_0x0251:
+            r7 = r6
+            goto L_0x0262
+        L_0x0253:
+            int r1 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
+            if (r1 > 0) goto L_0x0262
+            int r1 = r0.mCurrentState
+            int r2 = r0.mBeginState
+            if (r1 == r2) goto L_0x025e
+            goto L_0x025f
+        L_0x025e:
+            r6 = r7
+        L_0x025f:
+            r0.mCurrentState = r2
+            goto L_0x0251
+        L_0x0262:
+            boolean r1 = r0.mNeedsFireTransitionCompleted
+            r1 = r1 | r7
+            r0.mNeedsFireTransitionCompleted = r1
+            if (r7 == 0) goto L_0x0270
+            boolean r1 = r0.mInLayout
+            if (r1 != 0) goto L_0x0270
+            r22.requestLayout()
+        L_0x0270:
+            float r1 = r0.mTransitionLastPosition
+            r0.mTransitionPosition = r1
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.motion.widget.MotionLayout.evaluate(boolean):void");
+    }
+
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
+        this.mInLayout = true;
+        try {
+            if (this.mScene == null) {
+                super.onLayout(z, i, i2, i3, i4);
                 return;
             }
-        }
-        z3 = z4;
-        this.mNeedsFireTransitionCompleted |= z3;
-        if (Build.VERSION.SDK_INT >= 18) {
-            requestLayout();
-        }
-        this.mTransitionPosition = this.mTransitionLastPosition;
-        if (z3) {
-        }
-        fireTransitionChange();
-        if (z3) {
+            int i5 = i3 - i;
+            int i6 = i4 - i2;
+            if (!(this.mLastLayoutWidth == i5 && this.mLastLayoutHeight == i6)) {
+                rebuildScene();
+                evaluate(true);
+            }
+            this.mLastLayoutWidth = i5;
+            this.mLastLayoutHeight = i6;
+            this.mOldWidth = i5;
+            this.mOldHeight = i6;
+            this.mInLayout = false;
+        } finally {
+            this.mInLayout = false;
         }
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
-        if (this.mScene == null) {
-            super.onLayout(z, i, i2, i3, i4);
-            return;
-        }
-        int i5 = i3 - i;
-        int i6 = i4 - i2;
-        if (this.mLastLayoutWidth != i5 || this.mLastLayoutHeight != i6) {
-            rebuildScene();
-            evaluate(true);
-        }
-        this.mLastLayoutWidth = i5;
-        this.mLastLayoutHeight = i6;
-        this.mOldWidth = i5;
-        this.mOldHeight = i6;
-    }
-
-    @Override // androidx.constraintlayout.widget.ConstraintLayout
-    protected void parseLayoutDescription(int i) {
+    /* access modifiers changed from: protected */
+    public void parseLayoutDescription(int i) {
         this.mConstraintLayoutSpec = null;
     }
 
@@ -1583,31 +2853,31 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         MotionScene motionScene;
         IS_IN_EDIT_MODE = isInEditMode();
         if (attributeSet != null) {
-            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, R$styleable.MotionLayout);
+            TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(attributeSet, C0483R.styleable.MotionLayout);
             int indexCount = obtainStyledAttributes.getIndexCount();
             boolean z = true;
             for (int i = 0; i < indexCount; i++) {
                 int index = obtainStyledAttributes.getIndex(i);
-                if (index == R$styleable.MotionLayout_layoutDescription) {
+                if (index == C0483R.styleable.MotionLayout_layoutDescription) {
                     this.mScene = new MotionScene(getContext(), this, obtainStyledAttributes.getResourceId(index, -1));
-                } else if (index == R$styleable.MotionLayout_currentState) {
+                } else if (index == C0483R.styleable.MotionLayout_currentState) {
                     this.mCurrentState = obtainStyledAttributes.getResourceId(index, -1);
-                } else if (index == R$styleable.MotionLayout_motionProgress) {
+                } else if (index == C0483R.styleable.MotionLayout_motionProgress) {
                     this.mTransitionGoalPosition = obtainStyledAttributes.getFloat(index, 0.0f);
                     this.mInTransition = true;
-                } else if (index == R$styleable.MotionLayout_applyMotionScene) {
+                } else if (index == C0483R.styleable.MotionLayout_applyMotionScene) {
                     z = obtainStyledAttributes.getBoolean(index, z);
-                } else if (index == R$styleable.MotionLayout_showPaths) {
+                } else if (index == C0483R.styleable.MotionLayout_showPaths) {
                     if (this.mDebugPath == 0) {
                         this.mDebugPath = obtainStyledAttributes.getBoolean(index, false) ? 2 : 0;
                     }
-                } else if (index == R$styleable.MotionLayout_motionDebug) {
+                } else if (index == C0483R.styleable.MotionLayout_motionDebug) {
                     this.mDebugPath = obtainStyledAttributes.getInt(index, 0);
                 }
             }
             obtainStyledAttributes.recycle();
             if (this.mScene == null) {
-                Log.e("MotionLayout", "WARNING NO app:layoutDescription tag");
+                Log.e(TAG, "WARNING NO app:layoutDescription tag");
             }
             if (!z) {
                 this.mScene = null;
@@ -1616,18 +2886,23 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         if (this.mDebugPath != 0) {
             checkStructure();
         }
-        if (this.mCurrentState != -1 || (motionScene = this.mScene) == null) {
-            return;
+        if (this.mCurrentState == -1 && (motionScene = this.mScene) != null) {
+            this.mCurrentState = motionScene.getStartId();
+            this.mBeginState = this.mScene.getStartId();
+            this.mEndState = this.mScene.getEndId();
         }
-        this.mCurrentState = motionScene.getStartId();
-        this.mBeginState = this.mScene.getStartId();
-        this.mEndState = this.mScene.getEndId();
+    }
+
+    public void setScene(MotionScene motionScene) {
+        this.mScene = motionScene;
+        motionScene.setRtl(isRtl());
+        rebuildScene();
     }
 
     private void checkStructure() {
         MotionScene motionScene = this.mScene;
         if (motionScene == null) {
-            Log.e("MotionLayout", "CHECK: motion scene not set! set \"app:layoutDescription=\"@xml/file\"");
+            Log.e(TAG, "CHECK: motion scene not set! set \"app:layoutDescription=\"@xml/file\"");
             return;
         }
         int startId = motionScene.getStartId();
@@ -1639,7 +2914,7 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         while (it.hasNext()) {
             MotionScene.Transition next = it.next();
             if (next == this.mScene.mCurrentTransition) {
-                Log.v("MotionLayout", "CHECK: CURRENT");
+                Log.v(TAG, "CHECK: CURRENT");
             }
             checkStructure(next);
             int startConstraintSetId = next.getStartConstraintSetId();
@@ -1647,33 +2922,33 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             String name = Debug.getName(getContext(), startConstraintSetId);
             String name2 = Debug.getName(getContext(), endConstraintSetId);
             if (sparseIntArray.get(startConstraintSetId) == endConstraintSetId) {
-                Log.e("MotionLayout", "CHECK: two transitions with the same start and end " + name + "->" + name2);
+                Log.e(TAG, "CHECK: two transitions with the same start and end " + name + "->" + name2);
             }
             if (sparseIntArray2.get(endConstraintSetId) == startConstraintSetId) {
-                Log.e("MotionLayout", "CHECK: you can't have reverse transitions" + name + "->" + name2);
+                Log.e(TAG, "CHECK: you can't have reverse transitions" + name + "->" + name2);
             }
             sparseIntArray.put(startConstraintSetId, endConstraintSetId);
             sparseIntArray2.put(endConstraintSetId, startConstraintSetId);
             if (this.mScene.getConstraintSet(startConstraintSetId) == null) {
-                Log.e("MotionLayout", " no such constraintSetStart " + name);
+                Log.e(TAG, " no such constraintSetStart " + name);
             }
             if (this.mScene.getConstraintSet(endConstraintSetId) == null) {
-                Log.e("MotionLayout", " no such constraintSetEnd " + name);
+                Log.e(TAG, " no such constraintSetEnd " + name);
             }
         }
     }
 
     private void checkStructure(int i, ConstraintSet constraintSet) {
-        View childAt;
         String name = Debug.getName(getContext(), i);
         int childCount = getChildCount();
         for (int i2 = 0; i2 < childCount; i2++) {
-            int id = getChildAt(i2).getId();
+            View childAt = getChildAt(i2);
+            int id = childAt.getId();
             if (id == -1) {
-                Log.w("MotionLayout", "CHECK: " + name + " ALL VIEWS SHOULD HAVE ID's " + childAt.getClass().getName() + " does not!");
+                Log.w(TAG, "CHECK: " + name + " ALL VIEWS SHOULD HAVE ID's " + childAt.getClass().getName() + " does not!");
             }
             if (constraintSet.getConstraint(id) == null) {
-                Log.w("MotionLayout", "CHECK: " + name + " NO CONSTRAINTS for " + Debug.getName(childAt));
+                Log.w(TAG, "CHECK: " + name + " NO CONSTRAINTS for " + Debug.getName(childAt));
             }
         }
         int[] knownIds = constraintSet.getKnownIds();
@@ -1681,100 +2956,204 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             int i4 = knownIds[i3];
             String name2 = Debug.getName(getContext(), i4);
             if (findViewById(knownIds[i3]) == null) {
-                Log.w("MotionLayout", "CHECK: " + name + " NO View matches id " + name2);
+                Log.w(TAG, "CHECK: " + name + " NO View matches id " + name2);
             }
             if (constraintSet.getHeight(i4) == -1) {
-                Log.w("MotionLayout", "CHECK: " + name + "(" + name2 + ") no LAYOUT_HEIGHT");
+                Log.w(TAG, "CHECK: " + name + NavigationBarInflaterView.KEY_CODE_START + name2 + ") no LAYOUT_HEIGHT");
             }
             if (constraintSet.getWidth(i4) == -1) {
-                Log.w("MotionLayout", "CHECK: " + name + "(" + name2 + ") no LAYOUT_HEIGHT");
+                Log.w(TAG, "CHECK: " + name + NavigationBarInflaterView.KEY_CODE_START + name2 + ") no LAYOUT_HEIGHT");
             }
         }
     }
 
     private void checkStructure(MotionScene.Transition transition) {
-        Log.v("MotionLayout", "CHECK: transition = " + transition.debugString(getContext()));
-        Log.v("MotionLayout", "CHECK: transition.setDuration = " + transition.getDuration());
         if (transition.getStartConstraintSetId() == transition.getEndConstraintSetId()) {
-            Log.e("MotionLayout", "CHECK: start and end constraint set should not be the same!");
+            Log.e(TAG, "CHECK: start and end constraint set should not be the same!");
         }
     }
 
-    private boolean handlesTouchEvent(float f, float f2, View view, MotionEvent motionEvent) {
-        if (view instanceof ViewGroup) {
-            ViewGroup viewGroup = (ViewGroup) view;
-            int childCount = viewGroup.getChildCount();
-            for (int i = 0; i < childCount; i++) {
-                if (handlesTouchEvent(view.getLeft() + f, view.getTop() + f2, viewGroup.getChildAt(i), motionEvent)) {
-                    return true;
-                }
-            }
-        }
-        this.mBoundsCheck.set(view.getLeft() + f, view.getTop() + f2, f + view.getRight(), f2 + view.getBottom());
-        if (motionEvent.getAction() == 0) {
-            if (this.mBoundsCheck.contains(motionEvent.getX(), motionEvent.getY()) && view.onTouchEvent(motionEvent)) {
-                return true;
-            }
-        } else if (view.onTouchEvent(motionEvent)) {
-            return true;
-        }
-        return false;
+    public void setDebugMode(int i) {
+        this.mDebugPath = i;
+        invalidate();
     }
 
-    @Override // android.view.ViewGroup
+    public void getDebugMode(boolean z) {
+        this.mDebugPath = z ? 2 : 1;
+        invalidate();
+    }
+
+    private boolean callTransformedTouchEvent(View view, MotionEvent motionEvent, float f, float f2) {
+        Matrix matrix = view.getMatrix();
+        if (matrix.isIdentity()) {
+            motionEvent.offsetLocation(f, f2);
+            boolean onTouchEvent = view.onTouchEvent(motionEvent);
+            motionEvent.offsetLocation(-f, -f2);
+            return onTouchEvent;
+        }
+        MotionEvent obtain = MotionEvent.obtain(motionEvent);
+        obtain.offsetLocation(f, f2);
+        if (this.mInverseMatrix == null) {
+            this.mInverseMatrix = new Matrix();
+        }
+        matrix.invert(this.mInverseMatrix);
+        obtain.transform(this.mInverseMatrix);
+        boolean onTouchEvent2 = view.onTouchEvent(obtain);
+        obtain.recycle();
+        return onTouchEvent2;
+    }
+
+    /* JADX WARNING: Removed duplicated region for block: B:10:0x0039  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private boolean handlesTouchEvent(float r8, float r9, android.view.View r10, android.view.MotionEvent r11) {
+        /*
+            r7 = this;
+            boolean r0 = r10 instanceof android.view.ViewGroup
+            r1 = 1
+            if (r0 == 0) goto L_0x0036
+            r0 = r10
+            android.view.ViewGroup r0 = (android.view.ViewGroup) r0
+            int r2 = r0.getChildCount()
+            int r2 = r2 - r1
+        L_0x000d:
+            if (r2 < 0) goto L_0x0036
+            android.view.View r3 = r0.getChildAt(r2)
+            int r4 = r3.getLeft()
+            float r4 = (float) r4
+            float r4 = r4 + r8
+            int r5 = r10.getScrollX()
+            float r5 = (float) r5
+            float r4 = r4 - r5
+            int r5 = r3.getTop()
+            float r5 = (float) r5
+            float r5 = r5 + r9
+            int r6 = r10.getScrollY()
+            float r6 = (float) r6
+            float r5 = r5 - r6
+            boolean r3 = r7.handlesTouchEvent(r4, r5, r3, r11)
+            if (r3 == 0) goto L_0x0033
+            r0 = r1
+            goto L_0x0037
+        L_0x0033:
+            int r2 = r2 + -1
+            goto L_0x000d
+        L_0x0036:
+            r0 = 0
+        L_0x0037:
+            if (r0 != 0) goto L_0x0075
+            android.graphics.RectF r2 = r7.mBoundsCheck
+            int r3 = r10.getRight()
+            float r3 = (float) r3
+            float r3 = r3 + r8
+            int r4 = r10.getLeft()
+            float r4 = (float) r4
+            float r3 = r3 - r4
+            int r4 = r10.getBottom()
+            float r4 = (float) r4
+            float r4 = r4 + r9
+            int r5 = r10.getTop()
+            float r5 = (float) r5
+            float r4 = r4 - r5
+            r2.set(r8, r9, r3, r4)
+            int r2 = r11.getAction()
+            if (r2 != 0) goto L_0x006c
+            android.graphics.RectF r2 = r7.mBoundsCheck
+            float r3 = r11.getX()
+            float r4 = r11.getY()
+            boolean r2 = r2.contains(r3, r4)
+            if (r2 == 0) goto L_0x0075
+        L_0x006c:
+            float r8 = -r8
+            float r9 = -r9
+            boolean r7 = r7.callTransformedTouchEvent(r10, r11, r8, r9)
+            if (r7 == 0) goto L_0x0075
+            goto L_0x0076
+        L_0x0075:
+            r1 = r0
+        L_0x0076:
+            return r1
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.constraintlayout.motion.widget.MotionLayout.handlesTouchEvent(float, float, android.view.View, android.view.MotionEvent):boolean");
+    }
+
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        MotionScene.Transition transition;
         TouchResponse touchResponse;
         int touchRegionId;
         RectF touchRegion;
         MotionScene motionScene = this.mScene;
-        if (motionScene != null && this.mInteractionEnabled && (transition = motionScene.mCurrentTransition) != null && transition.isEnabled() && (touchResponse = transition.getTouchResponse()) != null && ((motionEvent.getAction() != 0 || (touchRegion = touchResponse.getTouchRegion(this, new RectF())) == null || touchRegion.contains(motionEvent.getX(), motionEvent.getY())) && (touchRegionId = touchResponse.getTouchRegionId()) != -1)) {
-            View view = this.mRegionView;
-            if (view == null || view.getId() != touchRegionId) {
-                this.mRegionView = findViewById(touchRegionId);
+        if (motionScene != null && this.mInteractionEnabled) {
+            if (motionScene.mViewTransitionController != null) {
+                this.mScene.mViewTransitionController.touchEvent(motionEvent);
             }
-            View view2 = this.mRegionView;
-            if (view2 != null) {
-                this.mBoundsCheck.set(view2.getLeft(), this.mRegionView.getTop(), this.mRegionView.getRight(), this.mRegionView.getBottom());
-                if (this.mBoundsCheck.contains(motionEvent.getX(), motionEvent.getY()) && !handlesTouchEvent(0.0f, 0.0f, this.mRegionView, motionEvent)) {
-                    return onTouchEvent(motionEvent);
+            MotionScene.Transition transition = this.mScene.mCurrentTransition;
+            if (transition != null && transition.isEnabled() && (touchResponse = transition.getTouchResponse()) != null && ((motionEvent.getAction() != 0 || (touchRegion = touchResponse.getTouchRegion(this, new RectF())) == null || touchRegion.contains(motionEvent.getX(), motionEvent.getY())) && (touchRegionId = touchResponse.getTouchRegionId()) != -1)) {
+                View view = this.mRegionView;
+                if (view == null || view.getId() != touchRegionId) {
+                    this.mRegionView = findViewById(touchRegionId);
+                }
+                View view2 = this.mRegionView;
+                if (view2 != null) {
+                    this.mBoundsCheck.set((float) view2.getLeft(), (float) this.mRegionView.getTop(), (float) this.mRegionView.getRight(), (float) this.mRegionView.getBottom());
+                    if (this.mBoundsCheck.contains(motionEvent.getX(), motionEvent.getY()) && !handlesTouchEvent((float) this.mRegionView.getLeft(), (float) this.mRegionView.getTop(), this.mRegionView, motionEvent)) {
+                        return onTouchEvent(motionEvent);
+                    }
                 }
             }
         }
         return false;
     }
 
-    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
         MotionScene motionScene = this.mScene;
-        if (motionScene != null && this.mInteractionEnabled && motionScene.supportTouch()) {
-            MotionScene.Transition transition = this.mScene.mCurrentTransition;
-            if (transition != null && !transition.isEnabled()) {
-                return super.onTouchEvent(motionEvent);
-            }
-            this.mScene.processTouchEvent(motionEvent, getCurrentState(), this);
-            return true;
+        if (motionScene == null || !this.mInteractionEnabled || !motionScene.supportTouch()) {
+            return super.onTouchEvent(motionEvent);
         }
-        return super.onTouchEvent(motionEvent);
+        MotionScene.Transition transition = this.mScene.mCurrentTransition;
+        if (transition != null && !transition.isEnabled()) {
+            return super.onTouchEvent(motionEvent);
+        }
+        this.mScene.processTouchEvent(motionEvent, getCurrentState(), this);
+        return true;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         int i;
         super.onAttachedToWindow();
+        Display display = getDisplay();
+        if (display != null) {
+            this.mPreviouseRotation = display.getRotation();
+        }
         MotionScene motionScene = this.mScene;
-        if (motionScene != null && (i = this.mCurrentState) != -1) {
+        if (!(motionScene == null || (i = this.mCurrentState) == -1)) {
             ConstraintSet constraintSet = motionScene.getConstraintSet(i);
             this.mScene.readFallback(this);
+            ArrayList<MotionHelper> arrayList = this.mDecoratorsHelpers;
+            if (arrayList != null) {
+                Iterator<MotionHelper> it = arrayList.iterator();
+                while (it.hasNext()) {
+                    it.next().onFinishedMotionScene(this);
+                }
+            }
             if (constraintSet != null) {
                 constraintSet.applyTo(this);
             }
             this.mBeginState = this.mCurrentState;
         }
         onNewStateAttachHandlers();
+        StateCache stateCache = this.mStateCache;
+        if (stateCache != null) {
+            stateCache.apply();
+            return;
+        }
+        MotionScene motionScene2 = this.mScene;
+        if (motionScene2 != null && motionScene2.mCurrentTransition != null && this.mScene.mCurrentTransition.getAutoTransition() == 4) {
+            transitionToEnd();
+            setState(TransitionState.SETUP);
+            setState(TransitionState.MOVING);
+        }
     }
 
-    @Override // android.view.View
     public void onRtlPropertiesChanged(int i) {
         MotionScene motionScene = this.mScene;
         if (motionScene != null) {
@@ -1782,17 +3161,21 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
     }
 
-    private void onNewStateAttachHandlers() {
+    /* access modifiers changed from: package-private */
+    public void onNewStateAttachHandlers() {
         MotionScene motionScene = this.mScene;
-        if (motionScene != null && !motionScene.autoTransition(this, this.mCurrentState)) {
+        if (motionScene != null) {
+            if (motionScene.autoTransition(this, this.mCurrentState)) {
+                requestLayout();
+                return;
+            }
             int i = this.mCurrentState;
             if (i != -1) {
                 this.mScene.addOnClickListeners(this, i);
             }
-            if (!this.mScene.supportTouch()) {
-                return;
+            if (this.mScene.supportTouch()) {
+                this.mScene.setupTouch();
             }
-            this.mScene.setupTouch();
         }
     }
 
@@ -1804,9 +3187,9 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         return this.mTransitionLastPosition;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void getAnchorDpDt(int i, float f, float f2, float f3, float[] fArr) {
-        String resourceName;
+        String str;
         HashMap<View, MotionController> hashMap = this.mFrameArrayList;
         View viewById = getViewById(i);
         MotionController motionController = hashMap.get(viewById);
@@ -1818,11 +3201,38 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
             return;
         }
         if (viewById == null) {
-            resourceName = "" + i;
+            str = "" + i;
         } else {
-            resourceName = viewById.getContext().getResources().getResourceName(i);
+            str = viewById.getContext().getResources().getResourceName(i);
         }
-        Log.w("MotionLayout", "WARNING could not find view id " + resourceName);
+        Log.w(TAG, "WARNING could not find view id " + str);
+    }
+
+    public long getTransitionTimeMs() {
+        MotionScene motionScene = this.mScene;
+        if (motionScene != null) {
+            this.mTransitionDuration = ((float) motionScene.getDuration()) / 1000.0f;
+        }
+        return (long) (this.mTransitionDuration * 1000.0f);
+    }
+
+    public void setTransitionListener(TransitionListener transitionListener) {
+        this.mTransitionListener = transitionListener;
+    }
+
+    public void addTransitionListener(TransitionListener transitionListener) {
+        if (this.mTransitionListeners == null) {
+            this.mTransitionListeners = new ArrayList<>();
+        }
+        this.mTransitionListeners.add(transitionListener);
+    }
+
+    public boolean removeTransitionListener(TransitionListener transitionListener) {
+        ArrayList<TransitionListener> arrayList = this.mTransitionListeners;
+        if (arrayList == null) {
+            return false;
+        }
+        return arrayList.remove((Object) transitionListener);
     }
 
     public void fireTrigger(int i, boolean z, float f) {
@@ -1874,22 +3284,34 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
     }
 
-    protected void fireTransitionCompleted() {
+    /* access modifiers changed from: protected */
+    public void fireTransitionCompleted() {
         int i;
-        ArrayList<Integer> arrayList;
-        ArrayList<TransitionListener> arrayList2;
-        if ((this.mTransitionListener != null || ((arrayList2 = this.mTransitionListeners) != null && !arrayList2.isEmpty())) && this.mListenerState == -1) {
+        ArrayList<TransitionListener> arrayList;
+        if ((this.mTransitionListener != null || ((arrayList = this.mTransitionListeners) != null && !arrayList.isEmpty())) && this.mListenerState == -1) {
             this.mListenerState = this.mCurrentState;
             if (!this.mTransitionCompleted.isEmpty()) {
-                i = this.mTransitionCompleted.get(arrayList.size() - 1).intValue();
+                ArrayList<Integer> arrayList2 = this.mTransitionCompleted;
+                i = arrayList2.get(arrayList2.size() - 1).intValue();
             } else {
                 i = -1;
             }
             int i2 = this.mCurrentState;
-            if (i == i2 || i2 == -1) {
-                return;
+            if (!(i == i2 || i2 == -1)) {
+                this.mTransitionCompleted.add(Integer.valueOf(i2));
             }
-            this.mTransitionCompleted.add(Integer.valueOf(i2));
+        }
+        processTransitionCompleted();
+        Runnable runnable = this.mOnComplete;
+        if (runnable != null) {
+            runnable.run();
+        }
+        int[] iArr = this.mScheduledTransitionTo;
+        if (iArr != null && this.mScheduledTransitions > 0) {
+            transitionToState(iArr[0]);
+            int[] iArr2 = this.mScheduledTransitionTo;
+            System.arraycopy((Object) iArr2, 1, (Object) iArr2, 0, iArr2.length - 1);
+            this.mScheduledTransitions--;
         }
     }
 
@@ -1916,7 +3338,13 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
         }
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintLayout, android.view.ViewGroup
+    public DesignTool getDesignTool() {
+        if (this.mDesignTool == null) {
+            this.mDesignTool = new DesignTool(this);
+        }
+        return this.mDesignTool;
+    }
+
     public void onViewAdded(View view) {
         super.onViewAdded(view);
         if (view instanceof MotionHelper) {
@@ -1931,35 +3359,142 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
                 }
                 this.mOnShowHelpers.add(motionHelper);
             }
-            if (!motionHelper.isUseOnHide()) {
-                return;
+            if (motionHelper.isUseOnHide()) {
+                if (this.mOnHideHelpers == null) {
+                    this.mOnHideHelpers = new ArrayList<>();
+                }
+                this.mOnHideHelpers.add(motionHelper);
             }
-            if (this.mOnHideHelpers == null) {
-                this.mOnHideHelpers = new ArrayList<>();
+            if (motionHelper.isDecorator()) {
+                if (this.mDecoratorsHelpers == null) {
+                    this.mDecoratorsHelpers = new ArrayList<>();
+                }
+                this.mDecoratorsHelpers.add(motionHelper);
             }
-            this.mOnHideHelpers.add(motionHelper);
         }
     }
 
-    @Override // androidx.constraintlayout.widget.ConstraintLayout, android.view.ViewGroup
     public void onViewRemoved(View view) {
         super.onViewRemoved(view);
         ArrayList<MotionHelper> arrayList = this.mOnShowHelpers;
         if (arrayList != null) {
-            arrayList.remove(view);
+            arrayList.remove((Object) view);
         }
         ArrayList<MotionHelper> arrayList2 = this.mOnHideHelpers;
         if (arrayList2 != null) {
-            arrayList2.remove(view);
+            arrayList2.remove((Object) view);
         }
-        if (this.mScrollTarget == view) {
-            this.mScrollTarget = null;
+    }
+
+    public void setOnShow(float f) {
+        ArrayList<MotionHelper> arrayList = this.mOnShowHelpers;
+        if (arrayList != null) {
+            int size = arrayList.size();
+            for (int i = 0; i < size; i++) {
+                this.mOnShowHelpers.get(i).setProgress(f);
+            }
         }
+    }
+
+    public void setOnHide(float f) {
+        ArrayList<MotionHelper> arrayList = this.mOnHideHelpers;
+        if (arrayList != null) {
+            int size = arrayList.size();
+            for (int i = 0; i < size; i++) {
+                this.mOnHideHelpers.get(i).setProgress(f);
+            }
+        }
+    }
+
+    public int[] getConstraintSetIds() {
+        MotionScene motionScene = this.mScene;
+        if (motionScene == null) {
+            return null;
+        }
+        return motionScene.getConstraintSetIds();
+    }
+
+    public ConstraintSet getConstraintSet(int i) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene == null) {
+            return null;
+        }
+        return motionScene.getConstraintSet(i);
+    }
+
+    public ConstraintSet cloneConstraintSet(int i) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene == null) {
+            return null;
+        }
+        ConstraintSet constraintSet = motionScene.getConstraintSet(i);
+        ConstraintSet constraintSet2 = new ConstraintSet();
+        constraintSet2.clone(constraintSet);
+        return constraintSet2;
+    }
+
+    @Deprecated
+    public void rebuildMotion() {
+        Log.e(TAG, "This method is deprecated. Please call rebuildScene() instead.");
+        rebuildScene();
     }
 
     public void rebuildScene() {
         this.mModel.reEvaluateState();
         invalidate();
+    }
+
+    public void updateState(int i, ConstraintSet constraintSet) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene != null) {
+            motionScene.setConstraintSet(i, constraintSet);
+        }
+        updateState();
+        if (this.mCurrentState == i) {
+            constraintSet.applyTo(this);
+        }
+    }
+
+    public void updateStateAnimate(int i, ConstraintSet constraintSet, int i2) {
+        if (this.mScene != null && this.mCurrentState == i) {
+            updateState(C0483R.C0486id.view_transition, getConstraintSet(i));
+            setState(C0483R.C0486id.view_transition, -1, -1);
+            updateState(i, constraintSet);
+            MotionScene.Transition transition = new MotionScene.Transition(-1, this.mScene, C0483R.C0486id.view_transition, i);
+            transition.setDuration(i2);
+            setTransition(transition);
+            transitionToEnd();
+        }
+    }
+
+    public void scheduleTransitionTo(int i) {
+        if (getCurrentState() == -1) {
+            transitionToState(i);
+            return;
+        }
+        int[] iArr = this.mScheduledTransitionTo;
+        if (iArr == null) {
+            this.mScheduledTransitionTo = new int[4];
+        } else if (iArr.length <= this.mScheduledTransitions) {
+            this.mScheduledTransitionTo = Arrays.copyOf(iArr, iArr.length * 2);
+        }
+        int[] iArr2 = this.mScheduledTransitionTo;
+        int i2 = this.mScheduledTransitions;
+        this.mScheduledTransitions = i2 + 1;
+        iArr2[i2] = i;
+    }
+
+    public void updateState() {
+        this.mModel.initFrom(this.mLayoutWidget, this.mScene.getConstraintSet(this.mBeginState), this.mScene.getConstraintSet(this.mEndState));
+        rebuildScene();
+    }
+
+    public ArrayList<MotionScene.Transition> getDefinedTransitions() {
+        MotionScene motionScene = this.mScene;
+        if (motionScene == null) {
+            return null;
+        }
+        return motionScene.getDefinedTransitions();
     }
 
     public int getStartState() {
@@ -1968,6 +3503,53 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
 
     public int getEndState() {
         return this.mEndState;
+    }
+
+    public float getTargetPosition() {
+        return this.mTransitionGoalPosition;
+    }
+
+    public void setTransitionDuration(int i) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene == null) {
+            Log.e(TAG, "MotionScene not defined");
+        } else {
+            motionScene.setDuration(i);
+        }
+    }
+
+    public MotionScene.Transition getTransition(int i) {
+        return this.mScene.getTransitionById(i);
+    }
+
+    /* access modifiers changed from: package-private */
+    public int lookUpConstraintId(String str) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene == null) {
+            return 0;
+        }
+        return motionScene.lookUpConstraintId(str);
+    }
+
+    /* access modifiers changed from: package-private */
+    public String getConstraintSetNames(int i) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene == null) {
+            return null;
+        }
+        return motionScene.lookUpConstraintName(i);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void disableAutoTransition(boolean z) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene != null) {
+            motionScene.disableAutoTransition(z);
+        }
+    }
+
+    public void setInteractionEnabled(boolean z) {
+        this.mInteractionEnabled = z;
     }
 
     public boolean isInteractionEnabled() {
@@ -1986,5 +3568,37 @@ public class MotionLayout extends ConstraintLayout implements NestedScrollingPar
                 it.next().onTransitionStarted(motionLayout, i, i2);
             }
         }
+    }
+
+    public void viewTransition(int i, View... viewArr) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene != null) {
+            motionScene.viewTransition(i, viewArr);
+        } else {
+            Log.e(TAG, " no motionScene");
+        }
+    }
+
+    public void enableViewTransition(int i, boolean z) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene != null) {
+            motionScene.enableViewTransition(i, z);
+        }
+    }
+
+    public boolean isViewTransitionEnabled(int i) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene != null) {
+            return motionScene.isViewTransitionEnabled(i);
+        }
+        return false;
+    }
+
+    public boolean applyViewTransition(int i, MotionController motionController) {
+        MotionScene motionScene = this.mScene;
+        if (motionScene != null) {
+            return motionScene.applyViewTransition(i, motionController);
+        }
+        return false;
     }
 }

@@ -7,7 +7,7 @@ import com.android.systemui.recents.OverviewProxyService;
 import com.android.systemui.statusbar.CommandQueue;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class WindowMagnification_Factory implements Factory<WindowMagnification> {
     private final Provider<CommandQueue> commandQueueProvider;
     private final Provider<Context> contextProvider;
@@ -25,10 +25,8 @@ public final class WindowMagnification_Factory implements Factory<WindowMagnific
         this.overviewProxyServiceProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public WindowMagnification mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.mainHandlerProvider.mo1933get(), this.commandQueueProvider.mo1933get(), this.modeSwitchesControllerProvider.mo1933get(), this.sysUiStateProvider.mo1933get(), this.overviewProxyServiceProvider.mo1933get());
+    public WindowMagnification get() {
+        return newInstance(this.contextProvider.get(), this.mainHandlerProvider.get(), this.commandQueueProvider.get(), this.modeSwitchesControllerProvider.get(), this.sysUiStateProvider.get(), this.overviewProxyServiceProvider.get());
     }
 
     public static WindowMagnification_Factory create(Provider<Context> provider, Provider<Handler> provider2, Provider<CommandQueue> provider3, Provider<ModeSwitchesController> provider4, Provider<SysUiState> provider5, Provider<OverviewProxyService> provider6) {

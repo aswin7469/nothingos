@@ -1,24 +1,25 @@
 package com.android.systemui.statusbar.phone;
 
+import com.android.internal.logging.MetricsLogger;
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+import javax.inject.Provider;
+
 public final class LockscreenGestureLogger_Factory implements Factory<LockscreenGestureLogger> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LockscreenGestureLogger mo1933get() {
-        return newInstance();
+    private final Provider<MetricsLogger> metricsLoggerProvider;
+
+    public LockscreenGestureLogger_Factory(Provider<MetricsLogger> provider) {
+        this.metricsLoggerProvider = provider;
     }
 
-    public static LockscreenGestureLogger_Factory create() {
-        return InstanceHolder.INSTANCE;
+    public LockscreenGestureLogger get() {
+        return newInstance(this.metricsLoggerProvider.get());
     }
 
-    public static LockscreenGestureLogger newInstance() {
-        return new LockscreenGestureLogger();
+    public static LockscreenGestureLogger_Factory create(Provider<MetricsLogger> provider) {
+        return new LockscreenGestureLogger_Factory(provider);
     }
 
-    /* loaded from: classes.dex */
-    private static final class InstanceHolder {
-        private static final LockscreenGestureLogger_Factory INSTANCE = new LockscreenGestureLogger_Factory();
+    public static LockscreenGestureLogger newInstance(MetricsLogger metricsLogger) {
+        return new LockscreenGestureLogger(metricsLogger);
     }
 }

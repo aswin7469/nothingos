@@ -2,93 +2,173 @@ package com.android.systemui.doze;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
-import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.RectF;
 import android.hardware.display.AmbientDisplayConfiguration;
+import android.os.Debug;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.util.IndentingPrintWriter;
 import android.util.Log;
 import android.view.SurfaceControl;
-import com.android.internal.annotations.VisibleForTesting;
+import androidx.core.app.NotificationCompat;
 import com.android.internal.logging.UiEventLogger;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 import com.android.systemui.biometrics.AuthController;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.doze.DozeHost;
 import com.android.systemui.doze.DozeMachine;
-import com.android.systemui.doze.DozeSensors;
-import com.android.systemui.doze.DozeTriggers;
+import com.android.systemui.doze.dagger.DozeScope;
 import com.android.systemui.statusbar.phone.DozeParameters;
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.policy.DevicePostureController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.Assert;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.sensors.AsyncSensorManager;
+import com.android.systemui.util.sensors.ProximityCheck;
 import com.android.systemui.util.sensors.ProximitySensor;
 import com.android.systemui.util.settings.SecureSettings;
 import com.android.systemui.util.wakelock.WakeLock;
-import com.nothingos.keyguard.NTColorController;
-import com.nothingos.systemui.doze.AODController;
-import com.nothingos.systemui.doze.LiftWakeGestureController;
-import java.io.PrintWriter;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.biometrics.NTColorController;
+import com.nothing.systemui.doze.AODController;
+import com.nothing.systemui.keyguard.KeyguardUpdateMonitorEx;
+import com.nothing.systemui.statusbar.phone.CentralSurfacesImplEx;
+import com.nothing.systemui.util.NTLogUtil;
+import java.p026io.PrintWriter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@DozeScope
 public class DozeTriggers implements DozeMachine.Part {
-    private static final boolean DEBUG = DozeService.DEBUG;
+    /* access modifiers changed from: private */
+    public static final boolean DEBUG = DozeService.DEBUG;
+    public static final String NT_TURN_OFF_INVERT_OR_AOD = "turn_off_invert_or_aod";
+    private static final int PROXIMITY_TIMEOUT_DELAY_MS = 500;
+    private static final String PULSE_ACTION = "com.android.systemui.doze.pulse";
+    private static final String TAG = "DozeTriggers";
     private static boolean sWakeDisplaySensorState = true;
+    private final String DELAY_DISMISS_FINGERPRINT = "com.nothingos.aod.dismiss.fingerprint";
+    private final String ENTER_SLEEP_MODE_ACTION = "com.nothingos.aod.sleep.enter";
+    private final String EXIT_SLEEP_MODE_ACTION = "com.nothingos.aod.sleep.exit";
+    private final int NO_CLOSE = 0;
+    private final int TURN_OFF_INVERT = 1;
+    private final int TURN_OFF_INVERT_AND_AOD = 2;
     private AlarmManager mAlarmManager;
-    private Runnable mAodInterruptRunnable;
-    private final AuthController mAuthController;
+    private final boolean mAllowPulseTriggers;
+    /* access modifiers changed from: private */
+    public Runnable mAodInterruptRunnable;
+    /* access modifiers changed from: private */
+    public final AuthController mAuthController;
     private final BroadcastDispatcher mBroadcastDispatcher;
+    private final TriggerReceiver mBroadcastReceiver = new TriggerReceiver();
     private final AmbientDisplayConfiguration mConfig;
     private final Context mContext;
     private PendingIntent mDelayDismissFpPendingIntent;
+    private final DevicePostureController.Callback mDevicePostureCallback = new DozeTriggers$$ExternalSyntheticLambda6();
+    private final DevicePostureController mDevicePostureController;
+    private final DockEventListener mDockEventListener = new DockEventListener();
     private final DockManager mDockManager;
     private final DozeHost mDozeHost;
     private final DozeLog mDozeLog;
     private final DozeParameters mDozeParameters;
-    private final DozeSensors mDozeSensors;
+    /* access modifiers changed from: private */
+    public final DozeSensors mDozeSensors;
     private PendingIntent mEnterSleepModePendingIntent;
     private PendingIntent mExitSleepModePendingIntent;
+    private DozeHost.Callback mHostCallback = new DozeHost.Callback() {
+        public void onNotificationAlerted(Runnable runnable) {
+            DozeTriggers.this.onNotification(runnable);
+        }
+
+        public void onLiftWake() {
+            Log.d(DozeTriggers.TAG, "onLiftWake: ");
+            DozeTriggers.this.onSensor(3, -1.0f, -1.0f, new float[]{1.0f});
+        }
+
+        public void onMotion() {
+            Log.d(DozeTriggers.TAG, "onMotion: ");
+            DozeTriggers.this.onSensor(2, -1.0f, -1.0f, new float[]{1.0f});
+        }
+
+        public void onDozeFingerprintDown() {
+            Log.d(DozeTriggers.TAG, "onDozeFingerprintDown: ");
+            DozeMachine.State state = DozeTriggers.this.mMachine.getState();
+            Log.d(DozeTriggers.TAG, "onDozeFingerprintDown: state = " + state);
+            Log.d(DozeTriggers.TAG, "onDozeFingerprintDown: running = " + ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintDetectionRunning());
+            if (!DozeTriggers.this.mAuthController.isFpIconVisible()) {
+                DozeTriggers.this.mAuthController.showFingerprintIcon();
+            }
+            if (((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintDetectionRunning()) {
+                DozeTriggers.this.cancelDelayDismissFingerprint();
+                Runnable unused = DozeTriggers.this.mAodInterruptRunnable = new DozeTriggers$1$$ExternalSyntheticLambda0(this);
+                if (state == DozeMachine.State.DOZE_AOD_PAUSING || state == DozeMachine.State.DOZE_AOD_PAUSED || state == DozeMachine.State.DOZE) {
+                    DozeTriggers.this.switchAODPowerMode(1);
+                    DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE_AOD);
+                } else {
+                    DozeTriggers.this.mAodInterruptRunnable.run();
+                    Runnable unused2 = DozeTriggers.this.mAodInterruptRunnable = null;
+                }
+            }
+            DozeTriggers.this.delayDismissFingerprint();
+        }
+
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onDozeFingerprintDown$0$com-android-systemui-doze-DozeTriggers$1 */
+        public /* synthetic */ void mo32472x2e7930d9() {
+            Log.d(DozeTriggers.TAG, "onDozeFingerprintDown: off finger auth");
+            DozeTriggers.this.mAuthController.showDimLayer(true, "onDozeFingerprintDown");
+            RectF sensorRectF = DozeTriggers.this.mAuthController.getSensorRectF();
+            DozeTriggers.this.mAuthController.onAodInterrupt((int) sensorRectF.centerX(), (int) sensorRectF.centerY(), sensorRectF.width(), sensorRectF.height());
+        }
+
+        public void onDozeFingerprintUp() {
+            Log.d(DozeTriggers.TAG, "onDozeFingerprintUp: ");
+            DozeTriggers.this.mAuthController.onCancelUdfps();
+            DozeTriggers.this.mAuthController.showDimLayer(false, "onDozeFingerprintUp");
+        }
+
+        public void onDozeFingerprintRunningStateChanged() {
+            Log.d(DozeTriggers.TAG, "onDozeFingerprintRunningStateChanged: ");
+            DozeTriggers.this.cancelDelayDismissFingerprint();
+            DozeTriggers.this.delayDismissFingerprint();
+        }
+
+        public void onTapWakeUp() {
+            Log.d(DozeTriggers.TAG, "onTapWakeUp: ");
+            DozeTriggers.this.onSensor(9, -1.0f, -1.0f, new float[]{1.0f});
+        }
+    };
     private final KeyguardStateController mKeyguardStateController;
-    private DozeMachine mMachine;
+    /* access modifiers changed from: private */
+    public DozeMachine mMachine;
     private final DelayableExecutor mMainExecutor;
+    /* access modifiers changed from: private */
+    public boolean mNotificationPulseRequested = false;
     private long mNotificationPulseTime;
-    private final ProximitySensor.ProximityCheck mProxCheck;
+    private final ProximityCheck mProxCheck;
     private boolean mPulsePending;
     private final AsyncSensorManager mSensorManager;
     private final UiEventLogger mUiEventLogger;
-    private final UiModeManager mUiModeManager;
     private final WakeLock mWakeLock;
     private boolean mWantProxSensor;
     private boolean mWantSensors;
     private boolean mWantTouchScreenSensors;
-    private final TriggerReceiver mBroadcastReceiver = new TriggerReceiver(this, null);
-    private final DockEventListener mDockEventListener = new DockEventListener(this, null);
-    private DozeHost.Callback mHostCallback = new AnonymousClass1();
-    private final String ENTER_SLEEP_MODE_ACTION = "com.nothingos.aod.sleep.enter";
-    private final String EXIT_SLEEP_MODE_ACTION = "com.nothingos.aod.sleep.exit";
-    private final String DELAY_DISMISS_FINGERPRINT = "com.nothingos.aod.dismiss.fingerprint";
-    private final int NO_CLOSE = 0;
-    private final int TURN_OFF_INVERT = 1;
-    private final int TURN_OFF_INVERT_AND_AOD = 2;
-    private int mPulseReason = -1;
-    private final boolean mAllowPulseTriggers = true;
 
-    @VisibleForTesting
-    /* loaded from: classes.dex */
+    static /* synthetic */ void lambda$new$0(int i) {
+    }
+
     public enum DozingUpdateUiEvent implements UiEventLogger.UiEventEnum {
         DOZING_UPDATE_NOTIFICATION(433),
         DOZING_UPDATE_SIGMOTION(434),
@@ -105,7 +185,7 @@ public class DozeTriggers implements DozeMachine.Part {
         
         private final int mId;
 
-        DozingUpdateUiEvent(int i) {
+        private DozingUpdateUiEvent(int i) {
             this.mId = i;
         }
 
@@ -143,25 +223,23 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
-    public DozeTriggers(Context context, DozeHost dozeHost, AmbientDisplayConfiguration ambientDisplayConfiguration, DozeParameters dozeParameters, AsyncSensorManager asyncSensorManager, WakeLock wakeLock, DockManager dockManager, ProximitySensor proximitySensor, ProximitySensor.ProximityCheck proximityCheck, DozeLog dozeLog, BroadcastDispatcher broadcastDispatcher, SecureSettings secureSettings, AuthController authController, DelayableExecutor delayableExecutor, UiEventLogger uiEventLogger, KeyguardStateController keyguardStateController) {
-        this.mContext = context;
+    @Inject
+    public DozeTriggers(Context context, DozeHost dozeHost, AmbientDisplayConfiguration ambientDisplayConfiguration, DozeParameters dozeParameters, AsyncSensorManager asyncSensorManager, WakeLock wakeLock, DockManager dockManager, ProximitySensor proximitySensor, ProximityCheck proximityCheck, DozeLog dozeLog, BroadcastDispatcher broadcastDispatcher, SecureSettings secureSettings, AuthController authController, @Main DelayableExecutor delayableExecutor, UiEventLogger uiEventLogger, KeyguardStateController keyguardStateController, DevicePostureController devicePostureController) {
+        Context context2 = context;
+        this.mContext = context2;
         this.mDozeHost = dozeHost;
-        this.mConfig = ambientDisplayConfiguration;
-        this.mDozeParameters = dozeParameters;
-        this.mSensorManager = asyncSensorManager;
-        this.mWakeLock = wakeLock;
-        this.mDozeSensors = new DozeSensors(context, asyncSensorManager, dozeParameters, ambientDisplayConfiguration, wakeLock, new DozeSensors.Callback() { // from class: com.android.systemui.doze.DozeTriggers$$ExternalSyntheticLambda0
-            @Override // com.android.systemui.doze.DozeSensors.Callback
-            public final void onSensorPulse(int i, float f, float f2, float[] fArr) {
-                DozeTriggers.this.onSensor(i, f, f2, fArr);
-            }
-        }, new Consumer() { // from class: com.android.systemui.doze.DozeTriggers$$ExternalSyntheticLambda3
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                DozeTriggers.this.onProximityFar(((Boolean) obj).booleanValue());
-            }
-        }, dozeLog, proximitySensor, secureSettings, authController);
-        this.mUiModeManager = (UiModeManager) context.getSystemService(UiModeManager.class);
+        AmbientDisplayConfiguration ambientDisplayConfiguration2 = ambientDisplayConfiguration;
+        this.mConfig = ambientDisplayConfiguration2;
+        DozeParameters dozeParameters2 = dozeParameters;
+        this.mDozeParameters = dozeParameters2;
+        AsyncSensorManager asyncSensorManager2 = asyncSensorManager;
+        this.mSensorManager = asyncSensorManager2;
+        WakeLock wakeLock2 = wakeLock;
+        this.mWakeLock = wakeLock2;
+        this.mAllowPulseTriggers = true;
+        DevicePostureController devicePostureController2 = devicePostureController;
+        this.mDevicePostureController = devicePostureController2;
+        this.mDozeSensors = new DozeSensors(context, asyncSensorManager2, dozeParameters2, ambientDisplayConfiguration2, wakeLock2, new DozeTriggers$$ExternalSyntheticLambda7(this), new DozeTriggers$$ExternalSyntheticLambda8(this), dozeLog, proximitySensor, secureSettings, authController, devicePostureController2);
         this.mDockManager = dockManager;
         this.mProxCheck = proximityCheck;
         this.mDozeLog = dozeLog;
@@ -170,26 +248,25 @@ public class DozeTriggers implements DozeMachine.Part {
         this.mMainExecutor = delayableExecutor;
         this.mUiEventLogger = uiEventLogger;
         this.mKeyguardStateController = keyguardStateController;
-        this.mAlarmManager = (AlarmManager) context.getSystemService("alarm");
+        this.mAlarmManager = (AlarmManager) context2.getSystemService(NotificationCompat.CATEGORY_ALARM);
     }
 
-    @Override // com.android.systemui.doze.DozeMachine.Part
     public void setDozeMachine(DozeMachine dozeMachine) {
         this.mMachine = dozeMachine;
     }
 
-    @Override // com.android.systemui.doze.DozeMachine.Part
     public void destroy() {
         this.mDozeSensors.destroy();
+        this.mProxCheck.destroy();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onNotification(Runnable runnable) {
         if (DozeMachine.DEBUG) {
-            Log.d("DozeTriggers", "requestNotificationPulse");
+            Log.d(TAG, "requestNotificationPulse");
         }
         if (!sWakeDisplaySensorState) {
-            Log.d("DozeTriggers", "Wake display false. Pulse denied.");
+            Log.d(TAG, "Wake display false. Pulse denied.");
             runIfNotNull(runnable);
             this.mDozeLog.tracePulseDropped("wakeDisplaySensor");
             return;
@@ -198,13 +275,11 @@ public class DozeTriggers implements DozeMachine.Part {
         if (!this.mConfig.pulseOnNotificationEnabled(-2)) {
             runIfNotNull(runnable);
             this.mDozeLog.tracePulseDropped("pulseOnNotificationsDisabled");
-            Log.d("DozeTriggers", "onNotification: pulseOnNotificationsDisabled");
-        } else if (this.mDozeHost.isDozeSuppressed()) {
+        } else if (this.mDozeHost.isAlwaysOnSuppressed()) {
             runIfNotNull(runnable);
             this.mDozeLog.tracePulseDropped("dozeSuppressed");
-            Log.d("DozeTriggers", "onNotification: dozeSuppressed");
         } else {
-            this.mPulseReason = 1;
+            this.mNotificationPulseRequested = true;
             requestPulse(1, false, runnable);
             this.mDozeLog.traceNotificationPulse();
         }
@@ -216,89 +291,78 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
-    private void proximityCheckThenCall(final Consumer<Boolean> consumer, boolean z, final int i) {
+    private void proximityCheckThenCall(Consumer<Boolean> consumer, boolean z, int i) {
         Boolean isProximityCurrentlyNear = this.mDozeSensors.isProximityCurrentlyNear();
         if (z) {
             consumer.accept(null);
         } else if (isProximityCurrentlyNear != null) {
             consumer.accept(isProximityCurrentlyNear);
         } else {
-            final long uptimeMillis = SystemClock.uptimeMillis();
-            this.mProxCheck.check(500L, new Consumer() { // from class: com.android.systemui.doze.DozeTriggers$$ExternalSyntheticLambda5
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    DozeTriggers.this.lambda$proximityCheckThenCall$0(uptimeMillis, i, consumer, (Boolean) obj);
-                }
-            });
-            this.mWakeLock.acquire("DozeTriggers");
+            this.mProxCheck.check(500, new DozeTriggers$$ExternalSyntheticLambda4(this, SystemClock.uptimeMillis(), i, consumer));
+            this.mWakeLock.acquire(TAG);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$proximityCheckThenCall$0(long j, int i, Consumer consumer, Boolean bool) {
-        this.mDozeLog.traceProximityResult(bool == null ? false : bool.booleanValue(), SystemClock.uptimeMillis() - j, i);
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$proximityCheckThenCall$1$com-android-systemui-doze-DozeTriggers */
+    public /* synthetic */ void mo32469x64e5e29e(long j, int i, Consumer consumer, Boolean bool) {
+        boolean z;
+        long uptimeMillis = SystemClock.uptimeMillis();
+        DozeLog dozeLog = this.mDozeLog;
+        if (bool == null) {
+            z = false;
+        } else {
+            z = bool.booleanValue();
+        }
+        dozeLog.traceProximityResult(z, uptimeMillis - j, i);
         consumer.accept(bool);
-        this.mWakeLock.release("DozeTriggers");
+        this.mWakeLock.release(TAG);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
-    public void onSensor(final int i, final float f, final float f2, final float[] fArr) {
-        boolean z;
-        final boolean z2 = i == 4;
-        final boolean z3 = i == 9;
-        boolean z4 = i == 3;
-        boolean z5 = i == 5;
-        boolean z6 = i == 7;
-        boolean z7 = i == 8;
-        final boolean z8 = i == 10;
-        boolean z9 = i == 11;
-        boolean z10 = z9 || ((z6 || z7) && fArr != null && fArr.length > 0 && fArr[0] != 0.0f);
-        final boolean z11 = i == 2;
+    /* access modifiers changed from: package-private */
+    public void onSensor(int i, float f, float f2, float[] fArr) {
+        int i2 = i;
+        float[] fArr2 = fArr;
+        boolean z = i2 == 4;
+        boolean z2 = i2 == 9;
+        boolean z3 = i2 == 3;
+        boolean z4 = i2 == 5;
+        boolean z5 = i2 == 7;
+        boolean z6 = i2 == 8;
+        boolean z7 = i2 == 10;
+        boolean z8 = i2 == 11;
+        boolean z9 = z8 || ((z5 || z6) && fArr2 != null && fArr2.length > 0 && fArr2[0] != 0.0f);
+        boolean z10 = i2 == 2;
         DozeMachine.State state = null;
-        if (z6) {
+        if (z5) {
             if (!this.mMachine.isExecutingTransition()) {
                 state = this.mMachine.getState();
             }
-            onWakeScreen(z10, state, i);
-        } else if (z5) {
-            requestPulse(i, true, null);
-        } else {
-            if (z7 || z9) {
-                z = true;
-                if (z10) {
-                    requestPulse(i, true, null);
-                }
-            } else {
-                final boolean z12 = z4;
-                proximityCheckThenCall(new Consumer() { // from class: com.android.systemui.doze.DozeTriggers$$ExternalSyntheticLambda4
-                    @Override // java.util.function.Consumer
-                    public final void accept(Object obj) {
-                        DozeTriggers.this.lambda$onSensor$2(i, z2, z3, f, f2, fArr, z12, z8, z11, (Boolean) obj);
-                    }
-                }, false, i);
-                z = true;
-            }
-            if (z4 || shouldDropPickupEvent()) {
-            }
-            this.mDozeLog.tracePickupWakeUp(SystemClock.elapsedRealtime() - this.mNotificationPulseTime < ((long) this.mDozeParameters.getPickupVibrationThreshold()) ? z : false);
-            return;
+            onWakeScreen(z9, state, i2);
+        } else if (z4) {
+            requestPulse(i2, true, (Runnable) null);
+        } else if (!z6 && !z8) {
+            DozeTriggers$$ExternalSyntheticLambda5 dozeTriggers$$ExternalSyntheticLambda5 = r0;
+            DozeTriggers$$ExternalSyntheticLambda5 dozeTriggers$$ExternalSyntheticLambda52 = new DozeTriggers$$ExternalSyntheticLambda5(this, i, z, z2, f, f2, fArr, z3, z7, z10);
+            proximityCheckThenCall(dozeTriggers$$ExternalSyntheticLambda5, true, i2);
+        } else if (z9) {
+            requestPulse(i2, true, (Runnable) null);
         }
-        z = true;
-        if (z4) {
+        if (z3 && !shouldDropPickupEvent()) {
+            this.mDozeLog.tracePickupWakeUp(SystemClock.elapsedRealtime() - this.mNotificationPulseTime < ((long) this.mDozeParameters.getPickupVibrationThreshold()));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onSensor$2(int i, boolean z, boolean z2, final float f, final float f2, final float[] fArr, boolean z3, boolean z4, boolean z5, Boolean bool) {
-        Log.d("DozeTriggers", "onSensor: result = " + bool);
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onSensor$3$com-android-systemui-doze-DozeTriggers  reason: not valid java name */
+    public /* synthetic */ void m2739lambda$onSensor$3$comandroidsystemuidozeDozeTriggers(int i, boolean z, boolean z2, float f, float f2, float[] fArr, boolean z3, boolean z4, boolean z5, Boolean bool) {
         if (bool != null && bool.booleanValue()) {
             this.mDozeLog.traceSensorEventDropped(i, "prox reporting near");
         } else if (z || z2) {
-            if (f != -1.0f && f2 != -1.0f) {
+            if (!(f == -1.0f || f2 == -1.0f)) {
                 this.mDozeHost.onSlpiTap(f, f2);
             }
-            if (getResolverInt("tap_gesture", 1) == 1) {
+            if (getResolverInt(AODController.KEY_AOD_LIFT_WAKE_ENABLE, 1) == 1) {
                 gentleWakeUp(i);
             } else {
                 triggerFpMotion(fArr);
@@ -306,33 +370,27 @@ public class DozeTriggers implements DozeMachine.Part {
         } else if (z3) {
             if (shouldDropPickupEvent()) {
                 this.mDozeLog.traceSensorEventDropped(i, "keyguard occluded");
-            } else if (getResolverInt("wake_gesture_enabled", 1) == 1) {
+            } else if (getResolverInt(AODController.KEY_AOD_LIFT_WAKE_ENABLE, 1) == 1) {
                 gentleWakeUp(i);
             } else {
                 triggerFpMotion(fArr);
             }
-        } else if (!z4) {
-            if (z5) {
-                triggerFpMotion(fArr);
-            } else {
-                this.mDozeHost.extendPulse(i);
-            }
-        } else {
+        } else if (z4) {
             DozeMachine.State state = this.mMachine.getState();
             if (state == DozeMachine.State.DOZE_AOD || state == DozeMachine.State.DOZE) {
-                this.mAodInterruptRunnable = new Runnable() { // from class: com.android.systemui.doze.DozeTriggers$$ExternalSyntheticLambda1
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        DozeTriggers.this.lambda$onSensor$1(f, f2, fArr);
-                    }
-                };
+                this.mAodInterruptRunnable = new DozeTriggers$$ExternalSyntheticLambda3(this, f, f2, fArr);
             }
-            requestPulse(10, true, null);
+            requestPulse(10, true, (Runnable) null);
+        } else if (z5) {
+            triggerFpMotion(fArr);
+        } else {
+            this.mDozeHost.extendPulse(i);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onSensor$1(float f, float f2, float[] fArr) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onSensor$2$com-android-systemui-doze-DozeTriggers  reason: not valid java name */
+    public /* synthetic */ void m2738lambda$onSensor$2$comandroidsystemuidozeDozeTriggers(float f, float f2, float[] fArr) {
         this.mAuthController.onAodInterrupt((int) f, (int) f2, fArr[3], fArr[4]);
     }
 
@@ -344,96 +402,86 @@ public class DozeTriggers implements DozeMachine.Part {
         Optional ofNullable = Optional.ofNullable(DozingUpdateUiEvent.fromReason(i));
         UiEventLogger uiEventLogger = this.mUiEventLogger;
         Objects.requireNonNull(uiEventLogger);
-        ofNullable.ifPresent(new DozeTriggers$$ExternalSyntheticLambda2(uiEventLogger));
+        ofNullable.ifPresent(new DozeTriggers$$ExternalSyntheticLambda1(uiEventLogger));
         if (this.mDozeParameters.getDisplayNeedsBlanking()) {
             this.mDozeHost.setAodDimmingScrim(1.0f);
         }
         this.mMachine.wakeUp();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onProximityFar(boolean z) {
         if (this.mMachine.isExecutingTransition()) {
-            Log.w("DozeTriggers", "onProximityFar called during transition. Ignoring sensor response.");
+            Log.w(TAG, "onProximityFar called during transition. Ignoring sensor response.");
             return;
         }
         boolean z2 = !z;
         DozeMachine.State state = this.mMachine.getState();
         boolean z3 = false;
         boolean z4 = state == DozeMachine.State.DOZE_AOD_PAUSED;
-        DozeMachine.State state2 = DozeMachine.State.DOZE_AOD_PAUSING;
-        boolean z5 = state == state2;
-        DozeMachine.State state3 = DozeMachine.State.DOZE_AOD;
-        if (state == state3) {
+        boolean z5 = state == DozeMachine.State.DOZE_AOD_PAUSING;
+        if (state == DozeMachine.State.DOZE_AOD) {
             z3 = true;
         }
         if (state == DozeMachine.State.DOZE_PULSING || state == DozeMachine.State.DOZE_PULSING_BRIGHT) {
             if (DEBUG) {
-                Log.i("DozeTriggers", "Prox changed, ignore touch = " + z2);
+                Log.i(TAG, "Prox changed, ignore touch = " + z2);
             }
             this.mDozeHost.onIgnoreTouchWhilePulsing(z2);
         }
-        if (z && ((z4 || z5) && ((AODController) Dependency.get(AODController.class)).shouldShowAODView())) {
+        if (z && (z4 || z5)) {
             if (DEBUG) {
-                Log.i("DozeTriggers", "Prox FAR, unpausing AOD");
+                Log.i(TAG, "Prox FAR, unpausing AOD");
             }
-            this.mMachine.requestState(state3);
-        } else if (!z2 || !z3) {
-        } else {
+            this.mMachine.requestState(DozeMachine.State.DOZE_AOD);
+        } else if (z2 && z3) {
             if (DEBUG) {
-                Log.i("DozeTriggers", "Prox NEAR, pausing AOD");
+                Log.i(TAG, "Prox NEAR, pausing AOD");
             }
-            this.mMachine.requestState(state2);
+            this.mMachine.requestState(DozeMachine.State.DOZE_AOD_PAUSING);
         }
     }
 
-    private void onWakeScreen(boolean z, final DozeMachine.State state, final int i) {
+    private void onWakeScreen(boolean z, DozeMachine.State state, int i) {
         this.mDozeLog.traceWakeDisplay(z, i);
         sWakeDisplaySensorState = z;
         boolean z2 = false;
         if (z) {
-            proximityCheckThenCall(new Consumer() { // from class: com.android.systemui.doze.DozeTriggers$$ExternalSyntheticLambda6
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    DozeTriggers.this.lambda$onWakeScreen$3(state, i, (Boolean) obj);
-                }
-            }, false, i);
+            proximityCheckThenCall(new DozeTriggers$$ExternalSyntheticLambda2(this, state, i), false, i);
             return;
         }
         boolean z3 = state == DozeMachine.State.DOZE_AOD_PAUSED;
         if (state == DozeMachine.State.DOZE_AOD_PAUSING) {
             z2 = true;
         }
-        if (z2 || z3) {
-            return;
+        if (!z2 && !z3) {
+            this.mMachine.requestState(DozeMachine.State.DOZE);
+            this.mUiEventLogger.log(DozingUpdateUiEvent.DOZING_UPDATE_WAKE_TIMEOUT);
         }
-        this.mMachine.requestState(DozeMachine.State.DOZE);
-        this.mUiEventLogger.log(DozingUpdateUiEvent.DOZING_UPDATE_WAKE_TIMEOUT);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onWakeScreen$3(DozeMachine.State state, int i, Boolean bool) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onWakeScreen$4$com-android-systemui-doze-DozeTriggers  reason: not valid java name */
+    public /* synthetic */ void m2740lambda$onWakeScreen$4$comandroidsystemuidozeDozeTriggers(DozeMachine.State state, int i, Boolean bool) {
         if ((bool == null || !bool.booleanValue()) && state == DozeMachine.State.DOZE) {
             this.mMachine.requestState(DozeMachine.State.DOZE_AOD);
             Optional ofNullable = Optional.ofNullable(DozingUpdateUiEvent.fromReason(i));
             UiEventLogger uiEventLogger = this.mUiEventLogger;
             Objects.requireNonNull(uiEventLogger);
-            ofNullable.ifPresent(new DozeTriggers$$ExternalSyntheticLambda2(uiEventLogger));
+            ofNullable.ifPresent(new DozeTriggers$$ExternalSyntheticLambda1(uiEventLogger));
         }
     }
 
-    @Override // com.android.systemui.doze.DozeMachine.Part
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
         closeDisplayInversion(state2);
-        switch (AnonymousClass2.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {
+        switch (C20692.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {
             case 1:
                 this.mAodInterruptRunnable = null;
                 sWakeDisplaySensorState = true;
                 this.mBroadcastReceiver.register(this.mBroadcastDispatcher);
-                this.mDozeHost.addCallback(this.mHostCallback);
                 this.mDockManager.addListener(this.mDockEventListener);
                 this.mDozeSensors.requestTemporaryDisable();
-                checkTriggersAtInit();
+                this.mDozeHost.addCallback(this.mHostCallback);
                 if (((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintDetectionRunning()) {
                     delayDismissFingerprint();
                     break;
@@ -441,7 +489,7 @@ public class DozeTriggers implements DozeMachine.Part {
                 break;
             case 2:
             case 3:
-                this.mWantProxSensor = state2 != DozeMachine.State.DOZE;
+                this.mWantProxSensor = state2 == DozeMachine.State.DOZE || state2 == DozeMachine.State.DOZE_AOD;
                 this.mWantSensors = true;
                 this.mWantTouchScreenSensors = true;
                 if (state2 == DozeMachine.State.DOZE_AOD && !sWakeDisplaySensorState) {
@@ -482,58 +530,93 @@ public class DozeTriggers implements DozeMachine.Part {
         this.mDozeSensors.setListening(this.mWantSensors, this.mWantTouchScreenSensors);
     }
 
-    /* renamed from: com.android.systemui.doze.DozeTriggers$2  reason: invalid class name */
-    /* loaded from: classes.dex */
-    static /* synthetic */ class AnonymousClass2 {
+    /* renamed from: com.android.systemui.doze.DozeTriggers$2 */
+    static /* synthetic */ class C20692 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(20:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|(3:19|20|22)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(22:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|22) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0054 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0060 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:19:0x006c */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
-            int[] iArr = new int[DozeMachine.State.values().length];
-            $SwitchMap$com$android$systemui$doze$DozeMachine$State = iArr;
-            try {
-                iArr[DozeMachine.State.INITIALIZED.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State[DozeMachine.State.DOZE.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State[DozeMachine.State.DOZE_AOD.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State[DozeMachine.State.DOZE_AOD_PAUSED.ordinal()] = 4;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State[DozeMachine.State.DOZE_AOD_PAUSING.ordinal()] = 5;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State[DozeMachine.State.DOZE_PULSING.ordinal()] = 6;
-            } catch (NoSuchFieldError unused6) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State[DozeMachine.State.DOZE_PULSING_BRIGHT.ordinal()] = 7;
-            } catch (NoSuchFieldError unused7) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State[DozeMachine.State.DOZE_AOD_DOCKED.ordinal()] = 8;
-            } catch (NoSuchFieldError unused8) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State[DozeMachine.State.DOZE_PULSE_DONE.ordinal()] = 9;
-            } catch (NoSuchFieldError unused9) {
-            }
-            try {
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State[DozeMachine.State.FINISH.ordinal()] = 10;
-            } catch (NoSuchFieldError unused10) {
-            }
+            /*
+                com.android.systemui.doze.DozeMachine$State[] r0 = com.android.systemui.doze.DozeMachine.State.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$android$systemui$doze$DozeMachine$State = r0
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.INITIALIZED     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD_PAUSED     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD_PAUSING     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_PULSING     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_PULSING_BRIGHT     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0060 }
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD_DOCKED     // Catch:{ NoSuchFieldError -> 0x0060 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0060 }
+                r2 = 8
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0060 }
+            L_0x0060:
+                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x006c }
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_PULSE_DONE     // Catch:{ NoSuchFieldError -> 0x006c }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006c }
+                r2 = 9
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006c }
+            L_0x006c:
+                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0078 }
+                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.FINISH     // Catch:{ NoSuchFieldError -> 0x0078 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0078 }
+                r2 = 10
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0078 }
+            L_0x0078:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeTriggers.C20692.<clinit>():void");
         }
     }
 
-    @Override // com.android.systemui.doze.DozeMachine.Part
     public void onScreenState(int i) {
         this.mDozeSensors.onScreenState(i);
         boolean z = false;
@@ -544,34 +627,26 @@ public class DozeTriggers implements DozeMachine.Part {
         }
         dozeSensors.setProxListening(z);
         this.mDozeSensors.setListening(this.mWantSensors, this.mWantTouchScreenSensors, z2);
-        Log.d("DozeTriggers", "onScreenState:  state  = " + i, new Exception());
+        Log.d(TAG, "onScreenState:  state  = " + i + ", cb: " + Debug.getCallers(3));
         if (z2) {
             cancelDelayEnterAndExitSleepMode();
             delayEnterAndExitSleepMode();
         }
-        ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).setLowPowerState(z2);
+        ((KeyguardUpdateMonitorEx) NTDependencyEx.get(KeyguardUpdateMonitorEx.class)).setLowPowerState(z2);
         Runnable runnable = this.mAodInterruptRunnable;
         if (runnable != null && i == 3) {
             runnable.run();
             this.mAodInterruptRunnable = null;
         }
         Runnable runnable2 = this.mAodInterruptRunnable;
-        if (runnable2 == null || i != 2) {
-            return;
-        }
-        runnable2.run();
-        this.mAodInterruptRunnable = null;
-    }
-
-    private void checkTriggersAtInit() {
-        if (this.mUiModeManager.getCurrentModeType() == 3 || this.mDozeHost.isBlockingDoze() || !this.mDozeHost.isProvisioned()) {
-            this.mMachine.requestState(DozeMachine.State.FINISH);
+        if (runnable2 != null && i == 2) {
+            runnable2.run();
+            this.mAodInterruptRunnable = null;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void requestPulse(final int i, boolean z, final Runnable runnable) {
-        Log.d("DozeTriggers", "requestPulse: reason = " + i);
+    /* access modifiers changed from: private */
+    public void requestPulse(int i, boolean z, Runnable runnable) {
         Assert.isMainThread();
         this.mDozeHost.extendPulse(i);
         DozeMachine.State state = this.mMachine.isExecutingTransition() ? null : this.mMachine.getState();
@@ -581,41 +656,36 @@ public class DozeTriggers implements DozeMachine.Part {
             if (this.mAllowPulseTriggers) {
                 this.mDozeLog.tracePulseDropped(this.mPulsePending, state, this.mDozeHost.isPulsingBlocked());
             }
-            Log.d("DozeTriggers", "requestPulse: can not pulse mPulsePending = " + this.mPulsePending + "mAllowPulseTriggers =" + this.mAllowPulseTriggers + "canPulse =" + canPulse() + "state = " + this.mMachine.getState());
             runIfNotNull(runnable);
         } else {
             boolean z2 = true;
             this.mPulsePending = true;
-            Consumer<Boolean> consumer = new Consumer() { // from class: com.android.systemui.doze.DozeTriggers$$ExternalSyntheticLambda7
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    DozeTriggers.this.lambda$requestPulse$4(runnable, i, (Boolean) obj);
-                }
-            };
+            DozeTriggers$$ExternalSyntheticLambda0 dozeTriggers$$ExternalSyntheticLambda0 = new DozeTriggers$$ExternalSyntheticLambda0(this, runnable, i);
             if (this.mDozeParameters.getProxCheckBeforePulse() && !z) {
                 z2 = false;
             }
-            proximityCheckThenCall(consumer, z2, i);
+            proximityCheckThenCall(dozeTriggers$$ExternalSyntheticLambda0, z2, i);
             Optional ofNullable = Optional.ofNullable(DozingUpdateUiEvent.fromReason(i));
             UiEventLogger uiEventLogger = this.mUiEventLogger;
             Objects.requireNonNull(uiEventLogger);
-            ofNullable.ifPresent(new DozeTriggers$$ExternalSyntheticLambda2(uiEventLogger));
+            ofNullable.ifPresent(new DozeTriggers$$ExternalSyntheticLambda1(uiEventLogger));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$requestPulse$4(Runnable runnable, int i, Boolean bool) {
-        if (bool != null && bool.booleanValue()) {
-            this.mDozeLog.tracePulseDropped("inPocket");
-            this.mPulsePending = false;
-            runIfNotNull(runnable);
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$requestPulse$5$com-android-systemui-doze-DozeTriggers  reason: not valid java name */
+    public /* synthetic */ void m2741lambda$requestPulse$5$comandroidsystemuidozeDozeTriggers(Runnable runnable, int i, Boolean bool) {
+        if (bool == null || !bool.booleanValue()) {
+            continuePulseRequest(i);
             return;
         }
-        continuePulseRequest(i);
+        this.mDozeLog.tracePulseDropped("inPocket");
+        this.mPulsePending = false;
+        runIfNotNull(runnable);
     }
 
     private boolean canPulse() {
-        return this.mMachine.getState() == DozeMachine.State.DOZE || this.mMachine.getState() == DozeMachine.State.DOZE_AOD || this.mMachine.getState() == DozeMachine.State.DOZE_AOD_DOCKED || this.mMachine.getState() == DozeMachine.State.DOZE_AOD_PAUSING || this.mMachine.getState() == DozeMachine.State.DOZE_AOD_PAUSED;
+        return this.mMachine.getState() == DozeMachine.State.DOZE || this.mMachine.getState() == DozeMachine.State.DOZE_AOD || this.mMachine.getState() == DozeMachine.State.DOZE_AOD_DOCKED;
     }
 
     private void continuePulseRequest(int i) {
@@ -630,248 +700,164 @@ public class DozeTriggers implements DozeMachine.Part {
         delayDismissFingerprint();
     }
 
-    @Override // com.android.systemui.doze.DozeMachine.Part
     public void dump(PrintWriter printWriter) {
         printWriter.println(" mAodInterruptRunnable=" + this.mAodInterruptRunnable);
         printWriter.print(" notificationPulseTime=");
         printWriter.println(Formatter.formatShortElapsedTime(this.mContext, this.mNotificationPulseTime));
         printWriter.println(" pulsePending=" + this.mPulsePending);
         printWriter.println("DozeSensors:");
-        PrintWriter indentingPrintWriter = new IndentingPrintWriter(printWriter);
+        IndentingPrintWriter indentingPrintWriter = new IndentingPrintWriter(printWriter);
         indentingPrintWriter.increaseIndent();
         this.mDozeSensors.dump(indentingPrintWriter);
     }
 
-    /* loaded from: classes.dex */
     private class TriggerReceiver extends BroadcastReceiver {
         private boolean mRegistered;
 
         private TriggerReceiver() {
         }
 
-        /* synthetic */ TriggerReceiver(DozeTriggers dozeTriggers, AnonymousClass1 anonymousClass1) {
-            this();
-        }
-
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
-            if ("com.android.systemui.doze.pulse".equals(intent.getAction())) {
+            if (DozeTriggers.PULSE_ACTION.equals(intent.getAction())) {
                 if (DozeMachine.DEBUG) {
-                    Log.d("DozeTriggers", "Received pulse intent");
+                    Log.d(DozeTriggers.TAG, "Received pulse intent");
                 }
-                DozeTriggers.this.requestPulse(0, false, null);
-            }
-            if (UiModeManager.ACTION_ENTER_CAR_MODE.equals(intent.getAction())) {
-                DozeTriggers.this.mMachine.requestState(DozeMachine.State.FINISH);
+                DozeTriggers.this.requestPulse(0, false, (Runnable) null);
             }
             if ("android.intent.action.USER_SWITCHED".equals(intent.getAction())) {
                 DozeTriggers.this.mDozeSensors.onUserSwitched();
             }
-            Log.d("DozeTriggers", "Received  intent = " + intent.getAction());
-            if ("com.nothingos.aod.sleep.enter".equals(intent.getAction())) {
-                DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE_AOD_PAUSING);
-            }
-            if ("com.nothingos.aod.sleep.exit".equals(intent.getAction())) {
-                DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE_AOD);
-                if (((AODController) Dependency.get(AODController.class)).shouldShowAODView()) {
-                    ((StatusBar) Dependency.get(StatusBar.class)).setNotificationPanelViewAlpha(1.0f);
+            Log.d(DozeTriggers.TAG, "Received  intent = " + intent.getAction() + " mRegistered " + this.mRegistered);
+            if (this.mRegistered) {
+                if ("com.nothingos.aod.sleep.enter".equals(intent.getAction())) {
+                    DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE_AOD_PAUSING);
                 }
-            }
-            if ("com.nothingos.aod.dismiss.fingerprint".equals(intent.getAction())) {
-                DozeTriggers.this.mAuthController.dismissFingerprintIcon();
-                ((LiftWakeGestureController) Dependency.get(LiftWakeGestureController.class)).requestMotionTrigger();
-                if (DozeTriggers.this.mPulseReason == 1 && !((AODController) Dependency.get(AODController.class)).shouldShowAODView()) {
-                    ((StatusBar) Dependency.get(StatusBar.class)).setNotificationPanelViewAlpha(0.0f);
-                    DozeTriggers.this.mPulseReason = -1;
+                if ("com.nothingos.aod.sleep.exit".equals(intent.getAction())) {
+                    DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE_AOD);
+                    if (((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView()) {
+                        ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).setNotificationPanelViewAlpha(1.0f);
+                    }
                 }
-                if (((AODController) Dependency.get(AODController.class)).shouldShowAODView()) {
-                    return;
+                if ("com.nothingos.aod.dismiss.fingerprint".equals(intent.getAction())) {
+                    DozeTriggers.this.mAuthController.dismissFingerprintIcon();
+                    if (((AODController) NTDependencyEx.get(AODController.class)).shouldShowAODView()) {
+                        return;
+                    }
+                    if (DozeTriggers.this.mNotificationPulseRequested) {
+                        ((CentralSurfacesImplEx) NTDependencyEx.get(CentralSurfacesImplEx.class)).setNotificationPanelViewAlpha(0.0f);
+                        boolean unused = DozeTriggers.this.mNotificationPulseRequested = false;
+                        DozeTriggers.this.delayDismissFingerprint();
+                        return;
+                    }
+                    DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE);
                 }
-                DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE_AOD_PAUSING);
             }
         }
 
         public void register(BroadcastDispatcher broadcastDispatcher) {
-            if (this.mRegistered) {
-                return;
+            if (!this.mRegistered) {
+                IntentFilter intentFilter = new IntentFilter(DozeTriggers.PULSE_ACTION);
+                intentFilter.addAction("android.intent.action.USER_SWITCHED");
+                intentFilter.addAction("com.nothingos.aod.sleep.enter");
+                intentFilter.addAction("com.nothingos.aod.sleep.exit");
+                intentFilter.addAction("com.nothingos.aod.dismiss.fingerprint");
+                broadcastDispatcher.registerReceiver(this, intentFilter);
+                this.mRegistered = true;
             }
-            IntentFilter intentFilter = new IntentFilter("com.android.systemui.doze.pulse");
-            intentFilter.addAction(UiModeManager.ACTION_ENTER_CAR_MODE);
-            intentFilter.addAction("android.intent.action.USER_SWITCHED");
-            intentFilter.addAction("com.nothingos.aod.sleep.enter");
-            intentFilter.addAction("com.nothingos.aod.sleep.exit");
-            intentFilter.addAction("com.nothingos.aod.dismiss.fingerprint");
-            broadcastDispatcher.registerReceiver(this, intentFilter);
-            this.mRegistered = true;
         }
 
         public void unregister(BroadcastDispatcher broadcastDispatcher) {
-            if (!this.mRegistered) {
-                return;
+            if (this.mRegistered) {
+                broadcastDispatcher.unregisterReceiver(this);
+                this.mRegistered = false;
             }
-            broadcastDispatcher.unregisterReceiver(this);
-            this.mRegistered = false;
         }
     }
 
-    /* loaded from: classes.dex */
     private class DockEventListener implements DockManager.DockEventListener {
         private DockEventListener() {
         }
 
-        /* synthetic */ DockEventListener(DozeTriggers dozeTriggers, AnonymousClass1 anonymousClass1) {
-            this();
+        public void onEvent(int i) {
+            if (DozeTriggers.DEBUG) {
+                Log.d(DozeTriggers.TAG, "dock event = " + i);
+            }
+            if (i == 0) {
+                DozeTriggers.this.mDozeSensors.ignoreTouchScreenSensorsSettingInterferingWithDocking(false);
+            } else if (i == 1 || i == 2) {
+                DozeTriggers.this.mDozeSensors.ignoreTouchScreenSensorsSettingInterferingWithDocking(true);
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.doze.DozeTriggers$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass1 implements DozeHost.Callback {
-        AnonymousClass1() {
-        }
-
-        @Override // com.android.systemui.doze.DozeHost.Callback
-        public void onNotificationAlerted(Runnable runnable) {
-            DozeTriggers.this.onNotification(runnable);
-        }
-
-        @Override // com.android.systemui.doze.DozeHost.Callback
-        public void onPowerSaveChanged(boolean z) {
-            if (DozeTriggers.this.mDozeHost.isPowerSaveActive()) {
-                DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE);
-            } else if (DozeTriggers.this.mMachine.getState() != DozeMachine.State.DOZE || !DozeTriggers.this.mConfig.alwaysOnEnabled(-2)) {
-            } else {
-                DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE_AOD);
+    /* access modifiers changed from: private */
+    public void delayDismissFingerprint() {
+        Log.d(TAG, "delayDismissFingerprint visible = " + this.mAuthController.isUdfpsEnrolled(KeyguardUpdateMonitor.getCurrentUser()));
+        if (this.mAuthController.isUdfpsEnrolled(KeyguardUpdateMonitor.getCurrentUser())) {
+            if (this.mDelayDismissFpPendingIntent == null) {
+                this.mDelayDismissFpPendingIntent = PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.nothingos.aod.dismiss.fingerprint"), 67108864);
             }
+            this.mAlarmManager.cancel(this.mDelayDismissFpPendingIntent);
+            this.mAlarmManager.setExactAndAllowWhileIdle(2, SystemClock.elapsedRealtime() + 5000, this.mDelayDismissFpPendingIntent);
         }
+    }
 
-        @Override // com.android.systemui.doze.DozeHost.Callback
-        public void onDozeSuppressedChanged(boolean z) {
-            DozeMachine.State state;
-            if (DozeTriggers.this.mConfig.alwaysOnEnabled(-2) && !z) {
-                state = DozeMachine.State.DOZE_AOD;
-            } else {
-                state = DozeMachine.State.DOZE;
-            }
-            DozeTriggers.this.mMachine.requestState(state);
-        }
-
-        @Override // com.android.systemui.doze.DozeHost.Callback
-        public void onDozeFingerprintDown() {
-            Log.d("DozeTriggers", "onDozeFingerprintDown: ");
-            DozeMachine.State state = DozeTriggers.this.mMachine.getState();
-            Log.d("DozeTriggers", "onDozeFingerprintDown: state = " + state);
-            Log.d("DozeTriggers", "onDozeFingerprintDown: running = " + ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintDetectionRunning());
-            if (!DozeTriggers.this.mAuthController.isFpIconVisible()) {
-                DozeTriggers.this.mAuthController.showFingerprintIcon();
-            }
-            if (((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintDetectionRunning()) {
-                DozeTriggers.this.cancelDelayDismissFingerprint();
-                DozeTriggers.this.mAodInterruptRunnable = new Runnable() { // from class: com.android.systemui.doze.DozeTriggers$1$$ExternalSyntheticLambda0
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        DozeTriggers.AnonymousClass1.this.lambda$onDozeFingerprintDown$0();
-                    }
-                };
-                if (state == DozeMachine.State.DOZE_AOD_PAUSING || state == DozeMachine.State.DOZE_AOD_PAUSED) {
-                    DozeTriggers.this.switchAODPowerMode(1);
-                    DozeTriggers.this.mMachine.requestState(DozeMachine.State.DOZE_AOD);
-                } else {
-                    DozeTriggers.this.mAodInterruptRunnable.run();
-                    DozeTriggers.this.mAodInterruptRunnable = null;
-                }
-            }
-            DozeTriggers.this.delayDismissFingerprint();
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onDozeFingerprintDown$0() {
-            Log.d("DozeTriggers", "onDozeFingerprintDown: off finger auth");
-            DozeTriggers.this.mAuthController.doHBM(true);
-            RectF sensorRectF = DozeTriggers.this.mAuthController.getSensorRectF();
-            DozeTriggers.this.mAuthController.onAodInterrupt((int) sensorRectF.centerX(), (int) sensorRectF.centerY(), sensorRectF.width(), sensorRectF.height());
-        }
-
-        @Override // com.android.systemui.doze.DozeHost.Callback
-        public void onDozeFingerprintUp() {
-            Log.d("DozeTriggers", "onDozeFingerprintUp: ");
-            DozeTriggers.this.mAuthController.onCancelUdfps();
-            DozeTriggers.this.mAuthController.doHBM(false);
-        }
-
-        @Override // com.android.systemui.doze.DozeHost.Callback
-        public void onDozeFingerprintRunningStateChanged() {
-            Log.d("DozeTriggers", "onDozeFingerprintRunningStateChanged: ");
-            DozeTriggers.this.cancelDelayDismissFingerprint();
-            DozeTriggers.this.delayDismissFingerprint();
-        }
-
-        @Override // com.android.systemui.doze.DozeHost.Callback
-        public void onTapWake() {
-            Log.d("DozeTriggers", "onTapWake: ");
-            DozeTriggers.this.onSensor(9, -1.0f, -1.0f, new float[]{1.0f});
-        }
-
-        @Override // com.android.systemui.doze.DozeHost.Callback
-        public void onLiftWake() {
-            Log.d("DozeTriggers", "onLiftWake: ");
-            DozeTriggers.this.onSensor(3, -1.0f, -1.0f, new float[]{1.0f});
-        }
-
-        @Override // com.android.systemui.doze.DozeHost.Callback
-        public void onMotion() {
-            Log.d("DozeTriggers", "onMotion: ");
-            DozeTriggers.this.onSensor(2, -1.0f, -1.0f, new float[]{1.0f});
+    /* access modifiers changed from: private */
+    public void cancelDelayDismissFingerprint() {
+        Log.d(TAG, "cancelDelayDismissFingerprint");
+        PendingIntent pendingIntent = this.mDelayDismissFpPendingIntent;
+        if (pendingIntent != null) {
+            this.mAlarmManager.cancel(pendingIntent);
         }
     }
 
     private void delayEnterAndExitSleepMode() {
         long j;
         long j2;
-        if (((AODController) Dependency.get(AODController.class)).isAllDay()) {
+        if (!this.mDozeParameters.getAlwaysOn()) {
             return;
         }
-        Date time = Calendar.getInstance().getTime();
-        int hours = time.getHours();
-        int minutes = time.getMinutes();
-        int seconds = time.getSeconds();
-        int intValue = Integer.valueOf(((AODController) Dependency.get(AODController.class)).getAODEndTime().substring(0, 2)).intValue();
-        int intValue2 = Integer.valueOf(((AODController) Dependency.get(AODController.class)).getAODEndTime().substring(2, 4)).intValue();
-        int intValue3 = Integer.valueOf(((AODController) Dependency.get(AODController.class)).getAODStartTime().substring(0, 2)).intValue();
-        int intValue4 = Integer.valueOf(((AODController) Dependency.get(AODController.class)).getAODStartTime().substring(2, 4)).intValue();
-        if (((AODController) Dependency.get(AODController.class)).checkNightMode()) {
-            Log.d("DozeTriggers", "delayEnterAndExitSleepMode: night mode");
-            j2 = ((((hours <= intValue3 ? intValue3 - hours : intValue3 + (24 - hours)) * 60 * 60) + ((intValue4 - minutes) * 60)) * 1000) + ((0 - seconds) * 1000);
-            j = 0;
-        } else {
-            long j3 = ((((intValue >= hours ? intValue - hours : (24 - hours) + intValue) * 60 * 60) + ((intValue2 - minutes) * 60)) * 1000) + ((0 - seconds) * 1000);
-            Log.d("DozeTriggers", "delayEnterAndExitSleepMode: not night mode  duration = " + j3);
-            j = j3 + 0;
-            j2 = j3 + ((long) (((24 - intValue) + intValue3) * 60 * 60 * 1000));
-        }
-        Log.d("DozeTriggers", "delayEnterAndExitSleepMode now = " + time + ", enterSleepModeDelayMs = " + j + ", exitSleepModeDelayMs = " + j2);
-        if (j > 0) {
-            Log.d("DozeTriggers", "delay enter sleep mode enterSleepModeDelayMs = " + j);
-            if (this.mEnterSleepModePendingIntent == null) {
-                this.mEnterSleepModePendingIntent = PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.nothingos.aod.sleep.enter"), 67108864);
+        if (!this.mDozeParameters.getAlwaysOn() || !((AODController) NTDependencyEx.get(AODController.class)).isAllDay()) {
+            Date time = Calendar.getInstance().getTime();
+            int hours = time.getHours();
+            int minutes = time.getMinutes();
+            int seconds = time.getSeconds();
+            int intValue = Integer.valueOf(((AODController) NTDependencyEx.get(AODController.class)).getAODEndTime().substring(0, 2)).intValue();
+            int intValue2 = Integer.valueOf(((AODController) NTDependencyEx.get(AODController.class)).getAODEndTime().substring(2, 4)).intValue();
+            int intValue3 = Integer.valueOf(((AODController) NTDependencyEx.get(AODController.class)).getAODStartTime().substring(0, 2)).intValue();
+            int intValue4 = Integer.valueOf(((AODController) NTDependencyEx.get(AODController.class)).getAODStartTime().substring(2, 4)).intValue();
+            if (((AODController) NTDependencyEx.get(AODController.class)).checkNightMode()) {
+                Log.d(TAG, "delayEnterAndExitSleepMode: night mode");
+                j2 = (long) (((((hours <= intValue3 ? intValue3 - hours : intValue3 + (24 - hours)) * 60 * 60) + ((intValue4 - minutes) * 60)) * 1000) + ((0 - seconds) * 1000));
+                j = 0;
+            } else {
+                long j3 = (long) (((((intValue >= hours ? intValue - hours : (24 - hours) + intValue) * 60 * 60) + ((intValue2 - minutes) * 60)) * 1000) + ((0 - seconds) * 1000));
+                Log.d(TAG, "delayEnterAndExitSleepMode: not night mode  duration = " + j3);
+                j = j3 + 0;
+                j2 = j3 + ((long) (((24 - intValue) + intValue3) * 60 * 60 * 1000));
             }
-            this.mAlarmManager.cancel(this.mEnterSleepModePendingIntent);
-            this.mAlarmManager.setExactAndAllowWhileIdle(2, SystemClock.elapsedRealtime() + j, this.mEnterSleepModePendingIntent);
+            Log.d(TAG, "delayEnterAndExitSleepMode now = " + time + ", enterSleepModeDelayMs = " + j + ", exitSleepModeDelayMs = " + j2);
+            if (j > 0) {
+                Log.d(TAG, "delay enter sleep mode enterSleepModeDelayMs = " + j);
+                if (this.mEnterSleepModePendingIntent == null) {
+                    this.mEnterSleepModePendingIntent = PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.nothingos.aod.sleep.enter"), 67108864);
+                }
+                this.mAlarmManager.cancel(this.mEnterSleepModePendingIntent);
+                this.mAlarmManager.setExactAndAllowWhileIdle(2, SystemClock.elapsedRealtime() + j, this.mEnterSleepModePendingIntent);
+            }
+            if (j2 > 0) {
+                Log.d(TAG, "delay exit sleep mode exitSleepModeDelayMs = " + j2);
+                if (this.mExitSleepModePendingIntent == null) {
+                    this.mExitSleepModePendingIntent = PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.nothingos.aod.sleep.exit"), 67108864);
+                }
+                this.mAlarmManager.cancel(this.mExitSleepModePendingIntent);
+                this.mAlarmManager.setExactAndAllowWhileIdle(2, SystemClock.elapsedRealtime() + j2, this.mExitSleepModePendingIntent);
+            }
         }
-        if (j2 <= 0) {
-            return;
-        }
-        Log.d("DozeTriggers", "delay exit sleep mode exitSleepModeDelayMs = " + j2);
-        if (this.mExitSleepModePendingIntent == null) {
-            this.mExitSleepModePendingIntent = PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.nothingos.aod.sleep.exit"), 67108864);
-        }
-        this.mAlarmManager.cancel(this.mExitSleepModePendingIntent);
-        this.mAlarmManager.setExactAndAllowWhileIdle(2, SystemClock.elapsedRealtime() + j2, this.mExitSleepModePendingIntent);
     }
 
     private void cancelDelayEnterAndExitSleepMode() {
-        Log.d("DozeTriggers", "cancelDelayEnterSleepMode");
+        Log.d(TAG, "cancelDelayEnterSleepMode");
         PendingIntent pendingIntent = this.mEnterSleepModePendingIntent;
         if (pendingIntent != null) {
             this.mAlarmManager.cancel(pendingIntent);
@@ -882,49 +868,42 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void delayDismissFingerprint() {
-        Log.d("DozeTriggers", "delayDismissFingerprint visible = " + this.mAuthController.isUdfpsEnrolled(KeyguardUpdateMonitor.getCurrentUser()));
-        if (!this.mAuthController.isUdfpsEnrolled(KeyguardUpdateMonitor.getCurrentUser())) {
-            return;
-        }
-        if (this.mDelayDismissFpPendingIntent == null) {
-            this.mDelayDismissFpPendingIntent = PendingIntent.getBroadcast(this.mContext, 0, new Intent("com.nothingos.aod.dismiss.fingerprint"), 67108864);
-        }
-        this.mAlarmManager.cancel(this.mDelayDismissFpPendingIntent);
-        this.mAlarmManager.setExactAndAllowWhileIdle(2, SystemClock.elapsedRealtime() + 5000, this.mDelayDismissFpPendingIntent);
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public void cancelDelayDismissFingerprint() {
-        Log.d("DozeTriggers", "cancelDelayDismissFingerprint");
-        PendingIntent pendingIntent = this.mDelayDismissFpPendingIntent;
-        if (pendingIntent != null) {
-            this.mAlarmManager.cancel(pendingIntent);
-        }
+    /* access modifiers changed from: private */
+    public void switchAODPowerMode(int i) {
+        Log.d(TAG, "switchAODPowerMode " + i);
+        SurfaceControl.setDisplayPowerMode(SurfaceControl.getInternalDisplayToken(), i);
     }
 
     private void triggerFpMotion(float[] fArr) {
-        if (fArr[0] != 1.0f || !((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintDetectionRunning()) {
-            return;
+        if (fArr[0] == 1.0f && ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFingerprintDetectionRunning()) {
+            if (this.mMachine.getState() != DozeMachine.State.DOZE_AOD) {
+                this.mMachine.requestState(DozeMachine.State.DOZE_AOD);
+            }
+            this.mAuthController.showFingerprintIcon();
+            cancelDelayDismissFingerprint();
+            delayDismissFingerprint();
         }
-        DozeMachine.State state = this.mMachine.getState();
-        DozeMachine.State state2 = DozeMachine.State.DOZE_AOD;
-        if (state != state2) {
-            this.mMachine.requestState(state2);
-        }
-        this.mAuthController.showFingerprintIcon();
-        cancelDelayDismissFingerprint();
-        delayDismissFingerprint();
     }
 
     private void closeDisplayInversion(DozeMachine.State state) {
-        Log.e("closeDisplayInversion", "newState==" + state);
-        int resolverInt = getResolverInt("turn_off_invert_or_aod", 0);
-        if (state != DozeMachine.State.FINISH && state != DozeMachine.State.INITIALIZED) {
+        NTLogUtil.m1680d(TAG, "closeDisplayInversion newState==" + state);
+        int resolverInt = getResolverInt(NT_TURN_OFF_INVERT_OR_AOD, 0);
+        if (state == DozeMachine.State.FINISH || state == DozeMachine.State.INITIALIZED) {
             if (resolverInt != 0) {
-                return;
+                if (resolverInt == 2) {
+                    putResolverInt("doze_always_on", 1);
+                }
+                if (resolverInt == 1 || resolverInt == 2) {
+                    KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+                    if (!keyguardUpdateMonitor.isKeyguardVisible() || !keyguardUpdateMonitor.isUdfpsEnrolled() || keyguardUpdateMonitor.isFingerprintLockedOut()) {
+                        ((NTColorController) NTDependencyEx.get(NTColorController.class)).restoreInversion();
+                    } else {
+                        NTLogUtil.m1682i(TAG, "Don't restoreInversion!");
+                    }
+                }
+                putResolverInt(NT_TURN_OFF_INVERT_OR_AOD, 0);
             }
+        } else if (resolverInt == 0) {
             if (getResolverInt("accessibility_display_inversion_enabled", 0) == 1) {
                 if (getResolverInt("doze_always_on", 0) == 1) {
                     putResolverInt("doze_always_on", 0);
@@ -932,22 +911,9 @@ public class DozeTriggers implements DozeMachine.Part {
                 } else {
                     resolverInt = 1;
                 }
-                ((NTColorController) Dependency.get(NTColorController.class)).resetInversion();
+                ((NTColorController) NTDependencyEx.get(NTColorController.class)).resetInversion();
             }
-            putResolverInt("turn_off_invert_or_aod", resolverInt);
-        } else if (resolverInt == 0) {
-        } else {
-            if (resolverInt == 2) {
-                putResolverInt("doze_always_on", 1);
-            }
-            if (resolverInt == 1 || resolverInt == 2) {
-                if (((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isKeyguardVisible() && ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isUdfpsEnrolled()) {
-                    Log.i("DozeTriggers", "Don't restoreInversion!");
-                } else {
-                    ((NTColorController) Dependency.get(NTColorController.class)).restoreInversion();
-                }
-            }
-            putResolverInt("turn_off_invert_or_aod", 0);
+            putResolverInt(NT_TURN_OFF_INVERT_OR_AOD, resolverInt);
         }
     }
 
@@ -957,11 +923,5 @@ public class DozeTriggers implements DozeMachine.Part {
 
     private int getResolverInt(String str, int i) {
         return Settings.Secure.getInt(this.mContext.getContentResolver(), str, i);
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public void switchAODPowerMode(int i) {
-        Log.d("DozeTriggers", "switchAODPowerMode " + i);
-        SurfaceControl.setDisplayPowerMode(SurfaceControl.getInternalDisplayToken(), i);
     }
 }

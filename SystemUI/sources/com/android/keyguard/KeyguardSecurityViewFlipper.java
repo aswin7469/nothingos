@@ -10,15 +10,27 @@ import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
 import android.view.ViewHierarchyEncoder;
+import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.ViewFlipper;
-import com.android.systemui.R$styleable;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+
 public class KeyguardSecurityViewFlipper extends ViewFlipper {
+    private static final boolean DEBUG = KeyguardConstants.DEBUG;
+    private static final String TAG = "KeyguardSecurityViewFlipper";
     private Rect mTempRect;
 
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
+
     public KeyguardSecurityViewFlipper(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public KeyguardSecurityViewFlipper(Context context, AttributeSet attributeSet) {
@@ -26,7 +38,6 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper {
         this.mTempRect = new Rect();
     }
 
-    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
         boolean onTouchEvent = super.onTouchEvent(motionEvent);
         this.mTempRect.set(0, 0, 0, 0);
@@ -34,17 +45,15 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper {
             View childAt = getChildAt(i);
             if (childAt.getVisibility() == 0) {
                 offsetRectIntoDescendantCoords(childAt, this.mTempRect);
-                Rect rect = this.mTempRect;
-                motionEvent.offsetLocation(rect.left, rect.top);
+                motionEvent.offsetLocation((float) this.mTempRect.left, (float) this.mTempRect.top);
                 onTouchEvent = childAt.dispatchTouchEvent(motionEvent) || onTouchEvent;
-                Rect rect2 = this.mTempRect;
-                motionEvent.offsetLocation(-rect2.left, -rect2.top);
+                motionEvent.offsetLocation((float) (-this.mTempRect.left), (float) (-this.mTempRect.top));
             }
         }
         return onTouchEvent;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public KeyguardInputView getSecurityView() {
         View childAt = getChildAt(getDisplayedChild());
         if (childAt instanceof KeyguardInputView) {
@@ -58,39 +67,30 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper {
         return securityView != null ? securityView.getTitle() : "";
     }
 
-    public void animateForIme(int i, float f, boolean z) {
-        super.setTranslationY(i);
-        KeyguardInputView securityView = getSecurityView();
-        if (securityView != null) {
-            securityView.animateForIme(f, z);
-        }
-    }
-
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
-    protected boolean checkLayoutParams(ViewGroup.LayoutParams layoutParams) {
+    /* access modifiers changed from: protected */
+    public boolean checkLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return layoutParams instanceof LayoutParams;
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
-    protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+    /* access modifiers changed from: protected */
+    public ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return layoutParams instanceof LayoutParams ? new LayoutParams((LayoutParams) layoutParams) : new LayoutParams(layoutParams);
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
-    /* renamed from: generateLayoutParams  reason: collision with other method in class */
-    public LayoutParams mo229generateLayoutParams(AttributeSet attributeSet) {
+    public LayoutParams generateLayoutParams(AttributeSet attributeSet) {
         return new LayoutParams(getContext(), attributeSet);
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         int mode = View.MeasureSpec.getMode(i);
         int mode2 = View.MeasureSpec.getMode(i2);
-        if (mode != Integer.MIN_VALUE) {
-            Log.w("KeyguardSecurityViewFlipper", "onMeasure: widthSpec " + View.MeasureSpec.toString(i) + " should be AT_MOST");
+        boolean z = DEBUG;
+        if (z && mode != Integer.MIN_VALUE) {
+            Log.w(TAG, "onMeasure: widthSpec " + View.MeasureSpec.toString(i) + " should be AT_MOST");
         }
-        if (mode2 != Integer.MIN_VALUE) {
-            Log.w("KeyguardSecurityViewFlipper", "onMeasure: heightSpec " + View.MeasureSpec.toString(i2) + " should be AT_MOST");
+        if (z && mode2 != Integer.MIN_VALUE) {
+            Log.w(TAG, "onMeasure: heightSpec " + View.MeasureSpec.toString(i2) + " should be AT_MOST");
         }
         int size = View.MeasureSpec.getSize(i);
         int size2 = View.MeasureSpec.getSize(i2);
@@ -101,13 +101,11 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper {
             View childAt = getChildAt(i5);
             if (childAt.getVisibility() == 0) {
                 LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
-                int i6 = layoutParams.maxWidth;
-                if (i6 > 0 && i6 < i3) {
-                    i3 = i6;
+                if (layoutParams.maxWidth > 0 && layoutParams.maxWidth < i3) {
+                    i3 = layoutParams.maxWidth;
                 }
-                int i7 = layoutParams.maxHeight;
-                if (i7 > 0 && i7 < i4) {
-                    i4 = i7;
+                if (layoutParams.maxHeight > 0 && layoutParams.maxHeight < i4) {
+                    i4 = layoutParams.maxHeight;
                 }
             }
         }
@@ -115,29 +113,31 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper {
         int paddingTop = getPaddingTop() + getPaddingBottom();
         int max = Math.max(0, i3 - paddingLeft);
         int max2 = Math.max(0, i4 - paddingTop);
-        int i8 = mode == 1073741824 ? size : 0;
-        int i9 = mode2 == 1073741824 ? size2 : 0;
-        for (int i10 = 0; i10 < childCount; i10++) {
-            View childAt2 = getChildAt(i10);
+        int i6 = mode == 1073741824 ? size : 0;
+        int i7 = mode2 == 1073741824 ? size2 : 0;
+        for (int i8 = 0; i8 < childCount; i8++) {
+            View childAt2 = getChildAt(i8);
             LayoutParams layoutParams2 = (LayoutParams) childAt2.getLayoutParams();
-            childAt2.measure(makeChildMeasureSpec(max, ((FrameLayout.LayoutParams) layoutParams2).width), makeChildMeasureSpec(max2, ((FrameLayout.LayoutParams) layoutParams2).height));
-            i8 = Math.max(i8, Math.min(childAt2.getMeasuredWidth(), size - paddingLeft));
-            i9 = Math.max(i9, Math.min(childAt2.getMeasuredHeight(), size2 - paddingTop));
+            childAt2.measure(makeChildMeasureSpec(max, layoutParams2.width), makeChildMeasureSpec(max2, layoutParams2.height));
+            i6 = Math.max(i6, Math.min(childAt2.getMeasuredWidth(), size - paddingLeft));
+            i7 = Math.max(i7, Math.min(childAt2.getMeasuredHeight(), size2 - paddingTop));
         }
-        setMeasuredDimension(i8 + paddingLeft, i9 + paddingTop);
+        setMeasuredDimension(i6 + paddingLeft, i7 + paddingTop);
     }
 
     private int makeChildMeasureSpec(int i, int i2) {
-        int i3 = 1073741824;
-        if (i2 == -2) {
+        int i3;
+        if (i2 != -2) {
+            i3 = 1073741824;
+            if (i2 != -1) {
+                i = Math.min(i, i2);
+            }
+        } else {
             i3 = Integer.MIN_VALUE;
-        } else if (i2 != -1) {
-            i = Math.min(i, i2);
         }
         return View.MeasureSpec.makeMeasureSpec(i, i3);
     }
 
-    /* loaded from: classes.dex */
     public static class LayoutParams extends FrameLayout.LayoutParams {
         @ViewDebug.ExportedProperty(category = "layout")
         public int maxHeight;
@@ -149,20 +149,21 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper {
         }
 
         public LayoutParams(LayoutParams layoutParams) {
-            super((FrameLayout.LayoutParams) layoutParams);
+            super(layoutParams);
             this.maxWidth = layoutParams.maxWidth;
             this.maxHeight = layoutParams.maxHeight;
         }
 
         public LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.KeyguardSecurityViewFlipper_Layout, 0, 0);
-            this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(R$styleable.KeyguardSecurityViewFlipper_Layout_layout_maxWidth, 0);
-            this.maxHeight = obtainStyledAttributes.getDimensionPixelSize(R$styleable.KeyguardSecurityViewFlipper_Layout_layout_maxHeight, 0);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.KeyguardSecurityViewFlipper_Layout, 0, 0);
+            this.maxWidth = obtainStyledAttributes.getDimensionPixelSize(1, 0);
+            this.maxHeight = obtainStyledAttributes.getDimensionPixelSize(0, 0);
             obtainStyledAttributes.recycle();
         }
 
-        protected void encodeProperties(ViewHierarchyEncoder viewHierarchyEncoder) {
+        /* access modifiers changed from: protected */
+        public void encodeProperties(ViewHierarchyEncoder viewHierarchyEncoder) {
             super.encodeProperties(viewHierarchyEncoder);
             viewHierarchyEncoder.addProperty("layout:maxWidth", this.maxWidth);
             viewHierarchyEncoder.addProperty("layout:maxHeight", this.maxHeight);

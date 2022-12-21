@@ -3,14 +3,14 @@ package com.android.systemui.statusbar.charging;
 import android.content.Context;
 import android.view.WindowManager;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.statusbar.FeatureFlags;
+import com.android.systemui.flags.FeatureFlags;
 import com.android.systemui.statusbar.commandline.CommandRegistry;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.time.SystemClock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class WiredChargingRippleController_Factory implements Factory<WiredChargingRippleController> {
     private final Provider<BatteryController> batteryControllerProvider;
     private final Provider<CommandRegistry> commandRegistryProvider;
@@ -32,10 +32,8 @@ public final class WiredChargingRippleController_Factory implements Factory<Wire
         this.uiEventLoggerProvider = provider8;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public WiredChargingRippleController mo1933get() {
-        return newInstance(this.commandRegistryProvider.mo1933get(), this.batteryControllerProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.featureFlagsProvider.mo1933get(), this.contextProvider.mo1933get(), this.windowManagerProvider.mo1933get(), this.systemClockProvider.mo1933get(), this.uiEventLoggerProvider.mo1933get());
+    public WiredChargingRippleController get() {
+        return newInstance(this.commandRegistryProvider.get(), this.batteryControllerProvider.get(), this.configurationControllerProvider.get(), this.featureFlagsProvider.get(), this.contextProvider.get(), this.windowManagerProvider.get(), this.systemClockProvider.get(), this.uiEventLoggerProvider.get());
     }
 
     public static WiredChargingRippleController_Factory create(Provider<CommandRegistry> provider, Provider<BatteryController> provider2, Provider<ConfigurationController> provider3, Provider<FeatureFlags> provider4, Provider<Context> provider5, Provider<WindowManager> provider6, Provider<SystemClock> provider7, Provider<UiEventLogger> provider8) {

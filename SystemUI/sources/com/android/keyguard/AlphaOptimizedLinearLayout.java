@@ -2,12 +2,31 @@ package com.android.keyguard;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.LinearLayout;
-/* loaded from: classes.dex */
+
 public class AlphaOptimizedLinearLayout extends LinearLayout {
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        return super.generateLayoutParams(layoutParams);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
     }
 
     public AlphaOptimizedLinearLayout(Context context) {

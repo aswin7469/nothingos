@@ -8,14 +8,32 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.KeyValueListParser;
 import android.util.Log;
-import com.android.systemui.R$array;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+import com.android.systemui.dagger.SysUISingleton;
+import javax.inject.Inject;
+
+@SysUISingleton
 public class AlwaysOnDisplayPolicy {
+    private static final long DEFAULT_PROX_COOLDOWN_PERIOD_MS = 5000;
+    private static final long DEFAULT_PROX_COOLDOWN_TRIGGER_MS = 2000;
+    private static final long DEFAULT_PROX_SCREEN_OFF_DELAY_MS = 1000;
+    private static final long DEFAULT_WALLPAPER_FADE_OUT_MS = 400;
+    private static final long DEFAULT_WALLPAPER_VISIBILITY_MS = 60000;
+    static final String KEY_DIMMING_SCRIM_ARRAY = "dimming_scrim_array";
+    static final String KEY_PROX_COOLDOWN_PERIOD_MS = "prox_cooldown_period";
+    static final String KEY_PROX_COOLDOWN_TRIGGER_MS = "prox_cooldown_trigger";
+    static final String KEY_PROX_SCREEN_OFF_DELAY_MS = "prox_screen_off_delay";
+    static final String KEY_SCREEN_BRIGHTNESS_ARRAY = "screen_brightness_array";
+    static final String KEY_WALLPAPER_FADE_OUT_MS = "wallpaper_fade_out_duration";
+    static final String KEY_WALLPAPER_VISIBILITY_MS = "wallpaper_visibility_timeout";
+    public static final String TAG = "AlwaysOnDisplayPolicy";
     public int defaultDozeBrightness;
     public int dimBrightness;
     public int[] dimmingScrimArray;
-    private final Context mContext;
-    private final KeyValueListParser mParser = new KeyValueListParser(',');
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    /* access modifiers changed from: private */
+    public final KeyValueListParser mParser = new KeyValueListParser(',');
     private SettingsObserver mSettingsObserver;
     public long proxCooldownPeriodMs;
     public long proxCooldownTriggerMs;
@@ -24,6 +42,7 @@ public class AlwaysOnDisplayPolicy {
     public long wallpaperFadeOutDuration;
     public long wallpaperVisibilityDuration;
 
+    @Inject
     public AlwaysOnDisplayPolicy(Context context) {
         Context applicationContext = context.getApplicationContext();
         this.mContext = applicationContext;
@@ -32,7 +51,6 @@ public class AlwaysOnDisplayPolicy {
         settingsObserver.observe();
     }
 
-    /* loaded from: classes.dex */
     private final class SettingsObserver extends ContentObserver {
         private final Uri ALWAYS_ON_DISPLAY_CONSTANTS_URI = Settings.Global.getUriFor("always_on_display_constants");
 
@@ -40,12 +58,12 @@ public class AlwaysOnDisplayPolicy {
             super(handler);
         }
 
-        void observe() {
+        /* access modifiers changed from: package-private */
+        public void observe() {
             AlwaysOnDisplayPolicy.this.mContext.getContentResolver().registerContentObserver(this.ALWAYS_ON_DISPLAY_CONSTANTS_URI, false, this, -1);
-            update(null);
+            update((Uri) null);
         }
 
-        @Override // android.database.ContentObserver
         public void onChange(boolean z, Uri uri) {
             update(uri);
         }
@@ -56,24 +74,24 @@ public class AlwaysOnDisplayPolicy {
                 try {
                     AlwaysOnDisplayPolicy.this.mParser.setString(Settings.Global.getString(AlwaysOnDisplayPolicy.this.mContext.getContentResolver(), "always_on_display_constants"));
                 } catch (IllegalArgumentException unused) {
-                    Log.e("AlwaysOnDisplayPolicy", "Bad AOD constants");
+                    Log.e(AlwaysOnDisplayPolicy.TAG, "Bad AOD constants");
                 }
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy.proxScreenOffDelayMs = alwaysOnDisplayPolicy.mParser.getLong("prox_screen_off_delay", 1000L);
+                alwaysOnDisplayPolicy.proxScreenOffDelayMs = alwaysOnDisplayPolicy.mParser.getLong(AlwaysOnDisplayPolicy.KEY_PROX_SCREEN_OFF_DELAY_MS, 1000);
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy2 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy2.proxCooldownTriggerMs = alwaysOnDisplayPolicy2.mParser.getLong("prox_cooldown_trigger", 2000L);
+                alwaysOnDisplayPolicy2.proxCooldownTriggerMs = alwaysOnDisplayPolicy2.mParser.getLong(AlwaysOnDisplayPolicy.KEY_PROX_COOLDOWN_TRIGGER_MS, 2000);
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy3 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy3.proxCooldownPeriodMs = alwaysOnDisplayPolicy3.mParser.getLong("prox_cooldown_period", 5000L);
+                alwaysOnDisplayPolicy3.proxCooldownPeriodMs = alwaysOnDisplayPolicy3.mParser.getLong(AlwaysOnDisplayPolicy.KEY_PROX_COOLDOWN_PERIOD_MS, 5000);
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy4 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy4.wallpaperFadeOutDuration = alwaysOnDisplayPolicy4.mParser.getLong("wallpaper_fade_out_duration", 400L);
+                alwaysOnDisplayPolicy4.wallpaperFadeOutDuration = alwaysOnDisplayPolicy4.mParser.getLong(AlwaysOnDisplayPolicy.KEY_WALLPAPER_FADE_OUT_MS, AlwaysOnDisplayPolicy.DEFAULT_WALLPAPER_FADE_OUT_MS);
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy5 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy5.wallpaperVisibilityDuration = alwaysOnDisplayPolicy5.mParser.getLong("wallpaper_visibility_timeout", 60000L);
-                AlwaysOnDisplayPolicy.this.defaultDozeBrightness = resources.getInteger(17694908);
-                AlwaysOnDisplayPolicy.this.dimBrightness = resources.getInteger(17694907);
+                alwaysOnDisplayPolicy5.wallpaperVisibilityDuration = alwaysOnDisplayPolicy5.mParser.getLong(AlwaysOnDisplayPolicy.KEY_WALLPAPER_VISIBILITY_MS, AlwaysOnDisplayPolicy.DEFAULT_WALLPAPER_VISIBILITY_MS);
+                AlwaysOnDisplayPolicy.this.defaultDozeBrightness = resources.getInteger(17694923);
+                AlwaysOnDisplayPolicy.this.dimBrightness = resources.getInteger(17694922);
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy6 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy6.screenBrightnessArray = alwaysOnDisplayPolicy6.mParser.getIntArray("screen_brightness_array", resources.getIntArray(R$array.config_doze_brightness_sensor_to_brightness));
+                alwaysOnDisplayPolicy6.screenBrightnessArray = alwaysOnDisplayPolicy6.mParser.getIntArray(AlwaysOnDisplayPolicy.KEY_SCREEN_BRIGHTNESS_ARRAY, resources.getIntArray(C1893R.array.config_doze_brightness_sensor_to_brightness));
                 AlwaysOnDisplayPolicy alwaysOnDisplayPolicy7 = AlwaysOnDisplayPolicy.this;
-                alwaysOnDisplayPolicy7.dimmingScrimArray = alwaysOnDisplayPolicy7.mParser.getIntArray("dimming_scrim_array", resources.getIntArray(R$array.config_doze_brightness_sensor_to_scrim_opacity));
+                alwaysOnDisplayPolicy7.dimmingScrimArray = alwaysOnDisplayPolicy7.mParser.getIntArray(AlwaysOnDisplayPolicy.KEY_DIMMING_SCRIM_ARRAY, resources.getIntArray(C1893R.array.config_doze_brightness_sensor_to_scrim_opacity));
             }
         }
     }

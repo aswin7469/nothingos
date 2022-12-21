@@ -5,7 +5,7 @@ import android.net.ConnectivityManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideConnectivityManagagerFactory implements Factory<ConnectivityManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideConnectivityManagagerFactory i
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ConnectivityManager mo1933get() {
-        return provideConnectivityManagager(this.contextProvider.mo1933get());
+    public ConnectivityManager get() {
+        return provideConnectivityManagager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideConnectivityManagagerFactory create(Provider<Context> provider) {

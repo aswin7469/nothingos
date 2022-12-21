@@ -1,9 +1,8 @@
 package com.android.systemui;
 
 import android.content.Context;
-/* loaded from: classes.dex */
-public class VendorServices extends SystemUI {
-    @Override // com.android.systemui.SystemUI
+
+public class VendorServices extends CoreStartable {
     public void start() {
     }
 

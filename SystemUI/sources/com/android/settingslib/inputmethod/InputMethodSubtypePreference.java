@@ -2,14 +2,20 @@ package com.android.settingslib.inputmethod;
 
 import android.content.Context;
 import android.text.TextUtils;
-import com.android.internal.annotations.VisibleForTesting;
+import android.view.inputmethod.InputMethodInfo;
+import android.view.inputmethod.InputMethodSubtype;
+import androidx.preference.Preference;
+import java.text.Collator;
 import java.util.Locale;
-/* loaded from: classes.dex */
+
 public class InputMethodSubtypePreference extends SwitchWithNoTextPreference {
     private final boolean mIsSystemLanguage;
     private final boolean mIsSystemLocale;
 
-    @VisibleForTesting
+    public InputMethodSubtypePreference(Context context, InputMethodSubtype inputMethodSubtype, InputMethodInfo inputMethodInfo) {
+        this(context, inputMethodInfo.getId() + inputMethodSubtype.hashCode(), InputMethodAndSubtypeUtil.getSubtypeLocaleNameAsSentence(inputMethodSubtype, context, inputMethodInfo), inputMethodSubtype.getLocaleObject(), context.getResources().getConfiguration().locale);
+    }
+
     InputMethodSubtypePreference(Context context, String str, CharSequence charSequence, Locale locale, Locale locale2) {
         super(context);
         boolean z = false;
@@ -24,5 +30,42 @@ public class InputMethodSubtypePreference extends SwitchWithNoTextPreference {
         boolean equals = locale.equals(locale2);
         this.mIsSystemLocale = equals;
         this.mIsSystemLanguage = (equals || TextUtils.equals(locale.getLanguage(), locale2.getLanguage())) ? true : z;
+    }
+
+    public int compareTo(Preference preference, Collator collator) {
+        int i = 0;
+        if (this == preference) {
+            return 0;
+        }
+        if (!(preference instanceof InputMethodSubtypePreference)) {
+            return super.compareTo(preference);
+        }
+        InputMethodSubtypePreference inputMethodSubtypePreference = (InputMethodSubtypePreference) preference;
+        boolean z = this.mIsSystemLocale;
+        if (z && !inputMethodSubtypePreference.mIsSystemLocale) {
+            return -1;
+        }
+        if (!z && inputMethodSubtypePreference.mIsSystemLocale) {
+            return 1;
+        }
+        boolean z2 = this.mIsSystemLanguage;
+        if (z2 && !inputMethodSubtypePreference.mIsSystemLanguage) {
+            return -1;
+        }
+        if (!z2 && inputMethodSubtypePreference.mIsSystemLanguage) {
+            return 1;
+        }
+        CharSequence title = getTitle();
+        CharSequence title2 = preference.getTitle();
+        boolean isEmpty = TextUtils.isEmpty(title);
+        boolean isEmpty2 = TextUtils.isEmpty(title2);
+        if (!isEmpty && !isEmpty2) {
+            return collator.compare(title.toString(), title2.toString());
+        }
+        int i2 = isEmpty ? -1 : 0;
+        if (isEmpty2) {
+            i = -1;
+        }
+        return i2 - i;
     }
 }

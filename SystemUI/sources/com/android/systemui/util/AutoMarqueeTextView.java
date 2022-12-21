@@ -3,9 +3,8 @@ package com.android.systemui.util;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.TextView;
-/* loaded from: classes2.dex */
-public class AutoMarqueeTextView extends TextView {
+
+public class AutoMarqueeTextView extends SafeMarqueeTextView {
     private boolean mAggregatedVisible = false;
 
     public AutoMarqueeTextView(Context context) {
@@ -24,34 +23,32 @@ public class AutoMarqueeTextView extends TextView {
         super(context, attributeSet, i, i2);
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         onVisibilityAggregated(isVisibleToUser());
     }
 
-    @Override // android.widget.TextView, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         setSelected(true);
     }
 
-    @Override // android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         setSelected(false);
     }
 
-    @Override // android.view.View
     public void onVisibilityAggregated(boolean z) {
         super.onVisibilityAggregated(z);
-        if (z == this.mAggregatedVisible) {
-            return;
-        }
-        this.mAggregatedVisible = z;
-        if (z) {
-            setEllipsize(TextUtils.TruncateAt.MARQUEE);
-        } else {
-            setEllipsize(TextUtils.TruncateAt.END);
+        if (z != this.mAggregatedVisible) {
+            this.mAggregatedVisible = z;
+            if (z) {
+                setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            } else {
+                setEllipsize(TextUtils.TruncateAt.END);
+            }
         }
     }
 }

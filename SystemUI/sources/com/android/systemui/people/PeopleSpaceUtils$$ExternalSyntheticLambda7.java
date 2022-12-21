@@ -1,18 +1,18 @@
 package com.android.systemui.people;
 
+import android.app.people.IPeopleManager;
 import android.app.people.PeopleSpaceTile;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class PeopleSpaceUtils$$ExternalSyntheticLambda7 implements Predicate {
-    public static final /* synthetic */ PeopleSpaceUtils$$ExternalSyntheticLambda7 INSTANCE = new PeopleSpaceUtils$$ExternalSyntheticLambda7();
+import java.util.function.Function;
 
-    private /* synthetic */ PeopleSpaceUtils$$ExternalSyntheticLambda7() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class PeopleSpaceUtils$$ExternalSyntheticLambda7 implements Function {
+    public final /* synthetic */ IPeopleManager f$0;
+
+    public /* synthetic */ PeopleSpaceUtils$$ExternalSyntheticLambda7(IPeopleManager iPeopleManager) {
+        this.f$0 = iPeopleManager;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean shouldKeepConversation;
-        shouldKeepConversation = PeopleSpaceUtils.shouldKeepConversation((PeopleSpaceTile) obj);
-        return shouldKeepConversation;
+    public final Object apply(Object obj) {
+        return ((PeopleSpaceTile) obj).toBuilder().setLastInteractionTimestamp(PeopleSpaceUtils.getLastInteraction(this.f$0, (PeopleSpaceTile) obj).longValue()).build();
     }
 }

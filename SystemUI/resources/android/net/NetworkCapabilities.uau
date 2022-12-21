@@ -1,0 +1,5 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/NetworkCapabilities;->mNetworkCapabilities:J,packages/modules/Connectivity/framework/src/android/net/NetworkCapabilities.java,322,5,322,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkCapabilities;->mSignalStrength:I,packages/modules/Connectivity/framework/src/android/net/NetworkCapabilities.java,1619,5,1619,63,maxTargetSdk=28
+Landroid/net/NetworkCapabilities;->hasSignalStrength()Z,packages/modules/Connectivity/framework/src/android/net/NetworkCapabilities.java,1645,5,1645,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkCapabilities;->transportNamesOf([I)Ljava/lang/String;,packages/modules/Connectivity/framework/src/android/net/NetworkCapabilities.java,2382,5,2382,88,maxTargetSdk=30&trackingBug=170729553L

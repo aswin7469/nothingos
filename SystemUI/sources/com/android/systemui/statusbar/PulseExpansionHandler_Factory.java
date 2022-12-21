@@ -2,6 +2,7 @@ package com.android.systemui.statusbar;
 
 import android.content.Context;
 import com.android.systemui.classifier.FalsingCollector;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
@@ -11,11 +12,12 @@ import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class PulseExpansionHandler_Factory implements Factory<PulseExpansionHandler> {
     private final Provider<KeyguardBypassController> bypassControllerProvider;
     private final Provider<ConfigurationController> configurationControllerProvider;
     private final Provider<Context> contextProvider;
+    private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<FalsingCollector> falsingCollectorProvider;
     private final Provider<FalsingManager> falsingManagerProvider;
     private final Provider<HeadsUpManagerPhone> headsUpManagerProvider;
@@ -24,7 +26,7 @@ public final class PulseExpansionHandler_Factory implements Factory<PulseExpansi
     private final Provider<StatusBarStateController> statusBarStateControllerProvider;
     private final Provider<NotificationWakeUpCoordinator> wakeUpCoordinatorProvider;
 
-    public PulseExpansionHandler_Factory(Provider<Context> provider, Provider<NotificationWakeUpCoordinator> provider2, Provider<KeyguardBypassController> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<NotificationRoundnessManager> provider5, Provider<ConfigurationController> provider6, Provider<StatusBarStateController> provider7, Provider<FalsingManager> provider8, Provider<LockscreenShadeTransitionController> provider9, Provider<FalsingCollector> provider10) {
+    public PulseExpansionHandler_Factory(Provider<Context> provider, Provider<NotificationWakeUpCoordinator> provider2, Provider<KeyguardBypassController> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<NotificationRoundnessManager> provider5, Provider<ConfigurationController> provider6, Provider<StatusBarStateController> provider7, Provider<FalsingManager> provider8, Provider<LockscreenShadeTransitionController> provider9, Provider<FalsingCollector> provider10, Provider<DumpManager> provider11) {
         this.contextProvider = provider;
         this.wakeUpCoordinatorProvider = provider2;
         this.bypassControllerProvider = provider3;
@@ -35,19 +37,18 @@ public final class PulseExpansionHandler_Factory implements Factory<PulseExpansi
         this.falsingManagerProvider = provider8;
         this.lockscreenShadeTransitionControllerProvider = provider9;
         this.falsingCollectorProvider = provider10;
+        this.dumpManagerProvider = provider11;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PulseExpansionHandler mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.wakeUpCoordinatorProvider.mo1933get(), this.bypassControllerProvider.mo1933get(), this.headsUpManagerProvider.mo1933get(), this.roundnessManagerProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.falsingManagerProvider.mo1933get(), this.lockscreenShadeTransitionControllerProvider.mo1933get(), this.falsingCollectorProvider.mo1933get());
+    public PulseExpansionHandler get() {
+        return newInstance(this.contextProvider.get(), this.wakeUpCoordinatorProvider.get(), this.bypassControllerProvider.get(), this.headsUpManagerProvider.get(), this.roundnessManagerProvider.get(), this.configurationControllerProvider.get(), this.statusBarStateControllerProvider.get(), this.falsingManagerProvider.get(), this.lockscreenShadeTransitionControllerProvider.get(), this.falsingCollectorProvider.get(), this.dumpManagerProvider.get());
     }
 
-    public static PulseExpansionHandler_Factory create(Provider<Context> provider, Provider<NotificationWakeUpCoordinator> provider2, Provider<KeyguardBypassController> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<NotificationRoundnessManager> provider5, Provider<ConfigurationController> provider6, Provider<StatusBarStateController> provider7, Provider<FalsingManager> provider8, Provider<LockscreenShadeTransitionController> provider9, Provider<FalsingCollector> provider10) {
-        return new PulseExpansionHandler_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10);
+    public static PulseExpansionHandler_Factory create(Provider<Context> provider, Provider<NotificationWakeUpCoordinator> provider2, Provider<KeyguardBypassController> provider3, Provider<HeadsUpManagerPhone> provider4, Provider<NotificationRoundnessManager> provider5, Provider<ConfigurationController> provider6, Provider<StatusBarStateController> provider7, Provider<FalsingManager> provider8, Provider<LockscreenShadeTransitionController> provider9, Provider<FalsingCollector> provider10, Provider<DumpManager> provider11) {
+        return new PulseExpansionHandler_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11);
     }
 
-    public static PulseExpansionHandler newInstance(Context context, NotificationWakeUpCoordinator notificationWakeUpCoordinator, KeyguardBypassController keyguardBypassController, HeadsUpManagerPhone headsUpManagerPhone, NotificationRoundnessManager notificationRoundnessManager, ConfigurationController configurationController, StatusBarStateController statusBarStateController, FalsingManager falsingManager, LockscreenShadeTransitionController lockscreenShadeTransitionController, FalsingCollector falsingCollector) {
-        return new PulseExpansionHandler(context, notificationWakeUpCoordinator, keyguardBypassController, headsUpManagerPhone, notificationRoundnessManager, configurationController, statusBarStateController, falsingManager, lockscreenShadeTransitionController, falsingCollector);
+    public static PulseExpansionHandler newInstance(Context context, NotificationWakeUpCoordinator notificationWakeUpCoordinator, KeyguardBypassController keyguardBypassController, HeadsUpManagerPhone headsUpManagerPhone, NotificationRoundnessManager notificationRoundnessManager, ConfigurationController configurationController, StatusBarStateController statusBarStateController, FalsingManager falsingManager, LockscreenShadeTransitionController lockscreenShadeTransitionController, FalsingCollector falsingCollector, DumpManager dumpManager) {
+        return new PulseExpansionHandler(context, notificationWakeUpCoordinator, keyguardBypassController, headsUpManagerPhone, notificationRoundnessManager, configurationController, statusBarStateController, falsingManager, lockscreenShadeTransitionController, falsingCollector, dumpManager);
     }
 }

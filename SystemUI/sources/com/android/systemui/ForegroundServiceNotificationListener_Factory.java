@@ -6,7 +6,7 @@ import com.android.systemui.statusbar.notification.collection.NotifPipeline;
 import com.android.systemui.util.time.SystemClock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ForegroundServiceNotificationListener_Factory implements Factory<ForegroundServiceNotificationListener> {
     private final Provider<Context> contextProvider;
     private final Provider<ForegroundServiceController> foregroundServiceControllerProvider;
@@ -22,10 +22,8 @@ public final class ForegroundServiceNotificationListener_Factory implements Fact
         this.systemClockProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ForegroundServiceNotificationListener mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.foregroundServiceControllerProvider.mo1933get(), this.notificationEntryManagerProvider.mo1933get(), this.notifPipelineProvider.mo1933get(), this.systemClockProvider.mo1933get());
+    public ForegroundServiceNotificationListener get() {
+        return newInstance(this.contextProvider.get(), this.foregroundServiceControllerProvider.get(), this.notificationEntryManagerProvider.get(), this.notifPipelineProvider.get(), this.systemClockProvider.get());
     }
 
     public static ForegroundServiceNotificationListener_Factory create(Provider<Context> provider, Provider<ForegroundServiceController> provider2, Provider<NotificationEntryManager> provider3, Provider<NotifPipeline> provider4, Provider<SystemClock> provider5) {

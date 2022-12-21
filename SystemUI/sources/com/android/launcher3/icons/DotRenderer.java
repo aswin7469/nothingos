@@ -8,9 +8,13 @@ import android.graphics.PathMeasure;
 import android.graphics.Rect;
 import android.util.Log;
 import android.view.ViewDebug;
+import androidx.core.view.ViewCompat;
 import com.android.launcher3.icons.ShadowGenerator;
-/* loaded from: classes.dex */
+
 public class DotRenderer {
+    private static final int MIN_DOT_SIZE = 1;
+    private static final float SIZE_PERCENTAGE = 0.228f;
+    private static final String TAG = "DotRenderer";
     private final Bitmap mBackgroundWithShadow;
     private final float mBitmapOffset;
     private final Paint mCirclePaint = new Paint(3);
@@ -18,10 +22,11 @@ public class DotRenderer {
     private final float[] mLeftDotPosition;
     private final float[] mRightDotPosition;
 
-    /* loaded from: classes.dex */
     public static class DrawParams {
         @ViewDebug.ExportedProperty(category = "notification dot", formatToHexString = true)
-        public int color;
+        public int appColor;
+        @ViewDebug.ExportedProperty(category = "notification dot", formatToHexString = true)
+        public int dotColor;
         @ViewDebug.ExportedProperty(category = "notification dot")
         public Rect iconBounds = new Rect();
         @ViewDebug.ExportedProperty(category = "notification dot")
@@ -31,14 +36,15 @@ public class DotRenderer {
     }
 
     public DotRenderer(int i, Path path, int i2) {
-        Bitmap createPill;
-        int round = Math.round(i * 0.228f);
+        int round = Math.round(((float) i) * SIZE_PERCENTAGE);
+        round = round <= 0 ? 1 : round;
         ShadowGenerator.Builder builder = new ShadowGenerator.Builder(0);
         builder.ambientShadowAlpha = 88;
-        this.mBackgroundWithShadow = builder.setupBlurForSize(round).createPill(round, round);
+        Bitmap createPill = builder.setupBlurForSize(round).createPill(round, round);
+        this.mBackgroundWithShadow = createPill;
         this.mCircleRadius = builder.radius;
-        this.mBitmapOffset = (-createPill.getHeight()) * 0.5f;
-        float f = i2;
+        this.mBitmapOffset = ((float) (-createPill.getHeight())) * 0.5f;
+        float f = (float) i2;
         this.mLeftDotPosition = getPathPoint(path, f, -1.0f);
         this.mRightDotPosition = getPathPoint(path, f, 1.0f);
     }
@@ -52,8 +58,10 @@ public class DotRenderer {
         path2.lineTo(f4, -1.0f);
         path2.close();
         path2.op(path, Path.Op.INTERSECT);
-        new PathMeasure(path2, false).getPosTan(0.0f, r3, null);
-        float[] fArr = {fArr[0] / f, fArr[1] / f};
+        float[] fArr = new float[2];
+        new PathMeasure(path2, false).getPosTan(0.0f, fArr, (float[]) null);
+        fArr[0] = fArr[0] / f;
+        fArr[1] = fArr[1] / f;
         return fArr;
     }
 
@@ -66,30 +74,29 @@ public class DotRenderer {
     }
 
     public void draw(Canvas canvas, DrawParams drawParams) {
-        float min;
+        float f;
         if (drawParams == null) {
-            Log.e("DotRenderer", "Invalid null argument(s) passed in call to draw.");
+            Log.e(TAG, "Invalid null argument(s) passed in call to draw.");
             return;
         }
         canvas.save();
         Rect rect = drawParams.iconBounds;
         float[] fArr = drawParams.leftAlign ? this.mLeftDotPosition : this.mRightDotPosition;
-        float width = rect.left + (rect.width() * fArr[0]);
-        float height = rect.top + (rect.height() * fArr[1]);
+        float width = ((float) rect.left) + (((float) rect.width()) * fArr[0]);
+        float height = ((float) rect.top) + (((float) rect.height()) * fArr[1]);
         Rect clipBounds = canvas.getClipBounds();
         if (drawParams.leftAlign) {
-            min = Math.max(0.0f, clipBounds.left - (this.mBitmapOffset + width));
+            f = Math.max(0.0f, ((float) clipBounds.left) - (this.mBitmapOffset + width));
         } else {
-            min = Math.min(0.0f, clipBounds.right - (width - this.mBitmapOffset));
+            f = Math.min(0.0f, ((float) clipBounds.right) - (width - this.mBitmapOffset));
         }
-        canvas.translate(width + min, height + Math.max(0.0f, clipBounds.top - (this.mBitmapOffset + height)));
-        float f = drawParams.scale;
-        canvas.scale(f, f);
-        this.mCirclePaint.setColor(-16777216);
+        canvas.translate(width + f, height + Math.max(0.0f, ((float) clipBounds.top) - (this.mBitmapOffset + height)));
+        canvas.scale(drawParams.scale, drawParams.scale);
+        this.mCirclePaint.setColor(ViewCompat.MEASURED_STATE_MASK);
         Bitmap bitmap = this.mBackgroundWithShadow;
         float f2 = this.mBitmapOffset;
         canvas.drawBitmap(bitmap, f2, f2, this.mCirclePaint);
-        this.mCirclePaint.setColor(drawParams.color);
+        this.mCirclePaint.setColor(drawParams.dotColor);
         canvas.drawCircle(0.0f, 0.0f, this.mCircleRadius, this.mCirclePaint);
         canvas.restore();
     }

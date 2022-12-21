@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.debug.IAdbManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.ServiceManager;
 import android.os.SystemProperties;
@@ -19,26 +20,29 @@ import android.view.WindowManager;
 import android.widget.CheckBox;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
 public class UsbDebuggingActivity extends AlertActivity implements DialogInterface.OnClickListener {
+    private static final String TAG = "UsbDebuggingActivity";
     private CheckBox mAlwaysAllow;
     private final BroadcastDispatcher mBroadcastDispatcher;
     private UsbDisconnectedReceiver mDisconnectedReceiver;
     private String mKey;
     private boolean mServiceNotified;
 
+    @Inject
     public UsbDebuggingActivity(BroadcastDispatcher broadcastDispatcher) {
         this.mBroadcastDispatcher = broadcastDispatcher;
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARNING: type inference failed for: r5v0, types: [android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.systemui.usb.UsbDebuggingActivity, android.app.Activity] */
     public void onCreate(Bundle bundle) {
         Window window = getWindow();
         window.addSystemFlags(524288);
         window.setType(2008);
-        super.onCreate(bundle);
+        UsbDebuggingActivity.super.onCreate(bundle);
         boolean equals = SystemProperties.get("ro.boot.qemu").equals("1");
         if (SystemProperties.getInt("service.adb.tcp.port", 0) == 0 && !equals) {
             this.mDisconnectedReceiver = new UsbDisconnectedReceiver(this);
@@ -52,27 +56,26 @@ public class UsbDebuggingActivity extends AlertActivity implements DialogInterfa
             finish();
             return;
         }
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mTitle = getString(R$string.usb_debugging_title);
-        alertParams.mMessage = getString(R$string.usb_debugging_message, new Object[]{stringExtra});
-        alertParams.mPositiveButtonText = getString(R$string.usb_debugging_allow);
+        AlertController.AlertParams alertParams = this.mAlertParams;
+        alertParams.mTitle = getString(C1893R.string.usb_debugging_title);
+        alertParams.mMessage = getString(C1893R.string.usb_debugging_message, new Object[]{stringExtra});
+        alertParams.mPositiveButtonText = getString(C1893R.string.usb_debugging_allow);
         alertParams.mNegativeButtonText = getString(17039360);
         alertParams.mPositiveButtonListener = this;
         alertParams.mNegativeButtonListener = this;
         View inflate = LayoutInflater.from(alertParams.mContext).inflate(17367093, (ViewGroup) null);
-        CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
+        CheckBox checkBox = (CheckBox) inflate.findViewById(16908774);
         this.mAlwaysAllow = checkBox;
-        checkBox.setText(getString(R$string.usb_debugging_always));
+        checkBox.setText(getString(C1893R.string.usb_debugging_always));
         alertParams.mView = inflate;
         window.setCloseOnTouchOutside(false);
         setupAlert();
     }
 
     public void onWindowAttributesChanged(WindowManager.LayoutParams layoutParams) {
-        super.onWindowAttributesChanged(layoutParams);
+        UsbDebuggingActivity.super.onWindowAttributesChanged(layoutParams);
     }
 
-    /* loaded from: classes2.dex */
     private class UsbDisconnectedReceiver extends BroadcastReceiver {
         private final Activity mActivity;
 
@@ -80,17 +83,17 @@ public class UsbDebuggingActivity extends AlertActivity implements DialogInterfa
             this.mActivity = activity;
         }
 
-        @Override // android.content.BroadcastReceiver
         public void onReceive(Context context, Intent intent) {
-            if ("android.hardware.usb.action.USB_STATE".equals(intent.getAction()) && !intent.getBooleanExtra("connected", false)) {
-                Log.d("UsbDebuggingActivity", "USB disconnected, notifying service");
+            if ("android.hardware.usb.action.USB_STATE".equals(intent.getAction()) && !intent.getBooleanExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED, false)) {
+                Log.d(UsbDebuggingActivity.TAG, "USB disconnected, notifying service");
                 UsbDebuggingActivity.this.notifyService(false);
                 this.mActivity.finish();
             }
         }
     }
 
-    protected void onDestroy() {
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
         UsbDisconnectedReceiver usbDisconnectedReceiver = this.mDisconnectedReceiver;
         if (usbDisconnectedReceiver != null) {
             this.mBroadcastDispatcher.unregisterReceiver(usbDisconnectedReceiver);
@@ -98,10 +101,9 @@ public class UsbDebuggingActivity extends AlertActivity implements DialogInterfa
         if (isFinishing() && !this.mServiceNotified) {
             notifyService(false);
         }
-        super.onDestroy();
+        UsbDebuggingActivity.super.onDestroy();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         boolean z = true;
         boolean z2 = i == -1;
@@ -112,7 +114,7 @@ public class UsbDebuggingActivity extends AlertActivity implements DialogInterfa
         finish();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void notifyService(boolean z) {
         notifyService(z, false);
     }
@@ -127,7 +129,7 @@ public class UsbDebuggingActivity extends AlertActivity implements DialogInterfa
             }
             this.mServiceNotified = true;
         } catch (Exception e) {
-            Log.e("UsbDebuggingActivity", "Unable to notify Usb service", e);
+            Log.e(TAG, "Unable to notify Usb service", e);
         }
     }
 }

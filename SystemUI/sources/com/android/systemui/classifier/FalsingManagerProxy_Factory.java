@@ -6,7 +6,7 @@ import com.android.systemui.util.DeviceConfigProxy;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FalsingManagerProxy_Factory implements Factory<FalsingManagerProxy> {
     private final Provider<BrightLineFalsingManager> brightLineFalsingManagerProvider;
     private final Provider<DeviceConfigProxy> deviceConfigProvider;
@@ -22,10 +22,8 @@ public final class FalsingManagerProxy_Factory implements Factory<FalsingManager
         this.brightLineFalsingManagerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public FalsingManagerProxy mo1933get() {
-        return newInstance(this.pluginManagerProvider.mo1933get(), this.executorProvider.mo1933get(), this.deviceConfigProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.brightLineFalsingManagerProvider);
+    public FalsingManagerProxy get() {
+        return newInstance(this.pluginManagerProvider.get(), this.executorProvider.get(), this.deviceConfigProvider.get(), this.dumpManagerProvider.get(), this.brightLineFalsingManagerProvider);
     }
 
     public static FalsingManagerProxy_Factory create(Provider<PluginManager> provider, Provider<Executor> provider2, Provider<DeviceConfigProxy> provider3, Provider<DumpManager> provider4, Provider<BrightLineFalsingManager> provider5) {

@@ -5,287 +5,343 @@ import android.content.Context;
 import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.media.session.MediaSessionManager;
-import android.util.Log;
+import com.android.systemui.dagger.qualifiers.Background;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.media.MediaDataManager;
 import com.android.systemui.statusbar.phone.NotificationListenerWithPlugins;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executor;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.collections.CollectionsKt;
-import kotlin.collections.CollectionsKt___CollectionsKt;
-import kotlin.collections.SetsKt__SetsKt;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.jvm.internal.TypeIntrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-/* compiled from: MediaSessionBasedFilter.kt */
-/* loaded from: classes.dex */
-public final class MediaSessionBasedFilter implements MediaDataManager.Listener {
-    @NotNull
-    private final Executor backgroundExecutor;
-    @NotNull
-    private final Executor foregroundExecutor;
-    @NotNull
-    private final MediaSessionManager sessionManager;
-    @NotNull
-    private final Set<MediaDataManager.Listener> listeners = new LinkedHashSet();
-    @NotNull
-    private final LinkedHashMap<String, List<MediaController>> packageControllers = new LinkedHashMap<>();
-    @NotNull
-    private final Map<String, Set<MediaSession.Token>> keyedTokens = new LinkedHashMap();
-    @NotNull
-    private final Set<MediaSession.Token> tokensWithNotifications = new LinkedHashSet();
-    @NotNull
-    private final MediaSessionBasedFilter$sessionListener$1 sessionListener = new MediaSessionManager.OnActiveSessionsChangedListener() { // from class: com.android.systemui.media.MediaSessionBasedFilter$sessionListener$1
-        @Override // android.media.session.MediaSessionManager.OnActiveSessionsChangedListener
-        public void onActiveSessionsChanged(@NotNull List<MediaController> controllers) {
-            Intrinsics.checkNotNullParameter(controllers, "controllers");
-            MediaSessionBasedFilter.this.handleControllersChanged(controllers);
-        }
-    };
 
-    /* JADX WARN: Type inference failed for: r3v5, types: [com.android.systemui.media.MediaSessionBasedFilter$sessionListener$1] */
-    public MediaSessionBasedFilter(@NotNull final Context context, @NotNull MediaSessionManager sessionManager, @NotNull Executor foregroundExecutor, @NotNull Executor backgroundExecutor) {
+@Metadata(mo64986d1 = {"\u0000{\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010%\n\u0002\u0010\u000e\n\u0002\u0010#\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0004\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010 \n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0007*\u0001\u0016\u0018\u00002\u00020\u0001B+\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0001\u0010\u0006\u001a\u00020\u0007\u0012\b\b\u0001\u0010\b\u001a\u00020\u0007¢\u0006\u0002\u0010\tJ\u000e\u0010\u0019\u001a\u00020\u001a2\u0006\u0010\u001b\u001a\u00020\u0001J*\u0010\u001c\u001a\u00020\u001d2\u0006\u0010\u001e\u001a\u00020\f2\b\u0010\u001f\u001a\u0004\u0018\u00010\f2\u0006\u0010 \u001a\u00020!2\u0006\u0010\"\u001a\u00020\u001aH\u0002J\u0010\u0010#\u001a\u00020\u001d2\u0006\u0010\u001e\u001a\u00020\fH\u0002J\u0018\u0010$\u001a\u00020\u001d2\u0006\u0010\u001e\u001a\u00020\f2\u0006\u0010 \u001a\u00020%H\u0002J\u0018\u0010&\u001a\u00020\u001d2\u0006\u0010\u001e\u001a\u00020\f2\u0006\u0010\"\u001a\u00020\u001aH\u0002J\u0016\u0010'\u001a\u00020\u001d2\f\u0010(\u001a\b\u0012\u0004\u0012\u00020\u00130)H\u0002J:\u0010*\u001a\u00020\u001d2\u0006\u0010\u001e\u001a\u00020\f2\b\u0010\u001f\u001a\u0004\u0018\u00010\f2\u0006\u0010+\u001a\u00020!2\u0006\u0010\"\u001a\u00020\u001a2\u0006\u0010,\u001a\u00020-2\u0006\u0010.\u001a\u00020\u001aH\u0016J\u0010\u0010/\u001a\u00020\u001d2\u0006\u0010\u001e\u001a\u00020\fH\u0016J \u00100\u001a\u00020\u001d2\u0006\u0010\u001e\u001a\u00020\f2\u0006\u0010+\u001a\u00020%2\u0006\u00101\u001a\u00020\u001aH\u0016J\u0018\u00102\u001a\u00020\u001d2\u0006\u0010\u001e\u001a\u00020\f2\u0006\u0010\"\u001a\u00020\u001aH\u0016J\u000e\u00103\u001a\u00020\u001a2\u0006\u0010\u001b\u001a\u00020\u0001R\u000e\u0010\b\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R \u0010\n\u001a\u0014\u0012\u0004\u0012\u00020\f\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u000e0\r0\u000bX\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u000f\u001a\b\u0012\u0004\u0012\u00020\u00010\rX\u0004¢\u0006\u0002\n\u0000R6\u0010\u0010\u001a*\u0012\u0004\u0012\u00020\f\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u00130\u00120\u0011j\u0014\u0012\u0004\u0012\u00020\f\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u00130\u0012`\u0014X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0015\u001a\u00020\u0016X\u0004¢\u0006\u0004\n\u0002\u0010\u0017R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0018\u001a\b\u0012\u0004\u0012\u00020\u000e0\rX\u0004¢\u0006\u0002\n\u0000¨\u00064"}, mo64987d2 = {"Lcom/android/systemui/media/MediaSessionBasedFilter;", "Lcom/android/systemui/media/MediaDataManager$Listener;", "context", "Landroid/content/Context;", "sessionManager", "Landroid/media/session/MediaSessionManager;", "foregroundExecutor", "Ljava/util/concurrent/Executor;", "backgroundExecutor", "(Landroid/content/Context;Landroid/media/session/MediaSessionManager;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)V", "keyedTokens", "", "", "", "Landroid/media/session/MediaSession$Token;", "listeners", "packageControllers", "Ljava/util/LinkedHashMap;", "", "Landroid/media/session/MediaController;", "Lkotlin/collections/LinkedHashMap;", "sessionListener", "com/android/systemui/media/MediaSessionBasedFilter$sessionListener$1", "Lcom/android/systemui/media/MediaSessionBasedFilter$sessionListener$1;", "tokensWithNotifications", "addListener", "", "listener", "dispatchMediaDataLoaded", "", "key", "oldKey", "info", "Lcom/android/systemui/media/MediaData;", "immediately", "dispatchMediaDataRemoved", "dispatchSmartspaceMediaDataLoaded", "Lcom/android/systemui/media/SmartspaceMediaData;", "dispatchSmartspaceMediaDataRemoved", "handleControllersChanged", "controllers", "", "onMediaDataLoaded", "data", "receivedSmartspaceCardLatency", "", "isSsReactivated", "onMediaDataRemoved", "onSmartspaceMediaDataLoaded", "shouldPrioritize", "onSmartspaceMediaDataRemoved", "removeListener", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+/* compiled from: MediaSessionBasedFilter.kt */
+public final class MediaSessionBasedFilter implements MediaDataManager.Listener {
+    private final Executor backgroundExecutor;
+    private final Executor foregroundExecutor;
+    private final Map<String, Set<MediaSession.Token>> keyedTokens = new LinkedHashMap();
+    private final Set<MediaDataManager.Listener> listeners = new LinkedHashSet();
+    private final LinkedHashMap<String, List<MediaController>> packageControllers = new LinkedHashMap<>();
+    private final MediaSessionBasedFilter$sessionListener$1 sessionListener = new MediaSessionBasedFilter$sessionListener$1(this);
+    private final MediaSessionManager sessionManager;
+    private final Set<MediaSession.Token> tokensWithNotifications = new LinkedHashSet();
+
+    @Inject
+    public MediaSessionBasedFilter(Context context, MediaSessionManager mediaSessionManager, @Main Executor executor, @Background Executor executor2) {
         Intrinsics.checkNotNullParameter(context, "context");
-        Intrinsics.checkNotNullParameter(sessionManager, "sessionManager");
-        Intrinsics.checkNotNullParameter(foregroundExecutor, "foregroundExecutor");
-        Intrinsics.checkNotNullParameter(backgroundExecutor, "backgroundExecutor");
-        this.sessionManager = sessionManager;
-        this.foregroundExecutor = foregroundExecutor;
-        this.backgroundExecutor = backgroundExecutor;
-        backgroundExecutor.execute(new Runnable() { // from class: com.android.systemui.media.MediaSessionBasedFilter.1
-            @Override // java.lang.Runnable
-            public final void run() {
-                ComponentName componentName = new ComponentName(context, NotificationListenerWithPlugins.class);
-                this.sessionManager.addOnActiveSessionsChangedListener(this.sessionListener, componentName);
-                MediaSessionBasedFilter mediaSessionBasedFilter = this;
-                List<MediaController> activeSessions = mediaSessionBasedFilter.sessionManager.getActiveSessions(componentName);
-                Intrinsics.checkNotNullExpressionValue(activeSessions, "sessionManager.getActiveSessions(name)");
-                mediaSessionBasedFilter.handleControllersChanged(activeSessions);
-            }
-        });
+        Intrinsics.checkNotNullParameter(mediaSessionManager, "sessionManager");
+        Intrinsics.checkNotNullParameter(executor, "foregroundExecutor");
+        Intrinsics.checkNotNullParameter(executor2, "backgroundExecutor");
+        this.sessionManager = mediaSessionManager;
+        this.foregroundExecutor = executor;
+        this.backgroundExecutor = executor2;
+        executor2.execute(new MediaSessionBasedFilter$$ExternalSyntheticLambda2(context, this));
     }
 
-    public final boolean addListener(@NotNull MediaDataManager.Listener listener) {
+    /* access modifiers changed from: private */
+    /* renamed from: _init_$lambda-0  reason: not valid java name */
+    public static final void m2817_init_$lambda0(Context context, MediaSessionBasedFilter mediaSessionBasedFilter) {
+        Intrinsics.checkNotNullParameter(context, "$context");
+        Intrinsics.checkNotNullParameter(mediaSessionBasedFilter, "this$0");
+        ComponentName componentName = new ComponentName(context, NotificationListenerWithPlugins.class);
+        mediaSessionBasedFilter.sessionManager.addOnActiveSessionsChangedListener(mediaSessionBasedFilter.sessionListener, componentName);
+        List<MediaController> activeSessions = mediaSessionBasedFilter.sessionManager.getActiveSessions(componentName);
+        Intrinsics.checkNotNullExpressionValue(activeSessions, "sessionManager.getActiveSessions(name)");
+        mediaSessionBasedFilter.handleControllersChanged(activeSessions);
+    }
+
+    public final boolean addListener(MediaDataManager.Listener listener) {
         Intrinsics.checkNotNullParameter(listener, "listener");
         return this.listeners.add(listener);
     }
 
-    @Override // com.android.systemui.media.MediaDataManager.Listener
-    public void onMediaDataLoaded(@NotNull final String key, @Nullable final String str, @NotNull final MediaData data, final boolean z, boolean z2) {
-        Intrinsics.checkNotNullParameter(key, "key");
-        Intrinsics.checkNotNullParameter(data, "data");
-        this.backgroundExecutor.execute(new Runnable() { // from class: com.android.systemui.media.MediaSessionBasedFilter$onMediaDataLoaded$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                LinkedHashMap linkedHashMap;
-                ArrayList arrayList;
-                Set set;
-                Map map;
-                Map map2;
-                Set mutableSetOf;
-                Map map3;
-                Map map4;
-                Map map5;
-                Set set2;
-                MediaSession.Token token = MediaData.this.getToken();
-                if (token != null) {
-                    set2 = this.tokensWithNotifications;
-                    set2.add(token);
-                }
-                String str2 = str;
-                boolean z3 = str2 != null && !Intrinsics.areEqual(key, str2);
-                if (z3) {
-                    map4 = this.keyedTokens;
-                    String str3 = str;
-                    Objects.requireNonNull(map4, "null cannot be cast to non-null type kotlin.collections.MutableMap<K, V>");
-                    Set set3 = (Set) TypeIntrinsics.asMutableMap(map4).remove(str3);
-                    if (set3 != null) {
-                        MediaSessionBasedFilter mediaSessionBasedFilter = this;
-                        String str4 = key;
-                        map5 = mediaSessionBasedFilter.keyedTokens;
-                        Set set4 = (Set) map5.put(str4, set3);
-                    }
-                }
-                MediaController mediaController = null;
-                if (MediaData.this.getToken() != null) {
-                    map2 = this.keyedTokens;
-                    Set set5 = (Set) map2.get(key);
-                    if ((set5 == null ? null : Boolean.valueOf(set5.add(MediaData.this.getToken()))) == null) {
-                        MediaSessionBasedFilter mediaSessionBasedFilter2 = this;
-                        MediaData mediaData = MediaData.this;
-                        String str5 = key;
-                        mutableSetOf = SetsKt__SetsKt.mutableSetOf(mediaData.getToken());
-                        map3 = mediaSessionBasedFilter2.keyedTokens;
-                        Set set6 = (Set) map3.put(str5, mutableSetOf);
-                    }
-                }
-                linkedHashMap = this.packageControllers;
-                List list = (List) linkedHashMap.get(MediaData.this.getPackageName());
-                if (list == null) {
-                    arrayList = null;
-                } else {
-                    arrayList = new ArrayList();
-                    for (Object obj : list) {
-                        MediaController.PlaybackInfo playbackInfo = ((MediaController) obj).getPlaybackInfo();
-                        Integer valueOf = playbackInfo == null ? null : Integer.valueOf(playbackInfo.getPlaybackType());
-                        if (valueOf != null && valueOf.intValue() == 2) {
-                            arrayList.add(obj);
-                        }
-                    }
-                }
-                Integer valueOf2 = arrayList == null ? null : Integer.valueOf(arrayList.size());
-                if (valueOf2 != null && valueOf2.intValue() == 1) {
-                    mediaController = (MediaController) CollectionsKt.firstOrNull(arrayList);
-                }
-                if (!z3 && mediaController != null && !Intrinsics.areEqual(mediaController.getSessionToken(), MediaData.this.getToken())) {
-                    set = this.tokensWithNotifications;
-                    if (set.contains(mediaController.getSessionToken())) {
-                        Log.d("MediaSessionBasedFilter", "filtering key=" + key + " local=" + MediaData.this.getToken() + " remote=" + mediaController.getSessionToken());
-                        map = this.keyedTokens;
-                        Set set7 = (Set) map.get(key);
-                        Intrinsics.checkNotNull(set7);
-                        if (set7.contains(mediaController.getSessionToken())) {
-                            return;
-                        }
-                        this.dispatchMediaDataRemoved(key);
-                        return;
-                    }
-                }
-                this.dispatchMediaDataLoaded(key, str, MediaData.this, z);
-            }
-        });
+    public final boolean removeListener(MediaDataManager.Listener listener) {
+        Intrinsics.checkNotNullParameter(listener, "listener");
+        return this.listeners.remove(listener);
     }
 
-    @Override // com.android.systemui.media.MediaDataManager.Listener
-    public void onSmartspaceMediaDataLoaded(@NotNull final String key, @NotNull final SmartspaceMediaData data, boolean z) {
-        Intrinsics.checkNotNullParameter(key, "key");
-        Intrinsics.checkNotNullParameter(data, "data");
-        this.backgroundExecutor.execute(new Runnable() { // from class: com.android.systemui.media.MediaSessionBasedFilter$onSmartspaceMediaDataLoaded$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                MediaSessionBasedFilter.this.dispatchSmartspaceMediaDataLoaded(key, data);
-            }
-        });
+    public void onMediaDataLoaded(String str, String str2, MediaData mediaData, boolean z, int i, boolean z2) {
+        Intrinsics.checkNotNullParameter(str, "key");
+        Intrinsics.checkNotNullParameter(mediaData, "data");
+        this.backgroundExecutor.execute(new MediaSessionBasedFilter$$ExternalSyntheticLambda1(mediaData, str2, str, this, z));
     }
 
-    @Override // com.android.systemui.media.MediaDataManager.Listener
-    public void onMediaDataRemoved(@NotNull final String key) {
-        Intrinsics.checkNotNullParameter(key, "key");
-        this.backgroundExecutor.execute(new Runnable() { // from class: com.android.systemui.media.MediaSessionBasedFilter$onMediaDataRemoved$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                Map map;
-                map = MediaSessionBasedFilter.this.keyedTokens;
-                map.remove(key);
-                MediaSessionBasedFilter.this.dispatchMediaDataRemoved(key);
-            }
-        });
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r0v10, resolved type: java.lang.Object} */
+    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r4v3, resolved type: android.media.session.MediaController} */
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Multi-variable type inference failed */
+    /* renamed from: onMediaDataLoaded$lambda-6  reason: not valid java name */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static final void m2822onMediaDataLoaded$lambda6(com.android.systemui.media.MediaData r9, java.lang.String r10, java.lang.String r11, com.android.systemui.media.MediaSessionBasedFilter r12, boolean r13) {
+        /*
+            java.lang.String r0 = "$data"
+            kotlin.jvm.internal.Intrinsics.checkNotNullParameter(r9, r0)
+            java.lang.String r0 = "$key"
+            kotlin.jvm.internal.Intrinsics.checkNotNullParameter(r11, r0)
+            java.lang.String r0 = "this$0"
+            kotlin.jvm.internal.Intrinsics.checkNotNullParameter(r12, r0)
+            android.media.session.MediaSession$Token r0 = r9.getToken()
+            if (r0 == 0) goto L_0x001b
+            java.util.Set<android.media.session.MediaSession$Token> r1 = r12.tokensWithNotifications
+            r1.add(r0)
+        L_0x001b:
+            r0 = 1
+            r1 = 0
+            if (r10 == 0) goto L_0x0027
+            boolean r2 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r11, (java.lang.Object) r10)
+            if (r2 != 0) goto L_0x0027
+            r2 = r0
+            goto L_0x0028
+        L_0x0027:
+            r2 = r1
+        L_0x0028:
+            if (r2 == 0) goto L_0x0040
+            java.util.Map<java.lang.String, java.util.Set<android.media.session.MediaSession$Token>> r3 = r12.keyedTokens
+            java.util.Map r3 = kotlin.jvm.internal.TypeIntrinsics.asMutableMap(r3)
+            java.lang.Object r3 = r3.remove(r10)
+            java.util.Set r3 = (java.util.Set) r3
+            if (r3 == 0) goto L_0x0040
+            java.util.Map<java.lang.String, java.util.Set<android.media.session.MediaSession$Token>> r4 = r12.keyedTokens
+            java.lang.Object r3 = r4.put(r11, r3)
+            java.util.Set r3 = (java.util.Set) r3
+        L_0x0040:
+            android.media.session.MediaSession$Token r3 = r9.getToken()
+            if (r3 == 0) goto L_0x0070
+            java.util.Map<java.lang.String, java.util.Set<android.media.session.MediaSession$Token>> r3 = r12.keyedTokens
+            java.lang.Object r3 = r3.get(r11)
+            java.util.Set r3 = (java.util.Set) r3
+            if (r3 == 0) goto L_0x005c
+            android.media.session.MediaSession$Token r4 = r9.getToken()
+            boolean r3 = r3.add(r4)
+            java.lang.Boolean.valueOf((boolean) r3)
+            goto L_0x0070
+        L_0x005c:
+            android.media.session.MediaSession$Token[] r3 = new android.media.session.MediaSession.Token[r0]
+            android.media.session.MediaSession$Token r4 = r9.getToken()
+            r3[r1] = r4
+            java.util.Set r3 = kotlin.collections.SetsKt.mutableSetOf(r3)
+            java.util.Map<java.lang.String, java.util.Set<android.media.session.MediaSession$Token>> r4 = r12.keyedTokens
+            java.lang.Object r3 = r4.put(r11, r3)
+            java.util.Set r3 = (java.util.Set) r3
+        L_0x0070:
+            java.util.LinkedHashMap<java.lang.String, java.util.List<android.media.session.MediaController>> r3 = r12.packageControllers
+            java.lang.String r4 = r9.getPackageName()
+            java.lang.Object r3 = r3.get(r4)
+            java.util.List r3 = (java.util.List) r3
+            r4 = 0
+            if (r3 == 0) goto L_0x00b2
+            java.lang.Iterable r3 = (java.lang.Iterable) r3
+            java.util.ArrayList r5 = new java.util.ArrayList
+            r5.<init>()
+            java.util.Collection r5 = (java.util.Collection) r5
+            java.util.Iterator r3 = r3.iterator()
+        L_0x008c:
+            boolean r6 = r3.hasNext()
+            if (r6 == 0) goto L_0x00af
+            java.lang.Object r6 = r3.next()
+            r7 = r6
+            android.media.session.MediaController r7 = (android.media.session.MediaController) r7
+            android.media.session.MediaController$PlaybackInfo r7 = r7.getPlaybackInfo()
+            if (r7 == 0) goto L_0x00a8
+            int r7 = r7.getPlaybackType()
+            r8 = 2
+            if (r7 != r8) goto L_0x00a8
+            r7 = r0
+            goto L_0x00a9
+        L_0x00a8:
+            r7 = r1
+        L_0x00a9:
+            if (r7 == 0) goto L_0x008c
+            r5.add(r6)
+            goto L_0x008c
+        L_0x00af:
+            java.util.List r5 = (java.util.List) r5
+            goto L_0x00b3
+        L_0x00b2:
+            r5 = r4
+        L_0x00b3:
+            if (r5 == 0) goto L_0x00bc
+            int r3 = r5.size()
+            if (r3 != r0) goto L_0x00bc
+            goto L_0x00bd
+        L_0x00bc:
+            r0 = r1
+        L_0x00bd:
+            if (r0 == 0) goto L_0x00c6
+            java.lang.Object r0 = kotlin.collections.CollectionsKt.firstOrNull(r5)
+            r4 = r0
+            android.media.session.MediaController r4 = (android.media.session.MediaController) r4
+        L_0x00c6:
+            if (r2 != 0) goto L_0x012e
+            if (r4 == 0) goto L_0x012e
+            android.media.session.MediaSession$Token r0 = r4.getSessionToken()
+            android.media.session.MediaSession$Token r1 = r9.getToken()
+            boolean r0 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r0, (java.lang.Object) r1)
+            if (r0 != 0) goto L_0x012e
+            java.util.Set<android.media.session.MediaSession$Token> r0 = r12.tokensWithNotifications
+            android.media.session.MediaSession$Token r1 = r4.getSessionToken()
+            boolean r0 = r0.contains(r1)
+            if (r0 != 0) goto L_0x00e5
+            goto L_0x012e
+        L_0x00e5:
+            java.lang.StringBuilder r10 = new java.lang.StringBuilder
+            java.lang.String r13 = "filtering key="
+            r10.<init>((java.lang.String) r13)
+            java.lang.StringBuilder r10 = r10.append((java.lang.String) r11)
+            java.lang.String r13 = " local="
+            java.lang.StringBuilder r10 = r10.append((java.lang.String) r13)
+            android.media.session.MediaSession$Token r9 = r9.getToken()
+            java.lang.StringBuilder r9 = r10.append((java.lang.Object) r9)
+            java.lang.String r10 = " remote="
+            java.lang.StringBuilder r9 = r9.append((java.lang.String) r10)
+            android.media.session.MediaSession$Token r10 = r4.getSessionToken()
+            java.lang.StringBuilder r9 = r9.append((java.lang.Object) r10)
+            java.lang.String r9 = r9.toString()
+            java.lang.String r10 = "MediaSessionBasedFilter"
+            android.util.Log.d(r10, r9)
+            java.util.Map<java.lang.String, java.util.Set<android.media.session.MediaSession$Token>> r9 = r12.keyedTokens
+            java.lang.Object r9 = r9.get(r11)
+            kotlin.jvm.internal.Intrinsics.checkNotNull(r9)
+            java.util.Set r9 = (java.util.Set) r9
+            android.media.session.MediaSession$Token r10 = r4.getSessionToken()
+            boolean r9 = r9.contains(r10)
+            if (r9 != 0) goto L_0x0131
+            r12.dispatchMediaDataRemoved(r11)
+            goto L_0x0131
+        L_0x012e:
+            r12.dispatchMediaDataLoaded(r11, r10, r9, r13)
+        L_0x0131:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.MediaSessionBasedFilter.m2822onMediaDataLoaded$lambda6(com.android.systemui.media.MediaData, java.lang.String, java.lang.String, com.android.systemui.media.MediaSessionBasedFilter, boolean):void");
     }
 
-    @Override // com.android.systemui.media.MediaDataManager.Listener
-    public void onSmartspaceMediaDataRemoved(@NotNull final String key, final boolean z) {
-        Intrinsics.checkNotNullParameter(key, "key");
-        this.backgroundExecutor.execute(new Runnable() { // from class: com.android.systemui.media.MediaSessionBasedFilter$onSmartspaceMediaDataRemoved$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                MediaSessionBasedFilter.this.dispatchSmartspaceMediaDataRemoved(key, z);
-            }
-        });
+    public void onSmartspaceMediaDataLoaded(String str, SmartspaceMediaData smartspaceMediaData, boolean z) {
+        Intrinsics.checkNotNullParameter(str, "key");
+        Intrinsics.checkNotNullParameter(smartspaceMediaData, "data");
+        this.backgroundExecutor.execute(new MediaSessionBasedFilter$$ExternalSyntheticLambda3(this, str, smartspaceMediaData));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void dispatchMediaDataLoaded(final String str, final String str2, final MediaData mediaData, final boolean z) {
-        this.foregroundExecutor.execute(new Runnable() { // from class: com.android.systemui.media.MediaSessionBasedFilter$dispatchMediaDataLoaded$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                Set set;
-                Set<MediaDataManager.Listener> set2;
-                set = MediaSessionBasedFilter.this.listeners;
-                set2 = CollectionsKt___CollectionsKt.toSet(set);
-                String str3 = str;
-                String str4 = str2;
-                MediaData mediaData2 = mediaData;
-                boolean z2 = z;
-                for (MediaDataManager.Listener listener : set2) {
-                    MediaDataManager.Listener.DefaultImpls.onMediaDataLoaded$default(listener, str3, str4, mediaData2, z2, false, 16, null);
-                }
-            }
-        });
+    /* access modifiers changed from: private */
+    /* renamed from: onSmartspaceMediaDataLoaded$lambda-7  reason: not valid java name */
+    public static final void m2824onSmartspaceMediaDataLoaded$lambda7(MediaSessionBasedFilter mediaSessionBasedFilter, String str, SmartspaceMediaData smartspaceMediaData) {
+        Intrinsics.checkNotNullParameter(mediaSessionBasedFilter, "this$0");
+        Intrinsics.checkNotNullParameter(str, "$key");
+        Intrinsics.checkNotNullParameter(smartspaceMediaData, "$data");
+        mediaSessionBasedFilter.dispatchSmartspaceMediaDataLoaded(str, smartspaceMediaData);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void dispatchMediaDataRemoved(final String str) {
-        this.foregroundExecutor.execute(new Runnable() { // from class: com.android.systemui.media.MediaSessionBasedFilter$dispatchMediaDataRemoved$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                Set set;
-                Set<MediaDataManager.Listener> set2;
-                set = MediaSessionBasedFilter.this.listeners;
-                set2 = CollectionsKt___CollectionsKt.toSet(set);
-                String str2 = str;
-                for (MediaDataManager.Listener listener : set2) {
-                    listener.onMediaDataRemoved(str2);
-                }
-            }
-        });
+    public void onMediaDataRemoved(String str) {
+        Intrinsics.checkNotNullParameter(str, "key");
+        this.backgroundExecutor.execute(new MediaSessionBasedFilter$$ExternalSyntheticLambda6(this, str));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void dispatchSmartspaceMediaDataLoaded(final String str, final SmartspaceMediaData smartspaceMediaData) {
-        this.foregroundExecutor.execute(new Runnable() { // from class: com.android.systemui.media.MediaSessionBasedFilter$dispatchSmartspaceMediaDataLoaded$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                Set set;
-                Set<MediaDataManager.Listener> set2;
-                set = MediaSessionBasedFilter.this.listeners;
-                set2 = CollectionsKt___CollectionsKt.toSet(set);
-                String str2 = str;
-                SmartspaceMediaData smartspaceMediaData2 = smartspaceMediaData;
-                for (MediaDataManager.Listener listener : set2) {
-                    MediaDataManager.Listener.DefaultImpls.onSmartspaceMediaDataLoaded$default(listener, str2, smartspaceMediaData2, false, 4, null);
-                }
-            }
-        });
+    /* access modifiers changed from: private */
+    /* renamed from: onMediaDataRemoved$lambda-8  reason: not valid java name */
+    public static final void m2823onMediaDataRemoved$lambda8(MediaSessionBasedFilter mediaSessionBasedFilter, String str) {
+        Intrinsics.checkNotNullParameter(mediaSessionBasedFilter, "this$0");
+        Intrinsics.checkNotNullParameter(str, "$key");
+        mediaSessionBasedFilter.keyedTokens.remove(str);
+        mediaSessionBasedFilter.dispatchMediaDataRemoved(str);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void dispatchSmartspaceMediaDataRemoved(final String str, final boolean z) {
-        this.foregroundExecutor.execute(new Runnable() { // from class: com.android.systemui.media.MediaSessionBasedFilter$dispatchSmartspaceMediaDataRemoved$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                Set set;
-                Set<MediaDataManager.Listener> set2;
-                set = MediaSessionBasedFilter.this.listeners;
-                set2 = CollectionsKt___CollectionsKt.toSet(set);
-                String str2 = str;
-                boolean z2 = z;
-                for (MediaDataManager.Listener listener : set2) {
-                    listener.onSmartspaceMediaDataRemoved(str2, z2);
-                }
-            }
-        });
+    public void onSmartspaceMediaDataRemoved(String str, boolean z) {
+        Intrinsics.checkNotNullParameter(str, "key");
+        this.backgroundExecutor.execute(new MediaSessionBasedFilter$$ExternalSyntheticLambda8(this, str, z));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
+    /* renamed from: onSmartspaceMediaDataRemoved$lambda-9  reason: not valid java name */
+    public static final void m2825onSmartspaceMediaDataRemoved$lambda9(MediaSessionBasedFilter mediaSessionBasedFilter, String str, boolean z) {
+        Intrinsics.checkNotNullParameter(mediaSessionBasedFilter, "this$0");
+        Intrinsics.checkNotNullParameter(str, "$key");
+        mediaSessionBasedFilter.dispatchSmartspaceMediaDataRemoved(str, z);
+    }
+
+    private final void dispatchMediaDataLoaded(String str, String str2, MediaData mediaData, boolean z) {
+        this.foregroundExecutor.execute(new MediaSessionBasedFilter$$ExternalSyntheticLambda7(this, str, str2, mediaData, z));
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: dispatchMediaDataLoaded$lambda-11  reason: not valid java name */
+    public static final void m2818dispatchMediaDataLoaded$lambda11(MediaSessionBasedFilter mediaSessionBasedFilter, String str, String str2, MediaData mediaData, boolean z) {
+        Intrinsics.checkNotNullParameter(mediaSessionBasedFilter, "this$0");
+        Intrinsics.checkNotNullParameter(str, "$key");
+        Intrinsics.checkNotNullParameter(mediaData, "$info");
+        for (MediaDataManager.Listener onMediaDataLoaded$default : CollectionsKt.toSet(mediaSessionBasedFilter.listeners)) {
+            MediaDataManager.Listener.onMediaDataLoaded$default(onMediaDataLoaded$default, str, str2, mediaData, z, 0, false, 48, (Object) null);
+        }
+    }
+
+    private final void dispatchMediaDataRemoved(String str) {
+        this.foregroundExecutor.execute(new MediaSessionBasedFilter$$ExternalSyntheticLambda0(this, str));
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: dispatchMediaDataRemoved$lambda-13  reason: not valid java name */
+    public static final void m2819dispatchMediaDataRemoved$lambda13(MediaSessionBasedFilter mediaSessionBasedFilter, String str) {
+        Intrinsics.checkNotNullParameter(mediaSessionBasedFilter, "this$0");
+        Intrinsics.checkNotNullParameter(str, "$key");
+        for (MediaDataManager.Listener onMediaDataRemoved : CollectionsKt.toSet(mediaSessionBasedFilter.listeners)) {
+            onMediaDataRemoved.onMediaDataRemoved(str);
+        }
+    }
+
+    private final void dispatchSmartspaceMediaDataLoaded(String str, SmartspaceMediaData smartspaceMediaData) {
+        this.foregroundExecutor.execute(new MediaSessionBasedFilter$$ExternalSyntheticLambda4(this, str, smartspaceMediaData));
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: dispatchSmartspaceMediaDataLoaded$lambda-15  reason: not valid java name */
+    public static final void m2820dispatchSmartspaceMediaDataLoaded$lambda15(MediaSessionBasedFilter mediaSessionBasedFilter, String str, SmartspaceMediaData smartspaceMediaData) {
+        Intrinsics.checkNotNullParameter(mediaSessionBasedFilter, "this$0");
+        Intrinsics.checkNotNullParameter(str, "$key");
+        Intrinsics.checkNotNullParameter(smartspaceMediaData, "$info");
+        for (MediaDataManager.Listener onSmartspaceMediaDataLoaded$default : CollectionsKt.toSet(mediaSessionBasedFilter.listeners)) {
+            MediaDataManager.Listener.onSmartspaceMediaDataLoaded$default(onSmartspaceMediaDataLoaded$default, str, smartspaceMediaData, false, 4, (Object) null);
+        }
+    }
+
+    private final void dispatchSmartspaceMediaDataRemoved(String str, boolean z) {
+        this.foregroundExecutor.execute(new MediaSessionBasedFilter$$ExternalSyntheticLambda5(this, str, z));
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: dispatchSmartspaceMediaDataRemoved$lambda-17  reason: not valid java name */
+    public static final void m2821dispatchSmartspaceMediaDataRemoved$lambda17(MediaSessionBasedFilter mediaSessionBasedFilter, String str, boolean z) {
+        Intrinsics.checkNotNullParameter(mediaSessionBasedFilter, "this$0");
+        Intrinsics.checkNotNullParameter(str, "$key");
+        for (MediaDataManager.Listener onSmartspaceMediaDataRemoved : CollectionsKt.toSet(mediaSessionBasedFilter.listeners)) {
+            onSmartspaceMediaDataRemoved.onSmartspaceMediaDataRemoved(str, z);
+        }
+    }
+
+    /* access modifiers changed from: private */
     public final void handleControllersChanged(List<MediaController> list) {
         this.packageControllers.clear();
-        for (MediaController mediaController : list) {
-            List<MediaController> list2 = this.packageControllers.get(mediaController.getPackageName());
-            if ((list2 == null ? null : Boolean.valueOf(list2.add(mediaController))) == null) {
-                this.packageControllers.put(mediaController.getPackageName(), CollectionsKt.mutableListOf(mediaController));
+        Iterable<MediaController> iterable = list;
+        for (MediaController mediaController : iterable) {
+            List list2 = this.packageControllers.get(mediaController.getPackageName());
+            if (list2 != null) {
+                Boolean.valueOf(list2.add(mediaController));
+            } else {
+                MediaSessionBasedFilter mediaSessionBasedFilter = this;
+                List put = this.packageControllers.put(mediaController.getPackageName(), CollectionsKt.mutableListOf(mediaController));
             }
         }
         Set<MediaSession.Token> set = this.tokensWithNotifications;
-        ArrayList arrayList = new ArrayList(CollectionsKt.collectionSizeOrDefault(list, 10));
-        for (MediaController mediaController2 : list) {
-            arrayList.add(mediaController2.getSessionToken());
+        Collection arrayList = new ArrayList(CollectionsKt.collectionSizeOrDefault(iterable, 10));
+        for (MediaController sessionToken : iterable) {
+            arrayList.add(sessionToken.getSessionToken());
         }
-        set.retainAll(arrayList);
+        set.retainAll((List) arrayList);
     }
 }

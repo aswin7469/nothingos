@@ -1,18 +1,17 @@
 package com.android.wifitrackerlib;
 
-import android.net.wifi.ScanResult;
-import java.util.function.ToIntFunction;
-/* loaded from: classes2.dex */
-public final /* synthetic */ class Utils$$ExternalSyntheticLambda1 implements ToIntFunction {
-    public static final /* synthetic */ Utils$$ExternalSyntheticLambda1 INSTANCE = new Utils$$ExternalSyntheticLambda1();
+import android.telephony.SubscriptionInfo;
+import java.util.function.Predicate;
 
-    private /* synthetic */ Utils$$ExternalSyntheticLambda1() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class Utils$$ExternalSyntheticLambda1 implements Predicate {
+    public final /* synthetic */ int f$0;
+
+    public /* synthetic */ Utils$$ExternalSyntheticLambda1(int i) {
+        this.f$0 = i;
     }
 
-    @Override // java.util.function.ToIntFunction
-    public final int applyAsInt(Object obj) {
-        int i;
-        i = ((ScanResult) obj).level;
-        return i;
+    public final boolean test(Object obj) {
+        return Utils.lambda$isSimPresent$1(this.f$0, (SubscriptionInfo) obj);
     }
 }

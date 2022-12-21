@@ -11,27 +11,31 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.R$drawable;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
-/* loaded from: classes.dex */
+
 public class NotificationGuts extends FrameLayout {
+    private static final long CLOSE_GUTS_DELAY = 8000;
+    private static final String TAG = "NotificationGuts";
     private int mActualHeight;
     private Drawable mBackground;
     private int mClipBottomAmount;
     private int mClipTopAmount;
     private OnGutsClosedListener mClosedListener;
-    private boolean mExposed;
+    /* access modifiers changed from: private */
+    public boolean mExposed;
     private Runnable mFalsingCheck;
     private GutsContent mGutsContent;
     private View.AccessibilityDelegate mGutsContentAccessibilityDelegate;
     private Handler mHandler;
     private OnHeightChangedListener mHeightListener;
-    private boolean mNeedsFalsingProtection;
+    /* access modifiers changed from: private */
+    public boolean mNeedsFalsingProtection;
 
-    /* loaded from: classes.dex */
     public interface GutsContent {
         int getActualHeight();
 
@@ -39,13 +43,13 @@ public class NotificationGuts extends FrameLayout {
 
         boolean handleCloseControls(boolean z, boolean z2);
 
-        default boolean isLeavebehind() {
+        boolean isLeavebehind() {
             return false;
         }
 
         boolean needsFalsingProtection();
 
-        default void onFinishedClosing() {
+        void onFinishedClosing() {
         }
 
         void setAccessibilityDelegate(View.AccessibilityDelegate accessibilityDelegate);
@@ -57,31 +61,43 @@ public class NotificationGuts extends FrameLayout {
         boolean willBeRemoved();
     }
 
-    /* loaded from: classes.dex */
     public interface OnGutsClosedListener {
         void onGutsClosed(NotificationGuts notificationGuts);
     }
 
-    /* loaded from: classes.dex */
     public interface OnHeightChangedListener {
         void onHeightChanged(NotificationGuts notificationGuts);
     }
 
-    @Override // android.view.View
+    private interface OnSettingsClickListener {
+        void onClick(View view, int i);
+    }
+
     public boolean hasOverlappingRendering() {
         return false;
     }
 
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
+
     public NotificationGuts(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mGutsContentAccessibilityDelegate = new View.AccessibilityDelegate() { // from class: com.android.systemui.statusbar.notification.row.NotificationGuts.1
-            @Override // android.view.View.AccessibilityDelegate
+        this.mGutsContentAccessibilityDelegate = new View.AccessibilityDelegate() {
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_LONG_CLICK);
             }
 
-            @Override // android.view.View.AccessibilityDelegate
             public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
                 if (super.performAccessibilityAction(view, i, bundle)) {
                     return true;
@@ -95,19 +111,17 @@ public class NotificationGuts extends FrameLayout {
         };
         setWillNotDraw(false);
         this.mHandler = new Handler();
-        this.mFalsingCheck = new Runnable() { // from class: com.android.systemui.statusbar.notification.row.NotificationGuts.2
-            @Override // java.lang.Runnable
+        this.mFalsingCheck = new Runnable() {
             public void run() {
-                if (!NotificationGuts.this.mNeedsFalsingProtection || !NotificationGuts.this.mExposed) {
-                    return;
+                if (NotificationGuts.this.mNeedsFalsingProtection && NotificationGuts.this.mExposed) {
+                    NotificationGuts.this.closeControls(-1, -1, false, false);
                 }
-                NotificationGuts.this.closeControls(-1, -1, false, false);
             }
         };
     }
 
     public NotificationGuts(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public void setGutsContent(GutsContent gutsContent) {
@@ -124,55 +138,51 @@ public class NotificationGuts extends FrameLayout {
 
     public void resetFalsingCheck() {
         this.mHandler.removeCallbacks(this.mFalsingCheck);
-        if (!this.mNeedsFalsingProtection || !this.mExposed) {
-            return;
+        if (this.mNeedsFalsingProtection && this.mExposed) {
+            this.mHandler.postDelayed(this.mFalsingCheck, CLOSE_GUTS_DELAY);
         }
-        this.mHandler.postDelayed(this.mFalsingCheck, 8000L);
     }
 
-    @Override // android.view.View
-    protected void onDraw(Canvas canvas) {
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
         draw(canvas, this.mBackground);
     }
 
     private void draw(Canvas canvas, Drawable drawable) {
         int i = this.mClipTopAmount;
         int i2 = this.mActualHeight - this.mClipBottomAmount;
-        if (drawable == null || i >= i2) {
-            return;
+        if (drawable != null && i < i2) {
+            drawable.setBounds(0, i, getWidth(), i2);
+            drawable.draw(canvas);
         }
-        drawable.setBounds(0, i, getWidth(), i2);
-        drawable.draw(canvas);
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         super.onFinishInflate();
-        Drawable drawable = ((FrameLayout) this).mContext.getDrawable(R$drawable.notification_guts_bg);
+        Drawable drawable = this.mContext.getDrawable(C1893R.C1895drawable.notification_guts_bg);
         this.mBackground = drawable;
         if (drawable != null) {
             drawable.setCallback(this);
         }
     }
 
-    @Override // android.view.View
-    protected boolean verifyDrawable(Drawable drawable) {
+    /* access modifiers changed from: protected */
+    public boolean verifyDrawable(Drawable drawable) {
         return super.verifyDrawable(drawable) || drawable == this.mBackground;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void drawableStateChanged() {
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
         drawableStateChanged(this.mBackground);
     }
 
     private void drawableStateChanged(Drawable drawable) {
-        if (drawable == null || !drawable.isStateful()) {
-            return;
+        if (drawable != null && drawable.isStateful()) {
+            drawable.setState(getDrawableState());
         }
-        drawable.setState(getDrawableState());
     }
 
-    @Override // android.view.View
     public void drawableHotspotChanged(float f, float f2) {
         Drawable drawable = this.mBackground;
         if (drawable != null) {
@@ -187,10 +197,10 @@ public class NotificationGuts extends FrameLayout {
 
     public void closeControls(boolean z, boolean z2, int i, int i2, boolean z3) {
         GutsContent gutsContent = this.mGutsContent;
-        if (gutsContent != null) {
-            if ((!gutsContent.isLeavebehind() || !z) && (this.mGutsContent.isLeavebehind() || !z2)) {
-                return;
-            }
+        if (gutsContent == null) {
+            return;
+        }
+        if ((gutsContent.isLeavebehind() && z) || (!this.mGutsContent.isLeavebehind() && z2)) {
             closeControls(i, i2, this.mGutsContent.shouldBeSaved(), z3);
         }
     }
@@ -203,68 +213,70 @@ public class NotificationGuts extends FrameLayout {
         closeControls((iArr2[0] - iArr[0]) + (view.getWidth() / 2), (iArr2[1] - iArr[1]) + (view.getHeight() / 2), z, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void closeControls(int i, int i2, boolean z, boolean z2) {
         if (getWindowToken() == null) {
             OnGutsClosedListener onGutsClosedListener = this.mClosedListener;
-            if (onGutsClosedListener == null) {
+            if (onGutsClosedListener != null) {
+                onGutsClosedListener.onGutsClosed(this);
                 return;
             }
-            onGutsClosedListener.onGutsClosed(this);
             return;
         }
         GutsContent gutsContent = this.mGutsContent;
-        if (gutsContent != null && gutsContent.handleCloseControls(z, z2)) {
-            return;
+        if (gutsContent == null || !gutsContent.handleCloseControls(z, z2)) {
+            animateClose(i, i2, true);
+            setExposed(false, this.mNeedsFalsingProtection);
+            OnGutsClosedListener onGutsClosedListener2 = this.mClosedListener;
+            if (onGutsClosedListener2 != null) {
+                onGutsClosedListener2.onGutsClosed(this);
+            }
         }
-        animateClose(i, i2, true);
-        setExposed(false, this.mNeedsFalsingProtection);
-        OnGutsClosedListener onGutsClosedListener2 = this.mClosedListener;
-        if (onGutsClosedListener2 == null) {
-            return;
-        }
-        onGutsClosedListener2.onGutsClosed(this);
     }
 
     private void animateOpen(boolean z, int i, int i2, Runnable runnable) {
         if (!isAttachedToWindow()) {
-            Log.w("NotificationGuts", "Failed to animate guts open");
+            Log.w(TAG, "Failed to animate guts open");
         } else if (z) {
             setAlpha(1.0f);
-            Animator createCircularReveal = ViewAnimationUtils.createCircularReveal(this, i, i2, 0.0f, (float) Math.hypot(Math.max(getWidth() - i, i), Math.max(getHeight() - i2, i2)));
-            createCircularReveal.setDuration(360L);
+            Animator createCircularReveal = ViewAnimationUtils.createCircularReveal(this, i, i2, 0.0f, (float) Math.hypot((double) Math.max(getWidth() - i, i), (double) Math.max(getHeight() - i2, i2)));
+            createCircularReveal.setDuration(360);
             createCircularReveal.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
             createCircularReveal.addListener(new AnimateOpenListener(runnable));
             createCircularReveal.start();
         } else {
             setAlpha(0.0f);
-            animate().alpha(1.0f).setDuration(240L).setInterpolator(Interpolators.ALPHA_IN).setListener(new AnimateOpenListener(runnable)).start();
+            animate().alpha(1.0f).setDuration(240).setInterpolator(Interpolators.ALPHA_IN).setListener(new AnimateOpenListener(runnable)).start();
         }
     }
 
-    @VisibleForTesting
-    void animateClose(int i, int i2, boolean z) {
+    /* access modifiers changed from: package-private */
+    public void animateClose(int i, int i2, boolean z) {
         if (!isAttachedToWindow()) {
-            Log.w("NotificationGuts", "Failed to animate guts close");
+            Log.w(TAG, "Failed to animate guts close");
             this.mGutsContent.onFinishedClosing();
         } else if (z) {
             if (i == -1 || i2 == -1) {
                 i = (getLeft() + getRight()) / 2;
                 i2 = getTop() + (getHeight() / 2);
             }
-            Animator createCircularReveal = ViewAnimationUtils.createCircularReveal(this, i, i2, (float) Math.hypot(Math.max(getWidth() - i, i), Math.max(getHeight() - i2, i2)), 0.0f);
-            createCircularReveal.setDuration(360L);
+            Animator createCircularReveal = ViewAnimationUtils.createCircularReveal(this, i, i2, (float) Math.hypot((double) Math.max(getWidth() - i, i), (double) Math.max(getHeight() - i2, i2)), 0.0f);
+            createCircularReveal.setDuration(360);
             createCircularReveal.setInterpolator(Interpolators.FAST_OUT_LINEAR_IN);
             createCircularReveal.addListener(new AnimateCloseListener(this, this.mGutsContent));
             createCircularReveal.start();
         } else {
-            animate().alpha(0.0f).setDuration(240L).setInterpolator(Interpolators.ALPHA_OUT).setListener(new AnimateCloseListener(this, this.mGutsContent)).start();
+            animate().alpha(0.0f).setDuration(240).setInterpolator(Interpolators.ALPHA_OUT).setListener(new AnimateCloseListener(this, this.mGutsContent)).start();
         }
     }
 
     public void setActualHeight(int i) {
         this.mActualHeight = i;
         invalidate();
+    }
+
+    public int getActualHeight() {
+        return this.mActualHeight;
     }
 
     public int getIntrinsicHeight() {
@@ -290,7 +302,7 @@ public class NotificationGuts extends FrameLayout {
         this.mHeightListener = onHeightChangedListener;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onHeightChanged() {
         OnHeightChangedListener onHeightChangedListener = this.mHeightListener;
         if (onHeightChangedListener != null) {
@@ -298,26 +310,24 @@ public class NotificationGuts extends FrameLayout {
         }
     }
 
-    @VisibleForTesting
-    void setExposed(boolean z, boolean z2) {
+    /* access modifiers changed from: package-private */
+    public void setExposed(boolean z, boolean z2) {
         GutsContent gutsContent;
         boolean z3 = this.mExposed;
         this.mExposed = z;
         this.mNeedsFalsingProtection = z2;
-        if (z && z2) {
-            resetFalsingCheck();
-        } else {
+        if (!z || !z2) {
             this.mHandler.removeCallbacks(this.mFalsingCheck);
+        } else {
+            resetFalsingCheck();
         }
-        if (z3 == this.mExposed || (gutsContent = this.mGutsContent) == null) {
-            return;
+        if (z3 != this.mExposed && (gutsContent = this.mGutsContent) != null) {
+            View contentView = gutsContent.getContentView();
+            contentView.sendAccessibilityEvent(32);
+            if (this.mExposed) {
+                contentView.requestAccessibilityFocus();
+            }
         }
-        View contentView = gutsContent.getContentView();
-        contentView.sendAccessibilityEvent(32);
-        if (!this.mExposed) {
-            return;
-        }
-        contentView.requestAccessibilityFocus();
     }
 
     public boolean willBeRemoved() {
@@ -337,16 +347,13 @@ public class NotificationGuts extends FrameLayout {
         return gutsContent != null && gutsContent.isLeavebehind();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class AnimateOpenListener extends AnimatorListenerAdapter {
+    private static class AnimateOpenListener extends AnimatorListenerAdapter {
         final Runnable mOnAnimationEnd;
 
         private AnimateOpenListener(Runnable runnable) {
             this.mOnAnimationEnd = runnable;
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationEnd(Animator animator) {
             super.onAnimationEnd(animator);
             Runnable runnable = this.mOnAnimationEnd;
@@ -356,9 +363,7 @@ public class NotificationGuts extends FrameLayout {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class AnimateCloseListener extends AnimatorListenerAdapter {
+    private class AnimateCloseListener extends AnimatorListenerAdapter {
         private final GutsContent mGutsContent;
         final View mView;
 
@@ -367,7 +372,6 @@ public class NotificationGuts extends FrameLayout {
             this.mGutsContent = gutsContent;
         }
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
         public void onAnimationEnd(Animator animator) {
             super.onAnimationEnd(animator);
             if (!NotificationGuts.this.isExposed()) {

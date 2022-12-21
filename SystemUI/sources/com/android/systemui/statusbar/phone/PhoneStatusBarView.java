@@ -2,8 +2,6 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Insets;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -12,120 +10,109 @@ import android.view.DisplayCutout;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.view.WindowInsets;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import com.android.systemui.BatteryMeterView;
+import com.android.internal.policy.SystemBarUtils;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.ScreenDecorations;
 import com.android.systemui.plugins.DarkIconDispatcher;
-import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.util.leak.RotationUtils;
-import com.nothingos.utils.SystemUIDebugConfig;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-import java.util.List;
+import com.nothing.systemui.statusbar.phone.PhoneStatusBarViewEx;
 import java.util.Objects;
-/* loaded from: classes.dex */
-public class PhoneStatusBarView extends PanelBar {
-    StatusBar mBar;
+
+public class PhoneStatusBarView extends FrameLayout {
+    private static final String TAG = "PhoneStatusBarView";
     private DarkIconDispatcher.DarkReceiver mBattery;
-    private View mCenterIconSpace;
     private DarkIconDispatcher.DarkReceiver mClock;
+    private final StatusBarContentInsetsProvider mContentInsetsProvider = ((StatusBarContentInsetsProvider) Dependency.get(StatusBarContentInsetsProvider.class));
+    private int mCutoutSideNudge = 0;
     private View mCutoutSpace;
     private DisplayCutout mDisplayCutout;
-    private List<StatusBar.ExpansionChangedListener> mExpansionChangedListeners;
-    private boolean mHeadsUpVisible;
-    private float mMinFraction;
-    private ScrimController mScrimController;
-    private int mStatusBarHeight;
-    boolean mIsFullyOpenedPanel = false;
-    private Runnable mHideExpandedRunnable = new Runnable() { // from class: com.android.systemui.statusbar.phone.PhoneStatusBarView.1
-        @Override // java.lang.Runnable
-        public void run() {
-            if (SystemUIDebugConfig.DEBUG_PANEL) {
-                Log.d("PhoneStatusBarView", "run HideExpandedRunnable mPanelFraction = " + PhoneStatusBarView.this.mPanelFraction);
-            }
-            PhoneStatusBarView phoneStatusBarView = PhoneStatusBarView.this;
-            if (phoneStatusBarView.mPanelFraction == 0.0f) {
-                phoneStatusBarView.mBar.makeExpandedInvisible();
-            }
-        }
-    };
+    private Rect mDisplaySize;
+    private int mLayoutDirection = -1;
     private int mRotationOrientation = -1;
-    private int mCutoutSideNudge = 0;
-    private final CommandQueue mCommandQueue = (CommandQueue) Dependency.get(CommandQueue.class);
-    private final StatusBarContentInsetsProvider mContentInsetsProvider = (StatusBarContentInsetsProvider) Dependency.get(StatusBarContentInsetsProvider.class);
+    private int mStatusBarHeight;
+    private TouchEventHandler mTouchEventHandler;
+
+    public interface TouchEventHandler {
+        boolean handleTouchEvent(MotionEvent motionEvent);
+
+        void onInterceptTouchEvent(MotionEvent motionEvent);
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
 
     public PhoneStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    public void setBar(StatusBar statusBar) {
-        this.mBar = statusBar;
+    /* access modifiers changed from: package-private */
+    public void setTouchEventHandler(TouchEventHandler touchEventHandler) {
+        this.mTouchEventHandler = touchEventHandler;
     }
 
-    public void setExpansionChangedListeners(List<StatusBar.ExpansionChangedListener> list) {
-        this.mExpansionChangedListeners = list;
-    }
-
-    public void setScrimController(ScrimController scrimController) {
-        this.mScrimController = scrimController;
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar, android.view.View
     public void onFinishInflate() {
-        this.mBattery = (DarkIconDispatcher.DarkReceiver) findViewById(R$id.battery);
-        this.mClock = (DarkIconDispatcher.DarkReceiver) findViewById(R$id.clock);
-        this.mCutoutSpace = findViewById(R$id.cutout_space_view);
-        this.mCenterIconSpace = findViewById(R$id.centered_icon_area);
+        super.onFinishInflate();
+        this.mBattery = (DarkIconDispatcher.DarkReceiver) findViewById(C1893R.C1897id.battery);
+        this.mClock = (DarkIconDispatcher.DarkReceiver) findViewById(C1893R.C1897id.clock);
+        this.mCutoutSpace = findViewById(C1893R.C1897id.cutout_space_view);
         updateResources();
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mBattery);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mClock);
-        if (updateOrientationAndCutout()) {
+        if (updateDisplayParameters()) {
             updateLayoutForCutout();
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mBattery);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mClock);
         this.mDisplayCutout = null;
     }
 
-    @Override // android.view.View
-    protected void onConfigurationChanged(Configuration configuration) {
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         updateResources();
-        if (updateOrientationAndCutout()) {
+        if (updateDisplayParameters()) {
             updateLayoutForCutout();
             requestLayout();
         }
     }
 
-    @Override // android.view.View
     public WindowInsets onApplyWindowInsets(WindowInsets windowInsets) {
-        if (updateOrientationAndCutout()) {
-            updateLayoutForCutout(windowInsets);
+        if (updateDisplayParameters()) {
+            updateLayoutForCutout();
             requestLayout();
         }
         return super.onApplyWindowInsets(windowInsets);
     }
 
-    private boolean updateOrientationAndCutout() {
+    private boolean updateDisplayParameters() {
         boolean z;
-        int exactRotation = RotationUtils.getExactRotation(((FrameLayout) this).mContext);
+        int layoutDirection;
+        int exactRotation = RotationUtils.getExactRotation(this.mContext);
         if (exactRotation != this.mRotationOrientation) {
             this.mRotationOrientation = exactRotation;
             z = true;
@@ -134,128 +121,47 @@ public class PhoneStatusBarView extends PanelBar {
         }
         if (!Objects.equals(getRootWindowInsets().getDisplayCutout(), this.mDisplayCutout)) {
             this.mDisplayCutout = getRootWindowInsets().getDisplayCutout();
-            return true;
+            z = true;
         }
-        return z;
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public boolean panelEnabled() {
-        return this.mCommandQueue.panelsEnabled();
+        Rect maxBounds = this.mContext.getResources().getConfiguration().windowConfiguration.getMaxBounds();
+        if (!Objects.equals(maxBounds, this.mDisplaySize)) {
+            this.mDisplaySize = maxBounds;
+            z = true;
+        }
+        if (this.mContext.getResources() == null || this.mContext.getResources().getConfiguration() == null || this.mLayoutDirection == (layoutDirection = this.mContext.getResources().getConfiguration().getLayoutDirection())) {
+            return z;
+        }
+        this.mLayoutDirection = layoutDirection;
+        return true;
     }
 
     public boolean onRequestSendAccessibilityEventInternal(View view, AccessibilityEvent accessibilityEvent) {
-        if (super.onRequestSendAccessibilityEventInternal(view, accessibilityEvent)) {
-            AccessibilityEvent obtain = AccessibilityEvent.obtain();
-            onInitializeAccessibilityEvent(obtain);
-            dispatchPopulateAccessibilityEvent(obtain);
-            accessibilityEvent.appendRecord(obtain);
-            return true;
+        if (!super.onRequestSendAccessibilityEventInternal(view, accessibilityEvent)) {
+            return false;
         }
-        return false;
+        AccessibilityEvent obtain = AccessibilityEvent.obtain();
+        onInitializeAccessibilityEvent(obtain);
+        dispatchPopulateAccessibilityEvent(obtain);
+        accessibilityEvent.appendRecord(obtain);
+        return true;
     }
 
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public void onPanelPeeked() {
-        super.onPanelPeeked();
-        this.mBar.makeExpandedVisible(false);
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public void onPanelCollapsed() {
-        super.onPanelCollapsed();
-        post(this.mHideExpandedRunnable);
-        this.mIsFullyOpenedPanel = false;
-    }
-
-    public void removePendingHideExpandedRunnables() {
-        removeCallbacks(this.mHideExpandedRunnable);
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public void onPanelFullyOpened() {
-        super.onPanelFullyOpened();
-        if (!this.mIsFullyOpenedPanel) {
-            this.mPanel.getView().sendAccessibilityEvent(32);
-        }
-        this.mIsFullyOpenedPanel = true;
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar, android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        return this.mBar.interceptTouchEvent(motionEvent) || super.onTouchEvent(motionEvent);
+        TouchEventHandler touchEventHandler = this.mTouchEventHandler;
+        if (touchEventHandler != null) {
+            return touchEventHandler.handleTouchEvent(motionEvent);
+        }
+        Log.w(TAG, String.format("onTouch: No touch handler provided; eating gesture at (%d,%d)", Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())));
+        return true;
     }
 
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public void onTrackingStarted() {
-        super.onTrackingStarted();
-        this.mBar.onTrackingStarted();
-        this.mScrimController.onTrackingStarted();
-        removePendingHideExpandedRunnables();
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public void onClosingFinished() {
-        super.onClosingFinished();
-        this.mBar.onClosingFinished();
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public void onTrackingStopped(boolean z) {
-        super.onTrackingStopped(z);
-        this.mBar.onTrackingStopped(z);
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public void onExpandingFinished() {
-        super.onExpandingFinished();
-        this.mScrimController.onExpandingFinished();
-    }
-
-    @Override // android.view.ViewGroup
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        return this.mBar.interceptTouchEvent(motionEvent) || super.onInterceptTouchEvent(motionEvent);
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public void onPanelMinFractionChanged(float f) {
-        if (Float.isNaN(f)) {
-            throw new IllegalArgumentException("minFraction cannot be NaN");
-        }
-        super.onPanelMinFractionChanged(f);
-        if (this.mMinFraction == f) {
-            return;
-        }
-        this.mMinFraction = f;
-        updateScrimFraction();
-    }
-
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public void panelExpansionChanged(float f, boolean z) {
-        super.panelExpansionChanged(f, z);
-        updateScrimFraction();
-        if ((f == 0.0f || f == 1.0f) && this.mBar.getNavigationBarView() != null) {
-            this.mBar.getNavigationBarView().onStatusBarPanelStateChanged();
-        }
-        List<StatusBar.ExpansionChangedListener> list = this.mExpansionChangedListeners;
-        if (list != null) {
-            for (StatusBar.ExpansionChangedListener expansionChangedListener : list) {
-                expansionChangedListener.onExpansionChanged(f, z);
-            }
-        }
-    }
-
-    private void updateScrimFraction() {
-        float f = this.mPanelFraction;
-        float f2 = this.mMinFraction;
-        if (f2 < 1.0f) {
-            f = Math.max((f - f2) / (1.0f - f2), 0.0f);
-        }
-        this.mScrimController.setPanelExpansion(f);
+        this.mTouchEventHandler.onInterceptTouchEvent(motionEvent);
+        return super.onInterceptTouchEvent(motionEvent);
     }
 
     public void updateResources() {
-        this.mCutoutSideNudge = getResources().getDimensionPixelSize(R$dimen.display_cutout_margin_consumption);
+        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C1893R.dimen.display_cutout_margin_consumption);
         updateStatusBarHeight();
     }
 
@@ -263,80 +169,42 @@ public class PhoneStatusBarView extends PanelBar {
         DisplayCutout displayCutout = this.mDisplayCutout;
         int i = displayCutout == null ? 0 : displayCutout.getWaterfallInsets().top;
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
-        int dimensionPixelSize = getResources().getDimensionPixelSize(R$dimen.status_bar_height);
-        this.mStatusBarHeight = dimensionPixelSize;
-        layoutParams.height = dimensionPixelSize - i;
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(R$dimen.status_bar_padding_top);
-        int dimensionPixelSize3 = getResources().getDimensionPixelSize(R$dimen.status_bar_padding_start);
-        findViewById(R$id.status_bar_contents).setPaddingRelative(dimensionPixelSize3, dimensionPixelSize2, getResources().getDimensionPixelSize(R$dimen.status_bar_padding_end), 0);
-        findViewById(R$id.notification_lights_out).setPaddingRelative(0, dimensionPixelSize3, 0, 0);
+        int statusBarHeight = SystemBarUtils.getStatusBarHeight(this.mContext);
+        this.mStatusBarHeight = statusBarHeight;
+        layoutParams.height = statusBarHeight - i;
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.status_bar_padding_top);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C1893R.dimen.status_bar_padding_start);
+        PhoneStatusBarViewEx.updateSbContentPadding(this.mContext, findViewById(C1893R.C1897id.status_bar_contents), dimensionPixelSize2, dimensionPixelSize, getResources().getDimensionPixelSize(C1893R.dimen.status_bar_padding_end));
+        findViewById(C1893R.C1897id.notification_lights_out).setPaddingRelative(0, dimensionPixelSize2, 0, 0);
         setLayoutParams(layoutParams);
     }
 
     private void updateLayoutForCutout() {
-        updateLayoutForCutout(null);
-    }
-
-    private void updateCutoutLocation(Pair<Integer, Integer> pair) {
-        if (this.mCutoutSpace == null) {
-            return;
-        }
-        DisplayCutout displayCutout = this.mDisplayCutout;
-        if (displayCutout == null || displayCutout.isEmpty() || pair != null) {
-            this.mCenterIconSpace.setVisibility(0);
-            this.mCutoutSpace.setVisibility(8);
-            return;
-        }
-        this.mCenterIconSpace.setVisibility(8);
-        this.mCutoutSpace.setVisibility(0);
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mCutoutSpace.getLayoutParams();
-        Rect rect = new Rect();
-        ScreenDecorations.DisplayCutoutView.boundsFromDirection(this.mDisplayCutout, 48, rect);
-        int i = rect.left;
-        int i2 = this.mCutoutSideNudge;
-        rect.left = i + i2;
-        rect.right -= i2;
-        layoutParams.width = rect.width();
-        layoutParams.height = rect.height();
-    }
-
-    public void setHeadsUpVisible(boolean z) {
-        this.mHeadsUpVisible = z;
-        updateVisibility();
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.phone.PanelBar
-    public boolean shouldPanelBeVisible() {
-        return this.mHeadsUpVisible || super.shouldPanelBeVisible();
-    }
-
-    private void updateSafeInsets(WindowInsets windowInsets) {
-        Rect statusBarContentInsetsForRotation = this.mContentInsetsProvider.getStatusBarContentInsetsForRotation(RotationUtils.getExactRotation(getContext()));
-        Point point = new Point();
-        getDisplay().getRealSize(point);
-        int i = statusBarContentInsetsForRotation.left;
-        int i2 = point.x - statusBarContentInsetsForRotation.right;
-        if (windowInsets != null) {
-            Insets insets = windowInsets.getInsets(WindowInsets.Type.navigationBars());
-            i = Math.max(0, i - insets.left);
-            i2 = Math.max(0, i2 - insets.right);
-        }
-        setPadding(i, getPaddingTop(), i2, getPaddingBottom());
-    }
-
-    private void updateLayoutForCutout(WindowInsets windowInsets) {
         updateStatusBarHeight();
-        updateCutoutLocation(StatusBarWindowView.cornerCutoutMargins(this.mDisplayCutout, getDisplay()));
-        updateSafeInsets(windowInsets);
+        updateCutoutLocation();
+        updateSafeInsets();
     }
 
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        printWriter.println("PhoneStatusBarView state:");
-        DarkIconDispatcher.DarkReceiver darkReceiver = this.mBattery;
-        if (darkReceiver == null || !(darkReceiver instanceof BatteryMeterView)) {
-            return;
+    private void updateCutoutLocation() {
+        if (this.mCutoutSpace != null) {
+            boolean currentRotationHasCornerCutout = this.mContentInsetsProvider.currentRotationHasCornerCutout();
+            DisplayCutout displayCutout = this.mDisplayCutout;
+            if (displayCutout == null || displayCutout.isEmpty() || currentRotationHasCornerCutout) {
+                this.mCutoutSpace.setVisibility(8);
+                return;
+            }
+            this.mCutoutSpace.setVisibility(0);
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mCutoutSpace.getLayoutParams();
+            Rect boundingRectTop = this.mDisplayCutout.getBoundingRectTop();
+            boundingRectTop.left += this.mCutoutSideNudge;
+            boundingRectTop.right -= this.mCutoutSideNudge;
+            layoutParams.width = boundingRectTop.width();
+            layoutParams.height = boundingRectTop.height();
         }
-        ((BatteryMeterView) darkReceiver).dump(fileDescriptor, printWriter, strArr);
+    }
+
+    private void updateSafeInsets() {
+        Pair<Integer, Integer> statusBarContentInsetsForCurrentRotation = this.mContentInsetsProvider.getStatusBarContentInsetsForCurrentRotation();
+        setPadding(((Integer) statusBarContentInsetsForCurrentRotation.first).intValue(), getPaddingTop(), ((Integer) statusBarContentInsetsForCurrentRotation.second).intValue(), getPaddingBottom());
     }
 }

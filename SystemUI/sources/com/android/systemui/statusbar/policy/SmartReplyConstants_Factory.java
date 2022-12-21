@@ -5,7 +5,7 @@ import android.os.Handler;
 import com.android.systemui.util.DeviceConfigProxy;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class SmartReplyConstants_Factory implements Factory<SmartReplyConstants> {
     private final Provider<Context> contextProvider;
     private final Provider<DeviceConfigProxy> deviceConfigProvider;
@@ -17,10 +17,8 @@ public final class SmartReplyConstants_Factory implements Factory<SmartReplyCons
         this.deviceConfigProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SmartReplyConstants mo1933get() {
-        return newInstance(this.handlerProvider.mo1933get(), this.contextProvider.mo1933get(), this.deviceConfigProvider.mo1933get());
+    public SmartReplyConstants get() {
+        return newInstance(this.handlerProvider.get(), this.contextProvider.get(), this.deviceConfigProvider.get());
     }
 
     public static SmartReplyConstants_Factory create(Provider<Handler> provider, Provider<Context> provider2, Provider<DeviceConfigProxy> provider3) {

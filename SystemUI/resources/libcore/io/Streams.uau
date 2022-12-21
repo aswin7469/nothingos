@@ -1,0 +1,8 @@
+signature,file,startline,startcol,endline,endcol,properties
+Llibcore/io/Streams;->readSingleByte(Ljava/io/InputStream;)I,libcore/luni/src/main/java/libcore/io/Streams.java,58,5,58,25,
+Llibcore/io/Streams;->writeSingleByte(Ljava/io/OutputStream;I)V,libcore/luni/src/main/java/libcore/io/Streams.java,77,5,77,25,
+Llibcore/io/Streams;->readFully(Ljava/io/InputStream;[B)V,libcore/luni/src/main/java/libcore/io/Streams.java,95,5,95,25,
+Llibcore/io/Streams;->readFully(Ljava/io/InputStream;)[B,libcore/luni/src/main/java/libcore/io/Streams.java,140,5,140,25,
+Llibcore/io/Streams;->skipAll(Ljava/io/InputStream;)V,libcore/luni/src/main/java/libcore/io/Streams.java,198,5,198,25,
+Llibcore/io/Streams;->copy(Ljava/io/InputStream;Ljava/io/OutputStream;)I,libcore/luni/src/main/java/libcore/io/Streams.java,262,5,262,25,
+Llibcore/io/Streams;->readAsciiLine(Ljava/io/InputStream;)Ljava/lang/String;,libcore/luni/src/main/java/libcore/io/Streams.java,284,5,284,25,

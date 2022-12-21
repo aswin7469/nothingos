@@ -1,75 +1,12 @@
 package kotlinx.coroutines.scheduling;
 
-import kotlin.jvm.internal.Intrinsics;
+import kotlin.Metadata;
 import kotlinx.coroutines.internal.LockFreeTaskQueue;
-import kotlinx.coroutines.internal.LockFreeTaskQueueCore;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u0000\u0010\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0000\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0003¨\u0006\u0004"}, mo64987d2 = {"Lkotlinx/coroutines/scheduling/GlobalQueue;", "Lkotlinx/coroutines/internal/LockFreeTaskQueue;", "Lkotlinx/coroutines/scheduling/Task;", "()V", "kotlinx-coroutines-core"}, mo64988k = 1, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: Tasks.kt */
-/* loaded from: classes2.dex */
-public class GlobalQueue extends LockFreeTaskQueue<Task> {
+public final class GlobalQueue extends LockFreeTaskQueue<Task> {
     public GlobalQueue() {
         super(false);
-    }
-
-    /* JADX WARN: Code restructure failed: missing block: B:25:0x008e, code lost:
-        r7 = r9;
-     */
-    @Nullable
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final Task removeFirstWithModeOrNull(@NotNull TaskMode mode) {
-        Object obj;
-        Intrinsics.checkParameterIsNotNull(mode, "mode");
-        while (true) {
-            LockFreeTaskQueueCore lockFreeTaskQueueCore = (LockFreeTaskQueueCore) this._cur$internal;
-            while (true) {
-                long j = lockFreeTaskQueueCore._state$internal;
-                obj = null;
-                if ((1152921504606846976L & j) != 0) {
-                    obj = LockFreeTaskQueueCore.REMOVE_FROZEN;
-                    break;
-                }
-                LockFreeTaskQueueCore.Companion companion = LockFreeTaskQueueCore.Companion;
-                boolean z = false;
-                int i = (int) ((1073741823 & j) >> 0);
-                if ((((int) ((1152921503533105152L & j) >> 30)) & lockFreeTaskQueueCore.mask) == (lockFreeTaskQueueCore.mask & i)) {
-                    break;
-                }
-                Object obj2 = lockFreeTaskQueueCore.array$internal.get(lockFreeTaskQueueCore.mask & i);
-                if (obj2 == null) {
-                    if (lockFreeTaskQueueCore.singleConsumer) {
-                        break;
-                    }
-                } else if (obj2 instanceof LockFreeTaskQueueCore.Placeholder) {
-                    break;
-                } else {
-                    if (((Task) obj2).getMode() == mode) {
-                        z = true;
-                    }
-                    if (z) {
-                        int i2 = (i + 1) & 1073741823;
-                        if (LockFreeTaskQueueCore._state$FU$internal.compareAndSet(lockFreeTaskQueueCore, j, companion.updateHead(j, i2))) {
-                            lockFreeTaskQueueCore.array$internal.set(lockFreeTaskQueueCore.mask & i, null);
-                            break;
-                        } else if (lockFreeTaskQueueCore.singleConsumer) {
-                            LockFreeTaskQueueCore lockFreeTaskQueueCore2 = lockFreeTaskQueueCore;
-                            do {
-                                lockFreeTaskQueueCore2 = lockFreeTaskQueueCore2.removeSlowPath(i, i2);
-                            } while (lockFreeTaskQueueCore2 != null);
-                            break;
-                        }
-                    } else {
-                        break;
-                    }
-                }
-            }
-            if (obj == LockFreeTaskQueueCore.REMOVE_FROZEN) {
-                LockFreeTaskQueue._cur$FU$internal.compareAndSet(this, lockFreeTaskQueueCore, lockFreeTaskQueueCore.next());
-            } else {
-                return (Task) obj;
-            }
-        }
     }
 }

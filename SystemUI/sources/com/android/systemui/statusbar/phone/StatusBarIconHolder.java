@@ -5,13 +5,16 @@ import android.graphics.drawable.Icon;
 import android.os.UserHandle;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
-/* loaded from: classes.dex */
+
 public class StatusBarIconHolder {
+    public static final int TYPE_ICON = 0;
+    public static final int TYPE_MOBILE = 2;
+    public static final int TYPE_WIFI = 1;
     private StatusBarIcon mIcon;
     private StatusBarSignalPolicy.MobileIconState mMobileState;
-    private StatusBarSignalPolicy.WifiIconState mWifiState;
-    private int mType = 0;
     private int mTag = 0;
+    private int mType = 0;
+    private StatusBarSignalPolicy.WifiIconState mWifiState;
 
     private StatusBarIconHolder() {
     }
@@ -19,6 +22,12 @@ public class StatusBarIconHolder {
     public static StatusBarIconHolder fromIcon(StatusBarIcon statusBarIcon) {
         StatusBarIconHolder statusBarIconHolder = new StatusBarIconHolder();
         statusBarIconHolder.mIcon = statusBarIcon;
+        return statusBarIconHolder;
+    }
+
+    public static StatusBarIconHolder fromResId(Context context, int i, CharSequence charSequence) {
+        StatusBarIconHolder statusBarIconHolder = new StatusBarIconHolder();
+        statusBarIconHolder.mIcon = new StatusBarIcon(UserHandle.SYSTEM, context.getPackageName(), Icon.createWithResource(context, i), 0, 0, charSequence);
         return statusBarIconHolder;
     }
 
@@ -39,9 +48,7 @@ public class StatusBarIconHolder {
 
     public static StatusBarIconHolder fromCallIndicatorState(Context context, StatusBarSignalPolicy.CallIndicatorIconState callIndicatorIconState) {
         StatusBarIconHolder statusBarIconHolder = new StatusBarIconHolder();
-        boolean z = callIndicatorIconState.isNoCalling;
-        int i = z ? callIndicatorIconState.noCallingResId : callIndicatorIconState.callStrengthResId;
-        statusBarIconHolder.mIcon = new StatusBarIcon(UserHandle.SYSTEM, context.getPackageName(), Icon.createWithResource(context, i), 0, 0, z ? callIndicatorIconState.noCallingDescription : callIndicatorIconState.callStrengthDescription);
+        statusBarIconHolder.mIcon = new StatusBarIcon(UserHandle.SYSTEM, context.getPackageName(), Icon.createWithResource(context, callIndicatorIconState.isNoCalling ? callIndicatorIconState.noCallingResId : callIndicatorIconState.callStrengthResId), 0, 0, callIndicatorIconState.isNoCalling ? callIndicatorIconState.noCallingDescription : callIndicatorIconState.callStrengthDescription);
         statusBarIconHolder.mTag = callIndicatorIconState.subId;
         return statusBarIconHolder;
     }
@@ -76,30 +83,28 @@ public class StatusBarIconHolder {
 
     public boolean isVisible() {
         int i = this.mType;
-        if (i != 0) {
-            if (i == 1) {
-                return this.mWifiState.visible;
-            }
-            if (i == 2) {
-                return this.mMobileState.visible;
-            }
+        if (i == 0) {
+            return this.mIcon.visible;
+        }
+        if (i == 1) {
+            return this.mWifiState.visible;
+        }
+        if (i != 2) {
             return true;
         }
-        return this.mIcon.visible;
+        return this.mMobileState.visible;
     }
 
     public void setVisible(boolean z) {
-        if (isVisible() == z) {
-            return;
-        }
-        int i = this.mType;
-        if (i == 0) {
-            this.mIcon.visible = z;
-        } else if (i == 1) {
-            this.mWifiState.visible = z;
-        } else if (i != 2) {
-        } else {
-            this.mMobileState.visible = z;
+        if (isVisible() != z) {
+            int i = this.mType;
+            if (i == 0) {
+                this.mIcon.visible = z;
+            } else if (i == 1) {
+                this.mWifiState.visible = z;
+            } else if (i == 2) {
+                this.mMobileState.visible = z;
+            }
         }
     }
 

@@ -5,13 +5,14 @@ import android.content.res.Resources;
 import android.util.ArrayMap;
 import android.view.View;
 import android.widget.TextView;
-/* loaded from: classes2.dex */
+
 public class ConfigurableTexts {
     private final Context mContext;
-    private final ArrayMap<TextView, Integer> mTexts = new ArrayMap<>();
-    private final ArrayMap<TextView, Integer> mTextLabels = new ArrayMap<>();
-    private final Runnable mUpdateAll = new Runnable() { // from class: com.android.systemui.volume.ConfigurableTexts.2
-        @Override // java.lang.Runnable
+    /* access modifiers changed from: private */
+    public final ArrayMap<TextView, Integer> mTextLabels = new ArrayMap<>();
+    /* access modifiers changed from: private */
+    public final ArrayMap<TextView, Integer> mTexts = new ArrayMap<>();
+    private final Runnable mUpdateAll = new Runnable() {
         public void run() {
             for (int i = 0; i < ConfigurableTexts.this.mTexts.size(); i++) {
                 ConfigurableTexts configurableTexts = ConfigurableTexts.this;
@@ -43,12 +44,10 @@ public class ConfigurableTexts {
         float f = resources.getConfiguration().fontScale;
         final int textSize = (int) ((textView.getTextSize() / f) / resources.getDisplayMetrics().density);
         this.mTexts.put(textView, Integer.valueOf(textSize));
-        textView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() { // from class: com.android.systemui.volume.ConfigurableTexts.1
-            @Override // android.view.View.OnAttachStateChangeListener
+        textView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             public void onViewDetachedFromWindow(View view) {
             }
 
-            @Override // android.view.View.OnAttachStateChangeListener
             public void onViewAttachedToWindow(View view) {
                 ConfigurableTexts.this.setTextSizeH(textView, textSize);
             }
@@ -63,22 +62,21 @@ public class ConfigurableTexts {
     }
 
     public void update() {
-        if (this.mTexts.isEmpty()) {
-            return;
+        if (!this.mTexts.isEmpty()) {
+            this.mTexts.keyAt(0).post(this.mUpdateAll);
         }
-        this.mTexts.keyAt(0).post(this.mUpdateAll);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setTextSizeH(TextView textView, int i) {
-        textView.setTextSize(2, i);
+        textView.setTextSize(2, (float) i);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setTextLabelH(TextView textView, int i) {
         if (i >= 0) {
             try {
-                com.android.settingslib.volume.Util.setText(textView, this.mContext.getString(i));
+                Util.setText(textView, this.mContext.getString(i));
             } catch (Resources.NotFoundException unused) {
             }
         }

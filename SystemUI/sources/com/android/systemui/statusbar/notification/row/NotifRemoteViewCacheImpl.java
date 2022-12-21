@@ -7,66 +7,58 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
 import com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener;
 import java.util.Map;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class NotifRemoteViewCacheImpl implements NotifRemoteViewCache {
     private final NotifCollectionListener mCollectionListener;
-    private final Map<NotificationEntry, SparseArray<RemoteViews>> mNotifCachedContentViews = new ArrayMap();
+    /* access modifiers changed from: private */
+    public final Map<NotificationEntry, SparseArray<RemoteViews>> mNotifCachedContentViews = new ArrayMap();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public NotifRemoteViewCacheImpl(CommonNotifCollection commonNotifCollection) {
-        NotifCollectionListener notifCollectionListener = new NotifCollectionListener() { // from class: com.android.systemui.statusbar.notification.row.NotifRemoteViewCacheImpl.1
-            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
+    @Inject
+    NotifRemoteViewCacheImpl(CommonNotifCollection commonNotifCollection) {
+        C27531 r0 = new NotifCollectionListener() {
             public void onEntryInit(NotificationEntry notificationEntry) {
                 NotifRemoteViewCacheImpl.this.mNotifCachedContentViews.put(notificationEntry, new SparseArray());
             }
 
-            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryCleanUp(NotificationEntry notificationEntry) {
                 NotifRemoteViewCacheImpl.this.mNotifCachedContentViews.remove(notificationEntry);
             }
         };
-        this.mCollectionListener = notifCollectionListener;
-        commonNotifCollection.addCollectionListener(notifCollectionListener);
+        this.mCollectionListener = r0;
+        commonNotifCollection.addCollectionListener(r0);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotifRemoteViewCache
     public boolean hasCachedView(NotificationEntry notificationEntry, int i) {
         return getCachedView(notificationEntry, i) != null;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotifRemoteViewCache
     public RemoteViews getCachedView(NotificationEntry notificationEntry, int i) {
-        SparseArray<RemoteViews> sparseArray = this.mNotifCachedContentViews.get(notificationEntry);
+        SparseArray sparseArray = this.mNotifCachedContentViews.get(notificationEntry);
         if (sparseArray == null) {
             return null;
         }
-        return sparseArray.get(i);
+        return (RemoteViews) sparseArray.get(i);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotifRemoteViewCache
     public void putCachedView(NotificationEntry notificationEntry, int i, RemoteViews remoteViews) {
-        SparseArray<RemoteViews> sparseArray = this.mNotifCachedContentViews.get(notificationEntry);
-        if (sparseArray == null) {
-            return;
+        SparseArray sparseArray = this.mNotifCachedContentViews.get(notificationEntry);
+        if (sparseArray != null) {
+            sparseArray.put(i, remoteViews);
         }
-        sparseArray.put(i, remoteViews);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotifRemoteViewCache
     public void removeCachedView(NotificationEntry notificationEntry, int i) {
-        SparseArray<RemoteViews> sparseArray = this.mNotifCachedContentViews.get(notificationEntry);
-        if (sparseArray == null) {
-            return;
+        SparseArray sparseArray = this.mNotifCachedContentViews.get(notificationEntry);
+        if (sparseArray != null) {
+            sparseArray.remove(i);
         }
-        sparseArray.remove(i);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotifRemoteViewCache
     public void clearCache(NotificationEntry notificationEntry) {
-        SparseArray<RemoteViews> sparseArray = this.mNotifCachedContentViews.get(notificationEntry);
-        if (sparseArray == null) {
-            return;
+        SparseArray sparseArray = this.mNotifCachedContentViews.get(notificationEntry);
+        if (sparseArray != null) {
+            sparseArray.clear();
         }
-        sparseArray.clear();
     }
 }

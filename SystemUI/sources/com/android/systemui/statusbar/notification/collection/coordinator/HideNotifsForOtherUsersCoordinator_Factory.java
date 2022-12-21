@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.collection.coordinator;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class HideNotifsForOtherUsersCoordinator_Factory implements Factory<HideNotifsForOtherUsersCoordinator> {
     private final Provider<NotificationLockscreenUserManager> lockscreenUserManagerProvider;
     private final Provider<SharedCoordinatorLogger> loggerProvider;
@@ -13,10 +13,8 @@ public final class HideNotifsForOtherUsersCoordinator_Factory implements Factory
         this.loggerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public HideNotifsForOtherUsersCoordinator mo1933get() {
-        return newInstance(this.lockscreenUserManagerProvider.mo1933get(), this.loggerProvider.mo1933get());
+    public HideNotifsForOtherUsersCoordinator get() {
+        return newInstance(this.lockscreenUserManagerProvider.get(), this.loggerProvider.get());
     }
 
     public static HideNotifsForOtherUsersCoordinator_Factory create(Provider<NotificationLockscreenUserManager> provider, Provider<SharedCoordinatorLogger> provider2) {

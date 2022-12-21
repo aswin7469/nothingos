@@ -7,25 +7,57 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
+import android.view.inspector.InspectionCompanion;
+import android.view.inspector.PropertyMapper;
+import android.view.inspector.PropertyReader;
 import android.widget.ImageButton;
-import androidx.appcompat.R$attr;
+import androidx.appcompat.C0329R;
 import androidx.core.view.TintableBackgroundView;
 import androidx.core.widget.TintableImageSourceView;
-/* loaded from: classes.dex */
+
 public class AppCompatImageButton extends ImageButton implements TintableBackgroundView, TintableImageSourceView {
     private final AppCompatBackgroundHelper mBackgroundTintHelper;
+    private boolean mHasLevel;
     private final AppCompatImageHelper mImageHelper;
 
+    public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<AppCompatImageButton> {
+        private int mBackgroundTintId;
+        private int mBackgroundTintModeId;
+        private boolean mPropertiesMapped = false;
+        private int mTintId;
+        private int mTintModeId;
+
+        public void mapProperties(PropertyMapper propertyMapper) {
+            this.mBackgroundTintId = propertyMapper.mapObject("backgroundTint", C0329R.attr.backgroundTint);
+            this.mBackgroundTintModeId = propertyMapper.mapObject("backgroundTintMode", C0329R.attr.backgroundTintMode);
+            this.mTintId = propertyMapper.mapObject("tint", C0329R.attr.tint);
+            this.mTintModeId = propertyMapper.mapObject("tintMode", C0329R.attr.tintMode);
+            this.mPropertiesMapped = true;
+        }
+
+        public void readProperties(AppCompatImageButton appCompatImageButton, PropertyReader propertyReader) {
+            if (this.mPropertiesMapped) {
+                propertyReader.readObject(this.mBackgroundTintId, appCompatImageButton.getBackgroundTintList());
+                propertyReader.readObject(this.mBackgroundTintModeId, appCompatImageButton.getBackgroundTintMode());
+                propertyReader.readObject(this.mTintId, appCompatImageButton.getImageTintList());
+                propertyReader.readObject(this.mTintModeId, appCompatImageButton.getImageTintMode());
+                return;
+            }
+            throw new InspectionCompanion.UninitializedPropertyMapException();
+        }
+    }
+
     public AppCompatImageButton(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public AppCompatImageButton(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, R$attr.imageButtonStyle);
+        this(context, attributeSet, C0329R.attr.imageButtonStyle);
     }
 
     public AppCompatImageButton(Context context, AttributeSet attributeSet, int i) {
         super(TintContextWrapper.wrap(context), attributeSet, i);
+        this.mHasLevel = false;
         ThemeUtils.checkAppCompatTheme(this, getContext());
         AppCompatBackgroundHelper appCompatBackgroundHelper = new AppCompatBackgroundHelper(this);
         this.mBackgroundTintHelper = appCompatBackgroundHelper;
@@ -35,21 +67,25 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         appCompatImageHelper.loadFromAttributes(attributeSet, i);
     }
 
-    @Override // android.widget.ImageView
     public void setImageResource(int i) {
         this.mImageHelper.setImageResource(i);
     }
 
-    @Override // android.widget.ImageView
     public void setImageDrawable(Drawable drawable) {
-        super.setImageDrawable(drawable);
         AppCompatImageHelper appCompatImageHelper = this.mImageHelper;
-        if (appCompatImageHelper != null) {
-            appCompatImageHelper.applySupportImageTint();
+        if (!(appCompatImageHelper == null || drawable == null || this.mHasLevel)) {
+            appCompatImageHelper.obtainLevelFromDrawable(drawable);
+        }
+        super.setImageDrawable(drawable);
+        AppCompatImageHelper appCompatImageHelper2 = this.mImageHelper;
+        if (appCompatImageHelper2 != null) {
+            appCompatImageHelper2.applySupportImageTint();
+            if (!this.mHasLevel) {
+                this.mImageHelper.applyImageLevel();
+            }
         }
     }
 
-    @Override // android.widget.ImageView
     public void setImageBitmap(Bitmap bitmap) {
         super.setImageBitmap(bitmap);
         AppCompatImageHelper appCompatImageHelper = this.mImageHelper;
@@ -58,7 +94,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         }
     }
 
-    @Override // android.widget.ImageView
     public void setImageURI(Uri uri) {
         super.setImageURI(uri);
         AppCompatImageHelper appCompatImageHelper = this.mImageHelper;
@@ -67,7 +102,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         }
     }
 
-    @Override // android.view.View
     public void setBackgroundResource(int i) {
         super.setBackgroundResource(i);
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
@@ -76,7 +110,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         }
     }
 
-    @Override // android.view.View
     public void setBackgroundDrawable(Drawable drawable) {
         super.setBackgroundDrawable(drawable);
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
@@ -85,7 +118,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public void setSupportBackgroundTintList(ColorStateList colorStateList) {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -93,7 +125,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public ColorStateList getSupportBackgroundTintList() {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -102,7 +133,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         return null;
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public void setSupportBackgroundTintMode(PorterDuff.Mode mode) {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -110,7 +140,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public PorterDuff.Mode getSupportBackgroundTintMode() {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -119,7 +148,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         return null;
     }
 
-    @Override // androidx.core.widget.TintableImageSourceView
     public void setSupportImageTintList(ColorStateList colorStateList) {
         AppCompatImageHelper appCompatImageHelper = this.mImageHelper;
         if (appCompatImageHelper != null) {
@@ -127,7 +155,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         }
     }
 
-    @Override // androidx.core.widget.TintableImageSourceView
     public ColorStateList getSupportImageTintList() {
         AppCompatImageHelper appCompatImageHelper = this.mImageHelper;
         if (appCompatImageHelper != null) {
@@ -136,7 +163,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         return null;
     }
 
-    @Override // androidx.core.widget.TintableImageSourceView
     public void setSupportImageTintMode(PorterDuff.Mode mode) {
         AppCompatImageHelper appCompatImageHelper = this.mImageHelper;
         if (appCompatImageHelper != null) {
@@ -144,7 +170,6 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         }
     }
 
-    @Override // androidx.core.widget.TintableImageSourceView
     public PorterDuff.Mode getSupportImageTintMode() {
         AppCompatImageHelper appCompatImageHelper = this.mImageHelper;
         if (appCompatImageHelper != null) {
@@ -153,8 +178,8 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         return null;
     }
 
-    @Override // android.widget.ImageView, android.view.View
-    protected void drawableStateChanged() {
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
         super.drawableStateChanged();
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -166,8 +191,12 @@ public class AppCompatImageButton extends ImageButton implements TintableBackgro
         }
     }
 
-    @Override // android.widget.ImageView, android.view.View
     public boolean hasOverlappingRendering() {
         return this.mImageHelper.hasOverlappingRendering() && super.hasOverlappingRendering();
+    }
+
+    public void setImageLevel(int i) {
+        super.setImageLevel(i);
+        this.mHasLevel = true;
     }
 }

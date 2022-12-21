@@ -3,9 +3,8 @@ package com.android.systemui.statusbar;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.Button;
-/* loaded from: classes.dex */
+
 public class AlphaOptimizedButton extends Button {
-    @Override // android.widget.TextView, android.view.View
     public boolean hasOverlappingRendering() {
         return false;
     }

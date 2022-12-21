@@ -1,6 +1,5 @@
 package androidx.slice.compat;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,90 +10,90 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-/* loaded from: classes.dex */
+import sun.util.locale.BaseLocale;
+
 public class CompatPermissionManager {
+    public static final String ALL_SUFFIX = "_all";
+    private static final String TAG = "CompatPermissionManager";
     private final String[] mAutoGrantPermissions;
     private final Context mContext;
     private final int mMyUid;
     private final String mPrefsName;
 
-    public CompatPermissionManager(Context context, String prefsName, int myUid, String[] autoGrantPermissions) {
+    public CompatPermissionManager(Context context, String str, int i, String[] strArr) {
         this.mContext = context;
-        this.mPrefsName = prefsName;
-        this.mMyUid = myUid;
-        this.mAutoGrantPermissions = autoGrantPermissions;
+        this.mPrefsName = str;
+        this.mMyUid = i;
+        this.mAutoGrantPermissions = strArr;
     }
 
     private SharedPreferences getPrefs() {
         return this.mContext.getSharedPreferences(this.mPrefsName, 0);
     }
 
-    @SuppressLint({"WrongConstant"})
-    public int checkSlicePermission(Uri uri, int pid, int uid) {
-        if (uid == this.mMyUid) {
+    public int checkSlicePermission(Uri uri, int i, int i2) {
+        if (i2 == this.mMyUid) {
             return 0;
         }
-        String[] packagesForUid = this.mContext.getPackageManager().getPackagesForUid(uid);
-        for (String str : packagesForUid) {
-            if (checkSlicePermission(uri, str) == 0) {
+        String[] packagesForUid = this.mContext.getPackageManager().getPackagesForUid(i2);
+        for (String checkSlicePermission : packagesForUid) {
+            if (checkSlicePermission(uri, checkSlicePermission) == 0) {
                 return 0;
             }
         }
-        for (String str2 : this.mAutoGrantPermissions) {
-            if (this.mContext.checkPermission(str2, pid, uid) == 0) {
-                for (String str3 : packagesForUid) {
-                    grantSlicePermission(uri, str3);
+        for (String checkPermission : this.mAutoGrantPermissions) {
+            if (this.mContext.checkPermission(checkPermission, i, i2) == 0) {
+                for (String grantSlicePermission : packagesForUid) {
+                    grantSlicePermission(uri, grantSlicePermission);
                 }
                 return 0;
             }
         }
-        return this.mContext.checkUriPermission(uri, pid, uid, 2);
+        return this.mContext.checkUriPermission(uri, i, i2, 2);
     }
 
-    private int checkSlicePermission(Uri uri, String pkg) {
-        return getPermissionState(pkg, uri.getAuthority()).hasAccess(uri.getPathSegments()) ? 0 : -1;
+    private int checkSlicePermission(Uri uri, String str) {
+        return getPermissionState(str, uri.getAuthority()).hasAccess(uri.getPathSegments()) ? 0 : -1;
     }
 
-    public void grantSlicePermission(Uri uri, String toPkg) {
-        PermissionState permissionState = getPermissionState(toPkg, uri.getAuthority());
+    public void grantSlicePermission(Uri uri, String str) {
+        PermissionState permissionState = getPermissionState(str, uri.getAuthority());
         if (permissionState.addPath(uri.getPathSegments())) {
             persist(permissionState);
         }
     }
 
-    public void revokeSlicePermission(Uri uri, String toPkg) {
-        PermissionState permissionState = getPermissionState(toPkg, uri.getAuthority());
+    public void revokeSlicePermission(Uri uri, String str) {
+        PermissionState permissionState = getPermissionState(str, uri.getAuthority());
         if (permissionState.removePath(uri.getPathSegments())) {
             persist(permissionState);
         }
     }
 
-    private synchronized void persist(PermissionState state) {
-        SharedPreferences.Editor putStringSet = getPrefs().edit().putStringSet(state.getKey(), state.toPersistable());
-        putStringSet.putBoolean(state.getKey() + "_all", state.hasAllPermissions()).apply();
+    private synchronized void persist(PermissionState permissionState) {
+        getPrefs().edit().putStringSet(permissionState.getKey(), permissionState.toPersistable()).putBoolean(permissionState.getKey() + ALL_SUFFIX, permissionState.hasAllPermissions()).apply();
     }
 
-    private PermissionState getPermissionState(String pkg, String authority) {
-        String str = pkg + "_" + authority;
-        return new PermissionState(getPrefs().getStringSet(str, Collections.emptySet()), str, getPrefs().getBoolean(str + "_all", false));
+    private PermissionState getPermissionState(String str, String str2) {
+        String str3 = str + BaseLocale.SEP + str2;
+        return new PermissionState(getPrefs().getStringSet(str3, Collections.emptySet()), str3, getPrefs().getBoolean(str3 + ALL_SUFFIX, false));
     }
 
-    /* loaded from: classes.dex */
     public static class PermissionState {
         private final String mKey;
         private final ArraySet<String[]> mPaths;
 
-        PermissionState(Set<String> grant, String key, boolean hasAllPermissions) {
+        PermissionState(Set<String> set, String str, boolean z) {
             ArraySet<String[]> arraySet = new ArraySet<>();
             this.mPaths = arraySet;
-            if (hasAllPermissions) {
+            if (z) {
                 arraySet.add(new String[0]);
             } else {
-                for (String str : grant) {
-                    this.mPaths.add(decodeSegments(str));
+                for (String decodeSegments : set) {
+                    this.mPaths.add(decodeSegments(decodeSegments));
                 }
             }
-            this.mKey = key;
+            this.mKey = str;
         }
 
         public boolean hasAllPermissions() {
@@ -114,8 +113,8 @@ public class CompatPermissionManager {
             return arraySet;
         }
 
-        public boolean hasAccess(List<String> path) {
-            String[] strArr = (String[]) path.toArray(new String[path.size()]);
+        public boolean hasAccess(List<String> list) {
+            String[] strArr = (String[]) list.toArray(new String[list.size()]);
             Iterator<String[]> it = this.mPaths.iterator();
             while (it.hasNext()) {
                 if (isPathPrefixMatch(it.next(), strArr)) {
@@ -125,8 +124,9 @@ public class CompatPermissionManager {
             return false;
         }
 
-        boolean addPath(List<String> path) {
-            String[] strArr = (String[]) path.toArray(new String[path.size()]);
+        /* access modifiers changed from: package-private */
+        public boolean addPath(List<String> list) {
+            String[] strArr = (String[]) list.toArray(new String[list.size()]);
             for (int size = this.mPaths.size() - 1; size >= 0; size--) {
                 String[] valueAt = this.mPaths.valueAt(size);
                 if (isPathPrefixMatch(valueAt, strArr)) {
@@ -140,8 +140,9 @@ public class CompatPermissionManager {
             return true;
         }
 
-        boolean removePath(List<String> path) {
-            String[] strArr = (String[]) path.toArray(new String[path.size()]);
+        /* access modifiers changed from: package-private */
+        public boolean removePath(List<String> list) {
+            String[] strArr = (String[]) list.toArray(new String[list.size()]);
             boolean z = false;
             for (int size = this.mPaths.size() - 1; size >= 0; size--) {
                 if (isPathPrefixMatch(strArr, this.mPaths.valueAt(size))) {
@@ -152,29 +153,29 @@ public class CompatPermissionManager {
             return z;
         }
 
-        private boolean isPathPrefixMatch(String[] prefix, String[] path) {
-            int length = prefix.length;
-            if (path.length < length) {
+        private boolean isPathPrefixMatch(String[] strArr, String[] strArr2) {
+            int length = strArr.length;
+            if (strArr2.length < length) {
                 return false;
             }
             for (int i = 0; i < length; i++) {
-                if (!Objects.equals(path[i], prefix[i])) {
+                if (!Objects.equals(strArr2[i], strArr[i])) {
                     return false;
                 }
             }
             return true;
         }
 
-        private String encodeSegments(String[] s) {
-            String[] strArr = new String[s.length];
-            for (int i = 0; i < s.length; i++) {
-                strArr[i] = Uri.encode(s[i]);
+        private String encodeSegments(String[] strArr) {
+            String[] strArr2 = new String[strArr.length];
+            for (int i = 0; i < strArr.length; i++) {
+                strArr2[i] = Uri.encode(strArr[i]);
             }
-            return TextUtils.join("/", strArr);
+            return TextUtils.join("/", strArr2);
         }
 
-        private String[] decodeSegments(String s) {
-            String[] split = s.split("/", -1);
+        private String[] decodeSegments(String str) {
+            String[] split = str.split("/", -1);
             for (int i = 0; i < split.length; i++) {
                 split[i] = Uri.decode(split[i]);
             }

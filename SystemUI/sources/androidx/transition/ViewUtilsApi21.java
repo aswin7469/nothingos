@@ -1,16 +1,16 @@
 package androidx.transition;
 
-import android.annotation.SuppressLint;
 import android.graphics.Matrix;
 import android.view.View;
-/* loaded from: classes.dex */
+
 class ViewUtilsApi21 extends ViewUtilsApi19 {
     private static boolean sTryHiddenSetAnimationMatrix = true;
     private static boolean sTryHiddenTransformMatrixToGlobal = true;
     private static boolean sTryHiddenTransformMatrixToLocal = true;
 
-    @Override // androidx.transition.ViewUtilsBase
-    @SuppressLint({"NewApi"})
+    ViewUtilsApi21() {
+    }
+
     public void transformMatrixToGlobal(View view, Matrix matrix) {
         if (sTryHiddenTransformMatrixToGlobal) {
             try {
@@ -21,8 +21,6 @@ class ViewUtilsApi21 extends ViewUtilsApi19 {
         }
     }
 
-    @Override // androidx.transition.ViewUtilsBase
-    @SuppressLint({"NewApi"})
     public void transformMatrixToLocal(View view, Matrix matrix) {
         if (sTryHiddenTransformMatrixToLocal) {
             try {
@@ -33,8 +31,6 @@ class ViewUtilsApi21 extends ViewUtilsApi19 {
         }
     }
 
-    @Override // androidx.transition.ViewUtilsBase
-    @SuppressLint({"NewApi"})
     public void setAnimationMatrix(View view, Matrix matrix) {
         if (sTryHiddenSetAnimationMatrix) {
             try {

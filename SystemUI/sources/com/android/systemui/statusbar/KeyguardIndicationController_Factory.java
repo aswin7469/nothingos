@@ -3,12 +3,14 @@ package com.android.systemui.statusbar;
 import android.app.IActivityManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
+import android.os.Looper;
 import android.os.UserManager;
 import com.android.internal.app.IBatteryStats;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dock.DockManager;
+import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
@@ -17,8 +19,9 @@ import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.wakelock.WakeLock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardIndicationController_Factory implements Factory<KeyguardIndicationController> {
+    private final Provider<DelayableExecutor> bgExecutorProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
     private final Provider<Context> contextProvider;
     private final Provider<DevicePolicyManager> devicePolicyManagerProvider;
@@ -31,39 +34,42 @@ public final class KeyguardIndicationController_Factory implements Factory<Keygu
     private final Provider<KeyguardStateController> keyguardStateControllerProvider;
     private final Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
     private final Provider<LockPatternUtils> lockPatternUtilsProvider;
+    private final Provider<Looper> mainLooperProvider;
+    private final Provider<ScreenLifecycle> screenLifecycleProvider;
     private final Provider<StatusBarStateController> statusBarStateControllerProvider;
     private final Provider<UserManager> userManagerProvider;
     private final Provider<WakeLock.Builder> wakeLockBuilderProvider;
 
-    public KeyguardIndicationController_Factory(Provider<Context> provider, Provider<WakeLock.Builder> provider2, Provider<KeyguardStateController> provider3, Provider<StatusBarStateController> provider4, Provider<KeyguardUpdateMonitor> provider5, Provider<DockManager> provider6, Provider<BroadcastDispatcher> provider7, Provider<DevicePolicyManager> provider8, Provider<IBatteryStats> provider9, Provider<UserManager> provider10, Provider<DelayableExecutor> provider11, Provider<FalsingManager> provider12, Provider<LockPatternUtils> provider13, Provider<IActivityManager> provider14, Provider<KeyguardBypassController> provider15) {
+    public KeyguardIndicationController_Factory(Provider<Context> provider, Provider<Looper> provider2, Provider<WakeLock.Builder> provider3, Provider<KeyguardStateController> provider4, Provider<StatusBarStateController> provider5, Provider<KeyguardUpdateMonitor> provider6, Provider<DockManager> provider7, Provider<BroadcastDispatcher> provider8, Provider<DevicePolicyManager> provider9, Provider<IBatteryStats> provider10, Provider<UserManager> provider11, Provider<DelayableExecutor> provider12, Provider<DelayableExecutor> provider13, Provider<FalsingManager> provider14, Provider<LockPatternUtils> provider15, Provider<ScreenLifecycle> provider16, Provider<IActivityManager> provider17, Provider<KeyguardBypassController> provider18) {
         this.contextProvider = provider;
-        this.wakeLockBuilderProvider = provider2;
-        this.keyguardStateControllerProvider = provider3;
-        this.statusBarStateControllerProvider = provider4;
-        this.keyguardUpdateMonitorProvider = provider5;
-        this.dockManagerProvider = provider6;
-        this.broadcastDispatcherProvider = provider7;
-        this.devicePolicyManagerProvider = provider8;
-        this.iBatteryStatsProvider = provider9;
-        this.userManagerProvider = provider10;
-        this.executorProvider = provider11;
-        this.falsingManagerProvider = provider12;
-        this.lockPatternUtilsProvider = provider13;
-        this.iActivityManagerProvider = provider14;
-        this.keyguardBypassControllerProvider = provider15;
+        this.mainLooperProvider = provider2;
+        this.wakeLockBuilderProvider = provider3;
+        this.keyguardStateControllerProvider = provider4;
+        this.statusBarStateControllerProvider = provider5;
+        this.keyguardUpdateMonitorProvider = provider6;
+        this.dockManagerProvider = provider7;
+        this.broadcastDispatcherProvider = provider8;
+        this.devicePolicyManagerProvider = provider9;
+        this.iBatteryStatsProvider = provider10;
+        this.userManagerProvider = provider11;
+        this.executorProvider = provider12;
+        this.bgExecutorProvider = provider13;
+        this.falsingManagerProvider = provider14;
+        this.lockPatternUtilsProvider = provider15;
+        this.screenLifecycleProvider = provider16;
+        this.iActivityManagerProvider = provider17;
+        this.keyguardBypassControllerProvider = provider18;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardIndicationController mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.wakeLockBuilderProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.keyguardUpdateMonitorProvider.mo1933get(), this.dockManagerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.devicePolicyManagerProvider.mo1933get(), this.iBatteryStatsProvider.mo1933get(), this.userManagerProvider.mo1933get(), this.executorProvider.mo1933get(), this.falsingManagerProvider.mo1933get(), this.lockPatternUtilsProvider.mo1933get(), this.iActivityManagerProvider.mo1933get(), this.keyguardBypassControllerProvider.mo1933get());
+    public KeyguardIndicationController get() {
+        return newInstance(this.contextProvider.get(), this.mainLooperProvider.get(), this.wakeLockBuilderProvider.get(), this.keyguardStateControllerProvider.get(), this.statusBarStateControllerProvider.get(), this.keyguardUpdateMonitorProvider.get(), this.dockManagerProvider.get(), this.broadcastDispatcherProvider.get(), this.devicePolicyManagerProvider.get(), this.iBatteryStatsProvider.get(), this.userManagerProvider.get(), this.executorProvider.get(), this.bgExecutorProvider.get(), this.falsingManagerProvider.get(), this.lockPatternUtilsProvider.get(), this.screenLifecycleProvider.get(), this.iActivityManagerProvider.get(), this.keyguardBypassControllerProvider.get());
     }
 
-    public static KeyguardIndicationController_Factory create(Provider<Context> provider, Provider<WakeLock.Builder> provider2, Provider<KeyguardStateController> provider3, Provider<StatusBarStateController> provider4, Provider<KeyguardUpdateMonitor> provider5, Provider<DockManager> provider6, Provider<BroadcastDispatcher> provider7, Provider<DevicePolicyManager> provider8, Provider<IBatteryStats> provider9, Provider<UserManager> provider10, Provider<DelayableExecutor> provider11, Provider<FalsingManager> provider12, Provider<LockPatternUtils> provider13, Provider<IActivityManager> provider14, Provider<KeyguardBypassController> provider15) {
-        return new KeyguardIndicationController_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15);
+    public static KeyguardIndicationController_Factory create(Provider<Context> provider, Provider<Looper> provider2, Provider<WakeLock.Builder> provider3, Provider<KeyguardStateController> provider4, Provider<StatusBarStateController> provider5, Provider<KeyguardUpdateMonitor> provider6, Provider<DockManager> provider7, Provider<BroadcastDispatcher> provider8, Provider<DevicePolicyManager> provider9, Provider<IBatteryStats> provider10, Provider<UserManager> provider11, Provider<DelayableExecutor> provider12, Provider<DelayableExecutor> provider13, Provider<FalsingManager> provider14, Provider<LockPatternUtils> provider15, Provider<ScreenLifecycle> provider16, Provider<IActivityManager> provider17, Provider<KeyguardBypassController> provider18) {
+        return new KeyguardIndicationController_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18);
     }
 
-    public static KeyguardIndicationController newInstance(Context context, WakeLock.Builder builder, KeyguardStateController keyguardStateController, StatusBarStateController statusBarStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, DockManager dockManager, BroadcastDispatcher broadcastDispatcher, DevicePolicyManager devicePolicyManager, IBatteryStats iBatteryStats, UserManager userManager, DelayableExecutor delayableExecutor, FalsingManager falsingManager, LockPatternUtils lockPatternUtils, IActivityManager iActivityManager, KeyguardBypassController keyguardBypassController) {
-        return new KeyguardIndicationController(context, builder, keyguardStateController, statusBarStateController, keyguardUpdateMonitor, dockManager, broadcastDispatcher, devicePolicyManager, iBatteryStats, userManager, delayableExecutor, falsingManager, lockPatternUtils, iActivityManager, keyguardBypassController);
+    public static KeyguardIndicationController newInstance(Context context, Looper looper, WakeLock.Builder builder, KeyguardStateController keyguardStateController, StatusBarStateController statusBarStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, DockManager dockManager, BroadcastDispatcher broadcastDispatcher, DevicePolicyManager devicePolicyManager, IBatteryStats iBatteryStats, UserManager userManager, DelayableExecutor delayableExecutor, DelayableExecutor delayableExecutor2, FalsingManager falsingManager, LockPatternUtils lockPatternUtils, ScreenLifecycle screenLifecycle, IActivityManager iActivityManager, KeyguardBypassController keyguardBypassController) {
+        return new KeyguardIndicationController(context, looper, builder, keyguardStateController, statusBarStateController, keyguardUpdateMonitor, dockManager, broadcastDispatcher, devicePolicyManager, iBatteryStats, userManager, delayableExecutor, delayableExecutor2, falsingManager, lockPatternUtils, screenLifecycle, iActivityManager, keyguardBypassController);
     }
 }

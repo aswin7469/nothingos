@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Vibrator;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideVibratorFactory implements Factory<Vibrator> {
     private final Provider<Context> contextProvider;
 
@@ -12,10 +12,8 @@ public final class FrameworkServicesModule_ProvideVibratorFactory implements Fac
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public Vibrator mo1933get() {
-        return provideVibrator(this.contextProvider.mo1933get());
+    public Vibrator get() {
+        return provideVibrator(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideVibratorFactory create(Provider<Context> provider) {

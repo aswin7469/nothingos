@@ -5,73 +5,91 @@ import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.KeyguardManager;
 import android.app.PendingIntent;
-import android.app.admin.DevicePolicyManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.UserHandle;
-import android.view.View;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.R$string;
+import android.os.UserManager;
+import android.widget.ImageView;
+import com.android.systemui.C1893R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
-/* loaded from: classes.dex */
+import java.util.concurrent.Executor;
+import javax.inject.Inject;
+
 public class WorkLockActivity extends Activity {
+    private static final int REQUEST_CODE_CONFIRM_CREDENTIALS = 1;
+    private static final String TAG = "WorkLockActivity";
     private final BroadcastDispatcher mBroadcastDispatcher;
     private KeyguardManager mKgm;
-    private final BroadcastReceiver mLockEventReceiver = new BroadcastReceiver() { // from class: com.android.systemui.keyguard.WorkLockActivity.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mLockEventReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             int targetUserId = WorkLockActivity.this.getTargetUserId();
-            if (intent.getIntExtra("android.intent.extra.user_handle", targetUserId) != targetUserId || WorkLockActivity.this.getKeyguardManager().isDeviceLocked(targetUserId)) {
-                return;
+            if (intent.getIntExtra("android.intent.extra.user_handle", targetUserId) == targetUserId && !WorkLockActivity.this.getKeyguardManager().isDeviceLocked(targetUserId)) {
+                WorkLockActivity.this.finish();
             }
-            WorkLockActivity.this.finish();
         }
     };
+    private PackageManager mPackageManager;
+    private UserManager mUserManager;
 
-    @Override // android.app.Activity
     public void onBackPressed() {
     }
 
-    @Override // android.app.Activity
     public void setTaskDescription(ActivityManager.TaskDescription taskDescription) {
     }
 
-    public WorkLockActivity(BroadcastDispatcher broadcastDispatcher) {
+    @Inject
+    public WorkLockActivity(BroadcastDispatcher broadcastDispatcher, UserManager userManager, PackageManager packageManager) {
         this.mBroadcastDispatcher = broadcastDispatcher;
+        this.mUserManager = userManager;
+        this.mPackageManager = packageManager;
     }
 
-    @Override // android.app.Activity
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        this.mBroadcastDispatcher.registerReceiver(this.mLockEventReceiver, new IntentFilter("android.intent.action.DEVICE_LOCKED_CHANGED"), null, UserHandle.ALL);
+        this.mBroadcastDispatcher.registerReceiver(this.mLockEventReceiver, new IntentFilter("android.intent.action.DEVICE_LOCKED_CHANGED"), (Executor) null, UserHandle.ALL);
         if (!getKeyguardManager().isDeviceLocked(getTargetUserId())) {
             finish();
             return;
         }
         setOverlayWithDecorCaptionEnabled(true);
-        View view = new View(this);
-        view.setContentDescription(getString(R$string.accessibility_desc_work_lock));
-        view.setBackgroundColor(getPrimaryColor());
-        setContentView(view);
+        setContentView(C1893R.layout.auth_biometric_background);
+        Drawable badgedIcon = getBadgedIcon();
+        if (badgedIcon != null) {
+            ((ImageView) findViewById(C1893R.C1897id.icon)).setImageDrawable(badgedIcon);
+        }
     }
 
-    @Override // android.app.Activity, android.view.Window.Callback
+    /* access modifiers changed from: protected */
+    public Drawable getBadgedIcon() {
+        String stringExtra = getIntent().getStringExtra("android.intent.extra.PACKAGE_NAME");
+        if (stringExtra.isEmpty()) {
+            return null;
+        }
+        try {
+            UserManager userManager = this.mUserManager;
+            PackageManager packageManager = this.mPackageManager;
+            return userManager.getBadgedIconForUser(packageManager.getApplicationIcon(packageManager.getApplicationInfoAsUser(stringExtra, PackageManager.ApplicationInfoFlags.of(0), getTargetUserId())), UserHandle.of(getTargetUserId()));
+        } catch (PackageManager.NameNotFoundException unused) {
+            return null;
+        }
+    }
+
     public void onWindowFocusChanged(boolean z) {
         if (z) {
             showConfirmCredentialActivity();
         }
     }
 
-    @VisibleForTesting
-    protected void unregisterBroadcastReceiver() {
+    /* access modifiers changed from: protected */
+    public void unregisterBroadcastReceiver() {
         this.mBroadcastDispatcher.unregisterReceiver(this.mLockEventReceiver);
     }
 
-    @Override // android.app.Activity
     public void onDestroy() {
         unregisterBroadcastReceiver();
         super.onDestroy();
@@ -79,27 +97,25 @@ public class WorkLockActivity extends Activity {
 
     private void showConfirmCredentialActivity() {
         Intent createConfirmDeviceCredentialIntent;
-        if (isFinishing() || !getKeyguardManager().isDeviceLocked(getTargetUserId()) || (createConfirmDeviceCredentialIntent = getKeyguardManager().createConfirmDeviceCredentialIntent(null, null, getTargetUserId(), true)) == null) {
-            return;
+        if (!isFinishing() && getKeyguardManager().isDeviceLocked(getTargetUserId()) && (createConfirmDeviceCredentialIntent = getKeyguardManager().createConfirmDeviceCredentialIntent((CharSequence) null, (CharSequence) null, getTargetUserId(), true)) != null) {
+            ActivityOptions makeBasic = ActivityOptions.makeBasic();
+            makeBasic.setLaunchTaskId(getTaskId());
+            PendingIntent activity = PendingIntent.getActivity(this, -1, getIntent(), 1409286144, makeBasic.toBundle());
+            if (activity != null) {
+                createConfirmDeviceCredentialIntent.putExtra("android.intent.extra.INTENT", activity.getIntentSender());
+            }
+            ActivityOptions makeBasic2 = ActivityOptions.makeBasic();
+            makeBasic2.setLaunchTaskId(getTaskId());
+            makeBasic2.setTaskOverlay(true, true);
+            startActivityForResult(createConfirmDeviceCredentialIntent, 1, makeBasic2.toBundle());
         }
-        ActivityOptions makeBasic = ActivityOptions.makeBasic();
-        makeBasic.setLaunchTaskId(getTaskId());
-        PendingIntent activity = PendingIntent.getActivity(this, -1, getIntent(), 1409286144, makeBasic.toBundle());
-        if (activity != null) {
-            createConfirmDeviceCredentialIntent.putExtra("android.intent.extra.INTENT", activity.getIntentSender());
-        }
-        ActivityOptions makeBasic2 = ActivityOptions.makeBasic();
-        makeBasic2.setLaunchTaskId(getTaskId());
-        makeBasic2.setTaskOverlay(true, true);
-        startActivityForResult(createConfirmDeviceCredentialIntent, 1, makeBasic2.toBundle());
     }
 
-    @Override // android.app.Activity
-    protected void onActivityResult(int i, int i2, Intent intent) {
-        if (i != 1 || i2 == -1) {
-            return;
+    /* access modifiers changed from: protected */
+    public void onActivityResult(int i, int i2, Intent intent) {
+        if (i == 1 && i2 != -1) {
+            goToHomeScreen();
         }
-        goToHomeScreen();
     }
 
     private void goToHomeScreen() {
@@ -109,7 +125,7 @@ public class WorkLockActivity extends Activity {
         startActivity(intent);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public KeyguardManager getKeyguardManager() {
         if (this.mKgm == null) {
             this.mKgm = (KeyguardManager) getSystemService("keyguard");
@@ -117,17 +133,8 @@ public class WorkLockActivity extends Activity {
         return this.mKgm;
     }
 
-    @VisibleForTesting
-    final int getTargetUserId() {
+    /* access modifiers changed from: package-private */
+    public final int getTargetUserId() {
         return getIntent().getIntExtra("android.intent.extra.USER_ID", UserHandle.myUserId());
-    }
-
-    @VisibleForTesting
-    final int getPrimaryColor() {
-        ActivityManager.TaskDescription taskDescription = (ActivityManager.TaskDescription) getIntent().getExtra("com.android.systemui.keyguard.extra.TASK_DESCRIPTION");
-        if (taskDescription != null && Color.alpha(taskDescription.getPrimaryColor()) == 255) {
-            return taskDescription.getPrimaryColor();
-        }
-        return ((DevicePolicyManager) getSystemService("device_policy")).getOrganizationColorForUser(getTargetUserId());
     }
 }

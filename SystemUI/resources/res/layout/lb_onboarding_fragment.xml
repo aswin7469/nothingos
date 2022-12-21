@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/onboarding_fragment_root" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:id="@+id/onboarding_fragment_root" android:clipChildren="false" android:clipToPadding="false" android:layout_width="match_parent" android:layout_height="match_parent">
     <FrameLayout android:id="@+id/background_container" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent"/>
     <ImageView android:id="@+id/main_icon" style="?attr/onboardingMainIconStyle"/>
     <LinearLayout android:id="@+id/page_container" android:visibility="gone" style="?attr/onboardingHeaderStyle">

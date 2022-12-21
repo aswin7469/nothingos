@@ -11,7 +11,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class StatusBarRemoteInputCallback_Factory implements Factory<StatusBarRemoteInputCallback> {
     private final Provider<ActivityStarter> activityStarterProvider;
     private final Provider<ActionClickLogger> clickLoggerProvider;
@@ -39,10 +39,8 @@ public final class StatusBarRemoteInputCallback_Factory implements Factory<Statu
         this.executorProvider = provider11;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public StatusBarRemoteInputCallback mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.groupExpansionManagerProvider.mo1933get(), this.notificationLockscreenUserManagerProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.statusBarKeyguardViewManagerProvider.mo1933get(), this.activityStarterProvider.mo1933get(), this.shadeControllerProvider.mo1933get(), this.commandQueueProvider.mo1933get(), this.clickLoggerProvider.mo1933get(), this.executorProvider.mo1933get());
+    public StatusBarRemoteInputCallback get() {
+        return newInstance(this.contextProvider.get(), this.groupExpansionManagerProvider.get(), this.notificationLockscreenUserManagerProvider.get(), this.keyguardStateControllerProvider.get(), this.statusBarStateControllerProvider.get(), this.statusBarKeyguardViewManagerProvider.get(), this.activityStarterProvider.get(), this.shadeControllerProvider.get(), this.commandQueueProvider.get(), this.clickLoggerProvider.get(), this.executorProvider.get());
     }
 
     public static StatusBarRemoteInputCallback_Factory create(Provider<Context> provider, Provider<GroupExpansionManager> provider2, Provider<NotificationLockscreenUserManager> provider3, Provider<KeyguardStateController> provider4, Provider<StatusBarStateController> provider5, Provider<StatusBarKeyguardViewManager> provider6, Provider<ActivityStarter> provider7, Provider<ShadeController> provider8, Provider<CommandQueue> provider9, Provider<ActionClickLogger> provider10, Provider<Executor> provider11) {

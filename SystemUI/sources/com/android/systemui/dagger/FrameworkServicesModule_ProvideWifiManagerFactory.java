@@ -4,7 +4,7 @@ import android.content.Context;
 import android.net.wifi.WifiManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideWifiManagerFactory implements Factory<WifiManager> {
     private final Provider<Context> contextProvider;
 
@@ -12,10 +12,8 @@ public final class FrameworkServicesModule_ProvideWifiManagerFactory implements 
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public WifiManager mo1933get() {
-        return provideWifiManager(this.contextProvider.mo1933get());
+    public WifiManager get() {
+        return provideWifiManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideWifiManagerFactory create(Provider<Context> provider) {

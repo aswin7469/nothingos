@@ -1,35 +1,40 @@
 package com.android.systemui.statusbar.notification;
 
+import android.app.NotificationChannel;
+import android.os.UserHandle;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import com.android.internal.statusbar.NotificationVisibility;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-/* loaded from: classes.dex */
+
 public interface NotificationEntryListener {
-    default void onEntryInflated(NotificationEntry notificationEntry) {
+    void onEntryInflated(NotificationEntry notificationEntry) {
     }
 
-    default void onEntryReinflated(NotificationEntry notificationEntry) {
+    void onEntryReinflated(NotificationEntry notificationEntry) {
     }
 
-    default void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
+    void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
     }
 
-    default void onInflationError(StatusBarNotification statusBarNotification, Exception exc) {
+    void onInflationError(StatusBarNotification statusBarNotification, Exception exc) {
     }
 
-    default void onNotificationAdded(NotificationEntry notificationEntry) {
+    void onNotificationAdded(NotificationEntry notificationEntry) {
     }
 
-    default void onNotificationRankingUpdated(NotificationListenerService.RankingMap rankingMap) {
+    void onNotificationChannelModified(String str, UserHandle userHandle, NotificationChannel notificationChannel, int i) {
     }
 
-    default void onPendingEntryAdded(NotificationEntry notificationEntry) {
+    void onNotificationRankingUpdated(NotificationListenerService.RankingMap rankingMap) {
     }
 
-    default void onPostEntryUpdated(NotificationEntry notificationEntry) {
+    void onPendingEntryAdded(NotificationEntry notificationEntry) {
     }
 
-    default void onPreEntryUpdated(NotificationEntry notificationEntry) {
+    void onPostEntryUpdated(NotificationEntry notificationEntry) {
+    }
+
+    void onPreEntryUpdated(NotificationEntry notificationEntry) {
     }
 }

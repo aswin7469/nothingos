@@ -9,29 +9,26 @@ import android.os.UserHandle;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-/* loaded from: classes.dex */
+
 public class ScreenshotNotificationSmartActionsProvider {
+    public static final String ACTION_TYPE = "action_type";
+    public static final String DEFAULT_ACTION_TYPE = "Smart Action";
     private static final String TAG = LogConfig.logTag(ScreenshotNotificationSmartActionsProvider.class);
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public enum ScreenshotOp {
+    protected enum ScreenshotOp {
         OP_UNKNOWN,
         RETRIEVE_SMART_ACTIONS,
         REQUEST_SMART_ACTIONS,
         WAIT_FOR_SMART_ACTIONS
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public enum ScreenshotOpStatus {
+    protected enum ScreenshotOpStatus {
         OP_STATUS_UNKNOWN,
         SUCCESS,
         ERROR,
         TIMEOUT
     }
 
-    /* loaded from: classes.dex */
     public enum ScreenshotSmartActionType {
         REGULAR_SMART_ACTIONS,
         QUICK_SHARE_ACTION

@@ -4,10 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.RemoteException;
+import android.util.Log;
+import android.view.IWindowManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,88 +20,149 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.android.systemui.R$color;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.R$integer;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$string;
-import com.android.systemui.SystemUI;
+import com.android.systemui.C1893R;
+import com.android.systemui.CoreStartable;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.privacy.PrivacyChipBuilder;
 import com.android.systemui.privacy.PrivacyItem;
 import com.android.systemui.privacy.PrivacyItemController;
 import com.android.systemui.privacy.PrivacyType;
 import com.android.systemui.privacy.television.PrivacyChipDrawable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-/* loaded from: classes.dex */
-public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemController.Callback, PrivacyChipDrawable.PrivacyChipDrawableListener {
+import javax.inject.Inject;
+
+@SysUISingleton
+public class TvOngoingPrivacyChip extends CoreStartable implements PrivacyItemController.Callback, PrivacyChipDrawable.PrivacyChipDrawableListener {
+    private static final int ACCESSIBILITY_ANNOUNCEMENT_DELAY_MS = 500;
+    private static final boolean DEBUG = false;
+    private static final int EXPANDED_DURATION_MS = 4000;
+    private static final String LAYOUT_PARAMS_TITLE = "MicrophoneCaptureIndicator";
+    private static final int STATE_APPEARING = 1;
+    private static final int STATE_COLLAPSED = 3;
+    private static final int STATE_DISAPPEARING = 4;
+    private static final int STATE_EXPANDED = 2;
+    private static final int STATE_NOT_SHOWN = 0;
+    private static final String TAG = "TvOngoingPrivacyChip";
+    private final Runnable mAccessibilityRunnable = new TvOngoingPrivacyChip$$ExternalSyntheticLambda1(this);
     private boolean mAllIndicatorsEnabled;
     public final int mAnimationDurationMs;
     private ObjectAnimator mAnimator;
-    private PrivacyChipDrawable mChipDrawable;
+    private final Rect[] mBounds = new Rect[4];
+    /* access modifiers changed from: private */
+    public PrivacyChipDrawable mChipDrawable;
+    private final Runnable mCollapseRunnable = new TvOngoingPrivacyChip$$ExternalSyntheticLambda0(this);
     private final Context mContext;
+    private final IWindowManager mIWindowManager;
     private final int mIconMarginStart;
     private final int mIconSize;
     private LinearLayout mIconsContainer;
-    private ViewGroup mIndicatorView;
+    /* access modifiers changed from: private */
+    public ViewGroup mIndicatorView;
+    private boolean mIsRtl;
+    private final List<PrivacyItem> mItemsBeforeLastAnnouncement = new LinkedList();
     private boolean mMicCameraIndicatorFlagEnabled;
     private final PrivacyItemController mPrivacyItemController;
-    private boolean mViewAndWindowAdded;
     private List<PrivacyItem> mPrivacyItems = Collections.emptyList();
+    /* access modifiers changed from: private */
+    public int mState;
     private final Handler mUiThreadHandler = new Handler(Looper.getMainLooper());
-    private final Runnable mCollapseRunnable = new Runnable() { // from class: com.android.systemui.privacy.television.TvOngoingPrivacyChip$$ExternalSyntheticLambda1
-        @Override // java.lang.Runnable
-        public final void run() {
-            TvOngoingPrivacyChip.this.collapseChip();
-        }
-    };
-    private final Runnable mAccessibilityRunnable = new Runnable() { // from class: com.android.systemui.privacy.television.TvOngoingPrivacyChip$$ExternalSyntheticLambda0
-        @Override // java.lang.Runnable
-        public final void run() {
-            TvOngoingPrivacyChip.this.makeAccessibilityAnnouncement();
-        }
-    };
-    private final List<PrivacyItem> mItemsBeforeLastAnnouncement = new LinkedList();
-    private int mState = 0;
+    /* access modifiers changed from: private */
+    public boolean mViewAndWindowAdded;
 
-    public TvOngoingPrivacyChip(Context context, PrivacyItemController privacyItemController) {
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface State {
+    }
+
+    private String stateToString(int i) {
+        return i != 0 ? i != 1 ? i != 2 ? i != 3 ? i != 4 ? "INVALID" : "DISAPPEARING" : "COLLAPSED" : "EXPANDED" : "APPEARING" : "NOT_SHOWN";
+    }
+
+    @Inject
+    public TvOngoingPrivacyChip(Context context, PrivacyItemController privacyItemController, IWindowManager iWindowManager) {
         super(context);
+        boolean z = false;
+        this.mState = 0;
         this.mContext = context;
         this.mPrivacyItemController = privacyItemController;
+        this.mIWindowManager = iWindowManager;
         Resources resources = context.getResources();
-        this.mIconMarginStart = Math.round(resources.getDimension(R$dimen.privacy_chip_icon_margin_in_between));
-        this.mIconSize = resources.getDimensionPixelSize(R$dimen.privacy_chip_icon_size);
-        this.mAnimationDurationMs = resources.getInteger(R$integer.privacy_chip_animation_millis);
+        this.mIconMarginStart = Math.round(resources.getDimension(C1893R.dimen.privacy_chip_icon_margin_in_between));
+        this.mIconSize = resources.getDimensionPixelSize(C1893R.dimen.privacy_chip_icon_size);
+        this.mIsRtl = context.getResources().getConfiguration().getLayoutDirection() == 1 ? true : z;
+        updateStaticPrivacyIndicatorBounds();
+        this.mAnimationDurationMs = resources.getInteger(C1893R.integer.privacy_chip_animation_millis);
         this.mMicCameraIndicatorFlagEnabled = privacyItemController.getMicCameraAvailable();
         this.mAllIndicatorsEnabled = privacyItemController.getAllIndicatorsAvailable();
     }
 
-    @Override // com.android.systemui.SystemUI
-    public void start() {
-        this.mPrivacyItemController.addCallback(this);
+    public void onConfigurationChanged(Configuration configuration) {
+        boolean z = true;
+        if (configuration.getLayoutDirection() != 1) {
+            z = false;
+        }
+        if (this.mIsRtl != z) {
+            this.mIsRtl = z;
+            updateStaticPrivacyIndicatorBounds();
+            if (this.mState != 0 && this.mIndicatorView != null) {
+                fadeOutIndicator();
+                createAndShowIndicator();
+            }
+        }
     }
 
-    @Override // com.android.systemui.privacy.PrivacyItemController.Callback
+    public void start() {
+        this.mPrivacyItemController.addCallback((PrivacyItemController.Callback) this);
+    }
+
     public void onPrivacyItemsChanged(List<PrivacyItem> list) {
         ArrayList arrayList = new ArrayList(list);
-        arrayList.removeIf(TvOngoingPrivacyChip$$ExternalSyntheticLambda2.INSTANCE);
+        arrayList.removeIf(new TvOngoingPrivacyChip$$ExternalSyntheticLambda2());
         if (isChipDisabled()) {
             fadeOutIndicator();
             this.mPrivacyItems = arrayList;
-        } else if (arrayList.size() == this.mPrivacyItems.size() && this.mPrivacyItems.containsAll(arrayList)) {
-        } else {
+        } else if (arrayList.size() != this.mPrivacyItems.size() || !this.mPrivacyItems.containsAll(arrayList)) {
             this.mPrivacyItems = arrayList;
             postAccessibilityAnnouncement();
             updateChip();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$onPrivacyItemsChanged$0(PrivacyItem privacyItem) {
+    static /* synthetic */ boolean lambda$onPrivacyItemsChanged$0(PrivacyItem privacyItem) {
         return privacyItem.getPrivacyType() == PrivacyType.TYPE_LOCATION;
+    }
+
+    private void updateStaticPrivacyIndicatorBounds() {
+        int i;
+        int i2;
+        Resources resources = this.mContext.getResources();
+        int dimensionPixelSize = resources.getDimensionPixelSize(C1893R.dimen.privacy_chip_max_width);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C1893R.dimen.privacy_chip_height);
+        int dimensionPixelSize3 = resources.getDimensionPixelSize(C1893R.dimen.privacy_chip_margin) * 2;
+        Rect bounds = ((WindowManager) this.mContext.getSystemService(WindowManager.class)).getCurrentWindowMetrics().getBounds();
+        Rect[] rectArr = this.mBounds;
+        if (this.mIsRtl) {
+            i = bounds.left;
+        } else {
+            i = (bounds.right - dimensionPixelSize3) - dimensionPixelSize;
+        }
+        int i3 = bounds.top;
+        if (this.mIsRtl) {
+            i2 = bounds.left + dimensionPixelSize3 + dimensionPixelSize;
+        } else {
+            i2 = bounds.right;
+        }
+        rectArr[0] = new Rect(i, i3, i2, bounds.top + dimensionPixelSize3 + dimensionPixelSize2);
+        try {
+            this.mIWindowManager.updateStaticPrivacyIndicatorBounds(this.mContext.getDisplayId(), this.mBounds);
+        } catch (RemoteException unused) {
+            Log.w(TAG, "could not update privacy indicator bounds");
+        }
     }
 
     private void updateChip() {
@@ -110,8 +176,7 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
         } else if (i == 1 || i == 2) {
             updateIcons();
             collapseLater();
-        } else if (i != 3 && i != 4) {
-        } else {
+        } else if (i == 3 || i == 4) {
             this.mState = 2;
             updateIcons();
             animateIconAppearance();
@@ -120,25 +185,28 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
 
     private void collapseLater() {
         this.mUiThreadHandler.removeCallbacks(this.mCollapseRunnable);
-        this.mUiThreadHandler.postDelayed(this.mCollapseRunnable, 4000L);
+        this.mUiThreadHandler.postDelayed(this.mCollapseRunnable, 4000);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void collapseChip() {
-        if (this.mState != 2) {
-            return;
+        if (this.mState == 2) {
+            this.mState = 3;
+            PrivacyChipDrawable privacyChipDrawable = this.mChipDrawable;
+            if (privacyChipDrawable != null) {
+                privacyChipDrawable.collapse();
+            }
+            animateIconDisappearance();
         }
-        this.mState = 3;
-        PrivacyChipDrawable privacyChipDrawable = this.mChipDrawable;
-        if (privacyChipDrawable != null) {
-            privacyChipDrawable.collapse();
-        }
-        animateIconDisappearance();
     }
 
-    @Override // com.android.systemui.privacy.PrivacyItemController.Callback
     public void onFlagMicCameraChanged(boolean z) {
         this.mMicCameraIndicatorFlagEnabled = z;
+        updateChipOnFlagChanged();
+    }
+
+    public void onFlagAllChanged(boolean z) {
+        this.mAllIndicatorsEnabled = z;
         updateChipOnFlagChanged();
     }
 
@@ -156,65 +224,61 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
 
     private void fadeOutIndicator() {
         int i = this.mState;
-        if (i == 0 || i == 4) {
-            return;
+        if (i != 0 && i != 4) {
+            this.mUiThreadHandler.removeCallbacks(this.mCollapseRunnable);
+            if (this.mViewAndWindowAdded) {
+                this.mState = 4;
+                animateIconDisappearance();
+            } else {
+                this.mState = 0;
+                removeIndicatorView();
+            }
+            PrivacyChipDrawable privacyChipDrawable = this.mChipDrawable;
+            if (privacyChipDrawable != null) {
+                privacyChipDrawable.updateIcons(0);
+            }
         }
-        this.mUiThreadHandler.removeCallbacks(this.mCollapseRunnable);
-        if (this.mViewAndWindowAdded) {
-            this.mState = 4;
-            animateIconDisappearance();
-        } else {
-            this.mState = 0;
-            removeIndicatorView();
-        }
-        PrivacyChipDrawable privacyChipDrawable = this.mChipDrawable;
-        if (privacyChipDrawable == null) {
-            return;
-        }
-        privacyChipDrawable.updateIcons(0);
     }
 
     private void createAndShowIndicator() {
-        boolean z = true;
         this.mState = 1;
         if (this.mIndicatorView != null || this.mViewAndWindowAdded) {
             removeIndicatorView();
         }
-        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this.mContext).inflate(R$layout.tv_ongoing_privacy_chip, (ViewGroup) null);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this.mContext).inflate(C1893R.layout.tv_ongoing_privacy_chip, (ViewGroup) null);
         this.mIndicatorView = viewGroup;
-        viewGroup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() { // from class: com.android.systemui.privacy.television.TvOngoingPrivacyChip.1
-            @Override // android.view.ViewTreeObserver.OnGlobalLayoutListener
+        viewGroup.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             public void onGlobalLayout() {
-                if (TvOngoingPrivacyChip.this.mState != 1) {
-                    return;
+                if (TvOngoingPrivacyChip.this.mState == 1) {
+                    boolean unused = TvOngoingPrivacyChip.this.mViewAndWindowAdded = true;
+                    TvOngoingPrivacyChip.this.mIndicatorView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    TvOngoingPrivacyChip.this.postAccessibilityAnnouncement();
+                    TvOngoingPrivacyChip.this.animateIconAppearance();
+                    TvOngoingPrivacyChip.this.mChipDrawable.startInitialFadeIn();
                 }
-                TvOngoingPrivacyChip.this.mViewAndWindowAdded = true;
-                TvOngoingPrivacyChip.this.mIndicatorView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                TvOngoingPrivacyChip.this.postAccessibilityAnnouncement();
-                TvOngoingPrivacyChip.this.animateIconAppearance();
-                TvOngoingPrivacyChip.this.mChipDrawable.startInitialFadeIn();
             }
         });
-        if (this.mContext.getResources().getConfiguration().getLayoutDirection() != 1) {
-            z = false;
-        }
         PrivacyChipDrawable privacyChipDrawable = new PrivacyChipDrawable(this.mContext);
         this.mChipDrawable = privacyChipDrawable;
         privacyChipDrawable.setListener(this);
-        this.mChipDrawable.setRtl(z);
-        ImageView imageView = (ImageView) this.mIndicatorView.findViewById(R$id.chip_drawable);
+        this.mChipDrawable.setRtl(this.mIsRtl);
+        ImageView imageView = (ImageView) this.mIndicatorView.findViewById(C1893R.C1897id.chip_drawable);
         if (imageView != null) {
             imageView.setImageDrawable(this.mChipDrawable);
         }
-        LinearLayout linearLayout = (LinearLayout) this.mIndicatorView.findViewById(R$id.icons_container);
+        LinearLayout linearLayout = (LinearLayout) this.mIndicatorView.findViewById(C1893R.C1897id.icons_container);
         this.mIconsContainer = linearLayout;
         linearLayout.setAlpha(0.0f);
         updateIcons();
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-2, -2, 2006, 8, -3);
-        layoutParams.gravity = (z ? 3 : 5) | 48;
-        layoutParams.setTitle("MicrophoneCaptureIndicator");
+        ((WindowManager) this.mContext.getSystemService(WindowManager.class)).addView(this.mIndicatorView, getWindowLayoutParams());
+    }
+
+    private WindowManager.LayoutParams getWindowLayoutParams() {
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-2, -2, Types.REF, 8, -3);
+        layoutParams.gravity = (this.mIsRtl ? 3 : 5) | 48;
+        layoutParams.setTitle(LAYOUT_PARAMS_TITLE);
         layoutParams.packageName = this.mContext.getPackageName();
-        ((WindowManager) this.mContext.getSystemService(WindowManager.class)).addView(this.mIndicatorView, layoutParams);
+        return layoutParams;
     }
 
     private void updateIcons() {
@@ -222,7 +286,7 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
         this.mIconsContainer.removeAllViews();
         for (int i = 0; i < generateIcons.size(); i++) {
             Drawable drawable = generateIcons.get(i);
-            drawable.mutate().setTint(this.mContext.getColor(R$color.privacy_icon_tint));
+            drawable.mutate().setTint(this.mContext.getColor(C1893R.C1894color.privacy_icon_tint));
             ImageView imageView = new ImageView(this.mContext);
             imageView.setImageDrawable(drawable);
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
@@ -241,7 +305,7 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void animateIconAppearance() {
         animateIconAlphaTo(1.0f);
     }
@@ -257,20 +321,17 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
             this.mAnimator = objectAnimator2;
             objectAnimator2.setTarget(this.mIconsContainer);
             this.mAnimator.setProperty(View.ALPHA);
-            this.mAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.privacy.television.TvOngoingPrivacyChip.2
+            this.mAnimator.addListener(new AnimatorListenerAdapter() {
                 boolean mCancelled;
 
-                @Override // android.animation.Animator.AnimatorListener
                 public void onAnimationStart(Animator animator, boolean z) {
                     this.mCancelled = false;
                 }
 
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
                 public void onAnimationCancel(Animator animator) {
                     this.mCancelled = true;
                 }
 
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
                 public void onAnimationEnd(Animator animator) {
                     if (!this.mCancelled) {
                         TvOngoingPrivacyChip.this.onIconAnimationFinished();
@@ -280,15 +341,13 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
         } else if (objectAnimator.isRunning()) {
             this.mAnimator.cancel();
         }
-        if (this.mIconsContainer.getAlpha() == f) {
-            return;
+        if (this.mIconsContainer.getAlpha() != f) {
+            this.mAnimator.setDuration((long) this.mAnimationDurationMs);
+            this.mAnimator.setFloatValues(new float[]{f});
+            this.mAnimator.start();
         }
-        this.mAnimator.setDuration(this.mAnimationDurationMs);
-        this.mAnimator.setFloatValues(f);
-        this.mAnimator.start();
     }
 
-    @Override // com.android.systemui.privacy.television.PrivacyChipDrawable.PrivacyChipDrawableListener
     public void onFadeOutFinished() {
         if (this.mState == 4) {
             removeIndicatorView();
@@ -296,7 +355,7 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onIconAnimationFinished() {
         int i = this.mState;
         if (i == 1 || i == 2) {
@@ -305,8 +364,7 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
         int i2 = this.mState;
         if (i2 == 1) {
             this.mState = 2;
-        } else if (i2 != 4) {
-        } else {
+        } else if (i2 == 4) {
             removeIndicatorView();
             this.mState = 0;
         }
@@ -315,73 +373,64 @@ public class TvOngoingPrivacyChip extends SystemUI implements PrivacyItemControl
     private void removeIndicatorView() {
         ViewGroup viewGroup;
         WindowManager windowManager = (WindowManager) this.mContext.getSystemService(WindowManager.class);
-        if (windowManager != null && (viewGroup = this.mIndicatorView) != null) {
+        if (!(windowManager == null || (viewGroup = this.mIndicatorView) == null)) {
             windowManager.removeView(viewGroup);
         }
         this.mIndicatorView = null;
         this.mAnimator = null;
         PrivacyChipDrawable privacyChipDrawable = this.mChipDrawable;
         if (privacyChipDrawable != null) {
-            privacyChipDrawable.setListener(null);
+            privacyChipDrawable.setListener((PrivacyChipDrawable.PrivacyChipDrawableListener) null);
             this.mChipDrawable = null;
         }
         this.mViewAndWindowAdded = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void postAccessibilityAnnouncement() {
         this.mUiThreadHandler.removeCallbacks(this.mAccessibilityRunnable);
         if (this.mPrivacyItems.size() == 0) {
             makeAccessibilityAnnouncement();
         } else {
-            this.mUiThreadHandler.postDelayed(this.mAccessibilityRunnable, 500L);
+            this.mUiThreadHandler.postDelayed(this.mAccessibilityRunnable, 500);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void makeAccessibilityAnnouncement() {
         int i;
-        if (this.mIndicatorView == null) {
-            return;
-        }
-        List<PrivacyItem> list = this.mItemsBeforeLastAnnouncement;
-        PrivacyType privacyType = PrivacyType.TYPE_CAMERA;
-        boolean listContainsPrivacyType = listContainsPrivacyType(list, privacyType);
-        boolean listContainsPrivacyType2 = listContainsPrivacyType(this.mPrivacyItems, privacyType);
-        List<PrivacyItem> list2 = this.mItemsBeforeLastAnnouncement;
-        PrivacyType privacyType2 = PrivacyType.TYPE_MICROPHONE;
-        boolean listContainsPrivacyType3 = listContainsPrivacyType(list2, privacyType2);
-        boolean listContainsPrivacyType4 = listContainsPrivacyType(this.mPrivacyItems, privacyType2);
-        if (!listContainsPrivacyType && listContainsPrivacyType2 && !listContainsPrivacyType3 && listContainsPrivacyType4) {
-            i = R$string.mic_and_camera_recording_announcement;
-        } else if (!listContainsPrivacyType || listContainsPrivacyType2 || !listContainsPrivacyType3 || listContainsPrivacyType4) {
-            if (listContainsPrivacyType && !listContainsPrivacyType2) {
-                i = R$string.camera_stopped_recording_announcement;
+        if (this.mIndicatorView != null) {
+            boolean listContainsPrivacyType = listContainsPrivacyType(this.mItemsBeforeLastAnnouncement, PrivacyType.TYPE_CAMERA);
+            boolean listContainsPrivacyType2 = listContainsPrivacyType(this.mPrivacyItems, PrivacyType.TYPE_CAMERA);
+            boolean listContainsPrivacyType3 = listContainsPrivacyType(this.mItemsBeforeLastAnnouncement, PrivacyType.TYPE_MICROPHONE);
+            boolean listContainsPrivacyType4 = listContainsPrivacyType(this.mPrivacyItems, PrivacyType.TYPE_MICROPHONE);
+            if (!listContainsPrivacyType && listContainsPrivacyType2 && !listContainsPrivacyType3 && listContainsPrivacyType4) {
+                i = C1893R.string.mic_and_camera_recording_announcement;
+            } else if (!listContainsPrivacyType || listContainsPrivacyType2 || !listContainsPrivacyType3 || listContainsPrivacyType4) {
+                i = (!listContainsPrivacyType || listContainsPrivacyType2) ? (listContainsPrivacyType || !listContainsPrivacyType2) ? 0 : C1893R.string.camera_recording_announcement : C1893R.string.camera_stopped_recording_announcement;
+                if (i != 0) {
+                    this.mIndicatorView.announceForAccessibility(this.mContext.getString(i));
+                    i = 0;
+                }
+                if (listContainsPrivacyType3 && !listContainsPrivacyType4) {
+                    i = C1893R.string.mic_stopped_recording_announcement;
+                } else if (!listContainsPrivacyType3 && listContainsPrivacyType4) {
+                    i = C1893R.string.mic_recording_announcement;
+                }
             } else {
-                i = (listContainsPrivacyType || !listContainsPrivacyType2) ? 0 : R$string.camera_recording_announcement;
+                i = C1893R.string.mic_camera_stopped_recording_announcement;
             }
             if (i != 0) {
                 this.mIndicatorView.announceForAccessibility(this.mContext.getString(i));
-                i = 0;
             }
-            if (listContainsPrivacyType3 && !listContainsPrivacyType4) {
-                i = R$string.mic_stopped_recording_announcement;
-            } else if (!listContainsPrivacyType3 && listContainsPrivacyType4) {
-                i = R$string.mic_recording_announcement;
-            }
-        } else {
-            i = R$string.mic_camera_stopped_recording_announcement;
+            this.mItemsBeforeLastAnnouncement.clear();
+            this.mItemsBeforeLastAnnouncement.addAll(this.mPrivacyItems);
         }
-        if (i != 0) {
-            this.mIndicatorView.announceForAccessibility(this.mContext.getString(i));
-        }
-        this.mItemsBeforeLastAnnouncement.clear();
-        this.mItemsBeforeLastAnnouncement.addAll(this.mPrivacyItems);
     }
 
     private boolean listContainsPrivacyType(List<PrivacyItem> list, PrivacyType privacyType) {
-        for (PrivacyItem privacyItem : list) {
-            if (privacyItem.getPrivacyType() == privacyType) {
+        for (PrivacyItem privacyType2 : list) {
+            if (privacyType2.getPrivacyType() == privacyType) {
                 return true;
             }
         }

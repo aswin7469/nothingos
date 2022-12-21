@@ -1,5 +1,5 @@
 package com.airbnb.lottie.model;
-/* loaded from: classes.dex */
+
 public class Font {
     private final float ascent;
     private final String family;
@@ -23,5 +23,10 @@ public class Font {
 
     public String getStyle() {
         return this.style;
+    }
+
+    /* access modifiers changed from: package-private */
+    public float getAscent() {
+        return this.ascent;
     }
 }

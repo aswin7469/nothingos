@@ -5,7 +5,7 @@ import com.android.systemui.statusbar.phone.BiometricUnlockController;
 import com.android.systemui.statusbar.phone.DozeParameters;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DozeWallpaperState_Factory implements Factory<DozeWallpaperState> {
     private final Provider<BiometricUnlockController> biometricUnlockControllerProvider;
     private final Provider<DozeParameters> parametersProvider;
@@ -17,10 +17,8 @@ public final class DozeWallpaperState_Factory implements Factory<DozeWallpaperSt
         this.parametersProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DozeWallpaperState mo1933get() {
-        return newInstance(this.wallpaperManagerServiceProvider.mo1933get(), this.biometricUnlockControllerProvider.mo1933get(), this.parametersProvider.mo1933get());
+    public DozeWallpaperState get() {
+        return newInstance(this.wallpaperManagerServiceProvider.get(), this.biometricUnlockControllerProvider.get(), this.parametersProvider.get());
     }
 
     public static DozeWallpaperState_Factory create(Provider<IWallpaperManager> provider, Provider<BiometricUnlockController> provider2, Provider<DozeParameters> provider3) {

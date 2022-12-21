@@ -1,0 +1,11 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/NetworkTemplate;->buildTemplateMobileAll(Ljava/lang/String;)Landroid/net/NetworkTemplate;,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,192,5,192,25,
+Landroid/net/NetworkTemplate;->buildTemplateMobileWildcard()Landroid/net/NetworkTemplate;,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,225,5,225,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkTemplate;->buildTemplateWifiWildcard()Landroid/net/NetworkTemplate;,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,236,5,236,25,
+Landroid/net/NetworkTemplate;->buildTemplateWifi()Landroid/net/NetworkTemplate;,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,245,5,245,25,
+Landroid/net/NetworkTemplate;->buildTemplateEthernet()Landroid/net/NetworkTemplate;,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,295,5,295,25,
+Landroid/net/NetworkTemplate;-><init>(ILjava/lang/String;Ljava/lang/String;)V,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,382,5,382,25,
+Landroid/net/NetworkTemplate;->getMatchRule()I,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,551,5,551,25,
+Landroid/net/NetworkTemplate;->getSubscriberId()Ljava/lang/String;,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,570,5,570,25,
+Landroid/net/NetworkTemplate;->normalize(Landroid/net/NetworkTemplate;[Ljava/lang/String;)Landroid/net/NetworkTemplate;,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,863,5,863,25,
+Landroid/net/NetworkTemplate;->CREATOR:Landroid/os/Parcelable$Creator;,packages/modules/Connectivity/framework-t/src/android/net/NetworkTemplate.java,906,5,906,25,

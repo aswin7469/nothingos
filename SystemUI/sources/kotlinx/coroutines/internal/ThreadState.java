@@ -1,44 +1,49 @@
 package kotlinx.coroutines.internal;
 
+import kotlin.Metadata;
 import kotlin.coroutines.CoroutineContext;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import kotlinx.coroutines.ThreadContextElement;
+
+@Metadata(mo64986d1 = {"\u0000,\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u0011\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0002\n\u0002\b\u0004\b\u0002\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\u001c\u0010\u000e\u001a\u00020\u000f2\n\u0010\u0010\u001a\u0006\u0012\u0002\b\u00030\t2\b\u0010\u0011\u001a\u0004\u0018\u00010\u0001J\u000e\u0010\u0012\u001a\u00020\u000f2\u0006\u0010\u0002\u001a\u00020\u0003R\u0010\u0010\u0002\u001a\u00020\u00038\u0006X\u0004¢\u0006\u0002\n\u0000R \u0010\u0007\u001a\u0012\u0012\u000e\u0012\f\u0012\u0006\u0012\u0004\u0018\u00010\u0001\u0018\u00010\t0\bX\u0004¢\u0006\u0004\n\u0002\u0010\nR\u000e\u0010\u000b\u001a\u00020\u0005X\u000e¢\u0006\u0002\n\u0000R\u0018\u0010\f\u001a\n\u0012\u0006\u0012\u0004\u0018\u00010\u00010\bX\u0004¢\u0006\u0004\n\u0002\u0010\r¨\u0006\u0013"}, mo64987d2 = {"Lkotlinx/coroutines/internal/ThreadState;", "", "context", "Lkotlin/coroutines/CoroutineContext;", "n", "", "(Lkotlin/coroutines/CoroutineContext;I)V", "elements", "", "Lkotlinx/coroutines/ThreadContextElement;", "[Lkotlinx/coroutines/ThreadContextElement;", "i", "values", "[Ljava/lang/Object;", "append", "", "element", "value", "restore", "kotlinx-coroutines-core"}, mo64988k = 1, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: ThreadContext.kt */
-/* loaded from: classes2.dex */
 final class ThreadState {
-    private Object[] a;
-    @NotNull
-    private final CoroutineContext context;
-    private int i;
+    public final CoroutineContext context;
+    private final ThreadContextElement<Object>[] elements;
 
-    public ThreadState(@NotNull CoroutineContext context, int i) {
-        Intrinsics.checkParameterIsNotNull(context, "context");
-        this.context = context;
-        this.a = new Object[i];
+    /* renamed from: i */
+    private int f853i;
+    private final Object[] values;
+
+    public ThreadState(CoroutineContext coroutineContext, int i) {
+        this.context = coroutineContext;
+        this.values = new Object[i];
+        this.elements = new ThreadContextElement[i];
     }
 
-    @NotNull
-    public final CoroutineContext getContext() {
-        return this.context;
-    }
-
-    public final void append(@Nullable Object obj) {
-        Object[] objArr = this.a;
-        int i = this.i;
-        this.i = i + 1;
+    public final void append(ThreadContextElement<?> threadContextElement, Object obj) {
+        Object[] objArr = this.values;
+        int i = this.f853i;
         objArr[i] = obj;
+        ThreadContextElement<Object>[] threadContextElementArr = this.elements;
+        this.f853i = i + 1;
+        threadContextElementArr[i] = threadContextElement;
     }
 
-    @Nullable
-    public final Object take() {
-        Object[] objArr = this.a;
-        int i = this.i;
-        this.i = i + 1;
-        return objArr[i];
-    }
-
-    public final void start() {
-        this.i = 0;
+    public final void restore(CoroutineContext coroutineContext) {
+        int length = this.elements.length - 1;
+        if (length >= 0) {
+            while (true) {
+                int i = length - 1;
+                ThreadContextElement<Object> threadContextElement = this.elements[length];
+                Intrinsics.checkNotNull(threadContextElement);
+                threadContextElement.restoreThreadContext(coroutineContext, this.values[length]);
+                if (i >= 0) {
+                    length = i;
+                } else {
+                    return;
+                }
+            }
+        }
     }
 }

@@ -1,29 +1,28 @@
 package com.android.systemui;
 
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
 import dagger.Lazy;
+import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ActivityStarterDelegate_Factory implements Factory<ActivityStarterDelegate> {
-    private final Provider<Optional<Lazy<StatusBar>>> statusBarProvider;
+    private final Provider<Optional<CentralSurfaces>> centralSurfacesOptionalLazyProvider;
 
-    public ActivityStarterDelegate_Factory(Provider<Optional<Lazy<StatusBar>>> provider) {
-        this.statusBarProvider = provider;
+    public ActivityStarterDelegate_Factory(Provider<Optional<CentralSurfaces>> provider) {
+        this.centralSurfacesOptionalLazyProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ActivityStarterDelegate mo1933get() {
-        return newInstance(this.statusBarProvider.mo1933get());
+    public ActivityStarterDelegate get() {
+        return newInstance(DoubleCheck.lazy(this.centralSurfacesOptionalLazyProvider));
     }
 
-    public static ActivityStarterDelegate_Factory create(Provider<Optional<Lazy<StatusBar>>> provider) {
+    public static ActivityStarterDelegate_Factory create(Provider<Optional<CentralSurfaces>> provider) {
         return new ActivityStarterDelegate_Factory(provider);
     }
 
-    public static ActivityStarterDelegate newInstance(Optional<Lazy<StatusBar>> optional) {
-        return new ActivityStarterDelegate(optional);
+    public static ActivityStarterDelegate newInstance(Lazy<Optional<CentralSurfaces>> lazy) {
+        return new ActivityStarterDelegate(lazy);
     }
 }

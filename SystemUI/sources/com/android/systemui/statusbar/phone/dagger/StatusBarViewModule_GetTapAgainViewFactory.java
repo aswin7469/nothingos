@@ -5,7 +5,7 @@ import com.android.systemui.statusbar.phone.TapAgainView;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class StatusBarViewModule_GetTapAgainViewFactory implements Factory<TapAgainView> {
     private final Provider<NotificationPanelView> npvProvider;
 
@@ -13,10 +13,8 @@ public final class StatusBarViewModule_GetTapAgainViewFactory implements Factory
         this.npvProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public TapAgainView mo1933get() {
-        return getTapAgainView(this.npvProvider.mo1933get());
+    public TapAgainView get() {
+        return getTapAgainView(this.npvProvider.get());
     }
 
     public static StatusBarViewModule_GetTapAgainViewFactory create(Provider<NotificationPanelView> provider) {

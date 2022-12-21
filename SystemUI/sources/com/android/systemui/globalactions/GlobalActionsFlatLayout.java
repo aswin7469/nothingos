@@ -4,14 +4,16 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.internal.annotations.VisibleForTesting;
+import com.android.systemui.C1893R;
 import com.android.systemui.HardwareBgDrawable;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-/* loaded from: classes.dex */
+
 public class GlobalActionsFlatLayout extends GlobalActionsLayout {
-    @Override // com.android.systemui.globalactions.GlobalActionsLayout
-    protected HardwareBgDrawable getBackgroundDrawable(int i) {
+    public float getAnimationOffsetY() {
+        return 0.0f;
+    }
+
+    /* access modifiers changed from: protected */
+    public HardwareBgDrawable getBackgroundDrawable(int i) {
         return null;
     }
 
@@ -19,33 +21,39 @@ public class GlobalActionsFlatLayout extends GlobalActionsLayout {
         super(context, attributeSet);
     }
 
-    @Override // com.android.systemui.globalactions.GlobalActionsLayout
-    @VisibleForTesting
-    protected boolean shouldReverseListItems() {
+    /* access modifiers changed from: protected */
+    public boolean shouldReverseListItems() {
         int currentRotation = getCurrentRotation();
         if (currentRotation == 0) {
             return false;
         }
-        return getCurrentLayoutDirection() == 1 ? currentRotation == 1 : currentRotation == 3;
+        if (getCurrentLayoutDirection() == 1) {
+            if (currentRotation == 1) {
+                return true;
+            }
+            return false;
+        } else if (currentRotation == 3) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private View getOverflowButton() {
-        return findViewById(R$id.global_actions_overflow_button);
+        return findViewById(C1893R.C1897id.global_actions_overflow_button);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.globalactions.GlobalActionsLayout
+    /* access modifiers changed from: protected */
     public void addToListView(View view, boolean z) {
         super.addToListView(view, z);
         View overflowButton = getOverflowButton();
         if (overflowButton != null) {
-            mo610getListView().removeView(overflowButton);
+            getListView().removeView(overflowButton);
             super.addToListView(overflowButton, z);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.MultiListLayout
+    /* access modifiers changed from: protected */
     public void removeAllListViews() {
         View overflowButton = getOverflowButton();
         super.removeAllListViews();
@@ -54,20 +62,20 @@ public class GlobalActionsFlatLayout extends GlobalActionsLayout {
         }
     }
 
-    @Override // android.widget.LinearLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
-        ViewGroup mo610getListView = mo610getListView();
+        ViewGroup listView = getListView();
         boolean z2 = false;
-        for (int i5 = 0; i5 < mo610getListView.getChildCount(); i5++) {
-            View childAt = mo610getListView.getChildAt(i5);
+        for (int i5 = 0; i5 < listView.getChildCount(); i5++) {
+            View childAt = listView.getChildAt(i5);
             if (childAt instanceof GlobalActionsItem) {
                 z2 = z2 || ((GlobalActionsItem) childAt).isTruncated();
             }
         }
         if (z2) {
-            for (int i6 = 0; i6 < mo610getListView.getChildCount(); i6++) {
-                View childAt2 = mo610getListView.getChildAt(i6);
+            for (int i6 = 0; i6 < listView.getChildCount(); i6++) {
+                View childAt2 = listView.getChildAt(i6);
                 if (childAt2 instanceof GlobalActionsItem) {
                     ((GlobalActionsItem) childAt2).setMarquee(true);
                 }
@@ -75,17 +83,16 @@ public class GlobalActionsFlatLayout extends GlobalActionsLayout {
         }
     }
 
-    @VisibleForTesting
-    protected float getGridItemSize() {
-        return getContext().getResources().getDimension(R$dimen.global_actions_grid_item_height);
+    /* access modifiers changed from: protected */
+    public float getGridItemSize() {
+        return getContext().getResources().getDimension(C1893R.dimen.global_actions_grid_item_height);
     }
 
-    @VisibleForTesting
-    protected float getAnimationDistance() {
+    /* access modifiers changed from: protected */
+    public float getAnimationDistance() {
         return getGridItemSize() / 2.0f;
     }
 
-    @Override // com.android.systemui.MultiListLayout
     public float getAnimationOffsetX() {
         return getAnimationDistance();
     }

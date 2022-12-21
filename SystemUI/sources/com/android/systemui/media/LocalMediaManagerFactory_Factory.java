@@ -4,7 +4,7 @@ import android.content.Context;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class LocalMediaManagerFactory_Factory implements Factory<LocalMediaManagerFactory> {
     private final Provider<Context> contextProvider;
     private final Provider<LocalBluetoothManager> localBluetoothManagerProvider;
@@ -14,10 +14,8 @@ public final class LocalMediaManagerFactory_Factory implements Factory<LocalMedi
         this.localBluetoothManagerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LocalMediaManagerFactory mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.localBluetoothManagerProvider.mo1933get());
+    public LocalMediaManagerFactory get() {
+        return newInstance(this.contextProvider.get(), this.localBluetoothManagerProvider.get());
     }
 
     public static LocalMediaManagerFactory_Factory create(Provider<Context> provider, Provider<LocalBluetoothManager> provider2) {

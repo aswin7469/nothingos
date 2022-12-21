@@ -2,7 +2,7 @@ package com.android.systemui.statusbar.notification.icon;
 
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.systemui.statusbar.StatusBarIconView;
-/* loaded from: classes.dex */
+
 public final class IconPack {
     private final StatusBarIconView mAodIcon;
     private final boolean mAreIconsAvailable;
@@ -14,7 +14,7 @@ public final class IconPack {
     private final StatusBarIconView mStatusBarIcon;
 
     public static IconPack buildEmptyPack(IconPack iconPack) {
-        return new IconPack(false, null, null, null, null, iconPack);
+        return new IconPack(false, (StatusBarIconView) null, (StatusBarIconView) null, (StatusBarIconView) null, (StatusBarIconView) null, iconPack);
     }
 
     public static IconPack buildPack(StatusBarIconView statusBarIconView, StatusBarIconView statusBarIconView2, StatusBarIconView statusBarIconView3, StatusBarIconView statusBarIconView4, IconPack iconPack) {
@@ -48,32 +48,32 @@ public final class IconPack {
         return this.mAodIcon;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public StatusBarIcon getSmallIconDescriptor() {
         return this.mSmallIconDescriptor;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setSmallIconDescriptor(StatusBarIcon statusBarIcon) {
         this.mSmallIconDescriptor = statusBarIcon;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public StatusBarIcon getPeopleAvatarDescriptor() {
         return this.mPeopleAvatarDescriptor;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setPeopleAvatarDescriptor(StatusBarIcon statusBarIcon) {
         this.mPeopleAvatarDescriptor = statusBarIcon;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isImportantConversation() {
         return this.mIsImportantConversation;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setImportantConversation(boolean z) {
         this.mIsImportantConversation = z;
     }

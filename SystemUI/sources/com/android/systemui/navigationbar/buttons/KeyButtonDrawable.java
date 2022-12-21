@@ -8,6 +8,7 @@ import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
+import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -15,28 +16,32 @@ import android.graphics.Rect;
 import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.FloatProperty;
-import com.android.systemui.R$color;
-import com.android.systemui.R$dimen;
-/* loaded from: classes.dex */
+import com.android.settingslib.Utils;
+import com.android.systemui.C1893R;
+
 public class KeyButtonDrawable extends Drawable {
-    public static final FloatProperty<KeyButtonDrawable> KEY_DRAWABLE_ROTATE = new FloatProperty<KeyButtonDrawable>("KeyButtonRotation") { // from class: com.android.systemui.navigationbar.buttons.KeyButtonDrawable.1
-        @Override // android.util.FloatProperty
+    public static final FloatProperty<KeyButtonDrawable> KEY_DRAWABLE_ROTATE = new FloatProperty<KeyButtonDrawable>("KeyButtonRotation") {
+        public /* bridge */ /* synthetic */ void set(Object obj, Object obj2) {
+            super.set(obj, (Float) obj2);
+        }
+
         public void setValue(KeyButtonDrawable keyButtonDrawable, float f) {
             keyButtonDrawable.setRotation(f);
         }
 
-        @Override // android.util.Property
         public Float get(KeyButtonDrawable keyButtonDrawable) {
             return Float.valueOf(keyButtonDrawable.getRotation());
         }
     };
-    public static final FloatProperty<KeyButtonDrawable> KEY_DRAWABLE_TRANSLATE_Y = new FloatProperty<KeyButtonDrawable>("KeyButtonTranslateY") { // from class: com.android.systemui.navigationbar.buttons.KeyButtonDrawable.2
-        @Override // android.util.FloatProperty
+    public static final FloatProperty<KeyButtonDrawable> KEY_DRAWABLE_TRANSLATE_Y = new FloatProperty<KeyButtonDrawable>("KeyButtonTranslateY") {
+        public /* bridge */ /* synthetic */ void set(Object obj, Object obj2) {
+            super.set(obj, (Float) obj2);
+        }
+
         public void setValue(KeyButtonDrawable keyButtonDrawable, float f) {
             keyButtonDrawable.setTranslationY(f);
         }
 
-        @Override // android.util.Property
         public Float get(KeyButtonDrawable keyButtonDrawable) {
             return Float.valueOf(keyButtonDrawable.getTranslationY());
         }
@@ -47,7 +52,6 @@ public class KeyButtonDrawable extends Drawable {
     private final Paint mShadowPaint;
     private final ShadowDrawableState mState;
 
-    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return -3;
     }
@@ -59,23 +63,20 @@ public class KeyButtonDrawable extends Drawable {
     private KeyButtonDrawable(Drawable drawable, ShadowDrawableState shadowDrawableState) {
         this.mIconPaint = new Paint(3);
         this.mShadowPaint = new Paint(3);
-        Drawable.Callback callback = new Drawable.Callback() { // from class: com.android.systemui.navigationbar.buttons.KeyButtonDrawable.3
-            @Override // android.graphics.drawable.Drawable.Callback
-            public void invalidateDrawable(Drawable drawable2) {
+        C22723 r0 = new Drawable.Callback() {
+            public void invalidateDrawable(Drawable drawable) {
                 KeyButtonDrawable.this.invalidateSelf();
             }
 
-            @Override // android.graphics.drawable.Drawable.Callback
-            public void scheduleDrawable(Drawable drawable2, Runnable runnable, long j) {
+            public void scheduleDrawable(Drawable drawable, Runnable runnable, long j) {
                 KeyButtonDrawable.this.scheduleSelf(runnable, j);
             }
 
-            @Override // android.graphics.drawable.Drawable.Callback
-            public void unscheduleDrawable(Drawable drawable2, Runnable runnable) {
+            public void unscheduleDrawable(Drawable drawable, Runnable runnable) {
                 KeyButtonDrawable.this.unscheduleSelf(runnable);
             }
         };
-        this.mAnimatedDrawableCallback = callback;
+        this.mAnimatedDrawableCallback = r0;
         this.mState = shadowDrawableState;
         if (drawable != null) {
             shadowDrawableState.mBaseHeight = drawable.getIntrinsicHeight();
@@ -86,7 +87,7 @@ public class KeyButtonDrawable extends Drawable {
         if (canAnimate()) {
             AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) shadowDrawableState.mChildState.newDrawable().mutate();
             this.mAnimatedDrawable = animatedVectorDrawable;
-            animatedVectorDrawable.setCallback(callback);
+            animatedVectorDrawable.setCallback(r0);
             setDrawableBounds(this.mAnimatedDrawable);
         }
     }
@@ -99,15 +100,14 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     public void setRotation(float f) {
-        if (canAnimate()) {
-            return;
+        if (!canAnimate() && this.mState.mRotateDegrees != f) {
+            this.mState.mRotateDegrees = f;
+            invalidateSelf();
         }
-        ShadowDrawableState shadowDrawableState = this.mState;
-        if (shadowDrawableState.mRotateDegrees == f) {
-            return;
-        }
-        shadowDrawableState.mRotateDegrees = f;
-        invalidateSelf();
+    }
+
+    public void setTranslationX(float f) {
+        setTranslation(f, this.mState.mTranslationY);
     }
 
     public void setTranslationY(float f) {
@@ -115,33 +115,27 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     public void setTranslation(float f, float f2) {
-        ShadowDrawableState shadowDrawableState = this.mState;
-        if (shadowDrawableState.mTranslationX == f && shadowDrawableState.mTranslationY == f2) {
-            return;
+        if (this.mState.mTranslationX != f || this.mState.mTranslationY != f2) {
+            this.mState.mTranslationX = f;
+            this.mState.mTranslationY = f2;
+            invalidateSelf();
         }
-        shadowDrawableState.mTranslationX = f;
-        shadowDrawableState.mTranslationY = f2;
-        invalidateSelf();
     }
 
     public void setShadowProperties(int i, int i2, int i3, int i4) {
-        if (canAnimate()) {
-            return;
+        if (!canAnimate()) {
+            if (this.mState.mShadowOffsetX != i || this.mState.mShadowOffsetY != i2 || this.mState.mShadowSize != i3 || this.mState.mShadowColor != i4) {
+                this.mState.mShadowOffsetX = i;
+                this.mState.mShadowOffsetY = i2;
+                this.mState.mShadowSize = i3;
+                this.mState.mShadowColor = i4;
+                this.mShadowPaint.setColorFilter(new PorterDuffColorFilter(this.mState.mShadowColor, PorterDuff.Mode.SRC_ATOP));
+                updateShadowAlpha();
+                invalidateSelf();
+            }
         }
-        ShadowDrawableState shadowDrawableState = this.mState;
-        if (shadowDrawableState.mShadowOffsetX == i && shadowDrawableState.mShadowOffsetY == i2 && shadowDrawableState.mShadowSize == i3 && shadowDrawableState.mShadowColor == i4) {
-            return;
-        }
-        shadowDrawableState.mShadowOffsetX = i;
-        shadowDrawableState.mShadowOffsetY = i2;
-        shadowDrawableState.mShadowSize = i3;
-        shadowDrawableState.mShadowColor = i4;
-        this.mShadowPaint.setColorFilter(new PorterDuffColorFilter(this.mState.mShadowColor, PorterDuff.Mode.SRC_ATOP));
-        updateShadowAlpha();
-        invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public boolean setVisible(boolean z, boolean z2) {
         boolean visible = super.setVisible(z, z2);
         if (visible) {
@@ -150,7 +144,6 @@ public class KeyButtonDrawable extends Drawable {
         return visible;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void jumpToCurrentState() {
         super.jumpToCurrentState();
         AnimatedVectorDrawable animatedVectorDrawable = this.mAnimatedDrawable;
@@ -159,7 +152,6 @@ public class KeyButtonDrawable extends Drawable {
         }
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setAlpha(int i) {
         this.mState.mAlpha = i;
         this.mIconPaint.setAlpha(i);
@@ -167,7 +159,6 @@ public class KeyButtonDrawable extends Drawable {
         invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void setColorFilter(ColorFilter colorFilter) {
         this.mIconPaint.setColorFilter(colorFilter);
         if (this.mAnimatedDrawable != null) {
@@ -188,25 +179,24 @@ public class KeyButtonDrawable extends Drawable {
         return this.mState.mRotateDegrees;
     }
 
+    public float getTranslationX() {
+        return this.mState.mTranslationX;
+    }
+
     public float getTranslationY() {
         return this.mState.mTranslationY;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public Drawable.ConstantState getConstantState() {
         return this.mState;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getIntrinsicHeight() {
-        ShadowDrawableState shadowDrawableState = this.mState;
-        return shadowDrawableState.mBaseHeight + ((shadowDrawableState.mShadowSize + Math.abs(shadowDrawableState.mShadowOffsetY)) * 2);
+        return this.mState.mBaseHeight + ((this.mState.mShadowSize + Math.abs(this.mState.mShadowOffsetY)) * 2);
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getIntrinsicWidth() {
-        ShadowDrawableState shadowDrawableState = this.mState;
-        return shadowDrawableState.mBaseWidth + ((shadowDrawableState.mShadowSize + Math.abs(shadowDrawableState.mShadowOffsetX)) * 2);
+        return this.mState.mBaseWidth + ((this.mState.mShadowSize + Math.abs(this.mState.mShadowOffsetX)) * 2);
     }
 
     public boolean canAnimate() {
@@ -234,56 +224,46 @@ public class KeyButtonDrawable extends Drawable {
         }
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
-        ShadowDrawableState shadowDrawableState;
         Rect bounds = getBounds();
-        if (bounds.isEmpty()) {
-            return;
-        }
-        AnimatedVectorDrawable animatedVectorDrawable = this.mAnimatedDrawable;
-        if (animatedVectorDrawable != null) {
-            animatedVectorDrawable.draw(canvas);
-            return;
-        }
-        boolean z = this.mState.mIsHardwareBitmap != canvas.isHardwareAccelerated();
-        if (z) {
-            this.mState.mIsHardwareBitmap = canvas.isHardwareAccelerated();
-        }
-        if (this.mState.mLastDrawnIcon == null || z) {
-            regenerateBitmapIconCache();
-        }
-        canvas.save();
-        ShadowDrawableState shadowDrawableState2 = this.mState;
-        canvas.translate(shadowDrawableState2.mTranslationX, shadowDrawableState2.mTranslationY);
-        canvas.rotate(this.mState.mRotateDegrees, getIntrinsicWidth() / 2, getIntrinsicHeight() / 2);
-        ShadowDrawableState shadowDrawableState3 = this.mState;
-        if (shadowDrawableState3.mShadowSize > 0) {
-            if (shadowDrawableState3.mLastDrawnShadow == null || z) {
-                regenerateBitmapShadowCache();
+        if (!bounds.isEmpty()) {
+            AnimatedVectorDrawable animatedVectorDrawable = this.mAnimatedDrawable;
+            if (animatedVectorDrawable != null) {
+                animatedVectorDrawable.draw(canvas);
+                return;
             }
-            double d = (float) ((this.mState.mRotateDegrees * 3.141592653589793d) / 180.0d);
-            float sin = ((float) ((Math.sin(d) * this.mState.mShadowOffsetY) + (Math.cos(d) * shadowDrawableState.mShadowOffsetX))) - this.mState.mTranslationX;
-            double cos = Math.cos(d) * this.mState.mShadowOffsetY;
-            double sin2 = Math.sin(d);
-            ShadowDrawableState shadowDrawableState4 = this.mState;
-            canvas.drawBitmap(shadowDrawableState4.mLastDrawnShadow, sin, ((float) (cos - (sin2 * shadowDrawableState4.mShadowOffsetX))) - shadowDrawableState4.mTranslationY, this.mShadowPaint);
+            boolean z = this.mState.mIsHardwareBitmap != canvas.isHardwareAccelerated();
+            if (z) {
+                this.mState.mIsHardwareBitmap = canvas.isHardwareAccelerated();
+            }
+            if (this.mState.mLastDrawnIcon == null || z) {
+                regenerateBitmapIconCache();
+            }
+            canvas.save();
+            canvas.translate(this.mState.mTranslationX, this.mState.mTranslationY);
+            canvas.rotate(this.mState.mRotateDegrees, (float) (getIntrinsicWidth() / 2), (float) (getIntrinsicHeight() / 2));
+            if (this.mState.mShadowSize > 0) {
+                if (this.mState.mLastDrawnShadow == null || z) {
+                    regenerateBitmapShadowCache();
+                }
+                double d = (double) ((float) ((((double) this.mState.mRotateDegrees) * 3.141592653589793d) / 180.0d));
+                canvas.drawBitmap(this.mState.mLastDrawnShadow, ((float) ((Math.sin(d) * ((double) this.mState.mShadowOffsetY)) + (Math.cos(d) * ((double) this.mState.mShadowOffsetX)))) - this.mState.mTranslationX, ((float) ((Math.cos(d) * ((double) this.mState.mShadowOffsetY)) - (Math.sin(d) * ((double) this.mState.mShadowOffsetX)))) - this.mState.mTranslationY, this.mShadowPaint);
+            }
+            canvas.drawBitmap(this.mState.mLastDrawnIcon, (Rect) null, bounds, this.mIconPaint);
+            canvas.restore();
         }
-        canvas.drawBitmap(this.mState.mLastDrawnIcon, (Rect) null, bounds, this.mIconPaint);
-        canvas.restore();
     }
 
-    @Override // android.graphics.drawable.Drawable
     public boolean canApplyTheme() {
         return this.mState.canApplyTheme();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getDrawableBackgroundColor() {
         return this.mState.mOvalBackgroundColor.toArgb();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean hasOvalBg() {
         return this.mState.mOvalBackgroundColor != null;
     }
@@ -297,7 +277,7 @@ public class KeyButtonDrawable extends Drawable {
         setDrawableBounds(mutate);
         canvas.save();
         if (this.mState.mHorizontalFlip) {
-            canvas.scale(-1.0f, 1.0f, intrinsicWidth * 0.5f, intrinsicHeight * 0.5f);
+            canvas.scale(-1.0f, 1.0f, ((float) intrinsicWidth) * 0.5f, ((float) intrinsicHeight) * 0.5f);
         }
         mutate.draw(canvas);
         canvas.restore();
@@ -308,9 +288,8 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     private void regenerateBitmapShadowCache() {
-        ShadowDrawableState shadowDrawableState = this.mState;
-        if (shadowDrawableState.mShadowSize == 0) {
-            shadowDrawableState.mLastDrawnIcon = null;
+        if (this.mState.mShadowSize == 0) {
+            this.mState.mLastDrawnIcon = null;
             return;
         }
         int intrinsicWidth = getIntrinsicWidth();
@@ -321,17 +300,17 @@ public class KeyButtonDrawable extends Drawable {
         setDrawableBounds(mutate);
         canvas.save();
         if (this.mState.mHorizontalFlip) {
-            canvas.scale(-1.0f, 1.0f, intrinsicWidth * 0.5f, intrinsicHeight * 0.5f);
+            canvas.scale(-1.0f, 1.0f, ((float) intrinsicWidth) * 0.5f, ((float) intrinsicHeight) * 0.5f);
         }
         mutate.draw(canvas);
         canvas.restore();
         Paint paint = new Paint(3);
-        paint.setMaskFilter(new BlurMaskFilter(this.mState.mShadowSize, BlurMaskFilter.Blur.NORMAL));
+        paint.setMaskFilter(new BlurMaskFilter((float) this.mState.mShadowSize, BlurMaskFilter.Blur.NORMAL));
         int[] iArr = new int[2];
         Bitmap extractAlpha = createBitmap.extractAlpha(paint, iArr);
-        paint.setMaskFilter(null);
+        paint.setMaskFilter((MaskFilter) null);
         createBitmap.eraseColor(0);
-        canvas.drawBitmap(extractAlpha, iArr[0], iArr[1], paint);
+        canvas.drawBitmap(extractAlpha, (float) iArr[0], (float) iArr[1], paint);
         if (this.mState.mIsHardwareBitmap) {
             createBitmap = createBitmap.copy(Bitmap.Config.HARDWARE, false);
         }
@@ -339,23 +318,16 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     private void updateShadowAlpha() {
-        int alpha = Color.alpha(this.mState.mShadowColor);
-        Paint paint = this.mShadowPaint;
-        ShadowDrawableState shadowDrawableState = this.mState;
-        paint.setAlpha(Math.round(alpha * (shadowDrawableState.mAlpha / 255.0f) * (1.0f - shadowDrawableState.mDarkIntensity)));
+        this.mShadowPaint.setAlpha(Math.round(((float) Color.alpha(this.mState.mShadowColor)) * (((float) this.mState.mAlpha) / 255.0f) * (1.0f - this.mState.mDarkIntensity)));
     }
 
     private void setDrawableBounds(Drawable drawable) {
-        ShadowDrawableState shadowDrawableState = this.mState;
-        int abs = shadowDrawableState.mShadowSize + Math.abs(shadowDrawableState.mShadowOffsetX);
-        ShadowDrawableState shadowDrawableState2 = this.mState;
-        int abs2 = shadowDrawableState2.mShadowSize + Math.abs(shadowDrawableState2.mShadowOffsetY);
+        int abs = this.mState.mShadowSize + Math.abs(this.mState.mShadowOffsetX);
+        int abs2 = this.mState.mShadowSize + Math.abs(this.mState.mShadowOffsetY);
         drawable.setBounds(abs, abs2, getIntrinsicWidth() - abs, getIntrinsicHeight() - abs2);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class ShadowDrawableState extends Drawable.ConstantState {
+    private static class ShadowDrawableState extends Drawable.ConstantState {
         int mAlpha = 255;
         int mBaseHeight;
         int mBaseWidth;
@@ -378,7 +350,6 @@ public class KeyButtonDrawable extends Drawable {
         float mTranslationX;
         float mTranslationY;
 
-        @Override // android.graphics.drawable.Drawable.ConstantState
         public boolean canApplyTheme() {
             return true;
         }
@@ -391,15 +362,17 @@ public class KeyButtonDrawable extends Drawable {
             this.mOvalBackgroundColor = color;
         }
 
-        @Override // android.graphics.drawable.Drawable.ConstantState
         public Drawable newDrawable() {
-            return new KeyButtonDrawable(null, this);
+            return new KeyButtonDrawable((Drawable) null, this);
         }
 
-        @Override // android.graphics.drawable.Drawable.ConstantState
         public int getChangingConfigurations() {
             return this.mChangingConfigurations;
         }
+    }
+
+    public static KeyButtonDrawable create(Context context, Context context2, int i, boolean z, Color color) {
+        return create(context, Utils.getColorAttrDefaultColor(context, C1893R.attr.singleToneColor), Utils.getColorAttrDefaultColor(context2, C1893R.attr.singleToneColor), i, z, color);
     }
 
     public static KeyButtonDrawable create(Context context, int i, int i2, int i3, boolean z, Color color) {
@@ -408,7 +381,7 @@ public class KeyButtonDrawable extends Drawable {
         Drawable drawable = context.getDrawable(i3);
         KeyButtonDrawable keyButtonDrawable = new KeyButtonDrawable(drawable, i, i2, z2 && drawable.isAutoMirrored(), color);
         if (z) {
-            keyButtonDrawable.setShadowProperties(resources.getDimensionPixelSize(R$dimen.nav_key_button_shadow_offset_x), resources.getDimensionPixelSize(R$dimen.nav_key_button_shadow_offset_y), resources.getDimensionPixelSize(R$dimen.nav_key_button_shadow_radius), context.getColor(R$color.nav_key_button_shadow_color));
+            keyButtonDrawable.setShadowProperties(resources.getDimensionPixelSize(C1893R.dimen.nav_key_button_shadow_offset_x), resources.getDimensionPixelSize(C1893R.dimen.nav_key_button_shadow_offset_y), resources.getDimensionPixelSize(C1893R.dimen.nav_key_button_shadow_radius), context.getColor(C1893R.C1894color.nav_key_button_shadow_color));
         }
         return keyButtonDrawable;
     }

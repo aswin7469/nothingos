@@ -2,7 +2,7 @@ package com.android.systemui.statusbar;
 
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
-/* loaded from: classes.dex */
+
 public class ScalingDrawableWrapper extends DrawableWrapper {
     private float mScaleFactor;
 
@@ -11,13 +11,11 @@ public class ScalingDrawableWrapper extends DrawableWrapper {
         this.mScaleFactor = f;
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public int getIntrinsicWidth() {
-        return (int) (super.getIntrinsicWidth() * this.mScaleFactor);
+        return (int) (((float) super.getIntrinsicWidth()) * this.mScaleFactor);
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public int getIntrinsicHeight() {
-        return (int) (super.getIntrinsicHeight() * this.mScaleFactor);
+        return (int) (((float) super.getIntrinsicHeight()) * this.mScaleFactor);
     }
 }

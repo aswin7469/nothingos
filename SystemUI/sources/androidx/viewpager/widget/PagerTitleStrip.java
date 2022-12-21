@@ -11,20 +11,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.TextView;
-import androidx.core.view.ViewCompat;
 import androidx.core.widget.TextViewCompat;
 import androidx.viewpager.widget.ViewPager;
 import java.lang.ref.WeakReference;
 import java.util.Locale;
+
 @ViewPager.DecorView
-/* loaded from: classes.dex */
 public class PagerTitleStrip extends ViewGroup {
     private static final int[] ATTRS = {16842804, 16842901, 16842904, 16842927};
+    private static final float SIDE_ALPHA = 0.6f;
     private static final int[] TEXT_ATTRS = {16843660};
+    private static final int TEXT_SPACING = 16;
     TextView mCurrText;
     private int mGravity;
+    private int mLastKnownCurrentPage;
+    float mLastKnownPositionOffset;
     TextView mNextText;
     private int mNonPrimaryAlpha;
+    private final PageListener mPageListener;
     ViewPager mPager;
     TextView mPrevText;
     private int mScaledTextSpacing;
@@ -32,20 +36,14 @@ public class PagerTitleStrip extends ViewGroup {
     private boolean mUpdatingPositions;
     private boolean mUpdatingText;
     private WeakReference<PagerAdapter> mWatchingAdapter;
-    private int mLastKnownCurrentPage = -1;
-    float mLastKnownPositionOffset = -1.0f;
-    private final PageListener mPageListener = new PageListener();
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class SingleLineAllCapsTransform extends SingleLineTransformationMethod {
+    private static class SingleLineAllCapsTransform extends SingleLineTransformationMethod {
         private Locale mLocale;
 
         SingleLineAllCapsTransform(Context context) {
             this.mLocale = context.getResources().getConfiguration().locale;
         }
 
-        @Override // android.text.method.ReplacementTransformationMethod, android.text.method.TransformationMethod
         public CharSequence getTransformation(CharSequence charSequence, View view) {
             CharSequence transformation = super.getTransformation(charSequence, view);
             if (transformation != null) {
@@ -59,8 +57,15 @@ public class PagerTitleStrip extends ViewGroup {
         textView.setTransformationMethod(new SingleLineAllCapsTransform(textView.getContext()));
     }
 
+    public PagerTitleStrip(Context context) {
+        this(context, (AttributeSet) null);
+    }
+
     public PagerTitleStrip(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
+        this.mLastKnownCurrentPage = -1;
+        this.mLastKnownPositionOffset = -1.0f;
+        this.mPageListener = new PageListener();
         TextView textView = new TextView(context);
         this.mPrevText = textView;
         addView(textView);
@@ -70,9 +75,7 @@ public class PagerTitleStrip extends ViewGroup {
         TextView textView3 = new TextView(context);
         this.mNextText = textView3;
         addView(textView3);
-        int[] iArr = ATTRS;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, iArr);
-        ViewCompat.saveAttributeDataForStyleable(this, context, iArr, attributeSet, obtainStyledAttributes, 0, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, ATTRS);
         boolean z = false;
         int resourceId = obtainStyledAttributes.getResourceId(0, 0);
         if (resourceId != 0) {
@@ -82,7 +85,7 @@ public class PagerTitleStrip extends ViewGroup {
         }
         int dimensionPixelSize = obtainStyledAttributes.getDimensionPixelSize(1, 0);
         if (dimensionPixelSize != 0) {
-            setTextSize(0, dimensionPixelSize);
+            setTextSize(0, (float) dimensionPixelSize);
         }
         if (obtainStyledAttributes.hasValue(2)) {
             int color = obtainStyledAttributes.getColor(2, 0);
@@ -131,41 +134,56 @@ public class PagerTitleStrip extends ViewGroup {
         this.mNextText.setTextColor(i2);
     }
 
+    public void setTextColor(int i) {
+        this.mTextColor = i;
+        this.mCurrText.setTextColor(i);
+        int i2 = (this.mNonPrimaryAlpha << 24) | (this.mTextColor & 16777215);
+        this.mPrevText.setTextColor(i2);
+        this.mNextText.setTextColor(i2);
+    }
+
     public void setTextSize(int i, float f) {
         this.mPrevText.setTextSize(i, f);
         this.mCurrText.setTextSize(i, f);
         this.mNextText.setTextSize(i, f);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        ViewParent parent = getParent();
-        if (!(parent instanceof ViewPager)) {
-            throw new IllegalStateException("PagerTitleStrip must be a direct child of a ViewPager.");
-        }
-        ViewPager viewPager = (ViewPager) parent;
-        PagerAdapter adapter = viewPager.getAdapter();
-        viewPager.setInternalPageChangeListener(this.mPageListener);
-        viewPager.addOnAdapterChangeListener(this.mPageListener);
-        this.mPager = viewPager;
-        WeakReference<PagerAdapter> weakReference = this.mWatchingAdapter;
-        updateAdapter(weakReference != null ? weakReference.get() : null, adapter);
+    public void setGravity(int i) {
+        this.mGravity = i;
+        requestLayout();
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        ViewParent parent = getParent();
+        if (parent instanceof ViewPager) {
+            ViewPager viewPager = (ViewPager) parent;
+            PagerAdapter adapter = viewPager.getAdapter();
+            viewPager.setInternalPageChangeListener(this.mPageListener);
+            viewPager.addOnAdapterChangeListener(this.mPageListener);
+            this.mPager = viewPager;
+            WeakReference<PagerAdapter> weakReference = this.mWatchingAdapter;
+            updateAdapter(weakReference != null ? weakReference.get() : null, adapter);
+            return;
+        }
+        throw new IllegalStateException("PagerTitleStrip must be a direct child of a ViewPager.");
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ViewPager viewPager = this.mPager;
         if (viewPager != null) {
-            updateAdapter(viewPager.getAdapter(), null);
-            this.mPager.setInternalPageChangeListener(null);
+            updateAdapter(viewPager.getAdapter(), (PagerAdapter) null);
+            this.mPager.setInternalPageChangeListener((ViewPager.OnPageChangeListener) null);
             this.mPager.removeOnAdapterChangeListener(this.mPageListener);
             this.mPager = null;
         }
     }
 
-    void updateText(int i, PagerAdapter pagerAdapter) {
+    /* access modifiers changed from: package-private */
+    public void updateText(int i, PagerAdapter pagerAdapter) {
         int count = pagerAdapter != null ? pagerAdapter.getCount() : 0;
         this.mUpdatingText = true;
         CharSequence charSequence = null;
@@ -176,7 +194,7 @@ public class PagerTitleStrip extends ViewGroup {
             charSequence = pagerAdapter.getPageTitle(i2);
         }
         this.mNextText.setText(charSequence);
-        int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(Math.max(0, (int) (((getWidth() - getPaddingLeft()) - getPaddingRight()) * 0.8f)), Integer.MIN_VALUE);
+        int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(Math.max(0, (int) (((float) ((getWidth() - getPaddingLeft()) - getPaddingRight())) * 0.8f)), Integer.MIN_VALUE);
         int makeMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(Math.max(0, (getHeight() - getPaddingTop()) - getPaddingBottom()), Integer.MIN_VALUE);
         this.mPrevText.measure(makeMeasureSpec, makeMeasureSpec2);
         this.mCurrText.measure(makeMeasureSpec, makeMeasureSpec2);
@@ -188,14 +206,14 @@ public class PagerTitleStrip extends ViewGroup {
         this.mUpdatingText = false;
     }
 
-    @Override // android.view.View, android.view.ViewParent
     public void requestLayout() {
         if (!this.mUpdatingText) {
             super.requestLayout();
         }
     }
 
-    void updateAdapter(PagerAdapter pagerAdapter, PagerAdapter pagerAdapter2) {
+    /* access modifiers changed from: package-private */
+    public void updateAdapter(PagerAdapter pagerAdapter, PagerAdapter pagerAdapter2) {
         if (pagerAdapter != null) {
             pagerAdapter.unregisterDataSetObserver(this.mPageListener);
             this.mWatchingAdapter = null;
@@ -213,102 +231,106 @@ public class PagerTitleStrip extends ViewGroup {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateTextPositions(int i, float f, boolean z) {
         int i2;
         int i3;
         int i4;
         int i5;
-        if (i != this.mLastKnownCurrentPage) {
-            updateText(i, this.mPager.getAdapter());
-        } else if (!z && f == this.mLastKnownPositionOffset) {
+        int i6 = i;
+        float f2 = f;
+        if (i6 != this.mLastKnownCurrentPage) {
+            updateText(i6, this.mPager.getAdapter());
+        } else if (!z && f2 == this.mLastKnownPositionOffset) {
             return;
         }
         this.mUpdatingPositions = true;
         int measuredWidth = this.mPrevText.getMeasuredWidth();
         int measuredWidth2 = this.mCurrText.getMeasuredWidth();
         int measuredWidth3 = this.mNextText.getMeasuredWidth();
-        int i6 = measuredWidth2 / 2;
+        int i7 = measuredWidth2 / 2;
         int width = getWidth();
         int height = getHeight();
         int paddingLeft = getPaddingLeft();
         int paddingRight = getPaddingRight();
         int paddingTop = getPaddingTop();
         int paddingBottom = getPaddingBottom();
-        int i7 = paddingRight + i6;
-        int i8 = (width - (paddingLeft + i6)) - i7;
-        float f2 = 0.5f + f;
-        if (f2 > 1.0f) {
-            f2 -= 1.0f;
+        int i8 = paddingRight + i7;
+        int i9 = (width - (paddingLeft + i7)) - i8;
+        float f3 = 0.5f + f2;
+        if (f3 > 1.0f) {
+            f3 -= 1.0f;
         }
-        int i9 = ((width - i7) - ((int) (i8 * f2))) - i6;
-        int i10 = measuredWidth2 + i9;
+        int i10 = ((width - i8) - ((int) (((float) i9) * f3))) - i7;
+        int i11 = measuredWidth2 + i10;
         int baseline = this.mPrevText.getBaseline();
         int baseline2 = this.mCurrText.getBaseline();
         int baseline3 = this.mNextText.getBaseline();
         int max = Math.max(Math.max(baseline, baseline2), baseline3);
-        int i11 = max - baseline;
-        int i12 = max - baseline2;
-        int i13 = max - baseline3;
-        int max2 = Math.max(Math.max(this.mPrevText.getMeasuredHeight() + i11, this.mCurrText.getMeasuredHeight() + i12), this.mNextText.getMeasuredHeight() + i13);
-        int i14 = this.mGravity & 112;
-        if (i14 == 16) {
-            i2 = (((height - paddingTop) - paddingBottom) - max2) / 2;
-        } else if (i14 != 80) {
-            i3 = i11 + paddingTop;
+        int i12 = max - baseline;
+        int i13 = max - baseline2;
+        int i14 = max - baseline3;
+        int i15 = measuredWidth3;
+        int max2 = Math.max(Math.max(this.mPrevText.getMeasuredHeight() + i12, this.mCurrText.getMeasuredHeight() + i13), this.mNextText.getMeasuredHeight() + i14);
+        int i16 = this.mGravity & 112;
+        if (i16 == 16) {
+            i5 = (((height - paddingTop) - paddingBottom) - max2) / 2;
+        } else if (i16 != 80) {
             i4 = i12 + paddingTop;
-            i5 = paddingTop + i13;
+            i2 = i13 + paddingTop;
+            i3 = paddingTop + i14;
             TextView textView = this.mCurrText;
-            textView.layout(i9, i4, i10, textView.getMeasuredHeight() + i4);
-            int min = Math.min(paddingLeft, (i9 - this.mScaledTextSpacing) - measuredWidth);
+            textView.layout(i10, i2, i11, textView.getMeasuredHeight() + i2);
+            int min = Math.min(paddingLeft, (i10 - this.mScaledTextSpacing) - measuredWidth);
             TextView textView2 = this.mPrevText;
-            textView2.layout(min, i3, measuredWidth + min, textView2.getMeasuredHeight() + i3);
-            int max3 = Math.max((width - paddingRight) - measuredWidth3, i10 + this.mScaledTextSpacing);
+            textView2.layout(min, i4, measuredWidth + min, textView2.getMeasuredHeight() + i4);
+            int max3 = Math.max((width - paddingRight) - i15, i11 + this.mScaledTextSpacing);
             TextView textView3 = this.mNextText;
-            textView3.layout(max3, i5, max3 + measuredWidth3, textView3.getMeasuredHeight() + i5);
+            textView3.layout(max3, i3, max3 + i15, textView3.getMeasuredHeight() + i3);
             this.mLastKnownPositionOffset = f;
             this.mUpdatingPositions = false;
         } else {
-            i2 = (height - paddingBottom) - max2;
+            i5 = (height - paddingBottom) - max2;
         }
-        i3 = i11 + i2;
-        i4 = i12 + i2;
-        i5 = i2 + i13;
+        i4 = i12 + i5;
+        i2 = i13 + i5;
+        i3 = i5 + i14;
         TextView textView4 = this.mCurrText;
-        textView4.layout(i9, i4, i10, textView4.getMeasuredHeight() + i4);
-        int min2 = Math.min(paddingLeft, (i9 - this.mScaledTextSpacing) - measuredWidth);
+        textView4.layout(i10, i2, i11, textView4.getMeasuredHeight() + i2);
+        int min2 = Math.min(paddingLeft, (i10 - this.mScaledTextSpacing) - measuredWidth);
         TextView textView22 = this.mPrevText;
-        textView22.layout(min2, i3, measuredWidth + min2, textView22.getMeasuredHeight() + i3);
-        int max32 = Math.max((width - paddingRight) - measuredWidth3, i10 + this.mScaledTextSpacing);
+        textView22.layout(min2, i4, measuredWidth + min2, textView22.getMeasuredHeight() + i4);
+        int max32 = Math.max((width - paddingRight) - i15, i11 + this.mScaledTextSpacing);
         TextView textView32 = this.mNextText;
-        textView32.layout(max32, i5, max32 + measuredWidth3, textView32.getMeasuredHeight() + i5);
+        textView32.layout(max32, i3, max32 + i15, textView32.getMeasuredHeight() + i3);
         this.mLastKnownPositionOffset = f;
         this.mUpdatingPositions = false;
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
-        int max;
-        if (View.MeasureSpec.getMode(i) != 1073741824) {
-            throw new IllegalStateException("Must measure with an exact width");
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
+        int i3;
+        if (View.MeasureSpec.getMode(i) == 1073741824) {
+            int paddingTop = getPaddingTop() + getPaddingBottom();
+            int childMeasureSpec = getChildMeasureSpec(i2, paddingTop, -2);
+            int size = View.MeasureSpec.getSize(i);
+            int childMeasureSpec2 = getChildMeasureSpec(i, (int) (((float) size) * 0.2f), -2);
+            this.mPrevText.measure(childMeasureSpec2, childMeasureSpec);
+            this.mCurrText.measure(childMeasureSpec2, childMeasureSpec);
+            this.mNextText.measure(childMeasureSpec2, childMeasureSpec);
+            if (View.MeasureSpec.getMode(i2) == 1073741824) {
+                i3 = View.MeasureSpec.getSize(i2);
+            } else {
+                i3 = Math.max(getMinHeight(), this.mCurrText.getMeasuredHeight() + paddingTop);
+            }
+            setMeasuredDimension(size, View.resolveSizeAndState(i3, i2, this.mCurrText.getMeasuredState() << 16));
+            return;
         }
-        int paddingTop = getPaddingTop() + getPaddingBottom();
-        int childMeasureSpec = ViewGroup.getChildMeasureSpec(i2, paddingTop, -2);
-        int size = View.MeasureSpec.getSize(i);
-        int childMeasureSpec2 = ViewGroup.getChildMeasureSpec(i, (int) (size * 0.2f), -2);
-        this.mPrevText.measure(childMeasureSpec2, childMeasureSpec);
-        this.mCurrText.measure(childMeasureSpec2, childMeasureSpec);
-        this.mNextText.measure(childMeasureSpec2, childMeasureSpec);
-        if (View.MeasureSpec.getMode(i2) == 1073741824) {
-            max = View.MeasureSpec.getSize(i2);
-        } else {
-            max = Math.max(getMinHeight(), this.mCurrText.getMeasuredHeight() + paddingTop);
-        }
-        setMeasuredDimension(size, View.resolveSizeAndState(max, i2, this.mCurrText.getMeasuredState() << 16));
+        throw new IllegalStateException("Must measure with an exact width");
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         if (this.mPager != null) {
             float f = this.mLastKnownPositionOffset;
             if (f < 0.0f) {
@@ -318,7 +340,7 @@ public class PagerTitleStrip extends ViewGroup {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getMinHeight() {
         Drawable background = getBackground();
         if (background != null) {
@@ -327,15 +349,12 @@ public class PagerTitleStrip extends ViewGroup {
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class PageListener extends DataSetObserver implements ViewPager.OnPageChangeListener, ViewPager.OnAdapterChangeListener {
+    private class PageListener extends DataSetObserver implements ViewPager.OnPageChangeListener, ViewPager.OnAdapterChangeListener {
         private int mScrollState;
 
         PageListener() {
         }
 
-        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageScrolled(int i, float f, int i2) {
             if (f > 0.5f) {
                 i++;
@@ -343,39 +362,35 @@ public class PagerTitleStrip extends ViewGroup {
             PagerTitleStrip.this.updateTextPositions(i, f, false);
         }
 
-        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageSelected(int i) {
             if (this.mScrollState == 0) {
                 PagerTitleStrip pagerTitleStrip = PagerTitleStrip.this;
                 pagerTitleStrip.updateText(pagerTitleStrip.mPager.getCurrentItem(), PagerTitleStrip.this.mPager.getAdapter());
-                PagerTitleStrip pagerTitleStrip2 = PagerTitleStrip.this;
-                float f = pagerTitleStrip2.mLastKnownPositionOffset;
-                if (f < 0.0f) {
-                    f = 0.0f;
+                float f = 0.0f;
+                if (PagerTitleStrip.this.mLastKnownPositionOffset >= 0.0f) {
+                    f = PagerTitleStrip.this.mLastKnownPositionOffset;
                 }
+                PagerTitleStrip pagerTitleStrip2 = PagerTitleStrip.this;
                 pagerTitleStrip2.updateTextPositions(pagerTitleStrip2.mPager.getCurrentItem(), f, true);
             }
         }
 
-        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageScrollStateChanged(int i) {
             this.mScrollState = i;
         }
 
-        @Override // androidx.viewpager.widget.ViewPager.OnAdapterChangeListener
         public void onAdapterChanged(ViewPager viewPager, PagerAdapter pagerAdapter, PagerAdapter pagerAdapter2) {
             PagerTitleStrip.this.updateAdapter(pagerAdapter, pagerAdapter2);
         }
 
-        @Override // android.database.DataSetObserver
         public void onChanged() {
             PagerTitleStrip pagerTitleStrip = PagerTitleStrip.this;
             pagerTitleStrip.updateText(pagerTitleStrip.mPager.getCurrentItem(), PagerTitleStrip.this.mPager.getAdapter());
-            PagerTitleStrip pagerTitleStrip2 = PagerTitleStrip.this;
-            float f = pagerTitleStrip2.mLastKnownPositionOffset;
-            if (f < 0.0f) {
-                f = 0.0f;
+            float f = 0.0f;
+            if (PagerTitleStrip.this.mLastKnownPositionOffset >= 0.0f) {
+                f = PagerTitleStrip.this.mLastKnownPositionOffset;
             }
+            PagerTitleStrip pagerTitleStrip2 = PagerTitleStrip.this;
             pagerTitleStrip2.updateTextPositions(pagerTitleStrip2.mPager.getCurrentItem(), f, true);
         }
     }

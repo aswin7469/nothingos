@@ -1,11 +1,9 @@
 package com.android.systemui;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class UiOffloadThread_Factory implements Factory<UiOffloadThread> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public UiOffloadThread mo1933get() {
+    public UiOffloadThread get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class UiOffloadThread_Factory implements Factory<UiOffloadThread> {
         return new UiOffloadThread();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final UiOffloadThread_Factory INSTANCE = new UiOffloadThread_Factory();
+        /* access modifiers changed from: private */
+        public static final UiOffloadThread_Factory INSTANCE = new UiOffloadThread_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

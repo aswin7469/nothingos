@@ -1,7 +1,11 @@
 package com.google.gson;
-/* loaded from: classes2.dex */
+
 public final class JsonNull extends JsonElement {
     public static final JsonNull INSTANCE = new JsonNull();
+
+    public JsonNull deepCopy() {
+        return INSTANCE;
+    }
 
     public int hashCode() {
         return JsonNull.class.hashCode();

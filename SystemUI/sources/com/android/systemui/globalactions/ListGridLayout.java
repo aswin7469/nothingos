@@ -4,16 +4,35 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.LinearLayout;
-import com.android.internal.annotations.VisibleForTesting;
-/* loaded from: classes.dex */
+
 public class ListGridLayout extends LinearLayout {
+    private static final String TAG = "ListGridLayout";
+    private final int[][] mConfigs = {new int[]{0, 0}, new int[]{1, 1}, new int[]{1, 2}, new int[]{1, 3}, new int[]{2, 2}, new int[]{2, 3}, new int[]{2, 3}, new int[]{3, 3}, new int[]{3, 3}, new int[]{3, 3}};
+    private int mCurrentCount = 0;
     private int mExpectedCount;
     private boolean mReverseItems;
     private boolean mReverseSublists;
     private boolean mSwapRowsAndColumns;
-    private int mCurrentCount = 0;
-    private final int[][] mConfigs = {new int[]{0, 0}, new int[]{1, 1}, new int[]{1, 2}, new int[]{1, 3}, new int[]{2, 2}, new int[]{2, 3}, new int[]{2, 3}, new int[]{3, 3}, new int[]{3, 3}, new int[]{3, 3}};
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        return super.generateLayoutParams(layoutParams);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
 
     public ListGridLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
@@ -53,16 +72,16 @@ public class ListGridLayout extends LinearLayout {
         this.mCurrentCount++;
     }
 
-    @VisibleForTesting
-    protected ViewGroup getParentView(int i, boolean z, boolean z2) {
+    /* access modifiers changed from: protected */
+    public ViewGroup getParentView(int i, boolean z, boolean z2) {
         if (getRowCount() == 0 || i < 0) {
             return null;
         }
         return getSublist(getParentViewIndex(Math.min(i, getMaxElementCount() - 1), z, z2));
     }
 
-    @VisibleForTesting
-    protected ViewGroup getSublist(int i) {
+    /* access modifiers changed from: protected */
+    public ViewGroup getSublist(int i) {
         return (ViewGroup) getChildAt(i);
     }
 
@@ -74,7 +93,7 @@ public class ListGridLayout extends LinearLayout {
         int i2;
         int rowCount = getRowCount();
         if (z2) {
-            i2 = (int) Math.floor(i / rowCount);
+            i2 = (int) Math.floor((double) (i / rowCount));
         } else {
             i2 = i % rowCount;
         }
@@ -98,5 +117,9 @@ public class ListGridLayout extends LinearLayout {
 
     public int getRowCount() {
         return getConfig()[0];
+    }
+
+    public int getColumnCount() {
+        return getConfig()[1];
     }
 }

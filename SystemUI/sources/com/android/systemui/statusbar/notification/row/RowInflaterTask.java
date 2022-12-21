@@ -5,17 +5,18 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
-import com.android.systemui.R$layout;
+import com.android.systemui.C1893R;
 import com.android.systemui.statusbar.InflationTask;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-/* loaded from: classes.dex */
+
 public class RowInflaterTask implements InflationTask, AsyncLayoutInflater.OnInflateFinishedListener {
+    private static final String TAG = "RowInflaterTask";
+    private static final boolean TRACE_ORIGIN = true;
     private boolean mCancelled;
     private NotificationEntry mEntry;
     private Throwable mInflateOrigin;
     private RowInflationFinishedListener mListener;
 
-    /* loaded from: classes.dex */
     public interface RowInflationFinishedListener {
         void onInflationFinished(ExpandableNotificationRow expandableNotificationRow);
     }
@@ -26,15 +27,13 @@ public class RowInflaterTask implements InflationTask, AsyncLayoutInflater.OnInf
         AsyncLayoutInflater asyncLayoutInflater = new AsyncLayoutInflater(context);
         this.mEntry = notificationEntry;
         notificationEntry.setInflationTask(this);
-        asyncLayoutInflater.inflate(R$layout.status_bar_notification_row, viewGroup, this);
+        asyncLayoutInflater.inflate(C1893R.layout.status_bar_notification_row, viewGroup, this);
     }
 
-    @Override // com.android.systemui.statusbar.InflationTask
     public void abort() {
         this.mCancelled = true;
     }
 
-    @Override // androidx.asynclayoutinflater.view.AsyncLayoutInflater.OnInflateFinishedListener
     public void onInflateFinished(View view, int i, ViewGroup viewGroup) {
         if (!this.mCancelled) {
             try {
@@ -42,7 +41,7 @@ public class RowInflaterTask implements InflationTask, AsyncLayoutInflater.OnInf
                 this.mListener.onInflationFinished((ExpandableNotificationRow) view);
             } catch (Throwable th) {
                 if (this.mInflateOrigin != null) {
-                    Log.e("RowInflaterTask", "Error in inflation finished listener: " + th, this.mInflateOrigin);
+                    Log.e(TAG, "Error in inflation finished listener: " + th, this.mInflateOrigin);
                     th.addSuppressed(this.mInflateOrigin);
                 }
                 throw th;

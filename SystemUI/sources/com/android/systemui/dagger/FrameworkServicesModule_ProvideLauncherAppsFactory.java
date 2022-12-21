@@ -5,7 +5,7 @@ import android.content.pm.LauncherApps;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideLauncherAppsFactory implements Factory<LauncherApps> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideLauncherAppsFactory implements
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LauncherApps mo1933get() {
-        return provideLauncherApps(this.contextProvider.mo1933get());
+    public LauncherApps get() {
+        return provideLauncherApps(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideLauncherAppsFactory create(Provider<Context> provider) {

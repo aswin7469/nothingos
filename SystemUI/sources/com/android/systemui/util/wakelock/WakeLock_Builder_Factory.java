@@ -4,7 +4,7 @@ import android.content.Context;
 import com.android.systemui.util.wakelock.WakeLock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class WakeLock_Builder_Factory implements Factory<WakeLock.Builder> {
     private final Provider<Context> contextProvider;
 
@@ -12,10 +12,8 @@ public final class WakeLock_Builder_Factory implements Factory<WakeLock.Builder>
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public WakeLock.Builder mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public WakeLock.Builder get() {
+        return newInstance(this.contextProvider.get());
     }
 
     public static WakeLock_Builder_Factory create(Provider<Context> provider) {

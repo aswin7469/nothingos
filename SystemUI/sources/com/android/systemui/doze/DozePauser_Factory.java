@@ -4,7 +4,7 @@ import android.app.AlarmManager;
 import android.os.Handler;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DozePauser_Factory implements Factory<DozePauser> {
     private final Provider<AlarmManager> alarmManagerProvider;
     private final Provider<Handler> handlerProvider;
@@ -16,10 +16,8 @@ public final class DozePauser_Factory implements Factory<DozePauser> {
         this.policyProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DozePauser mo1933get() {
-        return newInstance(this.handlerProvider.mo1933get(), this.alarmManagerProvider.mo1933get(), this.policyProvider.mo1933get());
+    public DozePauser get() {
+        return newInstance(this.handlerProvider.get(), this.alarmManagerProvider.get(), this.policyProvider.get());
     }
 
     public static DozePauser_Factory create(Provider<Handler> provider, Provider<AlarmManager> provider2, Provider<AlwaysOnDisplayPolicy> provider3) {

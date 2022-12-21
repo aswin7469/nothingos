@@ -4,23 +4,33 @@ import android.content.Context;
 import android.graphics.Region;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-/* loaded from: classes.dex */
-public class RegionInterceptingFrameLayout extends FrameLayout {
-    private final ViewTreeObserver.OnComputeInternalInsetsListener mInsetsListener = new ViewTreeObserver.OnComputeInternalInsetsListener() { // from class: com.android.systemui.RegionInterceptingFrameLayout$$ExternalSyntheticLambda0
-        public final void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
-            RegionInterceptingFrameLayout.this.lambda$new$0(internalInsetsInfo);
-        }
-    };
 
-    /* loaded from: classes.dex */
+public class RegionInterceptingFrameLayout extends FrameLayout {
+    private final ViewTreeObserver.OnComputeInternalInsetsListener mInsetsListener = new RegionInterceptingFrameLayout$$ExternalSyntheticLambda0(this);
+
     public interface RegionInterceptableView {
         Region getInterceptRegion();
 
-        default boolean shouldInterceptTouch() {
+        boolean shouldInterceptTouch() {
             return false;
         }
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
     }
 
     public RegionInterceptingFrameLayout(Context context) {
@@ -39,20 +49,21 @@ public class RegionInterceptingFrameLayout extends FrameLayout {
         super(context, attributeSet, i, i2);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         getViewTreeObserver().addOnComputeInternalInsetsListener(this.mInsetsListener);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         getViewTreeObserver().removeOnComputeInternalInsetsListener(this.mInsetsListener);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-RegionInterceptingFrameLayout  reason: not valid java name */
+    public /* synthetic */ void m2522lambda$new$0$comandroidsystemuiRegionInterceptingFrameLayout(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
         Region interceptRegion;
         internalInsetsInfo.setTouchableInsets(3);
         internalInsetsInfo.touchableRegion.setEmpty();

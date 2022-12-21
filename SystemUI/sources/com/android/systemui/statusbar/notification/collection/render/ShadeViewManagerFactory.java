@@ -1,36 +1,12 @@
 package com.android.systemui.statusbar.notification.collection.render;
 
-import android.content.Context;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
-import com.android.systemui.statusbar.phone.NotificationIconAreaController;
-import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+import dagger.assisted.AssistedFactory;
+import kotlin.Metadata;
+
+@AssistedFactory
+@Metadata(mo64986d1 = {"\u0000\u001c\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\bg\u0018\u00002\u00020\u0001J\u0018\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\u0006\u001a\u00020\u0007H&ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\bÀ\u0006\u0001"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/collection/render/ShadeViewManagerFactory;", "", "create", "Lcom/android/systemui/statusbar/notification/collection/render/ShadeViewManager;", "listContainer", "Lcom/android/systemui/statusbar/notification/stack/NotificationListContainer;", "stackController", "Lcom/android/systemui/statusbar/notification/collection/render/NotifStackController;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ShadeViewManager.kt */
-/* loaded from: classes.dex */
-public final class ShadeViewManagerFactory {
-    @NotNull
-    private final Context context;
-    @NotNull
-    private final ShadeViewDifferLogger logger;
-    @NotNull
-    private final NotificationIconAreaController notificationIconAreaController;
-    @NotNull
-    private final NotifViewBarn viewBarn;
-
-    public ShadeViewManagerFactory(@NotNull Context context, @NotNull ShadeViewDifferLogger logger, @NotNull NotifViewBarn viewBarn, @NotNull NotificationIconAreaController notificationIconAreaController) {
-        Intrinsics.checkNotNullParameter(context, "context");
-        Intrinsics.checkNotNullParameter(logger, "logger");
-        Intrinsics.checkNotNullParameter(viewBarn, "viewBarn");
-        Intrinsics.checkNotNullParameter(notificationIconAreaController, "notificationIconAreaController");
-        this.context = context;
-        this.logger = logger;
-        this.viewBarn = viewBarn;
-        this.notificationIconAreaController = notificationIconAreaController;
-    }
-
-    @NotNull
-    public final ShadeViewManager create(@NotNull NotificationListContainer listContainer) {
-        Intrinsics.checkNotNullParameter(listContainer, "listContainer");
-        return new ShadeViewManager(this.context, listContainer, this.logger, this.viewBarn, this.notificationIconAreaController);
-    }
+public interface ShadeViewManagerFactory {
+    ShadeViewManager create(NotificationListContainer notificationListContainer, NotifStackController notifStackController);
 }

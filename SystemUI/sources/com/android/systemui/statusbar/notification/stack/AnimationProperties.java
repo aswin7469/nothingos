@@ -7,7 +7,7 @@ import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
+
 public class AnimationProperties {
     public long delay;
     public long duration;
@@ -19,8 +19,7 @@ public class AnimationProperties {
     }
 
     public AnimationFilter getAnimationFilter() {
-        return new AnimationFilter() { // from class: com.android.systemui.statusbar.notification.stack.AnimationProperties.1
-            @Override // com.android.systemui.statusbar.notification.stack.AnimationFilter
+        return new AnimationFilter() {
             public boolean shouldAnimateProperty(Property property) {
                 return true;
             }
@@ -32,15 +31,13 @@ public class AnimationProperties {
         if (consumer == null) {
             return null;
         }
-        return new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.notification.stack.AnimationProperties.2
+        return new AnimatorListenerAdapter() {
             private boolean mCancelled;
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationCancel(Animator animator) {
                 this.mCancelled = true;
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
                 if (!this.mCancelled) {
                     consumer.accept(property);
@@ -68,7 +65,7 @@ public class AnimationProperties {
             if (this.mInterpolatorMap == null) {
                 this.mInterpolatorMap = new ArrayMap<>();
             }
-            this.mInterpolatorMap.putAll((ArrayMap<? extends Property, ? extends Interpolator>) arrayMap);
+            this.mInterpolatorMap.putAll(arrayMap);
         }
     }
 

@@ -1,32 +1,30 @@
 package com.airbnb.lottie.parser;
 
+import android.icu.text.DateFormat;
 import com.airbnb.lottie.model.DocumentData;
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
-/* loaded from: classes.dex */
+import java.p026io.IOException;
+
 public class DocumentDataParser implements ValueParser<DocumentData> {
     public static final DocumentDataParser INSTANCE = new DocumentDataParser();
-    private static final JsonReader.Options NAMES = JsonReader.Options.of("t", "f", "s", "j", "tr", "lh", "ls", "fc", "sc", "sw", "of");
+    private static final JsonReader.Options NAMES = JsonReader.Options.m137of("t", "f", DateFormat.SECOND, DateFormat.HOUR, "tr", "lh", "ls", "fc", "sc", "sw", "of");
 
     private DocumentDataParser() {
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.airbnb.lottie.parser.ValueParser
-    /* renamed from: parse */
-    public DocumentData mo201parse(JsonReader jsonReader, float f) throws IOException {
+    public DocumentData parse(JsonReader jsonReader, float f) throws IOException {
         DocumentData.Justification justification = DocumentData.Justification.CENTER;
         jsonReader.beginObject();
         DocumentData.Justification justification2 = justification;
         String str = null;
         String str2 = null;
-        int i = 0;
-        int i2 = 0;
-        int i3 = 0;
         float f2 = 0.0f;
         float f3 = 0.0f;
         float f4 = 0.0f;
         float f5 = 0.0f;
+        int i = 0;
+        int i2 = 0;
+        int i3 = 0;
         boolean z = true;
         while (jsonReader.hasNext()) {
             switch (jsonReader.selectName(NAMES)) {
@@ -41,12 +39,13 @@ public class DocumentDataParser implements ValueParser<DocumentData> {
                     break;
                 case 3:
                     int nextInt = jsonReader.nextInt();
-                    justification2 = DocumentData.Justification.CENTER;
-                    if (nextInt <= justification2.ordinal() && nextInt >= 0) {
+                    if (nextInt <= DocumentData.Justification.CENTER.ordinal() && nextInt >= 0) {
                         justification2 = DocumentData.Justification.values()[nextInt];
                         break;
+                    } else {
+                        justification2 = DocumentData.Justification.CENTER;
+                        break;
                     }
-                    break;
                 case 4:
                     i = jsonReader.nextInt();
                     break;
@@ -74,6 +73,7 @@ public class DocumentDataParser implements ValueParser<DocumentData> {
                     break;
             }
         }
+        JsonReader jsonReader2 = jsonReader;
         jsonReader.endObject();
         return new DocumentData(str, str2, f2, justification2, i, f3, f4, i2, i3, f5, z);
     }

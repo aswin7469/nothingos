@@ -2,34 +2,28 @@ package com.airbnb.lottie.animation.keyframe;
 
 import com.airbnb.lottie.utils.MiscUtils;
 import com.airbnb.lottie.value.Keyframe;
-import com.airbnb.lottie.value.LottieValueCallback;
 import java.util.List;
-/* loaded from: classes.dex */
-public class FloatKeyframeAnimation extends KeyframeAnimation<Float> {
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation
-    /* renamed from: getValue  reason: collision with other method in class */
-    /* bridge */ /* synthetic */ Object mo191getValue(Keyframe keyframe, float f) {
-        return mo191getValue((Keyframe<Float>) keyframe, f);
-    }
 
+public class FloatKeyframeAnimation extends KeyframeAnimation<Float> {
     public FloatKeyframeAnimation(List<Keyframe<Float>> list) {
         super(list);
     }
 
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation
-    /* renamed from: getValue */
-    Float mo191getValue(Keyframe<Float> keyframe, float f) {
+    /* access modifiers changed from: package-private */
+    public Float getValue(Keyframe<Float> keyframe, float f) {
         return Float.valueOf(getFloatValue(keyframe, f));
     }
 
-    float getFloatValue(Keyframe<Float> keyframe, float f) {
-        Float f2;
+    /* access modifiers changed from: package-private */
+    public float getFloatValue(Keyframe<Float> keyframe, float f) {
         if (keyframe.startValue == null || keyframe.endValue == null) {
             throw new IllegalStateException("Missing values for keyframe.");
         }
-        LottieValueCallback<A> lottieValueCallback = this.valueCallback;
-        if (lottieValueCallback != 0 && (f2 = (Float) lottieValueCallback.getValueInternal(keyframe.startFrame, keyframe.endFrame.floatValue(), keyframe.startValue, keyframe.endValue, f, getLinearCurrentKeyframeProgress(), getProgress())) != null) {
-            return f2.floatValue();
+        if (this.valueCallback != null) {
+            Float f2 = (Float) this.valueCallback.getValueInternal(keyframe.startFrame, keyframe.endFrame.floatValue(), keyframe.startValue, keyframe.endValue, f, getLinearCurrentKeyframeProgress(), getProgress());
+            if (f2 != null) {
+                return f2.floatValue();
+            }
         }
         return MiscUtils.lerp(keyframe.getStartValueFloat(), keyframe.getEndValueFloat(), f);
     }

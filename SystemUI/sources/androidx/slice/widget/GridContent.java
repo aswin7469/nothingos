@@ -6,74 +6,88 @@ import android.graphics.drawable.Drawable;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.SliceItem;
 import androidx.slice.SliceUtils;
+import androidx.slice.compat.SliceProviderCompat;
 import androidx.slice.core.SliceActionImpl;
+import androidx.slice.core.SliceHints;
 import androidx.slice.core.SliceQuery;
+import com.android.launcher3.icons.cache.BaseIconCache;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class GridContent extends SliceContent {
     private boolean mAllImages;
+    private IconCompat mFirstImage = null;
+    private Point mFirstImageSize = null;
+    private final ArrayList<CellContent> mGridContent = new ArrayList<>();
     private boolean mIsLastIndex;
+    private int mLargestImageMode = 5;
     private int mMaxCellLineCount;
     private SliceItem mPrimaryAction;
     private SliceItem mSeeMoreItem;
     private SliceItem mTitleItem;
-    private final ArrayList<CellContent> mGridContent = new ArrayList<>();
-    private int mLargestImageMode = 5;
-    private IconCompat mFirstImage = null;
-    private Point mFirstImageSize = null;
 
-    public GridContent(SliceItem gridItem, int position) {
-        super(gridItem, position);
-        populate(gridItem);
+    public GridContent(SliceItem sliceItem, int i) {
+        super(sliceItem, i);
+        populate(sliceItem);
     }
 
-    private boolean populate(SliceItem gridItem) {
+    private boolean populate(SliceItem sliceItem) {
         List<SliceItem> items;
-        SliceItem find = SliceQuery.find(gridItem, (String) null, "see_more", (String) null);
+        SliceItem find = SliceQuery.find(sliceItem, (String) null, "see_more", (String) null);
         this.mSeeMoreItem = find;
-        if (find != null && "slice".equals(find.getFormat()) && (items = this.mSeeMoreItem.getSlice().getItems()) != null && items.size() > 0) {
+        if (find != null && SliceProviderCompat.EXTRA_SLICE.equals(find.getFormat()) && (items = this.mSeeMoreItem.getSlice().getItems()) != null && items.size() > 0) {
             this.mSeeMoreItem = items.get(0);
         }
-        this.mPrimaryAction = SliceQuery.find(gridItem, "slice", new String[]{"shortcut", "title"}, new String[]{"actions"});
+        this.mPrimaryAction = SliceQuery.find(sliceItem, SliceProviderCompat.EXTRA_SLICE, new String[]{"shortcut", "title"}, new String[]{"actions"});
         this.mAllImages = true;
-        if ("slice".equals(gridItem.getFormat())) {
-            List<SliceItem> filterAndProcessItems = filterAndProcessItems(gridItem.getSlice().getItems());
+        if (SliceProviderCompat.EXTRA_SLICE.equals(sliceItem.getFormat())) {
+            List<SliceItem> filterAndProcessItems = filterAndProcessItems(sliceItem.getSlice().getItems());
             for (int i = 0; i < filterAndProcessItems.size(); i++) {
-                SliceItem sliceItem = filterAndProcessItems.get(i);
-                if (!"content_description".equals(sliceItem.getSubType())) {
-                    processContent(new CellContent(sliceItem));
+                SliceItem sliceItem2 = filterAndProcessItems.get(i);
+                if (!"content_description".equals(sliceItem2.getSubType())) {
+                    processContent(new CellContent(sliceItem2));
                 }
             }
         } else {
-            processContent(new CellContent(gridItem));
+            processContent(new CellContent(sliceItem));
         }
         return isValid();
     }
 
-    private void processContent(CellContent cc) {
-        int max;
-        if (cc.isValid()) {
-            if (this.mTitleItem == null && cc.getTitleItem() != null) {
-                this.mTitleItem = cc.getTitleItem();
+    private void processContent(CellContent cellContent) {
+        int i;
+        if (cellContent.isValid()) {
+            if (this.mTitleItem == null && cellContent.getTitleItem() != null) {
+                this.mTitleItem = cellContent.getTitleItem();
             }
-            this.mGridContent.add(cc);
-            if (!cc.isImageOnly()) {
+            this.mGridContent.add(cellContent);
+            if (!cellContent.isImageOnly()) {
                 this.mAllImages = false;
             }
-            this.mMaxCellLineCount = Math.max(this.mMaxCellLineCount, cc.getTextCount());
-            if (this.mFirstImage == null && cc.hasImage()) {
-                this.mFirstImage = cc.getImageIcon();
+            this.mMaxCellLineCount = Math.max(this.mMaxCellLineCount, cellContent.getTextCount());
+            if (this.mFirstImage == null && cellContent.hasImage()) {
+                this.mFirstImage = cellContent.getImageIcon();
             }
-            int i = this.mLargestImageMode;
-            if (i == 5) {
-                max = cc.getImageMode();
+            int i2 = this.mLargestImageMode;
+            if (i2 == 5) {
+                i = cellContent.getImageMode();
             } else {
-                max = Math.max(i, cc.getImageMode());
+                i = Math.max(i2, cellContent.getImageMode());
             }
-            this.mLargestImageMode = max;
+            this.mLargestImageMode = i;
         }
+    }
+
+    public CharSequence getTitle() {
+        SliceItem sliceItem = this.mTitleItem;
+        if (sliceItem != null) {
+            return sliceItem.getSanitizedText();
+        }
+        if (this.mPrimaryAction != null) {
+            return new SliceActionImpl(this.mPrimaryAction).getTitle();
+        }
+        return null;
     }
 
     public ArrayList<CellContent> getGridContent() {
@@ -88,7 +102,6 @@ public class GridContent extends SliceContent {
         return this.mSeeMoreItem;
     }
 
-    @Override // androidx.slice.widget.SliceContent
     public boolean isValid() {
         return super.isValid() && this.mGridContent.size() > 0;
     }
@@ -113,12 +126,12 @@ public class GridContent extends SliceContent {
         return this.mFirstImageSize;
     }
 
-    private List<SliceItem> filterAndProcessItems(List<SliceItem> items) {
+    private List<SliceItem> filterAndProcessItems(List<SliceItem> list) {
         ArrayList arrayList = new ArrayList();
-        for (int i = 0; i < items.size(); i++) {
-            SliceItem sliceItem = items.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            SliceItem sliceItem = list.get(i);
             boolean z = true;
-            if (!(SliceQuery.find(sliceItem, (String) null, "see_more", (String) null) != null) && !sliceItem.hasAnyHints("shortcut", "see_more", "keywords", "ttl", "last_updated", "overlay")) {
+            if (!(SliceQuery.find(sliceItem, (String) null, "see_more", (String) null) != null) && !sliceItem.hasAnyHints("shortcut", "see_more", BaseIconCache.IconDB.COLUMN_KEYWORDS, "ttl", "last_updated", SliceHints.HINT_OVERLAY)) {
                 z = false;
             }
             if ("content_description".equals(sliceItem.getSubType())) {
@@ -142,57 +155,54 @@ public class GridContent extends SliceContent {
         return this.mIsLastIndex;
     }
 
-    public void setIsLastIndex(boolean isLast) {
-        this.mIsLastIndex = isLast;
+    public void setIsLastIndex(boolean z) {
+        this.mIsLastIndex = z;
     }
 
-    @Override // androidx.slice.widget.SliceContent
-    public int getHeight(SliceStyle style, SliceViewPolicy policy) {
-        return style.getGridHeight(this, policy);
+    public int getHeight(SliceStyle sliceStyle, SliceViewPolicy sliceViewPolicy) {
+        return sliceStyle.getGridHeight(this, sliceViewPolicy);
     }
 
-    /* loaded from: classes.dex */
     public static class CellContent {
+        private final ArrayList<SliceItem> mCellItems = new ArrayList<>();
         private SliceItem mContentDescr;
         private SliceItem mContentIntent;
         private IconCompat mImage;
         private int mImageCount;
+        private int mImageMode = -1;
         private SliceItem mOverlayItem;
         private SliceItem mPicker;
         private int mTextCount;
         private SliceItem mTitleItem;
         private SliceItem mToggleItem;
-        private final ArrayList<SliceItem> mCellItems = new ArrayList<>();
-        private int mImageMode = -1;
 
-        public CellContent(SliceItem cellItem) {
-            populate(cellItem);
+        public CellContent(SliceItem sliceItem) {
+            populate(sliceItem);
         }
 
-        public boolean populate(SliceItem cellItem) {
-            String format = cellItem.getFormat();
-            if (!cellItem.hasHint("shortcut") && ("slice".equals(format) || "action".equals(format))) {
-                List<SliceItem> items = cellItem.getSlice().getItems();
-                List<SliceItem> list = null;
+        public boolean populate(SliceItem sliceItem) {
+            List<SliceItem> list;
+            String format = sliceItem.getFormat();
+            if (!sliceItem.hasHint("shortcut") && (SliceProviderCompat.EXTRA_SLICE.equals(format) || "action".equals(format))) {
+                List<SliceItem> items = sliceItem.getSlice().getItems();
                 Iterator<SliceItem> it = items.iterator();
                 while (true) {
                     if (!it.hasNext()) {
+                        list = null;
                         break;
                     }
                     SliceItem next = it.next();
-                    if ("action".equals(next.getFormat()) || "slice".equals(next.getFormat())) {
-                        if (!"date_picker".equals(next.getSubType()) && !"time_picker".equals(next.getSubType())) {
-                            list = next.getSlice().getItems();
-                            if (new SliceActionImpl(next).isToggle()) {
-                                this.mToggleItem = next;
-                            } else {
-                                this.mContentIntent = items.get(0);
-                            }
+                    if (("action".equals(next.getFormat()) || SliceProviderCompat.EXTRA_SLICE.equals(next.getFormat())) && !SliceHints.SUBTYPE_DATE_PICKER.equals(next.getSubType()) && !SliceHints.SUBTYPE_TIME_PICKER.equals(next.getSubType())) {
+                        list = next.getSlice().getItems();
+                        if (new SliceActionImpl(next).isToggle()) {
+                            this.mToggleItem = next;
+                        } else {
+                            this.mContentIntent = items.get(0);
                         }
                     }
                 }
                 if ("action".equals(format)) {
-                    this.mContentIntent = cellItem;
+                    this.mContentIntent = sliceItem;
                 }
                 this.mTextCount = 0;
                 this.mImageCount = 0;
@@ -200,17 +210,17 @@ public class GridContent extends SliceContent {
                 if (this.mTextCount == 0 && this.mImageCount == 0 && list != null) {
                     fillCellItems(list);
                 }
-            } else if (isValidCellContent(cellItem)) {
-                this.mCellItems.add(cellItem);
+            } else if (isValidCellContent(sliceItem)) {
+                this.mCellItems.add(sliceItem);
             }
             return isValid();
         }
 
-        private void fillCellItems(List<SliceItem> items) {
-            for (int i = 0; i < items.size(); i++) {
-                SliceItem sliceItem = items.get(i);
+        private void fillCellItems(List<SliceItem> list) {
+            for (int i = 0; i < list.size(); i++) {
+                SliceItem sliceItem = list.get(i);
                 String format = sliceItem.getFormat();
-                if (this.mPicker == null && ("date_picker".equals(sliceItem.getSubType()) || "time_picker".equals(sliceItem.getSubType()))) {
+                if (this.mPicker == null && (SliceHints.SUBTYPE_DATE_PICKER.equals(sliceItem.getSubType()) || SliceHints.SUBTYPE_TIME_PICKER.equals(sliceItem.getSubType()))) {
                     this.mPicker = sliceItem;
                 } else if ("content_description".equals(sliceItem.getSubType())) {
                     this.mContentDescr = sliceItem;
@@ -219,13 +229,11 @@ public class GridContent extends SliceContent {
                     if (sliceItem2 == null || (!sliceItem2.hasHint("title") && sliceItem.hasHint("title"))) {
                         this.mTitleItem = sliceItem;
                     }
-                    if (sliceItem.hasHint("overlay")) {
-                        if (this.mOverlayItem == null) {
-                            this.mOverlayItem = sliceItem;
-                        }
-                    } else {
+                    if (!sliceItem.hasHint(SliceHints.HINT_OVERLAY)) {
                         this.mTextCount++;
                         this.mCellItems.add(sliceItem);
+                    } else if (this.mOverlayItem == null) {
+                        this.mOverlayItem = sliceItem;
                     }
                 } else if (this.mImageCount < 1 && "image".equals(sliceItem.getFormat())) {
                     this.mImageMode = SliceUtils.parseImageMode(sliceItem);
@@ -260,10 +268,13 @@ public class GridContent extends SliceContent {
             return this.mCellItems;
         }
 
-        private boolean isValidCellContent(SliceItem cellItem) {
-            String format = cellItem.getFormat();
-            if (!("content_description".equals(cellItem.getSubType()) || cellItem.hasAnyHints("keywords", "ttl", "last_updated"))) {
-                return "text".equals(format) || "long".equals(format) || "image".equals(format);
+        private boolean isValidCellContent(SliceItem sliceItem) {
+            String format = sliceItem.getFormat();
+            if ("content_description".equals(sliceItem.getSubType()) || sliceItem.hasAnyHints(BaseIconCache.IconDB.COLUMN_KEYWORDS, "ttl", "last_updated")) {
+                return false;
+            }
+            if ("text".equals(format) || "long".equals(format) || "image".equals(format)) {
+                return true;
             }
             return false;
         }

@@ -10,37 +10,42 @@ import android.content.pm.UserInfo;
 import android.os.UserHandle;
 import android.os.UserManager;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.phone.ManagedProfileController;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-/* loaded from: classes.dex */
+import java.util.concurrent.Executor;
+import javax.inject.Inject;
+
+@SysUISingleton
 public class ManagedProfileControllerImpl implements ManagedProfileController {
     private final BroadcastDispatcher mBroadcastDispatcher;
+    /* access modifiers changed from: private */
+    public final List<ManagedProfileController.Callback> mCallbacks = new ArrayList();
     private final Context mContext;
     private int mCurrentUser;
     private boolean mListening;
-    private final UserManager mUserManager;
-    private final List<ManagedProfileController.Callback> mCallbacks = new ArrayList();
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.systemui.statusbar.phone.ManagedProfileControllerImpl.1
-        @Override // android.content.BroadcastReceiver
+    private final LinkedList<UserInfo> mProfiles;
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             ManagedProfileControllerImpl.this.reloadManagedProfiles();
-            for (ManagedProfileController.Callback callback : ManagedProfileControllerImpl.this.mCallbacks) {
-                callback.onManagedProfileChanged();
+            for (ManagedProfileController.Callback onManagedProfileChanged : ManagedProfileControllerImpl.this.mCallbacks) {
+                onManagedProfileChanged.onManagedProfileChanged();
             }
         }
     };
-    private final LinkedList<UserInfo> mProfiles = new LinkedList<>();
+    private final UserManager mUserManager;
 
+    @Inject
     public ManagedProfileControllerImpl(Context context, BroadcastDispatcher broadcastDispatcher) {
         this.mContext = context;
         this.mUserManager = UserManager.get(context);
         this.mBroadcastDispatcher = broadcastDispatcher;
+        this.mProfiles = new LinkedList<>();
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void addCallback(ManagedProfileController.Callback callback) {
         this.mCallbacks.add(callback);
         if (this.mCallbacks.size() == 1) {
@@ -49,15 +54,12 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
         callback.onManagedProfileChanged();
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void removeCallback(ManagedProfileController.Callback callback) {
-        if (!this.mCallbacks.remove(callback) || this.mCallbacks.size() != 0) {
-            return;
+        if (this.mCallbacks.remove((Object) callback) && this.mCallbacks.size() == 0) {
+            setListening(false);
         }
-        setListening(false);
     }
 
-    @Override // com.android.systemui.statusbar.phone.ManagedProfileController
     public void setWorkModeEnabled(boolean z) {
         synchronized (this.mProfiles) {
             Iterator<UserInfo> it = this.mProfiles.iterator();
@@ -69,7 +71,7 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void reloadManagedProfiles() {
         synchronized (this.mProfiles) {
             boolean z = this.mProfiles.size() > 0;
@@ -81,15 +83,14 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
                 }
             }
             if (this.mProfiles.size() == 0 && z && currentUser == this.mCurrentUser) {
-                for (ManagedProfileController.Callback callback : this.mCallbacks) {
-                    callback.onManagedProfileRemoved();
+                for (ManagedProfileController.Callback onManagedProfileRemoved : this.mCallbacks) {
+                    onManagedProfileRemoved.onManagedProfileRemoved();
                 }
             }
             this.mCurrentUser = currentUser;
         }
     }
 
-    @Override // com.android.systemui.statusbar.phone.ManagedProfileController
     public boolean hasActiveProfile() {
         boolean z;
         if (!this.mListening) {
@@ -101,7 +102,6 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
         return z;
     }
 
-    @Override // com.android.systemui.statusbar.phone.ManagedProfileController
     public boolean isWorkModeEnabled() {
         if (!this.mListening) {
             reloadManagedProfiles();
@@ -127,7 +127,7 @@ public class ManagedProfileControllerImpl implements ManagedProfileController {
             intentFilter.addAction("android.intent.action.MANAGED_PROFILE_REMOVED");
             intentFilter.addAction("android.intent.action.MANAGED_PROFILE_AVAILABLE");
             intentFilter.addAction("android.intent.action.MANAGED_PROFILE_UNAVAILABLE");
-            this.mBroadcastDispatcher.registerReceiver(this.mReceiver, intentFilter, null, UserHandle.ALL);
+            this.mBroadcastDispatcher.registerReceiver(this.mReceiver, intentFilter, (Executor) null, UserHandle.ALL);
             return;
         }
         this.mBroadcastDispatcher.unregisterReceiver(this.mReceiver);

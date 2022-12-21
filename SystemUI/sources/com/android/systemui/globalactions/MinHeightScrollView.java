@@ -3,14 +3,28 @@ package com.android.systemui.globalactions;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.ScrollView;
-/* loaded from: classes.dex */
+
 public class MinHeightScrollView extends ScrollView {
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
+
     public MinHeightScrollView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    @Override // android.widget.ScrollView, android.widget.FrameLayout, android.view.View
     public void onMeasure(int i, int i2) {
         View childAt = getChildAt(0);
         if (childAt != null) {

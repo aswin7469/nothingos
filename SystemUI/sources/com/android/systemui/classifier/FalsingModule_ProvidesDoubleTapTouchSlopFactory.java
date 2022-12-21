@@ -3,7 +3,7 @@ package com.android.systemui.classifier;
 import android.content.res.Resources;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FalsingModule_ProvidesDoubleTapTouchSlopFactory implements Factory<Float> {
     private final Provider<Resources> resourcesProvider;
 
@@ -11,10 +11,8 @@ public final class FalsingModule_ProvidesDoubleTapTouchSlopFactory implements Fa
         this.resourcesProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public Float mo1933get() {
-        return Float.valueOf(providesDoubleTapTouchSlop(this.resourcesProvider.mo1933get()));
+    public Float get() {
+        return Float.valueOf(providesDoubleTapTouchSlop(this.resourcesProvider.get()));
     }
 
     public static FalsingModule_ProvidesDoubleTapTouchSlopFactory create(Provider<Resources> provider) {

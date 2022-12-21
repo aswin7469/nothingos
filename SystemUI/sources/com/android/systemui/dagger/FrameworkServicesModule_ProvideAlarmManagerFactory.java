@@ -5,7 +5,7 @@ import android.content.Context;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideAlarmManagerFactory implements Factory<AlarmManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideAlarmManagerFactory implements
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AlarmManager mo1933get() {
-        return provideAlarmManager(this.contextProvider.mo1933get());
+    public AlarmManager get() {
+        return provideAlarmManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideAlarmManagerFactory create(Provider<Context> provider) {

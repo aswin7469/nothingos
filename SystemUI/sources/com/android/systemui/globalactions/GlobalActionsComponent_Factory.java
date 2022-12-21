@@ -7,7 +7,7 @@ import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.ExtensionController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class GlobalActionsComponent_Factory implements Factory<GlobalActionsComponent> {
     private final Provider<CommandQueue> commandQueueProvider;
     private final Provider<Context> contextProvider;
@@ -23,10 +23,8 @@ public final class GlobalActionsComponent_Factory implements Factory<GlobalActio
         this.statusBarKeyguardViewManagerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public GlobalActionsComponent mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.commandQueueProvider.mo1933get(), this.extensionControllerProvider.mo1933get(), this.globalActionsProvider, this.statusBarKeyguardViewManagerProvider.mo1933get());
+    public GlobalActionsComponent get() {
+        return newInstance(this.contextProvider.get(), this.commandQueueProvider.get(), this.extensionControllerProvider.get(), this.globalActionsProvider, this.statusBarKeyguardViewManagerProvider.get());
     }
 
     public static GlobalActionsComponent_Factory create(Provider<Context> provider, Provider<CommandQueue> provider2, Provider<ExtensionController> provider3, Provider<GlobalActions> provider4, Provider<StatusBarKeyguardViewManager> provider5) {

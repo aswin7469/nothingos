@@ -7,38 +7,49 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.media.AudioManager;
-import android.os.Build;
 import android.view.Display;
-import androidx.mediarouter.R$string;
+import androidx.mediarouter.C1159R;
 import androidx.mediarouter.media.MediaRouteDescriptor;
 import androidx.mediarouter.media.MediaRouteProvider;
 import androidx.mediarouter.media.MediaRouteProviderDescriptor;
 import androidx.mediarouter.media.MediaRouter;
+import androidx.mediarouter.media.MediaRouterApi24;
 import androidx.mediarouter.media.MediaRouterJellybean;
 import androidx.mediarouter.media.MediaRouterJellybeanMr1;
 import androidx.mediarouter.media.MediaRouterJellybeanMr2;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
 
-    /* loaded from: classes.dex */
+abstract class SystemMediaRouteProvider extends MediaRouteProvider {
+    public static final String DEFAULT_ROUTE_ID = "DEFAULT_ROUTE";
+    public static final String PACKAGE_NAME = "android";
+    private static final String TAG = "SystemMediaRouteProvider";
+
     public interface SyncCallback {
-        void onSystemRouteSelectedByDescriptorId(String id);
+        void onSystemRouteSelectedByDescriptorId(String str);
     }
 
-    public void onSyncRouteAdded(MediaRouter.RouteInfo route) {
+    /* access modifiers changed from: protected */
+    public Object getDefaultRoute() {
+        return null;
     }
 
-    public void onSyncRouteChanged(MediaRouter.RouteInfo route) {
+    /* access modifiers changed from: protected */
+    public Object getSystemRoute(MediaRouter.RouteInfo routeInfo) {
+        return null;
     }
 
-    public void onSyncRouteRemoved(MediaRouter.RouteInfo route) {
+    public void onSyncRouteAdded(MediaRouter.RouteInfo routeInfo) {
     }
 
-    public void onSyncRouteSelected(MediaRouter.RouteInfo route) {
+    public void onSyncRouteChanged(MediaRouter.RouteInfo routeInfo) {
+    }
+
+    public void onSyncRouteRemoved(MediaRouter.RouteInfo routeInfo) {
+    }
+
+    public void onSyncRouteSelected(MediaRouter.RouteInfo routeInfo) {
     }
 
     protected SystemMediaRouteProvider(Context context) {
@@ -46,34 +57,20 @@ public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
     }
 
     public static SystemMediaRouteProvider obtain(Context context, SyncCallback syncCallback) {
-        int i = Build.VERSION.SDK_INT;
-        if (i >= 24) {
-            return new Api24Impl(context, syncCallback);
-        }
-        if (i >= 18) {
-            return new JellybeanMr2Impl(context, syncCallback);
-        }
-        if (i >= 17) {
-            return new JellybeanMr1Impl(context, syncCallback);
-        }
-        if (i >= 16) {
-            return new JellybeanImpl(context, syncCallback);
-        }
-        return new LegacyImpl(context);
+        return new Api24Impl(context, syncCallback);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class LegacyImpl extends SystemMediaRouteProvider {
+    static class LegacyImpl extends SystemMediaRouteProvider {
         private static final ArrayList<IntentFilter> CONTROL_FILTERS;
+        static final int PLAYBACK_STREAM = 3;
         final AudioManager mAudioManager;
         int mLastReportedVolume = -1;
         private final VolumeChangeReceiver mVolumeChangeReceiver;
 
         static {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addCategory("android.media.intent.category.LIVE_AUDIO");
-            intentFilter.addCategory("android.media.intent.category.LIVE_VIDEO");
+            intentFilter.addCategory(MediaControlIntent.CATEGORY_LIVE_AUDIO);
+            intentFilter.addCategory(MediaControlIntent.CATEGORY_LIVE_VIDEO);
             ArrayList<IntentFilter> arrayList = new ArrayList<>();
             CONTROL_FILTERS = arrayList;
             arrayList.add(intentFilter);
@@ -84,104 +81,93 @@ public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
             this.mAudioManager = (AudioManager) context.getSystemService("audio");
             VolumeChangeReceiver volumeChangeReceiver = new VolumeChangeReceiver();
             this.mVolumeChangeReceiver = volumeChangeReceiver;
-            context.registerReceiver(volumeChangeReceiver, new IntentFilter("android.media.VOLUME_CHANGED_ACTION"));
+            context.registerReceiver(volumeChangeReceiver, new IntentFilter(VolumeChangeReceiver.VOLUME_CHANGED_ACTION));
             publishRoutes();
         }
 
-        void publishRoutes() {
+        /* access modifiers changed from: package-private */
+        public void publishRoutes() {
             Resources resources = getContext().getResources();
             int streamMaxVolume = this.mAudioManager.getStreamMaxVolume(3);
             this.mLastReportedVolume = this.mAudioManager.getStreamVolume(3);
-            setDescriptor(new MediaRouteProviderDescriptor.Builder().addRoute(new MediaRouteDescriptor.Builder("DEFAULT_ROUTE", resources.getString(R$string.mr_system_route_name)).addControlFilters(CONTROL_FILTERS).setPlaybackStream(3).setPlaybackType(0).setVolumeHandling(1).setVolumeMax(streamMaxVolume).setVolume(this.mLastReportedVolume).build()).build());
+            setDescriptor(new MediaRouteProviderDescriptor.Builder().addRoute(new MediaRouteDescriptor.Builder(SystemMediaRouteProvider.DEFAULT_ROUTE_ID, resources.getString(C1159R.string.mr_system_route_name)).addControlFilters(CONTROL_FILTERS).setPlaybackStream(3).setPlaybackType(0).setVolumeHandling(1).setVolumeMax(streamMaxVolume).setVolume(this.mLastReportedVolume).build()).build());
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider
-        public MediaRouteProvider.RouteController onCreateRouteController(String routeId) {
-            if (routeId.equals("DEFAULT_ROUTE")) {
+        public MediaRouteProvider.RouteController onCreateRouteController(String str) {
+            if (str.equals(SystemMediaRouteProvider.DEFAULT_ROUTE_ID)) {
                 return new DefaultRouteController();
             }
             return null;
         }
 
-        /* loaded from: classes.dex */
         final class DefaultRouteController extends MediaRouteProvider.RouteController {
             DefaultRouteController() {
             }
 
-            @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-            public void onSetVolume(int volume) {
-                LegacyImpl.this.mAudioManager.setStreamVolume(3, volume, 0);
+            public void onSetVolume(int i) {
+                LegacyImpl.this.mAudioManager.setStreamVolume(3, i, 0);
                 LegacyImpl.this.publishRoutes();
             }
 
-            @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-            public void onUpdateVolume(int delta) {
+            public void onUpdateVolume(int i) {
                 int streamVolume = LegacyImpl.this.mAudioManager.getStreamVolume(3);
-                if (Math.min(LegacyImpl.this.mAudioManager.getStreamMaxVolume(3), Math.max(0, delta + streamVolume)) != streamVolume) {
+                if (Math.min(LegacyImpl.this.mAudioManager.getStreamMaxVolume(3), Math.max(0, i + streamVolume)) != streamVolume) {
                     LegacyImpl.this.mAudioManager.setStreamVolume(3, streamVolume, 0);
                 }
                 LegacyImpl.this.publishRoutes();
             }
         }
 
-        /* loaded from: classes.dex */
         final class VolumeChangeReceiver extends BroadcastReceiver {
+            public static final String EXTRA_VOLUME_STREAM_TYPE = "android.media.EXTRA_VOLUME_STREAM_TYPE";
+            public static final String EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
+            public static final String VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
+
             VolumeChangeReceiver() {
             }
 
-            @Override // android.content.BroadcastReceiver
             public void onReceive(Context context, Intent intent) {
                 int intExtra;
-                if (!intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION") || intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1) != 3 || (intExtra = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_VALUE", -1)) < 0) {
-                    return;
+                if (intent.getAction().equals(VOLUME_CHANGED_ACTION) && intent.getIntExtra(EXTRA_VOLUME_STREAM_TYPE, -1) == 3 && (intExtra = intent.getIntExtra(EXTRA_VOLUME_STREAM_VALUE, -1)) >= 0 && intExtra != LegacyImpl.this.mLastReportedVolume) {
+                    LegacyImpl.this.publishRoutes();
                 }
-                LegacyImpl legacyImpl = LegacyImpl.this;
-                if (intExtra == legacyImpl.mLastReportedVolume) {
-                    return;
-                }
-                legacyImpl.publishRoutes();
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class JellybeanImpl extends SystemMediaRouteProvider implements MediaRouterJellybean.Callback, MediaRouterJellybean.VolumeCallback {
+    static class JellybeanImpl extends SystemMediaRouteProvider implements MediaRouterJellybean.Callback, MediaRouterJellybean.VolumeCallback {
         private static final ArrayList<IntentFilter> LIVE_AUDIO_CONTROL_FILTERS;
         private static final ArrayList<IntentFilter> LIVE_VIDEO_CONTROL_FILTERS;
         protected boolean mActiveScan;
+        protected final Object mCallbackObj;
         protected boolean mCallbackRegistered;
         private MediaRouterJellybean.GetDefaultRouteWorkaround mGetDefaultRouteWorkaround;
         protected int mRouteTypes;
         protected final Object mRouterObj;
         private MediaRouterJellybean.SelectRouteWorkaround mSelectRouteWorkaround;
         private final SyncCallback mSyncCallback;
-        protected final Object mUserRouteCategoryObj;
         protected final ArrayList<SystemRouteRecord> mSystemRouteRecords = new ArrayList<>();
+        protected final Object mUserRouteCategoryObj;
         protected final ArrayList<UserRouteRecord> mUserRouteRecords = new ArrayList<>();
-        protected final Object mCallbackObj = createCallbackObj();
-        protected final Object mVolumeCallbackObj = createVolumeCallbackObj();
+        protected final Object mVolumeCallbackObj;
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.Callback
-        public void onRouteGrouped(Object routeObj, Object groupObj, int index) {
+        public void onRouteGrouped(Object obj, Object obj2, int i) {
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.Callback
-        public void onRouteUngrouped(Object routeObj, Object groupObj) {
+        public void onRouteUngrouped(Object obj, Object obj2) {
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.Callback
-        public void onRouteUnselected(int type, Object routeObj) {
+        public void onRouteUnselected(int i, Object obj) {
         }
 
         static {
             IntentFilter intentFilter = new IntentFilter();
-            intentFilter.addCategory("android.media.intent.category.LIVE_AUDIO");
+            intentFilter.addCategory(MediaControlIntent.CATEGORY_LIVE_AUDIO);
             ArrayList<IntentFilter> arrayList = new ArrayList<>();
             LIVE_AUDIO_CONTROL_FILTERS = arrayList;
             arrayList.add(intentFilter);
             IntentFilter intentFilter2 = new IntentFilter();
-            intentFilter2.addCategory("android.media.intent.category.LIVE_VIDEO");
+            intentFilter2.addCategory(MediaControlIntent.CATEGORY_LIVE_VIDEO);
             ArrayList<IntentFilter> arrayList2 = new ArrayList<>();
             LIVE_VIDEO_CONTROL_FILTERS = arrayList2;
             arrayList2.add(intentFilter2);
@@ -192,52 +178,50 @@ public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
             this.mSyncCallback = syncCallback;
             Object mediaRouter = MediaRouterJellybean.getMediaRouter(context);
             this.mRouterObj = mediaRouter;
-            this.mUserRouteCategoryObj = MediaRouterJellybean.createRouteCategory(mediaRouter, context.getResources().getString(R$string.mr_user_route_category_name), false);
+            this.mCallbackObj = createCallbackObj();
+            this.mVolumeCallbackObj = createVolumeCallbackObj();
+            this.mUserRouteCategoryObj = MediaRouterJellybean.createRouteCategory(mediaRouter, context.getResources().getString(C1159R.string.mr_user_route_category_name), false);
             updateSystemRoutes();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider
-        public MediaRouteProvider.RouteController onCreateRouteController(String routeId) {
-            int findSystemRouteRecordByDescriptorId = findSystemRouteRecordByDescriptorId(routeId);
+        public MediaRouteProvider.RouteController onCreateRouteController(String str) {
+            int findSystemRouteRecordByDescriptorId = findSystemRouteRecordByDescriptorId(str);
             if (findSystemRouteRecordByDescriptorId >= 0) {
                 return new SystemRouteController(this.mSystemRouteRecords.get(findSystemRouteRecordByDescriptorId).mRouteObj);
             }
             return null;
         }
 
-        @Override // androidx.mediarouter.media.MediaRouteProvider
-        public void onDiscoveryRequestChanged(MediaRouteDiscoveryRequest request) {
+        public void onDiscoveryRequestChanged(MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest) {
             boolean z;
             int i = 0;
-            if (request != null) {
-                List<String> controlCategories = request.getSelector().getControlCategories();
+            if (mediaRouteDiscoveryRequest != null) {
+                List<String> controlCategories = mediaRouteDiscoveryRequest.getSelector().getControlCategories();
                 int size = controlCategories.size();
                 int i2 = 0;
                 while (i < size) {
                     String str = controlCategories.get(i);
-                    if (str.equals("android.media.intent.category.LIVE_AUDIO")) {
+                    if (str.equals(MediaControlIntent.CATEGORY_LIVE_AUDIO)) {
                         i2 |= 1;
                     } else {
-                        i2 = str.equals("android.media.intent.category.LIVE_VIDEO") ? i2 | 2 : i2 | 8388608;
+                        i2 = str.equals(MediaControlIntent.CATEGORY_LIVE_VIDEO) ? i2 | 2 : i2 | 8388608;
                     }
                     i++;
                 }
-                z = request.isActiveScan();
+                z = mediaRouteDiscoveryRequest.isActiveScan();
                 i = i2;
             } else {
                 z = false;
             }
-            if (this.mRouteTypes == i && this.mActiveScan == z) {
-                return;
+            if (this.mRouteTypes != i || this.mActiveScan != z) {
+                this.mRouteTypes = i;
+                this.mActiveScan = z;
+                updateSystemRoutes();
             }
-            this.mRouteTypes = i;
-            this.mActiveScan = z;
-            updateSystemRoutes();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.Callback
-        public void onRouteAdded(Object routeObj) {
-            if (addSystemRouteNoPublish(routeObj)) {
+        public void onRouteAdded(Object obj) {
+            if (addSystemRouteNoPublish(obj)) {
                 publishRoutes();
             }
         }
@@ -245,112 +229,104 @@ public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
         private void updateSystemRoutes() {
             updateCallback();
             boolean z = false;
-            for (Object obj : MediaRouterJellybean.getRoutes(this.mRouterObj)) {
-                z |= addSystemRouteNoPublish(obj);
+            for (Object addSystemRouteNoPublish : MediaRouterJellybean.getRoutes(this.mRouterObj)) {
+                z |= addSystemRouteNoPublish(addSystemRouteNoPublish);
             }
             if (z) {
                 publishRoutes();
             }
         }
 
-        private boolean addSystemRouteNoPublish(Object routeObj) {
-            if (getUserRouteRecord(routeObj) != null || findSystemRouteRecord(routeObj) >= 0) {
+        private boolean addSystemRouteNoPublish(Object obj) {
+            if (getUserRouteRecord(obj) != null || findSystemRouteRecord(obj) >= 0) {
                 return false;
             }
-            SystemRouteRecord systemRouteRecord = new SystemRouteRecord(routeObj, assignRouteId(routeObj));
+            SystemRouteRecord systemRouteRecord = new SystemRouteRecord(obj, assignRouteId(obj));
             updateSystemRouteDescriptor(systemRouteRecord);
             this.mSystemRouteRecords.add(systemRouteRecord);
             return true;
         }
 
-        private String assignRouteId(Object routeObj) {
-            String format = getDefaultRoute() == routeObj ? "DEFAULT_ROUTE" : String.format(Locale.US, "ROUTE_%08x", Integer.valueOf(getRouteName(routeObj).hashCode()));
-            if (findSystemRouteRecordByDescriptorId(format) < 0) {
-                return format;
+        private String assignRouteId(Object obj) {
+            String str;
+            if (getDefaultRoute() == obj) {
+                str = SystemMediaRouteProvider.DEFAULT_ROUTE_ID;
+            } else {
+                str = String.format(Locale.f700US, "ROUTE_%08x", Integer.valueOf(getRouteName(obj).hashCode()));
+            }
+            if (findSystemRouteRecordByDescriptorId(str) < 0) {
+                return str;
             }
             int i = 2;
             while (true) {
-                String format2 = String.format(Locale.US, "%s_%d", format, Integer.valueOf(i));
-                if (findSystemRouteRecordByDescriptorId(format2) < 0) {
-                    return format2;
+                String format = String.format(Locale.f700US, "%s_%d", str, Integer.valueOf(i));
+                if (findSystemRouteRecordByDescriptorId(format) < 0) {
+                    return format;
                 }
                 i++;
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.Callback
-        public void onRouteRemoved(Object routeObj) {
+        public void onRouteRemoved(Object obj) {
             int findSystemRouteRecord;
-            if (getUserRouteRecord(routeObj) != null || (findSystemRouteRecord = findSystemRouteRecord(routeObj)) < 0) {
-                return;
+            if (getUserRouteRecord(obj) == null && (findSystemRouteRecord = findSystemRouteRecord(obj)) >= 0) {
+                this.mSystemRouteRecords.remove(findSystemRouteRecord);
+                publishRoutes();
             }
-            this.mSystemRouteRecords.remove(findSystemRouteRecord);
-            publishRoutes();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.Callback
-        public void onRouteChanged(Object routeObj) {
+        public void onRouteChanged(Object obj) {
             int findSystemRouteRecord;
-            if (getUserRouteRecord(routeObj) != null || (findSystemRouteRecord = findSystemRouteRecord(routeObj)) < 0) {
-                return;
+            if (getUserRouteRecord(obj) == null && (findSystemRouteRecord = findSystemRouteRecord(obj)) >= 0) {
+                updateSystemRouteDescriptor(this.mSystemRouteRecords.get(findSystemRouteRecord));
+                publishRoutes();
             }
-            updateSystemRouteDescriptor(this.mSystemRouteRecords.get(findSystemRouteRecord));
-            publishRoutes();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.Callback
-        public void onRouteVolumeChanged(Object routeObj) {
+        public void onRouteVolumeChanged(Object obj) {
             int findSystemRouteRecord;
-            if (getUserRouteRecord(routeObj) != null || (findSystemRouteRecord = findSystemRouteRecord(routeObj)) < 0) {
-                return;
+            if (getUserRouteRecord(obj) == null && (findSystemRouteRecord = findSystemRouteRecord(obj)) >= 0) {
+                SystemRouteRecord systemRouteRecord = this.mSystemRouteRecords.get(findSystemRouteRecord);
+                int volume = MediaRouterJellybean.RouteInfo.getVolume(obj);
+                if (volume != systemRouteRecord.mRouteDescriptor.getVolume()) {
+                    systemRouteRecord.mRouteDescriptor = new MediaRouteDescriptor.Builder(systemRouteRecord.mRouteDescriptor).setVolume(volume).build();
+                    publishRoutes();
+                }
             }
-            SystemRouteRecord systemRouteRecord = this.mSystemRouteRecords.get(findSystemRouteRecord);
-            int volume = MediaRouterJellybean.RouteInfo.getVolume(routeObj);
-            if (volume == systemRouteRecord.mRouteDescriptor.getVolume()) {
-                return;
-            }
-            systemRouteRecord.mRouteDescriptor = new MediaRouteDescriptor.Builder(systemRouteRecord.mRouteDescriptor).setVolume(volume).build();
-            publishRoutes();
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.Callback
-        public void onRouteSelected(int type, Object routeObj) {
-            if (routeObj != MediaRouterJellybean.getSelectedRoute(this.mRouterObj, 8388611)) {
-                return;
+        public void onRouteSelected(int i, Object obj) {
+            if (obj == MediaRouterJellybean.getSelectedRoute(this.mRouterObj, 8388611)) {
+                UserRouteRecord userRouteRecord = getUserRouteRecord(obj);
+                if (userRouteRecord != null) {
+                    userRouteRecord.mRoute.select();
+                    return;
+                }
+                int findSystemRouteRecord = findSystemRouteRecord(obj);
+                if (findSystemRouteRecord >= 0) {
+                    this.mSyncCallback.onSystemRouteSelectedByDescriptorId(this.mSystemRouteRecords.get(findSystemRouteRecord).mRouteDescriptorId);
+                }
             }
-            UserRouteRecord userRouteRecord = getUserRouteRecord(routeObj);
+        }
+
+        public void onVolumeSetRequest(Object obj, int i) {
+            UserRouteRecord userRouteRecord = getUserRouteRecord(obj);
             if (userRouteRecord != null) {
-                userRouteRecord.mRoute.select();
-                return;
+                userRouteRecord.mRoute.requestSetVolume(i);
             }
-            int findSystemRouteRecord = findSystemRouteRecord(routeObj);
-            if (findSystemRouteRecord < 0) {
-                return;
-            }
-            this.mSyncCallback.onSystemRouteSelectedByDescriptorId(this.mSystemRouteRecords.get(findSystemRouteRecord).mRouteDescriptorId);
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.VolumeCallback
-        public void onVolumeSetRequest(Object routeObj, int volume) {
-            UserRouteRecord userRouteRecord = getUserRouteRecord(routeObj);
+        public void onVolumeUpdateRequest(Object obj, int i) {
+            UserRouteRecord userRouteRecord = getUserRouteRecord(obj);
             if (userRouteRecord != null) {
-                userRouteRecord.mRoute.requestSetVolume(volume);
+                userRouteRecord.mRoute.requestUpdateVolume(i);
             }
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybean.VolumeCallback
-        public void onVolumeUpdateRequest(Object routeObj, int direction) {
-            UserRouteRecord userRouteRecord = getUserRouteRecord(routeObj);
-            if (userRouteRecord != null) {
-                userRouteRecord.mRoute.requestUpdateVolume(direction);
-            }
-        }
-
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider
-        public void onSyncRouteAdded(MediaRouter.RouteInfo route) {
-            if (route.getProviderInstance() != this) {
+        public void onSyncRouteAdded(MediaRouter.RouteInfo routeInfo) {
+            if (routeInfo.getProviderInstance() != this) {
                 Object createUserRoute = MediaRouterJellybean.createUserRoute(this.mRouterObj, this.mUserRouteCategoryObj);
-                UserRouteRecord userRouteRecord = new UserRouteRecord(route, createUserRoute);
+                UserRouteRecord userRouteRecord = new UserRouteRecord(routeInfo, createUserRoute);
                 MediaRouterJellybean.RouteInfo.setTag(createUserRoute, userRouteRecord);
                 MediaRouterJellybean.UserRouteInfo.setVolumeCallback(createUserRoute, this.mVolumeCallbackObj);
                 updateUserRouteProperties(userRouteRecord);
@@ -359,54 +335,47 @@ public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
                 return;
             }
             int findSystemRouteRecord = findSystemRouteRecord(MediaRouterJellybean.getSelectedRoute(this.mRouterObj, 8388611));
-            if (findSystemRouteRecord < 0 || !this.mSystemRouteRecords.get(findSystemRouteRecord).mRouteDescriptorId.equals(route.getDescriptorId())) {
-                return;
+            if (findSystemRouteRecord >= 0 && this.mSystemRouteRecords.get(findSystemRouteRecord).mRouteDescriptorId.equals(routeInfo.getDescriptorId())) {
+                routeInfo.select();
             }
-            route.select();
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider
-        public void onSyncRouteRemoved(MediaRouter.RouteInfo route) {
+        public void onSyncRouteRemoved(MediaRouter.RouteInfo routeInfo) {
             int findUserRouteRecord;
-            if (route.getProviderInstance() == this || (findUserRouteRecord = findUserRouteRecord(route)) < 0) {
-                return;
+            if (routeInfo.getProviderInstance() != this && (findUserRouteRecord = findUserRouteRecord(routeInfo)) >= 0) {
+                UserRouteRecord remove = this.mUserRouteRecords.remove(findUserRouteRecord);
+                MediaRouterJellybean.RouteInfo.setTag(remove.mRouteObj, (Object) null);
+                MediaRouterJellybean.UserRouteInfo.setVolumeCallback(remove.mRouteObj, (Object) null);
+                MediaRouterJellybean.removeUserRoute(this.mRouterObj, remove.mRouteObj);
             }
-            UserRouteRecord remove = this.mUserRouteRecords.remove(findUserRouteRecord);
-            MediaRouterJellybean.RouteInfo.setTag(remove.mRouteObj, null);
-            MediaRouterJellybean.UserRouteInfo.setVolumeCallback(remove.mRouteObj, null);
-            MediaRouterJellybean.removeUserRoute(this.mRouterObj, remove.mRouteObj);
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider
-        public void onSyncRouteChanged(MediaRouter.RouteInfo route) {
+        public void onSyncRouteChanged(MediaRouter.RouteInfo routeInfo) {
             int findUserRouteRecord;
-            if (route.getProviderInstance() == this || (findUserRouteRecord = findUserRouteRecord(route)) < 0) {
-                return;
+            if (routeInfo.getProviderInstance() != this && (findUserRouteRecord = findUserRouteRecord(routeInfo)) >= 0) {
+                updateUserRouteProperties(this.mUserRouteRecords.get(findUserRouteRecord));
             }
-            updateUserRouteProperties(this.mUserRouteRecords.get(findUserRouteRecord));
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider
-        public void onSyncRouteSelected(MediaRouter.RouteInfo route) {
-            if (!route.isSelected()) {
-                return;
-            }
-            if (route.getProviderInstance() != this) {
-                int findUserRouteRecord = findUserRouteRecord(route);
-                if (findUserRouteRecord < 0) {
+        public void onSyncRouteSelected(MediaRouter.RouteInfo routeInfo) {
+            if (routeInfo.isSelected()) {
+                if (routeInfo.getProviderInstance() != this) {
+                    int findUserRouteRecord = findUserRouteRecord(routeInfo);
+                    if (findUserRouteRecord >= 0) {
+                        selectRoute(this.mUserRouteRecords.get(findUserRouteRecord).mRouteObj);
+                        return;
+                    }
                     return;
                 }
-                selectRoute(this.mUserRouteRecords.get(findUserRouteRecord).mRouteObj);
-                return;
+                int findSystemRouteRecordByDescriptorId = findSystemRouteRecordByDescriptorId(routeInfo.getDescriptorId());
+                if (findSystemRouteRecordByDescriptorId >= 0) {
+                    selectRoute(this.mSystemRouteRecords.get(findSystemRouteRecordByDescriptorId).mRouteObj);
+                }
             }
-            int findSystemRouteRecordByDescriptorId = findSystemRouteRecordByDescriptorId(route.getDescriptorId());
-            if (findSystemRouteRecordByDescriptorId < 0) {
-                return;
-            }
-            selectRoute(this.mSystemRouteRecords.get(findSystemRouteRecordByDescriptorId).mRouteObj);
         }
 
-        protected void publishRoutes() {
+        /* access modifiers changed from: protected */
+        public void publishRoutes() {
             MediaRouteProviderDescriptor.Builder builder = new MediaRouteProviderDescriptor.Builder();
             int size = this.mSystemRouteRecords.size();
             for (int i = 0; i < size; i++) {
@@ -415,80 +384,89 @@ public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
             setDescriptor(builder.build());
         }
 
-        protected int findSystemRouteRecord(Object routeObj) {
+        /* access modifiers changed from: protected */
+        public int findSystemRouteRecord(Object obj) {
             int size = this.mSystemRouteRecords.size();
             for (int i = 0; i < size; i++) {
-                if (this.mSystemRouteRecords.get(i).mRouteObj == routeObj) {
+                if (this.mSystemRouteRecords.get(i).mRouteObj == obj) {
                     return i;
                 }
             }
             return -1;
         }
 
-        protected int findSystemRouteRecordByDescriptorId(String id) {
+        /* access modifiers changed from: protected */
+        public int findSystemRouteRecordByDescriptorId(String str) {
             int size = this.mSystemRouteRecords.size();
             for (int i = 0; i < size; i++) {
-                if (this.mSystemRouteRecords.get(i).mRouteDescriptorId.equals(id)) {
+                if (this.mSystemRouteRecords.get(i).mRouteDescriptorId.equals(str)) {
                     return i;
                 }
             }
             return -1;
         }
 
-        protected int findUserRouteRecord(MediaRouter.RouteInfo route) {
+        /* access modifiers changed from: protected */
+        public int findUserRouteRecord(MediaRouter.RouteInfo routeInfo) {
             int size = this.mUserRouteRecords.size();
             for (int i = 0; i < size; i++) {
-                if (this.mUserRouteRecords.get(i).mRoute == route) {
+                if (this.mUserRouteRecords.get(i).mRoute == routeInfo) {
                     return i;
                 }
             }
             return -1;
         }
 
-        protected UserRouteRecord getUserRouteRecord(Object routeObj) {
-            Object tag = MediaRouterJellybean.RouteInfo.getTag(routeObj);
+        /* access modifiers changed from: protected */
+        public UserRouteRecord getUserRouteRecord(Object obj) {
+            Object tag = MediaRouterJellybean.RouteInfo.getTag(obj);
             if (tag instanceof UserRouteRecord) {
                 return (UserRouteRecord) tag;
             }
             return null;
         }
 
-        protected void updateSystemRouteDescriptor(SystemRouteRecord record) {
-            MediaRouteDescriptor.Builder builder = new MediaRouteDescriptor.Builder(record.mRouteDescriptorId, getRouteName(record.mRouteObj));
-            onBuildSystemRouteDescriptor(record, builder);
-            record.mRouteDescriptor = builder.build();
+        /* access modifiers changed from: protected */
+        public void updateSystemRouteDescriptor(SystemRouteRecord systemRouteRecord) {
+            MediaRouteDescriptor.Builder builder = new MediaRouteDescriptor.Builder(systemRouteRecord.mRouteDescriptorId, getRouteName(systemRouteRecord.mRouteObj));
+            onBuildSystemRouteDescriptor(systemRouteRecord, builder);
+            systemRouteRecord.mRouteDescriptor = builder.build();
         }
 
-        protected String getRouteName(Object routeObj) {
-            CharSequence name = MediaRouterJellybean.RouteInfo.getName(routeObj, getContext());
+        /* access modifiers changed from: protected */
+        public String getRouteName(Object obj) {
+            CharSequence name = MediaRouterJellybean.RouteInfo.getName(obj, getContext());
             return name != null ? name.toString() : "";
         }
 
-        protected void onBuildSystemRouteDescriptor(SystemRouteRecord record, MediaRouteDescriptor.Builder builder) {
-            int supportedTypes = MediaRouterJellybean.RouteInfo.getSupportedTypes(record.mRouteObj);
+        /* access modifiers changed from: protected */
+        public void onBuildSystemRouteDescriptor(SystemRouteRecord systemRouteRecord, MediaRouteDescriptor.Builder builder) {
+            int supportedTypes = MediaRouterJellybean.RouteInfo.getSupportedTypes(systemRouteRecord.mRouteObj);
             if ((supportedTypes & 1) != 0) {
                 builder.addControlFilters(LIVE_AUDIO_CONTROL_FILTERS);
             }
             if ((supportedTypes & 2) != 0) {
                 builder.addControlFilters(LIVE_VIDEO_CONTROL_FILTERS);
             }
-            builder.setPlaybackType(MediaRouterJellybean.RouteInfo.getPlaybackType(record.mRouteObj));
-            builder.setPlaybackStream(MediaRouterJellybean.RouteInfo.getPlaybackStream(record.mRouteObj));
-            builder.setVolume(MediaRouterJellybean.RouteInfo.getVolume(record.mRouteObj));
-            builder.setVolumeMax(MediaRouterJellybean.RouteInfo.getVolumeMax(record.mRouteObj));
-            builder.setVolumeHandling(MediaRouterJellybean.RouteInfo.getVolumeHandling(record.mRouteObj));
+            builder.setPlaybackType(MediaRouterJellybean.RouteInfo.getPlaybackType(systemRouteRecord.mRouteObj));
+            builder.setPlaybackStream(MediaRouterJellybean.RouteInfo.getPlaybackStream(systemRouteRecord.mRouteObj));
+            builder.setVolume(MediaRouterJellybean.RouteInfo.getVolume(systemRouteRecord.mRouteObj));
+            builder.setVolumeMax(MediaRouterJellybean.RouteInfo.getVolumeMax(systemRouteRecord.mRouteObj));
+            builder.setVolumeHandling(MediaRouterJellybean.RouteInfo.getVolumeHandling(systemRouteRecord.mRouteObj));
         }
 
-        protected void updateUserRouteProperties(UserRouteRecord record) {
-            MediaRouterJellybean.UserRouteInfo.setName(record.mRouteObj, record.mRoute.getName());
-            MediaRouterJellybean.UserRouteInfo.setPlaybackType(record.mRouteObj, record.mRoute.getPlaybackType());
-            MediaRouterJellybean.UserRouteInfo.setPlaybackStream(record.mRouteObj, record.mRoute.getPlaybackStream());
-            MediaRouterJellybean.UserRouteInfo.setVolume(record.mRouteObj, record.mRoute.getVolume());
-            MediaRouterJellybean.UserRouteInfo.setVolumeMax(record.mRouteObj, record.mRoute.getVolumeMax());
-            MediaRouterJellybean.UserRouteInfo.setVolumeHandling(record.mRouteObj, record.mRoute.getVolumeHandling());
+        /* access modifiers changed from: protected */
+        public void updateUserRouteProperties(UserRouteRecord userRouteRecord) {
+            MediaRouterJellybean.UserRouteInfo.setName(userRouteRecord.mRouteObj, userRouteRecord.mRoute.getName());
+            MediaRouterJellybean.UserRouteInfo.setPlaybackType(userRouteRecord.mRouteObj, userRouteRecord.mRoute.getPlaybackType());
+            MediaRouterJellybean.UserRouteInfo.setPlaybackStream(userRouteRecord.mRouteObj, userRouteRecord.mRoute.getPlaybackStream());
+            MediaRouterJellybean.UserRouteInfo.setVolume(userRouteRecord.mRouteObj, userRouteRecord.mRoute.getVolume());
+            MediaRouterJellybean.UserRouteInfo.setVolumeMax(userRouteRecord.mRouteObj, userRouteRecord.mRoute.getVolumeMax());
+            MediaRouterJellybean.UserRouteInfo.setVolumeHandling(userRouteRecord.mRouteObj, userRouteRecord.mRoute.getVolumeHandling());
         }
 
-        protected void updateCallback() {
+        /* access modifiers changed from: protected */
+        public void updateCallback() {
             if (this.mCallbackRegistered) {
                 this.mCallbackRegistered = false;
                 MediaRouterJellybean.removeCallback(this.mRouterObj, this.mCallbackObj);
@@ -500,76 +478,80 @@ public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
             }
         }
 
-        protected Object createCallbackObj() {
+        /* access modifiers changed from: protected */
+        public Object createCallbackObj() {
             return MediaRouterJellybean.createCallback(this);
         }
 
-        protected Object createVolumeCallbackObj() {
+        /* access modifiers changed from: protected */
+        public Object createVolumeCallbackObj() {
             return MediaRouterJellybean.createVolumeCallback(this);
         }
 
-        protected void selectRoute(Object routeObj) {
+        /* access modifiers changed from: protected */
+        public void selectRoute(Object obj) {
             if (this.mSelectRouteWorkaround == null) {
                 this.mSelectRouteWorkaround = new MediaRouterJellybean.SelectRouteWorkaround();
             }
-            this.mSelectRouteWorkaround.selectRoute(this.mRouterObj, 8388611, routeObj);
+            this.mSelectRouteWorkaround.selectRoute(this.mRouterObj, 8388611, obj);
         }
 
-        protected Object getDefaultRoute() {
+        /* access modifiers changed from: protected */
+        public Object getDefaultRoute() {
             if (this.mGetDefaultRouteWorkaround == null) {
                 this.mGetDefaultRouteWorkaround = new MediaRouterJellybean.GetDefaultRouteWorkaround();
             }
             return this.mGetDefaultRouteWorkaround.getDefaultRoute(this.mRouterObj);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        /* loaded from: classes.dex */
-        public static final class SystemRouteRecord {
+        /* access modifiers changed from: protected */
+        public Object getSystemRoute(MediaRouter.RouteInfo routeInfo) {
+            int findSystemRouteRecordByDescriptorId;
+            if (routeInfo != null && (findSystemRouteRecordByDescriptorId = findSystemRouteRecordByDescriptorId(routeInfo.getDescriptorId())) >= 0) {
+                return this.mSystemRouteRecords.get(findSystemRouteRecordByDescriptorId).mRouteObj;
+            }
+            return null;
+        }
+
+        protected static final class SystemRouteRecord {
             public MediaRouteDescriptor mRouteDescriptor;
             public final String mRouteDescriptorId;
             public final Object mRouteObj;
 
-            public SystemRouteRecord(Object routeObj, String id) {
-                this.mRouteObj = routeObj;
-                this.mRouteDescriptorId = id;
+            public SystemRouteRecord(Object obj, String str) {
+                this.mRouteObj = obj;
+                this.mRouteDescriptorId = str;
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        /* loaded from: classes.dex */
-        public static final class UserRouteRecord {
+        protected static final class UserRouteRecord {
             public final MediaRouter.RouteInfo mRoute;
             public final Object mRouteObj;
 
-            public UserRouteRecord(MediaRouter.RouteInfo route, Object routeObj) {
-                this.mRoute = route;
-                this.mRouteObj = routeObj;
+            public UserRouteRecord(MediaRouter.RouteInfo routeInfo, Object obj) {
+                this.mRoute = routeInfo;
+                this.mRouteObj = obj;
             }
         }
 
-        /* loaded from: classes.dex */
         protected static final class SystemRouteController extends MediaRouteProvider.RouteController {
             private final Object mRouteObj;
 
-            public SystemRouteController(Object routeObj) {
-                this.mRouteObj = routeObj;
+            public SystemRouteController(Object obj) {
+                this.mRouteObj = obj;
             }
 
-            @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-            public void onSetVolume(int volume) {
-                MediaRouterJellybean.RouteInfo.requestSetVolume(this.mRouteObj, volume);
+            public void onSetVolume(int i) {
+                MediaRouterJellybean.RouteInfo.requestSetVolume(this.mRouteObj, i);
             }
 
-            @Override // androidx.mediarouter.media.MediaRouteProvider.RouteController
-            public void onUpdateVolume(int delta) {
-                MediaRouterJellybean.RouteInfo.requestUpdateVolume(this.mRouteObj, delta);
+            public void onUpdateVolume(int i) {
+                MediaRouterJellybean.RouteInfo.requestUpdateVolume(this.mRouteObj, i);
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class JellybeanMr1Impl extends JellybeanImpl implements MediaRouterJellybeanMr1.Callback {
+    private static class JellybeanMr1Impl extends JellybeanImpl implements MediaRouterJellybeanMr1.Callback {
         private MediaRouterJellybeanMr1.ActiveScanWorkaround mActiveScanWorkaround;
         private MediaRouterJellybeanMr1.IsConnectingWorkaround mIsConnectingWorkaround;
 
@@ -577,38 +559,36 @@ public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
             super(context, syncCallback);
         }
 
-        @Override // androidx.mediarouter.media.MediaRouterJellybeanMr1.Callback
-        public void onRoutePresentationDisplayChanged(Object routeObj) {
-            int findSystemRouteRecord = findSystemRouteRecord(routeObj);
+        public void onRoutePresentationDisplayChanged(Object obj) {
+            int findSystemRouteRecord = findSystemRouteRecord(obj);
             if (findSystemRouteRecord >= 0) {
-                JellybeanImpl.SystemRouteRecord systemRouteRecord = this.mSystemRouteRecords.get(findSystemRouteRecord);
-                Display presentationDisplay = MediaRouterJellybeanMr1.RouteInfo.getPresentationDisplay(routeObj);
+                JellybeanImpl.SystemRouteRecord systemRouteRecord = (JellybeanImpl.SystemRouteRecord) this.mSystemRouteRecords.get(findSystemRouteRecord);
+                Display presentationDisplay = MediaRouterJellybeanMr1.RouteInfo.getPresentationDisplay(obj);
                 int displayId = presentationDisplay != null ? presentationDisplay.getDisplayId() : -1;
-                if (displayId == systemRouteRecord.mRouteDescriptor.getPresentationDisplayId()) {
-                    return;
+                if (displayId != systemRouteRecord.mRouteDescriptor.getPresentationDisplayId()) {
+                    systemRouteRecord.mRouteDescriptor = new MediaRouteDescriptor.Builder(systemRouteRecord.mRouteDescriptor).setPresentationDisplayId(displayId).build();
+                    publishRoutes();
                 }
-                systemRouteRecord.mRouteDescriptor = new MediaRouteDescriptor.Builder(systemRouteRecord.mRouteDescriptor).setPresentationDisplayId(displayId).build();
-                publishRoutes();
             }
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanImpl
-        protected void onBuildSystemRouteDescriptor(JellybeanImpl.SystemRouteRecord record, MediaRouteDescriptor.Builder builder) {
-            super.onBuildSystemRouteDescriptor(record, builder);
-            if (!MediaRouterJellybeanMr1.RouteInfo.isEnabled(record.mRouteObj)) {
+        /* access modifiers changed from: protected */
+        public void onBuildSystemRouteDescriptor(JellybeanImpl.SystemRouteRecord systemRouteRecord, MediaRouteDescriptor.Builder builder) {
+            super.onBuildSystemRouteDescriptor(systemRouteRecord, builder);
+            if (!MediaRouterJellybeanMr1.RouteInfo.isEnabled(systemRouteRecord.mRouteObj)) {
                 builder.setEnabled(false);
             }
-            if (isConnecting(record)) {
+            if (isConnecting(systemRouteRecord)) {
                 builder.setConnectionState(1);
             }
-            Display presentationDisplay = MediaRouterJellybeanMr1.RouteInfo.getPresentationDisplay(record.mRouteObj);
+            Display presentationDisplay = MediaRouterJellybeanMr1.RouteInfo.getPresentationDisplay(systemRouteRecord.mRouteObj);
             if (presentationDisplay != null) {
                 builder.setPresentationDisplayId(presentationDisplay.getDisplayId());
             }
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanImpl
-        protected void updateCallback() {
+        /* access modifiers changed from: protected */
+        public void updateCallback() {
             super.updateCallback();
             if (this.mActiveScanWorkaround == null) {
                 this.mActiveScanWorkaround = new MediaRouterJellybeanMr1.ActiveScanWorkaround(getContext(), getHandler());
@@ -616,77 +596,74 @@ public abstract class SystemMediaRouteProvider extends MediaRouteProvider {
             this.mActiveScanWorkaround.setActiveScanRouteTypes(this.mActiveScan ? this.mRouteTypes : 0);
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanImpl
-        protected Object createCallbackObj() {
+        /* access modifiers changed from: protected */
+        public Object createCallbackObj() {
             return MediaRouterJellybeanMr1.createCallback(this);
         }
 
-        protected boolean isConnecting(JellybeanImpl.SystemRouteRecord record) {
+        /* access modifiers changed from: protected */
+        public boolean isConnecting(JellybeanImpl.SystemRouteRecord systemRouteRecord) {
             if (this.mIsConnectingWorkaround == null) {
                 this.mIsConnectingWorkaround = new MediaRouterJellybeanMr1.IsConnectingWorkaround();
             }
-            return this.mIsConnectingWorkaround.isConnecting(record.mRouteObj);
+            return this.mIsConnectingWorkaround.isConnecting(systemRouteRecord.mRouteObj);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class JellybeanMr2Impl extends JellybeanMr1Impl {
+    private static class JellybeanMr2Impl extends JellybeanMr1Impl {
         public JellybeanMr2Impl(Context context, SyncCallback syncCallback) {
             super(context, syncCallback);
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanMr1Impl, androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanImpl
-        protected void onBuildSystemRouteDescriptor(JellybeanImpl.SystemRouteRecord record, MediaRouteDescriptor.Builder builder) {
-            super.onBuildSystemRouteDescriptor(record, builder);
-            CharSequence description = MediaRouterJellybeanMr2.RouteInfo.getDescription(record.mRouteObj);
+        /* access modifiers changed from: protected */
+        public void onBuildSystemRouteDescriptor(JellybeanImpl.SystemRouteRecord systemRouteRecord, MediaRouteDescriptor.Builder builder) {
+            super.onBuildSystemRouteDescriptor(systemRouteRecord, builder);
+            CharSequence description = MediaRouterJellybeanMr2.RouteInfo.getDescription(systemRouteRecord.mRouteObj);
             if (description != null) {
                 builder.setDescription(description.toString());
             }
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanImpl
-        protected void selectRoute(Object routeObj) {
-            MediaRouterJellybean.selectRoute(this.mRouterObj, 8388611, routeObj);
+        /* access modifiers changed from: protected */
+        public void selectRoute(Object obj) {
+            MediaRouterJellybean.selectRoute(this.mRouterObj, 8388611, obj);
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanImpl
-        protected Object getDefaultRoute() {
+        /* access modifiers changed from: protected */
+        public Object getDefaultRoute() {
             return MediaRouterJellybeanMr2.getDefaultRoute(this.mRouterObj);
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanImpl
-        protected void updateUserRouteProperties(JellybeanImpl.UserRouteRecord record) {
-            super.updateUserRouteProperties(record);
-            MediaRouterJellybeanMr2.UserRouteInfo.setDescription(record.mRouteObj, record.mRoute.getDescription());
+        /* access modifiers changed from: protected */
+        public void updateUserRouteProperties(JellybeanImpl.UserRouteRecord userRouteRecord) {
+            super.updateUserRouteProperties(userRouteRecord);
+            MediaRouterJellybeanMr2.UserRouteInfo.setDescription(userRouteRecord.mRouteObj, userRouteRecord.mRoute.getDescription());
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanMr1Impl, androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanImpl
-        protected void updateCallback() {
+        /* access modifiers changed from: protected */
+        public void updateCallback() {
             if (this.mCallbackRegistered) {
                 MediaRouterJellybean.removeCallback(this.mRouterObj, this.mCallbackObj);
             }
             this.mCallbackRegistered = true;
-            MediaRouterJellybeanMr2.addCallback(this.mRouterObj, this.mRouteTypes, this.mCallbackObj, (this.mActiveScan ? 1 : 0) | 2);
+            MediaRouterJellybeanMr2.addCallback(this.mRouterObj, this.mRouteTypes, this.mCallbackObj, this.mActiveScan | true ? 1 : 0);
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanMr1Impl
-        protected boolean isConnecting(JellybeanImpl.SystemRouteRecord record) {
-            return MediaRouterJellybeanMr2.RouteInfo.isConnecting(record.mRouteObj);
+        /* access modifiers changed from: protected */
+        public boolean isConnecting(JellybeanImpl.SystemRouteRecord systemRouteRecord) {
+            return MediaRouterJellybeanMr2.RouteInfo.isConnecting(systemRouteRecord.mRouteObj);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class Api24Impl extends JellybeanMr2Impl {
+    private static class Api24Impl extends JellybeanMr2Impl {
         public Api24Impl(Context context, SyncCallback syncCallback) {
             super(context, syncCallback);
         }
 
-        @Override // androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanMr2Impl, androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanMr1Impl, androidx.mediarouter.media.SystemMediaRouteProvider.JellybeanImpl
-        protected void onBuildSystemRouteDescriptor(JellybeanImpl.SystemRouteRecord record, MediaRouteDescriptor.Builder builder) {
-            super.onBuildSystemRouteDescriptor(record, builder);
-            builder.setDeviceType(MediaRouterApi24$RouteInfo.getDeviceType(record.mRouteObj));
+        /* access modifiers changed from: protected */
+        public void onBuildSystemRouteDescriptor(JellybeanImpl.SystemRouteRecord systemRouteRecord, MediaRouteDescriptor.Builder builder) {
+            super.onBuildSystemRouteDescriptor(systemRouteRecord, builder);
+            builder.setDeviceType(MediaRouterApi24.RouteInfo.getDeviceType(systemRouteRecord.mRouteObj));
         }
     }
 }

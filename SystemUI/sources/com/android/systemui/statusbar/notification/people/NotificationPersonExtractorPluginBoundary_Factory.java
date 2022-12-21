@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.people;
 import com.android.systemui.statusbar.policy.ExtensionController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationPersonExtractorPluginBoundary_Factory implements Factory<NotificationPersonExtractorPluginBoundary> {
     private final Provider<ExtensionController> extensionControllerProvider;
 
@@ -11,10 +11,8 @@ public final class NotificationPersonExtractorPluginBoundary_Factory implements 
         this.extensionControllerProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationPersonExtractorPluginBoundary mo1933get() {
-        return newInstance(this.extensionControllerProvider.mo1933get());
+    public NotificationPersonExtractorPluginBoundary get() {
+        return newInstance(this.extensionControllerProvider.get());
     }
 
     public static NotificationPersonExtractorPluginBoundary_Factory create(Provider<ExtensionController> provider) {

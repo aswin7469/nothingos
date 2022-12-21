@@ -5,7 +5,7 @@ import android.view.ViewConfiguration;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideViewConfigurationFactory implements Factory<ViewConfiguration> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideViewConfigurationFactory imple
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ViewConfiguration mo1933get() {
-        return provideViewConfiguration(this.contextProvider.mo1933get());
+    public ViewConfiguration get() {
+        return provideViewConfiguration(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideViewConfigurationFactory create(Provider<Context> provider) {

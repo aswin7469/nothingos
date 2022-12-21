@@ -3,21 +3,20 @@ package androidx.leanback.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
-/* loaded from: classes.dex */
+
 public class VideoSurfaceView extends SurfaceView {
-    @Override // android.view.View
-    public void setTransitionVisibility(int visibility) {
+    public void setTransitionVisibility(int i) {
     }
 
     public VideoSurfaceView(Context context) {
         super(context);
     }
 
-    public VideoSurfaceView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public VideoSurfaceView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
     }
 
-    public VideoSurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public VideoSurfaceView(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
     }
 }

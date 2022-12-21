@@ -7,31 +7,40 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageButton;
-import com.android.keyguard.AlphaOptimizedImageButton;
+import android.widget.Button;
 import com.android.systemui.animation.Interpolators;
-/* loaded from: classes.dex */
-public class SettingsButton extends AlphaOptimizedImageButton {
+import com.android.systemui.statusbar.AlphaOptimizedImageView;
+
+public class SettingsButton extends AlphaOptimizedImageView {
+    private static final long ACCEL_LENGTH = 750;
+    private static final long FULL_SPEED_LENGTH = 375;
+    private static final long LONG_PRESS_LENGTH = 1000;
+    private static final long RUN_DURATION = 350;
+    private static final boolean TUNER_ENABLE_AVAILABLE = false;
     private ObjectAnimator mAnimator;
-    private final Runnable mLongPressCallback = new Runnable() { // from class: com.android.systemui.statusbar.phone.SettingsButton.3
-        @Override // java.lang.Runnable
+    private final Runnable mLongPressCallback = new Runnable() {
         public void run() {
             SettingsButton.this.startAccelSpin();
         }
     };
-    private float mSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
+    private float mSlop = ((float) ViewConfiguration.get(getContext()).getScaledTouchSlop());
     private boolean mUpToSpeed;
 
     public SettingsButton(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
+    public boolean isAnimating() {
+        ObjectAnimator objectAnimator = this.mAnimator;
+        return objectAnimator != null && objectAnimator.isRunning();
+    }
+
     public boolean isTunerClick() {
         return this.mUpToSpeed;
     }
 
-    @Override // android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked != 1) {
@@ -39,7 +48,7 @@ public class SettingsButton extends AlphaOptimizedImageButton {
                 float x = motionEvent.getX();
                 float y = motionEvent.getY();
                 float f = this.mSlop;
-                if (x < (-f) || y < (-f) || x > getWidth() + this.mSlop || y > getHeight() + this.mSlop) {
+                if (x < (-f) || y < (-f) || x > ((float) getWidth()) + this.mSlop || y > ((float) getHeight()) + this.mSlop) {
                     cancelLongClick();
                 }
             } else if (actionMasked == 3) {
@@ -53,7 +62,7 @@ public class SettingsButton extends AlphaOptimizedImageButton {
         return super.onTouchEvent(motionEvent);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void cancelLongClick() {
         cancelAnimation();
         this.mUpToSpeed = false;
@@ -70,48 +79,42 @@ public class SettingsButton extends AlphaOptimizedImageButton {
     }
 
     private void startExitAnimation() {
-        animate().translationX(((View) getParent().getParent()).getWidth() - getX()).alpha(0.0f).setDuration(350L).setInterpolator(AnimationUtils.loadInterpolator(((ImageButton) this).mContext, 17563650)).setListener(new Animator.AnimatorListener() { // from class: com.android.systemui.statusbar.phone.SettingsButton.1
-            @Override // android.animation.Animator.AnimatorListener
+        animate().translationX(((float) ((View) getParent().getParent()).getWidth()) - getX()).alpha(0.0f).setDuration(350).setInterpolator(AnimationUtils.loadInterpolator(this.mContext, 17563650)).setListener(new Animator.AnimatorListener() {
             public void onAnimationCancel(Animator animator) {
             }
 
-            @Override // android.animation.Animator.AnimatorListener
             public void onAnimationRepeat(Animator animator) {
             }
 
-            @Override // android.animation.Animator.AnimatorListener
             public void onAnimationStart(Animator animator) {
             }
 
-            @Override // android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
                 SettingsButton.this.setAlpha(1.0f);
                 SettingsButton.this.setTranslationX(0.0f);
                 SettingsButton.this.cancelLongClick();
+                SettingsButton.this.animate().setListener((Animator.AnimatorListener) null);
             }
         }).start();
     }
 
-    protected void startAccelSpin() {
+    /* access modifiers changed from: protected */
+    public void startAccelSpin() {
         cancelAnimation();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ROTATION, 0.0f, 360.0f);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ROTATION, new float[]{0.0f, 360.0f});
         this.mAnimator = ofFloat;
-        ofFloat.setInterpolator(AnimationUtils.loadInterpolator(((ImageButton) this).mContext, 17563648));
-        this.mAnimator.setDuration(750L);
-        this.mAnimator.addListener(new Animator.AnimatorListener() { // from class: com.android.systemui.statusbar.phone.SettingsButton.2
-            @Override // android.animation.Animator.AnimatorListener
+        ofFloat.setInterpolator(AnimationUtils.loadInterpolator(this.mContext, 17563648));
+        this.mAnimator.setDuration(ACCEL_LENGTH);
+        this.mAnimator.addListener(new Animator.AnimatorListener() {
             public void onAnimationCancel(Animator animator) {
             }
 
-            @Override // android.animation.Animator.AnimatorListener
             public void onAnimationRepeat(Animator animator) {
             }
 
-            @Override // android.animation.Animator.AnimatorListener
             public void onAnimationStart(Animator animator) {
             }
 
-            @Override // android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
                 SettingsButton.this.startContinuousSpin();
             }
@@ -119,15 +122,21 @@ public class SettingsButton extends AlphaOptimizedImageButton {
         this.mAnimator.start();
     }
 
-    protected void startContinuousSpin() {
+    /* access modifiers changed from: protected */
+    public void startContinuousSpin() {
         cancelAnimation();
         performHapticFeedback(0);
         this.mUpToSpeed = true;
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ROTATION, 0.0f, 360.0f);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ROTATION, new float[]{0.0f, 360.0f});
         this.mAnimator = ofFloat;
         ofFloat.setInterpolator(Interpolators.LINEAR);
-        this.mAnimator.setDuration(375L);
+        this.mAnimator.setDuration(FULL_SPEED_LENGTH);
         this.mAnimator.setRepeatCount(-1);
         this.mAnimator.start();
+    }
+
+    public void onInitializeAccessibilityNodeInfoInternal(AccessibilityNodeInfo accessibilityNodeInfo) {
+        super.onInitializeAccessibilityNodeInfoInternal(accessibilityNodeInfo);
+        accessibilityNodeInfo.setClassName(Button.class.getName());
     }
 }

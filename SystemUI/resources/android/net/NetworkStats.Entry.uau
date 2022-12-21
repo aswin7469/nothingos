@@ -1,0 +1,11 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/NetworkStats$Entry;->iface:Ljava/lang/String;,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,254,9,254,92,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStats$Entry;->uid:I,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,257,9,257,29,
+Landroid/net/NetworkStats$Entry;->set:I,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,260,9,260,29,
+Landroid/net/NetworkStats$Entry;->tag:I,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,263,9,263,92,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStats$Entry;->rxBytes:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,287,9,287,29,
+Landroid/net/NetworkStats$Entry;->rxPackets:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,290,9,290,92,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStats$Entry;->txBytes:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,293,9,293,29,
+Landroid/net/NetworkStats$Entry;->txPackets:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,296,9,296,92,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStats$Entry;->operations:J,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,299,9,299,92,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/NetworkStats$Entry;-><init>()V,packages/modules/Connectivity/framework-t/src/android/net/NetworkStats.java,303,9,303,92,maxTargetSdk=30&trackingBug=170729553L

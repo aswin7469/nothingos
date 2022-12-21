@@ -2,25 +2,35 @@ package androidx.cardview.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-/* loaded from: classes.dex */
+
 interface CardViewImpl {
-    ColorStateList getBackgroundColor(CardViewDelegate cardView);
+    ColorStateList getBackgroundColor(CardViewDelegate cardViewDelegate);
 
-    float getElevation(CardViewDelegate cardView);
+    float getElevation(CardViewDelegate cardViewDelegate);
 
-    float getMaxElevation(CardViewDelegate cardView);
+    float getMaxElevation(CardViewDelegate cardViewDelegate);
 
-    float getMinHeight(CardViewDelegate cardView);
+    float getMinHeight(CardViewDelegate cardViewDelegate);
 
-    float getMinWidth(CardViewDelegate cardView);
+    float getMinWidth(CardViewDelegate cardViewDelegate);
 
-    float getRadius(CardViewDelegate cardView);
+    float getRadius(CardViewDelegate cardViewDelegate);
 
     void initStatic();
 
-    void initialize(CardViewDelegate cardView, Context context, ColorStateList backgroundColor, float radius, float elevation, float maxElevation);
+    void initialize(CardViewDelegate cardViewDelegate, Context context, ColorStateList colorStateList, float f, float f2, float f3);
 
-    void setRadius(CardViewDelegate cardView, float radius);
+    void onCompatPaddingChanged(CardViewDelegate cardViewDelegate);
 
-    void updatePadding(CardViewDelegate cardView);
+    void onPreventCornerOverlapChanged(CardViewDelegate cardViewDelegate);
+
+    void setBackgroundColor(CardViewDelegate cardViewDelegate, ColorStateList colorStateList);
+
+    void setElevation(CardViewDelegate cardViewDelegate, float f);
+
+    void setMaxElevation(CardViewDelegate cardViewDelegate, float f);
+
+    void setRadius(CardViewDelegate cardViewDelegate, float f);
+
+    void updatePadding(CardViewDelegate cardViewDelegate);
 }

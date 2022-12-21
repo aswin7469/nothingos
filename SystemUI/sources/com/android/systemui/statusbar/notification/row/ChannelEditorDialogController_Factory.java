@@ -5,7 +5,7 @@ import android.content.Context;
 import com.android.systemui.statusbar.notification.row.ChannelEditorDialog;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ChannelEditorDialogController_Factory implements Factory<ChannelEditorDialogController> {
     private final Provider<Context> cProvider;
     private final Provider<ChannelEditorDialog.Builder> dialogBuilderProvider;
@@ -17,10 +17,8 @@ public final class ChannelEditorDialogController_Factory implements Factory<Chan
         this.dialogBuilderProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ChannelEditorDialogController mo1933get() {
-        return newInstance(this.cProvider.mo1933get(), this.noManProvider.mo1933get(), this.dialogBuilderProvider.mo1933get());
+    public ChannelEditorDialogController get() {
+        return newInstance(this.cProvider.get(), this.noManProvider.get(), this.dialogBuilderProvider.get());
     }
 
     public static ChannelEditorDialogController_Factory create(Provider<Context> provider, Provider<INotificationManager> provider2, Provider<ChannelEditorDialog.Builder> provider3) {

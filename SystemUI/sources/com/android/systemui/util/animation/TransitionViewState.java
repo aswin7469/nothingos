@@ -4,25 +4,27 @@ import android.graphics.PointF;
 import android.view.View;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import kotlin.Metadata;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-/* compiled from: TransitionLayout.kt */
-/* loaded from: classes2.dex */
-public final class TransitionViewState {
-    private int height;
-    private int width;
-    @NotNull
-    private Map<Integer, WidgetState> widgetStates = new LinkedHashMap();
-    private float alpha = 1.0f;
-    @NotNull
-    private final PointF translation = new PointF();
-    @NotNull
-    private final PointF contentTranslation = new PointF();
 
-    @NotNull
+@Metadata(mo64986d1 = {"\u0000<\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u0007\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0010%\n\u0002\u0018\u0002\n\u0002\b\n\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\u0018\u00002\u00020\u0001B\u0005¢\u0006\u0002\u0010\u0002J\u0012\u0010\u001f\u001a\u00020\u00002\n\b\u0002\u0010 \u001a\u0004\u0018\u00010\u0000J\u000e\u0010!\u001a\u00020\"2\u0006\u0010#\u001a\u00020$R\u001a\u0010\u0003\u001a\u00020\u0004X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0005\u0010\u0006\"\u0004\b\u0007\u0010\bR\u0011\u0010\t\u001a\u00020\n¢\u0006\b\n\u0000\u001a\u0004\b\u000b\u0010\fR\u001a\u0010\r\u001a\u00020\u000eX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u000f\u0010\u0010\"\u0004\b\u0011\u0010\u0012R\u0011\u0010\u0013\u001a\u00020\n¢\u0006\b\n\u0000\u001a\u0004\b\u0014\u0010\fR&\u0010\u0015\u001a\u000e\u0012\u0004\u0012\u00020\u000e\u0012\u0004\u0012\u00020\u00170\u0016X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u0018\u0010\u0019\"\u0004\b\u001a\u0010\u001bR\u001a\u0010\u001c\u001a\u00020\u000eX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001d\u0010\u0010\"\u0004\b\u001e\u0010\u0012¨\u0006%"}, mo64987d2 = {"Lcom/android/systemui/util/animation/TransitionViewState;", "", "()V", "alpha", "", "getAlpha", "()F", "setAlpha", "(F)V", "contentTranslation", "Landroid/graphics/PointF;", "getContentTranslation", "()Landroid/graphics/PointF;", "height", "", "getHeight", "()I", "setHeight", "(I)V", "translation", "getTranslation", "widgetStates", "", "Lcom/android/systemui/util/animation/WidgetState;", "getWidgetStates", "()Ljava/util/Map;", "setWidgetStates", "(Ljava/util/Map;)V", "width", "getWidth", "setWidth", "copy", "reusedState", "initFromLayout", "", "transitionLayout", "Lcom/android/systemui/util/animation/TransitionLayout;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+/* compiled from: TransitionLayout.kt */
+public final class TransitionViewState {
+    private float alpha = 1.0f;
+    private final PointF contentTranslation = new PointF();
+    private int height;
+    private final PointF translation = new PointF();
+    private Map<Integer, WidgetState> widgetStates = new LinkedHashMap();
+    private int width;
+
     public final Map<Integer, WidgetState> getWidgetStates() {
         return this.widgetStates;
+    }
+
+    public final void setWidgetStates(Map<Integer, WidgetState> map) {
+        Intrinsics.checkNotNullParameter(map, "<set-?>");
+        this.widgetStates = map;
     }
 
     public final int getWidth() {
@@ -49,12 +51,10 @@ public final class TransitionViewState {
         this.alpha = f;
     }
 
-    @NotNull
     public final PointF getTranslation() {
         return this.translation;
     }
 
-    @NotNull
     public final PointF getContentTranslation() {
         return this.contentTranslation;
     }
@@ -66,50 +66,34 @@ public final class TransitionViewState {
         return transitionViewState.copy(transitionViewState2);
     }
 
-    @NotNull
-    public final TransitionViewState copy(@Nullable TransitionViewState transitionViewState) {
-        WidgetState copy;
+    public final TransitionViewState copy(TransitionViewState transitionViewState) {
         TransitionViewState transitionViewState2 = transitionViewState == null ? new TransitionViewState() : transitionViewState;
         transitionViewState2.width = this.width;
         transitionViewState2.height = this.height;
         transitionViewState2.alpha = this.alpha;
-        PointF pointF = transitionViewState2.translation;
-        PointF pointF2 = this.translation;
-        pointF.set(pointF2.x, pointF2.y);
-        PointF pointF3 = transitionViewState2.contentTranslation;
-        PointF pointF4 = this.contentTranslation;
-        pointF3.set(pointF4.x, pointF4.y);
-        for (Map.Entry<Integer, WidgetState> entry : this.widgetStates.entrySet()) {
-            Map<Integer, WidgetState> map = transitionViewState2.widgetStates;
-            Integer valueOf = Integer.valueOf(entry.getKey().intValue());
-            copy = r5.copy((r20 & 1) != 0 ? r5.x : 0.0f, (r20 & 2) != 0 ? r5.y : 0.0f, (r20 & 4) != 0 ? r5.width : 0, (r20 & 8) != 0 ? r5.height : 0, (r20 & 16) != 0 ? r5.measureWidth : 0, (r20 & 32) != 0 ? r5.measureHeight : 0, (r20 & 64) != 0 ? r5.alpha : 0.0f, (r20 & 128) != 0 ? r5.scale : 0.0f, (r20 & 256) != 0 ? entry.getValue().gone : false);
-            map.put(valueOf, copy);
+        transitionViewState2.translation.set(this.translation.x, this.translation.y);
+        transitionViewState2.contentTranslation.set(this.contentTranslation.x, this.contentTranslation.y);
+        for (Map.Entry next : this.widgetStates.entrySet()) {
+            transitionViewState2.widgetStates.put(next.getKey(), WidgetState.copy$default((WidgetState) next.getValue(), 0.0f, 0.0f, 0, 0, 0, 0, 0.0f, 0.0f, false, 511, (Object) null));
         }
         return transitionViewState2;
     }
 
-    public final void initFromLayout(@NotNull TransitionLayout transitionLayout) {
-        Intrinsics.checkNotNullParameter(transitionLayout, "transitionLayout");
+    public final void initFromLayout(TransitionLayout transitionLayout) {
+        TransitionLayout transitionLayout2 = transitionLayout;
+        Intrinsics.checkNotNullParameter(transitionLayout2, "transitionLayout");
         int childCount = transitionLayout.getChildCount();
-        if (childCount > 0) {
-            int i = 0;
-            while (true) {
-                int i2 = i + 1;
-                View child = transitionLayout.getChildAt(i);
-                Map<Integer, WidgetState> map = this.widgetStates;
-                Integer valueOf = Integer.valueOf(child.getId());
-                WidgetState widgetState = map.get(valueOf);
-                if (widgetState == null) {
-                    widgetState = new WidgetState(0.0f, 0.0f, 0, 0, 0, 0, 0.0f, 0.0f, false, 384, null);
-                    map.put(valueOf, widgetState);
-                }
-                Intrinsics.checkNotNullExpressionValue(child, "child");
-                widgetState.initFromLayout(child);
-                if (i2 >= childCount) {
-                    break;
-                }
-                i = i2;
+        for (int i = 0; i < childCount; i++) {
+            View childAt = transitionLayout2.getChildAt(i);
+            Map<Integer, WidgetState> map = this.widgetStates;
+            Integer valueOf = Integer.valueOf(childAt.getId());
+            WidgetState widgetState = map.get(valueOf);
+            if (widgetState == null) {
+                widgetState = new WidgetState(0.0f, 0.0f, 0, 0, 0, 0, 0.0f, 0.0f, false, 384, (DefaultConstructorMarker) null);
+                map.put(valueOf, widgetState);
             }
+            Intrinsics.checkNotNullExpressionValue(childAt, "child");
+            widgetState.initFromLayout(childAt);
         }
         this.width = transitionLayout.getMeasuredWidth();
         this.height = transitionLayout.getMeasuredHeight();

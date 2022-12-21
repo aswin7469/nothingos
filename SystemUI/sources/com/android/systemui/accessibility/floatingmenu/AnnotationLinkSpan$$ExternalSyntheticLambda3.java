@@ -1,19 +1,17 @@
 package com.android.systemui.accessibility.floatingmenu;
 
-import com.android.systemui.accessibility.floatingmenu.AnnotationLinkSpan;
-import java.util.Optional;
-import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class AnnotationLinkSpan$$ExternalSyntheticLambda3 implements Function {
-    public static final /* synthetic */ AnnotationLinkSpan$$ExternalSyntheticLambda3 INSTANCE = new AnnotationLinkSpan$$ExternalSyntheticLambda3();
+import android.view.View;
+import java.util.function.Consumer;
 
-    private /* synthetic */ AnnotationLinkSpan$$ExternalSyntheticLambda3() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class AnnotationLinkSpan$$ExternalSyntheticLambda3 implements Consumer {
+    public final /* synthetic */ View f$0;
+
+    public /* synthetic */ AnnotationLinkSpan$$ExternalSyntheticLambda3(View view) {
+        this.f$0 = view;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        Optional access$000;
-        access$000 = AnnotationLinkSpan.LinkInfo.access$000((AnnotationLinkSpan.LinkInfo) obj);
-        return access$000;
+    public final void accept(Object obj) {
+        ((View.OnClickListener) obj).onClick(this.f$0);
     }
 }

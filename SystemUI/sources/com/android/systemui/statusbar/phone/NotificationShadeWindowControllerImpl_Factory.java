@@ -12,7 +12,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationShadeWindowControllerImpl_Factory implements Factory<NotificationShadeWindowControllerImpl> {
     private final Provider<IActivityManager> activityManagerProvider;
     private final Provider<AuthController> authControllerProvider;
@@ -24,11 +24,11 @@ public final class NotificationShadeWindowControllerImpl_Factory implements Fact
     private final Provider<KeyguardBypassController> keyguardBypassControllerProvider;
     private final Provider<KeyguardStateController> keyguardStateControllerProvider;
     private final Provider<KeyguardViewMediator> keyguardViewMediatorProvider;
+    private final Provider<ScreenOffAnimationController> screenOffAnimationControllerProvider;
     private final Provider<StatusBarStateController> statusBarStateControllerProvider;
-    private final Provider<UnlockedScreenOffAnimationController> unlockedScreenOffAnimationControllerProvider;
     private final Provider<WindowManager> windowManagerProvider;
 
-    public NotificationShadeWindowControllerImpl_Factory(Provider<Context> provider, Provider<WindowManager> provider2, Provider<IActivityManager> provider3, Provider<DozeParameters> provider4, Provider<StatusBarStateController> provider5, Provider<ConfigurationController> provider6, Provider<KeyguardViewMediator> provider7, Provider<KeyguardBypassController> provider8, Provider<SysuiColorExtractor> provider9, Provider<DumpManager> provider10, Provider<KeyguardStateController> provider11, Provider<UnlockedScreenOffAnimationController> provider12, Provider<AuthController> provider13) {
+    public NotificationShadeWindowControllerImpl_Factory(Provider<Context> provider, Provider<WindowManager> provider2, Provider<IActivityManager> provider3, Provider<DozeParameters> provider4, Provider<StatusBarStateController> provider5, Provider<ConfigurationController> provider6, Provider<KeyguardViewMediator> provider7, Provider<KeyguardBypassController> provider8, Provider<SysuiColorExtractor> provider9, Provider<DumpManager> provider10, Provider<KeyguardStateController> provider11, Provider<ScreenOffAnimationController> provider12, Provider<AuthController> provider13) {
         this.contextProvider = provider;
         this.windowManagerProvider = provider2;
         this.activityManagerProvider = provider3;
@@ -40,21 +40,19 @@ public final class NotificationShadeWindowControllerImpl_Factory implements Fact
         this.colorExtractorProvider = provider9;
         this.dumpManagerProvider = provider10;
         this.keyguardStateControllerProvider = provider11;
-        this.unlockedScreenOffAnimationControllerProvider = provider12;
+        this.screenOffAnimationControllerProvider = provider12;
         this.authControllerProvider = provider13;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationShadeWindowControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.windowManagerProvider.mo1933get(), this.activityManagerProvider.mo1933get(), this.dozeParametersProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.keyguardViewMediatorProvider.mo1933get(), this.keyguardBypassControllerProvider.mo1933get(), this.colorExtractorProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.unlockedScreenOffAnimationControllerProvider.mo1933get(), this.authControllerProvider.mo1933get());
+    public NotificationShadeWindowControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.windowManagerProvider.get(), this.activityManagerProvider.get(), this.dozeParametersProvider.get(), this.statusBarStateControllerProvider.get(), this.configurationControllerProvider.get(), this.keyguardViewMediatorProvider.get(), this.keyguardBypassControllerProvider.get(), this.colorExtractorProvider.get(), this.dumpManagerProvider.get(), this.keyguardStateControllerProvider.get(), this.screenOffAnimationControllerProvider.get(), this.authControllerProvider.get());
     }
 
-    public static NotificationShadeWindowControllerImpl_Factory create(Provider<Context> provider, Provider<WindowManager> provider2, Provider<IActivityManager> provider3, Provider<DozeParameters> provider4, Provider<StatusBarStateController> provider5, Provider<ConfigurationController> provider6, Provider<KeyguardViewMediator> provider7, Provider<KeyguardBypassController> provider8, Provider<SysuiColorExtractor> provider9, Provider<DumpManager> provider10, Provider<KeyguardStateController> provider11, Provider<UnlockedScreenOffAnimationController> provider12, Provider<AuthController> provider13) {
+    public static NotificationShadeWindowControllerImpl_Factory create(Provider<Context> provider, Provider<WindowManager> provider2, Provider<IActivityManager> provider3, Provider<DozeParameters> provider4, Provider<StatusBarStateController> provider5, Provider<ConfigurationController> provider6, Provider<KeyguardViewMediator> provider7, Provider<KeyguardBypassController> provider8, Provider<SysuiColorExtractor> provider9, Provider<DumpManager> provider10, Provider<KeyguardStateController> provider11, Provider<ScreenOffAnimationController> provider12, Provider<AuthController> provider13) {
         return new NotificationShadeWindowControllerImpl_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13);
     }
 
-    public static NotificationShadeWindowControllerImpl newInstance(Context context, WindowManager windowManager, IActivityManager iActivityManager, DozeParameters dozeParameters, StatusBarStateController statusBarStateController, ConfigurationController configurationController, KeyguardViewMediator keyguardViewMediator, KeyguardBypassController keyguardBypassController, SysuiColorExtractor sysuiColorExtractor, DumpManager dumpManager, KeyguardStateController keyguardStateController, UnlockedScreenOffAnimationController unlockedScreenOffAnimationController, AuthController authController) {
-        return new NotificationShadeWindowControllerImpl(context, windowManager, iActivityManager, dozeParameters, statusBarStateController, configurationController, keyguardViewMediator, keyguardBypassController, sysuiColorExtractor, dumpManager, keyguardStateController, unlockedScreenOffAnimationController, authController);
+    public static NotificationShadeWindowControllerImpl newInstance(Context context, WindowManager windowManager, IActivityManager iActivityManager, DozeParameters dozeParameters, StatusBarStateController statusBarStateController, ConfigurationController configurationController, KeyguardViewMediator keyguardViewMediator, KeyguardBypassController keyguardBypassController, SysuiColorExtractor sysuiColorExtractor, DumpManager dumpManager, KeyguardStateController keyguardStateController, ScreenOffAnimationController screenOffAnimationController, AuthController authController) {
+        return new NotificationShadeWindowControllerImpl(context, windowManager, iActivityManager, dozeParameters, statusBarStateController, configurationController, keyguardViewMediator, keyguardBypassController, sysuiColorExtractor, dumpManager, keyguardStateController, screenOffAnimationController, authController);
     }
 }

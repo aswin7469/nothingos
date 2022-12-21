@@ -6,6 +6,8 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Insets;
 import android.graphics.Rect;
+import android.os.CancellationSignal;
+import android.os.Trace;
 import android.util.AttributeSet;
 import android.view.WindowInsets;
 import android.view.WindowInsetsAnimationControlListener;
@@ -15,177 +17,134 @@ import android.view.animation.Interpolator;
 import android.widget.TextView;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.internal.widget.TextViewInputDisabler;
-import com.android.keyguard.KeyguardPasswordView;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
+import com.android.systemui.DejankUtils;
 import com.android.systemui.animation.Interpolators;
-/* loaded from: classes.dex */
+
 public class KeyguardPasswordView extends KeyguardAbsKeyInputView {
+    private static final long IME_DISAPPEAR_DURATION_MS = 125;
     private final int mDisappearYTranslation;
     private Interpolator mFastOutLinearInInterpolator;
     private Interpolator mLinearOutSlowInInterpolator;
     private TextView mPasswordEntry;
     private TextViewInputDisabler mPasswordEntryDisabler;
 
-    public KeyguardPasswordView(Context context) {
-        this(context, null);
-    }
-
-    public KeyguardPasswordView(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-        this.mDisappearYTranslation = getResources().getDimensionPixelSize(R$dimen.disappear_y_translation);
-        this.mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563662);
-        this.mFastOutLinearInInterpolator = AnimationUtils.loadInterpolator(context, 17563663);
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
+    /* access modifiers changed from: protected */
     public int getPasswordTextViewId() {
-        return R$id.passwordEntry;
+        return C1893R.C1897id.passwordEntry;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
+    /* access modifiers changed from: protected */
     public int getPromptReasonStringRes(int i) {
         if (i != 0) {
-            if (i == 1) {
-                return R$string.kg_prompt_reason_restart_password;
-            }
-            if (i == 2) {
-                return R$string.kg_prompt_reason_timeout_password;
-            }
-            if (i == 3) {
-                return R$string.kg_prompt_reason_device_admin;
-            }
-            if (i == 4) {
-                return R$string.kg_prompt_reason_user_request;
-            }
-            if (i == 6) {
-                return R$string.kg_prompt_reason_timeout_password;
-            }
-            return R$string.kg_prompt_reason_timeout_password;
+            return i != 1 ? i != 3 ? i != 4 ? C1893R.string.kg_prompt_reason_timeout_password : C1893R.string.kg_prompt_reason_user_request : C1893R.string.kg_prompt_reason_device_admin : C1893R.string.kg_prompt_reason_restart_password;
         }
         return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView, android.view.View
+    public int getWrongPasswordStringId() {
+        return C1893R.string.kg_wrong_password;
+    }
+
+    /* access modifiers changed from: protected */
+    public void resetState() {
+    }
+
+    public KeyguardPasswordView(Context context) {
+        this(context, (AttributeSet) null);
+    }
+
+    public KeyguardPasswordView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+        this.mDisappearYTranslation = getResources().getDimensionPixelSize(C1893R.dimen.disappear_y_translation);
+        this.mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, AndroidResources.LINEAR_OUT_SLOW_IN);
+        this.mFastOutLinearInInterpolator = AnimationUtils.loadInterpolator(context, AndroidResources.FAST_OUT_LINEAR_IN);
+    }
+
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mPasswordEntry = (TextView) findViewById(getPasswordTextViewId());
         this.mPasswordEntryDisabler = new TextViewInputDisabler(this.mPasswordEntry);
     }
 
-    @Override // android.view.ViewGroup
-    protected boolean onRequestFocusInDescendants(int i, Rect rect) {
+    /* access modifiers changed from: protected */
+    public boolean onRequestFocusInDescendants(int i, Rect rect) {
         return this.mPasswordEntry.requestFocus(i, rect);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
+    /* access modifiers changed from: protected */
     public void resetPasswordText(boolean z, boolean z2) {
         this.mPasswordEntry.setText("");
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
+    /* access modifiers changed from: protected */
     public LockscreenCredential getEnteredCredential() {
         return LockscreenCredential.createPasswordOrNone(this.mPasswordEntry.getText());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
+    /* access modifiers changed from: protected */
     public void setPasswordEntryEnabled(boolean z) {
         this.mPasswordEntry.setEnabled(z);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
+    /* access modifiers changed from: protected */
     public void setPasswordEntryInputEnabled(boolean z) {
         this.mPasswordEntryDisabler.setInputEnabled(z);
     }
 
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
-    public int getWrongPasswordStringId() {
-        return R$string.kg_wrong_password;
-    }
-
-    @Override // com.android.keyguard.KeyguardInputView
     public void startAppearAnimation() {
         setAlpha(0.0f);
-        animate().alpha(1.0f).setDuration(500L).setStartDelay(300L).start();
+        animate().alpha(1.0f).setDuration(300).start();
         setTranslationY(0.0f);
     }
 
-    @Override // com.android.keyguard.KeyguardInputView
-    public boolean startDisappearAnimation(Runnable runnable) {
-        getWindowInsetsController().controlWindowInsetsAnimation(WindowInsets.Type.ime(), 100L, Interpolators.LINEAR, null, new AnonymousClass1(runnable));
+    public boolean startDisappearAnimation(final Runnable runnable) {
+        getWindowInsetsController().controlWindowInsetsAnimation(WindowInsets.Type.ime(), 100, Interpolators.LINEAR, (CancellationSignal) null, new WindowInsetsAnimationControlListener() {
+            public void onFinished(WindowInsetsAnimationController windowInsetsAnimationController) {
+            }
+
+            public void onReady(final WindowInsetsAnimationController windowInsetsAnimationController, int i) {
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+                ofFloat.addUpdateListener(new KeyguardPasswordView$1$$ExternalSyntheticLambda0(windowInsetsAnimationController, ofFloat));
+                ofFloat.addListener(new AnimatorListenerAdapter() {
+                    public void onAnimationStart(Animator animator) {
+                    }
+
+                    public void onAnimationEnd(Animator animator) {
+                        DejankUtils.postAfterTraversal(new KeyguardPasswordView$1$1$$ExternalSyntheticLambda0(this, windowInsetsAnimationController, runnable));
+                    }
+
+                    /* access modifiers changed from: package-private */
+                    /* renamed from: lambda$onAnimationEnd$0$com-android-keyguard-KeyguardPasswordView$1$1 */
+                    public /* synthetic */ void mo25938x84419558(WindowInsetsAnimationController windowInsetsAnimationController, Runnable runnable) {
+                        Trace.beginSection("KeyguardPasswordView#onAnimationEnd");
+                        windowInsetsAnimationController.finish(false);
+                        KeyguardPasswordView.this.runOnFinishImeAnimationRunnable();
+                        runnable.run();
+                        Trace.endSection();
+                    }
+                });
+                ofFloat.setInterpolator(Interpolators.FAST_OUT_LINEAR_IN);
+                ofFloat.start();
+            }
+
+            static /* synthetic */ void lambda$onReady$0(WindowInsetsAnimationController windowInsetsAnimationController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
+                if (!windowInsetsAnimationController.isCancelled()) {
+                    Insets shownStateInsets = windowInsetsAnimationController.getShownStateInsets();
+                    windowInsetsAnimationController.setInsetsAndAlpha(Insets.add(shownStateInsets, Insets.of(0, 0, 0, (int) (((float) ((-shownStateInsets.bottom) / 4)) * valueAnimator.getAnimatedFraction()))), ((Float) valueAnimator2.getAnimatedValue()).floatValue(), valueAnimator.getAnimatedFraction());
+                }
+            }
+
+            public void onCancelled(WindowInsetsAnimationController windowInsetsAnimationController) {
+                KeyguardPasswordView.this.runOnFinishImeAnimationRunnable();
+                runnable.run();
+            }
+        });
         return true;
     }
 
-    /* renamed from: com.android.keyguard.KeyguardPasswordView$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    class AnonymousClass1 implements WindowInsetsAnimationControlListener {
-        final /* synthetic */ Runnable val$finishRunnable;
-
-        @Override // android.view.WindowInsetsAnimationControlListener
-        public void onFinished(WindowInsetsAnimationController windowInsetsAnimationController) {
-        }
-
-        AnonymousClass1(Runnable runnable) {
-            this.val$finishRunnable = runnable;
-        }
-
-        @Override // android.view.WindowInsetsAnimationControlListener
-        public void onReady(final WindowInsetsAnimationController windowInsetsAnimationController, int i) {
-            final ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
-            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.keyguard.KeyguardPasswordView$1$$ExternalSyntheticLambda0
-                @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    KeyguardPasswordView.AnonymousClass1.lambda$onReady$0(windowInsetsAnimationController, ofFloat, valueAnimator);
-                }
-            });
-            ofFloat.addListener(new AnimatorListenerAdapter() { // from class: com.android.keyguard.KeyguardPasswordView.1.1
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-                public void onAnimationStart(Animator animator) {
-                }
-
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-                public void onAnimationEnd(Animator animator) {
-                    windowInsetsAnimationController.finish(false);
-                    KeyguardPasswordView.this.runOnFinishImeAnimationRunnable();
-                    AnonymousClass1.this.val$finishRunnable.run();
-                }
-            });
-            ofFloat.setInterpolator(Interpolators.FAST_OUT_LINEAR_IN);
-            ofFloat.start();
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public static /* synthetic */ void lambda$onReady$0(WindowInsetsAnimationController windowInsetsAnimationController, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
-            if (windowInsetsAnimationController.isCancelled()) {
-                return;
-            }
-            Insets shownStateInsets = windowInsetsAnimationController.getShownStateInsets();
-            windowInsetsAnimationController.setInsetsAndAlpha(Insets.add(shownStateInsets, Insets.of(0, 0, 0, (int) (((-shownStateInsets.bottom) / 4) * valueAnimator.getAnimatedFraction()))), ((Float) valueAnimator2.getAnimatedValue()).floatValue(), valueAnimator.getAnimatedFraction());
-        }
-
-        @Override // android.view.WindowInsetsAnimationControlListener
-        public void onCancelled(WindowInsetsAnimationController windowInsetsAnimationController) {
-            KeyguardPasswordView.this.runOnFinishImeAnimationRunnable();
-            this.val$finishRunnable.run();
-        }
-    }
-
-    @Override // com.android.keyguard.KeyguardInputView
-    public void animateForIme(float f, boolean z) {
-        animate().cancel();
-        setAlpha(z ? Math.max(f, getAlpha()) : 1.0f - f);
-    }
-
-    @Override // com.android.keyguard.KeyguardInputView
     public CharSequence getTitle() {
-        return getResources().getString(17040442);
+        return getResources().getString(17040518);
     }
 }

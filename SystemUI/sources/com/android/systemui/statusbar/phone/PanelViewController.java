@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.SystemClock;
 import android.util.BoostFramework;
 import android.util.Log;
 import android.util.MathUtils;
@@ -16,157 +15,222 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Interpolator;
+import androidx.exifinterface.media.ExifInterface;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.util.LatencyTracker;
+import com.android.p019wm.shell.animation.FlingAnimationUtils;
+import com.android.systemui.C1893R;
 import com.android.systemui.DejankUtils;
-import com.android.systemui.R$bool;
-import com.android.systemui.R$dimen;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.doze.DozeLog;
+import com.android.systemui.keyguard.KeyguardUnlockAnimationController;
 import com.android.systemui.plugins.FalsingManager;
+import com.android.systemui.statusbar.NotificationShadeWindowController;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.VibratorHelper;
 import com.android.systemui.statusbar.notification.stack.AmbientState;
 import com.android.systemui.statusbar.phone.LockscreenGestureLogger;
 import com.android.systemui.statusbar.phone.PanelView;
+import com.android.systemui.statusbar.phone.panelstate.PanelExpansionStateManager;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
-import com.android.wm.shell.animation.FlingAnimationUtils;
-import com.nothingos.utils.SystemUIUtils;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-/* loaded from: classes.dex */
+import com.android.systemui.util.time.SystemClock;
+import com.nothing.systemui.statusbar.phone.NotificationPanelViewControllerEx;
+import com.nothing.systemui.util.NTLogUtil;
+import java.p026io.PrintWriter;
+
 public abstract class PanelViewController {
-    public static final String TAG = PanelView.class.getSimpleName();
+    public static final boolean DEBUG = false;
+    private static final float FACTOR_OF_HIGH_VELOCITY_FOR_MAX_OVERSHOOT = 0.5f;
+    public static final float FLING_CLOSING_MAX_LENGTH_SECONDS = 0.6f;
+    public static final float FLING_CLOSING_SPEED_UP_FACTOR = 0.6f;
+    public static final float FLING_MAX_LENGTH_SECONDS = 0.6f;
+    public static final float FLING_SPEED_UP_FACTOR = 0.6f;
+    private static final int NO_FIXED_DURATION = -1;
+    private static final long SHADE_OPEN_SPRING_BACK_DURATION = 400;
+    private static final long SHADE_OPEN_SPRING_OUT_DURATION = 350;
+    public static final String TAG = PanelView.TAG;
     protected final AmbientState mAmbientState;
-    private boolean mAnimateAfterExpanding;
-    private boolean mAnimatingOnDown;
-    PanelBar mBar;
-    private boolean mClosing;
-    private boolean mCollapsedAndHeadsUpOnDown;
+    /* access modifiers changed from: private */
+    public boolean mAnimateAfterExpanding;
+    /* access modifiers changed from: private */
+    public boolean mAnimatingOnDown;
+    private Interpolator mBounceInterpolator;
+    protected CentralSurfaces mCentralSurfaces;
+    /* access modifiers changed from: private */
+    public boolean mClosing;
+    /* access modifiers changed from: private */
+    public boolean mCollapsedAndHeadsUpOnDown;
     protected long mDownTime;
     private final DozeLog mDozeLog;
+    protected NotificationPanelViewControllerEx mEx;
     private boolean mExpandLatencyTracking;
+    private float mExpandedFraction = 0.0f;
+    protected float mExpandedHeight = 0.0f;
     protected boolean mExpanding;
+    private float mExpansionDragDownAmountPx = 0.0f;
     private final FalsingManager mFalsingManager;
+    private int mFixedDuration = -1;
     private FlingAnimationUtils mFlingAnimationUtils;
     private FlingAnimationUtils mFlingAnimationUtilsClosing;
     private FlingAnimationUtils mFlingAnimationUtilsDismissing;
-    private boolean mGestureWaitForTouchSlop;
-    private boolean mHandlingPointerUp;
-    private boolean mHasLayoutedSinceDown;
-    protected HeadsUpManagerPhone mHeadsUpManager;
-    private ValueAnimator mHeightAnimator;
-    protected boolean mHintAnimationRunning;
-    private float mHintDistance;
-    private boolean mIgnoreXTouchSlop;
-    private float mInitialOffsetOnTouch;
-    private float mInitialTouchX;
-    private float mInitialTouchY;
-    private boolean mInstantExpanding;
-    protected boolean mIsExpandFling;
-    private boolean mIsFlinging;
-    protected boolean mIsLaunchAnimationRunning;
-    private boolean mIsSpringBackAnimation;
-    protected KeyguardBottomAreaView mKeyguardBottomArea;
-    protected final KeyguardStateController mKeyguardStateController;
-    private final LatencyTracker mLatencyTracker;
-    private float mMinExpandHeight;
-    private boolean mMotionAborted;
-    private boolean mNotificationsDragEnabled;
-    protected float mOverExpansion;
-    private boolean mPanelClosedOnDown;
-    private float mPanelFlingOvershootAmount;
-    private boolean mPanelUpdateWhenAnimatorEnds;
-    private BoostFramework mPerf;
-    protected final Resources mResources;
-    private float mSlopMultiplier;
-    protected StatusBar mStatusBar;
-    private final StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
-    protected final SysuiStatusBarStateController mStatusBarStateController;
-    protected final StatusBarTouchableRegionManager mStatusBarTouchableRegionManager;
-    private boolean mTouchAboveFalsingThreshold;
-    private boolean mTouchDisabled;
-    private int mTouchSlop;
-    private boolean mTouchSlopExceeded;
-    protected boolean mTouchSlopExceededBeforeDown;
-    private boolean mTouchStartedInEmptyArea;
-    protected boolean mTracking;
-    private int mTrackingPointer;
-    private int mUnlockFalsingThreshold;
-    private boolean mUpdateFlingOnLayout;
-    private float mUpdateFlingVelocity;
-    private boolean mUpwardsWhenThresholdReached;
-    private boolean mVibrateOnOpening;
-    private final VibratorHelper mVibratorHelper;
-    private final PanelView mView;
-    private String mViewName;
-    private LockscreenGestureLogger mLockscreenGestureLogger = new LockscreenGestureLogger();
-    private int mFixedDuration = -1;
-    protected ArrayList<PanelExpansionListener> mExpansionListeners = new ArrayList<>();
-    private float mLastGesturedOverExpansion = -1.0f;
-    private float mExpandedFraction = 0.0f;
-    protected float mExpandedHeight = 0.0f;
-    private final VelocityTracker mVelocityTracker = VelocityTracker.obtain();
-    private float mNextCollapseSpeedUpFactor = 1.0f;
-    private final Runnable mFlingCollapseRunnable = new Runnable() { // from class: com.android.systemui.statusbar.phone.PanelViewController.4
-        @Override // java.lang.Runnable
+    private final Runnable mFlingCollapseRunnable = new Runnable() {
         public void run() {
             PanelViewController panelViewController = PanelViewController.this;
             panelViewController.fling(0.0f, false, panelViewController.mNextCollapseSpeedUpFactor, false);
         }
     };
-    protected final Runnable mPostCollapseRunnable = new Runnable() { // from class: com.android.systemui.statusbar.phone.PanelViewController.8
-        @Override // java.lang.Runnable
-        public void run() {
-            PanelViewController.this.collapse(false, 1.0f);
-        }
-    };
-    private Interpolator mBounceInterpolator = new BounceInterpolator();
+    /* access modifiers changed from: private */
+    public boolean mGestureWaitForTouchSlop;
+    /* access modifiers changed from: private */
+    public boolean mHandlingPointerUp;
+    /* access modifiers changed from: private */
+    public boolean mHasLayoutedSinceDown;
+    protected HeadsUpManagerPhone mHeadsUpManager;
+    /* access modifiers changed from: private */
+    public ValueAnimator mHeightAnimator;
+    protected boolean mHintAnimationRunning;
+    private float mHintDistance;
+    /* access modifiers changed from: private */
+    public boolean mIgnoreXTouchSlop;
+    protected boolean mInSplitShade;
+    /* access modifiers changed from: private */
+    public float mInitialOffsetOnTouch;
+    /* access modifiers changed from: private */
+    public float mInitialTouchX;
+    /* access modifiers changed from: private */
+    public float mInitialTouchY;
+    /* access modifiers changed from: private */
+    public boolean mInstantExpanding;
+    private final InteractionJankMonitor mInteractionJankMonitor;
+    private boolean mIsFlinging;
+    protected boolean mIsLaunchAnimationRunning;
+    /* access modifiers changed from: private */
+    public boolean mIsSpringBackAnimation;
+    protected KeyguardBottomAreaView mKeyguardBottomArea;
+    protected final KeyguardStateController mKeyguardStateController;
+    private KeyguardUnlockAnimationController mKeyguardUnlockAnimationController;
+    private float mLastGesturedOverExpansion = -1.0f;
+    private final LatencyTracker mLatencyTracker;
+    protected final LockscreenGestureLogger mLockscreenGestureLogger;
+    /* access modifiers changed from: private */
+    public float mMinExpandHeight;
+    /* access modifiers changed from: private */
+    public boolean mMotionAborted;
+    /* access modifiers changed from: private */
+    public float mNextCollapseSpeedUpFactor = 1.0f;
+    private final NotificationShadeWindowController mNotificationShadeWindowController;
+    /* access modifiers changed from: private */
+    public boolean mNotificationsDragEnabled;
+    private boolean mOverExpandedBeforeFling;
+    protected float mOverExpansion;
+    /* access modifiers changed from: private */
+    public boolean mPanelClosedOnDown;
+    private final PanelExpansionStateManager mPanelExpansionStateManager;
+    private float mPanelFlingOvershootAmount;
+    private boolean mPanelUpdateWhenAnimatorEnds;
+    /* access modifiers changed from: private */
+    public BoostFramework mPerf = null;
+    protected final Resources mResources;
+    private float mSlopMultiplier;
+    private final StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
+    protected final SysuiStatusBarStateController mStatusBarStateController;
+    protected final StatusBarTouchableRegionManager mStatusBarTouchableRegionManager;
+    protected final SystemClock mSystemClock;
+    /* access modifiers changed from: private */
+    public boolean mTouchAboveFalsingThreshold;
+    /* access modifiers changed from: private */
+    public boolean mTouchDisabled;
+    private final TouchHandler mTouchHandler;
+    private int mTouchSlop;
+    /* access modifiers changed from: private */
+    public boolean mTouchSlopExceeded;
+    protected boolean mTouchSlopExceededBeforeDown;
+    /* access modifiers changed from: private */
+    public boolean mTouchStartedInEmptyArea;
+    protected boolean mTracking;
+    /* access modifiers changed from: private */
+    public int mTrackingPointer;
+    private int mUnlockFalsingThreshold;
+    /* access modifiers changed from: private */
+    public boolean mUpdateFlingOnLayout;
+    /* access modifiers changed from: private */
+    public float mUpdateFlingVelocity;
+    /* access modifiers changed from: private */
+    public boolean mUpwardsWhenThresholdReached;
+    /* access modifiers changed from: private */
+    public final VelocityTracker mVelocityTracker = VelocityTracker.obtain();
+    private boolean mVibrateOnOpening;
+    private final VibratorHelper mVibratorHelper;
+    /* access modifiers changed from: private */
+    public final PanelView mView;
+    /* access modifiers changed from: private */
+    public String mViewName;
 
-    protected abstract boolean canCollapsePanelOnTouch();
+    /* access modifiers changed from: protected */
+    public boolean canCollapsePanelOnTouch() {
+        return true;
+    }
 
-    /* renamed from: createLayoutChangeListener */
-    public abstract OnLayoutChangeListener mo1222createLayoutChangeListener();
+    /* access modifiers changed from: protected */
+    public abstract TouchHandler createTouchHandler();
 
-    protected abstract OnConfigurationChangedListener createOnConfigurationChangedListener();
+    /* access modifiers changed from: protected */
+    public abstract int getMaxPanelHeight();
 
-    protected abstract TouchHandler createTouchHandler();
+    /* access modifiers changed from: protected */
+    public abstract float getOpeningHeight();
 
-    protected abstract int getMaxPanelHeight();
+    /* access modifiers changed from: protected */
+    public abstract boolean isDozing();
 
-    protected abstract boolean isInContentBounds(float f, float f2);
+    /* access modifiers changed from: protected */
+    public abstract boolean isInContentBounds(float f, float f2);
 
-    protected abstract boolean isPanelVisibleBecauseOfHeadsUp();
+    /* access modifiers changed from: protected */
+    public abstract boolean isPanelVisibleBecauseOfHeadsUp();
 
-    protected abstract boolean isTrackingBlocked();
+    /* access modifiers changed from: protected */
+    public abstract boolean isTrackingBlocked();
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
+    public abstract void onClosingFinished();
+
+    /* access modifiers changed from: protected */
+    public abstract void onExpandingFinished();
+
+    /* access modifiers changed from: protected */
     public void onExpandingStarted() {
     }
 
-    protected abstract void onHeightUpdated(float f);
+    /* access modifiers changed from: protected */
+    public abstract void onHeightUpdated(float f);
 
-    protected abstract boolean onMiddleClicked();
+    /* access modifiers changed from: protected */
+    public abstract boolean onMiddleClicked();
 
     public abstract void resetViews(boolean z);
 
-    public abstract void setIsShadeOpening(boolean z);
+    /* access modifiers changed from: protected */
+    public abstract boolean shouldGestureIgnoreXTouchSlop(float f, float f2);
 
-    public abstract void setMinFraction(float f);
+    /* access modifiers changed from: protected */
+    public abstract boolean shouldGestureWaitForTouchSlop();
 
-    protected abstract boolean shouldGestureIgnoreXTouchSlop(float f, float f2);
+    /* access modifiers changed from: package-private */
+    public abstract boolean shouldPanelBeVisible();
 
-    protected abstract boolean shouldGestureWaitForTouchSlop();
+    /* access modifiers changed from: protected */
+    public abstract boolean shouldUseDismissingAnimation();
 
-    protected abstract boolean shouldUseDismissingAnimation();
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    public void onExpandingFinished() {
-        this.mBar.onExpandingFinished();
+    static {
+        Class<PanelView> cls = PanelView.class;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    private void logf(String str, Object... objArr) {
+        Log.v(TAG, (this.mViewName != null ? this.mViewName + ": " : "") + String.format(str, objArr));
+    }
+
+    /* access modifiers changed from: protected */
     public void notifyExpandingStarted() {
         if (!this.mExpanding) {
             this.mExpanding = true;
@@ -174,7 +238,7 @@ public abstract class PanelViewController {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public final void notifyExpandingFinished() {
         endClosing();
         if (this.mExpanding) {
@@ -183,61 +247,78 @@ public abstract class PanelViewController {
         }
     }
 
-    public PanelViewController(PanelView panelView, FalsingManager falsingManager, DozeLog dozeLog, KeyguardStateController keyguardStateController, SysuiStatusBarStateController sysuiStatusBarStateController, VibratorHelper vibratorHelper, StatusBarKeyguardViewManager statusBarKeyguardViewManager, LatencyTracker latencyTracker, FlingAnimationUtils.Builder builder, StatusBarTouchableRegionManager statusBarTouchableRegionManager, AmbientState ambientState) {
-        this.mPerf = null;
+    /* access modifiers changed from: protected */
+    public AmbientState getAmbientState() {
+        return this.mAmbientState;
+    }
+
+    public PanelViewController(PanelView panelView, FalsingManager falsingManager, DozeLog dozeLog, KeyguardStateController keyguardStateController, SysuiStatusBarStateController sysuiStatusBarStateController, NotificationShadeWindowController notificationShadeWindowController, VibratorHelper vibratorHelper, StatusBarKeyguardViewManager statusBarKeyguardViewManager, LatencyTracker latencyTracker, FlingAnimationUtils.Builder builder, StatusBarTouchableRegionManager statusBarTouchableRegionManager, LockscreenGestureLogger lockscreenGestureLogger, PanelExpansionStateManager panelExpansionStateManager, AmbientState ambientState, InteractionJankMonitor interactionJankMonitor, KeyguardUnlockAnimationController keyguardUnlockAnimationController, SystemClock systemClock) {
+        this.mKeyguardUnlockAnimationController = keyguardUnlockAnimationController;
+        keyguardStateController.addCallback(new KeyguardStateController.Callback() {
+            public void onKeyguardFadingAwayChanged() {
+                PanelViewController.this.requestPanelHeightUpdate();
+            }
+        });
         this.mAmbientState = ambientState;
         this.mView = panelView;
         this.mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
-        panelView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() { // from class: com.android.systemui.statusbar.phone.PanelViewController.1
-            @Override // android.view.View.OnAttachStateChangeListener
+        this.mLockscreenGestureLogger = lockscreenGestureLogger;
+        this.mPanelExpansionStateManager = panelExpansionStateManager;
+        TouchHandler createTouchHandler = createTouchHandler();
+        this.mTouchHandler = createTouchHandler;
+        panelView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             public void onViewDetachedFromWindow(View view) {
             }
 
-            @Override // android.view.View.OnAttachStateChangeListener
             public void onViewAttachedToWindow(View view) {
                 PanelViewController panelViewController = PanelViewController.this;
-                panelViewController.mViewName = panelViewController.mResources.getResourceName(panelViewController.mView.getId());
+                String unused = panelViewController.mViewName = panelViewController.mResources.getResourceName(PanelViewController.this.mView.getId());
             }
         });
-        panelView.addOnLayoutChangeListener(mo1222createLayoutChangeListener());
-        panelView.setOnTouchListener(createTouchHandler());
+        panelView.addOnLayoutChangeListener(createLayoutChangeListener());
+        panelView.setOnTouchListener(createTouchHandler);
         panelView.setOnConfigurationChangedListener(createOnConfigurationChangedListener());
         Resources resources = panelView.getResources();
         this.mResources = resources;
         this.mKeyguardStateController = keyguardStateController;
         this.mStatusBarStateController = sysuiStatusBarStateController;
+        this.mNotificationShadeWindowController = notificationShadeWindowController;
         this.mFlingAnimationUtils = builder.reset().setMaxLengthSeconds(0.6f).setSpeedUpFactor(0.6f).build();
-        this.mFlingAnimationUtilsClosing = builder.reset().setMaxLengthSeconds(0.5f).setSpeedUpFactor(0.6f).build();
+        this.mFlingAnimationUtilsClosing = builder.reset().setMaxLengthSeconds(0.6f).setSpeedUpFactor(0.6f).build();
         this.mFlingAnimationUtilsDismissing = builder.reset().setMaxLengthSeconds(0.5f).setSpeedUpFactor(0.6f).setX2(0.6f).setY2(0.84f).build();
         this.mLatencyTracker = latencyTracker;
+        this.mBounceInterpolator = new BounceInterpolator();
         this.mFalsingManager = falsingManager;
         this.mDozeLog = dozeLog;
-        this.mNotificationsDragEnabled = resources.getBoolean(R$bool.config_enableNotificationShadeDrag);
+        this.mNotificationsDragEnabled = resources.getBoolean(C1893R.bool.config_enableNotificationShadeDrag);
         this.mVibratorHelper = vibratorHelper;
-        this.mVibrateOnOpening = resources.getBoolean(R$bool.config_vibrateOnIconAnimation);
+        this.mVibrateOnOpening = resources.getBoolean(C1893R.bool.config_vibrateOnIconAnimation);
         this.mStatusBarTouchableRegionManager = statusBarTouchableRegionManager;
+        this.mInteractionJankMonitor = interactionJankMonitor;
+        this.mSystemClock = systemClock;
         this.mPerf = new BoostFramework();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void loadDimens() {
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mView.getContext());
         this.mTouchSlop = viewConfiguration.getScaledTouchSlop();
         this.mSlopMultiplier = viewConfiguration.getScaledAmbiguousGestureMultiplier();
-        this.mHintDistance = this.mResources.getDimension(R$dimen.hint_move_distance);
-        this.mPanelFlingOvershootAmount = this.mResources.getDimension(R$dimen.panel_overshoot_amount);
-        this.mUnlockFalsingThreshold = this.mResources.getDimensionPixelSize(R$dimen.unlock_falsing_threshold);
+        this.mHintDistance = this.mResources.getDimension(C1893R.dimen.hint_move_distance);
+        this.mPanelFlingOvershootAmount = this.mResources.getDimension(C1893R.dimen.panel_overshoot_amount);
+        this.mUnlockFalsingThreshold = this.mResources.getDimensionPixelSize(C1893R.dimen.unlock_falsing_threshold);
+        this.mInSplitShade = this.mResources.getBoolean(C1893R.bool.config_use_split_notification_shade);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public float getTouchSlop(MotionEvent motionEvent) {
         if (motionEvent.getClassification() == 1) {
-            return this.mTouchSlop * this.mSlopMultiplier;
+            return ((float) this.mTouchSlop) * this.mSlopMultiplier;
         }
-        return this.mTouchSlop;
+        return (float) this.mTouchSlop;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void addMovement(MotionEvent motionEvent) {
         float rawX = motionEvent.getRawX() - motionEvent.getX();
         float rawY = motionEvent.getRawY() - motionEvent.getY();
@@ -264,33 +345,36 @@ public abstract class PanelViewController {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void startOpening(MotionEvent motionEvent) {
-        notifyBarPanelExpansionChanged();
+        updatePanelExpansionAndVisibility();
         maybeVibrateOnOpening();
-        float displayWidth = this.mStatusBar.getDisplayWidth();
-        float displayHeight = this.mStatusBar.getDisplayHeight();
-        this.mLockscreenGestureLogger.writeAtFractionalPosition(1328, (int) ((motionEvent.getX() / displayWidth) * 100.0f), (int) ((motionEvent.getY() / displayHeight) * 100.0f), this.mStatusBar.getRotation());
+        float displayWidth = this.mCentralSurfaces.getDisplayWidth();
+        float displayHeight = this.mCentralSurfaces.getDisplayHeight();
+        this.mLockscreenGestureLogger.writeAtFractionalPosition(1328, (int) ((motionEvent.getX() / displayWidth) * 100.0f), (int) ((motionEvent.getY() / displayHeight) * 100.0f), this.mCentralSurfaces.getRotation());
         this.mLockscreenGestureLogger.log(LockscreenGestureLogger.LockscreenUiEvent.LOCKSCREEN_UNLOCKED_NOTIFICATION_PANEL_EXPAND);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void maybeVibrateOnOpening() {
         if (this.mVibrateOnOpening) {
             this.mVibratorHelper.vibrate(2);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isDirectionUpwards(float f, float f2) {
         float f3 = f - this.mInitialTouchX;
         float f4 = f2 - this.mInitialTouchY;
-        return f4 < 0.0f && Math.abs(f4) >= Math.abs(f3);
+        if (f4 < 0.0f && Math.abs(f4) >= Math.abs(f3)) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void startExpandMotion(float f, float f2, boolean z, float f3) {
-        if (!this.mHandlingPointerUp) {
+        if (!this.mHandlingPointerUp && !this.mStatusBarStateController.isDozing()) {
             beginJankMonitoring(0);
         }
         this.mInitialOffsetOnTouch = f3;
@@ -298,37 +382,44 @@ public abstract class PanelViewController {
         this.mInitialTouchX = f;
         if (z) {
             this.mTouchSlopExceeded = true;
-            setExpandedHeight(f3);
             onTrackingStarted();
+            setExpandedHeight(this.mInitialOffsetOnTouch);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void endMotionEvent(MotionEvent motionEvent, float f, float f2, boolean z) {
         boolean z2;
         int i;
         this.mTrackingPointer = -1;
-        if ((this.mTracking && this.mTouchSlopExceeded) || Math.abs(f - this.mInitialTouchX) > this.mTouchSlop || Math.abs(f2 - this.mInitialTouchY) > this.mTouchSlop || motionEvent.getActionMasked() == 3 || z) {
+        boolean z3 = false;
+        this.mAmbientState.setSwipingUp(false);
+        if ((this.mTracking && this.mTouchSlopExceeded) || Math.abs(f - this.mInitialTouchX) > ((float) this.mTouchSlop) || Math.abs(f2 - this.mInitialTouchY) > ((float) this.mTouchSlop) || motionEvent.getActionMasked() == 3 || z) {
             this.mVelocityTracker.computeCurrentVelocity(1000);
             float yVelocity = this.mVelocityTracker.getYVelocity();
-            float hypot = (float) Math.hypot(this.mVelocityTracker.getXVelocity(), this.mVelocityTracker.getYVelocity());
-            boolean z3 = false;
+            float hypot = (float) Math.hypot((double) this.mVelocityTracker.getXVelocity(), (double) this.mVelocityTracker.getYVelocity());
             boolean z4 = this.mStatusBarStateController.getState() == 1;
             if (motionEvent.getActionMasked() == 3 || z) {
-                z2 = z4 ? true : !this.mPanelClosedOnDown;
+                if (!this.mKeyguardStateController.isKeyguardFadingAway()) {
+                    if (z4) {
+                        z2 = true;
+                    } else if (!this.mKeyguardStateController.isKeyguardFadingAway()) {
+                        z2 = !this.mPanelClosedOnDown;
+                    }
+                }
+                z2 = false;
             } else {
                 z2 = flingExpands(yVelocity, hypot, f, f2);
             }
-            this.mDozeLog.traceFling(z2, this.mTouchAboveFalsingThreshold, this.mStatusBar.isFalsingThresholdNeeded(), this.mStatusBar.isWakeUpComingFromTouch());
+            this.mDozeLog.traceFling(z2, this.mTouchAboveFalsingThreshold, this.mCentralSurfaces.isFalsingThresholdNeeded(), this.mCentralSurfaces.isWakeUpComingFromTouch());
             if (!z2 && z4) {
-                float displayDensity = this.mStatusBar.getDisplayDensity();
+                float displayDensity = this.mCentralSurfaces.getDisplayDensity();
                 this.mLockscreenGestureLogger.write(186, (int) Math.abs((f2 - this.mInitialTouchY) / displayDensity), (int) Math.abs(yVelocity / displayDensity));
                 this.mLockscreenGestureLogger.log(LockscreenGestureLogger.LockscreenUiEvent.LOCKSCREEN_UNLOCK);
             }
-            int i2 = (yVelocity > 0.0f ? 1 : (yVelocity == 0.0f ? 0 : -1));
-            if (i2 == 0) {
+            if (yVelocity == 0.0f) {
                 i = 7;
-            } else if (i2 > 0) {
+            } else if (f2 - this.mInitialTouchY > 0.0f) {
                 i = 0;
             } else {
                 i = this.mKeyguardStateController.canDismissLockScreen() ? 4 : 8;
@@ -342,40 +433,40 @@ public abstract class PanelViewController {
             if (z3) {
                 this.mUpdateFlingVelocity = yVelocity;
             }
-        } else if (!this.mStatusBar.isBouncerShowing() && !this.mStatusBarKeyguardViewManager.isShowingAlternateAuthOrAnimating()) {
+        } else if (!this.mCentralSurfaces.isBouncerShowing() && !this.mStatusBarKeyguardViewManager.isShowingAlternateAuthOrAnimating() && !this.mKeyguardStateController.isKeyguardGoingAway()) {
             onTrackingStopped(onEmptySpaceClick(this.mInitialTouchX));
         }
         this.mVelocityTracker.clear();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public float getCurrentExpandVelocity() {
         this.mVelocityTracker.computeCurrentVelocity(1000);
         return this.mVelocityTracker.getYVelocity();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public int getFalsingThreshold() {
-        return (int) (this.mUnlockFalsingThreshold * (this.mStatusBar.isWakeUpComingFromTouch() ? 1.5f : 1.0f));
+        return (int) (((float) this.mUnlockFalsingThreshold) * (this.mCentralSurfaces.isWakeUpComingFromTouch() ? 1.5f : 1.0f));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onTrackingStopped(boolean z) {
         this.mTracking = false;
-        this.mBar.onTrackingStopped(z);
-        notifyBarPanelExpansionChanged();
+        this.mCentralSurfaces.onTrackingStopped(z);
+        updatePanelExpansionAndVisibility();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onTrackingStarted() {
         endClosing();
         this.mTracking = true;
-        this.mBar.onTrackingStarted();
+        this.mCentralSurfaces.onTrackingStarted();
         notifyExpandingStarted();
-        notifyBarPanelExpansionChanged();
+        updatePanelExpansionAndVisibility();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void cancelHeightAnimator() {
         ValueAnimator valueAnimator = this.mHeightAnimator;
         if (valueAnimator != null) {
@@ -383,25 +474,30 @@ public abstract class PanelViewController {
                 this.mPanelUpdateWhenAnimatorEnds = false;
             }
             this.mHeightAnimator.cancel();
+            NTLogUtil.m1680d(TAG, "cancelHeightAnimator");
         }
         endClosing();
     }
 
     private void endClosing() {
         if (this.mClosing) {
-            this.mClosing = false;
+            setIsClosing(false);
             onClosingFinished();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
+    public float getContentHeight() {
+        return this.mExpandedHeight;
+    }
+
+    /* access modifiers changed from: protected */
     public boolean flingExpands(float f, float f2, float f3, float f4) {
         int i;
         if (this.mFalsingManager.isUnlockingDisabled()) {
             return true;
         }
-        int i2 = (f > 0.0f ? 1 : (f == 0.0f ? 0 : -1));
-        if (i2 > 0) {
+        if (f4 - this.mInitialTouchY > 0.0f) {
             i = 0;
         } else {
             i = this.mKeyguardStateController.canDismissLockScreen() ? 4 : 8;
@@ -412,16 +508,19 @@ public abstract class PanelViewController {
         if (Math.abs(f2) < this.mFlingAnimationUtils.getMinVelocityPxPerSecond()) {
             return shouldExpandWhenNotFlinging();
         }
-        return i2 > 0;
+        if (f > 0.0f) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean shouldExpandWhenNotFlinging() {
         return getExpandedFraction() > 0.5f;
     }
 
     private boolean isFalseTouch(float f, float f2, int i) {
-        if (!this.mStatusBar.isFalsingThresholdNeeded()) {
+        if (!this.mCentralSurfaces.isFalsingThresholdNeeded()) {
             return false;
         }
         if (this.mFalsingManager.isClassifierEnabled()) {
@@ -430,83 +529,103 @@ public abstract class PanelViewController {
         if (!this.mTouchAboveFalsingThreshold) {
             return true;
         }
-        if (!this.mUpwardsWhenThresholdReached) {
-            return !isDirectionUpwards(f, f2);
+        if (this.mUpwardsWhenThresholdReached) {
+            return false;
         }
-        return false;
+        return !isDirectionUpwards(f, f2);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void fling(float f, boolean z) {
         fling(f, z, 1.0f, false);
     }
 
-    protected void fling(float f, boolean z, boolean z2) {
+    /* access modifiers changed from: protected */
+    public void fling(float f, boolean z, boolean z2) {
         fling(f, z, 1.0f, z2);
     }
 
-    protected void fling(float f, boolean z, float f2, boolean z2) {
-        float maxPanelHeight = z ? getMaxPanelHeight() : 0.0f;
+    /* access modifiers changed from: protected */
+    public void fling(float f, boolean z, float f2, boolean z2) {
+        float maxPanelHeight = z ? (float) getMaxPanelHeight() : 0.0f;
         if (!z) {
-            this.mClosing = true;
+            setIsClosing(true);
         }
         flingToHeight(f, z, maxPanelHeight, f2, z2);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void flingToHeight(float f, boolean z, float f2, float f3, boolean z2) {
+        ValueAnimator valueAnimator;
         int i;
-        if (f2 == this.mExpandedHeight && this.mOverExpansion == 0.0f) {
-            endJankMonitoring(0);
-            this.mKeyguardStateController.notifyPanelFlingEnd();
-            notifyExpandingFinished();
+        String str;
+        float f4 = f;
+        boolean z3 = z;
+        float f5 = f2;
+        if (f5 == this.mExpandedHeight && this.mOverExpansion == 0.0f) {
+            onFlingEnd(false);
             return;
         }
+        boolean z4 = this.mIsFlinging;
         this.mIsFlinging = true;
-        boolean z3 = z && this.mStatusBarStateController.getState() != 1 && this.mOverExpansion == 0.0f && f >= 0.0f;
-        final boolean z4 = z3 || (this.mOverExpansion != 0.0f && z);
-        float lerp = z3 ? MathUtils.lerp(0.2f, 1.0f, MathUtils.saturate(f / (this.mFlingAnimationUtils.getHighVelocityPxPerSecond() * 0.5f))) + (this.mOverExpansion / this.mPanelFlingOvershootAmount) : 0.0f;
-        ValueAnimator createHeightAnimator = createHeightAnimator(f2, lerp);
-        if (z) {
-            this.mIsExpandFling = true;
-            float f4 = (!z2 || f >= 0.0f) ? f : 0.0f;
-            this.mFlingAnimationUtils.apply(createHeightAnimator, this.mExpandedHeight, f2 + (lerp * this.mPanelFlingOvershootAmount), f4, this.mView.getHeight());
+        boolean z5 = z3 && !this.mInSplitShade && this.mStatusBarStateController.getState() != 1 && this.mOverExpansion == 0.0f && f4 >= 0.0f;
+        final boolean z6 = z5 || (this.mOverExpansion != 0.0f && z3);
+        float lerp = z5 ? MathUtils.lerp(0.2f, 1.0f, MathUtils.saturate(f4 / (this.mFlingAnimationUtils.getHighVelocityPxPerSecond() * 0.5f))) + (this.mOverExpansion / this.mPanelFlingOvershootAmount) : 0.0f;
+        ValueAnimator createHeightAnimator = createHeightAnimator(f5, lerp);
+        if (this.mEx.shouldIgnoreStartFlingAnimavor(createHeightAnimator, this.mHeightAnimator, f4, z3)) {
+            this.mIsFlinging = z4;
+            NTLogUtil.m1680d(TAG, "skip flingToHeight because exist a similar animator vel = " + f4 + ", expand = " + z3);
+            return;
+        }
+        if (z3) {
+            if (z2 && f4 < 0.0f) {
+                f4 = 0.0f;
+            }
+            this.mFlingAnimationUtils.apply((Animator) createHeightAnimator, this.mExpandedHeight, f5 + (lerp * this.mPanelFlingOvershootAmount), f4, (float) this.mView.getHeight());
             if (f4 == 0.0f) {
-                createHeightAnimator.setDuration(350L);
+                createHeightAnimator.setDuration(350);
             }
             i = -1;
+            str = ", expand = ";
+            valueAnimator = createHeightAnimator;
         } else {
             if (!shouldUseDismissingAnimation()) {
                 i = -1;
-                this.mFlingAnimationUtilsClosing.apply(createHeightAnimator, this.mExpandedHeight, f2, f, this.mView.getHeight());
-            } else if (f == 0.0f) {
+                str = ", expand = ";
+                valueAnimator = createHeightAnimator;
+                this.mFlingAnimationUtilsClosing.apply((Animator) valueAnimator, this.mExpandedHeight, f2, f, (float) this.mView.getHeight());
+            } else if (f4 == 0.0f) {
                 createHeightAnimator.setInterpolator(Interpolators.PANEL_CLOSE_ACCELERATED);
-                createHeightAnimator.setDuration(((this.mExpandedHeight / this.mView.getHeight()) * 100.0f) + 200.0f);
+                createHeightAnimator.setDuration((long) (((this.mExpandedHeight / ((float) this.mView.getHeight())) * 100.0f) + 200.0f));
                 i = -1;
+                str = ", expand = ";
+                valueAnimator = createHeightAnimator;
             } else {
                 i = -1;
-                this.mFlingAnimationUtilsDismissing.apply(createHeightAnimator, this.mExpandedHeight, f2, f, this.mView.getHeight());
+                str = ", expand = ";
+                valueAnimator = createHeightAnimator;
+                this.mFlingAnimationUtilsDismissing.apply((Animator) createHeightAnimator, this.mExpandedHeight, f2, f, (float) this.mView.getHeight());
             }
-            if (f == 0.0f) {
-                createHeightAnimator.setDuration(((float) createHeightAnimator.getDuration()) / f3);
+            if (f4 == 0.0f) {
+                valueAnimator.setDuration((long) (((float) valueAnimator.getDuration()) / f3));
             }
             int i2 = this.mFixedDuration;
             if (i2 != i) {
-                createHeightAnimator.setDuration(i2);
+                valueAnimator.setDuration((long) i2);
             }
         }
         if (this.mPerf != null) {
             this.mPerf.perfHint(4224, this.mView.getContext().getPackageName(), i, 3);
         }
-        createHeightAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.PanelViewController.2
+        valueAnimator.addListener(new AnimatorListenerAdapter() {
             private boolean mCancelled;
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationStart(Animator animator) {
-                PanelViewController.this.beginJankMonitoring(0);
+                if (!PanelViewController.this.mStatusBarStateController.isDozing()) {
+                    PanelViewController.this.beginJankMonitoring(0);
+                }
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationCancel(Animator animator) {
                 if (PanelViewController.this.mPerf != null) {
                     PanelViewController.this.mPerf.perfLockRelease();
@@ -514,23 +633,23 @@ public abstract class PanelViewController {
                 this.mCancelled = true;
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
                 if (PanelViewController.this.mPerf != null) {
                     PanelViewController.this.mPerf.perfLockRelease();
                 }
-                if (!z4 || this.mCancelled) {
+                if (!z6 || this.mCancelled) {
                     PanelViewController.this.onFlingEnd(this.mCancelled);
                 } else {
                     PanelViewController.this.springBack();
                 }
             }
         });
-        setAnimator(createHeightAnimator);
-        createHeightAnimator.start();
+        NTLogUtil.m1680d(TAG, "PanelViewController start fling animator vel = " + f4 + str + z3);
+        setAnimator(valueAnimator);
+        valueAnimator.start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void springBack() {
         float f = this.mOverExpansion;
         if (f == 0.0f) {
@@ -538,26 +657,19 @@ public abstract class PanelViewController {
             return;
         }
         this.mIsSpringBackAnimation = true;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(f, 0.0f);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.phone.PanelViewController$$ExternalSyntheticLambda0
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                PanelViewController.this.lambda$springBack$0(valueAnimator);
-            }
-        });
-        ofFloat.setDuration(400L);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, 0.0f});
+        ofFloat.addUpdateListener(new PanelViewController$$ExternalSyntheticLambda0(this));
+        ofFloat.setDuration(SHADE_OPEN_SPRING_BACK_DURATION);
         ofFloat.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-        ofFloat.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.PanelViewController.3
+        ofFloat.addListener(new AnimatorListenerAdapter() {
             private boolean mCancelled;
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationCancel(Animator animator) {
                 this.mCancelled = true;
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
-                PanelViewController.this.mIsSpringBackAnimation = false;
+                boolean unused = PanelViewController.this.mIsSpringBackAnimation = false;
                 PanelViewController.this.onFlingEnd(this.mCancelled);
             }
         });
@@ -565,17 +677,17 @@ public abstract class PanelViewController {
         ofFloat.start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$springBack$0(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$springBack$0$com-android-systemui-statusbar-phone-PanelViewController */
+    public /* synthetic */ void mo44932x8909a8e1(ValueAnimator valueAnimator) {
         setOverExpansionInternal(((Float) valueAnimator.getAnimatedValue()).floatValue(), false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: package-private */
     public void onFlingEnd(boolean z) {
         this.mIsFlinging = false;
-        this.mIsExpandFling = false;
         setOverExpansionInternal(0.0f, false);
-        setAnimator(null);
+        setAnimator((ValueAnimator) null);
         this.mKeyguardStateController.notifyPanelFlingEnd();
         if (!z) {
             endJankMonitoring(0);
@@ -583,7 +695,7 @@ public abstract class PanelViewController {
         } else {
             cancelJankMonitoring(0);
         }
-        notifyBarPanelExpansionChanged();
+        updatePanelExpansionAndVisibility();
     }
 
     public String getName() {
@@ -594,38 +706,44 @@ public abstract class PanelViewController {
         setExpandedHeightInternal(f);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void requestPanelHeightUpdate() {
-        float maxPanelHeight = getMaxPanelHeight();
-        if (!isFullyCollapsed() && maxPanelHeight != this.mExpandedHeight) {
-            if (this.mTracking && !isTrackingBlocked()) {
-                return;
-            }
-            if (this.mHeightAnimator != null && !this.mIsSpringBackAnimation) {
-                this.mPanelUpdateWhenAnimatorEnds = true;
-            } else {
-                setExpandedHeight(maxPanelHeight);
-            }
+        float maxPanelHeight = (float) getMaxPanelHeight();
+        if (isFullyCollapsed() || maxPanelHeight == this.mExpandedHeight) {
+            return;
         }
+        if (this.mTracking && !isTrackingBlocked()) {
+            return;
+        }
+        if (this.mHeightAnimator == null || this.mIsSpringBackAnimation) {
+            setExpandedHeight(maxPanelHeight);
+        } else {
+            this.mPanelUpdateWhenAnimatorEnds = true;
+        }
+    }
+
+    private float getStackHeightFraction(float f) {
+        return Interpolators.ACCELERATE_DECELERATE.getInterpolation(f / ((float) getMaxPanelHeight()));
     }
 
     public void setExpandedHeightInternal(float f) {
         if (Float.isNaN(f)) {
             Log.wtf(TAG, "ExpandedHeight set to NaN");
         }
+        this.mNotificationShadeWindowController.batchApplyWindowLayoutParams(new PanelViewController$$ExternalSyntheticLambda1(this, f));
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setExpandedHeightInternal$2$com-android-systemui-statusbar-phone-PanelViewController */
+    public /* synthetic */ void mo44931x7186338e(float f) {
         float f2 = 0.0f;
         if (this.mExpandLatencyTracking && f != 0.0f) {
-            DejankUtils.postAfterTraversal(new Runnable() { // from class: com.android.systemui.statusbar.phone.PanelViewController$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    PanelViewController.this.lambda$setExpandedHeightInternal$1();
-                }
-            });
+            DejankUtils.postAfterTraversal(new PanelViewController$$ExternalSyntheticLambda5(this));
             this.mExpandLatencyTracking = false;
         }
-        float maxPanelHeight = getMaxPanelHeight();
+        float maxPanelHeight = (float) getMaxPanelHeight();
         if (this.mHeightAnimator == null) {
-            if (this.mTracking) {
+            if (this.mTracking && !this.mInSplitShade) {
                 setOverExpansionInternal(Math.max(0.0f, f - maxPanelHeight), true);
             }
             this.mExpandedHeight = Math.min(f, maxPanelHeight);
@@ -640,20 +758,22 @@ public abstract class PanelViewController {
                 valueAnimator.end();
             }
         }
+        this.mExpansionDragDownAmountPx = f;
         if (maxPanelHeight != 0.0f) {
             f2 = this.mExpandedHeight / maxPanelHeight;
         }
         this.mExpandedFraction = Math.min(1.0f, f2);
         onHeightUpdated(this.mExpandedHeight);
-        notifyBarPanelExpansionChanged();
+        updatePanelExpansionAndVisibility();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setExpandedHeightInternal$1() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setExpandedHeightInternal$1$com-android-systemui-statusbar-phone-PanelViewController */
+    public /* synthetic */ void mo44930xe4991c6f() {
         this.mLatencyTracker.onActionEnd(0);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void setOverExpansion(float f) {
         this.mOverExpansion = f;
     }
@@ -662,15 +782,14 @@ public abstract class PanelViewController {
         if (!z) {
             this.mLastGesturedOverExpansion = -1.0f;
             setOverExpansion(f);
-        } else if (this.mLastGesturedOverExpansion == f) {
-        } else {
+        } else if (this.mLastGesturedOverExpansion != f) {
             this.mLastGesturedOverExpansion = f;
-            setOverExpansion(Interpolators.getOvershootInterpolation(MathUtils.saturate(f / (this.mView.getHeight() / 3.0f))) * this.mPanelFlingOvershootAmount * 2.0f);
+            setOverExpansion(Interpolators.getOvershootInterpolation(MathUtils.saturate(f / (((float) this.mView.getHeight()) / 3.0f))) * this.mPanelFlingOvershootAmount * 2.0f);
         }
     }
 
     public void setExpandedFraction(float f) {
-        setExpandedHeight(getMaxPanelHeight() * f);
+        setExpandedHeight(((float) getMaxPanelHeight()) * f);
     }
 
     public float getExpandedHeight() {
@@ -693,22 +812,22 @@ public abstract class PanelViewController {
         return this.mClosing || this.mIsLaunchAnimationRunning;
     }
 
-    public boolean isTracking() {
-        return this.mTracking;
+    public boolean isFlinging() {
+        return this.mIsFlinging;
     }
 
-    public void setBar(PanelBar panelBar) {
-        this.mBar = panelBar;
+    public boolean isTracking() {
+        return this.mTracking;
     }
 
     public void collapse(boolean z, float f) {
         if (canPanelBeCollapsed()) {
             cancelHeightAnimator();
             notifyExpandingStarted();
-            this.mClosing = true;
+            setIsClosing(true);
             if (z) {
                 this.mNextCollapseSpeedUpFactor = f;
-                this.mView.postDelayed(this.mFlingCollapseRunnable, 120L);
+                this.mView.postDelayed(this.mFlingCollapseRunnable, 120);
                 return;
             }
             fling(0.0f, false, f, false);
@@ -731,14 +850,12 @@ public abstract class PanelViewController {
             if (this.mExpanding) {
                 notifyExpandingFinished();
             }
-            notifyBarPanelExpansionChanged();
-            this.mView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() { // from class: com.android.systemui.statusbar.phone.PanelViewController.5
-                @Override // android.view.ViewTreeObserver.OnGlobalLayoutListener
+            updatePanelExpansionAndVisibility();
+            this.mView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 public void onGlobalLayout() {
                     if (!PanelViewController.this.mInstantExpanding) {
                         PanelViewController.this.mView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    } else if (!PanelViewController.this.mStatusBar.getNotificationShadeWindowView().isVisibleToUser()) {
-                    } else {
+                    } else if (PanelViewController.this.mCentralSurfaces.getNotificationShadeWindowView().isVisibleToUser()) {
                         PanelViewController.this.mView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                         if (PanelViewController.this.mAnimateAfterExpanding) {
                             PanelViewController.this.notifyExpandingStarted();
@@ -747,7 +864,7 @@ public abstract class PanelViewController {
                         } else {
                             PanelViewController.this.setExpandedFraction(1.0f);
                         }
-                        PanelViewController.this.mInstantExpanding = false;
+                        boolean unused = PanelViewController.this.mInstantExpanding = false;
                     }
                 }
             });
@@ -763,53 +880,42 @@ public abstract class PanelViewController {
         }
         if (this.mInstantExpanding) {
             this.mInstantExpanding = false;
-            notifyBarPanelExpansionChanged();
+            updatePanelExpansionAndVisibility();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void abortAnimations() {
         cancelHeightAnimator();
-        this.mView.removeCallbacks(this.mPostCollapseRunnable);
         this.mView.removeCallbacks(this.mFlingCollapseRunnable);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public void onClosingFinished() {
-        this.mBar.onClosingFinished();
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void startUnlockHintAnimation() {
-        if (this.mHeightAnimator != null || this.mTracking) {
-            return;
+        if (this.mHeightAnimator == null && !this.mTracking) {
+            notifyExpandingStarted();
+            startUnlockHintAnimationPhase1(new PanelViewController$$ExternalSyntheticLambda4(this));
+            onUnlockHintStarted();
+            this.mHintAnimationRunning = true;
         }
-        notifyExpandingStarted();
-        startUnlockHintAnimationPhase1(new Runnable() { // from class: com.android.systemui.statusbar.phone.PanelViewController$$ExternalSyntheticLambda3
-            @Override // java.lang.Runnable
-            public final void run() {
-                PanelViewController.this.lambda$startUnlockHintAnimation$2();
-            }
-        });
-        onUnlockHintStarted();
-        this.mHintAnimationRunning = true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$startUnlockHintAnimation$2() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$startUnlockHintAnimation$3$com-android-systemui-statusbar-phone-PanelViewController */
+    public /* synthetic */ void mo44933x15a26b9b() {
         notifyExpandingFinished();
         onUnlockHintFinished();
         this.mHintAnimationRunning = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onUnlockHintFinished() {
-        this.mStatusBar.onHintFinished();
+        this.mCentralSurfaces.onHintFinished();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onUnlockHintStarted() {
-        this.mStatusBar.onUnlockHintStarted();
+        this.mCentralSurfaces.onUnlockHintStarted();
     }
 
     public boolean isUnlockHintRunning() {
@@ -817,21 +923,19 @@ public abstract class PanelViewController {
     }
 
     private void startUnlockHintAnimationPhase1(final Runnable runnable) {
-        ValueAnimator createHeightAnimator = createHeightAnimator(Math.max(0.0f, getMaxPanelHeight() - this.mHintDistance));
-        createHeightAnimator.setDuration(250L);
+        ValueAnimator createHeightAnimator = createHeightAnimator(Math.max(0.0f, ((float) getMaxPanelHeight()) - this.mHintDistance));
+        createHeightAnimator.setDuration(250);
         createHeightAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-        createHeightAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.PanelViewController.6
+        createHeightAnimator.addListener(new AnimatorListenerAdapter() {
             private boolean mCancelled;
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationCancel(Animator animator) {
                 this.mCancelled = true;
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
                 if (this.mCancelled) {
-                    PanelViewController.this.setAnimator(null);
+                    PanelViewController.this.setAnimator((ValueAnimator) null);
                     runnable.run();
                     return;
                 }
@@ -840,46 +944,40 @@ public abstract class PanelViewController {
         });
         createHeightAnimator.start();
         setAnimator(createHeightAnimator);
-        View[] viewArr = {this.mKeyguardBottomArea.getIndicationArea(), this.mStatusBar.getAmbientIndicationContainer()};
+        View[] viewArr = {this.mKeyguardBottomArea.getIndicationArea(), this.mCentralSurfaces.getAmbientIndicationContainer()};
         for (int i = 0; i < 2; i++) {
-            final View view = viewArr[i];
+            View view = viewArr[i];
             if (view != null) {
-                view.animate().translationY(-this.mHintDistance).setDuration(250L).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).withEndAction(new Runnable() { // from class: com.android.systemui.statusbar.phone.PanelViewController$$ExternalSyntheticLambda4
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        PanelViewController.this.lambda$startUnlockHintAnimationPhase1$3(view);
-                    }
-                }).start();
+                view.animate().translationY(-this.mHintDistance).setDuration(250).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).withEndAction(new PanelViewController$$ExternalSyntheticLambda2(this, view)).start();
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$startUnlockHintAnimationPhase1$3(View view) {
-        view.animate().translationY(0.0f).setDuration(450L).setInterpolator(this.mBounceInterpolator).start();
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$startUnlockHintAnimationPhase1$4$com-android-systemui-statusbar-phone-PanelViewController */
+    public /* synthetic */ void mo44934xb73085c4(View view) {
+        view.animate().translationY(0.0f).setDuration(450).setInterpolator(this.mBounceInterpolator).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setAnimator(ValueAnimator valueAnimator) {
         this.mHeightAnimator = valueAnimator;
-        if (valueAnimator != null || !this.mPanelUpdateWhenAnimatorEnds) {
-            return;
+        if (valueAnimator == null && this.mPanelUpdateWhenAnimatorEnds) {
+            this.mPanelUpdateWhenAnimatorEnds = false;
+            requestPanelHeightUpdate();
         }
-        this.mPanelUpdateWhenAnimatorEnds = false;
-        requestPanelHeightUpdate();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void startUnlockHintAnimationPhase2(final Runnable runnable) {
-        ValueAnimator createHeightAnimator = createHeightAnimator(getMaxPanelHeight());
-        createHeightAnimator.setDuration(450L);
+        ValueAnimator createHeightAnimator = createHeightAnimator((float) getMaxPanelHeight());
+        createHeightAnimator.setDuration(450);
         createHeightAnimator.setInterpolator(this.mBounceInterpolator);
-        createHeightAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.PanelViewController.7
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+        createHeightAnimator.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
-                PanelViewController.this.setAnimator(null);
+                PanelViewController.this.setAnimator((ValueAnimator) null);
                 runnable.run();
-                PanelViewController.this.notifyBarPanelExpansionChanged();
+                PanelViewController.this.updatePanelExpansionAndVisibility();
             }
         });
         createHeightAnimator.start();
@@ -890,43 +988,36 @@ public abstract class PanelViewController {
         return createHeightAnimator(f, 0.0f);
     }
 
-    private ValueAnimator createHeightAnimator(final float f, final float f2) {
-        final float f3 = this.mOverExpansion;
-        final ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mExpandedHeight, f);
-        ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.phone.PanelViewController$$ExternalSyntheticLambda1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                PanelViewController.this.lambda$createHeightAnimator$4(f2, f, f3, ofFloat, valueAnimator);
-            }
-        });
+    private ValueAnimator createHeightAnimator(float f, float f2) {
+        float f3 = this.mOverExpansion;
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mExpandedHeight, f});
+        ofFloat.addUpdateListener(new PanelViewController$$ExternalSyntheticLambda3(this, f2, f, f3, ofFloat));
         return ofFloat;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$createHeightAnimator$4(float f, float f2, float f3, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$createHeightAnimator$5$com-android-systemui-statusbar-phone-PanelViewController */
+    public /* synthetic */ void mo44929x3aa4d246(float f, float f2, float f3, ValueAnimator valueAnimator, ValueAnimator valueAnimator2) {
         if (f > 0.0f || (f2 == 0.0f && f3 != 0.0f)) {
             setOverExpansionInternal(MathUtils.lerp(f3, this.mPanelFlingOvershootAmount * f, Interpolators.FAST_OUT_SLOW_IN.getInterpolation(valueAnimator.getAnimatedFraction())), false);
         }
         setExpandedHeightInternal(((Float) valueAnimator2.getAnimatedValue()).floatValue());
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public void notifyBarPanelExpansionChanged() {
-        PanelBar panelBar = this.mBar;
-        if (panelBar != null) {
-            float f = this.mExpandedFraction;
-            panelBar.panelExpansionChanged(f, f > 0.0f || this.mInstantExpanding || isPanelVisibleBecauseOfHeadsUp() || this.mTracking || (this.mHeightAnimator != null && !this.mIsSpringBackAnimation));
-        }
-        for (int i = 0; i < this.mExpansionListeners.size(); i++) {
-            this.mExpansionListeners.get(i).onPanelExpansionChanged(this.mExpandedFraction, this.mTracking);
-        }
+    public void updateVisibility() {
+        this.mView.setVisibility(shouldPanelBeVisible() ? 0 : 4);
     }
 
-    public void addExpansionListener(PanelExpansionListener panelExpansionListener) {
-        this.mExpansionListeners.add(panelExpansionListener);
+    public void updatePanelExpansionAndVisibility() {
+        this.mPanelExpansionStateManager.onPanelExpansionChanged(this.mExpandedFraction, isExpanded(), this.mTracking, this.mExpansionDragDownAmountPx);
+        updateVisibility();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    public boolean isExpanded() {
+        return this.mExpandedFraction > 0.0f || this.mInstantExpanding || isPanelVisibleBecauseOfHeadsUp() || this.mTracking || (this.mHeightAnimator != null && !this.mIsSpringBackAnimation);
+    }
+
+    /* access modifiers changed from: protected */
     public boolean onEmptySpaceClick(float f) {
         if (this.mHintAnimationRunning) {
             return true;
@@ -934,13 +1025,14 @@ public abstract class PanelViewController {
         return onMiddleClicked();
     }
 
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         Object[] objArr = new Object[8];
         objArr[0] = getClass().getSimpleName();
         objArr[1] = Float.valueOf(getExpandedHeight());
         objArr[2] = Integer.valueOf(getMaxPanelHeight());
-        String str = "T";
-        objArr[3] = this.mClosing ? str : "f";
+        boolean z = this.mClosing;
+        String str = ExifInterface.GPS_DIRECTION_TRUE;
+        objArr[3] = z ? str : "f";
         objArr[4] = this.mTracking ? str : "f";
         ValueAnimator valueAnimator = this.mHeightAnimator;
         objArr[5] = valueAnimator;
@@ -960,6 +1052,16 @@ public abstract class PanelViewController {
         this.mIsLaunchAnimationRunning = z;
     }
 
+    /* access modifiers changed from: protected */
+    public void setIsClosing(boolean z) {
+        this.mClosing = z;
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean isClosing() {
+        return this.mClosing;
+    }
+
     public void collapseWithDuration(int i) {
         this.mFixedDuration = i;
         collapse(false, 1.0f);
@@ -970,277 +1072,279 @@ public abstract class PanelViewController {
         return this.mView;
     }
 
-    public boolean isEnabled() {
-        return this.mView.isEnabled();
+    public OnLayoutChangeListener createLayoutChangeListener() {
+        return new OnLayoutChangeListener();
     }
 
-    /* loaded from: classes.dex */
+    /* access modifiers changed from: protected */
+    public OnConfigurationChangedListener createOnConfigurationChangedListener() {
+        return new OnConfigurationChangedListener();
+    }
+
     public class TouchHandler implements View.OnTouchListener {
         public TouchHandler() {
         }
 
         public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-            PanelViewController panelViewController;
             int pointerId;
-            if (PanelViewController.this.mInstantExpanding || !PanelViewController.this.mNotificationsDragEnabled || PanelViewController.this.mTouchDisabled) {
+            if (!PanelViewController.this.mInstantExpanding && PanelViewController.this.mNotificationsDragEnabled && !PanelViewController.this.mTouchDisabled && (!PanelViewController.this.mMotionAborted || motionEvent.getActionMasked() == 0)) {
+                int findPointerIndex = motionEvent.findPointerIndex(PanelViewController.this.mTrackingPointer);
+                if (findPointerIndex < 0) {
+                    int unused = PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(0);
+                    findPointerIndex = 0;
+                }
+                float x = motionEvent.getX(findPointerIndex);
+                float y = motionEvent.getY(findPointerIndex);
+                boolean canCollapsePanelOnTouch = PanelViewController.this.canCollapsePanelOnTouch();
+                int actionMasked = motionEvent.getActionMasked();
+                int i = 1;
+                if (actionMasked != 0) {
+                    if (actionMasked != 1) {
+                        if (actionMasked == 2) {
+                            float access$2000 = y - PanelViewController.this.mInitialTouchY;
+                            PanelViewController.this.addMovement(motionEvent);
+                            boolean z = PanelViewController.this.mPanelClosedOnDown && !PanelViewController.this.mCollapsedAndHeadsUpOnDown;
+                            if (canCollapsePanelOnTouch || PanelViewController.this.mTouchStartedInEmptyArea || PanelViewController.this.mAnimatingOnDown || z) {
+                                float abs = Math.abs(access$2000);
+                                float touchSlop = PanelViewController.this.getTouchSlop(motionEvent);
+                                if ((access$2000 < (-touchSlop) || ((z || PanelViewController.this.mAnimatingOnDown) && abs > touchSlop)) && abs > Math.abs(x - PanelViewController.this.mInitialTouchX)) {
+                                    PanelViewController.this.cancelHeightAnimator();
+                                    PanelViewController panelViewController = PanelViewController.this;
+                                    panelViewController.startExpandMotion(x, y, true, panelViewController.mExpandedHeight);
+                                    return true;
+                                }
+                            }
+                        } else if (actionMasked != 3) {
+                            if (actionMasked != 5) {
+                                if (actionMasked == 6 && PanelViewController.this.mTrackingPointer == (pointerId = motionEvent.getPointerId(motionEvent.getActionIndex()))) {
+                                    if (motionEvent.getPointerId(0) != pointerId) {
+                                        i = 0;
+                                    }
+                                    int unused2 = PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(i);
+                                    float unused3 = PanelViewController.this.mInitialTouchX = motionEvent.getX(i);
+                                    float unused4 = PanelViewController.this.mInitialTouchY = motionEvent.getY(i);
+                                }
+                            } else if (PanelViewController.this.mStatusBarStateController.getState() == 1) {
+                                boolean unused5 = PanelViewController.this.mMotionAborted = true;
+                                PanelViewController.this.mVelocityTracker.clear();
+                            }
+                        }
+                    }
+                    PanelViewController.this.mVelocityTracker.clear();
+                } else {
+                    PanelViewController.this.mCentralSurfaces.userActivity();
+                    PanelViewController panelViewController2 = PanelViewController.this;
+                    boolean unused6 = panelViewController2.mAnimatingOnDown = panelViewController2.mHeightAnimator != null && !PanelViewController.this.mIsSpringBackAnimation;
+                    float unused7 = PanelViewController.this.mMinExpandHeight = 0.0f;
+                    PanelViewController panelViewController3 = PanelViewController.this;
+                    panelViewController3.mDownTime = panelViewController3.mSystemClock.uptimeMillis();
+                    if (!PanelViewController.this.mAnimatingOnDown || !PanelViewController.this.mClosing || PanelViewController.this.mHintAnimationRunning) {
+                        float unused8 = PanelViewController.this.mInitialTouchY = y;
+                        float unused9 = PanelViewController.this.mInitialTouchX = x;
+                        PanelViewController panelViewController4 = PanelViewController.this;
+                        boolean unused10 = panelViewController4.mTouchStartedInEmptyArea = !panelViewController4.isInContentBounds(x, y);
+                        PanelViewController panelViewController5 = PanelViewController.this;
+                        boolean unused11 = panelViewController5.mTouchSlopExceeded = panelViewController5.mTouchSlopExceededBeforeDown;
+                        boolean unused12 = PanelViewController.this.mMotionAborted = false;
+                        PanelViewController panelViewController6 = PanelViewController.this;
+                        boolean unused13 = panelViewController6.mPanelClosedOnDown = panelViewController6.isFullyCollapsed();
+                        boolean unused14 = PanelViewController.this.mCollapsedAndHeadsUpOnDown = false;
+                        boolean unused15 = PanelViewController.this.mHasLayoutedSinceDown = false;
+                        boolean unused16 = PanelViewController.this.mUpdateFlingOnLayout = false;
+                        boolean unused17 = PanelViewController.this.mTouchAboveFalsingThreshold = false;
+                        PanelViewController.this.addMovement(motionEvent);
+                    } else {
+                        PanelViewController.this.cancelHeightAnimator();
+                        boolean unused18 = PanelViewController.this.mTouchSlopExceeded = true;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            int pointerId;
+            if (PanelViewController.this.mInstantExpanding) {
+                return false;
+            }
+            if (PanelViewController.this.mTouchDisabled && motionEvent.getActionMasked() != 3) {
                 return false;
             }
             if (PanelViewController.this.mMotionAborted && motionEvent.getActionMasked() != 0) {
                 return false;
             }
-            int findPointerIndex = motionEvent.findPointerIndex(PanelViewController.this.mTrackingPointer);
-            if (findPointerIndex < 0) {
-                PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(0);
-                findPointerIndex = 0;
-            }
-            float x = motionEvent.getX(findPointerIndex);
-            float y = motionEvent.getY(findPointerIndex);
-            boolean canCollapsePanelOnTouch = PanelViewController.this.canCollapsePanelOnTouch();
-            int actionMasked = motionEvent.getActionMasked();
-            if (actionMasked != 0) {
-                if (actionMasked != 1) {
-                    if (actionMasked == 2) {
-                        float f = y - PanelViewController.this.mInitialTouchY;
-                        PanelViewController.this.addMovement(motionEvent);
-                        boolean z = PanelViewController.this.mPanelClosedOnDown && !PanelViewController.this.mCollapsedAndHeadsUpOnDown;
-                        if (canCollapsePanelOnTouch || PanelViewController.this.mTouchStartedInEmptyArea || PanelViewController.this.mAnimatingOnDown || z) {
-                            float abs = Math.abs(f);
-                            float touchSlop = PanelViewController.this.getTouchSlop(motionEvent);
-                            if ((f < (-touchSlop) || ((z || PanelViewController.this.mAnimatingOnDown) && abs > touchSlop)) && abs > Math.abs(x - PanelViewController.this.mInitialTouchX)) {
-                                PanelViewController.this.cancelHeightAnimator();
-                                PanelViewController panelViewController2 = PanelViewController.this;
-                                panelViewController2.startExpandMotion(x, y, true, panelViewController2.mExpandedHeight);
-                                return true;
-                            }
-                        }
-                    } else if (actionMasked != 3) {
-                        if (actionMasked != 5) {
-                            if (actionMasked == 6 && PanelViewController.this.mTrackingPointer == (pointerId = motionEvent.getPointerId(motionEvent.getActionIndex()))) {
-                                int i = motionEvent.getPointerId(0) != pointerId ? 0 : 1;
-                                PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(i);
-                                PanelViewController.this.mInitialTouchX = motionEvent.getX(i);
-                                PanelViewController.this.mInitialTouchY = motionEvent.getY(i);
-                            }
-                        } else if (PanelViewController.this.mStatusBarStateController.getState() == 1) {
-                            PanelViewController.this.mMotionAborted = true;
-                            PanelViewController.this.mVelocityTracker.clear();
-                        }
-                    }
+            if (!PanelViewController.this.mNotificationsDragEnabled) {
+                if (PanelViewController.this.mTracking) {
+                    PanelViewController.this.onTrackingStopped(true);
                 }
-                PanelViewController.this.mVelocityTracker.clear();
-            } else {
-                PanelViewController.this.mStatusBar.userActivity();
-                PanelViewController panelViewController3 = PanelViewController.this;
-                panelViewController3.mAnimatingOnDown = panelViewController3.mHeightAnimator != null && !PanelViewController.this.mIsSpringBackAnimation;
-                PanelViewController.this.mMinExpandHeight = 0.0f;
-                PanelViewController.this.mDownTime = SystemClock.uptimeMillis();
-                if (PanelViewController.this.mAnimatingOnDown && PanelViewController.this.mClosing) {
-                    PanelViewController panelViewController4 = PanelViewController.this;
-                    if (!panelViewController4.mHintAnimationRunning) {
-                        panelViewController4.cancelHeightAnimator();
-                        PanelViewController.this.mTouchSlopExceeded = true;
-                        return true;
-                    }
+                return false;
+            } else if (!PanelViewController.this.isFullyCollapsed() || !motionEvent.isFromSource(8194)) {
+                int findPointerIndex = motionEvent.findPointerIndex(PanelViewController.this.mTrackingPointer);
+                if (findPointerIndex < 0) {
+                    int unused = PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(0);
+                    findPointerIndex = 0;
                 }
-                PanelViewController.this.mInitialTouchY = y;
-                PanelViewController.this.mInitialTouchX = x;
-                PanelViewController.this.mTouchStartedInEmptyArea = !panelViewController.isInContentBounds(x, y);
-                PanelViewController panelViewController5 = PanelViewController.this;
-                panelViewController5.mTouchSlopExceeded = panelViewController5.mTouchSlopExceededBeforeDown;
-                PanelViewController.this.mMotionAborted = false;
-                PanelViewController panelViewController6 = PanelViewController.this;
-                panelViewController6.mPanelClosedOnDown = panelViewController6.isFullyCollapsed();
-                PanelViewController.this.mCollapsedAndHeadsUpOnDown = false;
-                PanelViewController.this.mHasLayoutedSinceDown = false;
-                PanelViewController.this.mUpdateFlingOnLayout = false;
-                PanelViewController.this.mTouchAboveFalsingThreshold = false;
-                PanelViewController.this.addMovement(motionEvent);
-            }
-            return SystemUIUtils.getInstance().shouldUseSplitNotificationShade() && PanelViewController.this.isFullyCollapsed() && !PanelViewController.this.mHeadsUpManager.hasPinnedHeadsUp();
-        }
-
-        @Override // android.view.View.OnTouchListener
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            boolean z;
-            int pointerId;
-            if (!PanelViewController.this.mInstantExpanding) {
-                if (PanelViewController.this.mTouchDisabled && motionEvent.getActionMasked() != 3) {
-                    return false;
-                }
-                if (PanelViewController.this.mMotionAborted && motionEvent.getActionMasked() != 0) {
-                    return false;
-                }
-                if (!PanelViewController.this.mNotificationsDragEnabled) {
+                float x = motionEvent.getX(findPointerIndex);
+                float y = motionEvent.getY(findPointerIndex);
+                if (motionEvent.getActionMasked() == 0) {
                     PanelViewController panelViewController = PanelViewController.this;
-                    if (panelViewController.mTracking) {
-                        panelViewController.onTrackingStopped(true);
-                    }
-                    return false;
-                } else if (!PanelViewController.this.isFullyCollapsed() || !motionEvent.isFromSource(8194)) {
-                    int findPointerIndex = motionEvent.findPointerIndex(PanelViewController.this.mTrackingPointer);
-                    if (findPointerIndex < 0) {
-                        PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(0);
-                        findPointerIndex = 0;
-                    }
-                    float x = motionEvent.getX(findPointerIndex);
-                    float y = motionEvent.getY(findPointerIndex);
-                    if (motionEvent.getActionMasked() == 0) {
-                        PanelViewController panelViewController2 = PanelViewController.this;
-                        panelViewController2.mGestureWaitForTouchSlop = panelViewController2.shouldGestureWaitForTouchSlop();
-                        PanelViewController panelViewController3 = PanelViewController.this;
-                        panelViewController3.mIgnoreXTouchSlop = panelViewController3.isFullyCollapsed() || PanelViewController.this.shouldGestureIgnoreXTouchSlop(x, y);
-                    }
-                    int actionMasked = motionEvent.getActionMasked();
-                    if (actionMasked != 0) {
-                        if (actionMasked != 1) {
-                            if (actionMasked == 2) {
-                                PanelViewController.this.addMovement(motionEvent);
-                                float f = y - PanelViewController.this.mInitialTouchY;
-                                if (Math.abs(f) > PanelViewController.this.getTouchSlop(motionEvent) && (Math.abs(f) > Math.abs(x - PanelViewController.this.mInitialTouchX) || PanelViewController.this.mIgnoreXTouchSlop)) {
-                                    PanelViewController.this.mTouchSlopExceeded = true;
-                                    if (PanelViewController.this.mGestureWaitForTouchSlop) {
-                                        PanelViewController panelViewController4 = PanelViewController.this;
-                                        if (!panelViewController4.mTracking && !panelViewController4.mCollapsedAndHeadsUpOnDown) {
-                                            if (PanelViewController.this.mInitialOffsetOnTouch != 0.0f) {
-                                                PanelViewController panelViewController5 = PanelViewController.this;
-                                                panelViewController5.startExpandMotion(x, y, false, panelViewController5.mExpandedHeight);
-                                                f = 0.0f;
-                                            }
-                                            PanelViewController.this.cancelHeightAnimator();
-                                            PanelViewController.this.onTrackingStarted();
-                                        }
-                                    }
-                                }
-                                float max = Math.max(Math.max(0.0f, PanelViewController.this.mInitialOffsetOnTouch + f), PanelViewController.this.mMinExpandHeight);
-                                if ((-f) >= PanelViewController.this.getFalsingThreshold()) {
-                                    PanelViewController.this.mTouchAboveFalsingThreshold = true;
-                                    PanelViewController panelViewController6 = PanelViewController.this;
-                                    panelViewController6.mUpwardsWhenThresholdReached = panelViewController6.isDirectionUpwards(x, y);
-                                }
-                                if ((!PanelViewController.this.mGestureWaitForTouchSlop || PanelViewController.this.mTracking) && !PanelViewController.this.isTrackingBlocked()) {
-                                    PanelViewController.this.setExpandedHeightInternal(max);
-                                }
-                            } else if (actionMasked != 3) {
-                                if (actionMasked != 5) {
-                                    if (actionMasked == 6 && PanelViewController.this.mTrackingPointer == (pointerId = motionEvent.getPointerId(motionEvent.getActionIndex()))) {
-                                        int i = motionEvent.getPointerId(0) != pointerId ? 0 : 1;
-                                        float y2 = motionEvent.getY(i);
-                                        float x2 = motionEvent.getX(i);
-                                        PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(i);
-                                        PanelViewController.this.mHandlingPointerUp = true;
-                                        PanelViewController panelViewController7 = PanelViewController.this;
-                                        panelViewController7.startExpandMotion(x2, y2, true, panelViewController7.mExpandedHeight);
-                                        PanelViewController.this.mHandlingPointerUp = false;
-                                    }
-                                } else if (PanelViewController.this.mStatusBarStateController.getState() == 1) {
-                                    PanelViewController.this.mMotionAborted = true;
-                                    PanelViewController.this.endMotionEvent(motionEvent, x, y, true);
-                                    return false;
-                                }
+                    boolean unused2 = panelViewController.mGestureWaitForTouchSlop = panelViewController.shouldGestureWaitForTouchSlop();
+                    PanelViewController panelViewController2 = PanelViewController.this;
+                    boolean unused3 = panelViewController2.mIgnoreXTouchSlop = panelViewController2.isFullyCollapsed() || PanelViewController.this.shouldGestureIgnoreXTouchSlop(x, y);
+                }
+                int actionMasked = motionEvent.getActionMasked();
+                if (actionMasked != 0) {
+                    if (actionMasked != 1) {
+                        if (actionMasked == 2) {
+                            PanelViewController.this.addMovement(motionEvent);
+                            float access$2000 = y - PanelViewController.this.mInitialTouchY;
+                            if (PanelViewController.this.mEx.shouldIgnorePanelViewTouch(access$2000)) {
+                                return false;
                             }
-                        }
-                        PanelViewController.this.addMovement(motionEvent);
-                        PanelViewController.this.endMotionEvent(motionEvent, x, y, false);
-                        if (PanelViewController.this.mHeightAnimator == null) {
-                            if (motionEvent.getActionMasked() == 1) {
-                                PanelViewController.this.endJankMonitoring(0);
-                            } else {
-                                PanelViewController.this.cancelJankMonitoring(0);
-                            }
-                        }
-                    } else {
-                        PanelViewController panelViewController8 = PanelViewController.this;
-                        panelViewController8.startExpandMotion(x, y, false, panelViewController8.mExpandedHeight);
-                        PanelViewController.this.mMinExpandHeight = 0.0f;
-                        PanelViewController panelViewController9 = PanelViewController.this;
-                        panelViewController9.mPanelClosedOnDown = panelViewController9.isFullyCollapsed();
-                        PanelViewController.this.mHasLayoutedSinceDown = false;
-                        PanelViewController.this.mUpdateFlingOnLayout = false;
-                        PanelViewController.this.mMotionAborted = false;
-                        PanelViewController.this.mDownTime = SystemClock.uptimeMillis();
-                        PanelViewController.this.mTouchAboveFalsingThreshold = false;
-                        PanelViewController panelViewController10 = PanelViewController.this;
-                        panelViewController10.mCollapsedAndHeadsUpOnDown = panelViewController10.isFullyCollapsed() && PanelViewController.this.mHeadsUpManager.hasPinnedHeadsUp();
-                        PanelViewController.this.addMovement(motionEvent);
-                        if (PanelViewController.this.mHeightAnimator != null) {
-                            PanelViewController panelViewController11 = PanelViewController.this;
-                            if (!panelViewController11.mHintAnimationRunning && !panelViewController11.mIsSpringBackAnimation) {
-                                z = true;
-                                if (PanelViewController.this.mGestureWaitForTouchSlop || z) {
-                                    PanelViewController panelViewController12 = PanelViewController.this;
-                                    panelViewController12.mTouchSlopExceeded = !z || panelViewController12.mTouchSlopExceededBeforeDown;
+                            if (Math.abs(access$2000) > PanelViewController.this.getTouchSlop(motionEvent) && (Math.abs(access$2000) > Math.abs(x - PanelViewController.this.mInitialTouchX) || PanelViewController.this.mIgnoreXTouchSlop)) {
+                                boolean unused4 = PanelViewController.this.mTouchSlopExceeded = true;
+                                if (PanelViewController.this.mGestureWaitForTouchSlop && !PanelViewController.this.mTracking && !PanelViewController.this.mCollapsedAndHeadsUpOnDown) {
+                                    if (PanelViewController.this.mInitialOffsetOnTouch != 0.0f) {
+                                        PanelViewController panelViewController3 = PanelViewController.this;
+                                        panelViewController3.startExpandMotion(x, y, false, panelViewController3.mExpandedHeight);
+                                        access$2000 = 0.0f;
+                                    }
                                     PanelViewController.this.cancelHeightAnimator();
                                     PanelViewController.this.onTrackingStarted();
                                 }
-                                if (PanelViewController.this.isFullyCollapsed() && !PanelViewController.this.mHeadsUpManager.hasPinnedHeadsUp() && !PanelViewController.this.mStatusBar.isBouncerShowing()) {
-                                    PanelViewController.this.startOpening(motionEvent);
+                            }
+                            float max = Math.max(Math.max(0.0f, PanelViewController.this.mInitialOffsetOnTouch + access$2000), PanelViewController.this.mMinExpandHeight);
+                            if ((-access$2000) >= ((float) PanelViewController.this.getFalsingThreshold())) {
+                                boolean unused5 = PanelViewController.this.mTouchAboveFalsingThreshold = true;
+                                PanelViewController panelViewController4 = PanelViewController.this;
+                                boolean unused6 = panelViewController4.mUpwardsWhenThresholdReached = panelViewController4.isDirectionUpwards(x, y);
+                            }
+                            if ((!PanelViewController.this.mGestureWaitForTouchSlop || PanelViewController.this.mTracking) && !PanelViewController.this.isTrackingBlocked()) {
+                                PanelViewController.this.mAmbientState.setSwipingUp(access$2000 <= 0.0f);
+                                PanelViewController.this.setExpandedHeightInternal(max);
+                            }
+                        } else if (actionMasked != 3) {
+                            if (actionMasked != 5) {
+                                if (actionMasked == 6 && PanelViewController.this.mTrackingPointer == (pointerId = motionEvent.getPointerId(motionEvent.getActionIndex()))) {
+                                    int i = motionEvent.getPointerId(0) != pointerId ? 0 : 1;
+                                    float y2 = motionEvent.getY(i);
+                                    float x2 = motionEvent.getX(i);
+                                    int unused7 = PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(i);
+                                    boolean unused8 = PanelViewController.this.mHandlingPointerUp = true;
+                                    PanelViewController panelViewController5 = PanelViewController.this;
+                                    panelViewController5.startExpandMotion(x2, y2, true, panelViewController5.mExpandedHeight);
+                                    boolean unused9 = PanelViewController.this.mHandlingPointerUp = false;
                                 }
+                            } else if (PanelViewController.this.mStatusBarStateController.getState() == 1) {
+                                boolean unused10 = PanelViewController.this.mMotionAborted = true;
+                                PanelViewController.this.endMotionEvent(motionEvent, x, y, true);
+                                return false;
                             }
                         }
-                        z = false;
-                        if (PanelViewController.this.mGestureWaitForTouchSlop) {
+                    }
+                    PanelViewController.this.addMovement(motionEvent);
+                    PanelViewController.this.endMotionEvent(motionEvent, x, y, false);
+                    if (PanelViewController.this.mHeightAnimator == null) {
+                        if (motionEvent.getActionMasked() == 1) {
+                            PanelViewController.this.endJankMonitoring(0);
+                        } else {
+                            PanelViewController.this.cancelJankMonitoring(0);
                         }
-                        PanelViewController panelViewController122 = PanelViewController.this;
-                        panelViewController122.mTouchSlopExceeded = !z || panelViewController122.mTouchSlopExceededBeforeDown;
+                    }
+                } else {
+                    PanelViewController panelViewController6 = PanelViewController.this;
+                    panelViewController6.startExpandMotion(x, y, false, panelViewController6.mExpandedHeight);
+                    float unused11 = PanelViewController.this.mMinExpandHeight = 0.0f;
+                    PanelViewController panelViewController7 = PanelViewController.this;
+                    boolean unused12 = panelViewController7.mPanelClosedOnDown = panelViewController7.isFullyCollapsed();
+                    boolean unused13 = PanelViewController.this.mHasLayoutedSinceDown = false;
+                    boolean unused14 = PanelViewController.this.mUpdateFlingOnLayout = false;
+                    boolean unused15 = PanelViewController.this.mMotionAborted = false;
+                    PanelViewController panelViewController8 = PanelViewController.this;
+                    panelViewController8.mDownTime = panelViewController8.mSystemClock.uptimeMillis();
+                    boolean unused16 = PanelViewController.this.mTouchAboveFalsingThreshold = false;
+                    PanelViewController panelViewController9 = PanelViewController.this;
+                    boolean unused17 = panelViewController9.mCollapsedAndHeadsUpOnDown = panelViewController9.isFullyCollapsed() && PanelViewController.this.mHeadsUpManager.hasPinnedHeadsUp();
+                    PanelViewController.this.addMovement(motionEvent);
+                    boolean z = PanelViewController.this.mHeightAnimator != null && !PanelViewController.this.mHintAnimationRunning && !PanelViewController.this.mIsSpringBackAnimation;
+                    if (!PanelViewController.this.mGestureWaitForTouchSlop || z) {
+                        PanelViewController panelViewController10 = PanelViewController.this;
+                        boolean unused18 = panelViewController10.mTouchSlopExceeded = z || panelViewController10.mTouchSlopExceededBeforeDown;
                         PanelViewController.this.cancelHeightAnimator();
                         PanelViewController.this.onTrackingStarted();
-                        if (PanelViewController.this.isFullyCollapsed()) {
-                            PanelViewController.this.startOpening(motionEvent);
-                        }
                     }
-                    return !PanelViewController.this.mGestureWaitForTouchSlop || PanelViewController.this.mTracking;
-                } else {
-                    if (motionEvent.getAction() == 1) {
-                        PanelViewController.this.expand(true);
+                    if (PanelViewController.this.isFullyCollapsed() && !PanelViewController.this.mHeadsUpManager.hasPinnedHeadsUp() && !PanelViewController.this.mCentralSurfaces.isBouncerShowing()) {
+                        PanelViewController.this.startOpening(motionEvent);
                     }
+                    PanelViewController.this.mEx.onPanelViewTouchTrackStarted();
+                }
+                if (!PanelViewController.this.mGestureWaitForTouchSlop || PanelViewController.this.mTracking) {
                     return true;
                 }
+                return false;
+            } else {
+                if (motionEvent.getAction() == 1) {
+                    PanelViewController.this.expand(true);
+                }
+                return true;
             }
-            return false;
         }
     }
 
-    /* loaded from: classes.dex */
     public class OnLayoutChangeListener implements View.OnLayoutChangeListener {
         public OnLayoutChangeListener() {
         }
 
-        @Override // android.view.View.OnLayoutChangeListener
         public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
             PanelViewController.this.requestPanelHeightUpdate();
-            PanelViewController.this.mHasLayoutedSinceDown = true;
+            boolean unused = PanelViewController.this.mHasLayoutedSinceDown = true;
             if (PanelViewController.this.mUpdateFlingOnLayout) {
                 PanelViewController.this.abortAnimations();
                 PanelViewController panelViewController = PanelViewController.this;
                 panelViewController.fling(panelViewController.mUpdateFlingVelocity, true);
-                PanelViewController.this.mUpdateFlingOnLayout = false;
+                boolean unused2 = PanelViewController.this.mUpdateFlingOnLayout = false;
             }
         }
     }
 
-    /* loaded from: classes.dex */
     public class OnConfigurationChangedListener implements PanelView.OnConfigurationChangedListener {
         public OnConfigurationChangedListener() {
         }
 
-        @Override // com.android.systemui.statusbar.phone.PanelView.OnConfigurationChangedListener
         public void onConfigurationChanged(Configuration configuration) {
             PanelViewController.this.loadDimens();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void beginJankMonitoring(int i) {
-        InteractionJankMonitor.getInstance().begin(new InteractionJankMonitor.Configuration.Builder(i).setView(this.mView).setTag(isFullyCollapsed() ? "Expand" : "Collapse"));
+        if (this.mInteractionJankMonitor != null) {
+            this.mInteractionJankMonitor.begin(InteractionJankMonitor.Configuration.Builder.withView(i, this.mView).setTag(isFullyCollapsed() ? "Expand" : "Collapse"));
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void endJankMonitoring(int i) {
-        InteractionJankMonitor.getInstance().end(i);
+        if (this.mInteractionJankMonitor != null) {
+            InteractionJankMonitor.getInstance().end(i);
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void cancelJankMonitoring(int i) {
-        InteractionJankMonitor.getInstance().cancel(i);
+        if (this.mInteractionJankMonitor != null) {
+            InteractionJankMonitor.getInstance().cancel(i);
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public float getExpansionFraction() {
+        return this.mExpandedFraction;
+    }
+
+    /* access modifiers changed from: protected */
+    public PanelExpansionStateManager getPanelExpansionStateManager() {
+        return this.mPanelExpansionStateManager;
     }
 }

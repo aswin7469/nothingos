@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.KeyguardManager;
@@ -25,11 +24,14 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RotateDrawable;
 import android.media.AudioSystem;
+import android.net.connectivity.com.android.net.module.util.NetworkStackConstants;
+import android.net.wifi.WifiEnterpriseConfig;
 import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
+import android.os.Trace;
 import android.os.VibrationEffect;
 import android.provider.Settings;
 import android.text.InputFilter;
@@ -49,7 +51,6 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -57,20 +58,14 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.slice.core.SliceHints;
 import com.android.internal.graphics.drawable.BackgroundBlurDrawable;
+import com.android.internal.jank.InteractionJankMonitor;
 import com.android.settingslib.Utils;
-import com.android.systemui.Dependency;
+import com.android.systemui.C1893R;
 import com.android.systemui.Prefs;
-import com.android.systemui.R$bool;
-import com.android.systemui.R$color;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$drawable;
-import com.android.systemui.R$id;
-import com.android.systemui.R$integer;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$string;
-import com.android.systemui.R$style;
 import com.android.systemui.animation.Interpolators;
+import com.android.systemui.charging.WirelessChargingAnimation;
 import com.android.systemui.media.dialog.MediaOutputDialogFactory;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.VolumeDialog;
@@ -80,32 +75,141 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import com.android.systemui.util.AlphaTintDrawableWrapper;
 import com.android.systemui.util.RoundedCornerProgressDrawable;
-import com.android.systemui.volume.CaptionsToggleImageButton;
-import com.android.systemui.volume.VolumeDialogImpl;
+import com.android.systemui.volume.SystemUIInterpolators;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.util.NTLogUtil;
+import com.nothing.systemui.volume.VolumeDialogImplEx;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
-/* loaded from: classes2.dex */
+
 public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.ConfigurationListener, ViewTreeObserver.OnComputeInternalInsetsListener {
-    private static final String TAG = Util.logTag(VolumeDialogImpl.class);
+    static final int DIALOG_HOVERING_TIMEOUT_MILLIS = 16000;
+    static final int DIALOG_ODI_CAPTIONS_TOOLTIP_TIMEOUT_MILLIS = 5000;
+    static final int DIALOG_SAFETYWARNING_TIMEOUT_MILLIS = 5000;
+    static final int DIALOG_TIMEOUT_MILLIS = 3000;
+    private static final int DRAWER_ANIMATION_DURATION = 250;
+    private static final int DRAWER_ANIMATION_DURATION_SHORT = 175;
+    /* access modifiers changed from: private */
+    public static final String TAG = Util.logTag(VolumeDialogImpl.class);
+    private static final String TYPE_DISMISS = "dismiss";
+    private static final String TYPE_SHOW = "show";
+    private static final String TYPE_UPDATE = "update";
+    private static final int UPDATE_ANIMATION_DURATION = 80;
+    private static final long USER_ATTEMPT_GRACE_PERIOD = 1000;
+    private final Accessibility mAccessibility = new Accessibility();
+    private final AccessibilityManagerWrapper mAccessibilityMgr;
     private int mActiveStream;
-    private final ActivityManager mActivityManager;
+    /* access modifiers changed from: private */
+    public final ActivityManager mActivityManager;
+    private final ActivityStarter mActivityStarter;
+    private final ValueAnimator mAnimateUpBackgroundToMatchDrawer = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+    private boolean mAutomute = true;
+    private View mBackgroundContainer;
+    private final boolean mChangeVolumeRowTintWhenInactive;
+    /* access modifiers changed from: private */
+    public boolean mConfigChanged = false;
     private ConfigurableTexts mConfigurableTexts;
-    private final Context mContext;
-    private Consumer<Boolean> mCrossWindowBlurEnabledListener;
-    private CustomDialog mDialog;
-    private int mDialogCornerRadius;
+    private final ConfigurationController mConfigurationController;
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    /* access modifiers changed from: private */
+    public final VolumeDialogController mController;
+    private final VolumeDialogController.Callbacks mControllerCallbackH = new VolumeDialogController.Callbacks() {
+        public void onShowRequested(int i, boolean z, int i2) {
+            VolumeDialogImpl.this.showH(i, z, i2);
+        }
+
+        public void onDismissRequested(int i) {
+            VolumeDialogImpl.this.dismissH(i);
+        }
+
+        public void onScreenOff() {
+            VolumeDialogImpl.this.dismissH(4);
+        }
+
+        public void onStateChanged(VolumeDialogController.State state) {
+            VolumeDialogImpl.this.onStateChangedH(state);
+        }
+
+        public void onLayoutDirectionChanged(int i) {
+            VolumeDialogImpl.this.mDialogView.setLayoutDirection(i);
+        }
+
+        public void onConfigurationChanged() {
+            VolumeDialogImpl.this.mDialog.dismiss();
+            boolean unused = VolumeDialogImpl.this.mConfigChanged = true;
+            VolumeDialogImpl.this.hideRingerDrawer();
+        }
+
+        public void onShowVibrateHint() {
+            if (VolumeDialogImpl.this.mSilentMode) {
+                VolumeDialogImpl.this.mController.setRingerMode(0, false);
+            }
+        }
+
+        public void onShowSilentHint() {
+            if (VolumeDialogImpl.this.mSilentMode) {
+                VolumeDialogImpl.this.mController.setRingerMode(2, false);
+            }
+        }
+
+        public void onShowSafetyWarning(int i) {
+            VolumeDialogImpl.this.showSafetyWarningH(i);
+        }
+
+        public void onAccessibilityModeChanged(Boolean bool) {
+            boolean unused = VolumeDialogImpl.this.mShowA11yStream = bool == null ? false : bool.booleanValue();
+            VolumeRow access$4900 = VolumeDialogImpl.this.getActiveRow();
+            if (VolumeDialogImpl.this.mShowA11yStream || 10 != access$4900.stream) {
+                VolumeDialogImpl.this.updateRowsH(access$4900);
+            } else {
+                VolumeDialogImpl.this.dismissH(7);
+            }
+        }
+
+        public void onCaptionComponentStateChanged(Boolean bool, Boolean bool2) {
+            VolumeDialogImpl.this.updateODICaptionsH(bool.booleanValue(), bool2.booleanValue());
+        }
+    };
+    /* access modifiers changed from: private */
+    public Consumer<Boolean> mCrossWindowBlurEnabledListener;
+    private int mCurrentRingerMode = -1;
+    private final DeviceProvisionedController mDeviceProvisionedController;
+    /* access modifiers changed from: private */
+    public CustomDialog mDialog;
+    /* access modifiers changed from: private */
+    public int mDialogCornerRadius;
     private final int mDialogHideAnimationDurationMs;
-    private ViewGroup mDialogRowsView;
-    private BackgroundBlurDrawable mDialogRowsViewBackground;
+    /* access modifiers changed from: private */
+    public ViewGroup mDialogRowsView;
+    /* access modifiers changed from: private */
+    public BackgroundBlurDrawable mDialogRowsViewBackground;
     private ViewGroup mDialogRowsViewContainer;
     private final int mDialogShowAnimationDurationMs;
-    private ViewGroup mDialogView;
+    /* access modifiers changed from: private */
+    public ViewGroup mDialogView;
     private int mDialogWidth;
+    private final SparseBooleanArray mDynamic = new SparseBooleanArray();
+    private final ValueAnimator mExpandDialogRows = ValueAnimator.ofFloat(new float[]{1.0f, 3.0f});
+    private final ValueAnimator mExpandRingerDrawer = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+    private ViewGroup mFakeRingerDrawerContainer;
+    private ViewGroup mFakeRingerDrawerVibrate;
+    /* access modifiers changed from: private */
+    public final C3301H mHandler = new C3301H();
     private boolean mHasSeenODICaptionsTooltip;
-    private final KeyguardManager mKeyguard;
+    private boolean mHovering = false;
+    /* access modifiers changed from: private */
+    public final InteractionJankMonitor mInteractionJankMonitor;
+    private boolean mIsAnimatingDismiss = false;
+    private boolean mIsRingerDrawerOpen = false;
+    /* access modifiers changed from: private */
+    public final KeyguardManager mKeyguard;
+    private final MediaOutputDialogFactory mMediaOutputDialogFactory;
     private CaptionsToggleImageButton mODICaptionsIcon;
+    private View mODICaptionsTooltipView = null;
     private ViewStub mODICaptionsTooltipViewStub;
     private ViewGroup mODICaptionsView;
     private int mPrevActiveStream;
@@ -113,10 +217,16 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     private View mRingerAndDrawerContainer;
     private Drawable mRingerAndDrawerContainerBackground;
     private int mRingerCount;
-    private ViewGroup mRingerDrawerContainer;
-    private ImageView mRingerDrawerIconAnimatingDeselected;
-    private ImageView mRingerDrawerIconAnimatingSelected;
-    private int mRingerDrawerItemSize;
+    private float mRingerDrawerClosedAmount = 1.0f;
+    /* access modifiers changed from: private */
+    public ViewGroup mRingerDrawerContainer;
+    /* access modifiers changed from: private */
+    public ImageView mRingerDrawerIconAnimatingDeselected;
+    /* access modifiers changed from: private */
+    public ImageView mRingerDrawerIconAnimatingSelected;
+    private final ValueAnimator mRingerDrawerIconColorAnimator = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+    /* access modifiers changed from: private */
+    public int mRingerDrawerItemSize;
     private ViewGroup mRingerDrawerMute;
     private ImageView mRingerDrawerMuteIcon;
     private ViewGroup mRingerDrawerNewSelectionBg;
@@ -125,136 +235,74 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     private ViewGroup mRingerDrawerVibrate;
     private ImageView mRingerDrawerVibrateIcon;
     private ImageButton mRingerIcon;
-    private int mRingerRowsPadding;
-    private SafetyWarningDialog mSafetyWarning;
+    /* access modifiers changed from: private */
+    public int mRingerRowsPadding;
+    private final List<VolumeRow> mRows = new ArrayList();
+    /* access modifiers changed from: private */
+    public SafetyWarningDialog mSafetyWarning;
+    /* access modifiers changed from: private */
+    public final Object mSafetyWarningLock = new Object();
+    private TextView mSeeMoreButton;
     private ViewGroup mSelectedRingerContainer;
     private ImageView mSelectedRingerIcon;
     private ImageButton mSettingsIcon;
     private View mSettingsView;
-    private boolean mShowA11yStream;
+    /* access modifiers changed from: private */
+    public boolean mShowA11yStream;
+    private final boolean mShowActiveStreamOnly;
     private final boolean mShowLowMediaVolumeIcon;
     private boolean mShowVibrate;
-    private boolean mShowing;
-    private VolumeDialogController.State mState;
+    /* access modifiers changed from: private */
+    public boolean mShowing;
+    /* access modifiers changed from: private */
+    public boolean mSilentMode = true;
+    /* access modifiers changed from: private */
+    public VolumeDialogController.State mState;
     private View mTopContainer;
-    private final boolean mUseBackgroundBlur;
-    private Window mWindow;
-    private FrameLayout mZenIcon;
-    private final H mHandler = new H();
     private final Region mTouchableRegion = new Region();
-    private final ValueAnimator mRingerDrawerIconColorAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
-    private final ValueAnimator mAnimateUpBackgroundToMatchDrawer = ValueAnimator.ofFloat(1.0f, 0.0f);
-    private boolean mIsRingerDrawerOpen = false;
-    private float mRingerDrawerClosedAmount = 1.0f;
-    private final List<VolumeRow> mRows = new ArrayList();
-    private final SparseBooleanArray mDynamic = new SparseBooleanArray();
-    private final Object mSafetyWarningLock = new Object();
-    private final Accessibility mAccessibility = new Accessibility();
-    private boolean mAutomute = true;
-    private boolean mSilentMode = true;
-    private boolean mHovering = false;
-    private boolean mConfigChanged = false;
-    private boolean mIsAnimatingDismiss = false;
-    private View mODICaptionsTooltipView = null;
-    private final VolumeDialogController.Callbacks mControllerCallbackH = new VolumeDialogController.Callbacks() { // from class: com.android.systemui.volume.VolumeDialogImpl.6
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onShowRequested(int i) {
-            VolumeDialogImpl.this.showH(i);
-        }
+    private final boolean mUseBackgroundBlur;
+    private Drawable mVolumeUITopContainerBackground;
+    /* access modifiers changed from: private */
+    public Window mWindow;
+    private FrameLayout mZenIcon;
 
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onDismissRequested(int i) {
-            VolumeDialogImpl.this.dismissH(i);
-        }
+    private int getStringDescriptionResourceForRingerMode(int i) {
+        return i != 0 ? i != 1 ? C1893R.string.volume_ringer_status_normal : C1893R.string.volume_ringer_status_vibrate : C1893R.string.volume_ringer_status_silent;
+    }
 
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onScreenOff() {
-            VolumeDialogImpl.this.dismissH(4);
-        }
+    private boolean showActiveStreamOnly() {
+        return true;
+    }
 
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onStateChanged(VolumeDialogController.State state) {
-            VolumeDialogImpl.this.onStateChangedH(state);
-        }
-
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onLayoutDirectionChanged(int i) {
-            VolumeDialogImpl.this.mDialogView.setLayoutDirection(i);
-        }
-
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onConfigurationChanged() {
-            VolumeDialogImpl.this.mDialog.dismiss();
-            VolumeDialogImpl.this.mConfigChanged = true;
-        }
-
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onShowVibrateHint() {
-            if (VolumeDialogImpl.this.mSilentMode) {
-                VolumeDialogImpl.this.mController.setRingerMode(0, false);
-            }
-        }
-
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onShowSilentHint() {
-            if (VolumeDialogImpl.this.mSilentMode) {
-                VolumeDialogImpl.this.mController.setRingerMode(2, false);
-            }
-        }
-
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onShowSafetyWarning(int i) {
-            VolumeDialogImpl.this.showSafetyWarningH(i);
-        }
-
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onAccessibilityModeChanged(Boolean bool) {
-            VolumeDialogImpl.this.mShowA11yStream = bool == null ? false : bool.booleanValue();
-            VolumeRow activeRow = VolumeDialogImpl.this.getActiveRow();
-            if (VolumeDialogImpl.this.mShowA11yStream || 10 != activeRow.stream) {
-                VolumeDialogImpl.this.updateRowsH(activeRow);
-            } else {
-                VolumeDialogImpl.this.dismissH(7);
-            }
-        }
-
-        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
-        public void onCaptionComponentStateChanged(Boolean bool, Boolean bool2) {
-            VolumeDialogImpl.this.updateODICaptionsH(bool.booleanValue(), bool2.booleanValue());
-        }
-    };
-    private final VolumeDialogController mController = (VolumeDialogController) Dependency.get(VolumeDialogController.class);
-    private final AccessibilityManagerWrapper mAccessibilityMgr = (AccessibilityManagerWrapper) Dependency.get(AccessibilityManagerWrapper.class);
-    private final DeviceProvisionedController mDeviceProvisionedController = (DeviceProvisionedController) Dependency.get(DeviceProvisionedController.class);
-    private boolean mShowActiveStreamOnly = true;
-    private final boolean mChangeVolumeRowTintWhenInactive = false;
-
-    public VolumeDialogImpl(Context context) {
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, R$style.volume_dialog_theme);
+    public VolumeDialogImpl(Context context, VolumeDialogController volumeDialogController, AccessibilityManagerWrapper accessibilityManagerWrapper, DeviceProvisionedController deviceProvisionedController, ConfigurationController configurationController, MediaOutputDialogFactory mediaOutputDialogFactory, ActivityStarter activityStarter, InteractionJankMonitor interactionJankMonitor) {
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, C1893R.style.volume_dialog_theme);
         this.mContext = contextThemeWrapper;
+        this.mController = volumeDialogController;
         this.mKeyguard = (KeyguardManager) contextThemeWrapper.getSystemService("keyguard");
-        this.mActivityManager = (ActivityManager) contextThemeWrapper.getSystemService("activity");
-        this.mHasSeenODICaptionsTooltip = Prefs.getBoolean(context, "HasSeenODICaptionsTooltip", false);
-        this.mShowLowMediaVolumeIcon = contextThemeWrapper.getResources().getBoolean(R$bool.config_showLowMediaVolumeIcon);
-        this.mDialogShowAnimationDurationMs = contextThemeWrapper.getResources().getInteger(R$integer.config_dialogShowAnimationDurationMs);
-        this.mDialogHideAnimationDurationMs = contextThemeWrapper.getResources().getInteger(R$integer.config_dialogHideAnimationDurationMs);
-        boolean z = contextThemeWrapper.getResources().getBoolean(R$bool.config_volumeDialogUseBackgroundBlur);
+        this.mActivityManager = (ActivityManager) contextThemeWrapper.getSystemService(SliceHints.HINT_ACTIVITY);
+        this.mAccessibilityMgr = accessibilityManagerWrapper;
+        this.mDeviceProvisionedController = deviceProvisionedController;
+        this.mConfigurationController = configurationController;
+        this.mMediaOutputDialogFactory = mediaOutputDialogFactory;
+        this.mActivityStarter = activityStarter;
+        this.mShowActiveStreamOnly = showActiveStreamOnly();
+        this.mHasSeenODICaptionsTooltip = Prefs.getBoolean(context, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, false);
+        this.mShowLowMediaVolumeIcon = contextThemeWrapper.getResources().getBoolean(C1893R.bool.config_showLowMediaVolumeIcon);
+        this.mChangeVolumeRowTintWhenInactive = contextThemeWrapper.getResources().getBoolean(C1893R.bool.config_changeVolumeRowTintWhenInactive);
+        this.mDialogShowAnimationDurationMs = contextThemeWrapper.getResources().getInteger(C1893R.integer.config_dialogShowAnimationDurationMs);
+        this.mDialogHideAnimationDurationMs = contextThemeWrapper.getResources().getInteger(C1893R.integer.config_dialogHideAnimationDurationMs);
+        boolean z = contextThemeWrapper.getResources().getBoolean(C1893R.bool.config_volumeDialogUseBackgroundBlur);
         this.mUseBackgroundBlur = z;
+        this.mInteractionJankMonitor = interactionJankMonitor;
         if (z) {
-            final int color = contextThemeWrapper.getColor(R$color.volume_dialog_background_color_above_blur);
-            final int color2 = contextThemeWrapper.getColor(R$color.volume_dialog_background_color);
-            this.mCrossWindowBlurEnabledListener = new Consumer() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda23
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    VolumeDialogImpl.this.lambda$new$0(color, color2, (Boolean) obj);
-                }
-            };
+            this.mCrossWindowBlurEnabledListener = new VolumeDialogImpl$$ExternalSyntheticLambda22(this, contextThemeWrapper.getColor(C1893R.C1894color.volume_dialog_background_color_above_blur), contextThemeWrapper.getColor(C1893R.C1894color.volume_dialog_background_color));
         }
         initDimens();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(int i, int i2, Boolean bool) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ void m3320lambda$new$0$comandroidsystemuivolumeVolumeDialogImpl(int i, int i2, Boolean bool) {
         BackgroundBlurDrawable backgroundBlurDrawable = this.mDialogRowsViewBackground;
         if (!bool.booleanValue()) {
             i = i2;
@@ -263,25 +311,22 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         this.mDialogRowsView.invalidate();
     }
 
-    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
         this.mContext.getTheme().applyStyle(this.mContext.getThemeResId(), true);
     }
 
-    @Override // com.android.systemui.plugins.VolumeDialog
     public void init(int i, VolumeDialog.Callback callback) {
-        initDialog();
+        initDialog(this.mActivityManager.getLockTaskModeState());
         this.mAccessibility.init();
         this.mController.addCallback(this.mControllerCallbackH, this.mHandler);
         this.mController.getState();
-        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
+        this.mConfigurationController.addCallback(this);
     }
 
-    @Override // com.android.systemui.plugins.VolumeDialog
     public void destroy() {
         this.mController.removeCallback(this.mControllerCallbackH);
-        this.mHandler.removeCallbacksAndMessages(null);
-        ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
+        this.mHandler.removeCallbacksAndMessages((Object) null);
+        this.mConfigurationController.removeCallback(this);
     }
 
     public void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
@@ -298,21 +343,27 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     }
 
     private void unionViewBoundstoTouchableRegion(View view) {
+        int i;
         int[] iArr = new int[2];
         view.getLocationInWindow(iArr);
-        float f = iArr[0];
-        float f2 = iArr[1];
-        if (view == this.mTopContainer && !this.mIsRingerDrawerOpen) {
-            if (!isLandscape()) {
-                f2 += getRingerDrawerOpenExtraSize();
-            } else {
-                f += getRingerDrawerOpenExtraSize();
-            }
+        float f = (float) iArr[0];
+        float f2 = (float) iArr[1];
+        if (view == this.mBackgroundContainer && !this.mIsRingerDrawerOpen && isLandscape()) {
+            f += (float) getRingerDrawerOpenExtraSize();
         }
-        this.mTouchableRegion.op((int) f, (int) f2, iArr[0] + view.getWidth(), iArr[1] + view.getHeight(), Region.Op.UNION);
+        Region region = this.mTouchableRegion;
+        int i2 = (int) f;
+        int i3 = (int) f2;
+        int i4 = iArr[0];
+        if (!isLandscape()) {
+            i = this.mRingerAndDrawerContainer.getWidth() - ((int) (this.mRingerDrawerClosedAmount * ((float) getRingerDrawerOpenExtraSize())));
+        } else {
+            i = view.getWidth();
+        }
+        region.op(i2, i3, i4 + i, iArr[1] + view.getHeight(), Region.Op.UNION);
     }
 
-    private void initDialog() {
+    private void initDialog(int i) {
         this.mDialog = new CustomDialog(this.mContext);
         initDimens();
         this.mConfigurableTexts = new ConfigurableTexts(this.mContext);
@@ -324,192 +375,179 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         this.mWindow.setBackgroundDrawable(new ColorDrawable(0));
         this.mWindow.clearFlags(65538);
         this.mWindow.addFlags(17563688);
-        this.mWindow.addPrivateFlags(536870912);
+        this.mWindow.addPrivateFlags(NetworkStackConstants.NEIGHBOR_ADVERTISEMENT_FLAG_OVERRIDE);
         this.mWindow.setType(2020);
         this.mWindow.setWindowAnimations(16973828);
         WindowManager.LayoutParams attributes = this.mWindow.getAttributes();
         attributes.format = -3;
-        attributes.setTitle(VolumeDialogImpl.class.getSimpleName());
+        attributes.setTitle("VolumeDialogImpl");
         attributes.windowAnimations = -1;
-        if (!isLandscape()) {
-            attributes.gravity = 19;
-            attributes.y = -350;
-        } else {
-            attributes.gravity = this.mContext.getResources().getInteger(R$integer.volume_dialog_gravity);
-            attributes.y = 0;
-        }
+        attributes.gravity = ((VolumeDialogImplEx) NTDependencyEx.get(VolumeDialogImplEx.class)).getVolumeDialogPosition(this.mContext, shouldSlideInVolumeTray());
+        attributes.y = ((VolumeDialogImplEx) NTDependencyEx.get(VolumeDialogImplEx.class)).getVolumeDialogOffset(this.mContext, shouldSlideInVolumeTray());
         this.mWindow.setAttributes(attributes);
         this.mWindow.setLayout(-2, -2);
-        this.mDialog.setContentView(R$layout.volume_dialog);
-        ViewGroup viewGroup = (ViewGroup) this.mDialog.findViewById(R$id.volume_dialog);
+        this.mDialog.setContentView(C1893R.layout.volume_dialog);
+        ViewGroup viewGroup = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_dialog);
         this.mDialogView = viewGroup;
         viewGroup.setAlpha(0.0f);
         this.mDialog.setCanceledOnTouchOutside(true);
-        this.mDialog.setOnShowListener(new DialogInterface.OnShowListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda3
-            @Override // android.content.DialogInterface.OnShowListener
-            public final void onShow(DialogInterface dialogInterface) {
-                VolumeDialogImpl.this.lambda$initDialog$2(dialogInterface);
-            }
-        });
-        this.mDialog.setOnDismissListener(new DialogInterface.OnDismissListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda2
-            @Override // android.content.DialogInterface.OnDismissListener
-            public final void onDismiss(DialogInterface dialogInterface) {
-                VolumeDialogImpl.this.lambda$initDialog$3(dialogInterface);
-            }
-        });
-        this.mDialogView.setOnHoverListener(new View.OnHoverListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda9
-            @Override // android.view.View.OnHoverListener
-            public final boolean onHover(View view, MotionEvent motionEvent) {
-                boolean lambda$initDialog$4;
-                lambda$initDialog$4 = VolumeDialogImpl.this.lambda$initDialog$4(view, motionEvent);
-                return lambda$initDialog$4;
-            }
-        });
-        this.mDialogRowsView = (ViewGroup) this.mDialog.findViewById(R$id.volume_dialog_rows);
+        this.mDialog.setOnShowListener(new VolumeDialogImpl$$ExternalSyntheticLambda12(this));
+        this.mDialog.setOnDismissListener(new VolumeDialogImpl$$ExternalSyntheticLambda13(this));
+        this.mDialogView.setOnHoverListener(new VolumeDialogImpl$$ExternalSyntheticLambda14(this));
+        this.mDialogRowsView = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_dialog_rows);
         if (this.mUseBackgroundBlur) {
-            this.mDialogView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() { // from class: com.android.systemui.volume.VolumeDialogImpl.1
-                @Override // android.view.View.OnAttachStateChangeListener
+            this.mDialogView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                 public void onViewAttachedToWindow(View view) {
                     VolumeDialogImpl.this.mWindow.getWindowManager().addCrossWindowBlurEnabledListener(VolumeDialogImpl.this.mCrossWindowBlurEnabledListener);
-                    VolumeDialogImpl.this.mDialogRowsViewBackground = view.getViewRootImpl().createBackgroundBlurDrawable();
+                    BackgroundBlurDrawable unused = VolumeDialogImpl.this.mDialogRowsViewBackground = view.getViewRootImpl().createBackgroundBlurDrawable();
                     Resources resources = VolumeDialogImpl.this.mContext.getResources();
-                    VolumeDialogImpl.this.mDialogRowsViewBackground.setCornerRadius(VolumeDialogImpl.this.mContext.getResources().getDimensionPixelSize(Utils.getThemeAttr(VolumeDialogImpl.this.mContext, 16844145)));
-                    VolumeDialogImpl.this.mDialogRowsViewBackground.setBlurRadius(resources.getDimensionPixelSize(R$dimen.volume_dialog_background_blur_radius));
+                    VolumeDialogImpl.this.mDialogRowsViewBackground.setCornerRadius((float) VolumeDialogImpl.this.mContext.getResources().getDimensionPixelSize(Utils.getThemeAttr(VolumeDialogImpl.this.mContext, 16844145)));
+                    VolumeDialogImpl.this.mDialogRowsViewBackground.setBlurRadius(resources.getDimensionPixelSize(C1893R.dimen.volume_dialog_background_blur_radius));
                     VolumeDialogImpl.this.mDialogRowsView.setBackground(VolumeDialogImpl.this.mDialogRowsViewBackground);
                 }
 
-                @Override // android.view.View.OnAttachStateChangeListener
                 public void onViewDetachedFromWindow(View view) {
                     VolumeDialogImpl.this.mWindow.getWindowManager().removeCrossWindowBlurEnabledListener(VolumeDialogImpl.this.mCrossWindowBlurEnabledListener);
                 }
             });
         }
-        this.mDialogRowsViewContainer = (ViewGroup) this.mDialogView.findViewById(R$id.volume_dialog_rows_container);
-        this.mTopContainer = this.mDialogView.findViewById(R$id.volume_dialog_top_container);
-        View findViewById = this.mDialogView.findViewById(R$id.volume_ringer_and_drawer_container);
+        this.mDialogRowsViewContainer = (ViewGroup) this.mDialogView.findViewById(C1893R.C1897id.volume_dialog_rows_container);
+        this.mTopContainer = this.mDialogView.findViewById(C1893R.C1897id.volume_dialog_top_container);
+        this.mBackgroundContainer = this.mDialogView.findViewById(C1893R.C1897id.volume_dialog_bg_container);
+        View findViewById = this.mDialogView.findViewById(C1893R.C1897id.volume_ringer_and_drawer_container);
         this.mRingerAndDrawerContainer = findViewById;
         if (findViewById != null) {
             if (isLandscape()) {
                 View view = this.mRingerAndDrawerContainer;
                 view.setPadding(view.getPaddingLeft(), this.mRingerAndDrawerContainer.getPaddingTop(), this.mRingerAndDrawerContainer.getPaddingRight(), this.mRingerRowsPadding);
-                this.mRingerAndDrawerContainer.setBackgroundDrawable(this.mContext.getDrawable(R$drawable.volume_background_top_rounded));
+                this.mRingerAndDrawerContainer.setBackgroundDrawable(this.mContext.getDrawable(C1893R.C1895drawable.volume_background_top_rounded));
             }
-            this.mRingerAndDrawerContainer.post(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda13
-                @Override // java.lang.Runnable
-                public final void run() {
-                    VolumeDialogImpl.this.lambda$initDialog$5();
-                }
-            });
+            this.mRingerAndDrawerContainer.post(new VolumeDialogImpl$$ExternalSyntheticLambda15(this));
         }
-        ViewGroup viewGroup2 = (ViewGroup) this.mDialog.findViewById(R$id.ringer);
+        View view2 = this.mBackgroundContainer;
+        if (view2 != null) {
+            view2.post(new VolumeDialogImpl$$ExternalSyntheticLambda16(this));
+        }
+        ViewGroup viewGroup2 = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.ringer);
         this.mRinger = viewGroup2;
         if (viewGroup2 != null) {
-            this.mRingerIcon = (ImageButton) viewGroup2.findViewById(R$id.ringer_icon);
-            this.mZenIcon = (FrameLayout) this.mRinger.findViewById(R$id.dnd_icon);
+            this.mRingerIcon = (ImageButton) viewGroup2.findViewById(C1893R.C1897id.ringer_icon);
+            this.mZenIcon = (FrameLayout) this.mRinger.findViewById(C1893R.C1897id.dnd_icon);
         }
-        this.mSelectedRingerIcon = (ImageView) this.mDialog.findViewById(R$id.volume_new_ringer_active_icon);
-        this.mSelectedRingerContainer = (ViewGroup) this.mDialog.findViewById(R$id.volume_new_ringer_active_icon_container);
-        this.mRingerDrawerMute = (ViewGroup) this.mDialog.findViewById(R$id.volume_drawer_mute);
-        this.mRingerDrawerNormal = (ViewGroup) this.mDialog.findViewById(R$id.volume_drawer_normal);
-        this.mRingerDrawerVibrate = (ViewGroup) this.mDialog.findViewById(R$id.volume_drawer_vibrate);
-        this.mRingerDrawerMuteIcon = (ImageView) this.mDialog.findViewById(R$id.volume_drawer_mute_icon);
-        this.mRingerDrawerVibrateIcon = (ImageView) this.mDialog.findViewById(R$id.volume_drawer_vibrate_icon);
-        this.mRingerDrawerNormalIcon = (ImageView) this.mDialog.findViewById(R$id.volume_drawer_normal_icon);
-        this.mRingerDrawerNewSelectionBg = (ViewGroup) this.mDialog.findViewById(R$id.volume_drawer_selection_background);
+        this.mSelectedRingerIcon = (ImageView) this.mDialog.findViewById(C1893R.C1897id.volume_new_ringer_active_icon);
+        this.mSelectedRingerContainer = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_new_ringer_active_icon_container);
+        this.mRingerDrawerMute = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_mute);
+        this.mRingerDrawerNormal = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_normal);
+        this.mRingerDrawerVibrate = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_vibrate);
+        this.mRingerDrawerMuteIcon = (ImageView) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_mute_icon);
+        this.mRingerDrawerVibrateIcon = (ImageView) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_vibrate_icon);
+        this.mRingerDrawerNormalIcon = (ImageView) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_normal_icon);
+        this.mRingerDrawerNewSelectionBg = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_selection_background);
+        this.mFakeRingerDrawerVibrate = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_vibrate_fake);
         setupRingerDrawer();
-        ViewGroup viewGroup3 = (ViewGroup) this.mDialog.findViewById(R$id.odi_captions);
+        ViewGroup viewGroup3 = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.odi_captions);
         this.mODICaptionsView = viewGroup3;
         if (viewGroup3 != null) {
-            this.mODICaptionsIcon = (CaptionsToggleImageButton) viewGroup3.findViewById(R$id.odi_captions_icon);
+            this.mODICaptionsIcon = (CaptionsToggleImageButton) viewGroup3.findViewById(C1893R.C1897id.odi_captions_icon);
         }
-        ViewStub viewStub = (ViewStub) this.mDialog.findViewById(R$id.odi_captions_tooltip_stub);
+        ViewStub viewStub = (ViewStub) this.mDialog.findViewById(C1893R.C1897id.odi_captions_tooltip_stub);
         this.mODICaptionsTooltipViewStub = viewStub;
         if (this.mHasSeenODICaptionsTooltip && viewStub != null) {
             this.mDialogView.removeView(viewStub);
             this.mODICaptionsTooltipViewStub = null;
         }
-        this.mSettingsView = this.mDialog.findViewById(R$id.settings_container);
-        this.mSettingsIcon = (ImageButton) this.mDialog.findViewById(R$id.settings);
+        this.mSettingsView = this.mDialog.findViewById(C1893R.C1897id.settings_container);
+        this.mSettingsIcon = (ImageButton) this.mDialog.findViewById(C1893R.C1897id.settings);
+        this.mSeeMoreButton = (TextView) this.mDialog.findViewById(C1893R.C1897id.see_more_button);
         if (this.mRows.isEmpty()) {
             if (!AudioSystem.isSingleVolume(this.mContext)) {
-                int i = R$drawable.ic_volume_accessibility;
-                addRow(10, i, i, true, false);
+                addRow(10, C1893R.C1895drawable.ic_volume_accessibility, C1893R.C1895drawable.ic_volume_accessibility, true, false);
             }
-            addRow(3, R$drawable.ic_volume_media, R$drawable.ic_volume_media_mute, true, true);
+            addRow(3, C1893R.C1895drawable.ic_volume_media, C1893R.C1895drawable.ic_volume_media_mute, true, true);
             if (!AudioSystem.isSingleVolume(this.mContext)) {
-                addRow(2, R$drawable.ic_volume_ringer, R$drawable.ic_volume_ringer_mute, true, false);
-                addRow(4, R$drawable.ic_alarm, R$drawable.ic_volume_alarm_mute, true, false);
-                addRow(0, 17302807, 17302807, false, false);
-                int i2 = R$drawable.ic_volume_bt_sco;
-                addRow(6, i2, i2, false, false);
-                addRow(1, R$drawable.ic_volume_system, R$drawable.ic_volume_system_mute, false, false);
+                addRow(2, C1893R.C1895drawable.ic_volume_ringer, C1893R.C1895drawable.ic_volume_ringer_mute, true, false);
+                addRow(4, C1893R.C1895drawable.ic_alarm, C1893R.C1895drawable.ic_volume_alarm_mute, true, false);
+                addRow(0, 17302817, 17302817, false, false);
+                addRow(6, C1893R.C1895drawable.ic_volume_bt_sco, C1893R.C1895drawable.ic_volume_bt_sco, false, false);
+                addRow(1, C1893R.C1895drawable.ic_volume_system, C1893R.C1895drawable.ic_volume_system_mute, false, false);
             }
         } else {
             addExistingRows();
         }
         updateRowsH(getActiveRow());
         initRingerH();
-        initSettingsH();
+        initSettingsH(i);
         initODICaptionsH();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$initDialog$2(DialogInterface dialogInterface) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initDialog$2$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ void m3314lambda$initDialog$2$comandroidsystemuivolumeVolumeDialogImpl(DialogInterface dialogInterface) {
         this.mDialogView.getViewTreeObserver().addOnComputeInternalInsetsListener(this);
-        if (!isLandscape()) {
-            ViewGroup viewGroup = this.mDialogView;
-            viewGroup.setTranslationX((-viewGroup.getWidth()) / 2.0f);
-        }
+        this.mDialogView.setTranslationX(((VolumeDialogImplEx) NTDependencyEx.get(VolumeDialogImplEx.class)).getTranslationX(this.mDialogView, shouldSlideInVolumeTray()));
         this.mDialogView.setAlpha(0.0f);
-        this.mDialogView.animate().alpha(1.0f).translationX(0.0f).setDuration(this.mDialogShowAnimationDurationMs).setInterpolator(new SystemUIInterpolators$LogDecelerateInterpolator()).withEndAction(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda16
-            @Override // java.lang.Runnable
-            public final void run() {
-                VolumeDialogImpl.this.lambda$initDialog$1();
-            }
-        }).start();
+        this.mDialogView.animate().alpha(1.0f).translationX(0.0f).setDuration((long) this.mDialogShowAnimationDurationMs).setListener(getJankListener(getDialogView(), TYPE_SHOW, 3000)).setInterpolator(new SystemUIInterpolators.LogDecelerateInterpolator()).withEndAction(new VolumeDialogImpl$$ExternalSyntheticLambda19(this)).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$initDialog$1() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initDialog$1$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ void m3313lambda$initDialog$1$comandroidsystemuivolumeVolumeDialogImpl() {
         ImageButton imageButton;
-        if (Prefs.getBoolean(this.mContext, "TouchedRingerToggle", false) || (imageButton = this.mRingerIcon) == null) {
-            return;
+        if (!Prefs.getBoolean(this.mContext, Prefs.Key.TOUCHED_RINGER_TOGGLE, false) && (imageButton = this.mRingerIcon) != null) {
+            imageButton.postOnAnimationDelayed(getSinglePressFor(imageButton), WirelessChargingAnimation.DURATION);
         }
-        imageButton.postOnAnimationDelayed(getSinglePressFor(imageButton), 1500L);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$initDialog$3(DialogInterface dialogInterface) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initDialog$3$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ void m3315lambda$initDialog$3$comandroidsystemuivolumeVolumeDialogImpl(DialogInterface dialogInterface) {
         this.mDialogView.getViewTreeObserver().removeOnComputeInternalInsetsListener(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$initDialog$4(View view, MotionEvent motionEvent) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initDialog$4$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ boolean m3316lambda$initDialog$4$comandroidsystemuivolumeVolumeDialogImpl(View view, MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         this.mHovering = actionMasked == 9 || actionMasked == 7;
         rescheduleTimeoutH();
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$initDialog$5() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initDialog$5$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ void m3317lambda$initDialog$5$comandroidsystemuivolumeVolumeDialogImpl() {
         LayerDrawable layerDrawable = (LayerDrawable) this.mRingerAndDrawerContainer.getBackground();
-        if (layerDrawable == null || layerDrawable.getNumberOfLayers() <= 0) {
-            return;
+        if (layerDrawable != null && layerDrawable.getNumberOfLayers() > 0) {
+            this.mRingerAndDrawerContainerBackground = layerDrawable.getDrawable(0);
+            updateBackgroundForDrawerClosedAmount();
+            setTopContainerBackgroundDrawable();
+            setDrawerContainerOutLine();
         }
-        this.mRingerAndDrawerContainerBackground = layerDrawable.getDrawable(0);
-        updateBackgroundForDrawerClosedAmount();
-        setTopContainerBackgroundDrawable();
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initDialog$6$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ void m3318lambda$initDialog$6$comandroidsystemuivolumeVolumeDialogImpl() {
+        LayerDrawable layerDrawable = (LayerDrawable) this.mBackgroundContainer.getBackground();
+        if (layerDrawable != null && layerDrawable.getNumberOfLayers() > 0) {
+            this.mVolumeUITopContainerBackground = layerDrawable.getDrawable(0);
+            updateBackgroundClosedAmount();
+        }
     }
 
     private void initDimens() {
-        this.mDialogWidth = this.mContext.getResources().getDimensionPixelSize(R$dimen.volume_dialog_panel_width);
-        this.mDialogCornerRadius = this.mContext.getResources().getDimensionPixelSize(R$dimen.volume_dialog_panel_width_half);
-        this.mRingerDrawerItemSize = this.mContext.getResources().getDimensionPixelSize(R$dimen.volume_ringer_drawer_item_size);
-        this.mRingerRowsPadding = this.mContext.getResources().getDimensionPixelSize(R$dimen.volume_dialog_ringer_rows_padding);
+        this.mDialogWidth = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.volume_dialog_panel_width);
+        this.mDialogCornerRadius = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.volume_dialog_panel_width_half);
+        this.mRingerDrawerItemSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.volume_ringer_drawer_item_size);
+        this.mRingerRowsPadding = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.volume_dialog_ringer_rows_padding);
         boolean hasVibrator = this.mController.hasVibrator();
         this.mShowVibrate = hasVibrator;
         this.mRingerCount = hasVibrator ? 3 : 2;
+    }
+
+    /* access modifiers changed from: protected */
+    public ViewGroup getDialogView() {
+        return this.mDialogView;
     }
 
     private int getAlphaAttr(int i) {
@@ -519,8 +557,11 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         return (int) (f * 255.0f);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public boolean isLandscape() {
+    private boolean shouldSlideInVolumeTray() {
+        return this.mContext.getDisplay().getRotation() != 0;
+    }
+
+    private boolean isLandscape() {
         return this.mContext.getResources().getConfiguration().orientation == 2;
     }
 
@@ -533,19 +574,17 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     }
 
     public void setAutomute(boolean z) {
-        if (this.mAutomute == z) {
-            return;
+        if (this.mAutomute != z) {
+            this.mAutomute = z;
+            this.mHandler.sendEmptyMessage(4);
         }
-        this.mAutomute = z;
-        this.mHandler.sendEmptyMessage(4);
     }
 
     public void setSilentMode(boolean z) {
-        if (this.mSilentMode == z) {
-            return;
+        if (this.mSilentMode != z) {
+            this.mSilentMode = z;
+            this.mHandler.sendEmptyMessage(4);
         }
-        this.mSilentMode = z;
-        this.mHandler.sendEmptyMessage(4);
     }
 
     private void addRow(int i, int i2, int i3, boolean z, boolean z2) {
@@ -553,13 +592,12 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     }
 
     private void addRow(int i, int i2, int i3, boolean z, boolean z2, boolean z3) {
-        if (D.BUG) {
-            String str = TAG;
-            Slog.d(str, "Adding row for stream " + i);
+        if (C3265D.BUG) {
+            Slog.d(TAG, "Adding row for stream " + i);
         }
         VolumeRow volumeRow = new VolumeRow();
         initRow(volumeRow, i, i2, i3, z, z2);
-        this.mDialogRowsView.addView(volumeRow.view, 0);
+        this.mDialogRowsView.addView(volumeRow.view);
         this.mRows.add(volumeRow);
     }
 
@@ -568,36 +606,50 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         for (int i = 0; i < size; i++) {
             VolumeRow volumeRow = this.mRows.get(i);
             initRow(volumeRow, volumeRow.stream, volumeRow.iconRes, volumeRow.iconMuteRes, volumeRow.important, volumeRow.defaultStream);
-            this.mDialogRowsView.addView(volumeRow.view, 0);
+            this.mDialogRowsView.addView(volumeRow.view);
             updateVolumeRowH(volumeRow);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public VolumeRow getActiveRow() {
-        for (VolumeRow volumeRow : this.mRows) {
-            if (volumeRow.stream == this.mActiveStream) {
-                return volumeRow;
+        for (VolumeRow next : this.mRows) {
+            if (next.stream == this.mActiveStream) {
+                return next;
             }
         }
-        for (VolumeRow volumeRow2 : this.mRows) {
-            if (volumeRow2.stream == 3) {
-                return volumeRow2;
+        for (VolumeRow next2 : this.mRows) {
+            if (next2.stream == 3) {
+                return next2;
             }
         }
         return this.mRows.get(0);
     }
 
     private VolumeRow findRow(int i) {
-        for (VolumeRow volumeRow : this.mRows) {
-            if (volumeRow.stream == i) {
-                return volumeRow;
+        for (VolumeRow next : this.mRows) {
+            if (next.stream == i) {
+                return next;
             }
         }
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    public void dump(PrintWriter printWriter) {
+        printWriter.println("VolumeDialogImpl state:");
+        printWriter.print("  mShowing: ");
+        printWriter.println(this.mShowing);
+        printWriter.print("  mActiveStream: ");
+        printWriter.println(this.mActiveStream);
+        printWriter.print("  mDynamic: ");
+        printWriter.println((Object) this.mDynamic);
+        printWriter.print("  mAutomute: ");
+        printWriter.println(this.mAutomute);
+        printWriter.print("  mSilentMode: ");
+        printWriter.println(this.mSilentMode);
+    }
+
+    /* access modifiers changed from: private */
     public static int getImpliedLevel(SeekBar seekBar, int i) {
         int max = seekBar.getMax();
         int i2 = max / 100;
@@ -605,57 +657,53 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         if (i == 0) {
             return 0;
         }
-        return i == max ? i2 : ((int) ((i / max) * i3)) + 1;
+        return i == max ? i2 : ((int) ((((float) i) / ((float) max)) * ((float) i3))) + 1;
     }
 
-    @SuppressLint({"InflateParams"})
-    private void initRow(final VolumeRow volumeRow, final int i, int i2, int i3, boolean z, boolean z2) {
-        volumeRow.stream = i;
-        volumeRow.iconRes = i2;
-        volumeRow.iconMuteRes = i3;
-        volumeRow.important = z;
-        volumeRow.defaultStream = z2;
+    private void initRow(VolumeRow volumeRow, int i, int i2, int i3, boolean z, boolean z2) {
+        int unused = volumeRow.stream = i;
+        int unused2 = volumeRow.iconRes = i2;
+        int unused3 = volumeRow.iconMuteRes = i3;
+        boolean unused4 = volumeRow.important = z;
+        boolean unused5 = volumeRow.defaultStream = z2;
         AlphaTintDrawableWrapper alphaTintDrawableWrapper = null;
-        volumeRow.view = this.mDialog.getLayoutInflater().inflate(R$layout.volume_dialog_row, (ViewGroup) null);
+        View unused6 = volumeRow.view = this.mDialog.getLayoutInflater().inflate(C1893R.layout.volume_dialog_row, (ViewGroup) null);
         volumeRow.view.setId(volumeRow.stream);
         volumeRow.view.setTag(volumeRow);
-        volumeRow.header = (TextView) volumeRow.view.findViewById(R$id.volume_row_header);
+        TextView unused7 = volumeRow.header = (TextView) volumeRow.view.findViewById(C1893R.C1897id.volume_row_header);
         volumeRow.header.setId(volumeRow.stream * 20);
         if (i == 10) {
             volumeRow.header.setFilters(new InputFilter[]{new InputFilter.LengthFilter(13)});
         }
-        volumeRow.dndIcon = (FrameLayout) volumeRow.view.findViewById(R$id.dnd_icon);
-        volumeRow.slider = (SeekBar) volumeRow.view.findViewById(R$id.volume_row_slider);
+        FrameLayout unused8 = volumeRow.dndIcon = (FrameLayout) volumeRow.view.findViewById(C1893R.C1897id.dnd_icon);
+        SeekBar unused9 = volumeRow.slider = (SeekBar) volumeRow.view.findViewById(C1893R.C1897id.volume_row_slider);
         volumeRow.slider.setOnSeekBarChangeListener(new VolumeSeekBarChangeListener(volumeRow));
-        volumeRow.number = (TextView) volumeRow.view.findViewById(R$id.volume_number);
-        volumeRow.anim = null;
-        LayerDrawable layerDrawable = (LayerDrawable) this.mContext.getDrawable(R$drawable.volume_row_seekbar);
+        TextView unused10 = volumeRow.number = (TextView) volumeRow.view.findViewById(C1893R.C1897id.volume_number);
+        ObjectAnimator unused11 = volumeRow.anim = null;
+        LayerDrawable layerDrawable = (LayerDrawable) this.mContext.getDrawable(C1893R.C1895drawable.volume_row_seekbar);
         LayerDrawable layerDrawable2 = (LayerDrawable) ((RoundedCornerProgressDrawable) layerDrawable.findDrawableByLayerId(16908301)).getDrawable();
-        volumeRow.sliderProgressSolid = layerDrawable2.findDrawableByLayerId(R$id.volume_seekbar_progress_solid);
-        Drawable findDrawableByLayerId = layerDrawable2.findDrawableByLayerId(R$id.volume_seekbar_progress_icon);
+        Drawable unused12 = volumeRow.sliderProgressSolid = layerDrawable2.findDrawableByLayerId(C1893R.C1897id.volume_seekbar_progress_solid);
+        Drawable findDrawableByLayerId = layerDrawable2.findDrawableByLayerId(C1893R.C1897id.volume_seekbar_progress_icon);
         if (findDrawableByLayerId != null) {
             alphaTintDrawableWrapper = (AlphaTintDrawableWrapper) ((RotateDrawable) findDrawableByLayerId).getDrawable();
         }
-        volumeRow.sliderProgressIcon = alphaTintDrawableWrapper;
+        AlphaTintDrawableWrapper unused13 = volumeRow.sliderProgressIcon = alphaTintDrawableWrapper;
         volumeRow.slider.setProgressDrawable(layerDrawable);
-        volumeRow.icon = (ImageButton) volumeRow.view.findViewById(R$id.volume_row_icon);
+        ImageButton unused14 = volumeRow.icon = (ImageButton) volumeRow.view.findViewById(C1893R.C1897id.volume_row_icon);
         volumeRow.setIcon(i2, this.mContext.getTheme());
-        if (volumeRow.icon != null) {
-            if (volumeRow.stream != 10) {
-                volumeRow.icon.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda8
-                    @Override // android.view.View.OnClickListener
-                    public final void onClick(View view) {
-                        VolumeDialogImpl.this.lambda$initRow$6(volumeRow, i, view);
-                    }
-                });
-            } else {
-                volumeRow.icon.setImportantForAccessibility(2);
-            }
+        if (volumeRow.icon == null) {
+            return;
+        }
+        if (volumeRow.stream != 10) {
+            volumeRow.icon.setOnClickListener(new VolumeDialogImpl$$ExternalSyntheticLambda25(this, volumeRow, i));
+        } else {
+            volumeRow.icon.setImportantForAccessibility(2);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$initRow$6(VolumeRow volumeRow, int i, View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initRow$7$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ void m3319lambda$initRow$7$comandroidsystemuivolumeVolumeDialogImpl(VolumeRow volumeRow, int i, View view) {
         int i2 = 0;
         boolean z = true;
         Events.writeEvent(7, Integer.valueOf(volumeRow.stream), Integer.valueOf(volumeRow.iconState));
@@ -664,13 +712,13 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
             boolean hasVibrator = this.mController.hasVibrator();
             if (this.mState.ringerModeInternal != 2) {
                 this.mController.setRingerMode(2, false);
-                if (volumeRow.ss.level == 0) {
+                if (volumeRow.f402ss.level == 0) {
                     this.mController.setStreamVolume(i, 1);
                 }
             } else if (hasVibrator) {
                 this.mController.setRingerMode(1, false);
             } else {
-                if (volumeRow.ss.level != 0) {
+                if (volumeRow.f402ss.level != 0) {
                     z = false;
                 }
                 VolumeDialogController volumeDialogController = this.mController;
@@ -680,15 +728,15 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
                 volumeDialogController.setStreamVolume(i, i2);
             }
         } else {
-            if (volumeRow.ss.level == volumeRow.ss.levelMin) {
+            if (volumeRow.f402ss.level == volumeRow.f402ss.levelMin) {
                 i2 = 1;
             }
-            this.mController.setStreamVolume(i, i2 != 0 ? volumeRow.lastAudibleLevel : volumeRow.ss.levelMin);
+            this.mController.setStreamVolume(i, i2 != 0 ? volumeRow.lastAudibleLevel : volumeRow.f402ss.levelMin);
         }
-        volumeRow.userAttempt = 0L;
+        long unused = volumeRow.userAttempt = 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setRingerMode(int i) {
         Events.writeEvent(18, Integer.valueOf(i));
         incrementManualToggleCount();
@@ -699,66 +747,93 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     }
 
     private void setupRingerDrawer() {
-        ViewGroup viewGroup = (ViewGroup) this.mDialog.findViewById(R$id.volume_drawer_container);
-        this.mRingerDrawerContainer = viewGroup;
-        if (viewGroup == null) {
-            return;
+        this.mRingerDrawerContainer = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_container);
+        this.mFakeRingerDrawerContainer = (ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_drawer_container_fake);
+        if (this.mRingerDrawerContainer != null) {
+            if (!this.mShowVibrate) {
+                this.mRingerDrawerVibrate.setVisibility(8);
+                this.mFakeRingerDrawerVibrate.setVisibility(8);
+            }
+            if (!isLandscape()) {
+                ViewGroup viewGroup = this.mDialogView;
+                viewGroup.setPadding(viewGroup.getPaddingLeft(), this.mDialogView.getPaddingTop(), this.mDialogView.getPaddingRight() + getRingerDrawerOpenExtraSize(), this.mDialogView.getPaddingBottom());
+            } else {
+                ViewGroup viewGroup2 = this.mDialogView;
+                viewGroup2.setPadding(viewGroup2.getPaddingLeft() + getRingerDrawerOpenExtraSize(), this.mDialogView.getPaddingTop(), this.mDialogView.getPaddingRight(), this.mDialogView.getPaddingBottom());
+            }
+            ((LinearLayout) this.mRingerDrawerContainer.findViewById(C1893R.C1897id.volume_drawer_options)).setOrientation(0);
+            ((LinearLayout) this.mFakeRingerDrawerContainer.findViewById(C1893R.C1897id.volume_drawer_options_fake)).setOrientation(0);
+            this.mSelectedRingerContainer.setOnClickListener(new VolumeDialogImpl$$ExternalSyntheticLambda4(this));
+            this.mRingerDrawerVibrate.setOnClickListener(new RingerDrawerItemClickListener(1));
+            this.mRingerDrawerMute.setOnClickListener(new RingerDrawerItemClickListener(0));
+            this.mRingerDrawerNormal.setOnClickListener(new RingerDrawerItemClickListener(2));
+            int colorAccentDefaultColor = Utils.getColorAccentDefaultColor(this.mContext);
+            this.mRingerDrawerIconColorAnimator.addUpdateListener(new VolumeDialogImpl$$ExternalSyntheticLambda5(this, Utils.getColorAttrDefaultColor(this.mContext, 16844002), colorAccentDefaultColor));
+            this.mRingerDrawerIconColorAnimator.addListener(new AnimatorListenerAdapter() {
+                public void onAnimationEnd(Animator animator) {
+                    VolumeDialogImpl.this.mRingerDrawerIconAnimatingDeselected.clearColorFilter();
+                    VolumeDialogImpl.this.mRingerDrawerIconAnimatingSelected.clearColorFilter();
+                }
+            });
+            this.mRingerDrawerIconColorAnimator.setDuration(175);
+            this.mAnimateUpBackgroundToMatchDrawer.addUpdateListener(new VolumeDialogImpl$$ExternalSyntheticLambda6(this));
+            this.mExpandDialogRows.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                    VolumeDialogImpl.this.mDialogRowsView.getLayoutParams().width = (int) (floatValue * ((float) (VolumeDialogImpl.this.mRingerDrawerItemSize + (VolumeDialogImpl.this.mRingerRowsPadding * 2))));
+                    VolumeDialogImpl.this.mDialogRowsView.requestLayout();
+                }
+            });
+            this.mExpandDialogRows.addListener(new AnimatorListenerAdapter() {
+                public void onAnimationEnd(Animator animator) {
+                    super.onAnimationEnd(animator);
+                    VolumeDialogImpl.this.mDialogRowsView.getLayoutParams().width = -2;
+                    VolumeDialogImpl.this.mDialogRowsView.requestLayout();
+                }
+            });
+            this.mExpandRingerDrawer.addUpdateListener(new VolumeDialogImpl$$ExternalSyntheticLambda7(this));
+            this.mExpandRingerDrawer.addListener(new AnimatorListenerAdapter() {
+                public void onAnimationStart(Animator animator, boolean z) {
+                    super.onAnimationStart(animator, z);
+                    if (!z) {
+                        VolumeDialogImpl.this.mRingerDrawerContainer.getLayoutParams().width = VolumeDialogImpl.this.mRingerDrawerItemSize + VolumeDialogImpl.this.mRingerRowsPadding;
+                        VolumeDialogImpl.this.mRingerDrawerContainer.requestLayout();
+                        VolumeDialogImpl.this.mRingerDrawerContainer.setAlpha(1.0f);
+                        VolumeDialogImpl.this.mRingerDrawerContainer.setVisibility(0);
+                    }
+                }
+
+                public void onAnimationEnd(Animator animator, boolean z) {
+                    super.onAnimationEnd(animator, z);
+                    VolumeDialogImpl.this.mRingerDrawerContainer.getLayoutParams().width = -2;
+                    VolumeDialogImpl.this.mRingerDrawerContainer.requestLayout();
+                }
+            });
         }
-        if (!this.mShowVibrate) {
-            this.mRingerDrawerVibrate.setVisibility(8);
-        }
-        if (!isLandscape()) {
-            ViewGroup viewGroup2 = this.mDialogView;
-            viewGroup2.setPadding(viewGroup2.getPaddingLeft(), this.mDialogView.getPaddingTop(), this.mDialogView.getPaddingRight(), this.mDialogView.getPaddingBottom() + getRingerDrawerOpenExtraSize());
-        } else {
-            ViewGroup viewGroup3 = this.mDialogView;
-            viewGroup3.setPadding(viewGroup3.getPaddingLeft() + getRingerDrawerOpenExtraSize(), this.mDialogView.getPaddingTop(), this.mDialogView.getPaddingRight(), this.mDialogView.getPaddingBottom());
-        }
-        ((LinearLayout) this.mRingerDrawerContainer.findViewById(R$id.volume_drawer_options)).setOrientation(!isLandscape());
-        this.mSelectedRingerContainer.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda7
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                VolumeDialogImpl.this.lambda$setupRingerDrawer$7(view);
-            }
-        });
-        this.mRingerDrawerVibrate.setOnClickListener(new RingerDrawerItemClickListener(1));
-        this.mRingerDrawerMute.setOnClickListener(new RingerDrawerItemClickListener(0));
-        this.mRingerDrawerNormal.setOnClickListener(new RingerDrawerItemClickListener(2));
-        final int colorAccentDefaultColor = Utils.getColorAccentDefaultColor(this.mContext);
-        final int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(this.mContext, 16844002);
-        this.mRingerDrawerIconColorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                VolumeDialogImpl.this.lambda$setupRingerDrawer$8(colorAttrDefaultColor, colorAccentDefaultColor, valueAnimator);
-            }
-        });
-        this.mRingerDrawerIconColorAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.volume.VolumeDialogImpl.2
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-            public void onAnimationEnd(Animator animator) {
-                VolumeDialogImpl.this.mRingerDrawerIconAnimatingDeselected.clearColorFilter();
-                VolumeDialogImpl.this.mRingerDrawerIconAnimatingSelected.clearColorFilter();
-            }
-        });
-        this.mRingerDrawerIconColorAnimator.setDuration(175L);
-        this.mAnimateUpBackgroundToMatchDrawer.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda0
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                VolumeDialogImpl.this.lambda$setupRingerDrawer$9(valueAnimator);
-            }
-        });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setupRingerDrawer$7(View view) {
-        if (this.mIsRingerDrawerOpen) {
-            hideRingerDrawer();
-        } else {
-            showRingerDrawer();
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setupRingerDrawer$8$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47351x53906af7(View view) {
+        if (!this.mIsRingerDrawerOpen) {
+            int i = this.mState.ringerModeInternal;
+            if (i == 0) {
+                this.mRingerDrawerNormal.performClick();
+            } else if (i == 1) {
+                this.mRingerDrawerMute.performClick();
+            } else if (i == 2) {
+                if (this.mShowVibrate) {
+                    this.mRingerDrawerVibrate.performClick();
+                } else {
+                    this.mRingerDrawerMute.performClick();
+                }
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setupRingerDrawer$8(int i, int i2, ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setupRingerDrawer$9$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47352xd07f896(int i, int i2, ValueAnimator valueAnimator) {
         float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         int intValue = ((Integer) ArgbEvaluator.getInstance().evaluate(floatValue, Integer.valueOf(i), Integer.valueOf(i2))).intValue();
         int intValue2 = ((Integer) ArgbEvaluator.getInstance().evaluate(floatValue, Integer.valueOf(i2), Integer.valueOf(i))).intValue();
@@ -766,14 +841,26 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         this.mRingerDrawerIconAnimatingSelected.setColorFilter(intValue2);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setupRingerDrawer$9(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setupRingerDrawer$10$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47349x10e993c4(ValueAnimator valueAnimator) {
         this.mRingerDrawerClosedAmount = ((Float) valueAnimator.getAnimatedValue()).floatValue();
         updateBackgroundForDrawerClosedAmount();
+        updateBackgroundClosedAmount();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public ImageView getDrawerIconViewForMode(int i) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setupRingerDrawer$11$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47350xca612163(ValueAnimator valueAnimator) {
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        ViewGroup.LayoutParams layoutParams = this.mRingerDrawerContainer.getLayoutParams();
+        int i = this.mRingerDrawerItemSize;
+        int i2 = this.mRingerRowsPadding;
+        layoutParams.width = ((int) (floatValue * ((float) ((i * 2) + (i2 * 3))))) + i + i2;
+        this.mRingerDrawerContainer.requestLayout();
+    }
+
+    private ImageView getDrawerIconViewForMode(int i) {
         if (i == 1) {
             return this.mRingerDrawerVibrateIcon;
         }
@@ -783,184 +870,213 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         return this.mRingerDrawerNormalIcon;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public float getTranslationInDrawerForRingerMode(int i) {
+    private float getTranslationInDrawerForRingerMode(int i) {
         int i2;
-        if (i == 1) {
-            i2 = (-this.mRingerDrawerItemSize) * 2;
-        } else if (i != 0) {
+        if (i == 2) {
+            i2 = (-(this.mRingerDrawerItemSize + (this.mRingerRowsPadding * 2))) * 2;
+        } else if (i != 1) {
             return 0.0f;
         } else {
-            i2 = -this.mRingerDrawerItemSize;
+            i2 = -(this.mRingerDrawerItemSize + (this.mRingerRowsPadding * 2));
         }
-        return i2;
+        return (float) i2;
+    }
+
+    private float getTranslationInDrawerForRingerModePortrait(int i) {
+        int i2;
+        if (i == 2) {
+            return 0.0f;
+        }
+        if (i == 1) {
+            i2 = this.mRingerDrawerItemSize + (this.mRingerRowsPadding * 2);
+        } else {
+            i2 = (this.mRingerDrawerItemSize + (this.mRingerRowsPadding * 2)) * 2;
+        }
+        return (float) i2;
     }
 
     private void showRingerDrawer() {
         if (this.mIsRingerDrawerOpen) {
+            Log.d(TAG, "showRingerDrawer - drawer is already open");
             return;
         }
-        int i = 4;
         this.mRingerDrawerVibrateIcon.setVisibility(this.mState.ringerModeInternal == 1 ? 4 : 0);
         this.mRingerDrawerMuteIcon.setVisibility(this.mState.ringerModeInternal == 0 ? 4 : 0);
-        ImageView imageView = this.mRingerDrawerNormalIcon;
-        if (this.mState.ringerModeInternal != 2) {
-            i = 0;
-        }
-        imageView.setVisibility(i);
+        this.mRingerDrawerNormalIcon.setVisibility(this.mState.ringerModeInternal == 2 ? 4 : 0);
         this.mRingerDrawerNewSelectionBg.setAlpha(0.0f);
         if (!isLandscape()) {
-            this.mRingerDrawerNewSelectionBg.setTranslationY(getTranslationInDrawerForRingerMode(this.mState.ringerModeInternal));
+            this.mRingerDrawerNewSelectionBg.setTranslationX(getTranslationInDrawerForRingerModePortrait(this.mState.ringerModeInternal));
         } else {
             this.mRingerDrawerNewSelectionBg.setTranslationX(getTranslationInDrawerForRingerMode(this.mState.ringerModeInternal));
         }
-        if (!isLandscape()) {
-            this.mRingerDrawerContainer.setTranslationY(this.mRingerDrawerItemSize * (this.mRingerCount - 1));
-        } else {
-            this.mRingerDrawerContainer.setTranslationX(this.mRingerDrawerItemSize * (this.mRingerCount - 1));
-        }
-        this.mRingerDrawerContainer.setAlpha(0.0f);
-        this.mRingerDrawerContainer.setVisibility(0);
-        int i2 = this.mState.ringerModeInternal == 1 ? 175 : 250;
-        ViewPropertyAnimator animate = this.mRingerDrawerContainer.animate();
-        Interpolator interpolator = Interpolators.FAST_OUT_SLOW_IN;
-        long j = i2;
-        animate.setInterpolator(interpolator).setDuration(j).setStartDelay(this.mState.ringerModeInternal == 1 ? 75L : 0L).alpha(1.0f).translationX(0.0f).translationY(0.0f).start();
-        this.mSelectedRingerContainer.animate().setInterpolator(interpolator).setDuration(250L).withEndAction(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda12
-            @Override // java.lang.Runnable
-            public final void run() {
-                VolumeDialogImpl.this.lambda$showRingerDrawer$10();
-            }
-        });
+        this.mSeeMoreButton.setAlpha(1.0f);
+        this.mSeeMoreButton.setVisibility(0);
+        this.mSettingsIcon.setAlpha(0.0f);
+        this.mSettingsIcon.setVisibility(4);
+        long j = (long) (this.mState.ringerModeInternal == 1 ? 175 : 250);
+        this.mExpandRingerDrawer.setDuration(j);
+        this.mExpandRingerDrawer.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
+        this.mExpandRingerDrawer.start();
+        this.mDialogRowsView.getLayoutParams().width = this.mRingerDrawerItemSize + (this.mRingerRowsPadding * 2);
+        this.mDialogRowsView.requestLayout();
+        this.mExpandDialogRows.setDuration(j);
+        this.mExpandDialogRows.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
+        this.mExpandDialogRows.start();
+        this.mSelectedRingerContainer.animate().setInterpolator(Interpolators.FAST_OUT_SLOW_IN).setDuration(250).withEndAction(new VolumeDialogImpl$$ExternalSyntheticLambda17(this));
         this.mAnimateUpBackgroundToMatchDrawer.setDuration(j);
-        this.mAnimateUpBackgroundToMatchDrawer.setInterpolator(interpolator);
+        this.mAnimateUpBackgroundToMatchDrawer.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         this.mAnimateUpBackgroundToMatchDrawer.start();
         if (!isLandscape()) {
-            this.mSelectedRingerContainer.animate().translationY(getTranslationInDrawerForRingerMode(this.mState.ringerModeInternal)).start();
+            this.mSelectedRingerContainer.animate().translationX(getTranslationInDrawerForRingerModePortrait(this.mState.ringerModeInternal)).start();
         } else {
             this.mSelectedRingerContainer.animate().translationX(getTranslationInDrawerForRingerMode(this.mState.ringerModeInternal)).start();
         }
         this.mSelectedRingerContainer.setContentDescription(this.mContext.getString(getStringDescriptionResourceForRingerMode(this.mState.ringerModeInternal)));
         this.mIsRingerDrawerOpen = true;
+        updateRowsH(getActiveRow());
+        Log.d(TAG, "showRingerDrawer");
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$showRingerDrawer$10() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$showRingerDrawer$12$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47356xcb2c625c() {
         getDrawerIconViewForMode(this.mState.ringerModeInternal).setVisibility(0);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void hideRingerDrawer() {
-        if (this.mRingerDrawerContainer != null && this.mIsRingerDrawerOpen) {
+        if (this.mRingerDrawerContainer == null) {
+            Log.d(TAG, "hideRingerDrawer - mRingerDrawerContainer is null");
+        } else if (!this.mIsRingerDrawerOpen) {
+            Log.d(TAG, "hideRingerDrawer - drawer is already hide");
+        } else {
             getDrawerIconViewForMode(this.mState.ringerModeInternal).setVisibility(4);
-            this.mRingerDrawerContainer.animate().alpha(0.0f).setDuration(250L).setStartDelay(0L).withEndAction(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda20
-                @Override // java.lang.Runnable
-                public final void run() {
-                    VolumeDialogImpl.this.lambda$hideRingerDrawer$11();
-                }
-            });
-            if (!isLandscape()) {
-                this.mRingerDrawerContainer.animate().translationY(this.mRingerDrawerItemSize * 2).start();
-            } else {
-                this.mRingerDrawerContainer.animate().translationX(this.mRingerDrawerItemSize * 2).start();
-            }
-            this.mAnimateUpBackgroundToMatchDrawer.setDuration(250L);
+            this.mRingerDrawerContainer.setAlpha(0.0f);
+            this.mRingerDrawerContainer.setVisibility(4);
+            this.mSeeMoreButton.setAlpha(0.0f);
+            this.mSeeMoreButton.setVisibility(4);
+            this.mSettingsIcon.setAlpha(1.0f);
+            this.mSettingsIcon.setVisibility(0);
+            this.mAnimateUpBackgroundToMatchDrawer.setDuration(250);
             this.mAnimateUpBackgroundToMatchDrawer.setInterpolator(Interpolators.FAST_OUT_SLOW_IN_REVERSE);
             this.mAnimateUpBackgroundToMatchDrawer.reverse();
             this.mSelectedRingerContainer.animate().translationX(0.0f).translationY(0.0f).start();
-            this.mSelectedRingerContainer.setContentDescription(this.mContext.getString(R$string.volume_ringer_change));
+            this.mSelectedRingerContainer.setContentDescription(this.mContext.getString(C1893R.string.volume_ringer_change));
             this.mIsRingerDrawerOpen = false;
+            this.mExpandRingerDrawer.setDuration(250);
+            this.mExpandRingerDrawer.setInterpolator(Interpolators.FAST_OUT_SLOW_IN_REVERSE);
+            this.mExpandRingerDrawer.reverse();
+            this.mExpandDialogRows.setDuration(250);
+            this.mExpandDialogRows.setInterpolator(Interpolators.FAST_OUT_SLOW_IN_REVERSE);
+            this.mExpandDialogRows.reverse();
+            updateRowsH(getActiveRow());
+            Log.d(TAG, "hideRingerDrawer caller:" + Debug.getCallers(4));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$hideRingerDrawer$11() {
-        this.mRingerDrawerContainer.setVisibility(4);
-    }
-
-    public void initSettingsH() {
+    private void initSettingsH(int i) {
         View view = this.mSettingsView;
         if (view != null) {
-            view.setVisibility((!this.mDeviceProvisionedController.isCurrentUserSetup() || this.mActivityManager.getLockTaskModeState() != 0) ? 8 : 0);
+            view.setVisibility((!this.mDeviceProvisionedController.isCurrentUserSetup() || i != 0) ? 8 : 0);
         }
         ImageButton imageButton = this.mSettingsIcon;
         if (imageButton != null) {
-            imageButton.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda6
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view2) {
-                    VolumeDialogImpl.this.lambda$initSettingsH$12(view2);
-                }
-            });
+            imageButton.setOnClickListener(new VolumeDialogImpl$$ExternalSyntheticLambda20(this));
+        }
+        TextView textView = this.mSeeMoreButton;
+        if (textView != null) {
+            textView.setOnClickListener(new VolumeDialogImpl$$ExternalSyntheticLambda21(this));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$initSettingsH$12(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initSettingsH$13$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47345xb4eb2e2b(View view) {
+        if (!this.mIsRingerDrawerOpen) {
+            showRingerDrawer();
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initSettingsH$14$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47346x6e62bbca(View view) {
         Events.writeEvent(8, new Object[0]);
-        Intent intent = new Intent("android.settings.panel.action.VOLUME");
+        Intent addFlags = new Intent("android.settings.SOUND_SETTINGS").addFlags(268435456);
         dismissH(5);
-        ((MediaOutputDialogFactory) Dependency.get(MediaOutputDialogFactory.class)).dismiss();
-        ((ActivityStarter) Dependency.get(ActivityStarter.class)).startActivity(intent, true);
+        this.mMediaOutputDialogFactory.dismiss();
+        this.mActivityStarter.startActivity(addFlags, true);
     }
 
     public void initRingerH() {
         ImageButton imageButton = this.mRingerIcon;
         if (imageButton != null) {
             imageButton.setAccessibilityLiveRegion(1);
-            this.mRingerIcon.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda5
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    VolumeDialogImpl.this.lambda$initRingerH$13(view);
-                }
-            });
+            this.mRingerIcon.setOnClickListener(new VolumeDialogImpl$$ExternalSyntheticLambda0(this));
         }
         updateRingerH();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* JADX WARN: Code restructure failed: missing block: B:7:0x0023, code lost:
-        if (r2 != false) goto L9;
+    /* access modifiers changed from: package-private */
+    /* JADX WARNING: Code restructure failed: missing block: B:5:0x0023, code lost:
+        if (r2 != false) goto L_0x0038;
      */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public /* synthetic */ void lambda$initRingerH$13(View view) {
-        int i = 1;
-        Prefs.putBoolean(this.mContext, "TouchedRingerToggle", true);
-        VolumeDialogController.StreamState streamState = this.mState.states.get(2);
-        if (streamState == null) {
-            return;
-        }
-        boolean hasVibrator = this.mController.hasVibrator();
-        int i2 = this.mState.ringerModeInternal;
-        if (i2 != 2) {
-            if (i2 != 1) {
-                if (streamState.level == 0) {
-                    this.mController.setStreamVolume(2, 1);
-                }
-                i = 2;
-                setRingerMode(i);
-            }
-            i = 0;
-            setRingerMode(i);
-        }
+    /* renamed from: lambda$initRingerH$15$com-android-systemui-volume-VolumeDialogImpl */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public /* synthetic */ void mo47343x7c745eaf(android.view.View r6) {
+        /*
+            r5 = this;
+            android.content.Context r6 = r5.mContext
+            java.lang.String r0 = "TouchedRingerToggle"
+            r1 = 1
+            com.android.systemui.Prefs.putBoolean(r6, r0, r1)
+            com.android.systemui.plugins.VolumeDialogController$State r6 = r5.mState
+            android.util.SparseArray<com.android.systemui.plugins.VolumeDialogController$StreamState> r6 = r6.states
+            r0 = 2
+            java.lang.Object r6 = r6.get(r0)
+            com.android.systemui.plugins.VolumeDialogController$StreamState r6 = (com.android.systemui.plugins.VolumeDialogController.StreamState) r6
+            if (r6 != 0) goto L_0x0016
+            return
+        L_0x0016:
+            com.android.systemui.plugins.VolumeDialogController r2 = r5.mController
+            boolean r2 = r2.hasVibrator()
+            com.android.systemui.plugins.VolumeDialogController$State r3 = r5.mState
+            int r3 = r3.ringerModeInternal
+            r4 = 0
+            if (r3 != r0) goto L_0x0026
+            if (r2 == 0) goto L_0x002c
+            goto L_0x0038
+        L_0x0026:
+            com.android.systemui.plugins.VolumeDialogController$State r2 = r5.mState
+            int r2 = r2.ringerModeInternal
+            if (r2 != r1) goto L_0x002e
+        L_0x002c:
+            r1 = r4
+            goto L_0x0038
+        L_0x002e:
+            int r6 = r6.level
+            if (r6 != 0) goto L_0x0037
+            com.android.systemui.plugins.VolumeDialogController r6 = r5.mController
+            r6.setStreamVolume(r0, r1)
+        L_0x0037:
+            r1 = r0
+        L_0x0038:
+            r5.setRingerMode(r1)
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.volume.VolumeDialogImpl.mo47343x7c745eaf(android.view.View):void");
     }
 
     private void initODICaptionsH() {
         CaptionsToggleImageButton captionsToggleImageButton = this.mODICaptionsIcon;
         if (captionsToggleImageButton != null) {
-            captionsToggleImageButton.setOnConfirmedTapListener(new CaptionsToggleImageButton.ConfirmedTapListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda10
-                @Override // com.android.systemui.volume.CaptionsToggleImageButton.ConfirmedTapListener
-                public final void onConfirmedTap() {
-                    VolumeDialogImpl.this.lambda$initODICaptionsH$14();
-                }
-            }, this.mHandler);
+            captionsToggleImageButton.setOnConfirmedTapListener(new VolumeDialogImpl$$ExternalSyntheticLambda8(this), this.mHandler);
         }
         this.mController.getCaptionsComponentState(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$initODICaptionsH$14() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initODICaptionsH$16$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47342xad9c3804() {
         onCaptionIconClicked();
         Events.writeEvent(21, new Object[0]);
     }
@@ -969,63 +1085,51 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         boolean z2 = this.mHasSeenODICaptionsTooltip;
         if (!z2 && !z && this.mODICaptionsTooltipViewStub != null) {
             this.mController.getCaptionsComponentState(true);
-        } else if (!z2 || !z || this.mODICaptionsTooltipView == null) {
-        } else {
+        } else if (z2 && z && this.mODICaptionsTooltipView != null) {
             hideCaptionsTooltip();
         }
     }
 
-    protected void showCaptionsTooltip() {
+    /* access modifiers changed from: protected */
+    public void showCaptionsTooltip() {
         ViewStub viewStub;
         if (!this.mHasSeenODICaptionsTooltip && (viewStub = this.mODICaptionsTooltipViewStub) != null) {
             View inflate = viewStub.inflate();
             this.mODICaptionsTooltipView = inflate;
-            inflate.findViewById(R$id.dismiss).setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda4
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    VolumeDialogImpl.this.lambda$showCaptionsTooltip$15(view);
-                }
-            });
+            inflate.findViewById(C1893R.C1897id.dismiss).setOnClickListener(new VolumeDialogImpl$$ExternalSyntheticLambda23(this));
             this.mODICaptionsTooltipViewStub = null;
             rescheduleTimeoutH();
         }
         View view = this.mODICaptionsTooltipView;
         if (view != null) {
             view.setAlpha(0.0f);
-            this.mHandler.post(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda18
-                @Override // java.lang.Runnable
-                public final void run() {
-                    VolumeDialogImpl.this.lambda$showCaptionsTooltip$17();
-                }
-            });
+            this.mHandler.post(new VolumeDialogImpl$$ExternalSyntheticLambda24(this));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$showCaptionsTooltip$15(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$showCaptionsTooltip$17$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47353x7992684b(View view) {
         hideCaptionsTooltip();
         Events.writeEvent(22, new Object[0]);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$showCaptionsTooltip$17() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$showCaptionsTooltip$19$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47355xec818389() {
         int[] locationOnScreen = this.mODICaptionsTooltipView.getLocationOnScreen();
         int[] locationOnScreen2 = this.mODICaptionsIcon.getLocationOnScreen();
-        this.mODICaptionsTooltipView.setTranslationY((locationOnScreen2[1] - locationOnScreen[1]) - ((this.mODICaptionsTooltipView.getHeight() - this.mODICaptionsIcon.getHeight()) / 2.0f));
-        this.mODICaptionsTooltipView.animate().alpha(1.0f).setStartDelay(this.mDialogShowAnimationDurationMs).withEndAction(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda14
-            @Override // java.lang.Runnable
-            public final void run() {
-                VolumeDialogImpl.this.lambda$showCaptionsTooltip$16();
-            }
-        }).start();
+        this.mODICaptionsTooltipView.setTranslationY(((float) (locationOnScreen2[1] - locationOnScreen[1])) - (((float) (this.mODICaptionsTooltipView.getHeight() - this.mODICaptionsIcon.getHeight())) / 2.0f));
+        this.mODICaptionsTooltipView.animate().alpha(1.0f).setStartDelay((long) this.mDialogShowAnimationDurationMs).withEndAction(new VolumeDialogImpl$$ExternalSyntheticLambda2(this)).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$showCaptionsTooltip$16() {
-        if (D.BUG) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$showCaptionsTooltip$18$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47354x3309f5ea() {
+        if (C3265D.BUG) {
             Log.d(TAG, "tool:checkODICaptionsTooltip() putBoolean true");
         }
-        Prefs.putBoolean(this.mContext, "HasSeenODICaptionsTooltip", true);
+        Prefs.putBoolean(this.mContext, Prefs.Key.HAS_SEEN_ODI_CAPTIONS_TOOLTIP, true);
         this.mHasSeenODICaptionsTooltip = true;
         CaptionsToggleImageButton captionsToggleImageButton = this.mODICaptionsIcon;
         if (captionsToggleImageButton != null) {
@@ -1035,49 +1139,42 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
 
     private void hideCaptionsTooltip() {
         View view = this.mODICaptionsTooltipView;
-        if (view == null || view.getVisibility() != 0) {
-            return;
+        if (view != null && view.getVisibility() == 0) {
+            this.mODICaptionsTooltipView.animate().cancel();
+            this.mODICaptionsTooltipView.setAlpha(1.0f);
+            this.mODICaptionsTooltipView.animate().alpha(0.0f).setStartDelay(0).setDuration((long) this.mDialogHideAnimationDurationMs).withEndAction(new VolumeDialogImpl$$ExternalSyntheticLambda11(this)).start();
         }
-        this.mODICaptionsTooltipView.animate().cancel();
-        this.mODICaptionsTooltipView.setAlpha(1.0f);
-        this.mODICaptionsTooltipView.animate().alpha(0.0f).setStartDelay(0L).setDuration(this.mDialogHideAnimationDurationMs).withEndAction(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda15
-            @Override // java.lang.Runnable
-            public final void run() {
-                VolumeDialogImpl.this.lambda$hideCaptionsTooltip$18();
-            }
-        }).start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$hideCaptionsTooltip$18() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$hideCaptionsTooltip$20$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47335x9b9a784e() {
         View view = this.mODICaptionsTooltipView;
         if (view != null) {
             view.setVisibility(4);
         }
     }
 
-    protected void tryToRemoveCaptionsTooltip() {
-        if (!this.mHasSeenODICaptionsTooltip || this.mODICaptionsTooltipView == null) {
-            return;
+    /* access modifiers changed from: protected */
+    public void tryToRemoveCaptionsTooltip() {
+        if (this.mHasSeenODICaptionsTooltip && this.mODICaptionsTooltipView != null) {
+            ((ViewGroup) this.mDialog.findViewById(C1893R.C1897id.volume_dialog_container)).removeView(this.mODICaptionsTooltipView);
+            this.mODICaptionsTooltipView = null;
         }
-        ((ViewGroup) this.mDialog.findViewById(R$id.volume_dialog_container)).removeView(this.mODICaptionsTooltipView);
-        this.mODICaptionsTooltipView = null;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateODICaptionsH(boolean z, boolean z2) {
         ViewGroup viewGroup = this.mODICaptionsView;
         if (viewGroup != null) {
             viewGroup.setVisibility(z ? 0 : 8);
         }
-        if (!z) {
-            return;
+        if (z) {
+            updateCaptionsIcon();
+            if (z2) {
+                showCaptionsTooltip();
+            }
         }
-        updateCaptionsIcon();
-        if (!z2) {
-            return;
-        }
-        showCaptionsTooltip();
     }
 
     private void updateCaptionsIcon() {
@@ -1085,20 +1182,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         if (this.mODICaptionsIcon.getCaptionsEnabled() != areCaptionsEnabled) {
             this.mHandler.post(this.mODICaptionsIcon.setCaptionsEnabled(areCaptionsEnabled));
         }
-        final boolean isCaptionStreamOptedOut = this.mController.isCaptionStreamOptedOut();
-        if (this.mODICaptionsIcon.getOptedOut() != isCaptionStreamOptedOut) {
-            this.mHandler.post(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda22
-                @Override // java.lang.Runnable
-                public final void run() {
-                    VolumeDialogImpl.this.lambda$updateCaptionsIcon$19(isCaptionStreamOptedOut);
-                }
-            });
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateCaptionsIcon$19(boolean z) {
-        this.mODICaptionsIcon.setOptedOut(z);
     }
 
     private void onCaptionIconClicked() {
@@ -1112,141 +1195,163 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     }
 
     private void provideTouchFeedbackH(int i) {
-        VibrationEffect vibrationEffect;
         if (i == 0) {
-            vibrationEffect = VibrationEffect.get(0);
-        } else if (i == 2) {
-            this.mController.scheduleTouchFeedback();
-            vibrationEffect = null;
+            VibrationEffect.get(0);
+        } else if (i != 2) {
+            VibrationEffect.get(1);
         } else {
-            vibrationEffect = VibrationEffect.get(1);
-        }
-        if (vibrationEffect != null) {
-            this.mController.vibrate(vibrationEffect);
+            this.mController.scheduleTouchFeedback();
         }
     }
 
     private void maybeShowToastH(int i) {
-        int i2 = Prefs.getInt(this.mContext, "RingerGuidanceCount", 0);
-        if (i2 > 12) {
-            return;
-        }
-        String str = null;
-        if (i == 0) {
-            str = this.mContext.getString(17041573);
-        } else if (i == 2) {
-            VolumeDialogController.StreamState streamState = this.mState.states.get(2);
-            if (streamState != null) {
-                str = this.mContext.getString(R$string.volume_dialog_ringer_guidance_ring, Utils.formatPercentage(streamState.level, streamState.levelMax));
+        String str;
+        int i2 = Prefs.getInt(this.mContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, 0);
+        if (i2 <= 12) {
+            if (i == 0) {
+                str = this.mContext.getString(17041694);
+            } else if (i != 2) {
+                str = this.mContext.getString(17041695);
+            } else {
+                VolumeDialogController.StreamState streamState = this.mState.states.get(2);
+                if (streamState != null) {
+                    str = this.mContext.getString(C1893R.string.volume_dialog_ringer_guidance_ring, new Object[]{Utils.formatPercentage((long) streamState.level, (long) streamState.levelMax)});
+                } else {
+                    str = null;
+                }
             }
-        } else {
-            str = this.mContext.getString(17041574);
+            Toast.makeText(this.mContext, str, 0).show();
+            Prefs.putInt(this.mContext, Prefs.Key.SEEN_RINGER_GUIDANCE_COUNT, i2 + 1);
         }
-        Toast.makeText(this.mContext, str, 0).show();
-        Prefs.putInt(this.mContext, "RingerGuidanceCount", i2 + 1);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void showH(int i) {
-        if (D.BUG) {
-            String str = TAG;
-            Log.d(str, "showH r=" + Events.SHOW_REASONS[i]);
+    public void show(int i) {
+        this.mHandler.obtainMessage(1, i, 0).sendToTarget();
+    }
+
+    public void dismiss(int i) {
+        this.mHandler.obtainMessage(2, i, 0).sendToTarget();
+    }
+
+    private Animator.AnimatorListener getJankListener(View view, String str, long j) {
+        final View view2 = view;
+        final String str2 = str;
+        final long j2 = j;
+        return new Animator.AnimatorListener() {
+            public void onAnimationRepeat(Animator animator) {
+            }
+
+            public void onAnimationStart(Animator animator) {
+                if (view2.isAttachedToWindow()) {
+                    VolumeDialogImpl.this.mInteractionJankMonitor.begin(InteractionJankMonitor.Configuration.Builder.withView(55, view2).setTag(str2).setTimeout(j2));
+                } else if (C3265D.BUG) {
+                    Log.d(VolumeDialogImpl.TAG, "onAnimationStart view do not attached to window:" + view2);
+                }
+            }
+
+            public void onAnimationEnd(Animator animator) {
+                VolumeDialogImpl.this.mInteractionJankMonitor.end(55);
+            }
+
+            public void onAnimationCancel(Animator animator) {
+                VolumeDialogImpl.this.mInteractionJankMonitor.cancel(55);
+            }
+        };
+    }
+
+    /* access modifiers changed from: private */
+    public void showH(int i, boolean z, int i2) {
+        Trace.beginSection("VolumeDialogImpl#showH");
+        if (C3265D.BUG) {
+            Log.d(TAG, "showH r=" + Events.SHOW_REASONS[i]);
         }
         this.mHandler.removeMessages(1);
         this.mHandler.removeMessages(2);
         rescheduleTimeoutH();
         if (this.mConfigChanged) {
-            initDialog();
+            initDialog(i2);
             this.mConfigurableTexts.update();
             this.mConfigChanged = false;
         }
-        initSettingsH();
+        initSettingsH(i2);
         this.mShowing = true;
         this.mIsAnimatingDismiss = false;
         this.mDialog.show();
-        Events.writeEvent(0, Integer.valueOf(i), Boolean.valueOf(this.mKeyguard.isKeyguardLocked()));
+        Events.writeEvent(0, Integer.valueOf(i), Boolean.valueOf(z));
         this.mController.notifyVisible(true);
         this.mController.getCaptionsComponentState(false);
         checkODICaptionsTooltip(false);
         updateBackgroundForDrawerClosedAmount();
+        Log.d(TAG, "showH mTopContainer width = " + this.mTopContainer.getWidth() + "mRingerDrawerClosedAmount = " + this.mRingerDrawerClosedAmount);
+        updateBackgroundClosedAmount();
+        Trace.endSection();
     }
 
-    protected void rescheduleTimeoutH() {
+    /* access modifiers changed from: protected */
+    public void rescheduleTimeoutH() {
         this.mHandler.removeMessages(2);
         int computeTimeoutH = computeTimeoutH();
-        H h = this.mHandler;
-        h.sendMessageDelayed(h.obtainMessage(2, 3, 0), computeTimeoutH);
-        if (D.BUG) {
-            String str = TAG;
-            Log.d(str, "rescheduleTimeout " + computeTimeoutH + " " + Debug.getCaller());
-        }
+        C3301H h = this.mHandler;
+        h.sendMessageDelayed(h.obtainMessage(2, 3, 0), (long) computeTimeoutH);
+        NTLogUtil.m1680d(TAG, "rescheduleTimeout " + computeTimeoutH + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + Debug.getCaller());
         this.mController.userActivity();
     }
 
     private int computeTimeoutH() {
         if (this.mHovering) {
-            return this.mAccessibilityMgr.getRecommendedTimeoutMillis(16000, 4);
+            return this.mAccessibilityMgr.getRecommendedTimeoutMillis(DIALOG_HOVERING_TIMEOUT_MILLIS, 4);
         }
         if (this.mSafetyWarning != null) {
             return this.mAccessibilityMgr.getRecommendedTimeoutMillis(5000, 6);
         }
-        if (!this.mHasSeenODICaptionsTooltip && this.mODICaptionsTooltipView != null) {
-            return this.mAccessibilityMgr.getRecommendedTimeoutMillis(5000, 6);
+        if (this.mHasSeenODICaptionsTooltip || this.mODICaptionsTooltipView == null) {
+            return this.mAccessibilityMgr.getRecommendedTimeoutMillis(3000, 4);
         }
-        return this.mAccessibilityMgr.getRecommendedTimeoutMillis(3000, 4);
+        return this.mAccessibilityMgr.getRecommendedTimeoutMillis(5000, 6);
     }
 
-    protected void dismissH(int i) {
-        if (D.BUG) {
-            String str = TAG;
-            Log.d(str, "mDialog.dismiss() reason: " + Events.DISMISS_REASONS[i] + " from: " + Debug.getCaller());
+    /* access modifiers changed from: protected */
+    public void dismissH(int i) {
+        Trace.beginSection("VolumeDialogImpl#dismissH");
+        if (C3265D.BUG) {
+            Log.d(TAG, "mDialog.dismiss() reason: " + Events.DISMISS_REASONS[i] + " from: " + Debug.getCaller());
         }
         this.mHandler.removeMessages(2);
         this.mHandler.removeMessages(1);
-        if (this.mIsAnimatingDismiss) {
-            return;
-        }
-        this.mIsAnimatingDismiss = true;
-        this.mDialogView.animate().cancel();
-        if (this.mShowing) {
-            this.mShowing = false;
-            Events.writeEvent(1, Integer.valueOf(i));
-        }
-        this.mDialogView.setTranslationX(0.0f);
-        this.mDialogView.setAlpha(1.0f);
-        ViewPropertyAnimator withEndAction = this.mDialogView.animate().alpha(0.0f).setDuration(this.mDialogHideAnimationDurationMs).setInterpolator(new SystemUIInterpolators$LogAccelerateInterpolator()).withEndAction(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda19
-            @Override // java.lang.Runnable
-            public final void run() {
-                VolumeDialogImpl.this.lambda$dismissH$21();
+        if (!this.mIsAnimatingDismiss) {
+            this.mIsAnimatingDismiss = true;
+            this.mDialogView.animate().cancel();
+            if (this.mShowing) {
+                this.mShowing = false;
+                Events.writeEvent(1, Integer.valueOf(i));
             }
-        });
-        if (!isLandscape()) {
-            withEndAction.translationX((-this.mDialogView.getWidth()) / 2.0f);
-        }
-        withEndAction.start();
-        checkODICaptionsTooltip(true);
-        synchronized (this.mSafetyWarningLock) {
-            if (this.mSafetyWarning != null) {
-                if (D.BUG) {
-                    Log.d(TAG, "SafetyWarning dismissed");
+            this.mDialogView.setTranslationX(0.0f);
+            this.mDialogView.setAlpha(1.0f);
+            ViewPropertyAnimator withEndAction = this.mDialogView.animate().alpha(0.0f).setDuration((long) this.mDialogHideAnimationDurationMs).setInterpolator(new SystemUIInterpolators.LogAccelerateInterpolator()).withEndAction(new VolumeDialogImpl$$ExternalSyntheticLambda1(this));
+            withEndAction.translationX(((VolumeDialogImplEx) NTDependencyEx.get(VolumeDialogImplEx.class)).getTranslationX(this.mDialogView, shouldSlideInVolumeTray()));
+            withEndAction.setListener(getJankListener(getDialogView(), TYPE_DISMISS, (long) this.mDialogHideAnimationDurationMs)).start();
+            checkODICaptionsTooltip(true);
+            synchronized (this.mSafetyWarningLock) {
+                if (this.mSafetyWarning != null) {
+                    if (C3265D.BUG) {
+                        Log.d(TAG, "SafetyWarning dismissed");
+                    }
+                    this.mSafetyWarning.dismiss();
                 }
-                this.mSafetyWarning.dismiss();
             }
+            Trace.endSection();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$dismissH$21() {
-        this.mHandler.postDelayed(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda17
-            @Override // java.lang.Runnable
-            public final void run() {
-                VolumeDialogImpl.this.lambda$dismissH$20();
-            }
-        }, 50L);
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$dismissH$22$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ void m3312lambda$dismissH$22$comandroidsystemuivolumeVolumeDialogImpl() {
+        this.mHandler.postDelayed(new VolumeDialogImpl$$ExternalSyntheticLambda18(this), 50);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$dismissH$20() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$dismissH$21$com-android-systemui-volume-VolumeDialogImpl  reason: not valid java name */
+    public /* synthetic */ void m3311lambda$dismissH$21$comandroidsystemuivolumeVolumeDialogImpl() {
         this.mDialog.dismiss();
         tryToRemoveCaptionsTooltip();
         this.mIsAnimatingDismiss = false;
@@ -1255,33 +1360,52 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     }
 
     private boolean shouldBeVisibleH(VolumeRow volumeRow, VolumeRow volumeRow2) {
-        if (volumeRow.stream == volumeRow2.stream) {
+        if ((volumeRow.stream == volumeRow2.stream) && !this.mIsRingerDrawerOpen) {
             return true;
         }
-        if (this.mShowActiveStreamOnly) {
+        if (!this.mShowActiveStreamOnly) {
+            if (volumeRow.stream == 10) {
+                return this.mShowA11yStream;
+            }
+            if (volumeRow2.stream == 10 && volumeRow.stream == this.mPrevActiveStream) {
+                return true;
+            }
+            if (volumeRow.defaultStream) {
+                if (volumeRow2.stream == 2 || volumeRow2.stream == 4 || volumeRow2.stream == 0 || volumeRow2.stream == 10 || this.mDynamic.get(volumeRow2.stream)) {
+                    return true;
+                }
+                return false;
+            }
+        }
+        if (volumeRow.stream != 10 || this.mIsRingerDrawerOpen) {
             return false;
         }
-        if (volumeRow.stream == 10) {
-            return this.mShowA11yStream;
-        }
-        if (volumeRow2.stream == 10 && volumeRow.stream == this.mPrevActiveStream) {
-            return true;
-        }
-        if (!volumeRow.defaultStream) {
-            return false;
-        }
-        return volumeRow2.stream == 2 || volumeRow2.stream == 4 || volumeRow2.stream == 0 || volumeRow2.stream == 10 || this.mDynamic.get(volumeRow2.stream);
+        return this.mShowA11yStream;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    private boolean shouldBeVisibleExpendH(VolumeRow volumeRow) {
+        if (!this.mIsRingerDrawerOpen) {
+            return false;
+        }
+        if (volumeRow.stream == 3 || volumeRow.stream == 2 || volumeRow.stream == 4) {
+            return true;
+        }
+        return false;
+    }
+
+    /* access modifiers changed from: private */
     public void updateRowsH(VolumeRow volumeRow) {
-        if (D.BUG) {
+        Trace.beginSection("VolumeDialogImpl#updateRowsH");
+        if (C3265D.BUG) {
             Log.d(TAG, "updateRowsH");
         }
         if (!this.mShowing) {
             trimObsoleteH();
         }
         int i = !isRtl() ? -1 : 32767;
+        if (!isLandscape()) {
+            i = isRtl() ? -1 : 32767;
+        }
         Iterator<VolumeRow> it = this.mRows.iterator();
         while (true) {
             boolean z = false;
@@ -1289,30 +1413,21 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
                 break;
             }
             VolumeRow next = it.next();
-            if (next == volumeRow) {
+            boolean z2 = next == volumeRow;
+            if (shouldBeVisibleH(next, volumeRow) || shouldBeVisibleExpendH(next)) {
                 z = true;
             }
-            boolean shouldBeVisibleH = shouldBeVisibleH(next, volumeRow);
-            Util.setVisOrGone(next.view, shouldBeVisibleH);
-            if (shouldBeVisibleH && this.mRingerAndDrawerContainerBackground != null) {
-                if (!isRtl()) {
-                    i = Math.max(i, this.mDialogRowsView.indexOfChild(next.view));
-                } else {
-                    i = Math.min(i, this.mDialogRowsView.indexOfChild(next.view));
-                }
+            Util.setVisOrGone(next.view, z);
+            if (z && this.mRingerAndDrawerContainerBackground != null) {
+                i = ((VolumeDialogImplEx) NTDependencyEx.get(VolumeDialogImplEx.class)).getRightMostVisibleRowIndex(isLandscape(), isRtl(), i, this.mDialogRowsView.indexOfChild(next.view));
                 ViewGroup.LayoutParams layoutParams = next.view.getLayoutParams();
                 if (layoutParams instanceof LinearLayout.LayoutParams) {
                     LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) layoutParams;
-                    if (!isRtl()) {
-                        layoutParams2.setMarginEnd(this.mRingerRowsPadding);
-                    } else {
-                        layoutParams2.setMarginStart(this.mRingerRowsPadding);
-                    }
                 }
-                next.view.setBackgroundDrawable(this.mContext.getDrawable(R$drawable.volume_row_rounded_background));
+                next.view.setBackgroundDrawable(this.mContext.getDrawable(C1893R.C1895drawable.volume_row_rounded_background));
             }
             if (next.view.isShown()) {
-                updateVolumeRowTintH(next, z);
+                updateVolumeRowTintH(next, z2);
             }
         }
         if (i > -1 && i < 32767) {
@@ -1326,79 +1441,56 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
             }
         }
         updateBackgroundForDrawerClosedAmount();
+        updateBackgroundClosedAmount();
+        Trace.endSection();
     }
 
-    protected void updateRingerH() {
+    /* access modifiers changed from: protected */
+    public void updateRingerH() {
         VolumeDialogController.State state;
         VolumeDialogController.StreamState streamState;
-        if (this.mRinger == null || (state = this.mState) == null || (streamState = state.states.get(2)) == null) {
-            return;
-        }
-        VolumeDialogController.State state2 = this.mState;
-        int i = state2.zenMode;
-        boolean z = false;
-        boolean z2 = i == 3 || i == 2 || (i == 1 && state2.disallowRinger);
-        enableRingerViewsH(!z2);
-        int i2 = this.mState.ringerModeInternal;
-        if (i2 == 0) {
-            ImageButton imageButton = this.mRingerIcon;
-            int i3 = R$drawable.ic_volume_ringer_mute;
-            imageButton.setImageResource(i3);
-            this.mSelectedRingerIcon.setImageResource(i3);
-            this.mRingerIcon.setTag(2);
-            addAccessibilityDescription(this.mRingerIcon, 0, this.mContext.getString(R$string.volume_ringer_hint_unmute));
-        } else if (i2 == 1) {
-            ImageButton imageButton2 = this.mRingerIcon;
-            int i4 = R$drawable.ic_volume_ringer_vibrate;
-            imageButton2.setImageResource(i4);
-            this.mSelectedRingerIcon.setImageResource(i4);
-            addAccessibilityDescription(this.mRingerIcon, 1, this.mContext.getString(R$string.volume_ringer_hint_mute));
-            this.mRingerIcon.setTag(3);
-        } else {
-            if ((this.mAutomute && streamState.level == 0) || streamState.muted) {
-                z = true;
-            }
-            if (!z2 && z) {
-                ImageButton imageButton3 = this.mRingerIcon;
-                int i5 = R$drawable.ic_volume_ringer_mute;
-                imageButton3.setImageResource(i5);
-                this.mSelectedRingerIcon.setImageResource(i5);
-                addAccessibilityDescription(this.mRingerIcon, 2, this.mContext.getString(R$string.volume_ringer_hint_unmute));
+        if (this.mRinger != null && (state = this.mState) != null && (streamState = state.states.get(2)) != null) {
+            boolean z = false;
+            boolean z2 = this.mState.zenMode == 3 || this.mState.zenMode == 2 || (this.mState.zenMode == 1 && this.mState.disallowRinger);
+            enableRingerViewsH(!z2);
+            int i = this.mState.ringerModeInternal;
+            if (i == 0) {
+                this.mRingerIcon.setImageResource(C1893R.C1895drawable.ic_volume_ringer_mute);
+                this.mSelectedRingerIcon.setImageResource(C1893R.C1895drawable.ic_volume_ringer_mute);
                 this.mRingerIcon.setTag(2);
-                return;
-            }
-            ImageButton imageButton4 = this.mRingerIcon;
-            int i6 = R$drawable.ic_volume_ringer;
-            imageButton4.setImageResource(i6);
-            this.mSelectedRingerIcon.setImageResource(i6);
-            if (this.mController.hasVibrator()) {
-                addAccessibilityDescription(this.mRingerIcon, 2, this.mContext.getString(R$string.volume_ringer_hint_vibrate));
+                addAccessibilityDescription(this.mRingerIcon, 0, this.mContext.getString(C1893R.string.volume_ringer_hint_unmute));
+            } else if (i != 1) {
+                if ((this.mAutomute && streamState.level == 0) || streamState.muted) {
+                    z = true;
+                }
+                if (z2 || !z) {
+                    this.mRingerIcon.setImageResource(C1893R.C1895drawable.ic_volume_ringer);
+                    this.mSelectedRingerIcon.setImageResource(C1893R.C1895drawable.ic_volume_ringer);
+                    if (this.mController.hasVibrator()) {
+                        addAccessibilityDescription(this.mRingerIcon, 2, this.mContext.getString(C1893R.string.volume_ringer_hint_vibrate));
+                    } else {
+                        addAccessibilityDescription(this.mRingerIcon, 2, this.mContext.getString(C1893R.string.volume_ringer_hint_mute));
+                    }
+                    this.mRingerIcon.setTag(1);
+                }
             } else {
-                addAccessibilityDescription(this.mRingerIcon, 2, this.mContext.getString(R$string.volume_ringer_hint_mute));
+                this.mRingerIcon.setImageResource(C1893R.C1895drawable.ic_volume_ringer_vibrate);
+                this.mSelectedRingerIcon.setImageResource(C1893R.C1895drawable.ic_volume_ringer_vibrate);
+                addAccessibilityDescription(this.mRingerIcon, 1, this.mContext.getString(C1893R.string.volume_ringer_hint_mute));
+                this.mRingerIcon.setTag(3);
             }
-            this.mRingerIcon.setTag(1);
+            ringerDrawerNewSelectionAnimation(this.mState.ringerModeInternal);
         }
     }
 
     private void addAccessibilityDescription(View view, int i, final String str) {
         view.setContentDescription(this.mContext.getString(getStringDescriptionResourceForRingerMode(i)));
-        view.setAccessibilityDelegate(new View.AccessibilityDelegate() { // from class: com.android.systemui.volume.VolumeDialogImpl.3
-            @Override // android.view.View.AccessibilityDelegate
-            public void onInitializeAccessibilityNodeInfo(View view2, AccessibilityNodeInfo accessibilityNodeInfo) {
-                super.onInitializeAccessibilityNodeInfo(view2, accessibilityNodeInfo);
+        view.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
+                super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, str));
             }
         });
-    }
-
-    private int getStringDescriptionResourceForRingerMode(int i) {
-        if (i != 0) {
-            if (i == 1) {
-                return R$string.volume_ringer_status_vibrate;
-            }
-            return R$string.volume_ringer_status_normal;
-        }
-        return R$string.volume_ringer_status_silent;
     }
 
     private void enableVolumeRowViewsH(VolumeRow volumeRow, boolean z) {
@@ -1417,174 +1509,479 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     }
 
     private void trimObsoleteH() {
-        if (D.BUG) {
+        if (C3265D.BUG) {
             Log.d(TAG, "trimObsoleteH");
         }
         for (int size = this.mRows.size() - 1; size >= 0; size--) {
             VolumeRow volumeRow = this.mRows.get(size);
-            if (volumeRow.ss != null && volumeRow.ss.dynamic && !this.mDynamic.get(volumeRow.stream)) {
-                this.mRows.remove(volumeRow);
+            if (volumeRow.f402ss != null && volumeRow.f402ss.dynamic && !this.mDynamic.get(volumeRow.stream)) {
+                this.mRows.remove(size);
                 this.mDialogRowsView.removeView(volumeRow.view);
                 this.mConfigurableTexts.remove(volumeRow.header);
             }
         }
     }
 
-    protected void onStateChangedH(VolumeDialogController.State state) {
-        int i;
-        int i2;
-        if (D.BUG) {
-            String str = TAG;
-            Log.d(str, "onStateChangedH() state: " + state.toString());
+    /* access modifiers changed from: protected */
+    public void onStateChangedH(VolumeDialogController.State state) {
+        if (C3265D.BUG) {
+            Log.d(TAG, "onStateChangedH() state: " + state.toString());
         }
         VolumeDialogController.State state2 = this.mState;
-        if (state2 != null && state != null && (i = state2.ringerModeInternal) != -1 && i != (i2 = state.ringerModeInternal) && i2 == 1) {
+        if (!(state2 == null || state == null || state2.ringerModeInternal == -1 || this.mState.ringerModeInternal == state.ringerModeInternal || state.ringerModeInternal != 1)) {
             this.mController.vibrate(VibrationEffect.get(5));
         }
         this.mState = state;
         this.mDynamic.clear();
-        for (int i3 = 0; i3 < state.states.size(); i3++) {
-            int keyAt = state.states.keyAt(i3);
-            if (state.states.valueAt(i3).dynamic) {
+        for (int i = 0; i < state.states.size(); i++) {
+            int keyAt = state.states.keyAt(i);
+            if (state.states.valueAt(i).dynamic) {
                 this.mDynamic.put(keyAt, true);
                 if (findRow(keyAt) == null) {
-                    addRow(keyAt, R$drawable.ic_volume_remote, R$drawable.ic_volume_remote_mute, true, false, true);
+                    addRow(keyAt, C1893R.C1895drawable.ic_volume_remote, C1893R.C1895drawable.ic_volume_remote_mute, true, false, true);
                 }
             }
         }
-        int i4 = this.mActiveStream;
-        int i5 = state.activeStream;
-        if (i4 != i5) {
-            this.mPrevActiveStream = i4;
-            this.mActiveStream = i5;
+        if (this.mActiveStream != state.activeStream) {
+            this.mPrevActiveStream = this.mActiveStream;
+            this.mActiveStream = state.activeStream;
             updateRowsH(getActiveRow());
             if (this.mShowing) {
                 rescheduleTimeoutH();
             }
         }
-        for (VolumeRow volumeRow : this.mRows) {
-            updateVolumeRowH(volumeRow);
+        for (VolumeRow updateVolumeRowH : this.mRows) {
+            updateVolumeRowH(updateVolumeRowH);
         }
         updateRingerH();
         this.mWindow.setTitle(composeWindowTitle());
     }
 
-    CharSequence composeWindowTitle() {
-        return this.mContext.getString(R$string.volume_dialog_title, getStreamLabelH(getActiveRow().ss));
+    /* access modifiers changed from: package-private */
+    public CharSequence composeWindowTitle() {
+        return this.mContext.getString(C1893R.string.volume_dialog_title, new Object[]{getStreamLabelH(getActiveRow().f402ss)});
     }
 
-    private void updateVolumeRowH(VolumeRow volumeRow) {
-        VolumeDialogController.StreamState streamState;
-        int i;
-        int i2;
-        int i3;
-        int i4;
-        if (D.BUG) {
-            Log.i(TAG, "updateVolumeRowH s=" + volumeRow.stream);
-        }
-        VolumeDialogController.State state = this.mState;
-        if (state == null || (streamState = state.states.get(volumeRow.stream)) == null) {
-            return;
-        }
-        volumeRow.ss = streamState;
-        int i5 = streamState.level;
-        if (i5 > 0) {
-            volumeRow.lastAudibleLevel = i5;
-        }
-        if (streamState.level == volumeRow.requestedLevel) {
-            volumeRow.requestedLevel = -1;
-        }
-        int i6 = 0;
-        boolean z = volumeRow.stream == 10;
-        int i7 = 2;
-        boolean z2 = volumeRow.stream == 2;
-        boolean z3 = volumeRow.stream == 1;
-        boolean z4 = volumeRow.stream == 4;
-        boolean z5 = volumeRow.stream == 3;
-        boolean z6 = z2 && this.mState.ringerModeInternal == 1;
-        boolean z7 = z2 && this.mState.ringerModeInternal == 0;
-        VolumeDialogController.State state2 = this.mState;
-        int i8 = state2.zenMode;
-        boolean z8 = !(i8 == 3) ? !(!(i8 == 2) ? !(i8 == 1) || ((!z4 || !state2.disallowAlarms) && ((!z5 || !state2.disallowMedia) && ((!z2 || !state2.disallowRinger) && (!z3 || !state2.disallowSystem)))) : !z2 && !z3 && !z4 && !z5) : !(!z2 && !z3);
-        int i9 = streamState.levelMax * 100;
-        if (i9 != volumeRow.slider.getMax()) {
-            volumeRow.slider.setMax(i9);
-        }
-        int i10 = streamState.levelMin * 100;
-        if (i10 != volumeRow.slider.getMin()) {
-            volumeRow.slider.setMin(i10);
-        }
-        com.android.settingslib.volume.Util.setText(volumeRow.header, getStreamLabelH(streamState));
-        volumeRow.slider.setContentDescription(volumeRow.header.getText());
-        this.mConfigurableTexts.add(volumeRow.header, streamState.name);
-        boolean z9 = (this.mAutomute || streamState.muteSupported) && !z8;
-        if (z6) {
-            i = R$drawable.ic_volume_ringer_vibrate;
-        } else {
-            i = (z7 || z8) ? volumeRow.iconMuteRes : streamState.routedToBluetooth ? isStreamMuted(streamState) ? R$drawable.ic_volume_media_bt_mute : R$drawable.ic_volume_media_bt : isStreamMuted(streamState) ? streamState.muted ? R$drawable.ic_volume_media_off : volumeRow.iconMuteRes : (!this.mShowLowMediaVolumeIcon || streamState.level * 2 >= streamState.levelMax + streamState.levelMin) ? volumeRow.iconRes : R$drawable.ic_volume_media_low;
-        }
-        volumeRow.setIcon(i, this.mContext.getTheme());
-        if (i == R$drawable.ic_volume_ringer_vibrate) {
-            i7 = 3;
-        } else if (i != R$drawable.ic_volume_media_bt_mute && i != volumeRow.iconMuteRes) {
-            i7 = (i == R$drawable.ic_volume_media_bt || i == volumeRow.iconRes || i == R$drawable.ic_volume_media_low) ? 1 : 0;
-        }
-        volumeRow.iconState = i7;
-        if (volumeRow.icon != null) {
-            if (!z9) {
-                volumeRow.icon.setContentDescription(getStreamLabelH(streamState));
-            } else if (z2) {
-                if (z6) {
-                    volumeRow.icon.setContentDescription(this.mContext.getString(R$string.volume_stream_content_description_unmute, getStreamLabelH(streamState)));
-                } else if (this.mController.hasVibrator()) {
-                    ImageButton imageButton = volumeRow.icon;
-                    Context context = this.mContext;
-                    if (this.mShowA11yStream) {
-                        i4 = R$string.volume_stream_content_description_vibrate_a11y;
-                    } else {
-                        i4 = R$string.volume_stream_content_description_vibrate;
-                    }
-                    imageButton.setContentDescription(context.getString(i4, getStreamLabelH(streamState)));
-                } else {
-                    ImageButton imageButton2 = volumeRow.icon;
-                    Context context2 = this.mContext;
-                    if (this.mShowA11yStream) {
-                        i3 = R$string.volume_stream_content_description_mute_a11y;
-                    } else {
-                        i3 = R$string.volume_stream_content_description_mute;
-                    }
-                    imageButton2.setContentDescription(context2.getString(i3, getStreamLabelH(streamState)));
-                }
-            } else if (!z) {
-                if (streamState.muted || (this.mAutomute && streamState.level == 0)) {
-                    volumeRow.icon.setContentDescription(this.mContext.getString(R$string.volume_stream_content_description_unmute, getStreamLabelH(streamState)));
-                } else {
-                    ImageButton imageButton3 = volumeRow.icon;
-                    Context context3 = this.mContext;
-                    if (this.mShowA11yStream) {
-                        i2 = R$string.volume_stream_content_description_mute_a11y;
-                    } else {
-                        i2 = R$string.volume_stream_content_description_mute;
-                    }
-                    imageButton3.setContentDescription(context3.getString(i2, getStreamLabelH(streamState)));
-                }
-            } else {
-                volumeRow.icon.setContentDescription(getStreamLabelH(streamState));
-            }
-        }
-        if (z8) {
-            volumeRow.tracking = false;
-        }
-        enableVolumeRowViewsH(volumeRow, !z8);
-        boolean z10 = !z8;
-        if (!volumeRow.ss.muted || z2 || z8) {
-            i6 = volumeRow.ss.level;
-        }
-        updateVolumeRowSliderH(volumeRow, z10, i6);
-        if (volumeRow.number == null) {
-            return;
-        }
-        volumeRow.number.setText(Integer.toString(i6));
+    /* JADX WARNING: Removed duplicated region for block: B:165:0x0297  */
+    /* JADX WARNING: Removed duplicated region for block: B:177:0x02cd  */
+    /* JADX WARNING: Removed duplicated region for block: B:179:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private void updateVolumeRowH(com.android.systemui.volume.VolumeDialogImpl.VolumeRow r17) {
+        /*
+            r16 = this;
+            r0 = r16
+            r1 = r17
+            boolean r2 = com.android.systemui.volume.C3265D.BUG
+            if (r2 == 0) goto L_0x0021
+            java.lang.String r2 = TAG
+            java.lang.StringBuilder r3 = new java.lang.StringBuilder
+            java.lang.String r4 = "updateVolumeRowH s="
+            r3.<init>((java.lang.String) r4)
+            int r4 = r17.stream
+            java.lang.StringBuilder r3 = r3.append((int) r4)
+            java.lang.String r3 = r3.toString()
+            android.util.Log.i(r2, r3)
+        L_0x0021:
+            com.android.systemui.plugins.VolumeDialogController$State r2 = r0.mState
+            if (r2 != 0) goto L_0x0026
+            return
+        L_0x0026:
+            android.util.SparseArray<com.android.systemui.plugins.VolumeDialogController$StreamState> r2 = r2.states
+            int r3 = r17.stream
+            java.lang.Object r2 = r2.get(r3)
+            com.android.systemui.plugins.VolumeDialogController$StreamState r2 = (com.android.systemui.plugins.VolumeDialogController.StreamState) r2
+            if (r2 != 0) goto L_0x0035
+            return
+        L_0x0035:
+            com.android.systemui.plugins.VolumeDialogController.StreamState unused = r1.f402ss = r2
+            int r3 = r2.level
+            if (r3 <= 0) goto L_0x0041
+            int r3 = r2.level
+            int unused = r1.lastAudibleLevel = r3
+        L_0x0041:
+            int r3 = r2.level
+            int r4 = r17.requestedLevel
+            if (r3 != r4) goto L_0x004d
+            r3 = -1
+            int unused = r1.requestedLevel = r3
+        L_0x004d:
+            int r3 = r17.stream
+            r4 = 10
+            r6 = 1
+            if (r3 != r4) goto L_0x0058
+            r3 = r6
+            goto L_0x0059
+        L_0x0058:
+            r3 = 0
+        L_0x0059:
+            int r4 = r17.stream
+            r7 = 2
+            if (r4 != r7) goto L_0x0062
+            r4 = r6
+            goto L_0x0063
+        L_0x0062:
+            r4 = 0
+        L_0x0063:
+            int r8 = r17.stream
+            if (r8 != r6) goto L_0x006b
+            r8 = r6
+            goto L_0x006c
+        L_0x006b:
+            r8 = 0
+        L_0x006c:
+            int r9 = r17.stream
+            r10 = 4
+            if (r9 != r10) goto L_0x0075
+            r9 = r6
+            goto L_0x0076
+        L_0x0075:
+            r9 = 0
+        L_0x0076:
+            int r10 = r17.stream
+            r11 = 3
+            if (r10 != r11) goto L_0x007f
+            r10 = r6
+            goto L_0x0080
+        L_0x007f:
+            r10 = 0
+        L_0x0080:
+            if (r4 == 0) goto L_0x008a
+            com.android.systemui.plugins.VolumeDialogController$State r12 = r0.mState
+            int r12 = r12.ringerModeInternal
+            if (r12 != r6) goto L_0x008a
+            r12 = r6
+            goto L_0x008b
+        L_0x008a:
+            r12 = 0
+        L_0x008b:
+            if (r4 == 0) goto L_0x0095
+            com.android.systemui.plugins.VolumeDialogController$State r13 = r0.mState
+            int r13 = r13.ringerModeInternal
+            if (r13 != 0) goto L_0x0095
+            r13 = r6
+            goto L_0x0096
+        L_0x0095:
+            r13 = 0
+        L_0x0096:
+            com.android.systemui.plugins.VolumeDialogController$State r14 = r0.mState
+            int r14 = r14.zenMode
+            if (r14 != r6) goto L_0x009e
+            r14 = r6
+            goto L_0x009f
+        L_0x009e:
+            r14 = 0
+        L_0x009f:
+            com.android.systemui.plugins.VolumeDialogController$State r15 = r0.mState
+            int r15 = r15.zenMode
+            if (r15 != r11) goto L_0x00a7
+            r15 = r6
+            goto L_0x00a8
+        L_0x00a7:
+            r15 = 0
+        L_0x00a8:
+            com.android.systemui.plugins.VolumeDialogController$State r11 = r0.mState
+            int r11 = r11.zenMode
+            if (r11 != r7) goto L_0x00b0
+            r11 = r6
+            goto L_0x00b1
+        L_0x00b0:
+            r11 = 0
+        L_0x00b1:
+            if (r15 == 0) goto L_0x00b9
+            if (r4 != 0) goto L_0x00b7
+            if (r8 == 0) goto L_0x00e7
+        L_0x00b7:
+            r8 = r6
+            goto L_0x00e8
+        L_0x00b9:
+            if (r11 == 0) goto L_0x00c4
+            if (r4 != 0) goto L_0x00b7
+            if (r8 != 0) goto L_0x00b7
+            if (r9 != 0) goto L_0x00b7
+            if (r10 == 0) goto L_0x00e7
+            goto L_0x00b7
+        L_0x00c4:
+            if (r14 == 0) goto L_0x00e7
+            if (r9 == 0) goto L_0x00ce
+            com.android.systemui.plugins.VolumeDialogController$State r9 = r0.mState
+            boolean r9 = r9.disallowAlarms
+            if (r9 != 0) goto L_0x00b7
+        L_0x00ce:
+            if (r10 == 0) goto L_0x00d6
+            com.android.systemui.plugins.VolumeDialogController$State r9 = r0.mState
+            boolean r9 = r9.disallowMedia
+            if (r9 != 0) goto L_0x00b7
+        L_0x00d6:
+            if (r4 == 0) goto L_0x00de
+            com.android.systemui.plugins.VolumeDialogController$State r9 = r0.mState
+            boolean r9 = r9.disallowRinger
+            if (r9 != 0) goto L_0x00b7
+        L_0x00de:
+            if (r8 == 0) goto L_0x00e7
+            com.android.systemui.plugins.VolumeDialogController$State r8 = r0.mState
+            boolean r8 = r8.disallowSystem
+            if (r8 == 0) goto L_0x00e7
+            goto L_0x00b7
+        L_0x00e7:
+            r8 = 0
+        L_0x00e8:
+            int r9 = r2.levelMax
+            int r9 = r9 * 100
+            android.widget.SeekBar r10 = r17.slider
+            int r10 = r10.getMax()
+            if (r9 == r10) goto L_0x00fd
+            android.widget.SeekBar r10 = r17.slider
+            r10.setMax(r9)
+        L_0x00fd:
+            int r9 = r2.levelMin
+            int r9 = r9 * 100
+            android.widget.SeekBar r10 = r17.slider
+            int r10 = r10.getMin()
+            if (r9 == r10) goto L_0x0112
+            android.widget.SeekBar r10 = r17.slider
+            r10.setMin(r9)
+        L_0x0112:
+            android.widget.TextView r9 = r17.header
+            java.lang.String r10 = r0.getStreamLabelH(r2)
+            com.android.systemui.volume.Util.setText(r9, r10)
+            android.widget.SeekBar r9 = r17.slider
+            android.widget.TextView r10 = r17.header
+            java.lang.CharSequence r10 = r10.getText()
+            r9.setContentDescription(r10)
+            com.android.systemui.volume.ConfigurableTexts r9 = r0.mConfigurableTexts
+            android.widget.TextView r10 = r17.header
+            int r11 = r2.name
+            r9.add(r10, r11)
+            boolean r9 = r0.mAutomute
+            if (r9 != 0) goto L_0x013f
+            boolean r9 = r2.muteSupported
+            if (r9 == 0) goto L_0x0143
+        L_0x013f:
+            if (r8 != 0) goto L_0x0143
+            r9 = r6
+            goto L_0x0144
+        L_0x0143:
+            r9 = 0
+        L_0x0144:
+            r10 = 2131232450(0x7f0806c2, float:1.808101E38)
+            r11 = 2131232448(0x7f0806c0, float:1.8081006E38)
+            r14 = 2131232449(0x7f0806c1, float:1.8081008E38)
+            r15 = 2131232459(0x7f0806cb, float:1.8081028E38)
+            if (r12 == 0) goto L_0x0154
+            r5 = r15
+            goto L_0x0195
+        L_0x0154:
+            if (r13 != 0) goto L_0x0191
+            if (r8 == 0) goto L_0x0159
+            goto L_0x0191
+        L_0x0159:
+            boolean r5 = r2.routedToBluetooth
+            if (r5 == 0) goto L_0x0167
+            boolean r5 = r0.isStreamMuted(r2)
+            if (r5 == 0) goto L_0x0165
+            r5 = r14
+            goto L_0x0195
+        L_0x0165:
+            r5 = r11
+            goto L_0x0195
+        L_0x0167:
+            boolean r5 = r0.isStreamMuted(r2)
+            if (r5 == 0) goto L_0x017c
+            if (r4 != 0) goto L_0x017c
+            boolean r5 = r2.muted
+            if (r5 == 0) goto L_0x0177
+            r5 = 2131232452(0x7f0806c4, float:1.8081014E38)
+            goto L_0x0195
+        L_0x0177:
+            int r5 = r17.iconMuteRes
+            goto L_0x0195
+        L_0x017c:
+            boolean r5 = r0.mShowLowMediaVolumeIcon
+            if (r5 == 0) goto L_0x018c
+            int r5 = r2.level
+            int r5 = r5 * r7
+            int r7 = r2.levelMax
+            int r6 = r2.levelMin
+            int r7 = r7 + r6
+            if (r5 >= r7) goto L_0x018c
+            r5 = r10
+            goto L_0x0195
+        L_0x018c:
+            int r5 = r17.iconRes
+            goto L_0x0195
+        L_0x0191:
+            int r5 = r17.iconMuteRes
+        L_0x0195:
+            android.content.Context r6 = r0.mContext
+            android.content.res.Resources$Theme r6 = r6.getTheme()
+            r1.setIcon(r5, r6)
+            if (r5 != r15) goto L_0x01a2
+            r7 = 3
+            goto L_0x01bb
+        L_0x01a2:
+            if (r5 == r14) goto L_0x01ba
+            int r6 = r17.iconMuteRes
+            if (r5 != r6) goto L_0x01ab
+            goto L_0x01ba
+        L_0x01ab:
+            if (r5 == r11) goto L_0x01b8
+            int r6 = r17.iconRes
+            if (r5 == r6) goto L_0x01b8
+            if (r5 != r10) goto L_0x01b6
+            goto L_0x01b8
+        L_0x01b6:
+            r7 = 0
+            goto L_0x01bb
+        L_0x01b8:
+            r7 = 1
+            goto L_0x01bb
+        L_0x01ba:
+            r7 = 2
+        L_0x01bb:
+            int unused = r1.iconState = r7
+            android.widget.ImageButton r5 = r17.icon
+            if (r5 == 0) goto L_0x0294
+            if (r9 == 0) goto L_0x0287
+            r5 = 2131953546(0x7f13078a, float:1.9543566E38)
+            r6 = 2131953545(0x7f130789, float:1.9543564E38)
+            r7 = 2131953547(0x7f13078b, float:1.9543568E38)
+            if (r4 == 0) goto L_0x0236
+            if (r12 == 0) goto L_0x01ec
+            android.widget.ImageButton r3 = r17.icon
+            android.content.Context r5 = r0.mContext
+            r6 = 1
+            java.lang.Object[] r6 = new java.lang.Object[r6]
+            java.lang.String r2 = r0.getStreamLabelH(r2)
+            r9 = 0
+            r6[r9] = r2
+            java.lang.String r2 = r5.getString(r7, r6)
+            r3.setContentDescription(r2)
+            goto L_0x0294
+        L_0x01ec:
+            com.android.systemui.plugins.VolumeDialogController r3 = r0.mController
+            boolean r3 = r3.hasVibrator()
+            if (r3 == 0) goto L_0x0218
+            android.widget.ImageButton r3 = r17.icon
+            android.content.Context r5 = r0.mContext
+            boolean r6 = r0.mShowA11yStream
+            if (r6 == 0) goto L_0x0202
+            r6 = 2131953549(0x7f13078d, float:1.9543572E38)
+            goto L_0x0205
+        L_0x0202:
+            r6 = 2131953548(0x7f13078c, float:1.954357E38)
+        L_0x0205:
+            r7 = 1
+            java.lang.Object[] r7 = new java.lang.Object[r7]
+            java.lang.String r2 = r0.getStreamLabelH(r2)
+            r9 = 0
+            r7[r9] = r2
+            java.lang.String r2 = r5.getString(r6, r7)
+            r3.setContentDescription(r2)
+            goto L_0x0294
+        L_0x0218:
+            android.widget.ImageButton r3 = r17.icon
+            android.content.Context r7 = r0.mContext
+            boolean r9 = r0.mShowA11yStream
+            if (r9 == 0) goto L_0x0223
+            goto L_0x0224
+        L_0x0223:
+            r5 = r6
+        L_0x0224:
+            r6 = 1
+            java.lang.Object[] r6 = new java.lang.Object[r6]
+            java.lang.String r2 = r0.getStreamLabelH(r2)
+            r9 = 0
+            r6[r9] = r2
+            java.lang.String r2 = r7.getString(r5, r6)
+            r3.setContentDescription(r2)
+            goto L_0x0294
+        L_0x0236:
+            if (r3 == 0) goto L_0x0244
+            android.widget.ImageButton r3 = r17.icon
+            java.lang.String r2 = r0.getStreamLabelH(r2)
+            r3.setContentDescription(r2)
+            goto L_0x0294
+        L_0x0244:
+            boolean r3 = r2.muted
+            if (r3 != 0) goto L_0x026f
+            boolean r3 = r0.mAutomute
+            if (r3 == 0) goto L_0x0251
+            int r3 = r2.level
+            if (r3 != 0) goto L_0x0251
+            goto L_0x026f
+        L_0x0251:
+            android.widget.ImageButton r3 = r17.icon
+            android.content.Context r7 = r0.mContext
+            boolean r9 = r0.mShowA11yStream
+            if (r9 == 0) goto L_0x025c
+            goto L_0x025d
+        L_0x025c:
+            r5 = r6
+        L_0x025d:
+            r6 = 1
+            java.lang.Object[] r6 = new java.lang.Object[r6]
+            java.lang.String r2 = r0.getStreamLabelH(r2)
+            r9 = 0
+            r6[r9] = r2
+            java.lang.String r2 = r7.getString(r5, r6)
+            r3.setContentDescription(r2)
+            goto L_0x0295
+        L_0x026f:
+            r6 = 1
+            r9 = 0
+            android.widget.ImageButton r3 = r17.icon
+            android.content.Context r5 = r0.mContext
+            java.lang.Object[] r6 = new java.lang.Object[r6]
+            java.lang.String r2 = r0.getStreamLabelH(r2)
+            r6[r9] = r2
+            java.lang.String r2 = r5.getString(r7, r6)
+            r3.setContentDescription(r2)
+            goto L_0x0295
+        L_0x0287:
+            r9 = 0
+            android.widget.ImageButton r3 = r17.icon
+            java.lang.String r2 = r0.getStreamLabelH(r2)
+            r3.setContentDescription(r2)
+            goto L_0x0295
+        L_0x0294:
+            r9 = 0
+        L_0x0295:
+            if (r8 == 0) goto L_0x029a
+            boolean unused = r1.tracking = r9
+        L_0x029a:
+            r2 = r8 ^ 1
+            r0.enableVolumeRowViewsH(r1, r2)
+            r2 = r8 ^ 1
+            com.android.systemui.plugins.VolumeDialogController$StreamState r3 = r17.f402ss
+            boolean r3 = r3.muted
+            if (r3 == 0) goto L_0x02ae
+            if (r4 != 0) goto L_0x02ae
+            if (r8 != 0) goto L_0x02ae
+            goto L_0x02b4
+        L_0x02ae:
+            if (r4 == 0) goto L_0x02b6
+            if (r12 != 0) goto L_0x02b4
+            if (r13 == 0) goto L_0x02b6
+        L_0x02b4:
+            r5 = r9
+            goto L_0x02bc
+        L_0x02b6:
+            com.android.systemui.plugins.VolumeDialogController$StreamState r3 = r17.f402ss
+            int r5 = r3.level
+        L_0x02bc:
+            java.lang.String r3 = "VolumeDialogImpl#updateVolumeRowSliderH"
+            android.os.Trace.beginSection(r3)
+            r0.updateVolumeRowSliderH(r1, r2, r5)
+            android.os.Trace.endSection()
+            android.widget.TextView r0 = r17.number
+            if (r0 == 0) goto L_0x02d8
+            android.widget.TextView r0 = r17.number
+            java.lang.String r1 = java.lang.Integer.toString(r5)
+            r0.setText(r1)
+        L_0x02d8:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.volume.VolumeDialogImpl.updateVolumeRowH(com.android.systemui.volume.VolumeDialogImpl$VolumeRow):void");
     }
 
     private boolean isStreamMuted(VolumeDialogController.StreamState streamState) {
@@ -1592,44 +1989,36 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
     }
 
     private void updateVolumeRowTintH(VolumeRow volumeRow, boolean z) {
-        ColorStateList colorAttr;
-        int alphaAttr;
+        ColorStateList colorStateList;
+        int i;
         if (z) {
             volumeRow.slider.requestFocus();
         }
         boolean z2 = z && volumeRow.slider.isEnabled();
         if (z2 || this.mChangeVolumeRowTintWhenInactive) {
             if (z2) {
-                colorAttr = Utils.getColorAccent(this.mContext);
+                colorStateList = Utils.getColorAccent(this.mContext);
             } else {
-                colorAttr = Utils.getColorAttr(this.mContext, 17956902);
+                colorStateList = Utils.getColorAttr(this.mContext, 17956902);
             }
             if (z2) {
-                alphaAttr = Color.alpha(colorAttr.getDefaultColor());
+                i = Color.alpha(colorStateList.getDefaultColor());
             } else {
-                alphaAttr = getAlphaAttr(16844115);
+                i = getAlphaAttr(16844115);
             }
-            ColorStateList colorAttr2 = Utils.getColorAttr(this.mContext, 16844002);
-            ColorStateList colorAttr3 = Utils.getColorAttr(this.mContext, 17957102);
-            volumeRow.sliderProgressSolid.setTintList(colorAttr);
-            if (volumeRow.sliderBgIcon != null) {
-                volumeRow.sliderBgIcon.setTintList(colorAttr);
-            }
-            if (volumeRow.sliderBgSolid != null) {
-                volumeRow.sliderBgSolid.setTintList(colorAttr2);
-            }
+            ColorStateList colorAttr = Utils.getColorAttr(this.mContext, 16844002);
+            ColorStateList colorAttr2 = Utils.getColorAttr(this.mContext, 17957103);
             if (volumeRow.sliderProgressIcon != null) {
-                volumeRow.sliderProgressIcon.setTintList(colorAttr2);
+                volumeRow.sliderProgressIcon.setTintList(colorAttr);
             }
             if (volumeRow.icon != null) {
-                volumeRow.icon.setImageTintList(colorAttr3);
-                volumeRow.icon.setImageAlpha(alphaAttr);
+                volumeRow.icon.setImageTintList(colorAttr2);
+                volumeRow.icon.setImageAlpha(i);
             }
-            if (volumeRow.number == null) {
-                return;
+            if (volumeRow.number != null) {
+                volumeRow.number.setTextColor(colorStateList);
+                volumeRow.number.setAlpha((float) i);
             }
-            volumeRow.number.setTextColor(colorAttr);
-            volumeRow.number.setAlpha(alphaAttr);
         }
     }
 
@@ -1637,216 +2026,253 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         int i2;
         volumeRow.slider.setEnabled(z);
         updateVolumeRowTintH(volumeRow, volumeRow.stream == this.mActiveStream);
-        if (volumeRow.tracking) {
-            return;
-        }
-        int progress = volumeRow.slider.getProgress();
-        int impliedLevel = getImpliedLevel(volumeRow.slider, progress);
-        boolean z2 = volumeRow.view.getVisibility() == 0;
-        boolean z3 = SystemClock.uptimeMillis() - volumeRow.userAttempt < 1000;
-        this.mHandler.removeMessages(3, volumeRow);
-        boolean z4 = this.mShowing;
-        if (z4 && z2 && z3) {
-            if (D.BUG) {
-                Log.d(TAG, "inGracePeriod");
-            }
-            H h = this.mHandler;
-            h.sendMessageAtTime(h.obtainMessage(3, volumeRow), volumeRow.userAttempt + 1000);
-        } else if ((i == impliedLevel && z4 && z2) || progress == (i2 = i * 100)) {
-        } else {
-            if (!z4 || !z2) {
-                if (volumeRow.anim != null) {
-                    volumeRow.anim.cancel();
+        if (!volumeRow.tracking) {
+            int progress = volumeRow.slider.getProgress();
+            int impliedLevel = getImpliedLevel(volumeRow.slider, progress);
+            boolean z2 = volumeRow.view.getVisibility() == 0;
+            boolean z3 = SystemClock.uptimeMillis() - volumeRow.userAttempt < 1000;
+            this.mHandler.removeMessages(3, volumeRow);
+            boolean z4 = this.mShowing;
+            if (z4 && z2 && z3) {
+                if (C3265D.BUG) {
+                    Log.d(TAG, "inGracePeriod");
                 }
-                volumeRow.slider.setProgress(i2, true);
-            } else if (volumeRow.anim != null && volumeRow.anim.isRunning() && volumeRow.animTargetProgress == i2) {
+                C3301H h = this.mHandler;
+                h.sendMessageAtTime(h.obtainMessage(3, volumeRow), volumeRow.userAttempt + 1000);
+            } else if ((i == impliedLevel && z4 && z2) || progress == (i2 = i * 100)) {
             } else {
-                if (volumeRow.anim == null) {
-                    volumeRow.anim = ObjectAnimator.ofInt(volumeRow.slider, "progress", progress, i2);
-                    volumeRow.anim.setInterpolator(new DecelerateInterpolator());
-                } else {
-                    volumeRow.anim.cancel();
-                    volumeRow.anim.setIntValues(progress, i2);
+                if (!z4 || !z2) {
+                    if (volumeRow.anim != null) {
+                        volumeRow.anim.cancel();
+                    }
+                    volumeRow.slider.setProgress(i2, true);
+                } else if (volumeRow.anim == null || !volumeRow.anim.isRunning() || volumeRow.animTargetProgress != i2) {
+                    if (volumeRow.anim == null) {
+                        ObjectAnimator unused = volumeRow.anim = ObjectAnimator.ofInt(volumeRow.slider, "progress", new int[]{progress, i2});
+                        volumeRow.anim.setInterpolator(new DecelerateInterpolator());
+                    } else {
+                        volumeRow.anim.cancel();
+                        volumeRow.anim.setIntValues(new int[]{progress, i2});
+                    }
+                    int unused2 = volumeRow.animTargetProgress = i2;
+                    volumeRow.anim.setDuration(80);
+                    volumeRow.anim.addListener(getJankListener(volumeRow.view, TYPE_UPDATE, 80));
+                    volumeRow.anim.start();
                 }
-                volumeRow.animTargetProgress = i2;
-                volumeRow.anim.setDuration(80L);
-                volumeRow.anim.start();
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void recheckH(VolumeRow volumeRow) {
         if (volumeRow == null) {
-            if (D.BUG) {
+            if (C3265D.BUG) {
                 Log.d(TAG, "recheckH ALL");
             }
             trimObsoleteH();
-            for (VolumeRow volumeRow2 : this.mRows) {
-                updateVolumeRowH(volumeRow2);
+            for (VolumeRow updateVolumeRowH : this.mRows) {
+                updateVolumeRowH(updateVolumeRowH);
             }
             return;
         }
-        if (D.BUG) {
-            String str = TAG;
-            Log.d(str, "recheckH " + volumeRow.stream);
+        if (C3265D.BUG) {
+            Log.d(TAG, "recheckH " + volumeRow.stream);
         }
         updateVolumeRowH(volumeRow);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setStreamImportantH(int i, boolean z) {
-        for (VolumeRow volumeRow : this.mRows) {
-            if (volumeRow.stream == i) {
-                volumeRow.important = z;
+        for (VolumeRow next : this.mRows) {
+            if (next.stream == i) {
+                boolean unused = next.important = z;
                 return;
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void showSafetyWarningH(int i) {
-        if ((i & 1025) != 0 || this.mShowing) {
-            synchronized (this.mSafetyWarningLock) {
-                if (this.mSafetyWarning != null) {
-                    return;
-                }
-                SafetyWarningDialog safetyWarningDialog = new SafetyWarningDialog(this.mContext, this.mController.getAudioManager()) { // from class: com.android.systemui.volume.VolumeDialogImpl.4
-                    @Override // com.android.systemui.volume.SafetyWarningDialog
-                    protected void cleanUp() {
-                        synchronized (VolumeDialogImpl.this.mSafetyWarningLock) {
-                            VolumeDialogImpl.this.mSafetyWarning = null;
-                        }
-                        VolumeDialogImpl.this.recheckH(null);
-                    }
-                };
-                this.mSafetyWarning = safetyWarningDialog;
-                safetyWarningDialog.show();
-                recheckH(null);
-            }
-        }
-        rescheduleTimeoutH();
+    /* access modifiers changed from: private */
+    /* JADX WARNING: Code restructure failed: missing block: B:13:0x0024, code lost:
+        recheckH((com.android.systemui.volume.VolumeDialogImpl.VolumeRow) null);
+     */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void showSafetyWarningH(int r4) {
+        /*
+            r3 = this;
+            r4 = r4 & 1025(0x401, float:1.436E-42)
+            if (r4 != 0) goto L_0x0008
+            boolean r4 = r3.mShowing
+            if (r4 == 0) goto L_0x0028
+        L_0x0008:
+            java.lang.Object r4 = r3.mSafetyWarningLock
+            monitor-enter(r4)
+            com.android.systemui.volume.SafetyWarningDialog r0 = r3.mSafetyWarning     // Catch:{ all -> 0x002c }
+            if (r0 == 0) goto L_0x0011
+            monitor-exit(r4)     // Catch:{ all -> 0x002c }
+            return
+        L_0x0011:
+            com.android.systemui.volume.VolumeDialogImpl$8 r0 = new com.android.systemui.volume.VolumeDialogImpl$8     // Catch:{ all -> 0x002c }
+            android.content.Context r1 = r3.mContext     // Catch:{ all -> 0x002c }
+            com.android.systemui.plugins.VolumeDialogController r2 = r3.mController     // Catch:{ all -> 0x002c }
+            android.media.AudioManager r2 = r2.getAudioManager()     // Catch:{ all -> 0x002c }
+            r0.<init>(r1, r2)     // Catch:{ all -> 0x002c }
+            r3.mSafetyWarning = r0     // Catch:{ all -> 0x002c }
+            r0.show()     // Catch:{ all -> 0x002c }
+            monitor-exit(r4)     // Catch:{ all -> 0x002c }
+            r4 = 0
+            r3.recheckH(r4)
+        L_0x0028:
+            r3.rescheduleTimeoutH()
+            return
+        L_0x002c:
+            r3 = move-exception
+            monitor-exit(r4)     // Catch:{ all -> 0x002c }
+            throw r3
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.volume.VolumeDialogImpl.showSafetyWarningH(int):void");
     }
 
     private String getStreamLabelH(VolumeDialogController.StreamState streamState) {
         if (streamState == null) {
             return "";
         }
-        String str = streamState.remoteLabel;
-        if (str != null) {
-            return str;
+        if (streamState.remoteLabel != null) {
+            return streamState.remoteLabel;
         }
         try {
             return this.mContext.getResources().getString(streamState.name);
         } catch (Resources.NotFoundException unused) {
-            String str2 = TAG;
-            Slog.e(str2, "Can't find translation for stream " + streamState);
+            Slog.e(TAG, "Can't find translation for stream " + streamState);
             return "";
         }
     }
 
-    private Runnable getSinglePressFor(final ImageButton imageButton) {
-        return new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda21
-            @Override // java.lang.Runnable
-            public final void run() {
-                VolumeDialogImpl.this.lambda$getSinglePressFor$22(imageButton);
-            }
-        };
+    private Runnable getSinglePressFor(ImageButton imageButton) {
+        return new VolumeDialogImpl$$ExternalSyntheticLambda9(this, imageButton);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$getSinglePressFor$22(ImageButton imageButton) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$getSinglePressFor$23$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47334xf3d6ce7b(ImageButton imageButton) {
         if (imageButton != null) {
             imageButton.setPressed(true);
-            imageButton.postOnAnimationDelayed(getSingleUnpressFor(imageButton), 200L);
+            imageButton.postOnAnimationDelayed(getSingleUnpressFor(imageButton), 200);
         }
     }
 
-    private Runnable getSingleUnpressFor(final ImageButton imageButton) {
-        return new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$$ExternalSyntheticLambda11
-            @Override // java.lang.Runnable
-            public final void run() {
-                VolumeDialogImpl.lambda$getSingleUnpressFor$23(imageButton);
-            }
-        };
+    private Runnable getSingleUnpressFor(ImageButton imageButton) {
+        return new VolumeDialogImpl$$ExternalSyntheticLambda10(imageButton);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$getSingleUnpressFor$23(ImageButton imageButton) {
+    static /* synthetic */ void lambda$getSingleUnpressFor$24(ImageButton imageButton) {
         if (imageButton != null) {
             imageButton.setPressed(false);
         }
     }
 
     private int getRingerDrawerOpenExtraSize() {
-        return (this.mRingerCount - 1) * this.mRingerDrawerItemSize;
+        return (this.mRingerCount - 1) * (this.mRingerDrawerItemSize + (this.mRingerRowsPadding * 2));
     }
 
     private void updateBackgroundForDrawerClosedAmount() {
         Drawable drawable = this.mRingerAndDrawerContainerBackground;
-        if (drawable == null) {
-            return;
+        if (drawable != null) {
+            Rect copyBounds = drawable.copyBounds();
+            if (!isLandscape()) {
+                copyBounds.right = this.mRingerAndDrawerContainer.getWidth() - ((int) (this.mRingerDrawerClosedAmount * ((float) getRingerDrawerOpenExtraSize())));
+            } else {
+                copyBounds.left = (int) (this.mRingerDrawerClosedAmount * ((float) getRingerDrawerOpenExtraSize()));
+            }
+            this.mRingerAndDrawerContainerBackground.setBounds(copyBounds);
         }
-        Rect copyBounds = drawable.copyBounds();
-        if (!isLandscape()) {
-            copyBounds.top = (int) (this.mRingerDrawerClosedAmount * getRingerDrawerOpenExtraSize());
-        } else {
-            copyBounds.left = (int) (this.mRingerDrawerClosedAmount * getRingerDrawerOpenExtraSize());
+    }
+
+    private void updateBackgroundClosedAmount() {
+        Drawable drawable = this.mVolumeUITopContainerBackground;
+        if (drawable != null) {
+            Rect copyBounds = drawable.copyBounds();
+            if (!isLandscape()) {
+                copyBounds.right = this.mTopContainer.getWidth() - ((int) (this.mRingerDrawerClosedAmount * ((float) getRingerDrawerOpenExtraSize())));
+            } else {
+                copyBounds.left = (int) (this.mRingerDrawerClosedAmount * ((float) getRingerDrawerOpenExtraSize()));
+            }
+            this.mVolumeUITopContainerBackground.setBounds(copyBounds);
         }
-        this.mRingerAndDrawerContainerBackground.setBounds(copyBounds);
     }
 
     private void setTopContainerBackgroundDrawable() {
-        int height;
-        int top;
-        if (this.mTopContainer == null) {
-            return;
-        }
-        boolean z = this.mDeviceProvisionedController.isCurrentUserSetup() && this.mActivityManager.getLockTaskModeState() == 0;
-        LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{new ColorDrawable(Utils.getColorAttrDefaultColor(this.mContext, 17956909))});
-        int i = this.mDialogWidth;
-        if (!isLandscape()) {
-            height = this.mDialogRowsView.getHeight();
-            if (!z) {
-                height -= this.mDialogCornerRadius;
-            }
-        } else {
-            height = this.mDialogRowsView.getHeight() + this.mDialogCornerRadius;
-        }
-        layerDrawable.setLayerSize(0, i, height);
-        if (!isLandscape()) {
-            top = this.mDialogRowsViewContainer.getTop();
-        } else {
-            top = this.mDialogRowsViewContainer.getTop() - this.mDialogCornerRadius;
-        }
-        layerDrawable.setLayerInsetTop(0, top);
-        layerDrawable.setLayerGravity(0, 51);
-        if (isLandscape()) {
-            layerDrawable.setLayerGravity(0, 53);
-            this.mRingerAndDrawerContainer.setOutlineProvider(new ViewOutlineProvider() { // from class: com.android.systemui.volume.VolumeDialogImpl.5
-                @Override // android.view.ViewOutlineProvider
-                public void getOutline(View view, Outline outline) {
-                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), VolumeDialogImpl.this.mDialogCornerRadius);
+        int i;
+        int i2;
+        Drawable drawable;
+        if (this.mTopContainer != null) {
+            boolean z = this.mDeviceProvisionedController.isCurrentUserSetup() && this.mActivityManager.getLockTaskModeState() == 0;
+            LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{new ColorDrawable(Utils.getColorAttrDefaultColor(this.mContext, 17956909))});
+            int i3 = this.mDialogWidth;
+            if (!isLandscape()) {
+                i = this.mDialogRowsView.getHeight();
+                if (!z) {
+                    i -= this.mDialogCornerRadius;
                 }
-            });
-            this.mRingerAndDrawerContainer.setClipToOutline(true);
+            } else {
+                i = this.mDialogRowsView.getHeight() + this.mDialogCornerRadius;
+            }
+            layerDrawable.setLayerSize(0, i3, i);
+            if (!isLandscape()) {
+                i2 = this.mDialogRowsViewContainer.getTop();
+            } else {
+                i2 = this.mDialogRowsViewContainer.getTop() - this.mDialogCornerRadius;
+            }
+            layerDrawable.setLayerInsetTop(0, i2);
+            layerDrawable.setLayerGravity(0, 53);
+            if (!isLandscape()) {
+                layerDrawable.setLayerGravity(0, 51);
+            }
+            if (isLandscape()) {
+                this.mRingerAndDrawerContainer.setOutlineProvider(new ViewOutlineProvider() {
+                    public void getOutline(View view, Outline outline) {
+                        outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), (float) VolumeDialogImpl.this.mDialogCornerRadius);
+                    }
+                });
+                this.mRingerAndDrawerContainer.setClipToOutline(true);
+            }
+            this.mTopContainer.setBackground(layerDrawable);
+            ViewGroup viewGroup = this.mDialogRowsViewContainer;
+            if (z) {
+                drawable = null;
+            } else {
+                drawable = this.mContext.getDrawable(C1893R.C1895drawable.volume_row_rounded_background);
+            }
+            viewGroup.setBackgroundDrawable(drawable);
         }
-        this.mTopContainer.setBackground(layerDrawable);
-        this.mDialogRowsViewContainer.setBackgroundDrawable(z ? null : this.mContext.getDrawable(R$drawable.volume_row_rounded_background));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public final class H extends Handler {
-        public H() {
+    private void setDrawerContainerOutLine() {
+        this.mRingerAndDrawerContainer.setOutlineProvider(new ViewOutlineProvider() {
+            public void getOutline(View view, Outline outline) {
+                outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), (float) VolumeDialogImpl.this.mDialogCornerRadius);
+            }
+        });
+        this.mRingerAndDrawerContainer.setClipToOutline(true);
+    }
+
+    /* renamed from: com.android.systemui.volume.VolumeDialogImpl$H */
+    private final class C3301H extends Handler {
+        private static final int DISMISS = 2;
+        private static final int RECHECK = 3;
+        private static final int RECHECK_ALL = 4;
+        private static final int RESCHEDULE_TIMEOUT = 6;
+        private static final int SET_STREAM_IMPORTANT = 5;
+        private static final int SHOW = 1;
+        private static final int STATE_CHANGED = 7;
+
+        public C3301H() {
             super(Looper.getMainLooper());
         }
 
-        @Override // android.os.Handler
         public void handleMessage(Message message) {
             switch (message.what) {
                 case 1:
-                    VolumeDialogImpl.this.showH(message.arg1);
+                    VolumeDialogImpl.this.showH(message.arg1, VolumeDialogImpl.this.mKeyguard.isKeyguardLocked(), VolumeDialogImpl.this.mActivityManager.getLockTaskModeState());
                     return;
                 case 2:
                     VolumeDialogImpl.this.dismissH(message.arg1);
@@ -1855,7 +2281,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
                     VolumeDialogImpl.this.recheckH((VolumeRow) message.obj);
                     return;
                 case 4:
-                    VolumeDialogImpl.this.recheckH(null);
+                    VolumeDialogImpl.this.recheckH((VolumeRow) null);
                     return;
                 case 5:
                     VolumeDialogImpl.this.setStreamImportantH(message.arg1, message.arg2 != 0);
@@ -1873,32 +2299,28 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public final class CustomDialog extends Dialog {
+    private final class CustomDialog extends Dialog implements DialogInterface {
         public CustomDialog(Context context) {
-            super(context, R$style.volume_dialog_theme);
+            super(context, C1893R.style.volume_dialog_theme);
         }
 
-        @Override // android.app.Dialog, android.view.Window.Callback
         public boolean dispatchTouchEvent(MotionEvent motionEvent) {
             VolumeDialogImpl.this.rescheduleTimeoutH();
             return super.dispatchTouchEvent(motionEvent);
         }
 
-        @Override // android.app.Dialog
-        protected void onStart() {
+        /* access modifiers changed from: protected */
+        public void onStart() {
             super.setCanceledOnTouchOutside(true);
             super.onStart();
         }
 
-        @Override // android.app.Dialog
-        protected void onStop() {
+        /* access modifiers changed from: protected */
+        public void onStop() {
             super.onStop();
             VolumeDialogImpl.this.mHandler.sendEmptyMessage(4);
         }
 
-        @Override // android.app.Dialog
         public boolean onTouchEvent(MotionEvent motionEvent) {
             if (!VolumeDialogImpl.this.mShowing || motionEvent.getAction() != 4) {
                 return false;
@@ -1908,73 +2330,60 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public final class VolumeSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+    private final class VolumeSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
         private final VolumeRow mRow;
 
         private VolumeSeekBarChangeListener(VolumeRow volumeRow) {
             this.mRow = volumeRow;
         }
 
-        @Override // android.widget.SeekBar.OnSeekBarChangeListener
         public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
             int i2;
-            if (this.mRow.ss == null) {
-                return;
+            if (this.mRow.f402ss != null) {
+                if (C3265D.BUG) {
+                    Log.d(VolumeDialogImpl.TAG, AudioSystem.streamToString(this.mRow.stream) + " onProgressChanged " + i + " fromUser=" + z);
+                }
+                if (z) {
+                    if (this.mRow.f402ss.levelMin > 0 && i < (i2 = this.mRow.f402ss.levelMin * 100)) {
+                        seekBar.setProgress(i2);
+                        i = i2;
+                    }
+                    int access$5800 = VolumeDialogImpl.getImpliedLevel(seekBar, i);
+                    if (this.mRow.f402ss.level != access$5800 || (this.mRow.f402ss.muted && access$5800 > 0)) {
+                        long unused = this.mRow.userAttempt = SystemClock.uptimeMillis();
+                        if (this.mRow.requestedLevel != access$5800) {
+                            VolumeDialogImpl.this.mController.setActiveStream(this.mRow.stream);
+                            VolumeDialogImpl.this.mController.setStreamVolume(this.mRow.stream, access$5800);
+                            int unused2 = this.mRow.requestedLevel = access$5800;
+                            Events.writeEvent(9, Integer.valueOf(this.mRow.stream), Integer.valueOf(access$5800));
+                        }
+                    }
+                }
             }
-            if (D.BUG) {
-                String str = VolumeDialogImpl.TAG;
-                Log.d(str, AudioSystem.streamToString(this.mRow.stream) + " onProgressChanged " + i + " fromUser=" + z);
-            }
-            if (!z) {
-                return;
-            }
-            if (this.mRow.ss.levelMin > 0 && i < (i2 = this.mRow.ss.levelMin * 100)) {
-                seekBar.setProgress(i2);
-                i = i2;
-            }
-            int impliedLevel = VolumeDialogImpl.getImpliedLevel(seekBar, i);
-            if (this.mRow.ss.level == impliedLevel && (!this.mRow.ss.muted || impliedLevel <= 0)) {
-                return;
-            }
-            this.mRow.userAttempt = SystemClock.uptimeMillis();
-            if (this.mRow.requestedLevel == impliedLevel) {
-                return;
-            }
-            VolumeDialogImpl.this.mController.setActiveStream(this.mRow.stream);
-            VolumeDialogImpl.this.mController.setStreamVolume(this.mRow.stream, impliedLevel);
-            this.mRow.requestedLevel = impliedLevel;
-            Events.writeEvent(9, Integer.valueOf(this.mRow.stream), Integer.valueOf(impliedLevel));
         }
 
-        @Override // android.widget.SeekBar.OnSeekBarChangeListener
         public void onStartTrackingTouch(SeekBar seekBar) {
-            if (D.BUG) {
-                String str = VolumeDialogImpl.TAG;
-                Log.d(str, "onStartTrackingTouch " + this.mRow.stream);
+            if (C3265D.BUG) {
+                Log.d(VolumeDialogImpl.TAG, "onStartTrackingTouch " + this.mRow.stream);
             }
             VolumeDialogImpl.this.mController.setActiveStream(this.mRow.stream);
-            this.mRow.tracking = true;
+            boolean unused = this.mRow.tracking = true;
         }
 
-        @Override // android.widget.SeekBar.OnSeekBarChangeListener
         public void onStopTrackingTouch(SeekBar seekBar) {
-            if (D.BUG) {
-                String str = VolumeDialogImpl.TAG;
-                Log.d(str, "onStopTrackingTouch " + this.mRow.stream);
+            if (C3265D.BUG) {
+                Log.d(VolumeDialogImpl.TAG, "onStopTrackingTouch " + this.mRow.stream);
             }
-            this.mRow.tracking = false;
-            this.mRow.userAttempt = SystemClock.uptimeMillis();
-            int impliedLevel = VolumeDialogImpl.getImpliedLevel(seekBar, seekBar.getProgress());
-            Events.writeEvent(16, Integer.valueOf(this.mRow.stream), Integer.valueOf(impliedLevel));
-            if (this.mRow.ss.level != impliedLevel) {
-                VolumeDialogImpl.this.mHandler.sendMessageDelayed(VolumeDialogImpl.this.mHandler.obtainMessage(3, this.mRow), 1000L);
+            boolean unused = this.mRow.tracking = false;
+            long unused2 = this.mRow.userAttempt = SystemClock.uptimeMillis();
+            int access$5800 = VolumeDialogImpl.getImpliedLevel(seekBar, seekBar.getProgress());
+            Events.writeEvent(16, Integer.valueOf(this.mRow.stream), Integer.valueOf(access$5800));
+            if (this.mRow.f402ss.level != access$5800) {
+                VolumeDialogImpl.this.mHandler.sendMessageDelayed(VolumeDialogImpl.this.mHandler.obtainMessage(3, this.mRow), 1000);
             }
         }
     }
 
-    /* loaded from: classes2.dex */
     private final class Accessibility extends View.AccessibilityDelegate {
         private Accessibility() {
         }
@@ -1983,52 +2392,70 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
             VolumeDialogImpl.this.mDialogView.setAccessibilityDelegate(this);
         }
 
-        @Override // android.view.View.AccessibilityDelegate
         public boolean dispatchPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
             accessibilityEvent.getText().add(VolumeDialogImpl.this.composeWindowTitle());
             return true;
         }
 
-        @Override // android.view.View.AccessibilityDelegate
         public boolean onRequestSendAccessibilityEvent(ViewGroup viewGroup, View view, AccessibilityEvent accessibilityEvent) {
             VolumeDialogImpl.this.rescheduleTimeoutH();
             return super.onRequestSendAccessibilityEvent(viewGroup, view, accessibilityEvent);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class VolumeRow {
-        private ObjectAnimator anim;
-        private int animTargetProgress;
-        private boolean defaultStream;
-        private FrameLayout dndIcon;
-        private TextView header;
-        private ImageButton icon;
-        private int iconMuteRes;
-        private int iconRes;
-        private int iconState;
-        private boolean important;
-        private int lastAudibleLevel;
-        private TextView number;
-        private int requestedLevel;
-        private SeekBar slider;
-        private AlphaTintDrawableWrapper sliderBgIcon;
-        private Drawable sliderBgSolid;
-        private AlphaTintDrawableWrapper sliderProgressIcon;
-        private Drawable sliderProgressSolid;
-        private VolumeDialogController.StreamState ss;
-        private int stream;
-        private boolean tracking;
-        private long userAttempt;
-        private View view;
+    private static class VolumeRow {
+        /* access modifiers changed from: private */
+        public ObjectAnimator anim;
+        /* access modifiers changed from: private */
+        public int animTargetProgress;
+        /* access modifiers changed from: private */
+        public boolean defaultStream;
+        /* access modifiers changed from: private */
+        public FrameLayout dndIcon;
+        /* access modifiers changed from: private */
+        public TextView header;
+        /* access modifiers changed from: private */
+        public ImageButton icon;
+        /* access modifiers changed from: private */
+        public int iconMuteRes;
+        /* access modifiers changed from: private */
+        public int iconRes;
+        /* access modifiers changed from: private */
+        public int iconState;
+        /* access modifiers changed from: private */
+        public boolean important;
+        /* access modifiers changed from: private */
+        public int lastAudibleLevel;
+        /* access modifiers changed from: private */
+        public TextView number;
+        /* access modifiers changed from: private */
+        public int requestedLevel;
+        /* access modifiers changed from: private */
+        public SeekBar slider;
+        /* access modifiers changed from: private */
+        public AlphaTintDrawableWrapper sliderProgressIcon;
+        /* access modifiers changed from: private */
+        public Drawable sliderProgressSolid;
+        /* access modifiers changed from: private */
+
+        /* renamed from: ss */
+        public VolumeDialogController.StreamState f402ss;
+        /* access modifiers changed from: private */
+        public int stream;
+        /* access modifiers changed from: private */
+        public boolean tracking;
+        /* access modifiers changed from: private */
+        public long userAttempt;
+        /* access modifiers changed from: private */
+        public View view;
 
         private VolumeRow() {
             this.requestedLevel = -1;
             this.lastAudibleLevel = 1;
         }
 
-        void setIcon(int i, Resources.Theme theme) {
+        /* access modifiers changed from: package-private */
+        public void setIcon(int i, Resources.Theme theme) {
             ImageButton imageButton = this.icon;
             if (imageButton != null) {
                 imageButton.setImageResource(i);
@@ -2037,58 +2464,53 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
             if (alphaTintDrawableWrapper != null) {
                 alphaTintDrawableWrapper.setDrawable(this.view.getResources().getDrawable(i, theme));
             }
-            AlphaTintDrawableWrapper alphaTintDrawableWrapper2 = this.sliderBgIcon;
-            if (alphaTintDrawableWrapper2 != null) {
-                alphaTintDrawableWrapper2.setDrawable(this.view.getResources().getDrawable(i, theme));
-            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public class RingerDrawerItemClickListener implements View.OnClickListener {
+    private class RingerDrawerItemClickListener implements View.OnClickListener {
         private final int mClickedRingerMode;
 
         RingerDrawerItemClickListener(int i) {
             this.mClickedRingerMode = i;
         }
 
-        @Override // android.view.View.OnClickListener
         public void onClick(View view) {
-            if (!VolumeDialogImpl.this.mIsRingerDrawerOpen) {
-                return;
-            }
             VolumeDialogImpl.this.setRingerMode(this.mClickedRingerMode);
-            VolumeDialogImpl volumeDialogImpl = VolumeDialogImpl.this;
-            volumeDialogImpl.mRingerDrawerIconAnimatingSelected = volumeDialogImpl.getDrawerIconViewForMode(this.mClickedRingerMode);
-            VolumeDialogImpl volumeDialogImpl2 = VolumeDialogImpl.this;
-            volumeDialogImpl2.mRingerDrawerIconAnimatingDeselected = volumeDialogImpl2.getDrawerIconViewForMode(volumeDialogImpl2.mState.ringerModeInternal);
-            VolumeDialogImpl.this.mRingerDrawerIconColorAnimator.start();
-            VolumeDialogImpl.this.mSelectedRingerContainer.setVisibility(4);
-            VolumeDialogImpl.this.mRingerDrawerNewSelectionBg.setAlpha(1.0f);
-            VolumeDialogImpl.this.mRingerDrawerNewSelectionBg.animate().setInterpolator(Interpolators.ACCELERATE_DECELERATE).setDuration(175L).withEndAction(new Runnable() { // from class: com.android.systemui.volume.VolumeDialogImpl$RingerDrawerItemClickListener$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    VolumeDialogImpl.RingerDrawerItemClickListener.this.lambda$onClick$0();
-                }
-            });
-            if (!VolumeDialogImpl.this.isLandscape()) {
-                VolumeDialogImpl.this.mRingerDrawerNewSelectionBg.animate().translationY(VolumeDialogImpl.this.getTranslationInDrawerForRingerMode(this.mClickedRingerMode)).start();
-            } else {
-                VolumeDialogImpl.this.mRingerDrawerNewSelectionBg.animate().translationX(VolumeDialogImpl.this.getTranslationInDrawerForRingerMode(this.mClickedRingerMode)).start();
-            }
         }
+    }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onClick$0() {
-            VolumeDialogImpl.this.mRingerDrawerNewSelectionBg.setAlpha(0.0f);
-            if (!VolumeDialogImpl.this.isLandscape()) {
-                VolumeDialogImpl.this.mSelectedRingerContainer.setTranslationY(VolumeDialogImpl.this.getTranslationInDrawerForRingerMode(this.mClickedRingerMode));
-            } else {
-                VolumeDialogImpl.this.mSelectedRingerContainer.setTranslationX(VolumeDialogImpl.this.getTranslationInDrawerForRingerMode(this.mClickedRingerMode));
+    private void ringerDrawerNewSelectionAnimation(int i) {
+        int i2 = this.mCurrentRingerMode;
+        if (i2 == -1) {
+            Log.d(TAG, "init ringer mode =" + i);
+            this.mCurrentRingerMode = i;
+        } else if (i2 != i) {
+            this.mCurrentRingerMode = i;
+            this.mRingerDrawerIconAnimatingSelected = getDrawerIconViewForMode(i);
+            this.mRingerDrawerIconAnimatingDeselected = getDrawerIconViewForMode(this.mState.ringerModeInternal);
+            this.mRingerDrawerIconColorAnimator.start();
+            if (this.mIsRingerDrawerOpen) {
+                this.mSelectedRingerContainer.setVisibility(4);
+                this.mRingerDrawerNewSelectionBg.setAlpha(1.0f);
+                this.mRingerDrawerNewSelectionBg.animate().setInterpolator(Interpolators.ACCELERATE_DECELERATE).setDuration(175).withEndAction(new VolumeDialogImpl$$ExternalSyntheticLambda3(this, i));
+                if (!isLandscape()) {
+                    this.mRingerDrawerNewSelectionBg.animate().translationX(getTranslationInDrawerForRingerModePortrait(i)).start();
+                } else {
+                    this.mRingerDrawerNewSelectionBg.animate().translationX(getTranslationInDrawerForRingerMode(i)).start();
+                }
             }
-            VolumeDialogImpl.this.mSelectedRingerContainer.setVisibility(0);
-            VolumeDialogImpl.this.hideRingerDrawer();
         }
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$ringerDrawerNewSelectionAnimation$25$com-android-systemui-volume-VolumeDialogImpl */
+    public /* synthetic */ void mo47348x40e4b45f(int i) {
+        this.mRingerDrawerNewSelectionBg.setAlpha(0.0f);
+        if (!isLandscape()) {
+            this.mSelectedRingerContainer.setTranslationX(getTranslationInDrawerForRingerModePortrait(i));
+        } else {
+            this.mSelectedRingerContainer.setTranslationX(getTranslationInDrawerForRingerMode(i));
+        }
+        this.mSelectedRingerContainer.setVisibility(0);
     }
 }

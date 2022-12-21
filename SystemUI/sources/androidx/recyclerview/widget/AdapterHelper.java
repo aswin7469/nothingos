@@ -1,14 +1,18 @@
 package androidx.recyclerview.widget;
 
-import androidx.core.util.Pools$Pool;
-import androidx.core.util.Pools$SimplePool;
+import androidx.core.util.Pools;
 import androidx.recyclerview.widget.OpReorderer;
 import androidx.recyclerview.widget.RecyclerView;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class AdapterHelper implements OpReorderer.Callback {
+
+final class AdapterHelper implements OpReorderer.Callback {
+    private static final boolean DEBUG = false;
+    static final int POSITION_TYPE_INVISIBLE = 0;
+    static final int POSITION_TYPE_NEW_OR_LAID_OUT = 1;
+    private static final String TAG = "AHT";
     final Callback mCallback;
     final boolean mDisableRecycler;
     private int mExistingUpdateTypes;
@@ -16,51 +20,54 @@ public final class AdapterHelper implements OpReorderer.Callback {
     final OpReorderer mOpReorderer;
     final ArrayList<UpdateOp> mPendingUpdates;
     final ArrayList<UpdateOp> mPostponedList;
-    private Pools$Pool<UpdateOp> mUpdateOpPool;
+    private Pools.Pool<UpdateOp> mUpdateOpPool;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface Callback {
-        RecyclerView.ViewHolder findViewHolder(int position);
+    interface Callback {
+        RecyclerView.ViewHolder findViewHolder(int i);
 
-        void markViewHoldersUpdated(int positionStart, int itemCount, Object payloads);
+        void markViewHoldersUpdated(int i, int i2, Object obj);
 
-        void offsetPositionsForAdd(int positionStart, int itemCount);
+        void offsetPositionsForAdd(int i, int i2);
 
-        void offsetPositionsForMove(int from, int to);
+        void offsetPositionsForMove(int i, int i2);
 
-        void offsetPositionsForRemovingInvisible(int positionStart, int itemCount);
+        void offsetPositionsForRemovingInvisible(int i, int i2);
 
-        void offsetPositionsForRemovingLaidOutOrNewView(int positionStart, int itemCount);
+        void offsetPositionsForRemovingLaidOutOrNewView(int i, int i2);
 
         void onDispatchFirstPass(UpdateOp updateOp);
 
         void onDispatchSecondPass(UpdateOp updateOp);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AdapterHelper(Callback callback) {
+    AdapterHelper(Callback callback) {
         this(callback, false);
     }
 
-    AdapterHelper(Callback callback, boolean disableRecycler) {
-        this.mUpdateOpPool = new Pools$SimplePool(30);
+    AdapterHelper(Callback callback, boolean z) {
+        this.mUpdateOpPool = new Pools.SimplePool(30);
         this.mPendingUpdates = new ArrayList<>();
         this.mPostponedList = new ArrayList<>();
         this.mExistingUpdateTypes = 0;
         this.mCallback = callback;
-        this.mDisableRecycler = disableRecycler;
+        this.mDisableRecycler = z;
         this.mOpReorderer = new OpReorderer(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public AdapterHelper addUpdateOp(UpdateOp... updateOpArr) {
+        Collections.addAll(this.mPendingUpdates, updateOpArr);
+        return this;
+    }
+
+    /* access modifiers changed from: package-private */
     public void reset() {
         recycleUpdateOpsAndClearList(this.mPendingUpdates);
         recycleUpdateOpsAndClearList(this.mPostponedList);
         this.mExistingUpdateTypes = 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void preProcess() {
         this.mOpReorderer.reorderOps(this.mPendingUpdates);
         int size = this.mPendingUpdates.size();
@@ -84,7 +91,7 @@ public final class AdapterHelper implements OpReorderer.Callback {
         this.mPendingUpdates.clear();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void consumePostponedUpdates() {
         int size = this.mPostponedList.size();
         for (int i = 0; i < size; i++) {
@@ -94,30 +101,31 @@ public final class AdapterHelper implements OpReorderer.Callback {
         this.mExistingUpdateTypes = 0;
     }
 
-    private void applyMove(UpdateOp op) {
-        postponeAndUpdateViewHolders(op);
+    private void applyMove(UpdateOp updateOp) {
+        postponeAndUpdateViewHolders(updateOp);
     }
 
-    private void applyRemove(UpdateOp op) {
-        boolean z;
+    private void applyRemove(UpdateOp updateOp) {
         char c;
-        int i = op.positionStart;
-        int i2 = op.itemCount + i;
+        boolean z;
+        boolean z2;
+        int i = updateOp.positionStart;
+        int i2 = updateOp.positionStart + updateOp.itemCount;
+        int i3 = updateOp.positionStart;
         char c2 = 65535;
-        int i3 = i;
         int i4 = 0;
         while (i3 < i2) {
             if (this.mCallback.findViewHolder(i3) != null || canFindInPreLayout(i3)) {
                 if (c2 == 0) {
-                    dispatchAndUpdateViewHolders(obtainUpdateOp(2, i, i4, null));
-                    z = true;
+                    dispatchAndUpdateViewHolders(obtainUpdateOp(2, i, i4, (Object) null));
+                    z2 = true;
                 } else {
-                    z = false;
+                    z2 = false;
                 }
                 c = 1;
             } else {
                 if (c2 == 1) {
-                    postponeAndUpdateViewHolders(obtainUpdateOp(2, i, i4, null));
+                    postponeAndUpdateViewHolders(obtainUpdateOp(2, i, i4, (Object) null));
                     z = true;
                 } else {
                     z = false;
@@ -134,170 +142,160 @@ public final class AdapterHelper implements OpReorderer.Callback {
             i3++;
             c2 = c;
         }
-        if (i4 != op.itemCount) {
-            recycleUpdateOp(op);
-            op = obtainUpdateOp(2, i, i4, null);
+        if (i4 != updateOp.itemCount) {
+            recycleUpdateOp(updateOp);
+            updateOp = obtainUpdateOp(2, i, i4, (Object) null);
         }
         if (c2 == 0) {
-            dispatchAndUpdateViewHolders(op);
+            dispatchAndUpdateViewHolders(updateOp);
         } else {
-            postponeAndUpdateViewHolders(op);
+            postponeAndUpdateViewHolders(updateOp);
         }
     }
 
-    private void applyUpdate(UpdateOp op) {
-        int i = op.positionStart;
-        int i2 = op.itemCount + i;
+    private void applyUpdate(UpdateOp updateOp) {
+        int i = updateOp.positionStart;
+        int i2 = updateOp.positionStart + updateOp.itemCount;
+        char c = 65535;
         int i3 = 0;
-        boolean z = true;
-        int i4 = i;
-        while (i < i2) {
-            if (this.mCallback.findViewHolder(i) != null || canFindInPreLayout(i)) {
-                if (!z) {
-                    dispatchAndUpdateViewHolders(obtainUpdateOp(4, i4, i3, op.payload));
-                    i4 = i;
+        for (int i4 = updateOp.positionStart; i4 < i2; i4++) {
+            if (this.mCallback.findViewHolder(i4) != null || canFindInPreLayout(i4)) {
+                if (c == 0) {
+                    dispatchAndUpdateViewHolders(obtainUpdateOp(4, i, i3, updateOp.payload));
+                    i = i4;
                     i3 = 0;
                 }
-                z = true;
+                c = 1;
             } else {
-                if (z) {
-                    postponeAndUpdateViewHolders(obtainUpdateOp(4, i4, i3, op.payload));
-                    i4 = i;
+                if (c == 1) {
+                    postponeAndUpdateViewHolders(obtainUpdateOp(4, i, i3, updateOp.payload));
+                    i = i4;
                     i3 = 0;
                 }
-                z = false;
+                c = 0;
             }
             i3++;
-            i++;
         }
-        if (i3 != op.itemCount) {
-            Object obj = op.payload;
-            recycleUpdateOp(op);
-            op = obtainUpdateOp(4, i4, i3, obj);
+        if (i3 != updateOp.itemCount) {
+            Object obj = updateOp.payload;
+            recycleUpdateOp(updateOp);
+            updateOp = obtainUpdateOp(4, i, i3, obj);
         }
-        if (!z) {
-            dispatchAndUpdateViewHolders(op);
+        if (c == 0) {
+            dispatchAndUpdateViewHolders(updateOp);
         } else {
-            postponeAndUpdateViewHolders(op);
+            postponeAndUpdateViewHolders(updateOp);
         }
     }
 
-    private void dispatchAndUpdateViewHolders(UpdateOp op) {
+    private void dispatchAndUpdateViewHolders(UpdateOp updateOp) {
         int i;
-        int i2 = op.cmd;
-        if (i2 == 1 || i2 == 8) {
+        if (updateOp.cmd == 1 || updateOp.cmd == 8) {
             throw new IllegalArgumentException("should not dispatch add or move for pre layout");
         }
-        int updatePositionWithPostponed = updatePositionWithPostponed(op.positionStart, i2);
-        int i3 = op.positionStart;
-        int i4 = op.cmd;
-        if (i4 == 2) {
+        int updatePositionWithPostponed = updatePositionWithPostponed(updateOp.positionStart, updateOp.cmd);
+        int i2 = updateOp.positionStart;
+        int i3 = updateOp.cmd;
+        if (i3 == 2) {
             i = 0;
-        } else if (i4 != 4) {
-            throw new IllegalArgumentException("op should be remove or update." + op);
-        } else {
+        } else if (i3 == 4) {
             i = 1;
+        } else {
+            throw new IllegalArgumentException("op should be remove or update." + updateOp);
         }
-        int i5 = 1;
-        for (int i6 = 1; i6 < op.itemCount; i6++) {
-            int updatePositionWithPostponed2 = updatePositionWithPostponed(op.positionStart + (i * i6), op.cmd);
-            int i7 = op.cmd;
-            if (i7 == 2 ? updatePositionWithPostponed2 == updatePositionWithPostponed : i7 == 4 && updatePositionWithPostponed2 == updatePositionWithPostponed + 1) {
-                i5++;
+        int i4 = 1;
+        for (int i5 = 1; i5 < updateOp.itemCount; i5++) {
+            int updatePositionWithPostponed2 = updatePositionWithPostponed(updateOp.positionStart + (i * i5), updateOp.cmd);
+            int i6 = updateOp.cmd;
+            if (i6 == 2 ? updatePositionWithPostponed2 == updatePositionWithPostponed : i6 == 4 && updatePositionWithPostponed2 == updatePositionWithPostponed + 1) {
+                i4++;
             } else {
-                UpdateOp obtainUpdateOp = obtainUpdateOp(i7, updatePositionWithPostponed, i5, op.payload);
-                dispatchFirstPassAndUpdateViewHolders(obtainUpdateOp, i3);
+                UpdateOp obtainUpdateOp = obtainUpdateOp(updateOp.cmd, updatePositionWithPostponed, i4, updateOp.payload);
+                dispatchFirstPassAndUpdateViewHolders(obtainUpdateOp, i2);
                 recycleUpdateOp(obtainUpdateOp);
-                if (op.cmd == 4) {
-                    i3 += i5;
+                if (updateOp.cmd == 4) {
+                    i2 += i4;
                 }
-                i5 = 1;
+                i4 = 1;
                 updatePositionWithPostponed = updatePositionWithPostponed2;
             }
         }
-        Object obj = op.payload;
-        recycleUpdateOp(op);
-        if (i5 <= 0) {
-            return;
+        Object obj = updateOp.payload;
+        recycleUpdateOp(updateOp);
+        if (i4 > 0) {
+            UpdateOp obtainUpdateOp2 = obtainUpdateOp(updateOp.cmd, updatePositionWithPostponed, i4, obj);
+            dispatchFirstPassAndUpdateViewHolders(obtainUpdateOp2, i2);
+            recycleUpdateOp(obtainUpdateOp2);
         }
-        UpdateOp obtainUpdateOp2 = obtainUpdateOp(op.cmd, updatePositionWithPostponed, i5, obj);
-        dispatchFirstPassAndUpdateViewHolders(obtainUpdateOp2, i3);
-        recycleUpdateOp(obtainUpdateOp2);
     }
 
-    void dispatchFirstPassAndUpdateViewHolders(UpdateOp op, int offsetStart) {
-        this.mCallback.onDispatchFirstPass(op);
-        int i = op.cmd;
-        if (i == 2) {
-            this.mCallback.offsetPositionsForRemovingInvisible(offsetStart, op.itemCount);
-        } else if (i == 4) {
-            this.mCallback.markViewHoldersUpdated(offsetStart, op.itemCount, op.payload);
+    /* access modifiers changed from: package-private */
+    public void dispatchFirstPassAndUpdateViewHolders(UpdateOp updateOp, int i) {
+        this.mCallback.onDispatchFirstPass(updateOp);
+        int i2 = updateOp.cmd;
+        if (i2 == 2) {
+            this.mCallback.offsetPositionsForRemovingInvisible(i, updateOp.itemCount);
+        } else if (i2 == 4) {
+            this.mCallback.markViewHoldersUpdated(i, updateOp.itemCount, updateOp.payload);
         } else {
             throw new IllegalArgumentException("only remove and update ops can be dispatched in first pass");
         }
     }
 
-    private int updatePositionWithPostponed(int pos, int cmd) {
-        int i;
-        int i2;
+    private int updatePositionWithPostponed(int i, int i2) {
+        int i3;
+        int i4;
         for (int size = this.mPostponedList.size() - 1; size >= 0; size--) {
             UpdateOp updateOp = this.mPostponedList.get(size);
-            int i3 = updateOp.cmd;
-            if (i3 == 8) {
-                int i4 = updateOp.positionStart;
-                int i5 = updateOp.itemCount;
-                if (i4 < i5) {
-                    i2 = i4;
-                    i = i5;
+            if (updateOp.cmd == 8) {
+                if (updateOp.positionStart < updateOp.itemCount) {
+                    i4 = updateOp.positionStart;
+                    i3 = updateOp.itemCount;
                 } else {
-                    i = i4;
-                    i2 = i5;
+                    i4 = updateOp.itemCount;
+                    i3 = updateOp.positionStart;
                 }
-                if (pos < i2 || pos > i) {
-                    if (pos < i4) {
-                        if (cmd == 1) {
-                            updateOp.positionStart = i4 + 1;
-                            updateOp.itemCount = i5 + 1;
-                        } else if (cmd == 2) {
-                            updateOp.positionStart = i4 - 1;
-                            updateOp.itemCount = i5 - 1;
+                if (i < i4 || i > i3) {
+                    if (i < updateOp.positionStart) {
+                        if (i2 == 1) {
+                            updateOp.positionStart++;
+                            updateOp.itemCount++;
+                        } else if (i2 == 2) {
+                            updateOp.positionStart--;
+                            updateOp.itemCount--;
                         }
                     }
-                } else if (i2 == i4) {
-                    if (cmd == 1) {
-                        updateOp.itemCount = i5 + 1;
-                    } else if (cmd == 2) {
-                        updateOp.itemCount = i5 - 1;
+                } else if (i4 == updateOp.positionStart) {
+                    if (i2 == 1) {
+                        updateOp.itemCount++;
+                    } else if (i2 == 2) {
+                        updateOp.itemCount--;
                     }
-                    pos++;
+                    i++;
                 } else {
-                    if (cmd == 1) {
-                        updateOp.positionStart = i4 + 1;
-                    } else if (cmd == 2) {
-                        updateOp.positionStart = i4 - 1;
+                    if (i2 == 1) {
+                        updateOp.positionStart++;
+                    } else if (i2 == 2) {
+                        updateOp.positionStart--;
                     }
-                    pos--;
+                    i--;
                 }
-            } else {
-                int i6 = updateOp.positionStart;
-                if (i6 <= pos) {
-                    if (i3 == 1) {
-                        pos -= updateOp.itemCount;
-                    } else if (i3 == 2) {
-                        pos += updateOp.itemCount;
-                    }
-                } else if (cmd == 1) {
-                    updateOp.positionStart = i6 + 1;
-                } else if (cmd == 2) {
-                    updateOp.positionStart = i6 - 1;
+            } else if (updateOp.positionStart <= i) {
+                if (updateOp.cmd == 1) {
+                    i -= updateOp.itemCount;
+                } else if (updateOp.cmd == 2) {
+                    i += updateOp.itemCount;
                 }
+            } else if (i2 == 1) {
+                updateOp.positionStart++;
+            } else if (i2 == 2) {
+                updateOp.positionStart--;
             }
         }
         for (int size2 = this.mPostponedList.size() - 1; size2 >= 0; size2--) {
             UpdateOp updateOp2 = this.mPostponedList.get(size2);
             if (updateOp2.cmd == 8) {
-                int i7 = updateOp2.itemCount;
-                if (i7 == updateOp2.positionStart || i7 < 0) {
+                if (updateOp2.itemCount == updateOp2.positionStart || updateOp2.itemCount < 0) {
                     this.mPostponedList.remove(size2);
                     recycleUpdateOp(updateOp2);
                 }
@@ -306,26 +304,23 @@ public final class AdapterHelper implements OpReorderer.Callback {
                 recycleUpdateOp(updateOp2);
             }
         }
-        return pos;
+        return i;
     }
 
-    private boolean canFindInPreLayout(int position) {
+    private boolean canFindInPreLayout(int i) {
         int size = this.mPostponedList.size();
-        for (int i = 0; i < size; i++) {
-            UpdateOp updateOp = this.mPostponedList.get(i);
-            int i2 = updateOp.cmd;
-            if (i2 == 8) {
-                if (findPositionOffset(updateOp.itemCount, i + 1) == position) {
+        for (int i2 = 0; i2 < size; i2++) {
+            UpdateOp updateOp = this.mPostponedList.get(i2);
+            if (updateOp.cmd == 8) {
+                if (findPositionOffset(updateOp.itemCount, i2 + 1) == i) {
                     return true;
                 }
-            } else if (i2 == 1) {
-                int i3 = updateOp.positionStart;
-                int i4 = updateOp.itemCount + i3;
-                while (i3 < i4) {
-                    if (findPositionOffset(i3, i + 1) == position) {
+            } else if (updateOp.cmd == 1) {
+                int i3 = updateOp.positionStart + updateOp.itemCount;
+                for (int i4 = updateOp.positionStart; i4 < i3; i4++) {
+                    if (findPositionOffset(i4, i2 + 1) == i) {
                         return true;
                     }
-                    i3++;
                 }
                 continue;
             } else {
@@ -335,121 +330,128 @@ public final class AdapterHelper implements OpReorderer.Callback {
         return false;
     }
 
-    private void applyAdd(UpdateOp op) {
-        postponeAndUpdateViewHolders(op);
+    private void applyAdd(UpdateOp updateOp) {
+        postponeAndUpdateViewHolders(updateOp);
     }
 
-    private void postponeAndUpdateViewHolders(UpdateOp op) {
-        this.mPostponedList.add(op);
-        int i = op.cmd;
+    private void postponeAndUpdateViewHolders(UpdateOp updateOp) {
+        this.mPostponedList.add(updateOp);
+        int i = updateOp.cmd;
         if (i == 1) {
-            this.mCallback.offsetPositionsForAdd(op.positionStart, op.itemCount);
+            this.mCallback.offsetPositionsForAdd(updateOp.positionStart, updateOp.itemCount);
         } else if (i == 2) {
-            this.mCallback.offsetPositionsForRemovingLaidOutOrNewView(op.positionStart, op.itemCount);
+            this.mCallback.offsetPositionsForRemovingLaidOutOrNewView(updateOp.positionStart, updateOp.itemCount);
         } else if (i == 4) {
-            this.mCallback.markViewHoldersUpdated(op.positionStart, op.itemCount, op.payload);
+            this.mCallback.markViewHoldersUpdated(updateOp.positionStart, updateOp.itemCount, updateOp.payload);
         } else if (i == 8) {
-            this.mCallback.offsetPositionsForMove(op.positionStart, op.itemCount);
+            this.mCallback.offsetPositionsForMove(updateOp.positionStart, updateOp.itemCount);
         } else {
-            throw new IllegalArgumentException("Unknown update op type for " + op);
+            throw new IllegalArgumentException("Unknown update op type for " + updateOp);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean hasPendingUpdates() {
         return this.mPendingUpdates.size() > 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public boolean hasAnyUpdateTypes(int updateTypes) {
-        return (this.mExistingUpdateTypes & updateTypes) != 0;
+    /* access modifiers changed from: package-private */
+    public boolean hasAnyUpdateTypes(int i) {
+        return (this.mExistingUpdateTypes & i) != 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public int findPositionOffset(int position) {
-        return findPositionOffset(position, 0);
+    /* access modifiers changed from: package-private */
+    public int findPositionOffset(int i) {
+        return findPositionOffset(i, 0);
     }
 
-    int findPositionOffset(int position, int firstPostponedItem) {
+    /* access modifiers changed from: package-private */
+    public int findPositionOffset(int i, int i2) {
         int size = this.mPostponedList.size();
-        while (firstPostponedItem < size) {
-            UpdateOp updateOp = this.mPostponedList.get(firstPostponedItem);
-            int i = updateOp.cmd;
-            if (i == 8) {
-                int i2 = updateOp.positionStart;
-                if (i2 == position) {
-                    position = updateOp.itemCount;
+        while (i2 < size) {
+            UpdateOp updateOp = this.mPostponedList.get(i2);
+            if (updateOp.cmd == 8) {
+                if (updateOp.positionStart == i) {
+                    i = updateOp.itemCount;
                 } else {
-                    if (i2 < position) {
-                        position--;
+                    if (updateOp.positionStart < i) {
+                        i--;
                     }
-                    if (updateOp.itemCount <= position) {
-                        position++;
+                    if (updateOp.itemCount <= i) {
+                        i++;
                     }
                 }
-            } else {
-                int i3 = updateOp.positionStart;
-                if (i3 > position) {
-                    continue;
-                } else if (i == 2) {
-                    int i4 = updateOp.itemCount;
-                    if (position < i3 + i4) {
-                        return -1;
-                    }
-                    position -= i4;
-                } else if (i == 1) {
-                    position += updateOp.itemCount;
+            } else if (updateOp.positionStart > i) {
+                continue;
+            } else if (updateOp.cmd == 2) {
+                if (i < updateOp.positionStart + updateOp.itemCount) {
+                    return -1;
                 }
+                i -= updateOp.itemCount;
+            } else if (updateOp.cmd == 1) {
+                i += updateOp.itemCount;
             }
-            firstPostponedItem++;
+            i2++;
         }
-        return position;
+        return i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public boolean onItemRangeChanged(int positionStart, int itemCount, Object payload) {
-        if (itemCount < 1) {
+    /* access modifiers changed from: package-private */
+    public boolean onItemRangeChanged(int i, int i2, Object obj) {
+        if (i2 < 1) {
             return false;
         }
-        this.mPendingUpdates.add(obtainUpdateOp(4, positionStart, itemCount, payload));
+        this.mPendingUpdates.add(obtainUpdateOp(4, i, i2, obj));
         this.mExistingUpdateTypes |= 4;
-        return this.mPendingUpdates.size() == 1;
+        if (this.mPendingUpdates.size() == 1) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public boolean onItemRangeInserted(int positionStart, int itemCount) {
-        if (itemCount < 1) {
+    /* access modifiers changed from: package-private */
+    public boolean onItemRangeInserted(int i, int i2) {
+        if (i2 < 1) {
             return false;
         }
-        this.mPendingUpdates.add(obtainUpdateOp(1, positionStart, itemCount, null));
+        this.mPendingUpdates.add(obtainUpdateOp(1, i, i2, (Object) null));
         this.mExistingUpdateTypes |= 1;
-        return this.mPendingUpdates.size() == 1;
+        if (this.mPendingUpdates.size() == 1) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public boolean onItemRangeRemoved(int positionStart, int itemCount) {
-        if (itemCount < 1) {
+    /* access modifiers changed from: package-private */
+    public boolean onItemRangeRemoved(int i, int i2) {
+        if (i2 < 1) {
             return false;
         }
-        this.mPendingUpdates.add(obtainUpdateOp(2, positionStart, itemCount, null));
+        this.mPendingUpdates.add(obtainUpdateOp(2, i, i2, (Object) null));
         this.mExistingUpdateTypes |= 2;
-        return this.mPendingUpdates.size() == 1;
+        if (this.mPendingUpdates.size() == 1) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public boolean onItemRangeMoved(int from, int to, int itemCount) {
-        if (from == to) {
+    /* access modifiers changed from: package-private */
+    public boolean onItemRangeMoved(int i, int i2, int i3) {
+        if (i == i2) {
             return false;
         }
-        if (itemCount != 1) {
-            throw new IllegalArgumentException("Moving more than 1 item is not supported yet");
+        if (i3 == 1) {
+            this.mPendingUpdates.add(obtainUpdateOp(8, i, i2, (Object) null));
+            this.mExistingUpdateTypes |= 8;
+            if (this.mPendingUpdates.size() == 1) {
+                return true;
+            }
+            return false;
         }
-        this.mPendingUpdates.add(obtainUpdateOp(8, from, to, null));
-        this.mExistingUpdateTypes |= 8;
-        return this.mPendingUpdates.size() == 1;
+        throw new IllegalArgumentException("Moving more than 1 item is not supported yet");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void consumeUpdatesInOnePass() {
         consumePostponedUpdates();
         int size = this.mPendingUpdates.size();
@@ -478,80 +480,89 @@ public final class AdapterHelper implements OpReorderer.Callback {
         this.mExistingUpdateTypes = 0;
     }
 
-    public int applyPendingUpdatesToPosition(int position) {
+    public int applyPendingUpdatesToPosition(int i) {
         int size = this.mPendingUpdates.size();
-        for (int i = 0; i < size; i++) {
-            UpdateOp updateOp = this.mPendingUpdates.get(i);
-            int i2 = updateOp.cmd;
-            if (i2 != 1) {
-                if (i2 == 2) {
-                    int i3 = updateOp.positionStart;
-                    if (i3 <= position) {
-                        int i4 = updateOp.itemCount;
-                        if (i3 + i4 > position) {
-                            return -1;
-                        }
-                        position -= i4;
-                    } else {
-                        continue;
-                    }
-                } else if (i2 == 8) {
-                    int i5 = updateOp.positionStart;
-                    if (i5 == position) {
-                        position = updateOp.itemCount;
-                    } else {
-                        if (i5 < position) {
-                            position--;
-                        }
-                        if (updateOp.itemCount <= position) {
-                            position++;
+        for (int i2 = 0; i2 < size; i2++) {
+            UpdateOp updateOp = this.mPendingUpdates.get(i2);
+            int i3 = updateOp.cmd;
+            if (i3 != 1) {
+                if (i3 != 2) {
+                    if (i3 == 8) {
+                        if (updateOp.positionStart == i) {
+                            i = updateOp.itemCount;
+                        } else {
+                            if (updateOp.positionStart < i) {
+                                i--;
+                            }
+                            if (updateOp.itemCount <= i) {
+                                i++;
+                            }
                         }
                     }
+                } else if (updateOp.positionStart > i) {
+                    continue;
+                } else if (updateOp.positionStart + updateOp.itemCount > i) {
+                    return -1;
+                } else {
+                    i -= updateOp.itemCount;
                 }
-            } else if (updateOp.positionStart <= position) {
-                position += updateOp.itemCount;
+            } else if (updateOp.positionStart <= i) {
+                i += updateOp.itemCount;
             }
         }
-        return position;
+        return i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean hasUpdates() {
         return !this.mPostponedList.isEmpty() && !this.mPendingUpdates.isEmpty();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static final class UpdateOp {
+    static final class UpdateOp {
+        static final int ADD = 1;
+        static final int MOVE = 8;
+        static final int POOL_SIZE = 30;
+        static final int REMOVE = 2;
+        static final int UPDATE = 4;
         int cmd;
         int itemCount;
         Object payload;
         int positionStart;
 
-        UpdateOp(int cmd, int positionStart, int itemCount, Object payload) {
-            this.cmd = cmd;
-            this.positionStart = positionStart;
-            this.itemCount = itemCount;
-            this.payload = payload;
+        UpdateOp(int i, int i2, int i3, Object obj) {
+            this.cmd = i;
+            this.positionStart = i2;
+            this.itemCount = i3;
+            this.payload = obj;
         }
 
-        String cmdToString() {
+        /* access modifiers changed from: package-private */
+        public String cmdToString() {
             int i = this.cmd;
-            return i != 1 ? i != 2 ? i != 4 ? i != 8 ? "??" : "mv" : "up" : "rm" : "add";
+            if (i == 1) {
+                return "add";
+            }
+            if (i == 2) {
+                return "rm";
+            }
+            if (i != 4) {
+                return i != 8 ? "??" : "mv";
+            }
+            return "up";
         }
 
         public String toString() {
-            return Integer.toHexString(System.identityHashCode(this)) + "[" + cmdToString() + ",s:" + this.positionStart + "c:" + this.itemCount + ",p:" + this.payload + "]";
+            return Integer.toHexString(System.identityHashCode(this)) + NavigationBarInflaterView.SIZE_MOD_START + cmdToString() + ",s:" + this.positionStart + "c:" + this.itemCount + ",p:" + this.payload + NavigationBarInflaterView.SIZE_MOD_END;
         }
 
-        public boolean equals(Object o) {
-            if (this == o) {
+        public boolean equals(Object obj) {
+            if (this == obj) {
                 return true;
             }
-            if (!(o instanceof UpdateOp)) {
+            if (!(obj instanceof UpdateOp)) {
                 return false;
             }
-            UpdateOp updateOp = (UpdateOp) o;
+            UpdateOp updateOp = (UpdateOp) obj;
             int i = this.cmd;
             if (i != updateOp.cmd) {
                 return false;
@@ -562,9 +573,9 @@ public final class AdapterHelper implements OpReorderer.Callback {
             if (this.itemCount != updateOp.itemCount || this.positionStart != updateOp.positionStart) {
                 return false;
             }
-            Object obj = this.payload;
-            if (obj != null) {
-                if (!obj.equals(updateOp.payload)) {
+            Object obj2 = this.payload;
+            if (obj2 != null) {
+                if (!obj2.equals(updateOp.payload)) {
                     return false;
                 }
             } else if (updateOp.payload != null) {
@@ -578,32 +589,31 @@ public final class AdapterHelper implements OpReorderer.Callback {
         }
     }
 
-    @Override // androidx.recyclerview.widget.OpReorderer.Callback
-    public UpdateOp obtainUpdateOp(int cmd, int positionStart, int itemCount, Object payload) {
+    public UpdateOp obtainUpdateOp(int i, int i2, int i3, Object obj) {
         UpdateOp acquire = this.mUpdateOpPool.acquire();
         if (acquire == null) {
-            return new UpdateOp(cmd, positionStart, itemCount, payload);
+            return new UpdateOp(i, i2, i3, obj);
         }
-        acquire.cmd = cmd;
-        acquire.positionStart = positionStart;
-        acquire.itemCount = itemCount;
-        acquire.payload = payload;
+        acquire.cmd = i;
+        acquire.positionStart = i2;
+        acquire.itemCount = i3;
+        acquire.payload = obj;
         return acquire;
     }
 
-    @Override // androidx.recyclerview.widget.OpReorderer.Callback
-    public void recycleUpdateOp(UpdateOp op) {
+    public void recycleUpdateOp(UpdateOp updateOp) {
         if (!this.mDisableRecycler) {
-            op.payload = null;
-            this.mUpdateOpPool.release(op);
+            updateOp.payload = null;
+            this.mUpdateOpPool.release(updateOp);
         }
     }
 
-    void recycleUpdateOpsAndClearList(List<UpdateOp> ops) {
-        int size = ops.size();
+    /* access modifiers changed from: package-private */
+    public void recycleUpdateOpsAndClearList(List<UpdateOp> list) {
+        int size = list.size();
         for (int i = 0; i < size; i++) {
-            recycleUpdateOp(ops.get(i));
+            recycleUpdateOp(list.get(i));
         }
-        ops.clear();
+        list.clear();
     }
 }

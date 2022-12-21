@@ -4,36 +4,36 @@ import android.app.Notification;
 import android.app.RemoteInput;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.SystemProperties;
 import android.service.notification.StatusBarNotification;
 import android.util.ArrayMap;
+import android.util.IndentingPrintWriter;
 import android.util.Pair;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.policy.RemoteInputUriController;
+import com.android.systemui.util.DumpUtilsKt;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class RemoteInputController {
     private static final boolean ENABLE_REMOTE_INPUT = SystemProperties.getBoolean("debug.enable_remote_input", true);
-    private final Delegate mDelegate;
-    private final RemoteInputUriController mRemoteInputUriController;
-    private final ArrayList<Pair<WeakReference<NotificationEntry>, Object>> mOpen = new ArrayList<>();
-    private final ArrayMap<String, Object> mSpinning = new ArrayMap<>();
     private final ArrayList<Callback> mCallbacks = new ArrayList<>(3);
+    private final Delegate mDelegate;
+    private final ArrayList<Pair<WeakReference<NotificationEntry>, Object>> mOpen = new ArrayList<>();
+    private final RemoteInputUriController mRemoteInputUriController;
+    private final ArrayMap<String, Object> mSpinning = new ArrayMap<>();
 
-    /* loaded from: classes.dex */
     public interface Callback {
-        default void onRemoteInputActive(boolean z) {
+        void onRemoteInputActive(boolean z) {
         }
 
-        default void onRemoteInputSent(NotificationEntry notificationEntry) {
+        void onRemoteInputSent(NotificationEntry notificationEntry) {
         }
     }
 
-    /* loaded from: classes.dex */
     public interface Delegate {
         void lockScrollTo(NotificationEntry notificationEntry);
 
@@ -48,19 +48,17 @@ public class RemoteInputController {
     }
 
     public static void processForRemoteInput(Notification notification, Context context) {
-        Bundle bundle;
         RemoteInput[] remoteInputs;
-        if (ENABLE_REMOTE_INPUT && (bundle = notification.extras) != null && bundle.containsKey("android.wearable.EXTENSIONS")) {
-            Notification.Action[] actionArr = notification.actions;
-            if (actionArr != null && actionArr.length != 0) {
-                return;
-            }
-            Notification.Action action = null;
+        if (!ENABLE_REMOTE_INPUT || notification.extras == null || !notification.extras.containsKey("android.wearable.EXTENSIONS")) {
+            return;
+        }
+        if (notification.actions == null || notification.actions.length == 0) {
             List<Notification.Action> actions = new Notification.WearableExtender(notification).getActions();
             int size = actions.size();
+            Notification.Action action = null;
             for (int i = 0; i < size; i++) {
                 Notification.Action action2 = actions.get(i);
-                if (action2 != null && (remoteInputs = action2.getRemoteInputs()) != null) {
+                if (!(action2 == null || (remoteInputs = action2.getRemoteInputs()) == null)) {
                     int length = remoteInputs.length;
                     int i2 = 0;
                     while (true) {
@@ -78,28 +76,30 @@ public class RemoteInputController {
                     }
                 }
             }
-            if (action == null) {
-                return;
+            if (action != null) {
+                Notification.Builder recoverBuilder = Notification.Builder.recoverBuilder(context, notification);
+                recoverBuilder.setActions(new Notification.Action[]{action});
+                recoverBuilder.build();
             }
-            Notification.Builder recoverBuilder = Notification.Builder.recoverBuilder(context, notification);
-            recoverBuilder.setActions(action);
-            recoverBuilder.build();
         }
     }
 
     public void addRemoteInput(NotificationEntry notificationEntry, Object obj) {
         Objects.requireNonNull(notificationEntry);
         Objects.requireNonNull(obj);
-        if (!pruneWeakThenRemoveAndContains(notificationEntry, null, obj)) {
-            this.mOpen.add(new Pair<>(new WeakReference(notificationEntry), obj));
+        boolean isRemoteInputActive = isRemoteInputActive(notificationEntry);
+        if (!pruneWeakThenRemoveAndContains(notificationEntry, (NotificationEntry) null, obj)) {
+            this.mOpen.add(new Pair(new WeakReference(notificationEntry), obj));
         }
-        apply(notificationEntry);
+        if (!isRemoteInputActive) {
+            apply(notificationEntry);
+        }
     }
 
     public void removeRemoteInput(NotificationEntry notificationEntry, Object obj) {
         Objects.requireNonNull(notificationEntry);
         if ((!notificationEntry.mRemoteEditImeVisible || !notificationEntry.mRemoteEditImeAnimatingAway) && isRemoteInputActive(notificationEntry)) {
-            pruneWeakThenRemoveAndContains(null, notificationEntry, obj);
+            pruneWeakThenRemoveAndContains((NotificationEntry) null, notificationEntry, obj);
             apply(notificationEntry);
         }
     }
@@ -135,11 +135,11 @@ public class RemoteInputController {
     }
 
     public boolean isRemoteInputActive(NotificationEntry notificationEntry) {
-        return pruneWeakThenRemoveAndContains(notificationEntry, null, null);
+        return pruneWeakThenRemoveAndContains(notificationEntry, (NotificationEntry) null, (Object) null);
     }
 
     public boolean isRemoteInputActive() {
-        pruneWeakThenRemoveAndContains(null, null, null);
+        pruneWeakThenRemoveAndContains((NotificationEntry) null, (NotificationEntry) null, (Object) null);
         return !this.mOpen.isEmpty();
     }
 
@@ -167,6 +167,10 @@ public class RemoteInputController {
         this.mCallbacks.add(callback);
     }
 
+    public void removeCallback(Callback callback) {
+        this.mCallbacks.remove((Object) callback);
+    }
+
     public void remoteInputSent(NotificationEntry notificationEntry) {
         int size = this.mCallbacks.size();
         for (int i = 0; i < size; i++) {
@@ -175,20 +179,19 @@ public class RemoteInputController {
     }
 
     public void closeRemoteInputs() {
-        if (this.mOpen.size() == 0) {
-            return;
-        }
-        ArrayList arrayList = new ArrayList(this.mOpen.size());
-        for (int size = this.mOpen.size() - 1; size >= 0; size--) {
-            NotificationEntry notificationEntry = (NotificationEntry) ((WeakReference) this.mOpen.get(size).first).get();
-            if (notificationEntry != null && notificationEntry.rowExists()) {
-                arrayList.add(notificationEntry);
+        if (this.mOpen.size() != 0) {
+            ArrayList arrayList = new ArrayList(this.mOpen.size());
+            for (int size = this.mOpen.size() - 1; size >= 0; size--) {
+                NotificationEntry notificationEntry = (NotificationEntry) ((WeakReference) this.mOpen.get(size).first).get();
+                if (notificationEntry != null && notificationEntry.rowExists()) {
+                    arrayList.add(notificationEntry);
+                }
             }
-        }
-        for (int size2 = arrayList.size() - 1; size2 >= 0; size2--) {
-            NotificationEntry notificationEntry2 = (NotificationEntry) arrayList.get(size2);
-            if (notificationEntry2.rowExists()) {
-                notificationEntry2.closeRemoteInput();
+            for (int size2 = arrayList.size() - 1; size2 >= 0; size2--) {
+                NotificationEntry notificationEntry2 = (NotificationEntry) arrayList.get(size2);
+                if (notificationEntry2.rowExists()) {
+                    notificationEntry2.closeRemoteInput();
+                }
             }
         }
     }
@@ -203,5 +206,41 @@ public class RemoteInputController {
 
     public void grantInlineReplyUriPermission(StatusBarNotification statusBarNotification, Uri uri) {
         this.mRemoteInputUriController.grantInlineReplyUriPermission(statusBarNotification, uri);
+    }
+
+    public void dump(IndentingPrintWriter indentingPrintWriter) {
+        indentingPrintWriter.print("isRemoteInputActive: ");
+        indentingPrintWriter.println(isRemoteInputActive());
+        indentingPrintWriter.println("mOpen: " + this.mOpen.size());
+        DumpUtilsKt.withIncreasedIndent(indentingPrintWriter, (Runnable) new RemoteInputController$$ExternalSyntheticLambda0(this, indentingPrintWriter));
+        indentingPrintWriter.println("mSpinning: " + this.mSpinning.size());
+        DumpUtilsKt.withIncreasedIndent(indentingPrintWriter, (Runnable) new RemoteInputController$$ExternalSyntheticLambda1(this, indentingPrintWriter));
+        indentingPrintWriter.println(this.mSpinning);
+        indentingPrintWriter.print("mDelegate: ");
+        indentingPrintWriter.println(this.mDelegate);
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$dump$0$com-android-systemui-statusbar-RemoteInputController */
+    public /* synthetic */ void mo39012xfac918bb(IndentingPrintWriter indentingPrintWriter) {
+        String str;
+        Iterator<Pair<WeakReference<NotificationEntry>, Object>> it = this.mOpen.iterator();
+        while (it.hasNext()) {
+            NotificationEntry notificationEntry = (NotificationEntry) ((WeakReference) it.next().first).get();
+            if (notificationEntry == null) {
+                str = "???";
+            } else {
+                str = notificationEntry.getKey();
+            }
+            indentingPrintWriter.println(str);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$dump$1$com-android-systemui-statusbar-RemoteInputController */
+    public /* synthetic */ void mo39013x14e4975a(IndentingPrintWriter indentingPrintWriter) {
+        for (String println : this.mSpinning.keySet()) {
+            indentingPrintWriter.println(println);
+        }
     }
 }

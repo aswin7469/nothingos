@@ -1,11 +1,9 @@
 package com.android.systemui.media;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class MediaHostStatesManager_Factory implements Factory<MediaHostStatesManager> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaHostStatesManager mo1933get() {
+    public MediaHostStatesManager get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class MediaHostStatesManager_Factory implements Factory<MediaHostSt
         return new MediaHostStatesManager();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final MediaHostStatesManager_Factory INSTANCE = new MediaHostStatesManager_Factory();
+        /* access modifiers changed from: private */
+        public static final MediaHostStatesManager_Factory INSTANCE = new MediaHostStatesManager_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

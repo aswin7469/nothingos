@@ -4,7 +4,7 @@ import com.android.internal.logging.UiEventLogger;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class LongScreenshotActivity_Factory implements Factory<LongScreenshotActivity> {
     private final Provider<Executor> bgExecutorProvider;
     private final Provider<ImageExporter> imageExporterProvider;
@@ -20,10 +20,8 @@ public final class LongScreenshotActivity_Factory implements Factory<LongScreens
         this.longScreenshotHolderProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LongScreenshotActivity mo1933get() {
-        return newInstance(this.uiEventLoggerProvider.mo1933get(), this.imageExporterProvider.mo1933get(), this.mainExecutorProvider.mo1933get(), this.bgExecutorProvider.mo1933get(), this.longScreenshotHolderProvider.mo1933get());
+    public LongScreenshotActivity get() {
+        return newInstance(this.uiEventLoggerProvider.get(), this.imageExporterProvider.get(), this.mainExecutorProvider.get(), this.bgExecutorProvider.get(), this.longScreenshotHolderProvider.get());
     }
 
     public static LongScreenshotActivity_Factory create(Provider<UiEventLogger> provider, Provider<ImageExporter> provider2, Provider<Executor> provider3, Provider<Executor> provider4, Provider<LongScreenshotData> provider5) {

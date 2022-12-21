@@ -1,35 +1,57 @@
 package com.android.systemui.charging;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.View;
-import android.view.animation.Interpolator;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.constraintlayout.motion.widget.Key;
 import com.android.settingslib.Utils;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.R$integer;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$style;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.charging.ChargingRippleView;
+import com.android.systemui.statusbar.phone.NotificationTapHelper;
 import java.text.NumberFormat;
-/* loaded from: classes.dex */
+
 public class WirelessChargingLayout extends FrameLayout {
-    private ChargingRippleView mRippleView;
+    private static final long RIPPLE_ANIMATION_DURATION = 1500;
+    private static final int SCRIM_COLOR = 1275068416;
+    private static final int SCRIM_FADE_DURATION = 300;
+    public static final int UNKNOWN_BATTERY_LEVEL = -1;
+    /* access modifiers changed from: private */
+    public ChargingRippleView mRippleView;
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
+
+    public WirelessChargingLayout(Context context) {
+        super(context);
+        init(context, (AttributeSet) null, false);
+    }
 
     public WirelessChargingLayout(Context context, int i, int i2, boolean z) {
         super(context);
-        init(context, null, i, i2, z);
+        init(context, (AttributeSet) null, i, i2, z);
     }
 
     public WirelessChargingLayout(Context context, AttributeSet attributeSet) {
@@ -42,60 +64,54 @@ public class WirelessChargingLayout extends FrameLayout {
     }
 
     private void init(Context context, AttributeSet attributeSet, int i, int i2, boolean z) {
-        boolean z2 = i != -1;
-        int i3 = R$style.ChargingAnim_WallpaperBackground;
-        if (z) {
-            i3 = R$style.ChargingAnim_DarkBackground;
-        }
-        FrameLayout.inflate(new ContextThemeWrapper(context, i3), R$layout.wireless_charging_layout, this);
-        TextView textView = (TextView) findViewById(R$id.wireless_charging_percentage);
-        if (i2 != -1) {
-            textView.setText(NumberFormat.getPercentInstance().format(i2 / 100.0f));
+        int i3 = i;
+        int i4 = i2;
+        boolean z2 = i3 != -1;
+        inflate(new ContextThemeWrapper(context, z ? C1893R.style.ChargingAnim_DarkBackground : C1893R.style.ChargingAnim_WallpaperBackground), C1893R.layout.wireless_charging_layout, this);
+        TextView textView = (TextView) findViewById(C1893R.C1897id.wireless_charging_percentage);
+        if (i4 != -1) {
+            textView.setText(NumberFormat.getPercentInstance().format((double) (((float) i4) / 100.0f)));
             textView.setAlpha(0.0f);
         }
-        long integer = context.getResources().getInteger(R$integer.wireless_charging_fade_offset);
-        long integer2 = context.getResources().getInteger(R$integer.wireless_charging_fade_duration);
-        float f = context.getResources().getFloat(R$dimen.wireless_charging_anim_battery_level_text_size_start);
-        float f2 = context.getResources().getFloat(R$dimen.wireless_charging_anim_battery_level_text_size_end) * (z2 ? 0.75f : 1.0f);
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(textView, "textSize", f, f2);
+        long integer = (long) context.getResources().getInteger(C1893R.integer.wireless_charging_fade_offset);
+        long integer2 = (long) context.getResources().getInteger(C1893R.integer.wireless_charging_fade_duration);
+        float f = context.getResources().getFloat(C1893R.dimen.wireless_charging_anim_battery_level_text_size_start);
+        float f2 = context.getResources().getFloat(C1893R.dimen.wireless_charging_anim_battery_level_text_size_end) * (z2 ? 0.75f : 1.0f);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(textView, "textSize", new float[]{f, f2});
         ofFloat.setInterpolator(new PathInterpolator(0.0f, 0.0f, 0.0f, 1.0f));
-        Resources resources = context.getResources();
-        int i4 = R$integer.wireless_charging_battery_level_text_scale_animation_duration;
-        ofFloat.setDuration(resources.getInteger(i4));
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(textView, "alpha", 0.0f, 1.0f);
-        Interpolator interpolator = Interpolators.LINEAR;
-        ofFloat2.setInterpolator(interpolator);
-        Resources resources2 = context.getResources();
-        int i5 = R$integer.wireless_charging_battery_level_text_opacity_duration;
-        ofFloat2.setDuration(resources2.getInteger(i5));
-        Resources resources3 = context.getResources();
-        int i6 = R$integer.wireless_charging_anim_opacity_offset;
-        ofFloat2.setStartDelay(resources3.getInteger(i6));
-        ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(textView, "alpha", 1.0f, 0.0f);
+        ofFloat.setDuration((long) context.getResources().getInteger(C1893R.integer.wireless_charging_battery_level_text_scale_animation_duration));
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(textView, Key.ALPHA, new float[]{0.0f, 1.0f});
+        ofFloat2.setInterpolator(Interpolators.LINEAR);
+        float f3 = f;
+        String str = "textSize";
+        ofFloat2.setDuration((long) context.getResources().getInteger(C1893R.integer.wireless_charging_battery_level_text_opacity_duration));
+        int integer3 = context.getResources().getInteger(C1893R.integer.wireless_charging_anim_opacity_offset);
+        String str2 = Key.ALPHA;
+        ofFloat2.setStartDelay((long) integer3);
+        ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(textView, str2, new float[]{1.0f, 0.0f});
         ofFloat3.setDuration(integer2);
-        ofFloat3.setInterpolator(interpolator);
+        ofFloat3.setInterpolator(Interpolators.LINEAR);
         ofFloat3.setStartDelay(integer);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(ofFloat, ofFloat2, ofFloat3);
-        ObjectAnimator ofArgb = ObjectAnimator.ofArgb(this, "backgroundColor", 0, 1275068416);
-        ofArgb.setDuration(300L);
-        ofArgb.setInterpolator(interpolator);
-        ObjectAnimator ofArgb2 = ObjectAnimator.ofArgb(this, "backgroundColor", 1275068416, 0);
-        ofArgb2.setDuration(300L);
-        ofArgb2.setInterpolator(interpolator);
-        ofArgb2.setStartDelay(1200L);
+        animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2, ofFloat3});
+        ObjectAnimator ofArgb = ObjectAnimator.ofArgb(this, "backgroundColor", new int[]{0, SCRIM_COLOR});
+        float f4 = f2;
+        ofArgb.setDuration(300);
+        ofArgb.setInterpolator(Interpolators.LINEAR);
+        ObjectAnimator ofArgb2 = ObjectAnimator.ofArgb(this, "backgroundColor", new int[]{SCRIM_COLOR, 0});
+        ofArgb2.setDuration(300);
+        ofArgb2.setInterpolator(Interpolators.LINEAR);
+        ofArgb2.setStartDelay(NotificationTapHelper.DOUBLE_TAP_TIMEOUT_MS);
         AnimatorSet animatorSet2 = new AnimatorSet();
-        animatorSet2.playTogether(ofArgb, ofArgb2);
+        animatorSet2.playTogether(new Animator[]{ofArgb, ofArgb2});
         animatorSet2.start();
-        this.mRippleView = (ChargingRippleView) findViewById(R$id.wireless_charging_ripple);
-        this.mRippleView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() { // from class: com.android.systemui.charging.WirelessChargingLayout.1
-            @Override // android.view.View.OnAttachStateChangeListener
+        this.mRippleView = (ChargingRippleView) findViewById(C1893R.C1897id.wireless_charging_ripple);
+        this.mRippleView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             public void onViewDetachedFromWindow(View view) {
             }
 
-            @Override // android.view.View.OnAttachStateChangeListener
             public void onViewAttachedToWindow(View view) {
-                WirelessChargingLayout.this.mRippleView.setDuration(1500L);
+                WirelessChargingLayout.this.mRippleView.setDuration(1500);
                 WirelessChargingLayout.this.mRippleView.startRipple();
                 WirelessChargingLayout.this.mRippleView.removeOnAttachStateChangeListener(this);
             }
@@ -104,51 +120,51 @@ public class WirelessChargingLayout extends FrameLayout {
             animatorSet.start();
             return;
         }
-        TextView textView2 = (TextView) findViewById(R$id.reverse_wireless_charging_percentage);
+        TextView textView2 = (TextView) findViewById(C1893R.C1897id.reverse_wireless_charging_percentage);
         textView2.setVisibility(0);
-        textView2.setText(NumberFormat.getPercentInstance().format(i / 100.0f));
+        textView2.setText(NumberFormat.getPercentInstance().format((double) (((float) i3) / 100.0f)));
         textView2.setAlpha(0.0f);
-        ObjectAnimator ofFloat4 = ObjectAnimator.ofFloat(textView2, "textSize", f, f2);
+        ObjectAnimator ofFloat4 = ObjectAnimator.ofFloat(textView2, str, new float[]{f3, f4});
         ofFloat4.setInterpolator(new PathInterpolator(0.0f, 0.0f, 0.0f, 1.0f));
-        ofFloat4.setDuration(context.getResources().getInteger(i4));
-        ObjectAnimator ofFloat5 = ObjectAnimator.ofFloat(textView2, "alpha", 0.0f, 1.0f);
-        ofFloat5.setInterpolator(interpolator);
-        ofFloat5.setDuration(context.getResources().getInteger(i5));
-        ofFloat5.setStartDelay(context.getResources().getInteger(i6));
-        ObjectAnimator ofFloat6 = ObjectAnimator.ofFloat(textView2, "alpha", 1.0f, 0.0f);
+        ofFloat4.setDuration((long) context.getResources().getInteger(C1893R.integer.wireless_charging_battery_level_text_scale_animation_duration));
+        ObjectAnimator ofFloat5 = ObjectAnimator.ofFloat(textView2, str2, new float[]{0.0f, 1.0f});
+        ofFloat5.setInterpolator(Interpolators.LINEAR);
+        ofFloat5.setDuration((long) context.getResources().getInteger(C1893R.integer.wireless_charging_battery_level_text_opacity_duration));
+        ofFloat5.setStartDelay((long) context.getResources().getInteger(C1893R.integer.wireless_charging_anim_opacity_offset));
+        ObjectAnimator ofFloat6 = ObjectAnimator.ofFloat(textView2, str2, new float[]{1.0f, 0.0f});
         ofFloat6.setDuration(integer2);
-        ofFloat6.setInterpolator(interpolator);
+        ofFloat6.setInterpolator(Interpolators.LINEAR);
         ofFloat6.setStartDelay(integer);
         AnimatorSet animatorSet3 = new AnimatorSet();
-        animatorSet3.playTogether(ofFloat4, ofFloat5, ofFloat6);
-        ImageView imageView = (ImageView) findViewById(R$id.reverse_wireless_charging_icon);
+        animatorSet3.playTogether(new Animator[]{ofFloat4, ofFloat5, ofFloat6});
+        ImageView imageView = (ImageView) findViewById(C1893R.C1897id.reverse_wireless_charging_icon);
         imageView.setVisibility(0);
-        int round = Math.round(TypedValue.applyDimension(1, f2, getResources().getDisplayMetrics()));
+        int round = Math.round(TypedValue.applyDimension(1, f4, getResources().getDisplayMetrics()));
         imageView.setPadding(round, 0, round, 0);
-        ObjectAnimator ofFloat7 = ObjectAnimator.ofFloat(imageView, "alpha", 0.0f, 1.0f);
-        ofFloat7.setInterpolator(interpolator);
-        ofFloat7.setDuration(context.getResources().getInteger(i5));
-        ofFloat7.setStartDelay(context.getResources().getInteger(i6));
-        ObjectAnimator ofFloat8 = ObjectAnimator.ofFloat(imageView, "alpha", 1.0f, 0.0f);
+        ObjectAnimator ofFloat7 = ObjectAnimator.ofFloat(imageView, str2, new float[]{0.0f, 1.0f});
+        ofFloat7.setInterpolator(Interpolators.LINEAR);
+        ofFloat7.setDuration((long) context.getResources().getInteger(C1893R.integer.wireless_charging_battery_level_text_opacity_duration));
+        ofFloat7.setStartDelay((long) context.getResources().getInteger(C1893R.integer.wireless_charging_anim_opacity_offset));
+        ObjectAnimator ofFloat8 = ObjectAnimator.ofFloat(imageView, str2, new float[]{1.0f, 0.0f});
         ofFloat8.setDuration(integer2);
-        ofFloat8.setInterpolator(interpolator);
+        ofFloat8.setInterpolator(Interpolators.LINEAR);
         ofFloat8.setStartDelay(integer);
         AnimatorSet animatorSet4 = new AnimatorSet();
-        animatorSet4.playTogether(ofFloat7, ofFloat8);
+        animatorSet4.playTogether(new Animator[]{ofFloat7, ofFloat8});
         animatorSet.start();
         animatorSet3.start();
         animatorSet4.start();
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         if (this.mRippleView != null) {
             int measuredWidth = getMeasuredWidth();
             int measuredHeight = getMeasuredHeight();
             ChargingRippleView chargingRippleView = this.mRippleView;
             chargingRippleView.setColor(Utils.getColorAttr(chargingRippleView.getContext(), 16843829).getDefaultColor());
-            this.mRippleView.setOrigin(new PointF(measuredWidth / 2, measuredHeight / 2));
-            this.mRippleView.setRadius(Math.max(measuredWidth, measuredHeight) * 0.5f);
+            this.mRippleView.setOrigin(new PointF((float) (measuredWidth / 2), (float) (measuredHeight / 2)));
+            this.mRippleView.setRadius(((float) Math.max(measuredWidth, measuredHeight)) * 0.5f);
         }
         super.onLayout(z, i, i2, i3, i4);
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/notification_ripple_untinted_color">
+<ripple xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:color="@color/notification_ripple_untinted_color">
     <item>
         <inset android:insetLeft="0dp" android:insetRight="0dp" android:insetTop="8dp" android:insetBottom="8dp">
             <shape android:shape="rectangle">

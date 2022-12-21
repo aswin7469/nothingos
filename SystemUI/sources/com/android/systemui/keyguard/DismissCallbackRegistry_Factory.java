@@ -3,7 +3,7 @@ package com.android.systemui.keyguard;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DismissCallbackRegistry_Factory implements Factory<DismissCallbackRegistry> {
     private final Provider<Executor> uiBgExecutorProvider;
 
@@ -11,10 +11,8 @@ public final class DismissCallbackRegistry_Factory implements Factory<DismissCal
         this.uiBgExecutorProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DismissCallbackRegistry mo1933get() {
-        return newInstance(this.uiBgExecutorProvider.mo1933get());
+    public DismissCallbackRegistry get() {
+        return newInstance(this.uiBgExecutorProvider.get());
     }
 
     public static DismissCallbackRegistry_Factory create(Provider<Executor> provider) {

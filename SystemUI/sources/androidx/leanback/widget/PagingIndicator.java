@@ -20,47 +20,42 @@ import android.util.AttributeSet;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import androidx.constraintlayout.motion.widget.Key;
 import androidx.core.view.ViewCompat;
-import androidx.leanback.R$color;
-import androidx.leanback.R$dimen;
-import androidx.leanback.R$drawable;
-import androidx.leanback.R$styleable;
-/* loaded from: classes.dex */
+import androidx.leanback.C0742R;
+
 public class PagingIndicator extends View {
     private static final TimeInterpolator DECELERATE_INTERPOLATOR = new DecelerateInterpolator();
-    private static final Property<Dot, Float> DOT_ALPHA = new Property<Dot, Float>(Float.class, "alpha") { // from class: androidx.leanback.widget.PagingIndicator.1
-        @Override // android.util.Property
+    private static final Property<Dot, Float> DOT_ALPHA = new Property<Dot, Float>(Float.class, Key.ALPHA) {
         public Float get(Dot dot) {
             return Float.valueOf(dot.getAlpha());
         }
 
-        @Override // android.util.Property
-        public void set(Dot dot, Float value) {
-            dot.setAlpha(value.floatValue());
+        public void set(Dot dot, Float f) {
+            dot.setAlpha(f.floatValue());
         }
     };
-    private static final Property<Dot, Float> DOT_DIAMETER = new Property<Dot, Float>(Float.class, "diameter") { // from class: androidx.leanback.widget.PagingIndicator.2
-        @Override // android.util.Property
+    private static final Property<Dot, Float> DOT_DIAMETER = new Property<Dot, Float>(Float.class, "diameter") {
         public Float get(Dot dot) {
             return Float.valueOf(dot.getDiameter());
         }
 
-        @Override // android.util.Property
-        public void set(Dot dot, Float value) {
-            dot.setDiameter(value.floatValue());
+        public void set(Dot dot, Float f) {
+            dot.setDiameter(f.floatValue());
         }
     };
-    private static final Property<Dot, Float> DOT_TRANSLATION_X = new Property<Dot, Float>(Float.class, "translation_x") { // from class: androidx.leanback.widget.PagingIndicator.3
-        @Override // android.util.Property
+    private static final Property<Dot, Float> DOT_TRANSLATION_X = new Property<Dot, Float>(Float.class, "translation_x") {
         public Float get(Dot dot) {
             return Float.valueOf(dot.getTranslationX());
         }
 
-        @Override // android.util.Property
-        public void set(Dot dot, Float value) {
-            dot.setTranslationX(value.floatValue());
+        public void set(Dot dot, Float f) {
+            dot.setTranslationX(f.floatValue());
         }
     };
+    private static final long DURATION_ALPHA = 167;
+    private static final long DURATION_DIAMETER = 417;
+    private static final long DURATION_TRANSLATION_X = 417;
     private final AnimatorSet mAnimator;
     Bitmap mArrow;
     final int mArrowDiameter;
@@ -89,73 +84,69 @@ public class PagingIndicator extends View {
     private final AnimatorSet mShowAnimator;
 
     public PagingIndicator(Context context) {
-        this(context, null, 0);
+        this(context, (AttributeSet) null, 0);
     }
 
-    public PagingIndicator(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public PagingIndicator(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
     }
 
-    public PagingIndicator(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public PagingIndicator(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         AnimatorSet animatorSet = new AnimatorSet();
         this.mAnimator = animatorSet;
         Resources resources = getResources();
-        int[] iArr = R$styleable.PagingIndicator;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attrs, iArr, defStyle, 0);
-        ViewCompat.saveAttributeDataForStyleable(this, context, iArr, attrs, obtainStyledAttributes, defStyle, 0);
-        int dimensionFromTypedArray = getDimensionFromTypedArray(obtainStyledAttributes, R$styleable.PagingIndicator_lbDotRadius, R$dimen.lb_page_indicator_dot_radius);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0742R.styleable.PagingIndicator, i, 0);
+        ViewCompat.saveAttributeDataForStyleable(this, context, C0742R.styleable.PagingIndicator, attributeSet, obtainStyledAttributes, i, 0);
+        int dimensionFromTypedArray = getDimensionFromTypedArray(obtainStyledAttributes, C0742R.styleable.PagingIndicator_lbDotRadius, C0742R.dimen.lb_page_indicator_dot_radius);
         this.mDotRadius = dimensionFromTypedArray;
         this.mDotDiameter = dimensionFromTypedArray * 2;
-        int dimensionFromTypedArray2 = getDimensionFromTypedArray(obtainStyledAttributes, R$styleable.PagingIndicator_arrowRadius, R$dimen.lb_page_indicator_arrow_radius);
+        int dimensionFromTypedArray2 = getDimensionFromTypedArray(obtainStyledAttributes, C0742R.styleable.PagingIndicator_arrowRadius, C0742R.dimen.lb_page_indicator_arrow_radius);
         this.mArrowRadius = dimensionFromTypedArray2;
-        int i = dimensionFromTypedArray2 * 2;
-        this.mArrowDiameter = i;
-        this.mDotGap = getDimensionFromTypedArray(obtainStyledAttributes, R$styleable.PagingIndicator_dotToDotGap, R$dimen.lb_page_indicator_dot_gap);
-        this.mArrowGap = getDimensionFromTypedArray(obtainStyledAttributes, R$styleable.PagingIndicator_dotToArrowGap, R$dimen.lb_page_indicator_arrow_gap);
-        int colorFromTypedArray = getColorFromTypedArray(obtainStyledAttributes, R$styleable.PagingIndicator_dotBgColor, R$color.lb_page_indicator_dot);
+        int i2 = dimensionFromTypedArray2 * 2;
+        this.mArrowDiameter = i2;
+        this.mDotGap = getDimensionFromTypedArray(obtainStyledAttributes, C0742R.styleable.PagingIndicator_dotToDotGap, C0742R.dimen.lb_page_indicator_dot_gap);
+        this.mArrowGap = getDimensionFromTypedArray(obtainStyledAttributes, C0742R.styleable.PagingIndicator_dotToArrowGap, C0742R.dimen.lb_page_indicator_arrow_gap);
+        int colorFromTypedArray = getColorFromTypedArray(obtainStyledAttributes, C0742R.styleable.PagingIndicator_dotBgColor, C0742R.C0743color.lb_page_indicator_dot);
         Paint paint = new Paint(1);
         this.mBgPaint = paint;
         paint.setColor(colorFromTypedArray);
-        this.mDotFgSelectColor = getColorFromTypedArray(obtainStyledAttributes, R$styleable.PagingIndicator_arrowBgColor, R$color.lb_page_indicator_arrow_background);
-        if (this.mArrowPaint == null) {
-            int i2 = R$styleable.PagingIndicator_arrowColor;
-            if (obtainStyledAttributes.hasValue(i2)) {
-                setArrowColor(obtainStyledAttributes.getColor(i2, 0));
-            }
+        this.mDotFgSelectColor = getColorFromTypedArray(obtainStyledAttributes, C0742R.styleable.PagingIndicator_arrowBgColor, C0742R.C0743color.lb_page_indicator_arrow_background);
+        if (this.mArrowPaint == null && obtainStyledAttributes.hasValue(C0742R.styleable.PagingIndicator_arrowColor)) {
+            setArrowColor(obtainStyledAttributes.getColor(C0742R.styleable.PagingIndicator_arrowColor, 0));
         }
         obtainStyledAttributes.recycle();
         this.mIsLtr = resources.getConfiguration().getLayoutDirection() == 0;
-        int color = resources.getColor(R$color.lb_page_indicator_arrow_shadow);
-        int dimensionPixelSize = resources.getDimensionPixelSize(R$dimen.lb_page_indicator_arrow_shadow_radius);
+        int color = resources.getColor(C0742R.C0743color.lb_page_indicator_arrow_shadow);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0742R.dimen.lb_page_indicator_arrow_shadow_radius);
         this.mShadowRadius = dimensionPixelSize;
         Paint paint2 = new Paint(1);
         this.mFgPaint = paint2;
-        float dimensionPixelSize2 = resources.getDimensionPixelSize(R$dimen.lb_page_indicator_arrow_shadow_offset);
-        paint2.setShadowLayer(dimensionPixelSize, dimensionPixelSize2, dimensionPixelSize2, color);
+        float dimensionPixelSize2 = (float) resources.getDimensionPixelSize(C0742R.dimen.lb_page_indicator_arrow_shadow_offset);
+        paint2.setShadowLayer((float) dimensionPixelSize, dimensionPixelSize2, dimensionPixelSize2, color);
         this.mArrow = loadArrow();
         this.mArrowRect = new Rect(0, 0, this.mArrow.getWidth(), this.mArrow.getHeight());
-        this.mArrowToBgRatio = this.mArrow.getWidth() / i;
+        this.mArrowToBgRatio = ((float) this.mArrow.getWidth()) / ((float) i2);
         AnimatorSet animatorSet2 = new AnimatorSet();
         this.mShowAnimator = animatorSet2;
-        animatorSet2.playTogether(createDotAlphaAnimator(0.0f, 1.0f), createDotDiameterAnimator(dimensionFromTypedArray * 2, dimensionFromTypedArray2 * 2), createDotTranslationXAnimator());
+        animatorSet2.playTogether(new Animator[]{createDotAlphaAnimator(0.0f, 1.0f), createDotDiameterAnimator((float) (dimensionFromTypedArray * 2), (float) (dimensionFromTypedArray2 * 2)), createDotTranslationXAnimator()});
         AnimatorSet animatorSet3 = new AnimatorSet();
         this.mHideAnimator = animatorSet3;
-        animatorSet3.playTogether(createDotAlphaAnimator(1.0f, 0.0f), createDotDiameterAnimator(dimensionFromTypedArray2 * 2, dimensionFromTypedArray * 2), createDotTranslationXAnimator());
-        animatorSet.playTogether(animatorSet2, animatorSet3);
-        setLayerType(1, null);
+        animatorSet3.playTogether(new Animator[]{createDotAlphaAnimator(1.0f, 0.0f), createDotDiameterAnimator((float) (dimensionFromTypedArray2 * 2), (float) (dimensionFromTypedArray * 2)), createDotTranslationXAnimator()});
+        animatorSet.playTogether(new Animator[]{animatorSet2, animatorSet3});
+        setLayerType(1, (Paint) null);
     }
 
-    private int getDimensionFromTypedArray(TypedArray typedArray, int attr, int defaultId) {
-        return typedArray.getDimensionPixelOffset(attr, getResources().getDimensionPixelOffset(defaultId));
+    private int getDimensionFromTypedArray(TypedArray typedArray, int i, int i2) {
+        return typedArray.getDimensionPixelOffset(i, getResources().getDimensionPixelOffset(i2));
     }
 
-    private int getColorFromTypedArray(TypedArray typedArray, int attr, int defaultId) {
-        return typedArray.getColor(attr, getResources().getColor(defaultId));
+    private int getColorFromTypedArray(TypedArray typedArray, int i, int i2) {
+        return typedArray.getColor(i, getResources().getColor(i2));
     }
 
     private Bitmap loadArrow() {
-        Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), R$drawable.lb_ic_nav_arrow);
+        Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), C0742R.C0744drawable.lb_ic_nav_arrow);
         if (this.mIsLtr) {
             return decodeResource;
         }
@@ -164,32 +155,70 @@ public class PagingIndicator extends View {
         return Bitmap.createBitmap(decodeResource, 0, 0, decodeResource.getWidth(), decodeResource.getHeight(), matrix, false);
     }
 
-    public void setArrowColor(int color) {
+    public void setArrowColor(int i) {
         if (this.mArrowPaint == null) {
             this.mArrowPaint = new Paint();
         }
-        this.mArrowPaint.setColorFilter(new PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN));
+        this.mArrowPaint.setColorFilter(new PorterDuffColorFilter(i, PorterDuff.Mode.SRC_IN));
     }
 
-    private Animator createDotAlphaAnimator(float from, float to) {
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, DOT_ALPHA, from, to);
-        ofFloat.setDuration(167L);
+    public void setDotBackgroundColor(int i) {
+        this.mBgPaint.setColor(i);
+    }
+
+    public void setArrowBackgroundColor(int i) {
+        this.mDotFgSelectColor = i;
+    }
+
+    private Animator createDotAlphaAnimator(float f, float f2) {
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, DOT_ALPHA, new float[]{f, f2});
+        ofFloat.setDuration(DURATION_ALPHA);
         ofFloat.setInterpolator(DECELERATE_INTERPOLATOR);
         return ofFloat;
     }
 
-    private Animator createDotDiameterAnimator(float from, float to) {
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, DOT_DIAMETER, from, to);
-        ofFloat.setDuration(417L);
+    private Animator createDotDiameterAnimator(float f, float f2) {
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, DOT_DIAMETER, new float[]{f, f2});
+        ofFloat.setDuration(417);
         ofFloat.setInterpolator(DECELERATE_INTERPOLATOR);
         return ofFloat;
     }
 
     private Animator createDotTranslationXAnimator() {
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, DOT_TRANSLATION_X, (-this.mArrowGap) + this.mDotGap, 0.0f);
-        ofFloat.setDuration(417L);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, DOT_TRANSLATION_X, new float[]{(float) ((-this.mArrowGap) + this.mDotGap), 0.0f});
+        ofFloat.setDuration(417);
         ofFloat.setInterpolator(DECELERATE_INTERPOLATOR);
         return ofFloat;
+    }
+
+    public void setPageCount(int i) {
+        if (i > 0) {
+            this.mPageCount = i;
+            this.mDots = new Dot[i];
+            for (int i2 = 0; i2 < this.mPageCount; i2++) {
+                this.mDots[i2] = new Dot();
+            }
+            calculateDotPositions();
+            setSelectedPage(0);
+            return;
+        }
+        throw new IllegalArgumentException("The page count should be a positive integer");
+    }
+
+    public void onPageSelected(int i, boolean z) {
+        if (this.mCurrentPage != i) {
+            if (this.mAnimator.isStarted()) {
+                this.mAnimator.end();
+            }
+            int i2 = this.mCurrentPage;
+            this.mPreviousPage = i2;
+            if (z) {
+                this.mHideAnimator.setTarget(this.mDots[i2]);
+                this.mShowAnimator.setTarget(this.mDots[i]);
+                this.mAnimator.start();
+            }
+            setSelectedPage(i);
+        }
     }
 
     private void calculateDotPositions() {
@@ -249,44 +278,48 @@ public class PagingIndicator extends View {
         adjustDotPosition();
     }
 
-    int getPageCount() {
+    /* access modifiers changed from: package-private */
+    public int getPageCount() {
         return this.mPageCount;
     }
 
-    int[] getDotSelectedX() {
+    /* access modifiers changed from: package-private */
+    public int[] getDotSelectedX() {
         return this.mDotSelectedX;
     }
 
-    int[] getDotSelectedLeftX() {
+    /* access modifiers changed from: package-private */
+    public int[] getDotSelectedLeftX() {
         return this.mDotSelectedPrevX;
     }
 
-    int[] getDotSelectedRightX() {
+    /* access modifiers changed from: package-private */
+    public int[] getDotSelectedRightX() {
         return this.mDotSelectedNextX;
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         int desiredHeight = getDesiredHeight();
-        int mode = View.MeasureSpec.getMode(heightMeasureSpec);
+        int mode = View.MeasureSpec.getMode(i2);
         if (mode == Integer.MIN_VALUE) {
-            desiredHeight = Math.min(desiredHeight, View.MeasureSpec.getSize(heightMeasureSpec));
+            desiredHeight = Math.min(desiredHeight, View.MeasureSpec.getSize(i2));
         } else if (mode == 1073741824) {
-            desiredHeight = View.MeasureSpec.getSize(heightMeasureSpec);
+            desiredHeight = View.MeasureSpec.getSize(i2);
         }
         int desiredWidth = getDesiredWidth();
-        int mode2 = View.MeasureSpec.getMode(widthMeasureSpec);
+        int mode2 = View.MeasureSpec.getMode(i);
         if (mode2 == Integer.MIN_VALUE) {
-            desiredWidth = Math.min(desiredWidth, View.MeasureSpec.getSize(widthMeasureSpec));
+            desiredWidth = Math.min(desiredWidth, View.MeasureSpec.getSize(i));
         } else if (mode2 == 1073741824) {
-            desiredWidth = View.MeasureSpec.getSize(widthMeasureSpec);
+            desiredWidth = View.MeasureSpec.getSize(i);
         }
         setMeasuredDimension(desiredWidth, desiredHeight);
     }
 
-    @Override // android.view.View
-    protected void onSizeChanged(int width, int height, int oldWidth, int oldHeight) {
-        setMeasuredDimension(width, height);
+    /* access modifiers changed from: protected */
+    public void onSizeChanged(int i, int i2, int i3, int i4) {
+        setMeasuredDimension(i, i2);
         calculateDotPositions();
     }
 
@@ -302,10 +335,17 @@ public class PagingIndicator extends View {
         return getPaddingLeft() + getRequiredWidth() + getPaddingRight();
     }
 
-    @Override // android.view.View
-    protected void onDraw(Canvas canvas) {
+    /* access modifiers changed from: protected */
+    public void onDraw(Canvas canvas) {
         for (int i = 0; i < this.mPageCount; i++) {
             this.mDots[i].draw(canvas);
+        }
+    }
+
+    private void setSelectedPage(int i) {
+        if (i != this.mCurrentPage) {
+            this.mCurrentPage = i;
+            adjustDotPosition();
         }
     }
 
@@ -320,48 +360,48 @@ public class PagingIndicator extends View {
                 break;
             }
             this.mDots[i2].deselect();
-            Dot[] dotArr = this.mDots;
-            Dot dot = dotArr[i2];
+            Dot dot = this.mDots[i2];
             if (i2 != this.mPreviousPage) {
                 f = 1.0f;
             }
             dot.mDirection = f;
-            dotArr[i2].mCenterX = this.mDotSelectedPrevX[i2];
+            this.mDots[i2].mCenterX = (float) this.mDotSelectedPrevX[i2];
             i2++;
         }
         this.mDots[i].select();
-        Dot[] dotArr2 = this.mDots;
+        Dot[] dotArr = this.mDots;
         int i3 = this.mCurrentPage;
-        Dot dot2 = dotArr2[i3];
+        Dot dot2 = dotArr[i3];
         if (this.mPreviousPage >= i3) {
             f = 1.0f;
         }
         dot2.mDirection = f;
-        dotArr2[i3].mCenterX = this.mDotSelectedX[i3];
+        Dot[] dotArr2 = this.mDots;
+        int i4 = this.mCurrentPage;
+        dotArr2[i4].mCenterX = (float) this.mDotSelectedX[i4];
+        int i5 = this.mCurrentPage;
         while (true) {
-            i3++;
-            if (i3 < this.mPageCount) {
-                this.mDots[i3].deselect();
-                Dot[] dotArr3 = this.mDots;
-                dotArr3[i3].mDirection = 1.0f;
-                dotArr3[i3].mCenterX = this.mDotSelectedNextX[i3];
+            i5++;
+            if (i5 < this.mPageCount) {
+                this.mDots[i5].deselect();
+                this.mDots[i5].mDirection = 1.0f;
+                this.mDots[i5].mCenterX = (float) this.mDotSelectedNextX[i5];
             } else {
                 return;
             }
         }
     }
 
-    @Override // android.view.View
-    public void onRtlPropertiesChanged(int layoutDirection) {
-        super.onRtlPropertiesChanged(layoutDirection);
-        boolean z = layoutDirection == 0;
+    public void onRtlPropertiesChanged(int i) {
+        super.onRtlPropertiesChanged(i);
+        boolean z = i == 0;
         if (this.mIsLtr != z) {
             this.mIsLtr = z;
             this.mArrow = loadArrow();
             Dot[] dotArr = this.mDots;
             if (dotArr != null) {
-                for (Dot dot : dotArr) {
-                    dot.onRtlPropertiesChanged();
+                for (Dot onRtlPropertiesChanged : dotArr) {
+                    onRtlPropertiesChanged.onRtlPropertiesChanged();
                 }
             }
             calculateDotPositions();
@@ -369,98 +409,102 @@ public class PagingIndicator extends View {
         }
     }
 
-    /* loaded from: classes.dex */
     public class Dot {
+        static final float LEFT = -1.0f;
+        static final float LTR = 1.0f;
+        static final float RIGHT = 1.0f;
+        static final float RTL = -1.0f;
         float mAlpha;
         float mArrowImageRadius;
         float mCenterX;
         float mDiameter;
-        float mDirection;
+        float mDirection = 1.0f;
         int mFgColor;
         float mLayoutDirection;
         float mRadius;
         float mTranslationX;
-        final /* synthetic */ PagingIndicator this$0;
 
-        void select() {
+        public Dot() {
+            float f = 1.0f;
+            this.mLayoutDirection = !PagingIndicator.this.mIsLtr ? -1.0f : f;
+        }
+
+        /* access modifiers changed from: package-private */
+        public void select() {
             this.mTranslationX = 0.0f;
             this.mCenterX = 0.0f;
-            PagingIndicator pagingIndicator = this.this$0;
-            this.mDiameter = pagingIndicator.mArrowDiameter;
-            float f = pagingIndicator.mArrowRadius;
+            this.mDiameter = (float) PagingIndicator.this.mArrowDiameter;
+            float f = (float) PagingIndicator.this.mArrowRadius;
             this.mRadius = f;
-            this.mArrowImageRadius = f * pagingIndicator.mArrowToBgRatio;
+            this.mArrowImageRadius = f * PagingIndicator.this.mArrowToBgRatio;
             this.mAlpha = 1.0f;
             adjustAlpha();
         }
 
-        void deselect() {
+        /* access modifiers changed from: package-private */
+        public void deselect() {
             this.mTranslationX = 0.0f;
             this.mCenterX = 0.0f;
-            PagingIndicator pagingIndicator = this.this$0;
-            this.mDiameter = pagingIndicator.mDotDiameter;
-            float f = pagingIndicator.mDotRadius;
+            this.mDiameter = (float) PagingIndicator.this.mDotDiameter;
+            float f = (float) PagingIndicator.this.mDotRadius;
             this.mRadius = f;
-            this.mArrowImageRadius = f * pagingIndicator.mArrowToBgRatio;
+            this.mArrowImageRadius = f * PagingIndicator.this.mArrowToBgRatio;
             this.mAlpha = 0.0f;
             adjustAlpha();
         }
 
         public void adjustAlpha() {
-            this.mFgColor = Color.argb(Math.round(this.mAlpha * 255.0f), Color.red(this.this$0.mDotFgSelectColor), Color.green(this.this$0.mDotFgSelectColor), Color.blue(this.this$0.mDotFgSelectColor));
+            this.mFgColor = Color.argb(Math.round(this.mAlpha * 255.0f), Color.red(PagingIndicator.this.mDotFgSelectColor), Color.green(PagingIndicator.this.mDotFgSelectColor), Color.blue(PagingIndicator.this.mDotFgSelectColor));
         }
 
         public float getAlpha() {
             return this.mAlpha;
         }
 
-        public void setAlpha(float alpha) {
-            this.mAlpha = alpha;
+        public void setAlpha(float f) {
+            this.mAlpha = f;
             adjustAlpha();
-            this.this$0.invalidate();
+            PagingIndicator.this.invalidate();
         }
 
         public float getTranslationX() {
             return this.mTranslationX;
         }
 
-        public void setTranslationX(float translationX) {
-            this.mTranslationX = translationX * this.mDirection * this.mLayoutDirection;
-            this.this$0.invalidate();
+        public void setTranslationX(float f) {
+            this.mTranslationX = f * this.mDirection * this.mLayoutDirection;
+            PagingIndicator.this.invalidate();
         }
 
         public float getDiameter() {
             return this.mDiameter;
         }
 
-        public void setDiameter(float diameter) {
-            this.mDiameter = diameter;
-            float f = diameter / 2.0f;
-            this.mRadius = f;
-            PagingIndicator pagingIndicator = this.this$0;
-            this.mArrowImageRadius = f * pagingIndicator.mArrowToBgRatio;
-            pagingIndicator.invalidate();
+        public void setDiameter(float f) {
+            this.mDiameter = f;
+            float f2 = f / 2.0f;
+            this.mRadius = f2;
+            this.mArrowImageRadius = f2 * PagingIndicator.this.mArrowToBgRatio;
+            PagingIndicator.this.invalidate();
         }
 
-        void draw(Canvas canvas) {
+        /* access modifiers changed from: package-private */
+        public void draw(Canvas canvas) {
             float f = this.mCenterX + this.mTranslationX;
-            PagingIndicator pagingIndicator = this.this$0;
-            canvas.drawCircle(f, pagingIndicator.mDotCenterY, this.mRadius, pagingIndicator.mBgPaint);
+            canvas.drawCircle(f, (float) PagingIndicator.this.mDotCenterY, this.mRadius, PagingIndicator.this.mBgPaint);
             if (this.mAlpha > 0.0f) {
-                this.this$0.mFgPaint.setColor(this.mFgColor);
-                PagingIndicator pagingIndicator2 = this.this$0;
-                canvas.drawCircle(f, pagingIndicator2.mDotCenterY, this.mRadius, pagingIndicator2.mFgPaint);
-                PagingIndicator pagingIndicator3 = this.this$0;
-                Bitmap bitmap = pagingIndicator3.mArrow;
-                Rect rect = pagingIndicator3.mArrowRect;
+                PagingIndicator.this.mFgPaint.setColor(this.mFgColor);
+                canvas.drawCircle(f, (float) PagingIndicator.this.mDotCenterY, this.mRadius, PagingIndicator.this.mFgPaint);
+                Bitmap bitmap = PagingIndicator.this.mArrow;
+                Rect rect = PagingIndicator.this.mArrowRect;
                 float f2 = this.mArrowImageRadius;
-                int i = this.this$0.mDotCenterY;
-                canvas.drawBitmap(bitmap, rect, new Rect((int) (f - f2), (int) (i - f2), (int) (f + f2), (int) (i + f2)), this.this$0.mArrowPaint);
+                canvas.drawBitmap(bitmap, rect, new Rect((int) (f - this.mArrowImageRadius), (int) (((float) PagingIndicator.this.mDotCenterY) - f2), (int) (f + f2), (int) (((float) PagingIndicator.this.mDotCenterY) + this.mArrowImageRadius)), PagingIndicator.this.mArrowPaint);
             }
         }
 
-        void onRtlPropertiesChanged() {
-            this.mLayoutDirection = this.this$0.mIsLtr ? 1.0f : -1.0f;
+        /* access modifiers changed from: package-private */
+        public void onRtlPropertiesChanged() {
+            this.mLayoutDirection = PagingIndicator.this.mIsLtr ? 1.0f : -1.0f;
         }
     }
 }

@@ -1,57 +1,55 @@
 package com.android.systemui.statusbar.notification.collection;
 
-import com.android.internal.statusbar.IStatusBarService;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.InflationException;
 import com.android.systemui.statusbar.notification.collection.inflation.NotifInflater;
 import com.android.systemui.statusbar.notification.collection.inflation.NotificationRowBinderImpl;
 import com.android.systemui.statusbar.notification.row.NotifInflationErrorManager;
 import com.android.systemui.statusbar.notification.row.NotificationRowContentBinder;
-/* loaded from: classes.dex */
-public class NotifInflaterImpl implements NotifInflater {
-    private final NotifCollection mNotifCollection;
-    private final NotifInflationErrorManager mNotifErrorManager;
-    private final NotifPipeline mNotifPipeline;
-    private NotificationRowBinderImpl mNotificationRowBinder;
-    private final IStatusBarService mStatusBarService;
+import javax.inject.Inject;
 
-    public NotifInflaterImpl(IStatusBarService iStatusBarService, NotifCollection notifCollection, NotifInflationErrorManager notifInflationErrorManager, NotifPipeline notifPipeline) {
-        this.mStatusBarService = iStatusBarService;
-        this.mNotifCollection = notifCollection;
+@SysUISingleton
+public class NotifInflaterImpl implements NotifInflater {
+    /* access modifiers changed from: private */
+    public final NotifInflationErrorManager mNotifErrorManager;
+    private NotificationRowBinderImpl mNotificationRowBinder;
+
+    @Inject
+    public NotifInflaterImpl(NotifInflationErrorManager notifInflationErrorManager) {
         this.mNotifErrorManager = notifInflationErrorManager;
-        this.mNotifPipeline = notifPipeline;
     }
 
     public void setRowBinder(NotificationRowBinderImpl notificationRowBinderImpl) {
         this.mNotificationRowBinder = notificationRowBinderImpl;
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.inflation.NotifInflater
-    public void rebindViews(NotificationEntry notificationEntry, NotifInflater.InflationCallback inflationCallback) {
-        inflateViews(notificationEntry, inflationCallback);
+    public void rebindViews(NotificationEntry notificationEntry, NotifInflater.Params params, NotifInflater.InflationCallback inflationCallback) {
+        inflateViews(notificationEntry, params, inflationCallback);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.inflation.NotifInflater
-    public void inflateViews(NotificationEntry notificationEntry, NotifInflater.InflationCallback inflationCallback) {
+    public void inflateViews(NotificationEntry notificationEntry, NotifInflater.Params params, NotifInflater.InflationCallback inflationCallback) {
         try {
-            requireBinder().inflateViews(notificationEntry, wrapInflationCallback(inflationCallback));
+            requireBinder().inflateViews(notificationEntry, params, wrapInflationCallback(inflationCallback));
         } catch (InflationException e) {
             this.mNotifErrorManager.setInflationError(notificationEntry, e);
         }
     }
 
+    public void abortInflation(NotificationEntry notificationEntry) {
+        notificationEntry.abortTask();
+    }
+
     private NotificationRowContentBinder.InflationCallback wrapInflationCallback(final NotifInflater.InflationCallback inflationCallback) {
-        return new NotificationRowContentBinder.InflationCallback() { // from class: com.android.systemui.statusbar.notification.collection.NotifInflaterImpl.1
-            @Override // com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback
+        return new NotificationRowContentBinder.InflationCallback() {
             public void handleInflationException(NotificationEntry notificationEntry, Exception exc) {
                 NotifInflaterImpl.this.mNotifErrorManager.setInflationError(notificationEntry, exc);
             }
 
-            @Override // com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback
             public void onAsyncInflationFinished(NotificationEntry notificationEntry) {
                 NotifInflaterImpl.this.mNotifErrorManager.clearInflationError(notificationEntry);
-                NotifInflater.InflationCallback inflationCallback2 = inflationCallback;
-                if (inflationCallback2 != null) {
-                    inflationCallback2.onInflationFinished(notificationEntry);
+                NotifInflater.InflationCallback inflationCallback = inflationCallback;
+                if (inflationCallback != null) {
+                    inflationCallback.onInflationFinished(notificationEntry, notificationEntry.getRowController());
                 }
             }
         };

@@ -3,43 +3,42 @@ package com.android.keyguard.clock;
 import android.content.ContentResolver;
 import android.provider.Settings;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
 import org.json.JSONException;
 import org.json.JSONObject;
-/* loaded from: classes.dex */
+
 public class SettingsWrapper {
+    private static final String CLOCK_FIELD = "clock";
+    private static final String CUSTOM_CLOCK_FACE = "lock_screen_custom_clock_face";
+    private static final String DOCKED_CLOCK_FACE = "docked_clock_face";
+    private static final String TAG = "ClockFaceSettings";
     private final ContentResolver mContentResolver;
     private final Migration mMigration;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface Migration {
+    interface Migration {
         void migrate(String str, int i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public SettingsWrapper(ContentResolver contentResolver) {
+    SettingsWrapper(ContentResolver contentResolver) {
         this(contentResolver, new Migrator(contentResolver));
     }
 
-    @VisibleForTesting
     SettingsWrapper(ContentResolver contentResolver, Migration migration) {
         this.mContentResolver = contentResolver;
         this.mMigration = migration;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getLockScreenCustomClockFace(int i) {
-        return decode(Settings.Secure.getStringForUser(this.mContentResolver, "lock_screen_custom_clock_face", i), i);
+        return decode(Settings.Secure.getStringForUser(this.mContentResolver, CUSTOM_CLOCK_FACE, i), i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getDockedClockFace(int i) {
-        return Settings.Secure.getStringForUser(this.mContentResolver, "docked_clock_face", i);
+        return Settings.Secure.getStringForUser(this.mContentResolver, DOCKED_CLOCK_FACE, i);
     }
 
-    @VisibleForTesting
-    String decode(String str, int i) {
+    /* access modifiers changed from: package-private */
+    public String decode(String str, int i) {
         if (str == null) {
             return str;
         }
@@ -47,17 +46,16 @@ public class SettingsWrapper {
             try {
                 return new JSONObject(str).getString("clock");
             } catch (JSONException e) {
-                Log.e("ClockFaceSettings", "JSON object does not contain clock field.", e);
+                Log.e(TAG, "JSON object does not contain clock field.", e);
                 return null;
             }
         } catch (JSONException e2) {
-            Log.e("ClockFaceSettings", "Settings value is not valid JSON", e2);
+            Log.e(TAG, "Settings value is not valid JSON", e2);
             this.mMigration.migrate(str, i);
             return str;
         }
     }
 
-    /* loaded from: classes.dex */
     private static final class Migrator implements Migration {
         private final ContentResolver mContentResolver;
 
@@ -65,14 +63,13 @@ public class SettingsWrapper {
             this.mContentResolver = contentResolver;
         }
 
-        @Override // com.android.keyguard.clock.SettingsWrapper.Migration
         public void migrate(String str, int i) {
             try {
                 JSONObject jSONObject = new JSONObject();
-                jSONObject.put("clock", str);
-                Settings.Secure.putStringForUser(this.mContentResolver, "lock_screen_custom_clock_face", jSONObject.toString(), i);
+                jSONObject.put("clock", (Object) str);
+                Settings.Secure.putStringForUser(this.mContentResolver, SettingsWrapper.CUSTOM_CLOCK_FACE, jSONObject.toString(), i);
             } catch (JSONException e) {
-                Log.e("ClockFaceSettings", "Failed migrating settings value to JSON format", e);
+                Log.e(SettingsWrapper.TAG, "Failed migrating settings value to JSON format", e);
             }
         }
     }

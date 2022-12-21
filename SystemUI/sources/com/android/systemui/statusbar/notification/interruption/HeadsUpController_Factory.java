@@ -7,7 +7,7 @@ import com.android.systemui.statusbar.notification.collection.legacy.VisualStabi
 import com.android.systemui.statusbar.policy.HeadsUpManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class HeadsUpController_Factory implements Factory<HeadsUpController> {
     private final Provider<HeadsUpManager> headsUpManagerProvider;
     private final Provider<HeadsUpViewBinder> headsUpViewBinderProvider;
@@ -27,17 +27,15 @@ public final class HeadsUpController_Factory implements Factory<HeadsUpControlle
         this.notificationListenerProvider = provider7;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public HeadsUpController mo1933get() {
-        return newInstance(this.headsUpViewBinderProvider.mo1933get(), this.notificationInterruptStateProvider.mo1933get(), this.headsUpManagerProvider.mo1933get(), this.remoteInputManagerProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.visualStabilityManagerProvider.mo1933get(), this.notificationListenerProvider.mo1933get());
+    public HeadsUpController get() {
+        return newInstance(this.headsUpViewBinderProvider.get(), this.notificationInterruptStateProvider.get(), this.headsUpManagerProvider.get(), this.remoteInputManagerProvider.get(), this.statusBarStateControllerProvider.get(), this.visualStabilityManagerProvider.get(), this.notificationListenerProvider.get());
     }
 
     public static HeadsUpController_Factory create(Provider<HeadsUpViewBinder> provider, Provider<NotificationInterruptStateProvider> provider2, Provider<HeadsUpManager> provider3, Provider<NotificationRemoteInputManager> provider4, Provider<StatusBarStateController> provider5, Provider<VisualStabilityManager> provider6, Provider<NotificationListener> provider7) {
         return new HeadsUpController_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7);
     }
 
-    public static HeadsUpController newInstance(HeadsUpViewBinder headsUpViewBinder, NotificationInterruptStateProvider notificationInterruptStateProvider, HeadsUpManager headsUpManager, NotificationRemoteInputManager notificationRemoteInputManager, StatusBarStateController statusBarStateController, VisualStabilityManager visualStabilityManager, NotificationListener notificationListener) {
-        return new HeadsUpController(headsUpViewBinder, notificationInterruptStateProvider, headsUpManager, notificationRemoteInputManager, statusBarStateController, visualStabilityManager, notificationListener);
+    public static HeadsUpController newInstance(HeadsUpViewBinder headsUpViewBinder, NotificationInterruptStateProvider notificationInterruptStateProvider2, HeadsUpManager headsUpManager, NotificationRemoteInputManager notificationRemoteInputManager, StatusBarStateController statusBarStateController, VisualStabilityManager visualStabilityManager, NotificationListener notificationListener) {
+        return new HeadsUpController(headsUpViewBinder, notificationInterruptStateProvider2, headsUpManager, notificationRemoteInputManager, statusBarStateController, visualStabilityManager, notificationListener);
     }
 }

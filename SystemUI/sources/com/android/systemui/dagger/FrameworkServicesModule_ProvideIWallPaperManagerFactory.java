@@ -2,11 +2,9 @@ package com.android.systemui.dagger;
 
 import android.app.IWallpaperManager;
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideIWallPaperManagerFactory implements Factory<IWallpaperManager> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public IWallpaperManager mo1933get() {
+    public IWallpaperManager get() {
         return provideIWallPaperManager();
     }
 
@@ -18,8 +16,11 @@ public final class FrameworkServicesModule_ProvideIWallPaperManagerFactory imple
         return FrameworkServicesModule.provideIWallPaperManager();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final FrameworkServicesModule_ProvideIWallPaperManagerFactory INSTANCE = new FrameworkServicesModule_ProvideIWallPaperManagerFactory();
+        /* access modifiers changed from: private */
+        public static final FrameworkServicesModule_ProvideIWallPaperManagerFactory INSTANCE = new FrameworkServicesModule_ProvideIWallPaperManagerFactory();
+
+        private InstanceHolder() {
+        }
     }
 }

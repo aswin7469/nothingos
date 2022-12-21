@@ -13,6 +13,9 @@ import android.media.projection.IMediaProjection;
 import android.media.projection.IMediaProjectionManager;
 import android.media.projection.MediaProjection;
 import android.net.Uri;
+import android.net.connectivity.com.android.net.module.util.NetworkStackConstants;
+import android.os.CancellationSignal;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.provider.MediaStore;
@@ -21,14 +24,22 @@ import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.WindowManager;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.file.Files;
+import java.p026io.File;
+import java.p026io.IOException;
+import java.p026io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-/* loaded from: classes.dex */
+
 public class ScreenMediaRecorder {
+    private static final int AUDIO_BIT_RATE = 196000;
+    private static final int AUDIO_SAMPLE_RATE = 44100;
+    private static final int MAX_DURATION_MS = 3600000;
+    private static final long MAX_FILESIZE_BYTES = 5000000000L;
+    private static final String TAG = "ScreenMediaRecorder";
+    private static final int TOTAL_NUM_TRACKS = 1;
+    private static final int VIDEO_FRAME_RATE = 30;
+    private static final int VIDEO_FRAME_RATE_TO_RESOLUTION_RATIO = 6;
     private ScreenInternalAudioRecorder mAudio;
     private ScreenRecordingAudioSource mAudioSource;
     private Context mContext;
@@ -51,17 +62,15 @@ public class ScreenMediaRecorder {
 
     private void prepare() throws IOException, RemoteException, RuntimeException {
         int i;
+        int i2;
         boolean z = false;
         this.mMediaProjection = new MediaProjection(this.mContext, IMediaProjection.Stub.asInterface(IMediaProjectionManager.Stub.asInterface(ServiceManager.getService("media_projection")).createProjection(this.mUser, this.mContext.getPackageName(), 0, false).asBinder()));
         File cacheDir = this.mContext.getCacheDir();
         cacheDir.mkdirs();
         this.mTempVideoFile = File.createTempFile("temp", ".mp4", cacheDir);
-        MediaRecorder mediaRecorder = new MediaRecorder();
-        this.mMediaRecorder = mediaRecorder;
-        ScreenRecordingAudioSource screenRecordingAudioSource = this.mAudioSource;
-        ScreenRecordingAudioSource screenRecordingAudioSource2 = ScreenRecordingAudioSource.MIC;
-        if (screenRecordingAudioSource == screenRecordingAudioSource2) {
-            mediaRecorder.setAudioSource(0);
+        this.mMediaRecorder = new MediaRecorder();
+        if (this.mAudioSource == ScreenRecordingAudioSource.MIC) {
+            this.mMediaRecorder.setAudioSource(0);
         }
         this.mMediaRecorder.setVideoSource(2);
         this.mMediaRecorder.setOutputFormat(2);
@@ -69,46 +78,43 @@ public class ScreenMediaRecorder {
         WindowManager windowManager = (WindowManager) this.mContext.getSystemService("window");
         windowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
         int[] supportedSize = getSupportedSize(displayMetrics.widthPixels, displayMetrics.heightPixels, (int) windowManager.getDefaultDisplay().getRefreshRate());
-        int i2 = supportedSize[0];
-        int i3 = supportedSize[1];
-        int i4 = supportedSize[2];
-        if (i4 > 90) {
-            Log.d("ScreenMediaRecorder", "FrameRate change from " + i4 + " to 30fps");
-            i4 = 30;
+        int i3 = supportedSize[0];
+        int i4 = supportedSize[1];
+        int i5 = supportedSize[2];
+        if (i5 > 90) {
+            Log.d(TAG, "FrameRate change from " + i5 + " to 30fps");
+            i5 = 30;
         }
-        if (i2 >= 720) {
-            Log.d("ScreenMediaRecorder", "width change from " + i2 + " to 720");
-            i = 720;
+        float f = ((float) i4) / ((float) i3);
+        if (i3 > 1280) {
+            i = (int) (((float) NetworkStackConstants.IPV6_MIN_MTU) * f);
+            i2 = 1280;
+        } else if (i4 > 1280) {
+            i2 = (int) (((float) NetworkStackConstants.IPV6_MIN_MTU) / f);
+            i = 1280;
         } else {
-            i = i2;
-        }
-        int i5 = 1280;
-        if (i3 >= 1280) {
-            Log.d("ScreenMediaRecorder", "height change from " + i3 + " to 1280");
-        } else {
-            i5 = i3;
+            i2 = i3;
+            i = i4;
         }
         this.mMediaRecorder.setVideoEncoder(2);
         this.mMediaRecorder.setVideoEncodingProfileLevel(8, 256);
-        this.mMediaRecorder.setVideoSize(i, i5);
-        this.mMediaRecorder.setVideoFrameRate(i4);
-        this.mMediaRecorder.setVideoEncodingBitRate((((i * i5) * i4) / 30) * 6);
-        this.mMediaRecorder.setMaxDuration(3600000);
-        this.mMediaRecorder.setMaxFileSize(5000000000L);
-        if (this.mAudioSource == screenRecordingAudioSource2) {
+        this.mMediaRecorder.setVideoSize(i2, i);
+        this.mMediaRecorder.setVideoFrameRate(i5);
+        this.mMediaRecorder.setVideoEncodingBitRate((((i2 * i) * i5) / 30) * 6);
+        this.mMediaRecorder.setMaxDuration(MAX_DURATION_MS);
+        this.mMediaRecorder.setMaxFileSize(MAX_FILESIZE_BYTES);
+        if (this.mAudioSource == ScreenRecordingAudioSource.MIC) {
             this.mMediaRecorder.setAudioEncoder(4);
             this.mMediaRecorder.setAudioChannels(1);
-            this.mMediaRecorder.setAudioEncodingBitRate(196000);
-            this.mMediaRecorder.setAudioSamplingRate(44100);
+            this.mMediaRecorder.setAudioEncodingBitRate(AUDIO_BIT_RATE);
+            this.mMediaRecorder.setAudioSamplingRate(AUDIO_SAMPLE_RATE);
         }
         this.mMediaRecorder.setOutputFile(this.mTempVideoFile);
         this.mMediaRecorder.prepare();
-        Surface surface = this.mMediaRecorder.getSurface();
-        this.mInputSurface = surface;
-        this.mVirtualDisplay = this.mMediaProjection.createVirtualDisplay("Recording Display", i, i5, displayMetrics.densityDpi, 16, surface, null, null);
+        this.mInputSurface = this.mMediaRecorder.getSurface();
+        this.mVirtualDisplay = this.mMediaProjection.createVirtualDisplay("Recording Display", i2, i, displayMetrics.densityDpi, 16, this.mInputSurface, (VirtualDisplay.Callback) null, (Handler) null);
         this.mMediaRecorder.setOnInfoListener(this.mListener);
-        ScreenRecordingAudioSource screenRecordingAudioSource3 = this.mAudioSource;
-        if (screenRecordingAudioSource3 == ScreenRecordingAudioSource.INTERNAL || screenRecordingAudioSource3 == ScreenRecordingAudioSource.MIC_AND_INTERNAL) {
+        if (this.mAudioSource == ScreenRecordingAudioSource.INTERNAL || this.mAudioSource == ScreenRecordingAudioSource.MIC_AND_INTERNAL) {
             this.mTempAudioFile = File.createTempFile("temp", ".aac", this.mContext.getCacheDir());
             String absolutePath = this.mTempAudioFile.getAbsolutePath();
             MediaProjection mediaProjection = this.mMediaProjection;
@@ -127,42 +133,42 @@ public class ScreenMediaRecorder {
         int intValue2 = videoCapabilities.getSupportedHeights().getUpper().intValue();
         int widthAlignment = i % videoCapabilities.getWidthAlignment() != 0 ? i - (i % videoCapabilities.getWidthAlignment()) : i;
         int heightAlignment = i2 % videoCapabilities.getHeightAlignment() != 0 ? i2 - (i2 % videoCapabilities.getHeightAlignment()) : i2;
-        if (intValue >= widthAlignment && intValue2 >= heightAlignment && videoCapabilities.isSizeSupported(widthAlignment, heightAlignment)) {
-            int intValue3 = videoCapabilities.getSupportedFrameRatesFor(widthAlignment, heightAlignment).getUpper().intValue();
+        if (intValue < widthAlignment || intValue2 < heightAlignment || !videoCapabilities.isSizeSupported(widthAlignment, heightAlignment)) {
+            double d = (double) i;
+            double d2 = (double) i2;
+            double min = Math.min(((double) intValue) / d, ((double) intValue2) / d2);
+            int i4 = (int) (d * min);
+            int i5 = (int) (d2 * min);
+            if (i4 % videoCapabilities.getWidthAlignment() != 0) {
+                i4 -= i4 % videoCapabilities.getWidthAlignment();
+            }
+            if (i5 % videoCapabilities.getHeightAlignment() != 0) {
+                i5 -= i5 % videoCapabilities.getHeightAlignment();
+            }
+            int intValue3 = videoCapabilities.getSupportedFrameRatesFor(i4, i5).getUpper().intValue();
             if (intValue3 < i3) {
                 i3 = intValue3;
             }
-            Log.d("ScreenMediaRecorder", "Screen size supported at rate " + i3);
-            return new int[]{widthAlignment, heightAlignment, i3};
+            Log.d(TAG, "Resized by " + min + ": " + i4 + ", " + i5 + ", " + i3);
+            return new int[]{i4, i5, i3};
         }
-        double d = i;
-        double d2 = i2;
-        double min = Math.min(intValue / d, intValue2 / d2);
-        int i4 = (int) (d * min);
-        int i5 = (int) (d2 * min);
-        if (i4 % videoCapabilities.getWidthAlignment() != 0) {
-            i4 -= i4 % videoCapabilities.getWidthAlignment();
-        }
-        if (i5 % videoCapabilities.getHeightAlignment() != 0) {
-            i5 -= i5 % videoCapabilities.getHeightAlignment();
-        }
-        int intValue4 = videoCapabilities.getSupportedFrameRatesFor(i4, i5).getUpper().intValue();
+        int intValue4 = videoCapabilities.getSupportedFrameRatesFor(widthAlignment, heightAlignment).getUpper().intValue();
         if (intValue4 < i3) {
             i3 = intValue4;
         }
-        Log.d("ScreenMediaRecorder", "Resized by " + min + ": " + i4 + ", " + i5 + ", " + i3);
-        return new int[]{i4, i5, i3};
+        Log.d(TAG, "Screen size supported at rate " + i3);
+        return new int[]{widthAlignment, heightAlignment, i3};
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void start() throws IOException, RemoteException, RuntimeException {
-        Log.d("ScreenMediaRecorder", "start recording");
+        Log.d(TAG, "start recording");
         prepare();
         this.mMediaRecorder.start();
         recordInternalAudio();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void end() {
         this.mMediaRecorder.stop();
         this.mMediaRecorder.release();
@@ -172,25 +178,23 @@ public class ScreenMediaRecorder {
         this.mMediaRecorder = null;
         this.mMediaProjection = null;
         stopInternalAudioRecording();
-        Log.d("ScreenMediaRecorder", "end recording");
+        Log.d(TAG, "end recording");
     }
 
     private void stopInternalAudioRecording() {
-        ScreenRecordingAudioSource screenRecordingAudioSource = this.mAudioSource;
-        if (screenRecordingAudioSource == ScreenRecordingAudioSource.INTERNAL || screenRecordingAudioSource == ScreenRecordingAudioSource.MIC_AND_INTERNAL) {
+        if (this.mAudioSource == ScreenRecordingAudioSource.INTERNAL || this.mAudioSource == ScreenRecordingAudioSource.MIC_AND_INTERNAL) {
             this.mAudio.end();
             this.mAudio = null;
         }
     }
 
     private void recordInternalAudio() throws IllegalStateException {
-        ScreenRecordingAudioSource screenRecordingAudioSource = this.mAudioSource;
-        if (screenRecordingAudioSource == ScreenRecordingAudioSource.INTERNAL || screenRecordingAudioSource == ScreenRecordingAudioSource.MIC_AND_INTERNAL) {
+        if (this.mAudioSource == ScreenRecordingAudioSource.INTERNAL || this.mAudioSource == ScreenRecordingAudioSource.MIC_AND_INTERNAL) {
             this.mAudio.start();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public SavedRecording save() throws IOException {
         String format = new SimpleDateFormat("'screen-'yyyyMMdd-HHmmss'.mp4'").format(new Date());
         ContentValues contentValues = new ContentValues();
@@ -200,11 +204,10 @@ public class ScreenMediaRecorder {
         contentValues.put("datetaken", Long.valueOf(System.currentTimeMillis()));
         ContentResolver contentResolver = this.mContext.getContentResolver();
         Uri insert = contentResolver.insert(MediaStore.Video.Media.getContentUri("external_primary"), contentValues);
-        Log.d("ScreenMediaRecorder", insert.toString());
-        ScreenRecordingAudioSource screenRecordingAudioSource = this.mAudioSource;
-        if (screenRecordingAudioSource == ScreenRecordingAudioSource.MIC_AND_INTERNAL || screenRecordingAudioSource == ScreenRecordingAudioSource.INTERNAL) {
+        Log.d(TAG, insert.toString());
+        if (this.mAudioSource == ScreenRecordingAudioSource.MIC_AND_INTERNAL || this.mAudioSource == ScreenRecordingAudioSource.INTERNAL) {
             try {
-                Log.d("ScreenMediaRecorder", "muxing recording");
+                Log.d(TAG, "muxing recording");
                 File createTempFile = File.createTempFile("temp", ".mp4", this.mContext.getCacheDir());
                 ScreenRecordingMuxer screenRecordingMuxer = new ScreenRecordingMuxer(0, createTempFile.getAbsolutePath(), this.mTempVideoFile.getAbsolutePath(), this.mTempAudioFile.getAbsolutePath());
                 this.mMuxer = screenRecordingMuxer;
@@ -212,7 +215,7 @@ public class ScreenMediaRecorder {
                 this.mTempVideoFile.delete();
                 this.mTempVideoFile = createTempFile;
             } catch (IOException e) {
-                Log.e("ScreenMediaRecorder", "muxing recording " + e.getMessage());
+                Log.e(TAG, "muxing recording " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -229,7 +232,6 @@ public class ScreenMediaRecorder {
         return savedRecording;
     }
 
-    /* loaded from: classes.dex */
     public class SavedRecording {
         private Bitmap mThumbnailBitmap;
         private Uri mUri;
@@ -237,9 +239,9 @@ public class ScreenMediaRecorder {
         protected SavedRecording(Uri uri, File file, Size size) {
             this.mUri = uri;
             try {
-                this.mThumbnailBitmap = ThumbnailUtils.createVideoThumbnail(file, size, null);
+                this.mThumbnailBitmap = ThumbnailUtils.createVideoThumbnail(file, size, (CancellationSignal) null);
             } catch (IOException e) {
-                Log.e("ScreenMediaRecorder", "Error creating thumbnail", e);
+                Log.e(ScreenMediaRecorder.TAG, "Error creating thumbnail", e);
             }
         }
 

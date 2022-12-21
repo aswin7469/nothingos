@@ -2,7 +2,7 @@ package com.android.systemui.classifier;
 
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class PointerCountClassifier_Factory implements Factory<PointerCountClassifier> {
     private final Provider<FalsingDataProvider> dataProvider;
 
@@ -10,10 +10,8 @@ public final class PointerCountClassifier_Factory implements Factory<PointerCoun
         this.dataProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PointerCountClassifier mo1933get() {
-        return newInstance(this.dataProvider.mo1933get());
+    public PointerCountClassifier get() {
+        return newInstance(this.dataProvider.get());
     }
 
     public static PointerCountClassifier_Factory create(Provider<FalsingDataProvider> provider) {

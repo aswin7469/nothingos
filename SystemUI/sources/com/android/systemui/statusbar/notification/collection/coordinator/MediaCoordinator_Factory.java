@@ -1,27 +1,31 @@
 package com.android.systemui.statusbar.notification.collection.coordinator;
 
+import com.android.internal.statusbar.IStatusBarService;
 import com.android.systemui.media.MediaFeatureFlag;
+import com.android.systemui.statusbar.notification.icon.IconManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class MediaCoordinator_Factory implements Factory<MediaCoordinator> {
     private final Provider<MediaFeatureFlag> featureFlagProvider;
+    private final Provider<IconManager> iconManagerProvider;
+    private final Provider<IStatusBarService> statusBarServiceProvider;
 
-    public MediaCoordinator_Factory(Provider<MediaFeatureFlag> provider) {
+    public MediaCoordinator_Factory(Provider<MediaFeatureFlag> provider, Provider<IStatusBarService> provider2, Provider<IconManager> provider3) {
         this.featureFlagProvider = provider;
+        this.statusBarServiceProvider = provider2;
+        this.iconManagerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaCoordinator mo1933get() {
-        return newInstance(this.featureFlagProvider.mo1933get());
+    public MediaCoordinator get() {
+        return newInstance(this.featureFlagProvider.get(), this.statusBarServiceProvider.get(), this.iconManagerProvider.get());
     }
 
-    public static MediaCoordinator_Factory create(Provider<MediaFeatureFlag> provider) {
-        return new MediaCoordinator_Factory(provider);
+    public static MediaCoordinator_Factory create(Provider<MediaFeatureFlag> provider, Provider<IStatusBarService> provider2, Provider<IconManager> provider3) {
+        return new MediaCoordinator_Factory(provider, provider2, provider3);
     }
 
-    public static MediaCoordinator newInstance(MediaFeatureFlag mediaFeatureFlag) {
-        return new MediaCoordinator(mediaFeatureFlag);
+    public static MediaCoordinator newInstance(MediaFeatureFlag mediaFeatureFlag, IStatusBarService iStatusBarService, IconManager iconManager) {
+        return new MediaCoordinator(mediaFeatureFlag, iStatusBarService, iconManager);
     }
 }

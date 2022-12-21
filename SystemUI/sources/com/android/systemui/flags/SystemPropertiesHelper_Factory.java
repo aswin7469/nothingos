@@ -1,11 +1,9 @@
 package com.android.systemui.flags;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class SystemPropertiesHelper_Factory implements Factory<SystemPropertiesHelper> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SystemPropertiesHelper mo1933get() {
+    public SystemPropertiesHelper get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class SystemPropertiesHelper_Factory implements Factory<SystemPrope
         return new SystemPropertiesHelper();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final SystemPropertiesHelper_Factory INSTANCE = new SystemPropertiesHelper_Factory();
+        /* access modifiers changed from: private */
+        public static final SystemPropertiesHelper_Factory INSTANCE = new SystemPropertiesHelper_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

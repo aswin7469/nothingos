@@ -2,10 +2,14 @@ package com.google.gson;
 
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
-import java.io.StringWriter;
-/* loaded from: classes2.dex */
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.p026io.IOException;
+import java.p026io.StringWriter;
+
 public abstract class JsonElement {
+    public abstract JsonElement deepCopy();
+
     public boolean isJsonArray() {
         return this instanceof JsonArray;
     }
@@ -43,6 +47,62 @@ public abstract class JsonElement {
         throw new IllegalStateException("Not a JSON Primitive: " + this);
     }
 
+    public JsonNull getAsJsonNull() {
+        if (isJsonNull()) {
+            return (JsonNull) this;
+        }
+        throw new IllegalStateException("Not a JSON Null: " + this);
+    }
+
+    public boolean getAsBoolean() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public Number getAsNumber() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public String getAsString() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public double getAsDouble() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public float getAsFloat() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public long getAsLong() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public int getAsInt() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public byte getAsByte() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    @Deprecated
+    public char getAsCharacter() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public BigDecimal getAsBigDecimal() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public BigInteger getAsBigInteger() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public short getAsShort() {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
     public String toString() {
         try {
             StringWriter stringWriter = new StringWriter();
@@ -51,7 +111,7 @@ public abstract class JsonElement {
             Streams.write(this, jsonWriter);
             return stringWriter.toString();
         } catch (IOException e) {
-            throw new AssertionError(e);
+            throw new AssertionError((Object) e);
         }
     }
 }

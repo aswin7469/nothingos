@@ -6,15 +6,26 @@ import android.animation.ValueAnimator;
 import android.view.View;
 import com.android.systemui.animation.Interpolators;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class ButtonDispatcher {
+    private static final int FADE_DURATION_IN = 150;
+    private static final int FADE_DURATION_OUT = 250;
     private View.AccessibilityDelegate mAccessibilityDelegate;
     private Float mAlpha;
+    private final ValueAnimator.AnimatorUpdateListener mAlphaListener = new ButtonDispatcher$$ExternalSyntheticLambda0(this);
     private View.OnClickListener mClickListener;
     private View mCurrentView;
     private Float mDarkIntensity;
     private Boolean mDelayTouchFeedback;
-    private ValueAnimator mFadeAnimator;
+    /* access modifiers changed from: private */
+    public ValueAnimator mFadeAnimator;
+    private final AnimatorListenerAdapter mFadeListener = new AnimatorListenerAdapter() {
+        public void onAnimationEnd(Animator animator) {
+            ValueAnimator unused = ButtonDispatcher.this.mFadeAnimator = null;
+            ButtonDispatcher buttonDispatcher = ButtonDispatcher.this;
+            buttonDispatcher.setVisibility(buttonDispatcher.getAlpha() == 1.0f ? 0 : 4);
+        }
+    };
     private final int mId;
     private KeyButtonDrawable mImageDrawable;
     private View.OnLongClickListener mLongClickListener;
@@ -24,26 +35,13 @@ public class ButtonDispatcher {
     private boolean mVertical;
     private final ArrayList<View> mViews = new ArrayList<>();
     private Integer mVisibility = 0;
-    private final ValueAnimator.AnimatorUpdateListener mAlphaListener = new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.navigationbar.buttons.ButtonDispatcher$$ExternalSyntheticLambda0
-        @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-        public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-            ButtonDispatcher.this.lambda$new$0(valueAnimator);
-        }
-    };
-    private final AnimatorListenerAdapter mFadeListener = new AnimatorListenerAdapter() { // from class: com.android.systemui.navigationbar.buttons.ButtonDispatcher.1
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-        public void onAnimationEnd(Animator animator) {
-            ButtonDispatcher.this.mFadeAnimator = null;
-            ButtonDispatcher buttonDispatcher = ButtonDispatcher.this;
-            buttonDispatcher.setVisibility(buttonDispatcher.getAlpha() == 1.0f ? 0 : 4);
-        }
-    };
 
     public void onDestroy() {
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-navigationbar-buttons-ButtonDispatcher */
+    public /* synthetic */ void mo34877xef8ba53e(ValueAnimator valueAnimator) {
         setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue(), false, false);
     }
 
@@ -138,17 +136,16 @@ public class ButtonDispatcher {
     }
 
     public void setVisibility(int i) {
-        if (this.mVisibility.intValue() == i) {
-            return;
-        }
-        ValueAnimator valueAnimator = this.mFadeAnimator;
-        if (valueAnimator != null) {
-            valueAnimator.cancel();
-        }
-        this.mVisibility = Integer.valueOf(i);
-        int size = this.mViews.size();
-        for (int i2 = 0; i2 < size; i2++) {
-            this.mViews.get(i2).setVisibility(this.mVisibility.intValue());
+        if (this.mVisibility.intValue() != i) {
+            ValueAnimator valueAnimator = this.mFadeAnimator;
+            if (valueAnimator != null) {
+                valueAnimator.cancel();
+            }
+            this.mVisibility = Integer.valueOf(i);
+            int size = this.mViews.size();
+            for (int i2 = 0; i2 < size; i2++) {
+                this.mViews.get(i2).setVisibility(this.mVisibility.intValue());
+            }
         }
     }
 
@@ -169,8 +166,12 @@ public class ButtonDispatcher {
         setAlpha(f, z, true);
     }
 
+    public void setAlpha(float f, boolean z, long j) {
+        setAlpha(f, z, j, true);
+    }
+
     public void setAlpha(float f, boolean z, boolean z2) {
-        setAlpha(f, z, getAlpha() < f ? 150L : 250L, z2);
+        setAlpha(f, z, getAlpha() < f ? 150 : 250, z2);
     }
 
     public void setAlpha(float f, boolean z, long j, boolean z2) {
@@ -180,7 +181,7 @@ public class ButtonDispatcher {
         }
         if (z) {
             setVisibility(0);
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(getAlpha(), f);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{getAlpha(), f});
             this.mFadeAnimator = ofFloat;
             ofFloat.setDuration(j);
             this.mFadeAnimator.setInterpolator(Interpolators.LINEAR);
@@ -190,13 +191,12 @@ public class ButtonDispatcher {
             return;
         }
         int i = (int) (f * 255.0f);
-        if (((int) (getAlpha() * 255.0f)) == i) {
-            return;
-        }
-        this.mAlpha = Float.valueOf(i / 255.0f);
-        int size = this.mViews.size();
-        for (int i2 = 0; i2 < size; i2++) {
-            this.mViews.get(i2).setAlpha(this.mAlpha.floatValue());
+        if (((int) (getAlpha() * 255.0f)) != i) {
+            this.mAlpha = Float.valueOf(((float) i) / 255.0f);
+            int size = this.mViews.size();
+            for (int i2 = 0; i2 < size; i2++) {
+                this.mViews.get(i2).setAlpha(this.mAlpha.floatValue());
+            }
         }
     }
 
@@ -206,6 +206,16 @@ public class ButtonDispatcher {
         for (int i = 0; i < size; i++) {
             if (this.mViews.get(i) instanceof ButtonInterface) {
                 ((ButtonInterface) this.mViews.get(i)).setDarkIntensity(f);
+            }
+        }
+    }
+
+    public void setDelayTouchFeedback(boolean z) {
+        this.mDelayTouchFeedback = Boolean.valueOf(z);
+        int size = this.mViews.size();
+        for (int i = 0; i < size; i++) {
+            if (this.mViews.get(i) instanceof ButtonInterface) {
+                ((ButtonInterface) this.mViews.get(i)).setDelayTouchFeedback(z);
             }
         }
     }
@@ -256,6 +266,28 @@ public class ButtonDispatcher {
         for (int i = 0; i < size; i++) {
             this.mViews.get(i).setAccessibilityDelegate(accessibilityDelegate);
         }
+    }
+
+    public void setClickable(boolean z) {
+        abortCurrentGesture();
+        int size = this.mViews.size();
+        for (int i = 0; i < size; i++) {
+            this.mViews.get(i).setClickable(z);
+        }
+    }
+
+    public void setTranslation(int i, int i2, int i3) {
+        int size = this.mViews.size();
+        for (int i4 = 0; i4 < size; i4++) {
+            View view = this.mViews.get(i4);
+            view.setTranslationX((float) i);
+            view.setTranslationY((float) i2);
+            view.setTranslationZ((float) i3);
+        }
+    }
+
+    public ArrayList<View> getViews() {
+        return this.mViews;
     }
 
     public View getCurrentView() {

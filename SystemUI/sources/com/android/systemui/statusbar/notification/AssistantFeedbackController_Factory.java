@@ -5,7 +5,7 @@ import android.os.Handler;
 import com.android.systemui.util.DeviceConfigProxy;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class AssistantFeedbackController_Factory implements Factory<AssistantFeedbackController> {
     private final Provider<Context> contextProvider;
     private final Provider<Handler> handlerProvider;
@@ -17,10 +17,8 @@ public final class AssistantFeedbackController_Factory implements Factory<Assist
         this.proxyProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AssistantFeedbackController mo1933get() {
-        return newInstance(this.handlerProvider.mo1933get(), this.contextProvider.mo1933get(), this.proxyProvider.mo1933get());
+    public AssistantFeedbackController get() {
+        return newInstance(this.handlerProvider.get(), this.contextProvider.get(), this.proxyProvider.get());
     }
 
     public static AssistantFeedbackController_Factory create(Provider<Handler> provider, Provider<Context> provider2, Provider<DeviceConfigProxy> provider3) {

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvidesFingerprintManagerFactory implements Factory<FingerprintManager> {
     private final Provider<Context> contextProvider;
 
@@ -12,10 +12,8 @@ public final class FrameworkServicesModule_ProvidesFingerprintManagerFactory imp
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public FingerprintManager mo1933get() {
-        return providesFingerprintManager(this.contextProvider.mo1933get());
+    public FingerprintManager get() {
+        return providesFingerprintManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvidesFingerprintManagerFactory create(Provider<Context> provider) {

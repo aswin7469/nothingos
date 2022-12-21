@@ -1,13 +1,27 @@
 package androidx.dynamicanimation.animation;
-/* loaded from: classes.dex */
+
+import android.util.FloatProperty;
+
 public abstract class FloatPropertyCompat<T> {
     final String mPropertyName;
 
-    public abstract float getValue(T object);
+    public abstract float getValue(T t);
 
-    public abstract void setValue(T object, float value);
+    public abstract void setValue(T t, float f);
 
-    public FloatPropertyCompat(String name) {
-        this.mPropertyName = name;
+    public FloatPropertyCompat(String str) {
+        this.mPropertyName = str;
+    }
+
+    public static <T> FloatPropertyCompat<T> createFloatPropertyCompat(final FloatProperty<T> floatProperty) {
+        return new FloatPropertyCompat<T>(floatProperty.getName()) {
+            public float getValue(T t) {
+                return ((Float) floatProperty.get(t)).floatValue();
+            }
+
+            public void setValue(T t, float f) {
+                floatProperty.setValue(t, f);
+            }
+        };
     }
 }

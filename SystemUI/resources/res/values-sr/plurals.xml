@@ -20,6 +20,11 @@
         <item quantity="few">%s контроле су додате.</item>
         <item quantity="other">%s контрола је додато.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s апликација је активна</item>
+        <item quantity="few">%s апликације су активне</item>
+        <item quantity="other">%s апликација је активно</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">Унесите PIN за SIM. Имате још %d покушај.</item>
         <item quantity="few">Унесите PIN за SIM. Имате још %d покушаја.</item>
@@ -39,26 +44,6 @@
         <item quantity="one">Нетачан PUK кôд за SIM. Имате још %d покушај пре него што SIM картица постане трајно неупотребљива.</item>
         <item quantity="few">Нетачан PUK кôд за SIM. Имате још %d покушаја пре него што SIM картица постане трајно неупотребљива.</item>
         <item quantity="other">Нетачан PUK кôд за SIM. Имате још %d покушаја пре него што SIM картица постане трајно неупотребљива.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Нисте откључали уређај %d сат. Потврдите лозинку.</item>
-        <item quantity="few">Нисте откључали уређај %d сата. Потврдите лозинку.</item>
-        <item quantity="other">Нисте откључали уређај %d сати. Потврдите лозинку.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Нисте откључали уређај %d сат. Потврдите шаблон.</item>
-        <item quantity="few">Нисте откључали уређај %d сата. Потврдите шаблон.</item>
-        <item quantity="other">Нисте откључали уређај %d сати. Потврдите шаблон.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Нисте откључали уређај %d сат. Потврдите PIN.</item>
-        <item quantity="few">Нисте откључали уређај %d сата. Потврдите PIN.</item>
-        <item quantity="other">Нисте откључали уређај %d сати. Потврдите PIN.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">Пробајте поново за %d секунду.</item>
-        <item quantity="few">Пробајте поново за %d секунде.</item>
-        <item quantity="other">Пробајте поново за %d секунди.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d ново обавештење</item>
@@ -89,10 +74,5 @@
         <item quantity="one">Можете да додате највише %d корисника.</item>
         <item quantity="few">Можете да додате највише %d корисника.</item>
         <item quantity="other">Можете да додате највише %d корисника.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">Повезан је %1$d уређај</item>
-        <item quantity="few">Повезана су %1$d уређаја</item>
-        <item quantity="other">Повезано је %1$d уређаја</item>
     </plurals>
 </resources>

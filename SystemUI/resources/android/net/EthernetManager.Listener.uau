@@ -1,0 +1,2 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/EthernetManager$Listener;->onAvailabilityChanged(Ljava/lang/String;Z)V,packages/modules/Connectivity/framework-t/src/android/net/EthernetManager.java,167,9,167,92,maxTargetSdk=30&trackingBug=170729553L

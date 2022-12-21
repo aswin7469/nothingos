@@ -3,7 +3,7 @@ package com.android.systemui.util.time;
 import android.content.Context;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class DateFormatUtil_Factory implements Factory<DateFormatUtil> {
     private final Provider<Context> contextProvider;
 
@@ -11,10 +11,8 @@ public final class DateFormatUtil_Factory implements Factory<DateFormatUtil> {
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DateFormatUtil mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public DateFormatUtil get() {
+        return newInstance(this.contextProvider.get());
     }
 
     public static DateFormatUtil_Factory create(Provider<Context> provider) {

@@ -4,11 +4,12 @@ import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
-import java.util.Objects;
+import com.android.systemui.biometrics.AuthDialog;
+import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u00000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0003¢\u0006\u0002\u0010\u0005J(\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\t2\u0006\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u000e\u001a\u00020\u000fH\u0016R\u000e\u0010\u0004\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0010"}, mo64987d2 = {"Lcom/android/systemui/controls/management/MarginItemDecorator;", "Landroidx/recyclerview/widget/RecyclerView$ItemDecoration;", "topMargin", "", "sideMargins", "(II)V", "getItemOffsets", "", "outRect", "Landroid/graphics/Rect;", "view", "Landroid/view/View;", "parent", "Landroidx/recyclerview/widget/RecyclerView;", "state", "Landroidx/recyclerview/widget/RecyclerView$State;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ControlAdapter.kt */
-/* loaded from: classes.dex */
 public final class MarginItemDecorator extends RecyclerView.ItemDecoration {
     private final int sideMargins;
     private final int topMargin;
@@ -18,32 +19,31 @@ public final class MarginItemDecorator extends RecyclerView.ItemDecoration {
         this.sideMargins = i2;
     }
 
-    @Override // androidx.recyclerview.widget.RecyclerView.ItemDecoration
-    public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
-        Intrinsics.checkNotNullParameter(outRect, "outRect");
+    public void getItemOffsets(Rect rect, View view, RecyclerView recyclerView, RecyclerView.State state) {
+        Intrinsics.checkNotNullParameter(rect, "outRect");
         Intrinsics.checkNotNullParameter(view, "view");
-        Intrinsics.checkNotNullParameter(parent, "parent");
-        Intrinsics.checkNotNullParameter(state, "state");
-        int childAdapterPosition = parent.getChildAdapterPosition(view);
-        if (childAdapterPosition == -1) {
-            return;
-        }
-        RecyclerView.Adapter adapter = parent.getAdapter();
-        Integer valueOf = adapter == null ? null : Integer.valueOf(adapter.getItemViewType(childAdapterPosition));
-        if (valueOf != null && valueOf.intValue() == 1) {
-            outRect.top = this.topMargin * 2;
-            int i = this.sideMargins;
-            outRect.left = i;
-            outRect.right = i;
-            outRect.bottom = 0;
-        } else if (valueOf == null || valueOf.intValue() != 0 || childAdapterPosition != 0) {
-        } else {
-            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-            Objects.requireNonNull(layoutParams, "null cannot be cast to non-null type android.view.ViewGroup.MarginLayoutParams");
-            outRect.top = -((ViewGroup.MarginLayoutParams) layoutParams).topMargin;
-            outRect.left = 0;
-            outRect.right = 0;
-            outRect.bottom = 0;
+        Intrinsics.checkNotNullParameter(recyclerView, "parent");
+        Intrinsics.checkNotNullParameter(state, AuthDialog.KEY_BIOMETRIC_STATE);
+        int childAdapterPosition = recyclerView.getChildAdapterPosition(view);
+        if (childAdapterPosition != -1) {
+            RecyclerView.Adapter adapter = recyclerView.getAdapter();
+            Integer valueOf = adapter != null ? Integer.valueOf(adapter.getItemViewType(childAdapterPosition)) : null;
+            if (valueOf != null && valueOf.intValue() == 1) {
+                rect.top = this.topMargin * 2;
+                rect.left = this.sideMargins;
+                rect.right = this.sideMargins;
+                rect.bottom = 0;
+            } else if (valueOf != null && valueOf.intValue() == 0 && childAdapterPosition == 0) {
+                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                if (layoutParams != null) {
+                    rect.top = -((ViewGroup.MarginLayoutParams) layoutParams).topMargin;
+                    rect.left = 0;
+                    rect.right = 0;
+                    rect.bottom = 0;
+                    return;
+                }
+                throw new NullPointerException("null cannot be cast to non-null type android.view.ViewGroup.MarginLayoutParams");
+            }
         }
     }
 }

@@ -4,26 +4,27 @@ import android.content.Context;
 import android.service.quickaccesswallet.QuickAccessWalletClient;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
+import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class WalletModule_ProvideQuickAccessWalletClientFactory implements Factory<QuickAccessWalletClient> {
+    private final Provider<Executor> bgExecutorProvider;
     private final Provider<Context> contextProvider;
 
-    public WalletModule_ProvideQuickAccessWalletClientFactory(Provider<Context> provider) {
+    public WalletModule_ProvideQuickAccessWalletClientFactory(Provider<Context> provider, Provider<Executor> provider2) {
         this.contextProvider = provider;
+        this.bgExecutorProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public QuickAccessWalletClient mo1933get() {
-        return provideQuickAccessWalletClient(this.contextProvider.mo1933get());
+    public QuickAccessWalletClient get() {
+        return provideQuickAccessWalletClient(this.contextProvider.get(), this.bgExecutorProvider.get());
     }
 
-    public static WalletModule_ProvideQuickAccessWalletClientFactory create(Provider<Context> provider) {
-        return new WalletModule_ProvideQuickAccessWalletClientFactory(provider);
+    public static WalletModule_ProvideQuickAccessWalletClientFactory create(Provider<Context> provider, Provider<Executor> provider2) {
+        return new WalletModule_ProvideQuickAccessWalletClientFactory(provider, provider2);
     }
 
-    public static QuickAccessWalletClient provideQuickAccessWalletClient(Context context) {
-        return (QuickAccessWalletClient) Preconditions.checkNotNullFromProvides(WalletModule.provideQuickAccessWalletClient(context));
+    public static QuickAccessWalletClient provideQuickAccessWalletClient(Context context, Executor executor) {
+        return (QuickAccessWalletClient) Preconditions.checkNotNullFromProvides(WalletModule.provideQuickAccessWalletClient(context, executor));
     }
 }

@@ -7,26 +7,27 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.core.view.ViewCompat;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public final class ViewPreviewer {
+
+final class ViewPreviewer {
+    private static final String TAG = "ViewPreviewer";
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    ViewPreviewer() {
+    }
+
+    /* access modifiers changed from: package-private */
     public Bitmap createPreview(final View view, final int i, final int i2) {
         if (view == null) {
             return null;
         }
-        FutureTask futureTask = new FutureTask(new Callable<Bitmap>() { // from class: com.android.keyguard.clock.ViewPreviewer.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // java.util.concurrent.Callable
-            /* renamed from: call */
-            public Bitmap mo245call() {
+        FutureTask futureTask = new FutureTask(new Callable<Bitmap>() {
+            public Bitmap call() {
                 Bitmap createBitmap = Bitmap.createBitmap(i, i2, Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(createBitmap);
-                canvas.drawColor(-16777216);
+                canvas.drawColor(ViewCompat.MEASURED_STATE_MASK);
                 ViewPreviewer.this.dispatchVisibilityAggregated(view, true);
                 view.measure(View.MeasureSpec.makeMeasureSpec(i, 1073741824), View.MeasureSpec.makeMeasureSpec(i2, 1073741824));
                 view.layout(0, 0, i, i2);
@@ -42,12 +43,12 @@ public final class ViewPreviewer {
         try {
             return (Bitmap) futureTask.get();
         } catch (Exception e) {
-            Log.e("ViewPreviewer", "Error completing task", e);
+            Log.e(TAG, "Error completing task", e);
             return null;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void dispatchVisibilityAggregated(View view, boolean z) {
         boolean z2 = true;
         boolean z3 = view.getVisibility() == 0;

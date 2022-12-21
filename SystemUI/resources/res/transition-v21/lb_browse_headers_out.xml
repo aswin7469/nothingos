@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<transitionSet xmlns:android="http://schemas.android.com/apk/res/android" android:duration="@integer/lb_browse_headers_transition_duration">
+<transitionSet xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui" xmlns:aapt="http://schemas.android.com/aapt" android:duration="@integer/lb_browse_headers_transition_duration">
     <changeBounds android:interpolator="@android:interpolator/fast_out_linear_in"/>
     <changeTransform android:interpolator="@android:interpolator/fast_out_linear_in">
         <targets>

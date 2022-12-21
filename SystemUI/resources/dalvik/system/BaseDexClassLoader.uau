@@ -1,0 +1,6 @@
+signature,file,startline,startcol,endline,endcol,properties
+Ldalvik/system/BaseDexClassLoader;->pathList:Ldalvik/system/DexPathList;,libcore/dalvik/src/main/java/dalvik/system/BaseDexClassLoader.java,58,5,58,25,
+Ldalvik/system/BaseDexClassLoader;-><init>(Ljava/lang/String;Ljava/io/File;Ljava/lang/String;Ljava/lang/ClassLoader;Z)V,libcore/dalvik/src/main/java/dalvik/system/BaseDexClassLoader.java,111,5,111,25,
+Ldalvik/system/BaseDexClassLoader;->addDexPath(Ljava/lang/String;)V,libcore/dalvik/src/main/java/dalvik/system/BaseDexClassLoader.java,276,5,276,25,
+Ldalvik/system/BaseDexClassLoader;->addDexPath(Ljava/lang/String;Z)V,libcore/dalvik/src/main/java/dalvik/system/BaseDexClassLoader.java,285,5,285,25,
+Ldalvik/system/BaseDexClassLoader;->getLdLibraryPath()Ljava/lang/String;,libcore/dalvik/src/main/java/dalvik/system/BaseDexClassLoader.java,424,5,424,25,

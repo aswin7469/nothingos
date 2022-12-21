@@ -4,27 +4,53 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.text.method.KeyListener;
 import android.util.AttributeSet;
 import android.view.ActionMode;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
+import android.view.inspector.InspectionCompanion;
+import android.view.inspector.PropertyMapper;
+import android.view.inspector.PropertyReader;
 import android.widget.AutoCompleteTextView;
-import androidx.appcompat.R$attr;
+import androidx.appcompat.C0329R;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.view.TintableBackgroundView;
 import androidx.core.widget.TextViewCompat;
-/* loaded from: classes.dex */
-public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implements TintableBackgroundView {
+
+public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implements TintableBackgroundView, EmojiCompatConfigurationView {
     private static final int[] TINT_ATTRS = {16843126};
+    private final AppCompatEmojiEditTextHelper mAppCompatEmojiEditTextHelper;
     private final AppCompatBackgroundHelper mBackgroundTintHelper;
     private final AppCompatTextHelper mTextHelper;
 
+    public final class InspectionCompanion implements android.view.inspector.InspectionCompanion<AppCompatAutoCompleteTextView> {
+        private int mBackgroundTintId;
+        private int mBackgroundTintModeId;
+        private boolean mPropertiesMapped = false;
+
+        public void mapProperties(PropertyMapper propertyMapper) {
+            this.mBackgroundTintId = propertyMapper.mapObject("backgroundTint", C0329R.attr.backgroundTint);
+            this.mBackgroundTintModeId = propertyMapper.mapObject("backgroundTintMode", C0329R.attr.backgroundTintMode);
+            this.mPropertiesMapped = true;
+        }
+
+        public void readProperties(AppCompatAutoCompleteTextView appCompatAutoCompleteTextView, PropertyReader propertyReader) {
+            if (this.mPropertiesMapped) {
+                propertyReader.readObject(this.mBackgroundTintId, appCompatAutoCompleteTextView.getBackgroundTintList());
+                propertyReader.readObject(this.mBackgroundTintModeId, appCompatAutoCompleteTextView.getBackgroundTintMode());
+                return;
+            }
+            throw new InspectionCompanion.UninitializedPropertyMapException();
+        }
+    }
+
     public AppCompatAutoCompleteTextView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public AppCompatAutoCompleteTextView(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, R$attr.autoCompleteTextViewStyle);
+        this(context, attributeSet, C0329R.attr.autoCompleteTextViewStyle);
     }
 
     public AppCompatAutoCompleteTextView(Context context, AttributeSet attributeSet, int i) {
@@ -42,14 +68,16 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         this.mTextHelper = appCompatTextHelper;
         appCompatTextHelper.loadFromAttributes(attributeSet, i);
         appCompatTextHelper.applyCompoundDrawablesTints();
+        AppCompatEmojiEditTextHelper appCompatEmojiEditTextHelper = new AppCompatEmojiEditTextHelper(this);
+        this.mAppCompatEmojiEditTextHelper = appCompatEmojiEditTextHelper;
+        appCompatEmojiEditTextHelper.loadFromAttributes(attributeSet, i);
+        appCompatEmojiEditTextHelper.initKeyListener();
     }
 
-    @Override // android.widget.AutoCompleteTextView
     public void setDropDownBackgroundResource(int i) {
         setDropDownBackgroundDrawable(AppCompatResources.getDrawable(getContext(), i));
     }
 
-    @Override // android.view.View
     public void setBackgroundResource(int i) {
         super.setBackgroundResource(i);
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
@@ -58,7 +86,6 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         }
     }
 
-    @Override // android.view.View
     public void setBackgroundDrawable(Drawable drawable) {
         super.setBackgroundDrawable(drawable);
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
@@ -67,7 +94,6 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public void setSupportBackgroundTintList(ColorStateList colorStateList) {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -75,7 +101,6 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public ColorStateList getSupportBackgroundTintList() {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -84,7 +109,6 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         return null;
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public void setSupportBackgroundTintMode(PorterDuff.Mode mode) {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -92,7 +116,6 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         }
     }
 
-    @Override // androidx.core.view.TintableBackgroundView
     public PorterDuff.Mode getSupportBackgroundTintMode() {
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -101,8 +124,8 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         return null;
     }
 
-    @Override // android.widget.TextView, android.view.View
-    protected void drawableStateChanged() {
+    /* access modifiers changed from: protected */
+    public void drawableStateChanged() {
         super.drawableStateChanged();
         AppCompatBackgroundHelper appCompatBackgroundHelper = this.mBackgroundTintHelper;
         if (appCompatBackgroundHelper != null) {
@@ -114,7 +137,6 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         }
     }
 
-    @Override // android.widget.TextView
     public void setTextAppearance(Context context, int i) {
         super.setTextAppearance(context, i);
         AppCompatTextHelper appCompatTextHelper = this.mTextHelper;
@@ -123,13 +145,27 @@ public class AppCompatAutoCompleteTextView extends AutoCompleteTextView implemen
         }
     }
 
-    @Override // android.widget.TextView, android.view.View
     public InputConnection onCreateInputConnection(EditorInfo editorInfo) {
-        return AppCompatHintHelper.onCreateInputConnection(super.onCreateInputConnection(editorInfo), editorInfo, this);
+        return this.mAppCompatEmojiEditTextHelper.onCreateInputConnection(AppCompatHintHelper.onCreateInputConnection(super.onCreateInputConnection(editorInfo), editorInfo, this), editorInfo);
     }
 
-    @Override // android.widget.TextView
     public void setCustomSelectionActionModeCallback(ActionMode.Callback callback) {
         super.setCustomSelectionActionModeCallback(TextViewCompat.wrapCustomSelectionActionModeCallback(this, callback));
+    }
+
+    public ActionMode.Callback getCustomSelectionActionModeCallback() {
+        return TextViewCompat.unwrapCustomSelectionActionModeCallback(super.getCustomSelectionActionModeCallback());
+    }
+
+    public void setKeyListener(KeyListener keyListener) {
+        super.setKeyListener(this.mAppCompatEmojiEditTextHelper.getKeyListener(keyListener));
+    }
+
+    public void setEmojiCompatEnabled(boolean z) {
+        this.mAppCompatEmojiEditTextHelper.setEnabled(z);
+    }
+
+    public boolean isEmojiCompatEnabled() {
+        return this.mAppCompatEmojiEditTextHelper.isEnabled();
     }
 }

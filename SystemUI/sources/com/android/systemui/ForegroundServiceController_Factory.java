@@ -4,7 +4,7 @@ import android.os.Handler;
 import com.android.systemui.appops.AppOpsController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ForegroundServiceController_Factory implements Factory<ForegroundServiceController> {
     private final Provider<AppOpsController> appOpsControllerProvider;
     private final Provider<Handler> mainHandlerProvider;
@@ -14,10 +14,8 @@ public final class ForegroundServiceController_Factory implements Factory<Foregr
         this.mainHandlerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ForegroundServiceController mo1933get() {
-        return newInstance(this.appOpsControllerProvider.mo1933get(), this.mainHandlerProvider.mo1933get());
+    public ForegroundServiceController get() {
+        return newInstance(this.appOpsControllerProvider.get(), this.mainHandlerProvider.get());
     }
 
     public static ForegroundServiceController_Factory create(Provider<AppOpsController> provider, Provider<Handler> provider2) {

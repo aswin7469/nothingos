@@ -5,7 +5,7 @@ import android.net.NetworkScoreManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideNetworkScoreManagerFactory implements Factory<NetworkScoreManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideNetworkScoreManagerFactory imp
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NetworkScoreManager mo1933get() {
-        return provideNetworkScoreManager(this.contextProvider.mo1933get());
+    public NetworkScoreManager get() {
+        return provideNetworkScoreManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideNetworkScoreManagerFactory create(Provider<Context> provider) {

@@ -1,5 +1,7 @@
 package com.airbnb.lottie.value;
-/* loaded from: classes.dex */
+
+import sun.util.locale.LanguageTag;
+
 public class ScaleXY {
     private float scaleX;
     private float scaleY;
@@ -31,6 +33,6 @@ public class ScaleXY {
     }
 
     public String toString() {
-        return getScaleX() + "x" + getScaleY();
+        return getScaleX() + LanguageTag.PRIVATEUSE + getScaleY();
     }
 }

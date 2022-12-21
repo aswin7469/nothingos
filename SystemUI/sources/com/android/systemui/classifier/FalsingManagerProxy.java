@@ -4,166 +4,150 @@ import android.content.Context;
 import android.net.Uri;
 import android.provider.DeviceConfig;
 import com.android.systemui.Dumpable;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.FalsingPlugin;
 import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.shared.plugins.PluginManager;
 import com.android.systemui.util.DeviceConfigProxy;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.concurrent.Executor;
+import javax.inject.Inject;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
+@SysUISingleton
 public class FalsingManagerProxy implements FalsingManager, Dumpable {
+    private static final String DUMPABLE_TAG = "FalsingManager";
+    public static final String FALSING_REMAIN_LOCKED = "falsing_failure_after_attempts";
+    public static final String FALSING_SUCCESS = "falsing_success_after_attempts";
     private final Provider<BrightLineFalsingManager> mBrightLineFalsingManagerProvider;
     private final DeviceConfigProxy mDeviceConfig;
     private final DeviceConfig.OnPropertiesChangedListener mDeviceConfigListener;
     private final DumpManager mDumpManager;
-    private FalsingManager mInternalFalsingManager;
+    /* access modifiers changed from: private */
+    public FalsingManager mInternalFalsingManager;
     final PluginListener<FalsingPlugin> mPluginListener;
     private final PluginManager mPluginManager;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(DeviceConfig.Properties properties) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-classifier-FalsingManagerProxy  reason: not valid java name */
+    public /* synthetic */ void m2597lambda$new$0$comandroidsystemuiclassifierFalsingManagerProxy(DeviceConfig.Properties properties) {
         onDeviceConfigPropertiesChanged(properties.getNamespace());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public FalsingManagerProxy(PluginManager pluginManager, Executor executor, DeviceConfigProxy deviceConfigProxy, DumpManager dumpManager, Provider<BrightLineFalsingManager> provider) {
-        DeviceConfig.OnPropertiesChangedListener onPropertiesChangedListener = new DeviceConfig.OnPropertiesChangedListener() { // from class: com.android.systemui.classifier.FalsingManagerProxy$$ExternalSyntheticLambda0
-            public final void onPropertiesChanged(DeviceConfig.Properties properties) {
-                FalsingManagerProxy.this.lambda$new$0(properties);
-            }
-        };
-        this.mDeviceConfigListener = onPropertiesChangedListener;
+    @Inject
+    FalsingManagerProxy(PluginManager pluginManager, @Main Executor executor, DeviceConfigProxy deviceConfigProxy, DumpManager dumpManager, Provider<BrightLineFalsingManager> provider) {
+        FalsingManagerProxy$$ExternalSyntheticLambda0 falsingManagerProxy$$ExternalSyntheticLambda0 = new FalsingManagerProxy$$ExternalSyntheticLambda0(this);
+        this.mDeviceConfigListener = falsingManagerProxy$$ExternalSyntheticLambda0;
         this.mPluginManager = pluginManager;
         this.mDumpManager = dumpManager;
         this.mDeviceConfig = deviceConfigProxy;
         this.mBrightLineFalsingManagerProvider = provider;
         setupFalsingManager();
-        deviceConfigProxy.addOnPropertiesChangedListener("systemui", executor, onPropertiesChangedListener);
-        PluginListener<FalsingPlugin> pluginListener = new PluginListener<FalsingPlugin>() { // from class: com.android.systemui.classifier.FalsingManagerProxy.1
-            @Override // com.android.systemui.plugins.PluginListener
+        deviceConfigProxy.addOnPropertiesChangedListener("systemui", executor, falsingManagerProxy$$ExternalSyntheticLambda0);
+        C20121 r3 = new PluginListener<FalsingPlugin>() {
             public void onPluginConnected(FalsingPlugin falsingPlugin, Context context) {
                 FalsingManager falsingManager = falsingPlugin.getFalsingManager(context);
                 if (falsingManager != null) {
                     FalsingManagerProxy.this.mInternalFalsingManager.cleanupInternal();
-                    FalsingManagerProxy.this.mInternalFalsingManager = falsingManager;
+                    FalsingManager unused = FalsingManagerProxy.this.mInternalFalsingManager = falsingManager;
                 }
             }
 
-            @Override // com.android.systemui.plugins.PluginListener
             public void onPluginDisconnected(FalsingPlugin falsingPlugin) {
                 FalsingManagerProxy.this.setupFalsingManager();
             }
         };
-        this.mPluginListener = pluginListener;
-        pluginManager.addPluginListener(pluginListener, FalsingPlugin.class);
-        dumpManager.registerDumpable("FalsingManager", this);
+        this.mPluginListener = r3;
+        pluginManager.addPluginListener(r3, FalsingPlugin.class);
+        dumpManager.registerDumpable(DUMPABLE_TAG, this);
     }
 
     private void onDeviceConfigPropertiesChanged(String str) {
-        if (!"systemui".equals(str)) {
-            return;
+        if ("systemui".equals(str)) {
+            setupFalsingManager();
         }
-        setupFalsingManager();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setupFalsingManager() {
         FalsingManager falsingManager = this.mInternalFalsingManager;
         if (falsingManager != null) {
             falsingManager.cleanupInternal();
         }
-        this.mInternalFalsingManager = this.mBrightLineFalsingManagerProvider.mo1933get();
+        this.mInternalFalsingManager = this.mBrightLineFalsingManagerProvider.get();
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public void onSuccessfulUnlock() {
         this.mInternalFalsingManager.onSuccessfulUnlock();
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isUnlockingDisabled() {
         return this.mInternalFalsingManager.isUnlockingDisabled();
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isFalseTouch(int i) {
         return this.mInternalFalsingManager.isFalseTouch(i);
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isSimpleTap() {
         return this.mInternalFalsingManager.isSimpleTap();
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isFalseTap(int i) {
         return this.mInternalFalsingManager.isFalseTap(i);
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isFalseDoubleTap() {
         return this.mInternalFalsingManager.isFalseDoubleTap();
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isClassifierEnabled() {
         return this.mInternalFalsingManager.isClassifierEnabled();
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public boolean shouldEnforceBouncer() {
         return this.mInternalFalsingManager.shouldEnforceBouncer();
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public Uri reportRejectedTouch() {
         return this.mInternalFalsingManager.reportRejectedTouch();
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isReportingEnabled() {
         return this.mInternalFalsingManager.isReportingEnabled();
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public void addFalsingBeliefListener(FalsingManager.FalsingBeliefListener falsingBeliefListener) {
         this.mInternalFalsingManager.addFalsingBeliefListener(falsingBeliefListener);
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public void removeFalsingBeliefListener(FalsingManager.FalsingBeliefListener falsingBeliefListener) {
         this.mInternalFalsingManager.removeFalsingBeliefListener(falsingBeliefListener);
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public void addTapListener(FalsingManager.FalsingTapListener falsingTapListener) {
         this.mInternalFalsingManager.addTapListener(falsingTapListener);
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public void removeTapListener(FalsingManager.FalsingTapListener falsingTapListener) {
         this.mInternalFalsingManager.removeTapListener(falsingTapListener);
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public void onProximityEvent(FalsingManager.ProximityEvent proximityEvent) {
         this.mInternalFalsingManager.onProximityEvent(proximityEvent);
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        this.mInternalFalsingManager.dump(fileDescriptor, printWriter, strArr);
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        this.mInternalFalsingManager.dump(printWriter, strArr);
     }
 
-    @Override // com.android.systemui.plugins.FalsingManager
     public void cleanupInternal() {
         this.mDeviceConfig.removeOnPropertiesChangedListener(this.mDeviceConfigListener);
         this.mPluginManager.removePluginListener(this.mPluginListener);
-        this.mDumpManager.unregisterDumpable("FalsingManager");
+        this.mDumpManager.unregisterDumpable(DUMPABLE_TAG);
         this.mInternalFalsingManager.cleanupInternal();
     }
 }

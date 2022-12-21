@@ -6,16 +6,15 @@ import android.view.View;
 import android.widget.FrameLayout;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.view.ViewCompat;
-import com.google.android.material.R$dimen;
+import com.google.android.material.C3621R;
 import com.google.android.material.navigation.NavigationBarItemView;
 import com.google.android.material.navigation.NavigationBarMenuView;
-/* loaded from: classes2.dex */
+
 public class BottomNavigationMenuView extends NavigationBarMenuView {
     private final int activeItemMaxWidth;
     private final int activeItemMinWidth;
     private final int inactiveItemMaxWidth;
     private final int inactiveItemMinWidth;
-    private final int itemHeight;
     private boolean itemHorizontalTranslationEnabled;
     private int[] tempChildWidths = new int[5];
 
@@ -25,76 +24,80 @@ public class BottomNavigationMenuView extends NavigationBarMenuView {
         layoutParams.gravity = 17;
         setLayoutParams(layoutParams);
         Resources resources = getResources();
-        this.inactiveItemMaxWidth = resources.getDimensionPixelSize(R$dimen.design_bottom_navigation_item_max_width);
-        this.inactiveItemMinWidth = resources.getDimensionPixelSize(R$dimen.design_bottom_navigation_item_min_width);
-        this.activeItemMaxWidth = resources.getDimensionPixelSize(R$dimen.design_bottom_navigation_active_item_max_width);
-        this.activeItemMinWidth = resources.getDimensionPixelSize(R$dimen.design_bottom_navigation_active_item_min_width);
-        this.itemHeight = resources.getDimensionPixelSize(R$dimen.design_bottom_navigation_height);
+        this.inactiveItemMaxWidth = resources.getDimensionPixelSize(C3621R.dimen.design_bottom_navigation_item_max_width);
+        this.inactiveItemMinWidth = resources.getDimensionPixelSize(C3621R.dimen.design_bottom_navigation_item_min_width);
+        this.activeItemMaxWidth = resources.getDimensionPixelSize(C3621R.dimen.design_bottom_navigation_active_item_max_width);
+        this.activeItemMinWidth = resources.getDimensionPixelSize(C3621R.dimen.design_bottom_navigation_active_item_min_width);
     }
 
-    @Override // android.view.View
-    protected void onMeasure(int i, int i2) {
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
         MenuBuilder menu = getMenu();
         int size = View.MeasureSpec.getSize(i);
         int size2 = menu.getVisibleItems().size();
         int childCount = getChildCount();
-        int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(this.itemHeight, 1073741824);
-        if (isShifting(getLabelVisibilityMode(), size2) && isItemHorizontalTranslationEnabled()) {
-            View childAt = getChildAt(getSelectedItemPosition());
-            int i3 = this.activeItemMinWidth;
-            if (childAt.getVisibility() != 8) {
-                childAt.measure(View.MeasureSpec.makeMeasureSpec(this.activeItemMaxWidth, Integer.MIN_VALUE), makeMeasureSpec);
-                i3 = Math.max(i3, childAt.getMeasuredWidth());
+        int size3 = View.MeasureSpec.getSize(i2);
+        int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(size3, 1073741824);
+        int i3 = 1;
+        if (!isShifting(getLabelVisibilityMode(), size2) || !isItemHorizontalTranslationEnabled()) {
+            if (size2 != 0) {
+                i3 = size2;
             }
-            int i4 = size2 - (childAt.getVisibility() != 8 ? 1 : 0);
-            int min = Math.min(size - (this.inactiveItemMinWidth * i4), Math.min(i3, this.activeItemMaxWidth));
-            int i5 = size - min;
-            int min2 = Math.min(i5 / (i4 == 0 ? 1 : i4), this.inactiveItemMaxWidth);
-            int i6 = i5 - (i4 * min2);
-            int i7 = 0;
-            while (i7 < childCount) {
-                if (getChildAt(i7).getVisibility() != 8) {
-                    this.tempChildWidths[i7] = i7 == getSelectedItemPosition() ? min : min2;
-                    if (i6 > 0) {
-                        int[] iArr = this.tempChildWidths;
-                        iArr[i7] = iArr[i7] + 1;
-                        i6--;
+            int min = Math.min(size / i3, this.activeItemMaxWidth);
+            int i4 = size - (size2 * min);
+            for (int i5 = 0; i5 < childCount; i5++) {
+                if (getChildAt(i5).getVisibility() != 8) {
+                    int[] iArr = this.tempChildWidths;
+                    iArr[i5] = min;
+                    if (i4 > 0) {
+                        iArr[i5] = min + 1;
+                        i4--;
                     }
                 } else {
-                    this.tempChildWidths[i7] = 0;
+                    this.tempChildWidths[i5] = 0;
                 }
-                i7++;
             }
         } else {
-            int min3 = Math.min(size / (size2 == 0 ? 1 : size2), this.activeItemMaxWidth);
-            int i8 = size - (size2 * min3);
-            for (int i9 = 0; i9 < childCount; i9++) {
-                if (getChildAt(i9).getVisibility() != 8) {
-                    int[] iArr2 = this.tempChildWidths;
-                    iArr2[i9] = min3;
-                    if (i8 > 0) {
-                        iArr2[i9] = iArr2[i9] + 1;
-                        i8--;
+            View childAt = getChildAt(getSelectedItemPosition());
+            int i6 = this.activeItemMinWidth;
+            if (childAt.getVisibility() != 8) {
+                childAt.measure(View.MeasureSpec.makeMeasureSpec(this.activeItemMaxWidth, Integer.MIN_VALUE), makeMeasureSpec);
+                i6 = Math.max(i6, childAt.getMeasuredWidth());
+            }
+            int i7 = size2 - (childAt.getVisibility() != 8 ? 1 : 0);
+            int min2 = Math.min(size - (this.inactiveItemMinWidth * i7), Math.min(i6, this.activeItemMaxWidth));
+            int i8 = size - min2;
+            int min3 = Math.min(i8 / (i7 == 0 ? 1 : i7), this.inactiveItemMaxWidth);
+            int i9 = i8 - (i7 * min3);
+            int i10 = 0;
+            while (i10 < childCount) {
+                if (getChildAt(i10).getVisibility() != 8) {
+                    this.tempChildWidths[i10] = i10 == getSelectedItemPosition() ? min2 : min3;
+                    if (i9 > 0) {
+                        int[] iArr2 = this.tempChildWidths;
+                        iArr2[i10] = iArr2[i10] + 1;
+                        i9--;
                     }
                 } else {
-                    this.tempChildWidths[i9] = 0;
+                    this.tempChildWidths[i10] = 0;
                 }
+                i10++;
             }
         }
-        int i10 = 0;
-        for (int i11 = 0; i11 < childCount; i11++) {
-            View childAt2 = getChildAt(i11);
+        int i11 = 0;
+        for (int i12 = 0; i12 < childCount; i12++) {
+            View childAt2 = getChildAt(i12);
             if (childAt2.getVisibility() != 8) {
-                childAt2.measure(View.MeasureSpec.makeMeasureSpec(this.tempChildWidths[i11], 1073741824), makeMeasureSpec);
+                childAt2.measure(View.MeasureSpec.makeMeasureSpec(this.tempChildWidths[i12], 1073741824), makeMeasureSpec);
                 childAt2.getLayoutParams().width = childAt2.getMeasuredWidth();
-                i10 += childAt2.getMeasuredWidth();
+                i11 += childAt2.getMeasuredWidth();
             }
         }
-        setMeasuredDimension(View.resolveSizeAndState(i10, View.MeasureSpec.makeMeasureSpec(i10, 1073741824), 0), View.resolveSizeAndState(this.itemHeight, makeMeasureSpec, 0));
+        setMeasuredDimension(View.resolveSizeAndState(i11, View.MeasureSpec.makeMeasureSpec(i11, 1073741824), 0), View.resolveSizeAndState(size3, i2, 0));
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         int childCount = getChildCount();
         int i5 = i3 - i;
         int i6 = i4 - i2;
@@ -121,8 +124,8 @@ public class BottomNavigationMenuView extends NavigationBarMenuView {
         return this.itemHorizontalTranslationEnabled;
     }
 
-    @Override // com.google.android.material.navigation.NavigationBarMenuView
-    protected NavigationBarItemView createNavigationBarItemView(Context context) {
+    /* access modifiers changed from: protected */
+    public NavigationBarItemView createNavigationBarItemView(Context context) {
         return new BottomNavigationItemView(context);
     }
 }

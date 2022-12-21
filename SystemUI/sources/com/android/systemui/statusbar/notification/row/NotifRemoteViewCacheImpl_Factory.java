@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.row;
 import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotifRemoteViewCacheImpl_Factory implements Factory<NotifRemoteViewCacheImpl> {
     private final Provider<CommonNotifCollection> collectionProvider;
 
@@ -11,10 +11,8 @@ public final class NotifRemoteViewCacheImpl_Factory implements Factory<NotifRemo
         this.collectionProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotifRemoteViewCacheImpl mo1933get() {
-        return newInstance(this.collectionProvider.mo1933get());
+    public NotifRemoteViewCacheImpl get() {
+        return newInstance(this.collectionProvider.get());
     }
 
     public static NotifRemoteViewCacheImpl_Factory create(Provider<CommonNotifCollection> provider) {

@@ -10,7 +10,7 @@ import androidx.preference.Preference;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class MultiSelectListPreference extends DialogPreference {
     private CharSequence[] mEntries;
     private CharSequence[] mEntryValues;
@@ -19,9 +19,9 @@ public class MultiSelectListPreference extends DialogPreference {
     public MultiSelectListPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mValues = new HashSet();
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.MultiSelectListPreference, i, i2);
-        this.mEntries = TypedArrayUtils.getTextArray(obtainStyledAttributes, R$styleable.MultiSelectListPreference_entries, R$styleable.MultiSelectListPreference_android_entries);
-        this.mEntryValues = TypedArrayUtils.getTextArray(obtainStyledAttributes, R$styleable.MultiSelectListPreference_entryValues, R$styleable.MultiSelectListPreference_android_entryValues);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1246R.styleable.MultiSelectListPreference, i, i2);
+        this.mEntries = TypedArrayUtils.getTextArray(obtainStyledAttributes, C1246R.styleable.MultiSelectListPreference_entries, C1246R.styleable.MultiSelectListPreference_android_entries);
+        this.mEntryValues = TypedArrayUtils.getTextArray(obtainStyledAttributes, C1246R.styleable.MultiSelectListPreference_entryValues, C1246R.styleable.MultiSelectListPreference_android_entryValues);
         obtainStyledAttributes.recycle();
     }
 
@@ -30,11 +30,31 @@ public class MultiSelectListPreference extends DialogPreference {
     }
 
     public MultiSelectListPreference(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, TypedArrayUtils.getAttr(context, R$attr.dialogPreferenceStyle, 16842897));
+        this(context, attributeSet, TypedArrayUtils.getAttr(context, C1246R.attr.dialogPreferenceStyle, 16842897));
+    }
+
+    public MultiSelectListPreference(Context context) {
+        this(context, (AttributeSet) null);
+    }
+
+    public void setEntries(CharSequence[] charSequenceArr) {
+        this.mEntries = charSequenceArr;
+    }
+
+    public void setEntries(int i) {
+        setEntries(getContext().getResources().getTextArray(i));
     }
 
     public CharSequence[] getEntries() {
         return this.mEntries;
+    }
+
+    public void setEntryValues(CharSequence[] charSequenceArr) {
+        this.mEntryValues = charSequenceArr;
+    }
+
+    public void setEntryValues(int i) {
+        setEntryValues(getContext().getResources().getTextArray(i));
     }
 
     public CharSequence[] getEntryValues() {
@@ -52,8 +72,33 @@ public class MultiSelectListPreference extends DialogPreference {
         return this.mValues;
     }
 
-    @Override // androidx.preference.Preference
-    protected Object onGetDefaultValue(TypedArray typedArray, int i) {
+    public int findIndexOfValue(String str) {
+        CharSequence[] charSequenceArr;
+        if (str == null || (charSequenceArr = this.mEntryValues) == null) {
+            return -1;
+        }
+        for (int length = charSequenceArr.length - 1; length >= 0; length--) {
+            if (this.mEntryValues[length].equals(str)) {
+                return length;
+            }
+        }
+        return -1;
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean[] getSelectedItems() {
+        CharSequence[] charSequenceArr = this.mEntryValues;
+        int length = charSequenceArr.length;
+        Set<String> set = this.mValues;
+        boolean[] zArr = new boolean[length];
+        for (int i = 0; i < length; i++) {
+            zArr[i] = set.contains(charSequenceArr[i].toString());
+        }
+        return zArr;
+    }
+
+    /* access modifiers changed from: protected */
+    public Object onGetDefaultValue(TypedArray typedArray, int i) {
         CharSequence[] textArray = typedArray.getTextArray(i);
         HashSet hashSet = new HashSet();
         for (CharSequence charSequence : textArray) {
@@ -62,13 +107,12 @@ public class MultiSelectListPreference extends DialogPreference {
         return hashSet;
     }
 
-    @Override // androidx.preference.Preference
-    protected void onSetInitialValue(Object obj) {
+    /* access modifiers changed from: protected */
+    public void onSetInitialValue(Object obj) {
         setValues(getPersistedStringSet((Set) obj));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public Parcelable onSaveInstanceState() {
         Parcelable onSaveInstanceState = super.onSaveInstanceState();
         if (isPersistent()) {
@@ -79,8 +123,7 @@ public class MultiSelectListPreference extends DialogPreference {
         return savedState;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onRestoreInstanceState(Parcelable parcelable) {
         if (parcelable == null || !parcelable.getClass().equals(SavedState.class)) {
             super.onRestoreInstanceState(parcelable);
@@ -91,21 +134,13 @@ public class MultiSelectListPreference extends DialogPreference {
         setValues(savedState.mValues);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends Preference.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: androidx.preference.MultiSelectListPreference.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo129createFromParcel(Parcel parcel) {
+    private static class SavedState extends Preference.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo130newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -124,7 +159,6 @@ public class MultiSelectListPreference extends DialogPreference {
             super(parcelable);
         }
 
-        @Override // android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeInt(this.mValues.size());

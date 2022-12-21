@@ -4,7 +4,7 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.controller.ControlsController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ControlsRequestDialog_Factory implements Factory<ControlsRequestDialog> {
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
     private final Provider<ControlsController> controllerProvider;
@@ -16,10 +16,8 @@ public final class ControlsRequestDialog_Factory implements Factory<ControlsRequ
         this.controlsListingControllerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ControlsRequestDialog mo1933get() {
-        return newInstance(this.controllerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.controlsListingControllerProvider.mo1933get());
+    public ControlsRequestDialog get() {
+        return newInstance(this.controllerProvider.get(), this.broadcastDispatcherProvider.get(), this.controlsListingControllerProvider.get());
     }
 
     public static ControlsRequestDialog_Factory create(Provider<ControlsController> provider, Provider<BroadcastDispatcher> provider2, Provider<ControlsListingController> provider3) {

@@ -1,30 +1,27 @@
 package com.android.systemui.statusbar.events;
 
 import android.animation.Animator;
-import android.animation.ValueAnimator;
-import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import kotlin.Metadata;
+import kotlin.jvm.JvmDefault;
+
+@Metadata(mo64986d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0002\b\u0002\bf\u0018\u00002\u00020\u0001J\n\u0010\u0002\u001a\u0004\u0018\u00010\u0003H\u0017J\n\u0010\u0004\u001a\u0004\u0018\u00010\u0003H\u0016J\u0012\u0010\u0005\u001a\u0004\u0018\u00010\u00032\u0006\u0010\u0006\u001a\u00020\u0007H\u0016J\n\u0010\b\u001a\u0004\u0018\u00010\u0003H\u0017ø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\tÀ\u0006\u0001"}, mo64987d2 = {"Lcom/android/systemui/statusbar/events/SystemStatusAnimationCallback;", "", "onHidePersistentDot", "Landroid/animation/Animator;", "onSystemEventAnimationBegin", "onSystemEventAnimationFinish", "hasPersistentDot", "", "onSystemStatusAnimationTransitionToPersistentDot", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: SystemStatusAnimationScheduler.kt */
-/* loaded from: classes.dex */
 public interface SystemStatusAnimationCallback {
-    @Nullable
-    default Animator onHidePersistentDot() {
+    @JvmDefault
+    Animator onHidePersistentDot() {
         return null;
     }
 
-    default void onSystemChromeAnimationEnd() {
+    Animator onSystemEventAnimationBegin() {
+        return null;
     }
 
-    default void onSystemChromeAnimationStart() {
+    Animator onSystemEventAnimationFinish(boolean z) {
+        return null;
     }
 
-    default void onSystemChromeAnimationUpdate(@NotNull ValueAnimator animator) {
-        Intrinsics.checkNotNullParameter(animator, "animator");
-    }
-
-    @Nullable
-    default Animator onSystemStatusAnimationTransitionToPersistentDot(@Nullable String str) {
+    @JvmDefault
+    Animator onSystemStatusAnimationTransitionToPersistentDot() {
         return null;
     }
 }

@@ -1,25 +1,26 @@
 package com.android.systemui.dagger;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.util.DisplayMetrics;
-import com.android.internal.logging.UiEventLogger;
-import com.android.internal.logging.UiEventLoggerImpl;
-/* loaded from: classes.dex */
+import com.android.systemui.dagger.qualifiers.Application;
+import com.android.systemui.plugins.PluginsModule;
+import com.android.systemui.unfold.UnfoldTransitionModule;
+import com.android.systemui.util.concurrency.GlobalConcurrencyModule;
+import dagger.Module;
+import dagger.Provides;
+
+@Module(includes = {AndroidInternalsModule.class, FrameworkServicesModule.class, GlobalConcurrencyModule.class, UnfoldTransitionModule.class, PluginsModule.class})
 public class GlobalModule {
+    @Application
+    @Provides
+    public Context provideApplicationContext(Context context) {
+        return context.getApplicationContext();
+    }
+
+    @Provides
     public DisplayMetrics provideDisplayMetrics(Context context) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         context.getDisplay().getMetrics(displayMetrics);
         return displayMetrics;
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static UiEventLogger provideUiEventLogger() {
-        return new UiEventLoggerImpl();
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static boolean provideIsTestHarness() {
-        return ActivityManager.isRunningInUserTestHarness();
     }
 }

@@ -4,7 +4,7 @@ import com.android.systemui.statusbar.notification.row.ActivatableNotificationVi
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationShelfController_Factory implements Factory<NotificationShelfController> {
     private final Provider<ActivatableNotificationViewController> activatableNotificationViewControllerProvider;
     private final Provider<KeyguardBypassController> keyguardBypassControllerProvider;
@@ -18,10 +18,8 @@ public final class NotificationShelfController_Factory implements Factory<Notifi
         this.statusBarStateControllerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationShelfController mo1933get() {
-        return newInstance(this.notificationShelfProvider.mo1933get(), this.activatableNotificationViewControllerProvider.mo1933get(), this.keyguardBypassControllerProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get());
+    public NotificationShelfController get() {
+        return newInstance(this.notificationShelfProvider.get(), this.activatableNotificationViewControllerProvider.get(), this.keyguardBypassControllerProvider.get(), this.statusBarStateControllerProvider.get());
     }
 
     public static NotificationShelfController_Factory create(Provider<NotificationShelf> provider, Provider<ActivatableNotificationViewController> provider2, Provider<KeyguardBypassController> provider3, Provider<SysuiStatusBarStateController> provider4) {

@@ -3,14 +3,24 @@ package com.android.systemui.wmshell;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
-import com.android.systemui.Dependency;
-import com.android.systemui.SystemUI;
+import com.android.p019wm.shell.ShellCommandHandler;
+import com.android.p019wm.shell.compatui.CompatUI;
+import com.android.p019wm.shell.draganddrop.DragAndDrop;
+import com.android.p019wm.shell.hidedisplaycutout.HideDisplayCutout;
+import com.android.p019wm.shell.nano.WmShellTraceProto;
+import com.android.p019wm.shell.onehanded.OneHanded;
+import com.android.p019wm.shell.onehanded.OneHandedEventCallback;
+import com.android.p019wm.shell.onehanded.OneHandedTransitionCallback;
+import com.android.p019wm.shell.pip.Pip;
+import com.android.p019wm.shell.protolog.ShellProtoLogImpl;
+import com.android.p019wm.shell.splitscreen.SplitScreen;
+import com.android.systemui.CoreStartable;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.model.SysUiState;
@@ -18,31 +28,31 @@ import com.android.systemui.navigationbar.NavigationModeController;
 import com.android.systemui.shared.tracing.ProtoTraceable;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.policy.ConfigurationController;
+import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import com.android.systemui.tracing.ProtoTracer;
 import com.android.systemui.tracing.nano.SystemUiTraceProto;
-import com.android.systemui.wmshell.WMShell;
-import com.android.wm.shell.ShellCommandHandler;
-import com.android.wm.shell.hidedisplaycutout.HideDisplayCutout;
-import com.android.wm.shell.legacysplitscreen.LegacySplitScreen;
-import com.android.wm.shell.nano.WmShellTraceProto;
-import com.android.wm.shell.onehanded.OneHanded;
-import com.android.wm.shell.onehanded.OneHandedEventCallback;
-import com.android.wm.shell.onehanded.OneHandedTransitionCallback;
-import com.android.wm.shell.pip.Pip;
-import com.android.wm.shell.protolog.ShellProtoLogImpl;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.OutputStream;
+import java.p026io.PrintWriter;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
-/* loaded from: classes2.dex */
-public final class WMShell extends SystemUI implements CommandQueue.Callbacks, ProtoTraceable<SystemUiTraceProto> {
-    private final CommandQueue mCommandQueue;
+import javax.inject.Inject;
+
+@SysUISingleton
+public final class WMShell extends CoreStartable implements CommandQueue.Callbacks, ProtoTraceable<SystemUiTraceProto> {
+    private static final int INVALID_SYSUI_STATE_MASK = 8440396;
+    private static final String TAG = "com.android.systemui.wmshell.WMShell";
+    /* access modifiers changed from: private */
+    public final CommandQueue mCommandQueue;
+    private KeyguardStateController.Callback mCompatUIKeyguardCallback;
+    private final Optional<CompatUI> mCompatUIOptional;
     private final ConfigurationController mConfigurationController;
+    private final Optional<DragAndDrop> mDragAndDropOptional;
     private final Optional<HideDisplayCutout> mHideDisplayCutoutOptional;
     private boolean mIsSysUiStateValid;
+    /* access modifiers changed from: private */
+    public final KeyguardStateController mKeyguardStateController;
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final NavigationModeController mNavigationModeController;
     private KeyguardUpdateMonitorCallback mOneHandedKeyguardCallback;
@@ -53,16 +63,22 @@ public final class WMShell extends SystemUI implements CommandQueue.Callbacks, P
     private final ScreenLifecycle mScreenLifecycle;
     private final Optional<ShellCommandHandler> mShellCommandHandler;
     private KeyguardUpdateMonitorCallback mSplitScreenKeyguardCallback;
-    private final Optional<LegacySplitScreen> mSplitScreenOptional;
-    private final Executor mSysUiMainExecutor;
-    private final SysUiState mSysUiState;
+    private final Optional<SplitScreen> mSplitScreenOptional;
+    /* access modifiers changed from: private */
+    public final Executor mSysUiMainExecutor;
+    /* access modifiers changed from: private */
+    public final SysUiState mSysUiState;
+    private final UserInfoController mUserInfoController;
     private final WakefulnessLifecycle mWakefulnessLifecycle;
     private WakefulnessLifecycle.Observer mWakefulnessObserver;
 
-    public WMShell(Context context, Optional<Pip> optional, Optional<LegacySplitScreen> optional2, Optional<OneHanded> optional3, Optional<HideDisplayCutout> optional4, Optional<ShellCommandHandler> optional5, CommandQueue commandQueue, ConfigurationController configurationController, KeyguardUpdateMonitor keyguardUpdateMonitor, NavigationModeController navigationModeController, ScreenLifecycle screenLifecycle, SysUiState sysUiState, ProtoTracer protoTracer, WakefulnessLifecycle wakefulnessLifecycle, Executor executor) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    @Inject
+    public WMShell(Context context, Optional<Pip> optional, Optional<SplitScreen> optional2, Optional<OneHanded> optional3, Optional<HideDisplayCutout> optional4, Optional<ShellCommandHandler> optional5, Optional<CompatUI> optional6, Optional<DragAndDrop> optional7, CommandQueue commandQueue, ConfigurationController configurationController, KeyguardStateController keyguardStateController, KeyguardUpdateMonitor keyguardUpdateMonitor, NavigationModeController navigationModeController, ScreenLifecycle screenLifecycle, SysUiState sysUiState, ProtoTracer protoTracer, WakefulnessLifecycle wakefulnessLifecycle, UserInfoController userInfoController, @Main Executor executor) {
         super(context);
         this.mCommandQueue = commandQueue;
         this.mConfigurationController = configurationController;
+        this.mKeyguardStateController = keyguardStateController;
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
         this.mNavigationModeController = navigationModeController;
         this.mScreenLifecycle = screenLifecycle;
@@ -74,298 +90,243 @@ public final class WMShell extends SystemUI implements CommandQueue.Callbacks, P
         this.mWakefulnessLifecycle = wakefulnessLifecycle;
         this.mProtoTracer = protoTracer;
         this.mShellCommandHandler = optional5;
+        this.mCompatUIOptional = optional6;
+        this.mDragAndDropOptional = optional7;
+        this.mUserInfoController = userInfoController;
         this.mSysUiMainExecutor = executor;
     }
 
-    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mProtoTracer.add(this);
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
-        this.mPipOptional.ifPresent(new Consumer() { // from class: com.android.systemui.wmshell.WMShell$$ExternalSyntheticLambda5
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                WMShell.this.initPip((Pip) obj);
-            }
-        });
-        this.mSplitScreenOptional.ifPresent(new Consumer() { // from class: com.android.systemui.wmshell.WMShell$$ExternalSyntheticLambda3
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                WMShell.this.initSplitScreen((LegacySplitScreen) obj);
-            }
-        });
-        this.mOneHandedOptional.ifPresent(new Consumer() { // from class: com.android.systemui.wmshell.WMShell$$ExternalSyntheticLambda4
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                WMShell.this.initOneHanded((OneHanded) obj);
-            }
-        });
-        this.mHideDisplayCutoutOptional.ifPresent(new Consumer() { // from class: com.android.systemui.wmshell.WMShell$$ExternalSyntheticLambda2
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                WMShell.this.initHideDisplayCutout((HideDisplayCutout) obj);
-            }
-        });
+        this.mPipOptional.ifPresent(new WMShell$$ExternalSyntheticLambda3(this));
+        this.mSplitScreenOptional.ifPresent(new WMShell$$ExternalSyntheticLambda4(this));
+        this.mOneHandedOptional.ifPresent(new WMShell$$ExternalSyntheticLambda5(this));
+        this.mHideDisplayCutoutOptional.ifPresent(new WMShell$$ExternalSyntheticLambda6(this));
+        this.mCompatUIOptional.ifPresent(new WMShell$$ExternalSyntheticLambda7(this));
+        this.mDragAndDropOptional.ifPresent(new WMShell$$ExternalSyntheticLambda8(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
+    /* access modifiers changed from: package-private */
     public void initPip(final Pip pip) {
-        this.mCommandQueue.addCallback(new CommandQueue.Callbacks() { // from class: com.android.systemui.wmshell.WMShell.1
-            @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
+        this.mCommandQueue.addCallback((CommandQueue.Callbacks) new CommandQueue.Callbacks() {
             public void showPictureInPictureMenu() {
                 pip.showPictureInPictureMenu();
             }
         });
-        KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.systemui.wmshell.WMShell.2
-            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+        C33252 r0 = new KeyguardUpdateMonitorCallback() {
             public void onKeyguardVisibilityChanged(boolean z) {
-                if (z) {
-                    pip.hidePipMenu(null, null);
-                }
+                pip.onKeyguardVisibilityChanged(z, WMShell.this.mKeyguardStateController.isAnimatingBetweenKeyguardAndSurfaceBehind());
+            }
+
+            public void onKeyguardDismissAnimationFinished() {
+                pip.onKeyguardDismissAnimationFinished();
             }
         };
-        this.mPipKeyguardCallback = keyguardUpdateMonitorCallback;
-        this.mKeyguardUpdateMonitor.registerCallback(keyguardUpdateMonitorCallback);
-        this.mSysUiState.addCallback(new SysUiState.SysUiStateCallback() { // from class: com.android.systemui.wmshell.WMShell$$ExternalSyntheticLambda0
-            @Override // com.android.systemui.model.SysUiState.SysUiStateCallback
-            public final void onSystemUiStateChanged(int i) {
-                WMShell.this.lambda$initPip$0(pip, i);
-            }
-        });
-        this.mConfigurationController.addCallback(new ConfigurationController.ConfigurationListener() { // from class: com.android.systemui.wmshell.WMShell.3
-            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+        this.mPipKeyguardCallback = r0;
+        this.mKeyguardUpdateMonitor.registerCallback(r0);
+        this.mSysUiState.addCallback(new WMShell$$ExternalSyntheticLambda0(this, pip));
+        this.mConfigurationController.addCallback(new ConfigurationController.ConfigurationListener() {
             public void onConfigChanged(Configuration configuration) {
                 pip.onConfigurationChanged(configuration);
             }
 
-            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
             public void onDensityOrFontScaleChanged() {
                 pip.onDensityOrFontScaleChanged();
             }
 
-            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
-            public void onOverlayChanged() {
+            public void onThemeChanged() {
                 pip.onOverlayChanged();
             }
         });
-        ((UserInfoController) Dependency.get(UserInfoController.class)).addCallback(new UserInfoController.OnUserInfoChangedListener() { // from class: com.android.systemui.wmshell.WMShell$$ExternalSyntheticLambda1
-            @Override // com.android.systemui.statusbar.policy.UserInfoController.OnUserInfoChangedListener
-            public final void onUserInfoChanged(String str, Drawable drawable, String str2) {
-                Pip.this.registerSessionListenerForCurrentUser();
-            }
-        });
+        this.mUserInfoController.addCallback(new WMShell$$ExternalSyntheticLambda1(pip));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$initPip$0(Pip pip, int i) {
-        boolean z = (51788 & i) == 0;
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$initPip$0$com-android-systemui-wmshell-WMShell  reason: not valid java name */
+    public /* synthetic */ void m3326lambda$initPip$0$comandroidsystemuiwmshellWMShell(Pip pip, int i) {
+        boolean z = (INVALID_SYSUI_STATE_MASK & i) == 0;
         this.mIsSysUiStateValid = z;
         pip.onSystemUiStateChanged(z, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
-    public void initSplitScreen(final LegacySplitScreen legacySplitScreen) {
-        KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.systemui.wmshell.WMShell.4
-            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+    /* access modifiers changed from: package-private */
+    public void initSplitScreen(final SplitScreen splitScreen) {
+        C33274 r0 = new KeyguardUpdateMonitorCallback() {
             public void onKeyguardVisibilityChanged(boolean z) {
-                legacySplitScreen.onKeyguardVisibilityChanged(z);
+                splitScreen.onKeyguardVisibilityChanged(z);
             }
         };
-        this.mSplitScreenKeyguardCallback = keyguardUpdateMonitorCallback;
-        this.mKeyguardUpdateMonitor.registerCallback(keyguardUpdateMonitorCallback);
+        this.mSplitScreenKeyguardCallback = r0;
+        this.mKeyguardUpdateMonitor.registerCallback(r0);
+        this.mWakefulnessLifecycle.addObserver(new WakefulnessLifecycle.Observer() {
+            public void onFinishedWakingUp() {
+                splitScreen.onFinishedWakingUp();
+            }
+        });
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.wmshell.WMShell$5  reason: invalid class name */
-    /* loaded from: classes2.dex */
-    public class AnonymousClass5 implements OneHandedTransitionCallback {
-        AnonymousClass5() {
-        }
-
-        @Override // com.android.wm.shell.onehanded.OneHandedTransitionCallback
-        public void onStartTransition(boolean z) {
-            WMShell.this.mSysUiMainExecutor.execute(new Runnable() { // from class: com.android.systemui.wmshell.WMShell$5$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    WMShell.AnonymousClass5.this.lambda$onStartTransition$0();
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onStartTransition$0() {
-            WMShell.this.mSysUiState.setFlag(65536, true).commitUpdate(0);
-        }
-
-        @Override // com.android.wm.shell.onehanded.OneHandedTransitionCallback
-        public void onStartFinished(Rect rect) {
-            WMShell.this.mSysUiMainExecutor.execute(new Runnable() { // from class: com.android.systemui.wmshell.WMShell$5$$ExternalSyntheticLambda2
-                @Override // java.lang.Runnable
-                public final void run() {
-                    WMShell.AnonymousClass5.this.lambda$onStartFinished$1();
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onStartFinished$1() {
-            WMShell.this.mSysUiState.setFlag(65536, true).commitUpdate(0);
-        }
-
-        @Override // com.android.wm.shell.onehanded.OneHandedTransitionCallback
-        public void onStopFinished(Rect rect) {
-            WMShell.this.mSysUiMainExecutor.execute(new Runnable() { // from class: com.android.systemui.wmshell.WMShell$5$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    WMShell.AnonymousClass5.this.lambda$onStopFinished$2();
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onStopFinished$2() {
-            WMShell.this.mSysUiState.setFlag(65536, false).commitUpdate(0);
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
+    /* access modifiers changed from: package-private */
     public void initOneHanded(final OneHanded oneHanded) {
-        oneHanded.registerTransitionCallback(new AnonymousClass5());
-        oneHanded.registerEventCallback(new AnonymousClass6());
-        KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.systemui.wmshell.WMShell.7
-            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+        oneHanded.registerTransitionCallback(new OneHandedTransitionCallback() {
+            public void onStartTransition(boolean z) {
+                WMShell.this.mSysUiMainExecutor.execute(new WMShell$6$$ExternalSyntheticLambda2(this));
+            }
+
+            /* access modifiers changed from: package-private */
+            /* renamed from: lambda$onStartTransition$0$com-android-systemui-wmshell-WMShell$6 */
+            public /* synthetic */ void mo47563x3fd4fb56() {
+                WMShell.this.mSysUiState.setFlag(65536, true).commitUpdate(0);
+            }
+
+            public void onStartFinished(Rect rect) {
+                WMShell.this.mSysUiMainExecutor.execute(new WMShell$6$$ExternalSyntheticLambda0(this));
+            }
+
+            /* access modifiers changed from: package-private */
+            /* renamed from: lambda$onStartFinished$1$com-android-systemui-wmshell-WMShell$6  reason: not valid java name */
+            public /* synthetic */ void m3327lambda$onStartFinished$1$comandroidsystemuiwmshellWMShell$6() {
+                WMShell.this.mSysUiState.setFlag(65536, true).commitUpdate(0);
+            }
+
+            public void onStopFinished(Rect rect) {
+                WMShell.this.mSysUiMainExecutor.execute(new WMShell$6$$ExternalSyntheticLambda1(this));
+            }
+
+            /* access modifiers changed from: package-private */
+            /* renamed from: lambda$onStopFinished$2$com-android-systemui-wmshell-WMShell$6  reason: not valid java name */
+            public /* synthetic */ void m3328lambda$onStopFinished$2$comandroidsystemuiwmshellWMShell$6() {
+                WMShell.this.mSysUiState.setFlag(65536, false).commitUpdate(0);
+            }
+        });
+        oneHanded.registerEventCallback(new OneHandedEventCallback() {
+            public void notifyExpandNotification() {
+                WMShell.this.mSysUiMainExecutor.execute(new WMShell$7$$ExternalSyntheticLambda0(this));
+            }
+
+            /* access modifiers changed from: package-private */
+            /* renamed from: lambda$notifyExpandNotification$0$com-android-systemui-wmshell-WMShell$7 */
+            public /* synthetic */ void mo47568x2ae04327() {
+                WMShell.this.mCommandQueue.handleSystemKey(281);
+            }
+        });
+        C33318 r0 = new KeyguardUpdateMonitorCallback() {
             public void onKeyguardVisibilityChanged(boolean z) {
                 oneHanded.onKeyguardVisibilityChanged(z);
                 oneHanded.stopOneHanded();
             }
 
-            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onUserSwitchComplete(int i) {
                 oneHanded.onUserSwitch(i);
             }
         };
-        this.mOneHandedKeyguardCallback = keyguardUpdateMonitorCallback;
-        this.mKeyguardUpdateMonitor.registerCallback(keyguardUpdateMonitorCallback);
-        WakefulnessLifecycle.Observer observer = new WakefulnessLifecycle.Observer() { // from class: com.android.systemui.wmshell.WMShell.8
-            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
+        this.mOneHandedKeyguardCallback = r0;
+        this.mKeyguardUpdateMonitor.registerCallback(r0);
+        C33329 r02 = new WakefulnessLifecycle.Observer() {
             public void onFinishedWakingUp() {
                 oneHanded.setLockedDisabled(false, false);
             }
 
-            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
             public void onStartedGoingToSleep() {
                 oneHanded.stopOneHanded();
                 oneHanded.setLockedDisabled(true, false);
             }
         };
-        this.mWakefulnessObserver = observer;
-        this.mWakefulnessLifecycle.addObserver(observer);
-        this.mScreenLifecycle.addObserver(new ScreenLifecycle.Observer() { // from class: com.android.systemui.wmshell.WMShell.9
-            @Override // com.android.systemui.keyguard.ScreenLifecycle.Observer
+        this.mWakefulnessObserver = r02;
+        this.mWakefulnessLifecycle.addObserver(r02);
+        this.mScreenLifecycle.addObserver(new ScreenLifecycle.Observer() {
             public void onScreenTurningOff() {
                 oneHanded.stopOneHanded(7);
             }
         });
-        this.mCommandQueue.addCallback(new CommandQueue.Callbacks() { // from class: com.android.systemui.wmshell.WMShell.10
-            @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
+        this.mCommandQueue.addCallback((CommandQueue.Callbacks) new CommandQueue.Callbacks() {
             public void onCameraLaunchGestureDetected(int i) {
                 oneHanded.stopOneHanded();
             }
 
-            @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
             public void setImeWindowStatus(int i, IBinder iBinder, int i2, int i3, boolean z) {
-                if (i != 0 || (i2 & 2) == 0) {
-                    return;
+                if (i == 0 && (i2 & 2) != 0) {
+                    oneHanded.stopOneHanded(3);
                 }
-                oneHanded.stopOneHanded(3);
             }
         });
-        this.mConfigurationController.addCallback(new ConfigurationController.ConfigurationListener() { // from class: com.android.systemui.wmshell.WMShell.11
-            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+        this.mConfigurationController.addCallback(new ConfigurationController.ConfigurationListener() {
             public void onConfigChanged(Configuration configuration) {
                 oneHanded.onConfigChanged(configuration);
             }
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.wmshell.WMShell$6  reason: invalid class name */
-    /* loaded from: classes2.dex */
-    public class AnonymousClass6 implements OneHandedEventCallback {
-        AnonymousClass6() {
-        }
-
-        @Override // com.android.wm.shell.onehanded.OneHandedEventCallback
-        public void notifyExpandNotification() {
-            WMShell.this.mSysUiMainExecutor.execute(new Runnable() { // from class: com.android.systemui.wmshell.WMShell$6$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    WMShell.AnonymousClass6.this.lambda$notifyExpandNotification$0();
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$notifyExpandNotification$0() {
-            WMShell.this.mCommandQueue.handleSystemKey(281);
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
+    /* access modifiers changed from: package-private */
     public void initHideDisplayCutout(final HideDisplayCutout hideDisplayCutout) {
-        this.mConfigurationController.addCallback(new ConfigurationController.ConfigurationListener() { // from class: com.android.systemui.wmshell.WMShell.12
-            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+        this.mConfigurationController.addCallback(new ConfigurationController.ConfigurationListener() {
             public void onConfigChanged(Configuration configuration) {
                 hideDisplayCutout.onConfigurationChanged(configuration);
             }
         });
     }
 
-    @Override // com.android.systemui.shared.tracing.ProtoTraceable
+    /* access modifiers changed from: package-private */
+    public void initCompatUi(final CompatUI compatUI) {
+        C332314 r0 = new KeyguardStateController.Callback() {
+            public void onKeyguardShowingChanged() {
+                compatUI.onKeyguardShowingChanged(WMShell.this.mKeyguardStateController.isShowing());
+            }
+        };
+        this.mCompatUIKeyguardCallback = r0;
+        this.mKeyguardStateController.addCallback(r0);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void initDragAndDrop(final DragAndDrop dragAndDrop) {
+        this.mConfigurationController.addCallback(new ConfigurationController.ConfigurationListener() {
+            public void onConfigChanged(Configuration configuration) {
+                dragAndDrop.onConfigChanged(configuration);
+            }
+
+            public void onThemeChanged() {
+                dragAndDrop.onThemeChanged();
+            }
+        });
+    }
+
     public void writeToProto(SystemUiTraceProto systemUiTraceProto) {
         if (systemUiTraceProto.wmShell == null) {
             systemUiTraceProto.wmShell = new WmShellTraceProto();
         }
     }
 
-    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, final PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         if ((!this.mShellCommandHandler.isPresent() || !this.mShellCommandHandler.get().handleCommand(strArr, printWriter)) && !handleLoggingCommand(strArr, printWriter)) {
-            this.mShellCommandHandler.ifPresent(new Consumer() { // from class: com.android.systemui.wmshell.WMShell$$ExternalSyntheticLambda6
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    ((ShellCommandHandler) obj).dump(printWriter);
-                }
-            });
+            this.mShellCommandHandler.ifPresent(new WMShell$$ExternalSyntheticLambda2(printWriter));
         }
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void handleWindowManagerLoggingCommand(String[] strArr, ParcelFileDescriptor parcelFileDescriptor) {
-        PrintWriter printWriter = new PrintWriter(new ParcelFileDescriptor.AutoCloseOutputStream(parcelFileDescriptor));
+        PrintWriter printWriter = new PrintWriter((OutputStream) new ParcelFileDescriptor.AutoCloseOutputStream(parcelFileDescriptor));
         handleLoggingCommand(strArr, printWriter);
         printWriter.flush();
         printWriter.close();
     }
 
     private boolean handleLoggingCommand(String[] strArr, PrintWriter printWriter) {
-        String[] strArr2;
-        String[] strArr3;
         ShellProtoLogImpl singleInstance = ShellProtoLogImpl.getSingleInstance();
-        for (int i = 0; i < strArr.length; i++) {
+        int i = 0;
+        while (i < strArr.length) {
             String str = strArr[i];
             str.hashCode();
             if (str.equals("enable-text")) {
-                if (singleInstance.startTextLogging((String[]) Arrays.copyOfRange(strArr, i + 1, strArr.length), printWriter) == 0) {
-                    printWriter.println("Starting logging on groups: " + Arrays.toString(strArr2));
+                String[] strArr2 = (String[]) Arrays.copyOfRange((T[]) strArr, i + 1, strArr.length);
+                if (singleInstance.startTextLogging(strArr2, printWriter) == 0) {
+                    printWriter.println("Starting logging on groups: " + Arrays.toString((Object[]) strArr2));
                 }
                 return true;
-            } else if (str.equals("disable-text")) {
-                if (singleInstance.stopTextLogging((String[]) Arrays.copyOfRange(strArr, i + 1, strArr.length), printWriter) == 0) {
-                    printWriter.println("Stopping logging on groups: " + Arrays.toString(strArr3));
+            } else if (!str.equals("disable-text")) {
+                i++;
+            } else {
+                String[] strArr3 = (String[]) Arrays.copyOfRange((T[]) strArr, i + 1, strArr.length);
+                if (singleInstance.stopTextLogging(strArr3, printWriter) == 0) {
+                    printWriter.println("Stopping logging on groups: " + Arrays.toString((Object[]) strArr3));
                 }
                 return true;
             }

@@ -1,6 +1,5 @@
 package androidx.leanback.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
@@ -15,108 +14,105 @@ import android.view.autofill.AutofillValue;
 import android.widget.EditText;
 import android.widget.TextView;
 import androidx.core.widget.TextViewCompat;
-@SuppressLint({"AppCompatCustomView"})
-/* loaded from: classes.dex */
-public class GuidedActionEditText extends EditText {
-    private GuidedActionAutofillSupport$OnAutofillListener mAutofillListener;
-    private ImeKeyMonitor$ImeKeyListener mKeyListener;
+import androidx.leanback.widget.GuidedActionAutofillSupport;
+import androidx.leanback.widget.ImeKeyMonitor;
+
+public class GuidedActionEditText extends EditText implements ImeKeyMonitor, GuidedActionAutofillSupport {
+    private GuidedActionAutofillSupport.OnAutofillListener mAutofillListener;
+    private ImeKeyMonitor.ImeKeyListener mKeyListener;
     private final Drawable mNoPaddingDrawable;
     private final Drawable mSavedBackground;
 
-    @Override // android.widget.TextView, android.view.View
     public int getAutofillType() {
         return 1;
     }
 
-    /* loaded from: classes.dex */
     static final class NoPaddingDrawable extends Drawable {
-        @Override // android.graphics.drawable.Drawable
         public void draw(Canvas canvas) {
         }
 
-        @Override // android.graphics.drawable.Drawable
         public int getOpacity() {
             return -2;
         }
 
-        @Override // android.graphics.drawable.Drawable
-        public void setAlpha(int alpha) {
+        public void setAlpha(int i) {
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void setColorFilter(ColorFilter colorFilter) {
         }
 
         NoPaddingDrawable() {
         }
 
-        @Override // android.graphics.drawable.Drawable
-        public boolean getPadding(Rect padding) {
-            padding.set(0, 0, 0, 0);
+        public boolean getPadding(Rect rect) {
+            rect.set(0, 0, 0, 0);
             return true;
         }
     }
 
-    public GuidedActionEditText(Context ctx) {
-        this(ctx, null);
+    public GuidedActionEditText(Context context) {
+        this(context, (AttributeSet) null);
     }
 
-    public GuidedActionEditText(Context ctx, AttributeSet attrs) {
-        this(ctx, attrs, 16842862);
+    public GuidedActionEditText(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 16842862);
     }
 
-    public GuidedActionEditText(Context ctx, AttributeSet attrs, int defStyleAttr) {
-        super(ctx, attrs, defStyleAttr);
+    public GuidedActionEditText(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         this.mSavedBackground = getBackground();
         NoPaddingDrawable noPaddingDrawable = new NoPaddingDrawable();
         this.mNoPaddingDrawable = noPaddingDrawable;
         setBackground(noPaddingDrawable);
     }
 
-    @Override // android.widget.TextView, android.view.View
-    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
-        ImeKeyMonitor$ImeKeyListener imeKeyMonitor$ImeKeyListener = this.mKeyListener;
-        boolean onKeyPreIme = imeKeyMonitor$ImeKeyListener != null ? imeKeyMonitor$ImeKeyListener.onKeyPreIme(this, keyCode, event) : false;
-        return !onKeyPreIme ? super.onKeyPreIme(keyCode, event) : onKeyPreIme;
+    public void setImeKeyListener(ImeKeyMonitor.ImeKeyListener imeKeyListener) {
+        this.mKeyListener = imeKeyListener;
     }
 
-    @Override // android.view.View
-    public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
-        super.onInitializeAccessibilityNodeInfo(info);
-        info.setClassName((isFocused() ? EditText.class : TextView.class).getName());
+    public boolean onKeyPreIme(int i, KeyEvent keyEvent) {
+        ImeKeyMonitor.ImeKeyListener imeKeyListener = this.mKeyListener;
+        boolean onKeyPreIme = imeKeyListener != null ? imeKeyListener.onKeyPreIme(this, i, keyEvent) : false;
+        return !onKeyPreIme ? super.onKeyPreIme(i, keyEvent) : onKeyPreIme;
     }
 
-    @Override // android.widget.TextView, android.view.View
-    protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
-        super.onFocusChanged(focused, direction, previouslyFocusedRect);
-        if (focused) {
+    public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
+        super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
+        accessibilityNodeInfo.setClassName((isFocused() ? EditText.class : TextView.class).getName());
+    }
+
+    /* access modifiers changed from: protected */
+    public void onFocusChanged(boolean z, int i, Rect rect) {
+        super.onFocusChanged(z, i, rect);
+        if (z) {
             setBackground(this.mSavedBackground);
         } else {
             setBackground(this.mNoPaddingDrawable);
         }
-        if (!focused) {
+        if (!z) {
             setFocusable(false);
         }
     }
 
-    @Override // android.widget.TextView, android.view.View
-    public void autofill(AutofillValue values) {
-        super.autofill(values);
-        GuidedActionAutofillSupport$OnAutofillListener guidedActionAutofillSupport$OnAutofillListener = this.mAutofillListener;
-        if (guidedActionAutofillSupport$OnAutofillListener != null) {
-            guidedActionAutofillSupport$OnAutofillListener.onAutofill(this);
+    public void setOnAutofillListener(GuidedActionAutofillSupport.OnAutofillListener onAutofillListener) {
+        this.mAutofillListener = onAutofillListener;
+    }
+
+    public void autofill(AutofillValue autofillValue) {
+        super.autofill(autofillValue);
+        GuidedActionAutofillSupport.OnAutofillListener onAutofillListener = this.mAutofillListener;
+        if (onAutofillListener != null) {
+            onAutofillListener.onAutofill(this);
         }
     }
 
-    @Override // android.widget.TextView
-    public void setCustomSelectionActionModeCallback(ActionMode.Callback actionModeCallback) {
-        super.setCustomSelectionActionModeCallback(TextViewCompat.wrapCustomSelectionActionModeCallback(this, actionModeCallback));
+    public void setCustomSelectionActionModeCallback(ActionMode.Callback callback) {
+        super.setCustomSelectionActionModeCallback(TextViewCompat.wrapCustomSelectionActionModeCallback(this, callback));
     }
 
-    @Override // android.widget.TextView, android.view.View
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent motionEvent) {
         if (!isInTouchMode() || isFocusableInTouchMode() || isTextSelectable()) {
-            return super.onTouchEvent(event);
+            return super.onTouchEvent(motionEvent);
         }
         return false;
     }

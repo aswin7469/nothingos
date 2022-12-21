@@ -9,7 +9,6 @@ import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.RemoteException;
@@ -22,93 +21,111 @@ import android.util.MathUtils;
 import com.android.internal.display.BrightnessSynchronizer;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.RestrictedLockUtilsInternal;
-import com.android.systemui.Dependency;
+import com.android.settingslib.display.BrightnessUtils;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dagger.qualifiers.Background;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.settings.brightness.ToggleSlider;
-import java.util.ArrayList;
-import java.util.Iterator;
-/* loaded from: classes.dex */
-public class BrightnessController implements ToggleSlider.Listener {
-    private volatile boolean mAutomatic;
-    private final BrightnessObserver mBrightnessObserver;
-    private final Context mContext;
-    private final ToggleSlider mControl;
+import com.android.systemui.statusbar.policy.BrightnessMirrorController;
+import com.nothing.NtFeaturesUtils;
+import com.nothing.systemui.NTDependencyEx;
+import com.nothing.systemui.settings.brightness.BrightnessControllerEx;
+import com.nothing.systemui.util.NTLogUtil;
+import javax.inject.Inject;
+
+public class BrightnessController implements ToggleSlider.Listener, MirroredBrightnessController {
+    /* access modifiers changed from: private */
+    public static final Uri BRIGHTNESS_FOR_VR_FLOAT_URI = Settings.System.getUriFor("screen_brightness_for_vr_float");
+    /* access modifiers changed from: private */
+    public static final Uri BRIGHTNESS_MODE_URI = Settings.System.getUriFor("screen_brightness_mode");
+    private static final int MSG_ATTACH_LISTENER = 2;
+    private static final int MSG_DETACH_LISTENER = 3;
+    private static final int MSG_UPDATE_SLIDER = 1;
+    private static final int MSG_VR_MODE_CHANGED = 4;
+    private static final int SLIDER_ANIMATION_DURATION = 3000;
+    private static final String TAG = "CentralSurfaces.BrightnessController";
+    /* access modifiers changed from: private */
+    public volatile boolean mAutomatic;
+    /* access modifiers changed from: private */
+    public final Handler mBackgroundHandler;
+    /* access modifiers changed from: private */
+    public float mBrightnessMax = 1.0f;
+    /* access modifiers changed from: private */
+    public float mBrightnessMin = 0.0f;
+    /* access modifiers changed from: private */
+    public final BrightnessObserver mBrightnessObserver;
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    /* access modifiers changed from: private */
+    public final ToggleSlider mControl;
     private boolean mControlValueInitialized;
-    private final int mDisplayId;
-    private final DisplayManager mDisplayManager;
-    private boolean mExternalChange;
-    private final Handler mHandler;
-    private volatile boolean mIsVrModeEnabled;
-    private boolean mListening;
-    private final float mMaximumBacklightForVr;
-    private final float mMinimumBacklightForVr;
-    private ValueAnimator mSliderAnimator;
-    private final CurrentUserTracker mUserTracker;
-    private static final Uri BRIGHTNESS_MODE_URI = Settings.System.getUriFor("screen_brightness_mode");
-    private static final Uri BRIGHTNESS_FOR_VR_FLOAT_URI = Settings.System.getUriFor("screen_brightness_for_vr_float");
-    private final DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() { // from class: com.android.systemui.settings.brightness.BrightnessController.1
-        @Override // android.hardware.display.DisplayManager.DisplayListener
+    /* access modifiers changed from: private */
+    public final int mDisplayId;
+    /* access modifiers changed from: private */
+    public final DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
         public void onDisplayAdded(int i) {
         }
 
-        @Override // android.hardware.display.DisplayManager.DisplayListener
         public void onDisplayRemoved(int i) {
         }
 
-        @Override // android.hardware.display.DisplayManager.DisplayListener
         public void onDisplayChanged(int i) {
             BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateSliderRunnable);
-            BrightnessController.this.notifyCallbacks();
         }
     };
-    private ArrayList<BrightnessStateChangeCallback> mChangeCallbacks = new ArrayList<>();
-    private float mBrightnessMin = 0.0f;
-    private float mBrightnessMax = 1.0f;
-    private final Runnable mStartListeningRunnable = new Runnable() { // from class: com.android.systemui.settings.brightness.BrightnessController.2
-        @Override // java.lang.Runnable
-        public void run() {
-            if (BrightnessController.this.mListening) {
-                return;
-            }
-            BrightnessController.this.mListening = true;
-            if (BrightnessController.this.mVrManager != null) {
-                try {
-                    BrightnessController.this.mVrManager.registerListener(BrightnessController.this.mVrStateCallbacks);
-                    BrightnessController brightnessController = BrightnessController.this;
-                    brightnessController.mIsVrModeEnabled = brightnessController.mVrManager.getVrModeState();
-                } catch (RemoteException e) {
-                    Log.e("StatusBar.BrightnessController", "Failed to register VR mode state listener: ", e);
-                }
-            }
-            BrightnessController.this.mBrightnessObserver.startObserving();
-            BrightnessController.this.mUserTracker.startTracking();
-            BrightnessController.this.mUpdateModeRunnable.run();
-            BrightnessController.this.mUpdateSliderRunnable.run();
-            BrightnessController.this.mHandler.sendEmptyMessage(2);
-        }
-    };
-    private final Runnable mStopListeningRunnable = new Runnable() { // from class: com.android.systemui.settings.brightness.BrightnessController.3
-        @Override // java.lang.Runnable
+    /* access modifiers changed from: private */
+    public final DisplayManager mDisplayManager;
+    /* access modifiers changed from: private */
+    public boolean mExternalChange;
+    /* access modifiers changed from: private */
+    public final Handler mHandler;
+    /* access modifiers changed from: private */
+    public volatile boolean mIsVrModeEnabled;
+    /* access modifiers changed from: private */
+    public boolean mListening;
+    private final float mMaximumBacklightForVr;
+    private final float mMinimumBacklightForVr;
+    private ValueAnimator mSliderAnimator;
+    private final Runnable mStartListeningRunnable = new Runnable() {
         public void run() {
             if (!BrightnessController.this.mListening) {
-                return;
-            }
-            BrightnessController.this.mListening = false;
-            if (BrightnessController.this.mVrManager != null) {
-                try {
-                    BrightnessController.this.mVrManager.unregisterListener(BrightnessController.this.mVrStateCallbacks);
-                } catch (RemoteException e) {
-                    Log.e("StatusBar.BrightnessController", "Failed to unregister VR mode state listener: ", e);
+                boolean unused = BrightnessController.this.mListening = true;
+                if (BrightnessController.this.mVrManager != null) {
+                    try {
+                        BrightnessController.this.mVrManager.registerListener(BrightnessController.this.mVrStateCallbacks);
+                        BrightnessController brightnessController = BrightnessController.this;
+                        boolean unused2 = brightnessController.mIsVrModeEnabled = brightnessController.mVrManager.getVrModeState();
+                    } catch (RemoteException e) {
+                        Log.e(BrightnessController.TAG, "Failed to register VR mode state listener: ", e);
+                    }
                 }
+                BrightnessController.this.mBrightnessObserver.startObserving();
+                BrightnessController.this.mUserTracker.startTracking();
+                BrightnessController.this.mUpdateModeRunnable.run();
+                BrightnessController.this.mUpdateSliderRunnable.run();
+                BrightnessController.this.mHandler.sendEmptyMessage(2);
             }
-            BrightnessController.this.mBrightnessObserver.stopObserving();
-            BrightnessController.this.mUserTracker.stopTracking();
-            BrightnessController.this.mHandler.sendEmptyMessage(3);
         }
     };
-    private final Runnable mUpdateModeRunnable = new Runnable() { // from class: com.android.systemui.settings.brightness.BrightnessController.4
-        @Override // java.lang.Runnable
+    private final Runnable mStopListeningRunnable = new Runnable() {
+        public void run() {
+            if (BrightnessController.this.mListening) {
+                boolean unused = BrightnessController.this.mListening = false;
+                if (BrightnessController.this.mVrManager != null) {
+                    try {
+                        BrightnessController.this.mVrManager.unregisterListener(BrightnessController.this.mVrStateCallbacks);
+                    } catch (RemoteException e) {
+                        Log.e(BrightnessController.TAG, "Failed to unregister VR mode state listener: ", e);
+                    }
+                }
+                BrightnessController.this.mBrightnessObserver.stopObserving();
+                BrightnessController.this.mUserTracker.stopTracking();
+                BrightnessController.this.mHandler.sendEmptyMessage(3);
+            }
+        }
+    };
+    /* access modifiers changed from: private */
+    public final Runnable mUpdateModeRunnable = new Runnable() {
         public void run() {
             boolean z = false;
             int intForUser = Settings.System.getIntForUser(BrightnessController.this.mContext.getContentResolver(), "screen_brightness_mode", 0, -2);
@@ -116,56 +133,56 @@ public class BrightnessController implements ToggleSlider.Listener {
             if (intForUser != 0) {
                 z = true;
             }
-            brightnessController.mAutomatic = z;
+            boolean unused = brightnessController.mAutomatic = z;
         }
     };
-    private final Runnable mUpdateSliderRunnable = new Runnable() { // from class: com.android.systemui.settings.brightness.BrightnessController.5
-        @Override // java.lang.Runnable
+    /* access modifiers changed from: private */
+    public final Runnable mUpdateSliderRunnable = new Runnable() {
         public void run() {
-            boolean z = BrightnessController.this.mIsVrModeEnabled;
-            BrightnessInfo brightnessInfo = BrightnessController.this.mContext.getDisplay().getBrightnessInfo();
-            if (brightnessInfo == null) {
-                return;
+            if (!((BrightnessControllerEx) NTDependencyEx.get(BrightnessControllerEx.class)).isSliderTouched()) {
+                boolean access$1200 = BrightnessController.this.mIsVrModeEnabled;
+                BrightnessInfo brightnessInfo = BrightnessController.this.mContext.getDisplay().getBrightnessInfo();
+                if (brightnessInfo != null) {
+                    float unused = BrightnessController.this.mBrightnessMax = brightnessInfo.brightnessMaximum;
+                    float unused2 = BrightnessController.this.mBrightnessMin = brightnessInfo.brightnessMinimum;
+                    NTLogUtil.m1682i(BrightnessController.TAG, "NT slider updateSlider max: " + BrightnessController.this.mBrightnessMax + ", min: " + BrightnessController.this.mBrightnessMin + ",  brightness: " + brightnessInfo.brightness);
+                    BrightnessController.this.mHandler.obtainMessage(1, Float.floatToIntBits(brightnessInfo.brightness), access$1200 ? 1 : 0).sendToTarget();
+                }
             }
-            BrightnessController.this.mBrightnessMax = brightnessInfo.brightnessMaximum;
-            BrightnessController.this.mBrightnessMin = brightnessInfo.brightnessMinimum;
-            BrightnessController.this.mHandler.obtainMessage(1, Float.floatToIntBits(brightnessInfo.brightness), z ? 1 : 0).sendToTarget();
         }
     };
-    private final IVrStateCallbacks mVrStateCallbacks = new IVrStateCallbacks.Stub() { // from class: com.android.systemui.settings.brightness.BrightnessController.6
+    /* access modifiers changed from: private */
+    public final CurrentUserTracker mUserTracker;
+    /* access modifiers changed from: private */
+    public final IVrManager mVrManager;
+    /* access modifiers changed from: private */
+    public final IVrStateCallbacks mVrStateCallbacks = new IVrStateCallbacks.Stub() {
         public void onVrStateChanged(boolean z) {
             BrightnessController.this.mHandler.obtainMessage(4, z ? 1 : 0, 0).sendToTarget();
         }
     };
-    private final Handler mBackgroundHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
-    private final IVrManager mVrManager = IVrManager.Stub.asInterface(ServiceManager.getService("vrmanager"));
 
-    /* loaded from: classes.dex */
-    public interface BrightnessStateChangeCallback {
-        void onBrightnessLevelChanged();
+    public void setMirror(BrightnessMirrorController brightnessMirrorController) {
+        this.mControl.setMirrorControllerAndMirror(brightnessMirrorController);
     }
 
-    /* loaded from: classes.dex */
     private class BrightnessObserver extends ContentObserver {
         BrightnessObserver(Handler handler) {
             super(handler);
         }
 
-        @Override // android.database.ContentObserver
         public void onChange(boolean z, Uri uri) {
-            if (z) {
-                return;
+            if (!z) {
+                if (BrightnessController.BRIGHTNESS_MODE_URI.equals(uri)) {
+                    BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateModeRunnable);
+                    BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateSliderRunnable);
+                } else if (BrightnessController.BRIGHTNESS_FOR_VR_FLOAT_URI.equals(uri)) {
+                    BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateSliderRunnable);
+                } else {
+                    BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateModeRunnable);
+                    BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateSliderRunnable);
+                }
             }
-            if (BrightnessController.BRIGHTNESS_MODE_URI.equals(uri)) {
-                BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateModeRunnable);
-                BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateSliderRunnable);
-            } else if (BrightnessController.BRIGHTNESS_FOR_VR_FLOAT_URI.equals(uri)) {
-                BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateSliderRunnable);
-            } else {
-                BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateModeRunnable);
-                BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateSliderRunnable);
-            }
-            BrightnessController.this.notifyCallbacks();
         }
 
         public void startObserving() {
@@ -173,7 +190,7 @@ public class BrightnessController implements ToggleSlider.Listener {
             contentResolver.unregisterContentObserver(this);
             contentResolver.registerContentObserver(BrightnessController.BRIGHTNESS_MODE_URI, false, this, -1);
             contentResolver.registerContentObserver(BrightnessController.BRIGHTNESS_FOR_VR_FLOAT_URI, false, this, -1);
-            BrightnessController.this.mDisplayManager.registerDisplayListener(BrightnessController.this.mDisplayListener, BrightnessController.this.mHandler, 8L);
+            BrightnessController.this.mDisplayManager.registerDisplayListener(BrightnessController.this.mDisplayListener, BrightnessController.this.mHandler, 8);
         }
 
         public void stopObserving() {
@@ -182,12 +199,11 @@ public class BrightnessController implements ToggleSlider.Listener {
         }
     }
 
-    public BrightnessController(Context context, ToggleSlider toggleSlider, BroadcastDispatcher broadcastDispatcher) {
-        Handler handler = new Handler() { // from class: com.android.systemui.settings.brightness.BrightnessController.7
-            @Override // android.os.Handler
+    public BrightnessController(Context context, ToggleSlider toggleSlider, BroadcastDispatcher broadcastDispatcher, @Background Handler handler) {
+        C24747 r0 = new Handler() {
             public void handleMessage(Message message) {
                 boolean z = true;
-                BrightnessController.this.mExternalChange = true;
+                boolean unused = BrightnessController.this.mExternalChange = true;
                 try {
                     int i = message.what;
                     if (i == 1) {
@@ -200,38 +216,39 @@ public class BrightnessController implements ToggleSlider.Listener {
                     } else if (i == 2) {
                         BrightnessController.this.mControl.setOnChangedListener(BrightnessController.this);
                     } else if (i == 3) {
-                        BrightnessController.this.mControl.setOnChangedListener(null);
-                    } else if (i == 4) {
+                        BrightnessController.this.mControl.setOnChangedListener((ToggleSlider.Listener) null);
+                    } else if (i != 4) {
+                        super.handleMessage(message);
+                    } else {
                         BrightnessController brightnessController2 = BrightnessController.this;
                         if (message.arg1 == 0) {
                             z = false;
                         }
                         brightnessController2.updateVrMode(z);
-                    } else {
-                        super.handleMessage(message);
                     }
                 } finally {
-                    BrightnessController.this.mExternalChange = false;
+                    boolean unused2 = BrightnessController.this.mExternalChange = false;
                 }
             }
         };
-        this.mHandler = handler;
+        this.mHandler = r0;
         this.mContext = context;
         this.mControl = toggleSlider;
         toggleSlider.setMax(65535);
-        this.mUserTracker = new CurrentUserTracker(broadcastDispatcher) { // from class: com.android.systemui.settings.brightness.BrightnessController.8
-            @Override // com.android.systemui.settings.CurrentUserTracker
+        this.mBackgroundHandler = handler;
+        this.mUserTracker = new CurrentUserTracker(broadcastDispatcher) {
             public void onUserSwitched(int i) {
                 BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateModeRunnable);
                 BrightnessController.this.mBackgroundHandler.post(BrightnessController.this.mUpdateSliderRunnable);
             }
         };
-        this.mBrightnessObserver = new BrightnessObserver(handler);
+        this.mBrightnessObserver = new BrightnessObserver(r0);
         this.mDisplayId = context.getDisplayId();
         PowerManager powerManager = (PowerManager) context.getSystemService(PowerManager.class);
         this.mMinimumBacklightForVr = powerManager.getBrightnessConstraint(5);
         this.mMaximumBacklightForVr = powerManager.getBrightnessConstraint(6);
         this.mDisplayManager = (DisplayManager) context.getSystemService(DisplayManager.class);
+        this.mVrManager = IVrManager.Stub.asInterface(ServiceManager.getService("vrmanager"));
     }
 
     public void registerCallbacks() {
@@ -243,60 +260,67 @@ public class BrightnessController implements ToggleSlider.Listener {
         this.mControlValueInitialized = false;
     }
 
-    @Override // com.android.systemui.settings.brightness.ToggleSlider.Listener
     public void onChanged(boolean z, int i, boolean z2) {
         int i2;
         float f;
         float f2;
-        if (this.mExternalChange) {
-            return;
-        }
-        ValueAnimator valueAnimator = this.mSliderAnimator;
-        if (valueAnimator != null) {
-            valueAnimator.cancel();
-        }
-        if (this.mIsVrModeEnabled) {
-            i2 = 498;
-            f = this.mMinimumBacklightForVr;
-            f2 = this.mMaximumBacklightForVr;
-        } else {
-            i2 = this.mAutomatic ? 219 : 218;
-            f = this.mBrightnessMin;
-            f2 = this.mBrightnessMax;
-        }
-        final float map = MathUtils.map(0.0f, 65535.0f, f, f2, i);
-        if (z2) {
-            MetricsLogger.action(this.mContext, i2, BrightnessSynchronizer.brightnessFloatToInt(map));
-        }
-        setBrightness(map);
-        if (!z) {
-            AsyncTask.execute(new Runnable() { // from class: com.android.systemui.settings.brightness.BrightnessController.9
-                @Override // java.lang.Runnable
-                public void run() {
-                    BrightnessController.this.mDisplayManager.setBrightness(BrightnessController.this.mDisplayId, map);
-                }
-            });
-        }
-        Iterator<BrightnessStateChangeCallback> it = this.mChangeCallbacks.iterator();
-        while (it.hasNext()) {
-            it.next().onBrightnessLevelChanged();
+        final float f3;
+        if (!this.mExternalChange) {
+            ValueAnimator valueAnimator = this.mSliderAnimator;
+            if (valueAnimator != null) {
+                valueAnimator.cancel();
+            }
+            if (this.mIsVrModeEnabled) {
+                f2 = this.mMinimumBacklightForVr;
+                f = this.mMaximumBacklightForVr;
+                i2 = 498;
+            } else {
+                i2 = this.mAutomatic ? 219 : 218;
+                f2 = this.mBrightnessMin;
+                f = this.mBrightnessMax;
+            }
+            if (!NtFeaturesUtils.isSupport(new int[]{2})) {
+                f3 = MathUtils.min(BrightnessUtils.convertGammaToLinearFloat(i, f2, f), f);
+                NTLogUtil.m1680d(TAG, "NTF_BRIGHTNESS_LEVELCUST not enable. AOSP slider onChanged value: " + i + ",  brightness: " + f3);
+            } else {
+                f3 = MathUtils.map(0.0f, 65535.0f, f2, f, ((BrightnessControllerEx) NTDependencyEx.get(BrightnessControllerEx.class)).convertToNTSliderValForManual(i));
+                NTLogUtil.m1680d(TAG, "NT slider onChanged value: " + i + ",  brightness: " + f3);
+            }
+            if (z2) {
+                MetricsLogger.action(this.mContext, i2, BrightnessSynchronizer.brightnessFloatToInt(f3));
+            }
+            setBrightness(f3);
+            if (!z) {
+                AsyncTask.execute(new Runnable() {
+                    public void run() {
+                        BrightnessController.this.mDisplayManager.setBrightness(BrightnessController.this.mDisplayId, f3);
+                    }
+                });
+            }
         }
     }
 
     public void checkRestrictionAndSetEnabled() {
-        this.mBackgroundHandler.post(new Runnable() { // from class: com.android.systemui.settings.brightness.BrightnessController.10
-            @Override // java.lang.Runnable
+        this.mBackgroundHandler.post(new Runnable() {
             public void run() {
                 BrightnessController.this.mControl.setEnforcedAdmin(RestrictedLockUtilsInternal.checkIfRestrictionEnforced(BrightnessController.this.mContext, "no_config_brightness", BrightnessController.this.mUserTracker.getCurrentUserId()));
             }
         });
     }
 
+    public void hideSlider() {
+        this.mControl.hideView();
+    }
+
+    public void showSlider() {
+        this.mControl.showView();
+    }
+
     private void setBrightness(float f) {
         this.mDisplayManager.setTemporaryBrightness(this.mDisplayId, f);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateVrMode(boolean z) {
         if (this.mIsVrModeEnabled != z) {
             this.mIsVrModeEnabled = z;
@@ -304,10 +328,11 @@ public class BrightnessController implements ToggleSlider.Listener {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateSlider(float f, boolean z) {
         float f2;
         float f3;
+        int i;
         if (z) {
             f2 = this.mMinimumBacklightForVr;
             f3 = this.mMaximumBacklightForVr;
@@ -315,60 +340,57 @@ public class BrightnessController implements ToggleSlider.Listener {
             f2 = this.mBrightnessMin;
             f3 = this.mBrightnessMax;
         }
-        if (BrightnessSynchronizer.floatEquals(f, MathUtils.map(0.0f, 65535.0f, f2, f3, this.mControl.getValue()))) {
-            return;
-        }
-        animateSliderTo(Math.round(MathUtils.map(f2, f3, 0.0f, 65535.0f, f)));
-    }
-
-    private void animateSliderTo(int i) {
-        if (!this.mControlValueInitialized) {
-            this.mControl.setValue(i);
-            this.mControlValueInitialized = true;
-        }
         ValueAnimator valueAnimator = this.mSliderAnimator;
         if (valueAnimator != null && valueAnimator.isStarted()) {
             this.mSliderAnimator.cancel();
         }
-        ValueAnimator ofInt = ValueAnimator.ofInt(this.mControl.getValue(), i);
-        this.mSliderAnimator = ofInt;
-        ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.settings.brightness.BrightnessController$$ExternalSyntheticLambda0
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public final void onAnimationUpdate(ValueAnimator valueAnimator2) {
-                BrightnessController.this.lambda$animateSliderTo$0(valueAnimator2);
+        if (NtFeaturesUtils.isSupport(new int[]{2})) {
+            i = ((BrightnessControllerEx) NTDependencyEx.get(BrightnessControllerEx.class)).calculateSliderVal(f2, f3, f, this.mControl.getValue());
+            if (i == -1) {
+                return;
             }
-        });
-        this.mSliderAnimator.setDuration((Math.abs(this.mControl.getValue() - i) * 3000) / 65535);
+        } else if (!BrightnessSynchronizer.floatEquals(f, BrightnessUtils.convertGammaToLinearFloat(this.mControl.getValue(), f2, f3))) {
+            i = BrightnessUtils.convertLinearToGammaFloat(f, f2, f3);
+        } else {
+            return;
+        }
+        animateSliderTo(i);
+    }
+
+    private void animateSliderTo(int i) {
+        if (!this.mControlValueInitialized || !this.mControl.isVisible()) {
+            this.mControl.setValue(i);
+            this.mControlValueInitialized = true;
+        }
+        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{this.mControl.getValue(), i});
+        this.mSliderAnimator = ofInt;
+        ofInt.addUpdateListener(new BrightnessController$$ExternalSyntheticLambda0(this));
+        this.mSliderAnimator.setDuration((long) ((Math.abs(this.mControl.getValue() - i) * 3000) / 65535));
         this.mSliderAnimator.start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$animateSliderTo$0(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$animateSliderTo$0$com-android-systemui-settings-brightness-BrightnessController */
+    public /* synthetic */ void mo37729x9ea265e7(ValueAnimator valueAnimator) {
         this.mExternalChange = true;
         this.mControl.setValue(((Integer) valueAnimator.getAnimatedValue()).intValue());
         this.mExternalChange = false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void notifyCallbacks() {
-        int size = this.mChangeCallbacks.size();
-        for (int i = 0; i < size; i++) {
-            this.mChangeCallbacks.get(i).onBrightnessLevelChanged();
-        }
-    }
-
-    /* loaded from: classes.dex */
     public static class Factory {
+        private final Handler mBackgroundHandler;
         private final BroadcastDispatcher mBroadcastDispatcher;
         private final Context mContext;
 
-        public Factory(Context context, BroadcastDispatcher broadcastDispatcher) {
+        @Inject
+        public Factory(Context context, BroadcastDispatcher broadcastDispatcher, @Background Handler handler) {
             this.mContext = context;
             this.mBroadcastDispatcher = broadcastDispatcher;
+            this.mBackgroundHandler = handler;
         }
 
         public BrightnessController create(ToggleSlider toggleSlider) {
-            return new BrightnessController(this.mContext, toggleSlider, this.mBroadcastDispatcher);
+            return new BrightnessController(this.mContext, toggleSlider, this.mBroadcastDispatcher, this.mBackgroundHandler);
         }
     }
 }

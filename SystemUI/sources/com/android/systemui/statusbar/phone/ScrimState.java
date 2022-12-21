@@ -2,223 +2,196 @@ package com.android.systemui.statusbar.phone;
 
 import android.graphics.Color;
 import android.os.Trace;
+import androidx.core.view.ViewCompat;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.scrim.ScrimView;
-/* loaded from: classes.dex */
+import com.nothing.systemui.util.NTColorUtil;
+
 public enum ScrimState {
     UNINITIALIZED,
-    OFF { // from class: com.android.systemui.statusbar.phone.ScrimState.1
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    OFF {
         public boolean isLowPowerState() {
             return true;
         }
 
-        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
-            this.mFrontTint = -16777216;
-            this.mBehindTint = -16777216;
-            this.mBubbleTint = scrimState.mBubbleTint;
+            this.mFrontTint = ViewCompat.MEASURED_STATE_MASK;
+            this.mBehindTint = ViewCompat.MEASURED_STATE_MASK;
             this.mFrontAlpha = 1.0f;
             this.mBehindAlpha = 1.0f;
-            this.mBubbleAlpha = scrimState.mBubbleAlpha;
-            this.mAnimationDuration = 1000L;
+            this.mAnimationDuration = 1000;
         }
     },
-    KEYGUARD { // from class: com.android.systemui.statusbar.phone.ScrimState.2
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    KEYGUARD {
         public void prepare(ScrimState scrimState) {
+            int i = 0;
             this.mBlankScreen = false;
             if (scrimState == ScrimState.AOD) {
-                this.mAnimationDuration = 500L;
+                this.mAnimationDuration = 667;
                 if (this.mDisplayRequiresBlanking) {
                     this.mBlankScreen = true;
                 }
             } else if (scrimState == ScrimState.KEYGUARD) {
-                this.mAnimationDuration = 500L;
+                this.mAnimationDuration = 667;
             } else {
-                this.mAnimationDuration = 220L;
+                this.mAnimationDuration = 220;
             }
-            this.mFrontTint = -16777216;
-            this.mBehindTint = -16777216;
-            boolean z = this.mClipQsScrim;
-            this.mNotifTint = z ? -16777216 : 0;
-            this.mBubbleTint = 0;
+            this.mFrontTint = ViewCompat.MEASURED_STATE_MASK;
+            this.mBehindTint = ViewCompat.MEASURED_STATE_MASK;
+            if (this.mClipQsScrim) {
+                i = -16777216;
+            }
+            this.mNotifTint = i;
+            float f = 0.0f;
             this.mFrontAlpha = 0.0f;
-            this.mBehindAlpha = z ? 1.0f : this.mScrimBehindAlphaKeyguard;
-            this.mNotifAlpha = z ? this.mScrimBehindAlphaKeyguard : 0.0f;
-            this.mBubbleAlpha = 0.0f;
-            if (z) {
-                updateScrimColor(this.mScrimBehind, 1.0f, -16777216);
+            this.mBehindAlpha = this.mClipQsScrim ? 1.0f : this.mScrimBehindAlphaKeyguard;
+            if (this.mClipQsScrim) {
+                f = this.mScrimBehindAlphaKeyguard;
+            }
+            this.mNotifAlpha = f;
+            if (this.mClipQsScrim) {
+                updateScrimColor(this.mScrimBehind, 1.0f, NTColorUtil.getScrimBehindTintColor(this.mScrimBehind.getContext()));
             }
         }
     },
-    AUTH_SCRIMMED { // from class: com.android.systemui.statusbar.phone.ScrimState.3
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    AUTH_SCRIMMED_SHADE {
+        public void prepare(ScrimState scrimState) {
+            this.mFrontTint = ViewCompat.MEASURED_STATE_MASK;
+            this.mFrontAlpha = 0.66f;
+        }
+    },
+    AUTH_SCRIMMED {
         public void prepare(ScrimState scrimState) {
             this.mNotifTint = scrimState.mNotifTint;
             this.mNotifAlpha = scrimState.mNotifAlpha;
             this.mBehindTint = scrimState.mBehindTint;
             this.mBehindAlpha = scrimState.mBehindAlpha;
-            this.mFrontTint = -16777216;
+            this.mFrontTint = ViewCompat.MEASURED_STATE_MASK;
             this.mFrontAlpha = 0.66f;
         }
     },
-    BOUNCER { // from class: com.android.systemui.statusbar.phone.ScrimState.4
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    BOUNCER {
         public void prepare(ScrimState scrimState) {
-            boolean z = this.mClipQsScrim;
-            this.mBehindAlpha = z ? 1.0f : this.mDefaultScrimAlpha;
-            this.mBehindTint = z ? -16777216 : 0;
-            this.mNotifAlpha = z ? this.mDefaultScrimAlpha : 0.0f;
+            this.mBehindAlpha = this.mClipQsScrim ? 1.0f : this.mDefaultScrimAlpha;
+            this.mBehindTint = this.mClipQsScrim ? ViewCompat.MEASURED_STATE_MASK : 0;
+            this.mNotifAlpha = this.mClipQsScrim ? this.mDefaultScrimAlpha : 0.0f;
             this.mNotifTint = 0;
             this.mFrontAlpha = 0.0f;
-            this.mBubbleAlpha = 0.0f;
         }
     },
-    BOUNCER_SCRIMMED { // from class: com.android.systemui.statusbar.phone.ScrimState.5
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    BOUNCER_SCRIMMED {
         public void prepare(ScrimState scrimState) {
             this.mBehindAlpha = 0.0f;
-            this.mBubbleAlpha = 0.0f;
             this.mFrontAlpha = this.mDefaultScrimAlpha;
         }
     },
-    SHADE_LOCKED { // from class: com.android.systemui.statusbar.phone.ScrimState.6
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    SHADE_LOCKED {
         public int getBehindTint() {
-            return -16777216;
+            return ViewCompat.MEASURED_STATE_MASK;
         }
 
-        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
-            boolean z = this.mClipQsScrim;
-            this.mBehindAlpha = z ? 1.0f : this.mDefaultScrimAlpha;
+            this.mBehindAlpha = this.mClipQsScrim ? 1.0f : this.mDefaultScrimAlpha;
             this.mNotifAlpha = 1.0f;
-            this.mBubbleAlpha = 0.0f;
             this.mFrontAlpha = 0.0f;
-            this.mBehindTint = -16777216;
-            if (z) {
-                updateScrimColor(this.mScrimBehind, 1.0f, -16777216);
+            this.mBehindTint = ViewCompat.MEASURED_STATE_MASK;
+            if (this.mClipQsScrim) {
+                updateScrimColor(this.mScrimBehind, 1.0f, NTColorUtil.getScrimBehindTintColor(this.mScrimBehind.getContext()));
             }
         }
     },
-    BRIGHTNESS_MIRROR { // from class: com.android.systemui.statusbar.phone.ScrimState.7
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    BRIGHTNESS_MIRROR {
         public void prepare(ScrimState scrimState) {
             this.mBehindAlpha = 0.0f;
             this.mFrontAlpha = 0.0f;
-            this.mBubbleAlpha = 0.0f;
         }
     },
-    AOD { // from class: com.android.systemui.statusbar.phone.ScrimState.8
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    AOD {
         public boolean isLowPowerState() {
             return true;
         }
 
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+        public boolean shouldBlendWithMainColor() {
+            return false;
+        }
+
         public void prepare(ScrimState scrimState) {
+            float f;
             boolean alwaysOn = this.mDozeParameters.getAlwaysOn();
             boolean isQuickPickupEnabled = this.mDozeParameters.isQuickPickupEnabled();
             boolean isDocked = this.mDockManager.isDocked();
             this.mBlankScreen = this.mDisplayRequiresBlanking;
-            this.mFrontTint = -16777216;
-            this.mFrontAlpha = (alwaysOn || isDocked || isQuickPickupEnabled) ? this.mAodFrontScrimAlpha : 1.0f;
-            this.mBehindTint = -16777216;
-            this.mBehindAlpha = 0.0f;
-            boolean z = false;
-            this.mBubbleTint = 0;
-            this.mBubbleAlpha = 0.0f;
-            this.mAnimationDuration = 1000L;
-            if (this.mDozeParameters.shouldControlScreenOff() && !this.mDozeParameters.shouldControlUnlockedScreenOff()) {
-                z = true;
+            this.mFrontTint = ViewCompat.MEASURED_STATE_MASK;
+            if (alwaysOn || isDocked || isQuickPickupEnabled) {
+                f = this.mAodFrontScrimAlpha;
+            } else {
+                f = 1.0f;
             }
-            this.mAnimateChange = z;
+            this.mFrontAlpha = f;
+            this.mBehindTint = ViewCompat.MEASURED_STATE_MASK;
+            this.mBehindAlpha = 0.0f;
+            this.mAnimationDuration = 1000;
+            this.mAnimateChange = this.mDozeParameters.shouldControlScreenOff() && !this.mDozeParameters.shouldShowLightRevealScrim();
         }
 
-        @Override // com.android.systemui.statusbar.phone.ScrimState
         public float getMaxLightRevealScrimAlpha() {
             return (!this.mWallpaperSupportsAmbientMode || this.mHasBackdrop) ? 1.0f : 0.0f;
         }
     },
-    PULSING { // from class: com.android.systemui.statusbar.phone.ScrimState.9
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    PULSING {
         public void prepare(ScrimState scrimState) {
             this.mFrontAlpha = this.mAodFrontScrimAlpha;
-            this.mBubbleAlpha = 0.0f;
-            this.mBehindTint = -16777216;
-            this.mFrontTint = -16777216;
+            this.mBehindTint = ViewCompat.MEASURED_STATE_MASK;
+            this.mFrontTint = ViewCompat.MEASURED_STATE_MASK;
             this.mBlankScreen = this.mDisplayRequiresBlanking;
-            this.mAnimationDuration = this.mWakeLockScreenSensorActive ? 1000L : 220L;
+            this.mAnimationDuration = this.mWakeLockScreenSensorActive ? 1000 : 220;
         }
 
-        @Override // com.android.systemui.statusbar.phone.ScrimState
         public float getMaxLightRevealScrimAlpha() {
             if (this.mWakeLockScreenSensorActive) {
                 return 0.6f;
             }
-            return ScrimState.AOD.getMaxLightRevealScrimAlpha();
+            return AOD.getMaxLightRevealScrimAlpha();
         }
     },
-    UNLOCKED { // from class: com.android.systemui.statusbar.phone.ScrimState.10
-        @Override // com.android.systemui.statusbar.phone.ScrimState
+    UNLOCKED {
         public void prepare(ScrimState scrimState) {
             this.mBehindAlpha = this.mClipQsScrim ? 1.0f : 0.0f;
             this.mNotifAlpha = 0.0f;
             this.mFrontAlpha = 0.0f;
-            this.mBubbleAlpha = 0.0f;
-            this.mAnimationDuration = this.mKeyguardFadingAway ? this.mKeyguardFadingAwayDuration : 300L;
-            ScrimState scrimState2 = ScrimState.AOD;
-            this.mAnimateChange = !this.mLaunchingAffordanceWithPreview && !(scrimState == scrimState2 || scrimState == ScrimState.PULSING);
+            this.mAnimationDuration = this.mKeyguardFadingAway ? this.mKeyguardFadingAwayDuration : 300;
+            this.mAnimateChange = !this.mLaunchingAffordanceWithPreview && !(scrimState == AOD || scrimState == PULSING);
             this.mFrontTint = 0;
-            this.mBehindTint = -16777216;
-            this.mBubbleTint = 0;
-            this.mBlankScreen = false;
-            if (scrimState == scrimState2) {
-                updateScrimColor(this.mScrimInFront, 1.0f, -16777216);
-                updateScrimColor(this.mScrimBehind, 1.0f, -16777216);
-                ScrimView scrimView = this.mScrimForBubble;
-                if (scrimView != null) {
-                    updateScrimColor(scrimView, 1.0f, -16777216);
-                }
-                this.mFrontTint = -16777216;
-                this.mBehindTint = -16777216;
-                this.mBubbleTint = -16777216;
-                this.mBlankScreen = true;
-            }
-            if (this.mClipQsScrim) {
-                updateScrimColor(this.mScrimBehind, 1.0f, -16777216);
-            }
-        }
-    },
-    BUBBLE_EXPANDED { // from class: com.android.systemui.statusbar.phone.ScrimState.11
-        @Override // com.android.systemui.statusbar.phone.ScrimState
-        public void prepare(ScrimState scrimState) {
-            this.mBehindAlpha = this.mClipQsScrim ? 1.0f : 0.0f;
-            this.mNotifAlpha = 0.0f;
-            this.mFrontAlpha = 0.0f;
-            this.mAnimationDuration = this.mKeyguardFadingAway ? this.mKeyguardFadingAwayDuration : 300L;
-            this.mAnimateChange = !this.mLaunchingAffordanceWithPreview;
-            this.mFrontTint = 0;
-            this.mBehindTint = -16777216;
-            this.mBubbleTint = -16777216;
+            this.mBehindTint = NTColorUtil.getScrimBehindTintColor(this.mScrimBehind.getContext());
             this.mBlankScreen = false;
             if (scrimState == ScrimState.AOD) {
-                updateScrimColor(this.mScrimInFront, 1.0f, -16777216);
-                updateScrimColor(this.mScrimBehind, 1.0f, -16777216);
-                ScrimView scrimView = this.mScrimForBubble;
-                if (scrimView != null) {
-                    updateScrimColor(scrimView, 1.0f, -16777216);
-                }
-                this.mFrontTint = -16777216;
-                this.mBehindTint = -16777216;
-                this.mBubbleTint = -16777216;
+                updateScrimColor(this.mScrimInFront, 1.0f, ViewCompat.MEASURED_STATE_MASK);
+                updateScrimColor(this.mScrimBehind, 1.0f, ViewCompat.MEASURED_STATE_MASK);
+                this.mFrontTint = ViewCompat.MEASURED_STATE_MASK;
+                this.mBehindTint = ViewCompat.MEASURED_STATE_MASK;
                 this.mBlankScreen = true;
             }
             if (this.mClipQsScrim) {
-                updateScrimColor(this.mScrimBehind, 1.0f, -16777216);
+                updateScrimColor(this.mScrimBehind, 1.0f, NTColorUtil.getScrimBehindTintColor(this.mScrimBehind.getContext()));
             }
-            this.mAnimationDuration = 220L;
+        }
+    },
+    DREAMING {
+        public void prepare(ScrimState scrimState) {
+            this.mFrontTint = 0;
+            int i = ViewCompat.MEASURED_STATE_MASK;
+            this.mBehindTint = ViewCompat.MEASURED_STATE_MASK;
+            if (!this.mClipQsScrim) {
+                i = 0;
+            }
+            this.mNotifTint = i;
+            this.mFrontAlpha = 0.0f;
+            this.mBehindAlpha = this.mClipQsScrim ? 1.0f : 0.0f;
+            this.mNotifAlpha = 0.0f;
+            this.mBlankScreen = false;
+            if (this.mClipQsScrim) {
+                updateScrimColor(this.mScrimBehind, 1.0f, NTColorUtil.getScrimBehindTintColor(this.mScrimBehind.getContext()));
+            }
         }
     };
     
@@ -228,8 +201,6 @@ public enum ScrimState {
     float mBehindAlpha;
     int mBehindTint;
     boolean mBlankScreen;
-    float mBubbleAlpha;
-    int mBubbleTint;
     boolean mClipQsScrim;
     float mDefaultScrimAlpha;
     boolean mDisplayRequiresBlanking;
@@ -245,7 +216,6 @@ public enum ScrimState {
     int mNotifTint;
     ScrimView mScrimBehind;
     float mScrimBehindAlphaKeyguard;
-    ScrimView mScrimForBubble;
     ScrimView mScrimInFront;
     boolean mWakeLockScreenSensorActive;
     boolean mWallpaperSupportsAmbientMode;
@@ -261,20 +231,13 @@ public enum ScrimState {
     public void prepare(ScrimState scrimState) {
     }
 
-    ScrimState() {
-        this.mBlankScreen = false;
-        this.mAnimationDuration = 220L;
-        this.mFrontTint = 0;
-        this.mBehindTint = 0;
-        this.mBubbleTint = 0;
-        this.mNotifTint = 0;
-        this.mAnimateChange = true;
+    public boolean shouldBlendWithMainColor() {
+        return true;
     }
 
-    public void init(ScrimView scrimView, ScrimView scrimView2, ScrimView scrimView3, DozeParameters dozeParameters, DockManager dockManager) {
+    public void init(ScrimView scrimView, ScrimView scrimView2, DozeParameters dozeParameters, DockManager dockManager) {
         this.mScrimInFront = scrimView;
         this.mScrimBehind = scrimView2;
-        this.mScrimForBubble = scrimView3;
         this.mDozeParameters = dozeParameters;
         this.mDockManager = dockManager;
         this.mDisplayRequiresBlanking = dozeParameters.getDisplayNeedsBlanking();
@@ -292,10 +255,6 @@ public enum ScrimState {
         return this.mNotifAlpha;
     }
 
-    public float getBubbleAlpha() {
-        return this.mBubbleAlpha;
-    }
-
     public int getFrontTint() {
         return this.mFrontTint;
     }
@@ -308,10 +267,6 @@ public enum ScrimState {
         return this.mNotifTint;
     }
 
-    public int getBubbleTint() {
-        return this.mBubbleTint;
-    }
-
     public long getAnimationDuration() {
         return this.mAnimationDuration;
     }
@@ -321,8 +276,8 @@ public enum ScrimState {
     }
 
     public void updateScrimColor(ScrimView scrimView, float f, int i) {
-        Trace.traceCounter(4096L, scrimView == this.mScrimInFront ? "front_scrim_alpha" : "back_scrim_alpha", (int) (255.0f * f));
-        Trace.traceCounter(4096L, scrimView == this.mScrimInFront ? "front_scrim_tint" : "back_scrim_tint", Color.alpha(i));
+        Trace.traceCounter(4096, scrimView == this.mScrimInFront ? "front_scrim_alpha" : "back_scrim_alpha", (int) (255.0f * f));
+        Trace.traceCounter(4096, scrimView == this.mScrimInFront ? "front_scrim_tint" : "back_scrim_tint", Color.alpha(i));
         scrimView.setTint(i);
         scrimView.setViewAlpha(f);
     }
@@ -341,10 +296,6 @@ public enum ScrimState {
 
     public void setDefaultScrimAlpha(float f) {
         this.mDefaultScrimAlpha = f;
-    }
-
-    public void setBubbleAlpha(float f) {
-        this.mBubbleAlpha = f;
     }
 
     public void setWallpaperSupportsAmbientMode(boolean z) {

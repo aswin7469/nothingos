@@ -1,0 +1,22 @@
+package com.android.p019wm.shell.common;
+
+import android.view.SurfaceControl;
+import com.android.p019wm.shell.common.SyncTransactionQueue;
+
+/* renamed from: com.android.wm.shell.common.SyncTransactionQueue$SyncCallback$$ExternalSyntheticLambda0 */
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class SyncTransactionQueue$SyncCallback$$ExternalSyntheticLambda0 implements Runnable {
+    public final /* synthetic */ SyncTransactionQueue.SyncCallback f$0;
+    public final /* synthetic */ int f$1;
+    public final /* synthetic */ SurfaceControl.Transaction f$2;
+
+    public /* synthetic */ SyncTransactionQueue$SyncCallback$$ExternalSyntheticLambda0(SyncTransactionQueue.SyncCallback syncCallback, int i, SurfaceControl.Transaction transaction) {
+        this.f$0 = syncCallback;
+        this.f$1 = i;
+        this.f$2 = transaction;
+    }
+
+    public final void run() {
+        this.f$0.mo49126x2b2040e7(this.f$1, this.f$2);
+    }
+}

@@ -4,7 +4,7 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.dump.DumpManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DozeLog_Factory implements Factory<DozeLog> {
     private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
@@ -16,10 +16,8 @@ public final class DozeLog_Factory implements Factory<DozeLog> {
         this.loggerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DozeLog mo1933get() {
-        return newInstance(this.keyguardUpdateMonitorProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.loggerProvider.mo1933get());
+    public DozeLog get() {
+        return newInstance(this.keyguardUpdateMonitorProvider.get(), this.dumpManagerProvider.get(), this.loggerProvider.get());
     }
 
     public static DozeLog_Factory create(Provider<KeyguardUpdateMonitor> provider, Provider<DumpManager> provider2, Provider<DozeLogger> provider3) {

@@ -1,5 +1,5 @@
 package com.android.keyguard;
-/* loaded from: classes.dex */
+
 public interface ViewMediatorCallback {
     CharSequence consumeCustomMessage();
 
@@ -14,8 +14,6 @@ public interface ViewMediatorCallback {
     void keyguardDonePending(boolean z, int i);
 
     void keyguardGone();
-
-    void onBouncerVisiblityChanged(boolean z);
 
     void onCancelClicked();
 

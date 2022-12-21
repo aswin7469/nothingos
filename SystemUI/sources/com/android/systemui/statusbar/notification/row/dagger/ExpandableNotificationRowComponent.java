@@ -5,52 +5,67 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.service.notification.StatusBarNotification;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.row.ActivatableNotificationView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRowController;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
-import com.android.systemui.statusbar.phone.StatusBar;
-/* loaded from: classes.dex */
+import com.android.systemui.statusbar.phone.CentralSurfaces;
+import dagger.Binds;
+import dagger.BindsInstance;
+import dagger.Module;
+import dagger.Provides;
+import dagger.Subcomponent;
+
+@NotificationRowScope
+@Subcomponent(modules = {ActivatableNotificationViewModule.class, ExpandableNotificationRowModule.class, RemoteInputViewModule.class})
 public interface ExpandableNotificationRowComponent {
 
-    /* loaded from: classes.dex */
+    @Subcomponent.Builder
     public interface Builder {
         ExpandableNotificationRowComponent build();
 
-        /* renamed from: expandableNotificationRow */
-        Builder mo1409expandableNotificationRow(ExpandableNotificationRow expandableNotificationRow);
+        @BindsInstance
+        Builder expandableNotificationRow(ExpandableNotificationRow expandableNotificationRow);
 
-        /* renamed from: listContainer */
-        Builder mo1410listContainer(NotificationListContainer notificationListContainer);
+        @BindsInstance
+        Builder listContainer(NotificationListContainer notificationListContainer);
 
-        /* renamed from: notificationEntry */
-        Builder mo1411notificationEntry(NotificationEntry notificationEntry);
+        @BindsInstance
+        Builder notificationEntry(NotificationEntry notificationEntry);
 
-        /* renamed from: onExpandClickListener */
-        Builder mo1412onExpandClickListener(ExpandableNotificationRow.OnExpandClickListener onExpandClickListener);
+        @BindsInstance
+        Builder onExpandClickListener(ExpandableNotificationRow.OnExpandClickListener onExpandClickListener);
     }
 
+    @NotificationRowScope
     ExpandableNotificationRowController getExpandableNotificationRowController();
 
-    /* loaded from: classes.dex */
+    @Module
     public static abstract class ExpandableNotificationRowModule {
-        /* JADX INFO: Access modifiers changed from: package-private */
-        public static StatusBarNotification provideStatusBarNotification(NotificationEntry notificationEntry) {
+        /* access modifiers changed from: package-private */
+        @Binds
+        public abstract ActivatableNotificationView bindExpandableView(ExpandableNotificationRow expandableNotificationRow);
+
+        @Provides
+        static StatusBarNotification provideStatusBarNotification(NotificationEntry notificationEntry) {
             return notificationEntry.getSbn();
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        public static String provideNotificationKey(StatusBarNotification statusBarNotification) {
+        @NotificationKey
+        @Provides
+        static String provideNotificationKey(StatusBarNotification statusBarNotification) {
             return statusBarNotification.getKey();
         }
 
-        /* JADX INFO: Access modifiers changed from: package-private */
-        public static String provideAppName(Context context, StatusBarNotification statusBarNotification) {
-            PackageManager packageManagerForUser = StatusBar.getPackageManagerForUser(context, statusBarNotification.getUser().getIdentifier());
+        @AppName
+        @Provides
+        static String provideAppName(Context context, StatusBarNotification statusBarNotification) {
+            PackageManager packageManagerForUser = CentralSurfaces.getPackageManagerForUser(context, statusBarNotification.getUser().getIdentifier());
             String packageName = statusBarNotification.getPackageName();
             try {
                 ApplicationInfo applicationInfo = packageManagerForUser.getApplicationInfo(packageName, 8704);
                 if (applicationInfo != null) {
-                    return String.valueOf(packageManagerForUser.getApplicationLabel(applicationInfo));
+                    return String.valueOf((Object) packageManagerForUser.getApplicationLabel(applicationInfo));
                 }
             } catch (PackageManager.NameNotFoundException unused) {
             }

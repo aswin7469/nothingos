@@ -1,36 +1,40 @@
 package com.android.systemui.statusbar.policy;
 
 import android.os.Handler;
-import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dump.DumpManager;
+import com.android.systemui.settings.UserTracker;
 import com.android.systemui.util.settings.GlobalSettings;
 import com.android.systemui.util.settings.SecureSettings;
 import dagger.internal.Factory;
+import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class DeviceProvisionedControllerImpl_Factory implements Factory<DeviceProvisionedControllerImpl> {
-    private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
+    private final Provider<Handler> backgroundHandlerProvider;
+    private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<GlobalSettings> globalSettingsProvider;
-    private final Provider<Handler> mainHandlerProvider;
+    private final Provider<Executor> mainExecutorProvider;
     private final Provider<SecureSettings> secureSettingsProvider;
+    private final Provider<UserTracker> userTrackerProvider;
 
-    public DeviceProvisionedControllerImpl_Factory(Provider<Handler> provider, Provider<BroadcastDispatcher> provider2, Provider<GlobalSettings> provider3, Provider<SecureSettings> provider4) {
-        this.mainHandlerProvider = provider;
-        this.broadcastDispatcherProvider = provider2;
-        this.globalSettingsProvider = provider3;
-        this.secureSettingsProvider = provider4;
+    public DeviceProvisionedControllerImpl_Factory(Provider<SecureSettings> provider, Provider<GlobalSettings> provider2, Provider<UserTracker> provider3, Provider<DumpManager> provider4, Provider<Handler> provider5, Provider<Executor> provider6) {
+        this.secureSettingsProvider = provider;
+        this.globalSettingsProvider = provider2;
+        this.userTrackerProvider = provider3;
+        this.dumpManagerProvider = provider4;
+        this.backgroundHandlerProvider = provider5;
+        this.mainExecutorProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DeviceProvisionedControllerImpl mo1933get() {
-        return newInstance(this.mainHandlerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.globalSettingsProvider.mo1933get(), this.secureSettingsProvider.mo1933get());
+    public DeviceProvisionedControllerImpl get() {
+        return newInstance(this.secureSettingsProvider.get(), this.globalSettingsProvider.get(), this.userTrackerProvider.get(), this.dumpManagerProvider.get(), this.backgroundHandlerProvider.get(), this.mainExecutorProvider.get());
     }
 
-    public static DeviceProvisionedControllerImpl_Factory create(Provider<Handler> provider, Provider<BroadcastDispatcher> provider2, Provider<GlobalSettings> provider3, Provider<SecureSettings> provider4) {
-        return new DeviceProvisionedControllerImpl_Factory(provider, provider2, provider3, provider4);
+    public static DeviceProvisionedControllerImpl_Factory create(Provider<SecureSettings> provider, Provider<GlobalSettings> provider2, Provider<UserTracker> provider3, Provider<DumpManager> provider4, Provider<Handler> provider5, Provider<Executor> provider6) {
+        return new DeviceProvisionedControllerImpl_Factory(provider, provider2, provider3, provider4, provider5, provider6);
     }
 
-    public static DeviceProvisionedControllerImpl newInstance(Handler handler, BroadcastDispatcher broadcastDispatcher, GlobalSettings globalSettings, SecureSettings secureSettings) {
-        return new DeviceProvisionedControllerImpl(handler, broadcastDispatcher, globalSettings, secureSettings);
+    public static DeviceProvisionedControllerImpl newInstance(SecureSettings secureSettings, GlobalSettings globalSettings, UserTracker userTracker, DumpManager dumpManager, Handler handler, Executor executor) {
+        return new DeviceProvisionedControllerImpl(secureSettings, globalSettings, userTracker, dumpManager, handler, executor);
     }
 }

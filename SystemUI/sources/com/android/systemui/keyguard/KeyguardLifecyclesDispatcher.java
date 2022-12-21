@@ -2,14 +2,52 @@ package com.android.systemui.keyguard;
 
 import android.os.Handler;
 import android.os.Message;
-/* loaded from: classes.dex */
+import android.os.RemoteException;
+import android.os.Trace;
+import android.util.Log;
+import com.android.internal.policy.IKeyguardDrawnCallback;
+import com.android.systemui.dagger.SysUISingleton;
+import javax.inject.Inject;
+
+@SysUISingleton
 public class KeyguardLifecyclesDispatcher {
-    private Handler mHandler = new Handler() { // from class: com.android.systemui.keyguard.KeyguardLifecyclesDispatcher.1
-        @Override // android.os.Handler
+    static final int FINISHED_GOING_TO_SLEEP = 7;
+    static final int FINISHED_WAKING_UP = 5;
+    static final int SCREEN_TURNED_OFF = 3;
+    static final int SCREEN_TURNED_ON = 1;
+    static final int SCREEN_TURNING_OFF = 2;
+    static final int SCREEN_TURNING_ON = 0;
+    static final int STARTED_GOING_TO_SLEEP = 6;
+    static final int STARTED_WAKING_UP = 4;
+    private static final String TAG = "KeyguardLifecyclesDispatcher";
+    private Handler mHandler = new Handler() {
         public void handleMessage(Message message) {
+            final Object obj = message.obj;
             switch (message.what) {
                 case 0:
-                    KeyguardLifecyclesDispatcher.this.mScreenLifecycle.dispatchScreenTurningOn();
+                    Trace.beginSection("KeyguardLifecyclesDispatcher#SCREEN_TURNING_ON");
+                    final int identityHashCode = System.identityHashCode(message);
+                    Trace.beginAsyncSection("Waiting for KeyguardDrawnCallback#onDrawn", identityHashCode);
+                    KeyguardLifecyclesDispatcher.this.mScreenLifecycle.dispatchScreenTurningOn(new Runnable() {
+                        boolean mInvoked;
+
+                        public void run() {
+                            if (obj != null) {
+                                if (!this.mInvoked) {
+                                    this.mInvoked = true;
+                                    try {
+                                        Trace.endAsyncSection("Waiting for KeyguardDrawnCallback#onDrawn", identityHashCode);
+                                        ((IKeyguardDrawnCallback) obj).onDrawn();
+                                    } catch (RemoteException e) {
+                                        Log.w(KeyguardLifecyclesDispatcher.TAG, "Exception calling onDrawn():", e);
+                                    }
+                                } else {
+                                    Log.w(KeyguardLifecyclesDispatcher.TAG, "KeyguardDrawnCallback#onDrawn() invoked > 1 times");
+                                }
+                            }
+                        }
+                    });
+                    Trace.endSection();
                     return;
                 case 1:
                     KeyguardLifecyclesDispatcher.this.mScreenLifecycle.dispatchScreenTurnedOn();
@@ -37,23 +75,31 @@ public class KeyguardLifecyclesDispatcher {
             }
         }
     };
-    private final ScreenLifecycle mScreenLifecycle;
-    private final WakefulnessLifecycle mWakefulnessLifecycle;
+    /* access modifiers changed from: private */
+    public final ScreenLifecycle mScreenLifecycle;
+    /* access modifiers changed from: private */
+    public final WakefulnessLifecycle mWakefulnessLifecycle;
 
+    @Inject
     public KeyguardLifecyclesDispatcher(ScreenLifecycle screenLifecycle, WakefulnessLifecycle wakefulnessLifecycle) {
         this.mScreenLifecycle = screenLifecycle;
         this.mWakefulnessLifecycle = wakefulnessLifecycle;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void dispatch(int i) {
         this.mHandler.obtainMessage(i).sendToTarget();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void dispatch(int i, int i2) {
         Message obtainMessage = this.mHandler.obtainMessage(i);
         obtainMessage.arg1 = i2;
         obtainMessage.sendToTarget();
+    }
+
+    /* access modifiers changed from: package-private */
+    public void dispatch(int i, Object obj) {
+        this.mHandler.obtainMessage(i, obj).sendToTarget();
     }
 }

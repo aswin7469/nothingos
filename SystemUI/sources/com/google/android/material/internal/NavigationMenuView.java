@@ -6,14 +6,17 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-/* loaded from: classes2.dex */
+
 public class NavigationMenuView extends RecyclerView implements MenuView {
-    @Override // androidx.appcompat.view.menu.MenuView
+    public int getWindowAnimations() {
+        return 0;
+    }
+
     public void initialize(MenuBuilder menuBuilder) {
     }
 
     public NavigationMenuView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public NavigationMenuView(Context context, AttributeSet attributeSet) {

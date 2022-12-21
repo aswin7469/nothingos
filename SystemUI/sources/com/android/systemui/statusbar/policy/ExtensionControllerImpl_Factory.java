@@ -6,7 +6,7 @@ import com.android.systemui.tuner.TunerService;
 import com.android.systemui.util.leak.LeakDetector;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class ExtensionControllerImpl_Factory implements Factory<ExtensionControllerImpl> {
     private final Provider<ConfigurationController> configurationControllerProvider;
     private final Provider<Context> contextProvider;
@@ -22,10 +22,8 @@ public final class ExtensionControllerImpl_Factory implements Factory<ExtensionC
         this.configurationControllerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ExtensionControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.leakDetectorProvider.mo1933get(), this.pluginManagerProvider.mo1933get(), this.tunerServiceProvider.mo1933get(), this.configurationControllerProvider.mo1933get());
+    public ExtensionControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.leakDetectorProvider.get(), this.pluginManagerProvider.get(), this.tunerServiceProvider.get(), this.configurationControllerProvider.get());
     }
 
     public static ExtensionControllerImpl_Factory create(Provider<Context> provider, Provider<LeakDetector> provider2, Provider<PluginManager> provider3, Provider<TunerService> provider4, Provider<ConfigurationController> provider5) {

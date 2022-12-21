@@ -8,9 +8,12 @@ import android.os.RemoteException;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.Slog;
+import androidx.core.app.NotificationCompat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-/* loaded from: classes.dex */
+
 public class NotificationChannelHelper {
+    private static final String TAG = "NotificationChannelHelper";
+
     public static NotificationChannel createConversationChannelIfNeeded(Context context, INotificationManager iNotificationManager, NotificationEntry notificationEntry, NotificationChannel notificationChannel) {
         if (!TextUtils.isEmpty(notificationChannel.getConversationId())) {
             return notificationChannel;
@@ -26,7 +29,7 @@ public class NotificationChannelHelper {
             iNotificationManager.createConversationNotificationChannelForPackage(packageName, uid, notificationChannel, shortcutId);
             return iNotificationManager.getConversationNotificationChannel(context.getOpPackageName(), UserHandle.getUserId(uid), packageName, notificationChannel.getId(), false, shortcutId);
         } catch (RemoteException e) {
-            Slog.e("NotificationChannelHelper", "Could not create conversation channel", e);
+            Slog.e(TAG, "Could not create conversation channel", e);
             return notificationChannel;
         }
     }
@@ -36,9 +39,9 @@ public class NotificationChannelHelper {
             return notificationEntry.getRanking().getConversationShortcutInfo().getLabel().toString();
         }
         Bundle bundle = notificationEntry.getSbn().getNotification().extras;
-        CharSequence charSequence = bundle.getCharSequence("android.conversationTitle");
+        CharSequence charSequence = bundle.getCharSequence(NotificationCompat.EXTRA_CONVERSATION_TITLE);
         if (TextUtils.isEmpty(charSequence)) {
-            charSequence = bundle.getCharSequence("android.title");
+            charSequence = bundle.getCharSequence(NotificationCompat.EXTRA_TITLE);
         }
         return TextUtils.isEmpty(charSequence) ? "fallback" : charSequence;
     }

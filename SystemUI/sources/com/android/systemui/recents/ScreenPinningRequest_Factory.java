@@ -1,32 +1,37 @@
 package com.android.systemui.recents;
 
 import android.content.Context;
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.navigationbar.NavigationModeController;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
 import dagger.Lazy;
+import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ScreenPinningRequest_Factory implements Factory<ScreenPinningRequest> {
+    private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
+    private final Provider<Optional<CentralSurfaces>> centralSurfacesOptionalLazyProvider;
     private final Provider<Context> contextProvider;
-    private final Provider<Optional<Lazy<StatusBar>>> statusBarOptionalLazyProvider;
+    private final Provider<NavigationModeController> navigationModeControllerProvider;
 
-    public ScreenPinningRequest_Factory(Provider<Context> provider, Provider<Optional<Lazy<StatusBar>>> provider2) {
+    public ScreenPinningRequest_Factory(Provider<Context> provider, Provider<Optional<CentralSurfaces>> provider2, Provider<NavigationModeController> provider3, Provider<BroadcastDispatcher> provider4) {
         this.contextProvider = provider;
-        this.statusBarOptionalLazyProvider = provider2;
+        this.centralSurfacesOptionalLazyProvider = provider2;
+        this.navigationModeControllerProvider = provider3;
+        this.broadcastDispatcherProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ScreenPinningRequest mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.statusBarOptionalLazyProvider.mo1933get());
+    public ScreenPinningRequest get() {
+        return newInstance(this.contextProvider.get(), DoubleCheck.lazy(this.centralSurfacesOptionalLazyProvider), this.navigationModeControllerProvider.get(), this.broadcastDispatcherProvider.get());
     }
 
-    public static ScreenPinningRequest_Factory create(Provider<Context> provider, Provider<Optional<Lazy<StatusBar>>> provider2) {
-        return new ScreenPinningRequest_Factory(provider, provider2);
+    public static ScreenPinningRequest_Factory create(Provider<Context> provider, Provider<Optional<CentralSurfaces>> provider2, Provider<NavigationModeController> provider3, Provider<BroadcastDispatcher> provider4) {
+        return new ScreenPinningRequest_Factory(provider, provider2, provider3, provider4);
     }
 
-    public static ScreenPinningRequest newInstance(Context context, Optional<Lazy<StatusBar>> optional) {
-        return new ScreenPinningRequest(context, optional);
+    public static ScreenPinningRequest newInstance(Context context, Lazy<Optional<CentralSurfaces>> lazy, NavigationModeController navigationModeController, BroadcastDispatcher broadcastDispatcher) {
+        return new ScreenPinningRequest(context, lazy, navigationModeController, broadcastDispatcher);
     }
 }

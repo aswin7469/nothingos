@@ -1,108 +1,74 @@
 package com.android.systemui.statusbar.events;
 
 import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
-import android.content.Context;
 import android.os.Process;
 import android.provider.DeviceConfig;
-import android.view.View;
+import androidx.core.app.NotificationCompat;
 import com.android.systemui.Dumpable;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.dump.DumpManager;
-import com.android.systemui.statusbar.events.SystemStatusAnimationScheduler;
-import com.android.systemui.statusbar.phone.StatusBarWindowController;
 import com.android.systemui.statusbar.policy.CallbackController;
+import com.android.systemui.statusbar.window.StatusBarWindowController;
 import com.android.systemui.util.Assert;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.time.SystemClock;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
-import kotlin.jvm.functions.Function1;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@SysUISingleton
+@Metadata(mo64986d1 = {"\u0000\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\u0010\u000b\n\u0002\b\u0004\n\u0002\u0010#\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\n\b\u0007\u0018\u0000 <2\b\u0012\u0004\u0012\u00020\u00020\u00012\u00020\u0003:\u0001<B9\b\u0007\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r\u0012\b\b\u0001\u0010\u000e\u001a\u00020\u000f¢\u0006\u0002\u0010\u0010J\u0010\u0010\"\u001a\u00020#2\u0006\u0010$\u001a\u00020\u0002H\u0016J\b\u0010%\u001a\u00020#H\u0002J\b\u0010&\u001a\u00020'H\u0002J\b\u0010(\u001a\u00020'H\u0002J%\u0010)\u001a\u00020#2\u0006\u0010*\u001a\u00020+2\u000e\u0010,\u001a\n\u0012\u0006\b\u0001\u0012\u00020.0-H\u0016¢\u0006\u0002\u0010/J\b\u00100\u001a\u00020\u001aH\u0002J\b\u00101\u001a\u00020\u001aH\u0002J\n\u00102\u001a\u0004\u0018\u000103H\u0002J\n\u00104\u001a\u0004\u0018\u000103H\u0002J\u000e\u00105\u001a\u00020#2\u0006\u00106\u001a\u00020!J\u0010\u00107\u001a\u00020#2\u0006\u0010$\u001a\u00020\u0002H\u0016J\b\u00108\u001a\u00020#H\u0002J\u0010\u00109\u001a\u00020#2\u0006\u00106\u001a\u00020!H\u0002J\u000e\u0010:\u001a\u00020#2\u0006\u0010;\u001a\u00020\u001aR$\u0010\u0013\u001a\u00020\u00122\u0006\u0010\u0011\u001a\u00020\u0012@BX\u000e¢\u0006\u000e\n\u0000\u0012\u0004\b\u0014\u0010\u0015\u001a\u0004\b\u0016\u0010\u0017R\u0010\u0010\u0018\u001a\u0004\u0018\u00010\u0019X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\u000fX\u0004¢\u0006\u0002\n\u0000R\u001e\u0010\u001b\u001a\u00020\u001a2\u0006\u0010\u0011\u001a\u00020\u001a@BX\u000e¢\u0006\b\n\u0000\u001a\u0004\b\u001c\u0010\u001dR\u0014\u0010\u001e\u001a\b\u0012\u0004\u0012\u00020\u00020\u001fX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010 \u001a\u0004\u0018\u00010!X\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000¨\u0006="}, mo64987d2 = {"Lcom/android/systemui/statusbar/events/SystemStatusAnimationScheduler;", "Lcom/android/systemui/statusbar/policy/CallbackController;", "Lcom/android/systemui/statusbar/events/SystemStatusAnimationCallback;", "Lcom/android/systemui/Dumpable;", "coordinator", "Lcom/android/systemui/statusbar/events/SystemEventCoordinator;", "chipAnimationController", "Lcom/android/systemui/statusbar/events/SystemEventChipAnimationController;", "statusBarWindowController", "Lcom/android/systemui/statusbar/window/StatusBarWindowController;", "dumpManager", "Lcom/android/systemui/dump/DumpManager;", "systemClock", "Lcom/android/systemui/util/time/SystemClock;", "executor", "Lcom/android/systemui/util/concurrency/DelayableExecutor;", "(Lcom/android/systemui/statusbar/events/SystemEventCoordinator;Lcom/android/systemui/statusbar/events/SystemEventChipAnimationController;Lcom/android/systemui/statusbar/window/StatusBarWindowController;Lcom/android/systemui/dump/DumpManager;Lcom/android/systemui/util/time/SystemClock;Lcom/android/systemui/util/concurrency/DelayableExecutor;)V", "<set-?>", "", "animationState", "getAnimationState$annotations", "()V", "getAnimationState", "()I", "cancelExecutionRunnable", "Ljava/lang/Runnable;", "", "hasPersistentDot", "getHasPersistentDot", "()Z", "listeners", "", "scheduledEvent", "Lcom/android/systemui/statusbar/events/StatusEvent;", "addCallback", "", "listener", "clearDotIfVisible", "collectFinishAnimations", "Landroid/animation/AnimatorSet;", "collectStartAnimations", "dump", "pw", "Ljava/io/PrintWriter;", "args", "", "", "(Ljava/io/PrintWriter;[Ljava/lang/String;)V", "isImmersiveIndicatorEnabled", "isTooEarly", "notifyHidePersistentDot", "Landroid/animation/Animator;", "notifyTransitionToPersistentDot", "onStatusEvent", "event", "removeCallback", "runChipAnimation", "scheduleEvent", "setShouldShowPersistentPrivacyIndicator", "should", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: SystemStatusAnimationScheduler.kt */
-/* loaded from: classes.dex */
 public final class SystemStatusAnimationScheduler implements CallbackController<SystemStatusAnimationCallback>, Dumpable {
-    @NotNull
-    public static final Companion Companion = new Companion(null);
-    private int animationState;
-    @Nullable
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    private static final String PROPERTY_ENABLE_IMMERSIVE_INDICATOR = "enable_immersive_indicator";
+    /* access modifiers changed from: private */
+    public int animationState;
     private Runnable cancelExecutionRunnable;
-    @NotNull
     private final SystemEventChipAnimationController chipAnimationController;
-    @NotNull
     private final SystemEventCoordinator coordinator;
-    @NotNull
     private final DumpManager dumpManager;
-    @NotNull
-    private final DelayableExecutor executor;
+    /* access modifiers changed from: private */
+    public final DelayableExecutor executor;
     private boolean hasPersistentDot;
-    @Nullable
-    private StatusEvent scheduledEvent;
-    @NotNull
-    private final StatusBarWindowController statusBarWindowController;
-    @NotNull
-    private final SystemClock systemClock;
-    @NotNull
     private final Set<SystemStatusAnimationCallback> listeners = new LinkedHashSet();
-    @NotNull
-    private final ValueAnimator.AnimatorUpdateListener systemUpdateListener = new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.events.SystemStatusAnimationScheduler$systemUpdateListener$1
-        @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-        public final void onAnimationUpdate(ValueAnimator anim) {
-            SystemStatusAnimationScheduler systemStatusAnimationScheduler = SystemStatusAnimationScheduler.this;
-            Intrinsics.checkNotNullExpressionValue(anim, "anim");
-            systemStatusAnimationScheduler.notifySystemAnimationUpdate(anim);
-        }
-    };
-    @NotNull
-    private final SystemStatusAnimationScheduler$systemAnimatorAdapter$1 systemAnimatorAdapter = new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.events.SystemStatusAnimationScheduler$systemAnimatorAdapter$1
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-        public void onAnimationEnd(@Nullable Animator animator) {
-            SystemStatusAnimationScheduler.this.notifySystemFinish();
-        }
+    private StatusEvent scheduledEvent;
+    /* access modifiers changed from: private */
+    public final StatusBarWindowController statusBarWindowController;
+    private final SystemClock systemClock;
 
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-        public void onAnimationStart(@Nullable Animator animator) {
-            SystemStatusAnimationScheduler.this.notifySystemStart();
-        }
-    };
-    @NotNull
-    private final ValueAnimator.AnimatorUpdateListener chipUpdateListener = new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.events.SystemStatusAnimationScheduler$chipUpdateListener$1
-        @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-        public final void onAnimationUpdate(ValueAnimator anim) {
-            SystemEventChipAnimationController systemEventChipAnimationController = SystemStatusAnimationScheduler.this.chipAnimationController;
-            Intrinsics.checkNotNullExpressionValue(anim, "anim");
-            systemEventChipAnimationController.onChipAnimationUpdate(anim, SystemStatusAnimationScheduler.this.getAnimationState());
-        }
-    };
-
-    /* JADX WARN: Type inference failed for: r2v3, types: [com.android.systemui.statusbar.events.SystemStatusAnimationScheduler$systemAnimatorAdapter$1] */
-    public SystemStatusAnimationScheduler(@NotNull SystemEventCoordinator coordinator, @NotNull SystemEventChipAnimationController chipAnimationController, @NotNull StatusBarWindowController statusBarWindowController, @NotNull DumpManager dumpManager, @NotNull SystemClock systemClock, @NotNull DelayableExecutor executor) {
-        Intrinsics.checkNotNullParameter(coordinator, "coordinator");
-        Intrinsics.checkNotNullParameter(chipAnimationController, "chipAnimationController");
-        Intrinsics.checkNotNullParameter(statusBarWindowController, "statusBarWindowController");
-        Intrinsics.checkNotNullParameter(dumpManager, "dumpManager");
-        Intrinsics.checkNotNullParameter(systemClock, "systemClock");
-        Intrinsics.checkNotNullParameter(executor, "executor");
-        this.coordinator = coordinator;
-        this.chipAnimationController = chipAnimationController;
-        this.statusBarWindowController = statusBarWindowController;
-        this.dumpManager = dumpManager;
-        this.systemClock = systemClock;
-        this.executor = executor;
-        coordinator.attachScheduler(this);
-        dumpManager.registerDumpable("SystemStatusAnimationScheduler", this);
+    public static /* synthetic */ void getAnimationState$annotations() {
     }
 
+    @Inject
+    public SystemStatusAnimationScheduler(SystemEventCoordinator systemEventCoordinator, SystemEventChipAnimationController systemEventChipAnimationController, StatusBarWindowController statusBarWindowController2, DumpManager dumpManager2, SystemClock systemClock2, @Main DelayableExecutor delayableExecutor) {
+        Intrinsics.checkNotNullParameter(systemEventCoordinator, "coordinator");
+        Intrinsics.checkNotNullParameter(systemEventChipAnimationController, "chipAnimationController");
+        Intrinsics.checkNotNullParameter(statusBarWindowController2, "statusBarWindowController");
+        Intrinsics.checkNotNullParameter(dumpManager2, "dumpManager");
+        Intrinsics.checkNotNullParameter(systemClock2, "systemClock");
+        Intrinsics.checkNotNullParameter(delayableExecutor, "executor");
+        this.coordinator = systemEventCoordinator;
+        this.chipAnimationController = systemEventChipAnimationController;
+        this.statusBarWindowController = statusBarWindowController2;
+        this.dumpManager = dumpManager2;
+        this.systemClock = systemClock2;
+        this.executor = delayableExecutor;
+        systemEventCoordinator.attachScheduler(this);
+        dumpManager2.registerDumpable("SystemStatusAnimationScheduler", this);
+    }
+
+    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/systemui/statusbar/events/SystemStatusAnimationScheduler$Companion;", "", "()V", "PROPERTY_ENABLE_IMMERSIVE_INDICATOR", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: SystemStatusAnimationScheduler.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -113,7 +79,7 @@ public final class SystemStatusAnimationScheduler implements CallbackController<
     }
 
     private final boolean isImmersiveIndicatorEnabled() {
-        return DeviceConfig.getBoolean("privacy", "enable_immersive_indicator", true);
+        return DeviceConfig.getBoolean("privacy", PROPERTY_ENABLE_IMMERSIVE_INDICATOR, true);
     }
 
     public final int getAnimationState() {
@@ -124,32 +90,31 @@ public final class SystemStatusAnimationScheduler implements CallbackController<
         return this.hasPersistentDot;
     }
 
-    public final void onStatusEvent(@NotNull StatusEvent event) {
-        int i;
-        Intrinsics.checkNotNullParameter(event, "event");
-        if (isTooEarly() || !isImmersiveIndicatorEnabled()) {
-            return;
+    public final void onStatusEvent(StatusEvent statusEvent) {
+        Intrinsics.checkNotNullParameter(statusEvent, NotificationCompat.CATEGORY_EVENT);
+        if (!isTooEarly() && isImmersiveIndicatorEnabled()) {
+            Assert.isMainThread();
+            int priority = statusEvent.getPriority();
+            StatusEvent statusEvent2 = this.scheduledEvent;
+            if (priority <= (statusEvent2 != null ? statusEvent2.getPriority() : -1)) {
+                StatusEvent statusEvent3 = this.scheduledEvent;
+                boolean z = false;
+                if (statusEvent3 != null && statusEvent3.shouldUpdateFromEvent(statusEvent)) {
+                    z = true;
+                }
+                if (!z) {
+                    return;
+                }
+            }
+            if (statusEvent.getShowAnimation()) {
+                scheduleEvent(statusEvent);
+            } else if (statusEvent.getForceVisible()) {
+                this.hasPersistentDot = true;
+                if (this.animationState == 0) {
+                    notifyTransitionToPersistentDot();
+                }
+            }
         }
-        Assert.isMainThread();
-        int priority = event.getPriority();
-        StatusEvent statusEvent = this.scheduledEvent;
-        if (priority > (statusEvent == null ? -1 : statusEvent.getPriority()) && (i = this.animationState) != 3 && i != 4 && event.getForceVisible()) {
-            scheduleEvent(event);
-            return;
-        }
-        StatusEvent statusEvent2 = this.scheduledEvent;
-        if (!Intrinsics.areEqual(statusEvent2 == null ? null : Boolean.valueOf(statusEvent2.shouldUpdateFromEvent(event)), Boolean.TRUE)) {
-            return;
-        }
-        StatusEvent statusEvent3 = this.scheduledEvent;
-        if (statusEvent3 != null) {
-            statusEvent3.updateFromEvent(event);
-        }
-        if (!event.getForceVisible()) {
-            return;
-        }
-        this.hasPersistentDot = true;
-        notifyTransitionToPersistentDot();
     }
 
     private final void clearDotIfVisible() {
@@ -157,14 +122,12 @@ public final class SystemStatusAnimationScheduler implements CallbackController<
     }
 
     public final void setShouldShowPersistentPrivacyIndicator(boolean z) {
-        if (this.hasPersistentDot == z || !isImmersiveIndicatorEnabled()) {
-            return;
+        if (this.hasPersistentDot != z && isImmersiveIndicatorEnabled()) {
+            this.hasPersistentDot = z;
+            if (!z) {
+                clearDotIfVisible();
+            }
         }
-        this.hasPersistentDot = z;
-        if (z) {
-            return;
-        }
-        clearDotIfVisible();
     }
 
     private final boolean isTooEarly() {
@@ -172,227 +135,177 @@ public final class SystemStatusAnimationScheduler implements CallbackController<
     }
 
     private final void scheduleEvent(StatusEvent statusEvent) {
-        this.scheduledEvent = statusEvent;
-        if (statusEvent.getForceVisible()) {
-            this.hasPersistentDot = true;
-        }
-        if (!statusEvent.getShowAnimation() && statusEvent.getForceVisible()) {
-            notifyTransitionToPersistentDot();
-            this.scheduledEvent = null;
+        int i = this.animationState;
+        if (i == 4) {
             return;
         }
-        this.cancelExecutionRunnable = this.executor.executeDelayed(new Runnable() { // from class: com.android.systemui.statusbar.events.SystemStatusAnimationScheduler$scheduleEvent$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                StatusBarWindowController statusBarWindowController;
-                SystemStatusAnimationScheduler$systemAnimatorAdapter$1 systemStatusAnimationScheduler$systemAnimatorAdapter$1;
-                ValueAnimator.AnimatorUpdateListener animatorUpdateListener;
-                StatusEvent statusEvent2;
-                ValueAnimator.AnimatorUpdateListener animatorUpdateListener2;
-                DelayableExecutor delayableExecutor;
-                SystemStatusAnimationScheduler.this.cancelExecutionRunnable = null;
-                SystemStatusAnimationScheduler.this.animationState = 1;
-                statusBarWindowController = SystemStatusAnimationScheduler.this.statusBarWindowController;
-                statusBarWindowController.setForceStatusBarVisible(true);
-                ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
-                ofFloat.setDuration(250L);
-                systemStatusAnimationScheduler$systemAnimatorAdapter$1 = SystemStatusAnimationScheduler.this.systemAnimatorAdapter;
-                ofFloat.addListener(systemStatusAnimationScheduler$systemAnimatorAdapter$1);
-                animatorUpdateListener = SystemStatusAnimationScheduler.this.systemUpdateListener;
-                ofFloat.addUpdateListener(animatorUpdateListener);
-                ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
-                ofFloat2.setDuration(250L);
-                SystemStatusAnimationScheduler systemStatusAnimationScheduler = SystemStatusAnimationScheduler.this;
-                statusEvent2 = systemStatusAnimationScheduler.scheduledEvent;
-                Intrinsics.checkNotNull(statusEvent2);
-                ofFloat2.addListener(new SystemStatusAnimationScheduler.ChipAnimatorAdapter(systemStatusAnimationScheduler, 2, statusEvent2.getViewCreator()));
-                animatorUpdateListener2 = SystemStatusAnimationScheduler.this.chipUpdateListener;
-                ofFloat2.addUpdateListener(animatorUpdateListener2);
-                AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.playSequentially(ofFloat, ofFloat2);
-                animatorSet.start();
-                delayableExecutor = SystemStatusAnimationScheduler.this.executor;
-                final SystemStatusAnimationScheduler systemStatusAnimationScheduler2 = SystemStatusAnimationScheduler.this;
-                delayableExecutor.executeDelayed(new Runnable() { // from class: com.android.systemui.statusbar.events.SystemStatusAnimationScheduler$scheduleEvent$1.1
-                    /* JADX WARN: Code restructure failed: missing block: B:6:0x0071, code lost:
-                        r4 = r1.notifyTransitionToPersistentDot();
-                     */
-                    @Override // java.lang.Runnable
-                    /*
-                        Code decompiled incorrectly, please refer to instructions dump.
-                    */
-                    public final void run() {
-                        SystemStatusAnimationScheduler$systemAnimatorAdapter$1 systemStatusAnimationScheduler$systemAnimatorAdapter$12;
-                        ValueAnimator.AnimatorUpdateListener animatorUpdateListener3;
-                        StatusEvent statusEvent3;
-                        ValueAnimator.AnimatorUpdateListener animatorUpdateListener4;
-                        StatusBarWindowController statusBarWindowController2;
-                        Animator notifyTransitionToPersistentDot;
-                        SystemStatusAnimationScheduler.this.animationState = 3;
-                        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(0.0f, 1.0f);
-                        ofFloat3.setDuration(250L);
-                        systemStatusAnimationScheduler$systemAnimatorAdapter$12 = SystemStatusAnimationScheduler.this.systemAnimatorAdapter;
-                        ofFloat3.addListener(systemStatusAnimationScheduler$systemAnimatorAdapter$12);
-                        animatorUpdateListener3 = SystemStatusAnimationScheduler.this.systemUpdateListener;
-                        ofFloat3.addUpdateListener(animatorUpdateListener3);
-                        ValueAnimator ofFloat4 = ValueAnimator.ofFloat(1.0f, 0.0f);
-                        ofFloat4.setDuration(250L);
-                        int i = SystemStatusAnimationScheduler.this.getHasPersistentDot() ? 4 : 0;
-                        SystemStatusAnimationScheduler systemStatusAnimationScheduler3 = SystemStatusAnimationScheduler.this;
-                        statusEvent3 = systemStatusAnimationScheduler3.scheduledEvent;
-                        Intrinsics.checkNotNull(statusEvent3);
-                        ofFloat4.addListener(new SystemStatusAnimationScheduler.ChipAnimatorAdapter(systemStatusAnimationScheduler3, i, statusEvent3.getViewCreator()));
-                        animatorUpdateListener4 = SystemStatusAnimationScheduler.this.chipUpdateListener;
-                        ofFloat4.addUpdateListener(animatorUpdateListener4);
-                        AnimatorSet animatorSet2 = new AnimatorSet();
-                        animatorSet2.play(ofFloat4).before(ofFloat3);
-                        if (SystemStatusAnimationScheduler.this.getHasPersistentDot() && notifyTransitionToPersistentDot != null) {
-                            animatorSet2.playTogether(ofFloat3, notifyTransitionToPersistentDot);
-                        }
-                        animatorSet2.start();
-                        statusBarWindowController2 = SystemStatusAnimationScheduler.this.statusBarWindowController;
-                        statusBarWindowController2.setForceStatusBarVisible(false);
-                        SystemStatusAnimationScheduler.this.scheduledEvent = null;
-                    }
-                }, 1500L);
+        if (i != 5 || !statusEvent.getForceVisible()) {
+            StatusEvent statusEvent2 = this.scheduledEvent;
+            boolean z = false;
+            if (statusEvent2 != null && statusEvent2.shouldUpdateFromEvent(statusEvent)) {
+                z = true;
             }
-        }, 0L);
+            if (z) {
+                StatusEvent statusEvent3 = this.scheduledEvent;
+                if (statusEvent3 != null) {
+                    statusEvent3.updateFromEvent(statusEvent);
+                    return;
+                }
+                return;
+            }
+            this.scheduledEvent = statusEvent;
+            Intrinsics.checkNotNull(statusEvent);
+            if (statusEvent.getForceVisible()) {
+                this.hasPersistentDot = true;
+            }
+            SystemEventChipAnimationController systemEventChipAnimationController = this.chipAnimationController;
+            StatusEvent statusEvent4 = this.scheduledEvent;
+            Intrinsics.checkNotNull(statusEvent4);
+            systemEventChipAnimationController.prepareChipAnimation(statusEvent4.getViewCreator());
+            this.animationState = 1;
+            this.executor.executeDelayed(new SystemStatusAnimationScheduler$$ExternalSyntheticLambda0(this), 100);
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final Animator notifyTransitionToPersistentDot() {
-        Set<SystemStatusAnimationCallback> set = this.listeners;
-        ArrayList arrayList = new ArrayList();
-        Iterator<T> it = set.iterator();
-        while (true) {
-            String str = null;
-            if (!it.hasNext()) {
-                break;
-            }
-            SystemStatusAnimationCallback systemStatusAnimationCallback = (SystemStatusAnimationCallback) it.next();
-            StatusEvent statusEvent = this.scheduledEvent;
-            if (statusEvent != null) {
-                str = statusEvent.getContentDescription();
-            }
-            Animator onSystemStatusAnimationTransitionToPersistentDot = systemStatusAnimationCallback.onSystemStatusAnimationTransitionToPersistentDot(str);
-            if (onSystemStatusAnimationTransitionToPersistentDot != null) {
-                arrayList.add(onSystemStatusAnimationTransitionToPersistentDot);
+    /* access modifiers changed from: private */
+    /* renamed from: scheduleEvent$lambda-0  reason: not valid java name */
+    public static final void m3077scheduleEvent$lambda0(SystemStatusAnimationScheduler systemStatusAnimationScheduler) {
+        Intrinsics.checkNotNullParameter(systemStatusAnimationScheduler, "this$0");
+        systemStatusAnimationScheduler.runChipAnimation();
+    }
+
+    private final void runChipAnimation() {
+        this.executor.executeDelayed(new SystemStatusAnimationScheduler$$ExternalSyntheticLambda1(this), 50);
+        this.animationState = 2;
+        AnimatorSet collectStartAnimations = collectStartAnimations();
+        if (collectStartAnimations.getTotalDuration() <= 500) {
+            collectStartAnimations.addListener(new SystemStatusAnimationScheduler$runChipAnimation$2(this));
+            collectStartAnimations.start();
+            this.executor.executeDelayed(new SystemStatusAnimationScheduler$$ExternalSyntheticLambda2(this), 1000);
+            return;
+        }
+        throw new IllegalStateException("System animation total length exceeds budget. Expected: 500, actual: " + collectStartAnimations.getTotalDuration());
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: runChipAnimation$lambda-1  reason: not valid java name */
+    public static final void m3075runChipAnimation$lambda1(SystemStatusAnimationScheduler systemStatusAnimationScheduler) {
+        Intrinsics.checkNotNullParameter(systemStatusAnimationScheduler, "this$0");
+        systemStatusAnimationScheduler.statusBarWindowController.setForceStatusBarVisible(true);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: runChipAnimation$lambda-2  reason: not valid java name */
+    public static final void m3076runChipAnimation$lambda2(SystemStatusAnimationScheduler systemStatusAnimationScheduler) {
+        Intrinsics.checkNotNullParameter(systemStatusAnimationScheduler, "this$0");
+        AnimatorSet collectFinishAnimations = systemStatusAnimationScheduler.collectFinishAnimations();
+        systemStatusAnimationScheduler.animationState = 4;
+        collectFinishAnimations.addListener(new SystemStatusAnimationScheduler$runChipAnimation$3$1(systemStatusAnimationScheduler));
+        collectFinishAnimations.start();
+        systemStatusAnimationScheduler.scheduledEvent = null;
+    }
+
+    private final AnimatorSet collectStartAnimations() {
+        List arrayList = new ArrayList();
+        for (SystemStatusAnimationCallback onSystemEventAnimationBegin : this.listeners) {
+            Animator onSystemEventAnimationBegin2 = onSystemEventAnimationBegin.onSystemEventAnimationBegin();
+            if (onSystemEventAnimationBegin2 != null) {
+                arrayList.add(onSystemEventAnimationBegin2);
             }
         }
-        if (!arrayList.isEmpty()) {
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(arrayList);
-            return animatorSet;
+        arrayList.add(this.chipAnimationController.onSystemEventAnimationBegin());
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(arrayList);
+        return animatorSet;
+    }
+
+    private final AnimatorSet collectFinishAnimations() {
+        Animator notifyTransitionToPersistentDot;
+        List arrayList = new ArrayList();
+        for (SystemStatusAnimationCallback onSystemEventAnimationFinish : this.listeners) {
+            Animator onSystemEventAnimationFinish2 = onSystemEventAnimationFinish.onSystemEventAnimationFinish(this.hasPersistentDot);
+            if (onSystemEventAnimationFinish2 != null) {
+                arrayList.add(onSystemEventAnimationFinish2);
+            }
         }
-        return null;
+        arrayList.add(this.chipAnimationController.onSystemEventAnimationFinish(this.hasPersistentDot));
+        if (this.hasPersistentDot && (notifyTransitionToPersistentDot = notifyTransitionToPersistentDot()) != null) {
+            arrayList.add(notifyTransitionToPersistentDot);
+        }
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(arrayList);
+        return animatorSet;
+    }
+
+    private final Animator notifyTransitionToPersistentDot() {
+        Collection arrayList = new ArrayList();
+        for (SystemStatusAnimationCallback onSystemStatusAnimationTransitionToPersistentDot : this.listeners) {
+            Animator onSystemStatusAnimationTransitionToPersistentDot2 = onSystemStatusAnimationTransitionToPersistentDot.onSystemStatusAnimationTransitionToPersistentDot();
+            if (onSystemStatusAnimationTransitionToPersistentDot2 != null) {
+                arrayList.add(onSystemStatusAnimationTransitionToPersistentDot2);
+            }
+        }
+        Collection collection = (List) arrayList;
+        if (!(!collection.isEmpty())) {
+            return null;
+        }
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(collection);
+        return animatorSet;
     }
 
     private final Animator notifyHidePersistentDot() {
-        Set<SystemStatusAnimationCallback> set = this.listeners;
-        ArrayList arrayList = new ArrayList();
-        for (SystemStatusAnimationCallback systemStatusAnimationCallback : set) {
-            Animator onHidePersistentDot = systemStatusAnimationCallback.onHidePersistentDot();
-            if (onHidePersistentDot != null) {
-                arrayList.add(onHidePersistentDot);
+        Collection arrayList = new ArrayList();
+        for (SystemStatusAnimationCallback onHidePersistentDot : this.listeners) {
+            Animator onHidePersistentDot2 = onHidePersistentDot.onHidePersistentDot();
+            if (onHidePersistentDot2 != null) {
+                arrayList.add(onHidePersistentDot2);
             }
         }
-        if (this.animationState == 4) {
+        List list = (List) arrayList;
+        if (this.animationState == 5) {
             this.animationState = 0;
         }
-        if (!arrayList.isEmpty()) {
-            AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(arrayList);
-            return animatorSet;
+        Collection collection = list;
+        if (!(!collection.isEmpty())) {
+            return null;
         }
-        return null;
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(collection);
+        return animatorSet;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void notifySystemStart() {
-        for (SystemStatusAnimationCallback systemStatusAnimationCallback : this.listeners) {
-            systemStatusAnimationCallback.onSystemChromeAnimationStart();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void notifySystemFinish() {
-        for (SystemStatusAnimationCallback systemStatusAnimationCallback : this.listeners) {
-            systemStatusAnimationCallback.onSystemChromeAnimationEnd();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void notifySystemAnimationUpdate(ValueAnimator valueAnimator) {
-        for (SystemStatusAnimationCallback systemStatusAnimationCallback : this.listeners) {
-            systemStatusAnimationCallback.onSystemChromeAnimationUpdate(valueAnimator);
-        }
-    }
-
-    @Override // com.android.systemui.statusbar.policy.CallbackController
-    public void addCallback(@NotNull SystemStatusAnimationCallback listener) {
-        Intrinsics.checkNotNullParameter(listener, "listener");
+    public void addCallback(SystemStatusAnimationCallback systemStatusAnimationCallback) {
+        Intrinsics.checkNotNullParameter(systemStatusAnimationCallback, "listener");
         Assert.isMainThread();
         if (this.listeners.isEmpty()) {
             this.coordinator.startObserving();
         }
-        this.listeners.add(listener);
+        this.listeners.add(systemStatusAnimationCallback);
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
-    public void removeCallback(@NotNull SystemStatusAnimationCallback listener) {
-        Intrinsics.checkNotNullParameter(listener, "listener");
+    public void removeCallback(SystemStatusAnimationCallback systemStatusAnimationCallback) {
+        Intrinsics.checkNotNullParameter(systemStatusAnimationCallback, "listener");
         Assert.isMainThread();
-        this.listeners.remove(listener);
+        this.listeners.remove(systemStatusAnimationCallback);
         if (this.listeners.isEmpty()) {
             this.coordinator.stopObserving();
         }
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(@NotNull FileDescriptor fd, @NotNull PrintWriter pw, @NotNull String[] args) {
-        Intrinsics.checkNotNullParameter(fd, "fd");
-        Intrinsics.checkNotNullParameter(pw, "pw");
-        Intrinsics.checkNotNullParameter(args, "args");
-        pw.println(Intrinsics.stringPlus("Scheduled event: ", this.scheduledEvent));
-        pw.println(Intrinsics.stringPlus("Has persistent privacy dot: ", Boolean.valueOf(this.hasPersistentDot)));
-        pw.println(Intrinsics.stringPlus("Animation state: ", Integer.valueOf(this.animationState)));
-        pw.println("Listeners:");
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        Intrinsics.checkNotNullParameter(printWriter, "pw");
+        Intrinsics.checkNotNullParameter(strArr, "args");
+        printWriter.println("Scheduled event: " + this.scheduledEvent);
+        printWriter.println("Has persistent privacy dot: " + this.hasPersistentDot);
+        printWriter.println("Animation state: " + this.animationState);
+        printWriter.println("Listeners:");
         if (this.listeners.isEmpty()) {
-            pw.println("(none)");
+            printWriter.println("(none)");
             return;
         }
         for (SystemStatusAnimationCallback systemStatusAnimationCallback : this.listeners) {
-            pw.println(Intrinsics.stringPlus("  ", systemStatusAnimationCallback));
-        }
-    }
-
-    /* compiled from: SystemStatusAnimationScheduler.kt */
-    /* loaded from: classes.dex */
-    public final class ChipAnimatorAdapter extends AnimatorListenerAdapter {
-        private final int endState;
-        final /* synthetic */ SystemStatusAnimationScheduler this$0;
-        @NotNull
-        private final Function1<Context, View> viewCreator;
-
-        /* JADX WARN: Multi-variable type inference failed */
-        public ChipAnimatorAdapter(SystemStatusAnimationScheduler this$0, @NotNull int i, Function1<? super Context, ? extends View> viewCreator) {
-            Intrinsics.checkNotNullParameter(this$0, "this$0");
-            Intrinsics.checkNotNullParameter(viewCreator, "viewCreator");
-            this.this$0 = this$0;
-            this.endState = i;
-            this.viewCreator = viewCreator;
-        }
-
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-        public void onAnimationEnd(@Nullable Animator animator) {
-            this.this$0.chipAnimationController.onChipAnimationEnd(this.this$0.getAnimationState());
-            SystemStatusAnimationScheduler systemStatusAnimationScheduler = this.this$0;
-            systemStatusAnimationScheduler.animationState = (this.endState != 4 || systemStatusAnimationScheduler.getHasPersistentDot()) ? this.endState : 0;
-        }
-
-        @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
-        public void onAnimationStart(@Nullable Animator animator) {
-            this.this$0.chipAnimationController.onChipAnimationStart(this.viewCreator, this.this$0.getAnimationState());
+            printWriter.println("  " + systemStatusAnimationCallback);
         }
     }
 }

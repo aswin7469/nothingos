@@ -2,109 +2,57 @@ package com.android.systemui.statusbar.notification.collection.render;
 
 import android.content.Context;
 import android.view.View;
-import com.android.systemui.statusbar.notification.collection.GroupEntry;
-import com.android.systemui.statusbar.notification.collection.ListEntry;
-import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-import com.android.systemui.statusbar.notification.collection.ShadeListBuilder;
-import com.android.systemui.statusbar.notification.collection.listbuilder.NotifSection;
+import com.android.systemui.statusbar.notification.NotificationSectionsFeatureManager;
+import com.android.systemui.statusbar.notification.SectionHeaderVisibilityProvider;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
-import com.android.systemui.statusbar.phone.NotificationIconAreaController;
-import java.util.List;
-import kotlin.Pair;
-import kotlin.collections.CollectionsKt;
-import kotlin.collections.CollectionsKt___CollectionsKt;
+import dagger.assisted.Assisted;
+import dagger.assisted.AssistedInject;
+import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000g\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000*\u0001\u001c\u0018\u00002\u00020\u0001BS\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\b\b\u0001\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0001\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r\u0012\u0006\u0010\u000e\u001a\u00020\u000f\u0012\u0006\u0010\u0010\u001a\u00020\u0011\u0012\u0006\u0010\u0012\u001a\u00020\u0013¢\u0006\u0002\u0010\u0014J\u000e\u0010\u001e\u001a\u00020\u001f2\u0006\u0010 \u001a\u00020!R\u000e\u0010\u0015\u001a\u00020\u0016X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0018X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0013X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u001aX\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u001b\u001a\u00020\u001cX\u0004¢\u0006\u0004\n\u0002\u0010\u001d¨\u0006\""}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/collection/render/ShadeViewManager;", "", "context", "Landroid/content/Context;", "listContainer", "Lcom/android/systemui/statusbar/notification/stack/NotificationListContainer;", "stackController", "Lcom/android/systemui/statusbar/notification/collection/render/NotifStackController;", "mediaContainerController", "Lcom/android/systemui/statusbar/notification/collection/render/MediaContainerController;", "featureManager", "Lcom/android/systemui/statusbar/notification/NotificationSectionsFeatureManager;", "sectionHeaderVisibilityProvider", "Lcom/android/systemui/statusbar/notification/SectionHeaderVisibilityProvider;", "nodeSpecBuilderLogger", "Lcom/android/systemui/statusbar/notification/collection/render/NodeSpecBuilderLogger;", "shadeViewDifferLogger", "Lcom/android/systemui/statusbar/notification/collection/render/ShadeViewDifferLogger;", "viewBarn", "Lcom/android/systemui/statusbar/notification/collection/render/NotifViewBarn;", "(Landroid/content/Context;Lcom/android/systemui/statusbar/notification/stack/NotificationListContainer;Lcom/android/systemui/statusbar/notification/collection/render/NotifStackController;Lcom/android/systemui/statusbar/notification/collection/render/MediaContainerController;Lcom/android/systemui/statusbar/notification/NotificationSectionsFeatureManager;Lcom/android/systemui/statusbar/notification/SectionHeaderVisibilityProvider;Lcom/android/systemui/statusbar/notification/collection/render/NodeSpecBuilderLogger;Lcom/android/systemui/statusbar/notification/collection/render/ShadeViewDifferLogger;Lcom/android/systemui/statusbar/notification/collection/render/NotifViewBarn;)V", "rootController", "Lcom/android/systemui/statusbar/notification/collection/render/RootNodeController;", "specBuilder", "Lcom/android/systemui/statusbar/notification/collection/render/NodeSpecBuilder;", "viewDiffer", "Lcom/android/systemui/statusbar/notification/collection/render/ShadeViewDiffer;", "viewRenderer", "com/android/systemui/statusbar/notification/collection/render/ShadeViewManager$viewRenderer$1", "Lcom/android/systemui/statusbar/notification/collection/render/ShadeViewManager$viewRenderer$1;", "attach", "", "renderStageManager", "Lcom/android/systemui/statusbar/notification/collection/render/RenderStageManager;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ShadeViewManager.kt */
-/* loaded from: classes.dex */
 public final class ShadeViewManager {
-    @NotNull
-    private final NotificationIconAreaController notificationIconAreaController;
-    @NotNull
-    private final RootNodeController rootController;
-    @NotNull
-    private final NotifViewBarn viewBarn;
-    @NotNull
-    private final ShadeViewDiffer viewDiffer;
+    /* access modifiers changed from: private */
+    public final RootNodeController rootController;
+    /* access modifiers changed from: private */
+    public final NodeSpecBuilder specBuilder;
+    /* access modifiers changed from: private */
+    public final NotifStackController stackController;
+    /* access modifiers changed from: private */
+    public final NotifViewBarn viewBarn;
+    /* access modifiers changed from: private */
+    public final ShadeViewDiffer viewDiffer;
+    private final ShadeViewManager$viewRenderer$1 viewRenderer = new ShadeViewManager$viewRenderer$1(this);
 
-    public ShadeViewManager(@NotNull Context context, @NotNull NotificationListContainer listContainer, @NotNull ShadeViewDifferLogger logger, @NotNull NotifViewBarn viewBarn, @NotNull NotificationIconAreaController notificationIconAreaController) {
+    @AssistedInject
+    public ShadeViewManager(Context context, @Assisted NotificationListContainer notificationListContainer, @Assisted NotifStackController notifStackController, MediaContainerController mediaContainerController, NotificationSectionsFeatureManager notificationSectionsFeatureManager, SectionHeaderVisibilityProvider sectionHeaderVisibilityProvider, NodeSpecBuilderLogger nodeSpecBuilderLogger, ShadeViewDifferLogger shadeViewDifferLogger, NotifViewBarn notifViewBarn) {
+        Context context2 = context;
+        NotificationListContainer notificationListContainer2 = notificationListContainer;
+        ShadeViewDifferLogger shadeViewDifferLogger2 = shadeViewDifferLogger;
+        NotifViewBarn notifViewBarn2 = notifViewBarn;
         Intrinsics.checkNotNullParameter(context, "context");
-        Intrinsics.checkNotNullParameter(listContainer, "listContainer");
-        Intrinsics.checkNotNullParameter(logger, "logger");
-        Intrinsics.checkNotNullParameter(viewBarn, "viewBarn");
-        Intrinsics.checkNotNullParameter(notificationIconAreaController, "notificationIconAreaController");
-        this.viewBarn = viewBarn;
-        this.notificationIconAreaController = notificationIconAreaController;
-        RootNodeController rootNodeController = new RootNodeController(listContainer, new View(context));
+        Intrinsics.checkNotNullParameter(notificationListContainer, "listContainer");
+        Intrinsics.checkNotNullParameter(notifStackController, "stackController");
+        Intrinsics.checkNotNullParameter(mediaContainerController, "mediaContainerController");
+        NotificationSectionsFeatureManager notificationSectionsFeatureManager2 = notificationSectionsFeatureManager;
+        Intrinsics.checkNotNullParameter(notificationSectionsFeatureManager2, "featureManager");
+        SectionHeaderVisibilityProvider sectionHeaderVisibilityProvider2 = sectionHeaderVisibilityProvider;
+        Intrinsics.checkNotNullParameter(sectionHeaderVisibilityProvider2, "sectionHeaderVisibilityProvider");
+        NodeSpecBuilderLogger nodeSpecBuilderLogger2 = nodeSpecBuilderLogger;
+        Intrinsics.checkNotNullParameter(nodeSpecBuilderLogger2, "nodeSpecBuilderLogger");
+        Intrinsics.checkNotNullParameter(shadeViewDifferLogger2, "shadeViewDifferLogger");
+        Intrinsics.checkNotNullParameter(notifViewBarn2, "viewBarn");
+        this.stackController = notifStackController;
+        this.viewBarn = notifViewBarn2;
+        RootNodeController rootNodeController = new RootNodeController(notificationListContainer, new View(context));
         this.rootController = rootNodeController;
-        this.viewDiffer = new ShadeViewDiffer(rootNodeController, logger);
+        this.specBuilder = new NodeSpecBuilder(mediaContainerController, notificationSectionsFeatureManager2, sectionHeaderVisibilityProvider2, notifViewBarn2, nodeSpecBuilderLogger2);
+        this.viewDiffer = new ShadeViewDiffer(rootNodeController, shadeViewDifferLogger2);
     }
 
-    public final void attach(@NotNull ShadeListBuilder listBuilder) {
-        Intrinsics.checkNotNullParameter(listBuilder, "listBuilder");
-        listBuilder.setOnRenderListListener(new ShadeListBuilder.OnRenderListListener() { // from class: com.android.systemui.statusbar.notification.collection.render.ShadeViewManager$attach$1
-            @Override // com.android.systemui.statusbar.notification.collection.ShadeListBuilder.OnRenderListListener
-            public final void onRenderList(@NotNull List<? extends ListEntry> p0) {
-                Intrinsics.checkNotNullParameter(p0, "p0");
-                ShadeViewManager.this.onNewNotifTree(p0);
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void onNewNotifTree(List<? extends ListEntry> list) {
-        this.viewDiffer.applySpec(buildTree(list));
-    }
-
-    private final NodeSpec buildTree(List<? extends ListEntry> list) {
-        Sequence asSequence;
-        NodeController headerController;
-        NodeController headerController2;
-        NodeSpecImpl nodeSpecImpl = new NodeSpecImpl(null, this.rootController);
-        ListEntry listEntry = (ListEntry) CollectionsKt.firstOrNull(list);
-        NotifSection section = listEntry == null ? null : listEntry.getSection();
-        if (section != null && (headerController2 = section.getHeaderController()) != null) {
-            nodeSpecImpl.getChildren().add(new NodeSpecImpl(nodeSpecImpl, headerController2));
-        }
-        asSequence = CollectionsKt___CollectionsKt.asSequence(list);
-        for (Pair pair : SequencesKt.zipWithNext(asSequence)) {
-            ListEntry listEntry2 = (ListEntry) pair.component2();
-            NotifSection section2 = listEntry2.getSection();
-            if (!(!Intrinsics.areEqual(section2, ((ListEntry) pair.component1()).getSection()))) {
-                section2 = null;
-            }
-            if (section2 != null && (headerController = section2.getHeaderController()) != null) {
-                nodeSpecImpl.getChildren().add(new NodeSpecImpl(nodeSpecImpl, headerController));
-            }
-            nodeSpecImpl.getChildren().add(buildNotifNode(listEntry2, nodeSpecImpl));
-        }
-        this.notificationIconAreaController.updateNotificationIcons(list);
-        return nodeSpecImpl;
-    }
-
-    private final NodeSpec buildNotifNode(ListEntry listEntry, NodeSpec nodeSpec) {
-        if (listEntry instanceof NotificationEntry) {
-            return new NodeSpecImpl(nodeSpec, this.viewBarn.requireView(listEntry));
-        }
-        if (!(listEntry instanceof GroupEntry)) {
-            throw new RuntimeException(Intrinsics.stringPlus("Unexpected entry: ", listEntry));
-        }
-        NotifViewBarn notifViewBarn = this.viewBarn;
-        GroupEntry groupEntry = (GroupEntry) listEntry;
-        NotificationEntry summary = groupEntry.getSummary();
-        if (summary == null) {
-            throw new IllegalStateException("Required value was null.".toString());
-        }
-        NodeSpecImpl nodeSpecImpl = new NodeSpecImpl(nodeSpec, notifViewBarn.requireView(summary));
-        List<NotificationEntry> children = groupEntry.getChildren();
-        Intrinsics.checkNotNullExpressionValue(children, "entry.children");
-        for (NotificationEntry it : children) {
-            List<NodeSpec> children2 = nodeSpecImpl.getChildren();
-            Intrinsics.checkNotNullExpressionValue(it, "it");
-            children2.add(buildNotifNode(it, nodeSpecImpl));
-        }
-        return nodeSpecImpl;
+    public final void attach(RenderStageManager renderStageManager) {
+        Intrinsics.checkNotNullParameter(renderStageManager, "renderStageManager");
+        renderStageManager.setViewRenderer(this.viewRenderer);
     }
 }

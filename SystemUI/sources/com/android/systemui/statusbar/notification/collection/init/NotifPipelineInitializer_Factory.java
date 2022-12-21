@@ -1,51 +1,52 @@
 package com.android.systemui.statusbar.notification.collection.init;
 
 import com.android.systemui.dump.DumpManager;
-import com.android.systemui.statusbar.FeatureFlags;
+import com.android.systemui.statusbar.notification.NotifPipelineFlags;
 import com.android.systemui.statusbar.notification.collection.NotifCollection;
 import com.android.systemui.statusbar.notification.collection.NotifInflaterImpl;
 import com.android.systemui.statusbar.notification.collection.NotifPipeline;
 import com.android.systemui.statusbar.notification.collection.ShadeListBuilder;
 import com.android.systemui.statusbar.notification.collection.coalescer.GroupCoalescer;
 import com.android.systemui.statusbar.notification.collection.coordinator.NotifCoordinators;
+import com.android.systemui.statusbar.notification.collection.render.RenderStageManager;
 import com.android.systemui.statusbar.notification.collection.render.ShadeViewManagerFactory;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotifPipelineInitializer_Factory implements Factory<NotifPipelineInitializer> {
     private final Provider<DumpManager> dumpManagerProvider;
-    private final Provider<FeatureFlags> featureFlagsProvider;
     private final Provider<GroupCoalescer> groupCoalescerProvider;
     private final Provider<ShadeListBuilder> listBuilderProvider;
     private final Provider<NotifCollection> notifCollectionProvider;
     private final Provider<NotifCoordinators> notifCoordinatorsProvider;
     private final Provider<NotifInflaterImpl> notifInflaterProvider;
+    private final Provider<NotifPipelineFlags> notifPipelineFlagsProvider;
     private final Provider<NotifPipeline> pipelineWrapperProvider;
+    private final Provider<RenderStageManager> renderStageManagerProvider;
     private final Provider<ShadeViewManagerFactory> shadeViewManagerFactoryProvider;
 
-    public NotifPipelineInitializer_Factory(Provider<NotifPipeline> provider, Provider<GroupCoalescer> provider2, Provider<NotifCollection> provider3, Provider<ShadeListBuilder> provider4, Provider<NotifCoordinators> provider5, Provider<NotifInflaterImpl> provider6, Provider<DumpManager> provider7, Provider<ShadeViewManagerFactory> provider8, Provider<FeatureFlags> provider9) {
+    public NotifPipelineInitializer_Factory(Provider<NotifPipeline> provider, Provider<GroupCoalescer> provider2, Provider<NotifCollection> provider3, Provider<ShadeListBuilder> provider4, Provider<RenderStageManager> provider5, Provider<NotifCoordinators> provider6, Provider<NotifInflaterImpl> provider7, Provider<DumpManager> provider8, Provider<ShadeViewManagerFactory> provider9, Provider<NotifPipelineFlags> provider10) {
         this.pipelineWrapperProvider = provider;
         this.groupCoalescerProvider = provider2;
         this.notifCollectionProvider = provider3;
         this.listBuilderProvider = provider4;
-        this.notifCoordinatorsProvider = provider5;
-        this.notifInflaterProvider = provider6;
-        this.dumpManagerProvider = provider7;
-        this.shadeViewManagerFactoryProvider = provider8;
-        this.featureFlagsProvider = provider9;
+        this.renderStageManagerProvider = provider5;
+        this.notifCoordinatorsProvider = provider6;
+        this.notifInflaterProvider = provider7;
+        this.dumpManagerProvider = provider8;
+        this.shadeViewManagerFactoryProvider = provider9;
+        this.notifPipelineFlagsProvider = provider10;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotifPipelineInitializer mo1933get() {
-        return newInstance(this.pipelineWrapperProvider.mo1933get(), this.groupCoalescerProvider.mo1933get(), this.notifCollectionProvider.mo1933get(), this.listBuilderProvider.mo1933get(), this.notifCoordinatorsProvider.mo1933get(), this.notifInflaterProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.shadeViewManagerFactoryProvider.mo1933get(), this.featureFlagsProvider.mo1933get());
+    public NotifPipelineInitializer get() {
+        return newInstance(this.pipelineWrapperProvider.get(), this.groupCoalescerProvider.get(), this.notifCollectionProvider.get(), this.listBuilderProvider.get(), this.renderStageManagerProvider.get(), this.notifCoordinatorsProvider.get(), this.notifInflaterProvider.get(), this.dumpManagerProvider.get(), this.shadeViewManagerFactoryProvider.get(), this.notifPipelineFlagsProvider.get());
     }
 
-    public static NotifPipelineInitializer_Factory create(Provider<NotifPipeline> provider, Provider<GroupCoalescer> provider2, Provider<NotifCollection> provider3, Provider<ShadeListBuilder> provider4, Provider<NotifCoordinators> provider5, Provider<NotifInflaterImpl> provider6, Provider<DumpManager> provider7, Provider<ShadeViewManagerFactory> provider8, Provider<FeatureFlags> provider9) {
-        return new NotifPipelineInitializer_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9);
+    public static NotifPipelineInitializer_Factory create(Provider<NotifPipeline> provider, Provider<GroupCoalescer> provider2, Provider<NotifCollection> provider3, Provider<ShadeListBuilder> provider4, Provider<RenderStageManager> provider5, Provider<NotifCoordinators> provider6, Provider<NotifInflaterImpl> provider7, Provider<DumpManager> provider8, Provider<ShadeViewManagerFactory> provider9, Provider<NotifPipelineFlags> provider10) {
+        return new NotifPipelineInitializer_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10);
     }
 
-    public static NotifPipelineInitializer newInstance(NotifPipeline notifPipeline, GroupCoalescer groupCoalescer, NotifCollection notifCollection, ShadeListBuilder shadeListBuilder, NotifCoordinators notifCoordinators, NotifInflaterImpl notifInflaterImpl, DumpManager dumpManager, ShadeViewManagerFactory shadeViewManagerFactory, FeatureFlags featureFlags) {
-        return new NotifPipelineInitializer(notifPipeline, groupCoalescer, notifCollection, shadeListBuilder, notifCoordinators, notifInflaterImpl, dumpManager, shadeViewManagerFactory, featureFlags);
+    public static NotifPipelineInitializer newInstance(NotifPipeline notifPipeline, GroupCoalescer groupCoalescer, NotifCollection notifCollection, ShadeListBuilder shadeListBuilder, RenderStageManager renderStageManager, NotifCoordinators notifCoordinators, NotifInflaterImpl notifInflaterImpl, DumpManager dumpManager, ShadeViewManagerFactory shadeViewManagerFactory, NotifPipelineFlags notifPipelineFlags) {
+        return new NotifPipelineInitializer(notifPipeline, groupCoalescer, notifCollection, shadeListBuilder, renderStageManager, notifCoordinators, notifInflaterImpl, dumpManager, shadeViewManagerFactory, notifPipelineFlags);
     }
 }

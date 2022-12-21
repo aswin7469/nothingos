@@ -10,34 +10,36 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
-import com.android.settingslib.R$string;
-import com.android.settingslib.users.ActivityStarter;
 import com.android.settingslib.users.EditUserInfoController;
-import com.android.systemui.R$layout;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-/* loaded from: classes2.dex */
+import com.android.systemui.C1893R;
+import javax.inject.Inject;
+
 public class CreateUserActivity extends Activity {
+    private static final String DIALOG_STATE_KEY = "create_user_dialog_state";
+    private static final String TAG = "CreateUserActivity";
     private final IActivityManager mActivityManager;
     private final EditUserInfoController mEditUserInfoController;
     private Dialog mSetupUserDialog;
     private final UserCreator mUserCreator;
 
     public static Intent createIntentForStart(Context context) {
-        return new Intent(context, CreateUserActivity.class);
+        Intent intent = new Intent(context, CreateUserActivity.class);
+        intent.addFlags(335544320);
+        return intent;
     }
 
+    @Inject
     public CreateUserActivity(UserCreator userCreator, EditUserInfoController editUserInfoController, IActivityManager iActivityManager) {
         this.mUserCreator = userCreator;
         this.mEditUserInfoController = editUserInfoController;
         this.mActivityManager = iActivityManager;
     }
 
-    @Override // android.app.Activity
-    protected void onCreate(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setShowWhenLocked(true);
-        setContentView(R$layout.activity_create_new_user);
+        setContentView(C1893R.layout.activity_create_new_user);
         if (bundle != null) {
             this.mEditUserInfoController.onRestoreInstanceState(bundle);
         }
@@ -46,59 +48,43 @@ public class CreateUserActivity extends Activity {
         createDialog.show();
     }
 
-    @Override // android.app.Activity
-    protected void onSaveInstanceState(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onSaveInstanceState(Bundle bundle) {
         Dialog dialog = this.mSetupUserDialog;
         if (dialog != null && dialog.isShowing()) {
-            bundle.putBundle("create_user_dialog_state", this.mSetupUserDialog.onSaveInstanceState());
+            bundle.putBundle(DIALOG_STATE_KEY, this.mSetupUserDialog.onSaveInstanceState());
         }
         this.mEditUserInfoController.onSaveInstanceState(bundle);
         super.onSaveInstanceState(bundle);
     }
 
-    @Override // android.app.Activity
-    protected void onRestoreInstanceState(Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onRestoreInstanceState(Bundle bundle) {
         Dialog dialog;
         super.onRestoreInstanceState(bundle);
-        Bundle bundle2 = bundle.getBundle("create_user_dialog_state");
-        if (bundle2 == null || (dialog = this.mSetupUserDialog) == null) {
-            return;
+        Bundle bundle2 = bundle.getBundle(DIALOG_STATE_KEY);
+        if (bundle2 != null && (dialog = this.mSetupUserDialog) != null) {
+            dialog.onRestoreInstanceState(bundle2);
         }
-        dialog.onRestoreInstanceState(bundle2);
     }
 
     private Dialog createDialog() {
-        return this.mEditUserInfoController.createDialog(this, new ActivityStarter() { // from class: com.android.systemui.user.CreateUserActivity$$ExternalSyntheticLambda0
-            @Override // com.android.settingslib.users.ActivityStarter
-            public final void startActivityForResult(Intent intent, int i) {
-                CreateUserActivity.this.lambda$createDialog$0(intent, i);
-            }
-        }, null, getString(R$string.user_new_user_name), getString(com.android.systemui.R$string.user_add_user), new BiConsumer() { // from class: com.android.systemui.user.CreateUserActivity$$ExternalSyntheticLambda3
-            @Override // java.util.function.BiConsumer
-            public final void accept(Object obj, Object obj2) {
-                CreateUserActivity.this.addUserNow((String) obj, (Drawable) obj2);
-            }
-        }, new Runnable() { // from class: com.android.systemui.user.CreateUserActivity$$ExternalSyntheticLambda1
-            @Override // java.lang.Runnable
-            public final void run() {
-                CreateUserActivity.this.finish();
-            }
-        });
+        return this.mEditUserInfoController.createDialog(this, new CreateUserActivity$$ExternalSyntheticLambda0(this), (Drawable) null, getString(C1893R.string.user_new_user_name), getString(C1893R.string.user_add_user), new CreateUserActivity$$ExternalSyntheticLambda1(this), new CreateUserActivity$$ExternalSyntheticLambda2(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$createDialog$0(Intent intent, int i) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$createDialog$0$com-android-systemui-user-CreateUserActivity */
+    public /* synthetic */ void mo46669x5fd23fef(Intent intent, int i) {
         this.mEditUserInfoController.startingActivityForResult();
         startActivityForResult(intent, i);
     }
 
-    @Override // android.app.Activity
-    protected void onActivityResult(int i, int i2, Intent intent) {
+    /* access modifiers changed from: protected */
+    public void onActivityResult(int i, int i2, Intent intent) {
         super.onActivityResult(i, i2, intent);
         this.mEditUserInfoController.onActivityResult(i, i2, intent);
     }
 
-    @Override // android.app.Activity
     public void onBackPressed() {
         super.onBackPressed();
         Dialog dialog = this.mSetupUserDialog;
@@ -107,49 +93,40 @@ public class CreateUserActivity extends Activity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void addUserNow(String str, Drawable drawable) {
         this.mSetupUserDialog.dismiss();
         if (str == null || str.trim().isEmpty()) {
-            str = getString(com.android.systemui.R$string.user_new_user_name);
+            str = getString(C1893R.string.user_new_user_name);
         }
-        this.mUserCreator.createUser(str, drawable, new Consumer() { // from class: com.android.systemui.user.CreateUserActivity$$ExternalSyntheticLambda4
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                CreateUserActivity.this.lambda$addUserNow$1((UserInfo) obj);
-            }
-        }, new Runnable() { // from class: com.android.systemui.user.CreateUserActivity$$ExternalSyntheticLambda2
-            @Override // java.lang.Runnable
-            public final void run() {
-                CreateUserActivity.this.lambda$addUserNow$2();
-            }
-        });
+        this.mUserCreator.createUser(str, drawable, new CreateUserActivity$$ExternalSyntheticLambda3(this), new CreateUserActivity$$ExternalSyntheticLambda4(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$addUserNow$1(UserInfo userInfo) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$addUserNow$1$com-android-systemui-user-CreateUserActivity  reason: not valid java name */
+    public /* synthetic */ void m3291lambda$addUserNow$1$comandroidsystemuiuserCreateUserActivity(UserInfo userInfo) {
         switchToUser(userInfo.id);
         finishIfNeeded();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$addUserNow$2() {
-        Log.e("CreateUserActivity", "Unable to create user");
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$addUserNow$2$com-android-systemui-user-CreateUserActivity  reason: not valid java name */
+    public /* synthetic */ void m3292lambda$addUserNow$2$comandroidsystemuiuserCreateUserActivity() {
+        Log.e(TAG, "Unable to create user");
         finishIfNeeded();
     }
 
     private void finishIfNeeded() {
-        if (isFinishing() || isDestroyed()) {
-            return;
+        if (!isFinishing() && !isDestroyed()) {
+            finish();
         }
-        finish();
     }
 
     private void switchToUser(int i) {
         try {
             this.mActivityManager.switchUser(i);
         } catch (RemoteException e) {
-            Log.e("CreateUserActivity", "Couldn't switch user.", e);
+            Log.e(TAG, "Couldn't switch user.", e);
         }
     }
 }

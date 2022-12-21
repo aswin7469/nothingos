@@ -2,12 +2,26 @@ package com.android.systemui.statusbar;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.FrameLayout;
-/* loaded from: classes.dex */
+
 public class AlphaOptimizedFrameLayout extends FrameLayout {
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return false;
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
     }
 
     public AlphaOptimizedFrameLayout(Context context) {

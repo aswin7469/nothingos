@@ -4,107 +4,69 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.IndentingPrintWriter;
 import com.android.internal.util.Preconditions;
+import com.android.settingslib.SliceBroadcastRelay;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.logging.BroadcastDispatcherLogger;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
+import java.p026io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
-import kotlin.collections.CollectionsKt__MutableCollectionsKt;
+import kotlin.Metadata;
+import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt__SequencesKt;
-import org.jetbrains.annotations.NotNull;
+import kotlin.sequences.SequencesKt;
+
+@Metadata(mo64986d1 = {"\u0000z\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010#\n\u0002\u0010\u000e\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0011\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0002\b\u0006\b\u0016\u0018\u0000 32\u00020\u0001:\u000234B5\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r¢\u0006\u0002\u0010\u000eJ'\u0010\u001d\u001a\u00020\u00122\u0006\u0010\u001e\u001a\u00020\u001c2\b\u0010\u001f\u001a\u0004\u0018\u00010\u001c2\u0006\u0010 \u001a\u00020\u0005H\u0011¢\u0006\u0002\b!J%\u0010\"\u001a\u00020#2\u0006\u0010$\u001a\u00020%2\u000e\u0010&\u001a\n\u0012\u0006\b\u0001\u0012\u00020\u001c0'H\u0016¢\u0006\u0002\u0010(J\u0018\u0010)\u001a\u00020#2\u0006\u0010*\u001a\u00020+2\u0006\u0010 \u001a\u00020\u0005H\u0002J\u0010\u0010,\u001a\u00020#2\u0006\u0010-\u001a\u00020\u001aH\u0002J\u0015\u0010.\u001a\u00020/2\u0006\u0010-\u001a\u00020\u001aH\u0001¢\u0006\u0002\b0J\u0018\u00101\u001a\u00020#2\u0006\u0010*\u001a\u00020+2\u0006\u0010 \u001a\u00020\u0005H\u0007J\u0010\u00102\u001a\u00020#2\u0006\u0010-\u001a\u00020\u001aH\u0007R(\u0010\u000f\u001a\u000e\u0012\u0004\u0012\u00020\u0011\u0012\u0004\u0012\u00020\u00120\u00108\u0000X\u0004¢\u0006\u000e\n\u0000\u0012\u0004\b\u0013\u0010\u0014\u001a\u0004\b\u0015\u0010\u0016R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0018X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R \u0010\u0019\u001a\u0014\u0012\u0004\u0012\u00020\u001a\u0012\n\u0012\b\u0012\u0004\u0012\u00020\u001c0\u001b0\u0010X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000¨\u00065"}, mo64987d2 = {"Lcom/android/systemui/broadcast/UserBroadcastDispatcher;", "Lcom/android/systemui/Dumpable;", "context", "Landroid/content/Context;", "userId", "", "bgLooper", "Landroid/os/Looper;", "bgExecutor", "Ljava/util/concurrent/Executor;", "logger", "Lcom/android/systemui/broadcast/logging/BroadcastDispatcherLogger;", "removalPendingStore", "Lcom/android/systemui/broadcast/PendingRemovalStore;", "(Landroid/content/Context;ILandroid/os/Looper;Ljava/util/concurrent/Executor;Lcom/android/systemui/broadcast/logging/BroadcastDispatcherLogger;Lcom/android/systemui/broadcast/PendingRemovalStore;)V", "actionsToActionsReceivers", "Landroid/util/ArrayMap;", "Lcom/android/systemui/broadcast/UserBroadcastDispatcher$ReceiverProperties;", "Lcom/android/systemui/broadcast/ActionReceiver;", "getActionsToActionsReceivers$SystemUI_nothingRelease$annotations", "()V", "getActionsToActionsReceivers$SystemUI_nothingRelease", "()Landroid/util/ArrayMap;", "bgHandler", "Landroid/os/Handler;", "receiverToActions", "Landroid/content/BroadcastReceiver;", "", "", "createActionReceiver", "action", "permission", "flags", "createActionReceiver$SystemUI_nothingRelease", "dump", "", "pw", "Ljava/io/PrintWriter;", "args", "", "(Ljava/io/PrintWriter;[Ljava/lang/String;)V", "handleRegisterReceiver", "receiverData", "Lcom/android/systemui/broadcast/ReceiverData;", "handleUnregisterReceiver", "receiver", "isReceiverReferenceHeld", "", "isReceiverReferenceHeld$SystemUI_nothingRelease", "registerReceiver", "unregisterReceiver", "Companion", "ReceiverProperties", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: UserBroadcastDispatcher.kt */
-/* loaded from: classes.dex */
 public class UserBroadcastDispatcher implements Dumpable {
-    @NotNull
-    public static final Companion Companion = new Companion(null);
-    @NotNull
-    private static final AtomicInteger index = new AtomicInteger(0);
-    @NotNull
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    /* access modifiers changed from: private */
+    public static final AtomicInteger index = new AtomicInteger(0);
+    private final ArrayMap<ReceiverProperties, ActionReceiver> actionsToActionsReceivers = new ArrayMap<>();
     private final Executor bgExecutor;
-    @NotNull
-    private final UserBroadcastDispatcher$bgHandler$1 bgHandler;
-    @NotNull
+    /* access modifiers changed from: private */
+    public final Handler bgHandler;
     private final Looper bgLooper;
-    @NotNull
-    private final Context context;
-    @NotNull
-    private final BroadcastDispatcherLogger logger;
-    private final int userId;
-    @NotNull
-    private final ArrayMap<String, ActionReceiver> actionsToActionsReceivers = new ArrayMap<>();
-    @NotNull
+    /* access modifiers changed from: private */
+    public final Context context;
+    /* access modifiers changed from: private */
+    public final BroadcastDispatcherLogger logger;
     private final ArrayMap<BroadcastReceiver, Set<String>> receiverToActions = new ArrayMap<>();
+    private final PendingRemovalStore removalPendingStore;
+    /* access modifiers changed from: private */
+    public final int userId;
 
-    public static /* synthetic */ void getActionsToActionsReceivers$frameworks__base__packages__SystemUI__android_common__SystemUI_core$annotations() {
+    public static /* synthetic */ void getActionsToActionsReceivers$SystemUI_nothingRelease$annotations() {
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(@NotNull FileDescriptor fd, @NotNull PrintWriter pw, @NotNull String[] args) {
-        Intrinsics.checkNotNullParameter(fd, "fd");
-        Intrinsics.checkNotNullParameter(pw, "pw");
-        Intrinsics.checkNotNullParameter(args, "args");
-        boolean z = pw instanceof IndentingPrintWriter;
-        if (z) {
-            ((IndentingPrintWriter) pw).increaseIndent();
-        }
-        for (Map.Entry<String, ActionReceiver> entry : getActionsToActionsReceivers$frameworks__base__packages__SystemUI__android_common__SystemUI_core().entrySet()) {
-            pw.println(Intrinsics.stringPlus(entry.getKey(), ":"));
-            entry.getValue().dump(fd, pw, args);
-        }
-        if (z) {
-            ((IndentingPrintWriter) pw).decreaseIndent();
-        }
-    }
-
-    /* JADX WARN: Type inference failed for: r2v1, types: [com.android.systemui.broadcast.UserBroadcastDispatcher$bgHandler$1] */
-    public UserBroadcastDispatcher(@NotNull Context context, int i, @NotNull final Looper bgLooper, @NotNull Executor bgExecutor, @NotNull BroadcastDispatcherLogger logger) {
-        Intrinsics.checkNotNullParameter(context, "context");
-        Intrinsics.checkNotNullParameter(bgLooper, "bgLooper");
-        Intrinsics.checkNotNullParameter(bgExecutor, "bgExecutor");
-        Intrinsics.checkNotNullParameter(logger, "logger");
-        this.context = context;
+    public UserBroadcastDispatcher(Context context2, int i, Looper looper, Executor executor, BroadcastDispatcherLogger broadcastDispatcherLogger, PendingRemovalStore pendingRemovalStore) {
+        Intrinsics.checkNotNullParameter(context2, "context");
+        Intrinsics.checkNotNullParameter(looper, "bgLooper");
+        Intrinsics.checkNotNullParameter(executor, "bgExecutor");
+        Intrinsics.checkNotNullParameter(broadcastDispatcherLogger, "logger");
+        Intrinsics.checkNotNullParameter(pendingRemovalStore, "removalPendingStore");
+        this.context = context2;
         this.userId = i;
-        this.bgLooper = bgLooper;
-        this.bgExecutor = bgExecutor;
-        this.logger = logger;
-        this.bgHandler = new Handler(bgLooper) { // from class: com.android.systemui.broadcast.UserBroadcastDispatcher$bgHandler$1
-            @Override // android.os.Handler
-            public void handleMessage(@NotNull Message msg) {
-                Intrinsics.checkNotNullParameter(msg, "msg");
-                int i2 = msg.what;
-                if (i2 == 0) {
-                    UserBroadcastDispatcher userBroadcastDispatcher = UserBroadcastDispatcher.this;
-                    Object obj = msg.obj;
-                    Objects.requireNonNull(obj, "null cannot be cast to non-null type com.android.systemui.broadcast.ReceiverData");
-                    userBroadcastDispatcher.handleRegisterReceiver((ReceiverData) obj);
-                } else if (i2 != 1) {
-                } else {
-                    UserBroadcastDispatcher userBroadcastDispatcher2 = UserBroadcastDispatcher.this;
-                    Object obj2 = msg.obj;
-                    Objects.requireNonNull(obj2, "null cannot be cast to non-null type android.content.BroadcastReceiver");
-                    userBroadcastDispatcher2.handleUnregisterReceiver((BroadcastReceiver) obj2);
-                }
-            }
-        };
+        this.bgLooper = looper;
+        this.bgExecutor = executor;
+        this.logger = broadcastDispatcherLogger;
+        this.removalPendingStore = pendingRemovalStore;
+        this.bgHandler = new Handler(looper);
     }
 
+    @Metadata(mo64986d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u0011\u0010\u0003\u001a\u00020\u0004¢\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006¨\u0006\u0007"}, mo64987d2 = {"Lcom/android/systemui/broadcast/UserBroadcastDispatcher$Companion;", "", "()V", "index", "Ljava/util/concurrent/atomic/AtomicInteger;", "getIndex", "()Ljava/util/concurrent/atomic/AtomicInteger;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: UserBroadcastDispatcher.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -112,91 +74,204 @@ public class UserBroadcastDispatcher implements Dumpable {
 
         private Companion() {
         }
+
+        public final AtomicInteger getIndex() {
+            return UserBroadcastDispatcher.index;
+        }
     }
 
-    @NotNull
-    public final ArrayMap<String, ActionReceiver> getActionsToActionsReceivers$frameworks__base__packages__SystemUI__android_common__SystemUI_core() {
+    @Metadata(mo64986d1 = {"\u0000 \n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0002\b\f\n\u0002\u0010\u000b\n\u0002\b\u0004\b\b\u0018\u00002\u00020\u0001B\u001f\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\u0010\u0006\u001a\u0004\u0018\u00010\u0003¢\u0006\u0002\u0010\u0007J\t\u0010\r\u001a\u00020\u0003HÆ\u0003J\t\u0010\u000e\u001a\u00020\u0005HÆ\u0003J\u000b\u0010\u000f\u001a\u0004\u0018\u00010\u0003HÆ\u0003J)\u0010\u0010\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00052\n\b\u0002\u0010\u0006\u001a\u0004\u0018\u00010\u0003HÆ\u0001J\u0013\u0010\u0011\u001a\u00020\u00122\b\u0010\u0013\u001a\u0004\u0018\u00010\u0001HÖ\u0003J\t\u0010\u0014\u001a\u00020\u0005HÖ\u0001J\t\u0010\u0015\u001a\u00020\u0003HÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\b\u0010\tR\u0011\u0010\u0004\u001a\u00020\u0005¢\u0006\b\n\u0000\u001a\u0004\b\n\u0010\u000bR\u0013\u0010\u0006\u001a\u0004\u0018\u00010\u0003¢\u0006\b\n\u0000\u001a\u0004\b\f\u0010\t¨\u0006\u0016"}, mo64987d2 = {"Lcom/android/systemui/broadcast/UserBroadcastDispatcher$ReceiverProperties;", "", "action", "", "flags", "", "permission", "(Ljava/lang/String;ILjava/lang/String;)V", "getAction", "()Ljava/lang/String;", "getFlags", "()I", "getPermission", "component1", "component2", "component3", "copy", "equals", "", "other", "hashCode", "toString", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
+    /* compiled from: UserBroadcastDispatcher.kt */
+    public static final class ReceiverProperties {
+        private final String action;
+        private final int flags;
+        private final String permission;
+
+        public static /* synthetic */ ReceiverProperties copy$default(ReceiverProperties receiverProperties, String str, int i, String str2, int i2, Object obj) {
+            if ((i2 & 1) != 0) {
+                str = receiverProperties.action;
+            }
+            if ((i2 & 2) != 0) {
+                i = receiverProperties.flags;
+            }
+            if ((i2 & 4) != 0) {
+                str2 = receiverProperties.permission;
+            }
+            return receiverProperties.copy(str, i, str2);
+        }
+
+        public final String component1() {
+            return this.action;
+        }
+
+        public final int component2() {
+            return this.flags;
+        }
+
+        public final String component3() {
+            return this.permission;
+        }
+
+        public final ReceiverProperties copy(String str, int i, String str2) {
+            Intrinsics.checkNotNullParameter(str, "action");
+            return new ReceiverProperties(str, i, str2);
+        }
+
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (!(obj instanceof ReceiverProperties)) {
+                return false;
+            }
+            ReceiverProperties receiverProperties = (ReceiverProperties) obj;
+            return Intrinsics.areEqual((Object) this.action, (Object) receiverProperties.action) && this.flags == receiverProperties.flags && Intrinsics.areEqual((Object) this.permission, (Object) receiverProperties.permission);
+        }
+
+        public int hashCode() {
+            int hashCode = ((this.action.hashCode() * 31) + Integer.hashCode(this.flags)) * 31;
+            String str = this.permission;
+            return hashCode + (str == null ? 0 : str.hashCode());
+        }
+
+        public String toString() {
+            return "ReceiverProperties(action=" + this.action + ", flags=" + this.flags + ", permission=" + this.permission + ')';
+        }
+
+        public ReceiverProperties(String str, int i, String str2) {
+            Intrinsics.checkNotNullParameter(str, "action");
+            this.action = str;
+            this.flags = i;
+            this.permission = str2;
+        }
+
+        public final String getAction() {
+            return this.action;
+        }
+
+        public final int getFlags() {
+            return this.flags;
+        }
+
+        public final String getPermission() {
+            return this.permission;
+        }
+    }
+
+    public final ArrayMap<ReceiverProperties, ActionReceiver> getActionsToActionsReceivers$SystemUI_nothingRelease() {
         return this.actionsToActionsReceivers;
     }
 
-    public final boolean isReceiverReferenceHeld$frameworks__base__packages__SystemUI__android_common__SystemUI_core(@NotNull BroadcastReceiver receiver) {
+    public final boolean isReceiverReferenceHeld$SystemUI_nothingRelease(BroadcastReceiver broadcastReceiver) {
         boolean z;
-        Intrinsics.checkNotNullParameter(receiver, "receiver");
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
         Collection<ActionReceiver> values = this.actionsToActionsReceivers.values();
         Intrinsics.checkNotNullExpressionValue(values, "actionsToActionsReceivers.values");
-        if (!values.isEmpty()) {
-            for (ActionReceiver actionReceiver : values) {
-                if (actionReceiver.hasReceiver(receiver)) {
-                    z = true;
+        Iterable iterable = values;
+        if (!((Collection) iterable).isEmpty()) {
+            Iterator it = iterable.iterator();
+            while (true) {
+                if (it.hasNext()) {
+                    if (((ActionReceiver) it.next()).hasReceiver(broadcastReceiver)) {
+                        z = true;
+                        break;
+                    }
+                } else {
                     break;
                 }
             }
         }
         z = false;
-        return z || this.receiverToActions.containsKey(receiver);
+        if (z || this.receiverToActions.containsKey(broadcastReceiver)) {
+            return true;
+        }
+        return false;
     }
 
-    public final void registerReceiver(@NotNull ReceiverData receiverData) {
+    public final void registerReceiver(ReceiverData receiverData, int i) {
         Intrinsics.checkNotNullParameter(receiverData, "receiverData");
-        obtainMessage(0, receiverData).sendToTarget();
+        handleRegisterReceiver(receiverData, i);
     }
 
-    public final void unregisterReceiver(@NotNull BroadcastReceiver receiver) {
-        Intrinsics.checkNotNullParameter(receiver, "receiver");
-        obtainMessage(1, receiver).sendToTarget();
+    public final void unregisterReceiver(BroadcastReceiver broadcastReceiver) {
+        Intrinsics.checkNotNullParameter(broadcastReceiver, SliceBroadcastRelay.EXTRA_RECEIVER);
+        handleUnregisterReceiver(broadcastReceiver);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void handleRegisterReceiver(ReceiverData receiverData) {
-        Preconditions.checkState(getLooper().isCurrentThread(), "This method should only be called from BG thread");
-        ArrayMap<BroadcastReceiver, Set<String>> arrayMap = this.receiverToActions;
+    private final void handleRegisterReceiver(ReceiverData receiverData, int i) {
+        Sequence<T> sequence;
+        Preconditions.checkState(this.bgLooper.isCurrentThread(), "This method should only be called from BG thread");
+        Map map = this.receiverToActions;
         BroadcastReceiver receiver = receiverData.getReceiver();
-        Set<String> set = arrayMap.get(receiver);
-        if (set == null) {
-            set = new ArraySet<>();
-            arrayMap.put(receiver, set);
+        Object obj = map.get(receiver);
+        if (obj == null) {
+            obj = new ArraySet();
+            map.put(receiver, obj);
         }
-        Set<String> set2 = set;
+        Collection collection = (Collection) obj;
         Iterator<String> actionsIterator = receiverData.getFilter().actionsIterator();
-        Sequence asSequence = actionsIterator == null ? null : SequencesKt__SequencesKt.asSequence(actionsIterator);
-        if (asSequence == null) {
-            asSequence = SequencesKt__SequencesKt.emptySequence();
+        if (actionsIterator == null || (sequence = SequencesKt.asSequence(actionsIterator)) == null) {
+            sequence = SequencesKt.emptySequence();
         }
-        CollectionsKt__MutableCollectionsKt.addAll(set2, asSequence);
+        CollectionsKt.addAll(collection, sequence);
         Iterator<String> actionsIterator2 = receiverData.getFilter().actionsIterator();
         Intrinsics.checkNotNullExpressionValue(actionsIterator2, "receiverData.filter.actionsIterator()");
         while (actionsIterator2.hasNext()) {
-            String it = actionsIterator2.next();
-            ArrayMap<String, ActionReceiver> actionsToActionsReceivers$frameworks__base__packages__SystemUI__android_common__SystemUI_core = getActionsToActionsReceivers$frameworks__base__packages__SystemUI__android_common__SystemUI_core();
-            ActionReceiver actionReceiver = actionsToActionsReceivers$frameworks__base__packages__SystemUI__android_common__SystemUI_core.get(it);
-            if (actionReceiver == null) {
-                Intrinsics.checkNotNullExpressionValue(it, "it");
-                actionReceiver = createActionReceiver$frameworks__base__packages__SystemUI__android_common__SystemUI_core(it);
-                actionsToActionsReceivers$frameworks__base__packages__SystemUI__android_common__SystemUI_core.put(it, actionReceiver);
+            String next = actionsIterator2.next();
+            Map map2 = this.actionsToActionsReceivers;
+            Intrinsics.checkNotNullExpressionValue(next, "it");
+            ReceiverProperties receiverProperties = new ReceiverProperties(next, i, receiverData.getPermission());
+            Object obj2 = map2.get(receiverProperties);
+            if (obj2 == null) {
+                obj2 = createActionReceiver$SystemUI_nothingRelease(next, receiverData.getPermission(), i);
+                map2.put(receiverProperties, obj2);
             }
-            actionReceiver.addReceiverData(receiverData);
+            ((ActionReceiver) obj2).addReceiverData(receiverData);
         }
-        this.logger.logReceiverRegistered(this.userId, receiverData.getReceiver());
+        this.logger.logReceiverRegistered(this.userId, receiverData.getReceiver(), i);
     }
 
-    @NotNull
-    public ActionReceiver createActionReceiver$frameworks__base__packages__SystemUI__android_common__SystemUI_core(@NotNull String action) {
-        Intrinsics.checkNotNullParameter(action, "action");
-        return new ActionReceiver(action, this.userId, new UserBroadcastDispatcher$createActionReceiver$1(this), new UserBroadcastDispatcher$createActionReceiver$2(this, action), this.bgExecutor, this.logger);
+    public ActionReceiver createActionReceiver$SystemUI_nothingRelease(String str, String str2, int i) {
+        Intrinsics.checkNotNullParameter(str, "action");
+        return new ActionReceiver(str, this.userId, new UserBroadcastDispatcher$createActionReceiver$1(this, str2, i), new UserBroadcastDispatcher$createActionReceiver$2(this, str), this.bgExecutor, this.logger, new UserBroadcastDispatcher$createActionReceiver$3(this.removalPendingStore));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void handleUnregisterReceiver(BroadcastReceiver broadcastReceiver) {
-        Preconditions.checkState(getLooper().isCurrentThread(), "This method should only be called from BG thread");
-        Set<String> orDefault = this.receiverToActions.getOrDefault(broadcastReceiver, new LinkedHashSet());
-        Intrinsics.checkNotNullExpressionValue(orDefault, "receiverToActions.getOrDefault(receiver, mutableSetOf())");
-        for (String str : orDefault) {
-            ActionReceiver actionReceiver = getActionsToActionsReceivers$frameworks__base__packages__SystemUI__android_common__SystemUI_core().get(str);
-            if (actionReceiver != null) {
-                actionReceiver.removeReceiver(broadcastReceiver);
+    private final void handleUnregisterReceiver(BroadcastReceiver broadcastReceiver) {
+        Preconditions.checkState(this.bgLooper.isCurrentThread(), "This method should only be called from BG thread");
+        Object orDefault = this.receiverToActions.getOrDefault(broadcastReceiver, new LinkedHashSet());
+        Intrinsics.checkNotNullExpressionValue(orDefault, "receiverToActions.getOrD…receiver, mutableSetOf())");
+        for (String str : (Iterable) orDefault) {
+            for (Map.Entry entry : this.actionsToActionsReceivers.entrySet()) {
+                ActionReceiver actionReceiver = (ActionReceiver) entry.getValue();
+                if (Intrinsics.areEqual((Object) ((ReceiverProperties) entry.getKey()).getAction(), (Object) str)) {
+                    actionReceiver.removeReceiver(broadcastReceiver);
+                }
             }
         }
         this.receiverToActions.remove(broadcastReceiver);
         this.logger.logReceiverUnregistered(this.userId, broadcastReceiver);
+    }
+
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        Intrinsics.checkNotNullParameter(printWriter, "pw");
+        Intrinsics.checkNotNullParameter(strArr, "args");
+        boolean z = printWriter instanceof IndentingPrintWriter;
+        if (z) {
+            ((IndentingPrintWriter) printWriter).increaseIndent();
+        }
+        for (Map.Entry entry : this.actionsToActionsReceivers.entrySet()) {
+            ReceiverProperties receiverProperties = (ReceiverProperties) entry.getKey();
+            ActionReceiver actionReceiver = (ActionReceiver) entry.getValue();
+            StringBuilder append = new StringBuilder(NavigationBarInflaterView.KEY_CODE_START).append(receiverProperties.getAction()).append(": ").append(BroadcastDispatcherLogger.Companion.flagToString(receiverProperties.getFlags()));
+            String str = "):";
+            if (receiverProperties.getPermission() != null) {
+                str = ":" + receiverProperties.getPermission() + str;
+            }
+            printWriter.println(append.append(str).toString());
+            actionReceiver.dump(printWriter, strArr);
+        }
+        if (z) {
+            ((IndentingPrintWriter) printWriter).decreaseIndent();
+        }
     }
 }

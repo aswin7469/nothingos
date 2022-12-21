@@ -6,40 +6,38 @@ import android.provider.Settings;
 import android.util.AttributeSet;
 import androidx.preference.SwitchPreference;
 import com.android.internal.logging.MetricsLogger;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$styleable;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.tuner.TunerService;
-/* loaded from: classes2.dex */
+
 public class TunerSwitch extends SwitchPreference implements TunerService.Tunable {
     private final int mAction;
     private final boolean mDefault;
 
     public TunerSwitch(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.TunerSwitch);
-        this.mDefault = obtainStyledAttributes.getBoolean(R$styleable.TunerSwitch_defValue, false);
-        this.mAction = obtainStyledAttributes.getInt(R$styleable.TunerSwitch_metricsAction, -1);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.TunerSwitch);
+        this.mDefault = obtainStyledAttributes.getBoolean(0, false);
+        this.mAction = obtainStyledAttributes.getInt(1, -1);
+        obtainStyledAttributes.recycle();
     }
 
-    @Override // androidx.preference.Preference
     public void onAttached() {
         super.onAttached();
-        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, getKey().split(","));
+        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, getKey().split(NavigationBarInflaterView.BUTTON_SEPARATOR));
     }
 
-    @Override // androidx.preference.Preference
     public void onDetached() {
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
         super.onDetached();
     }
 
-    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         setChecked(TunerService.parseIntegerSwitch(str2, this.mDefault));
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.TwoStatePreference, androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public void onClick() {
         super.onClick();
         if (this.mAction != -1) {
@@ -47,11 +45,10 @@ public class TunerSwitch extends SwitchPreference implements TunerService.Tunabl
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    /* access modifiers changed from: protected */
     public boolean persistBoolean(boolean z) {
-        for (String str : getKey().split(",")) {
-            Settings.Secure.putString(getContext().getContentResolver(), str, z ? "1" : "0");
+        for (String putString : getKey().split(NavigationBarInflaterView.BUTTON_SEPARATOR)) {
+            Settings.Secure.putString(getContext().getContentResolver(), putString, z ? "1" : "0");
         }
         return true;
     }

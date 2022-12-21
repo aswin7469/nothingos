@@ -12,19 +12,44 @@ import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.view.View;
 import com.android.settingslib.Utils;
-import com.android.systemui.R$color;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
-/* loaded from: classes.dex */
+import com.android.systemui.utils.FwkResIdLoader;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class BarTransitions {
+    public static final int BACKGROUND_DURATION = 200;
+    private static final boolean DEBUG = false;
+    private static final boolean DEBUG_COLORS = false;
+    public static final int LIGHTS_IN_DURATION = 250;
+    public static final int LIGHTS_OUT_DURATION = 1500;
+    public static final int MODE_LIGHTS_OUT = 3;
+    public static final int MODE_LIGHTS_OUT_TRANSPARENT = 6;
+    public static final int MODE_OPAQUE = 4;
+    public static final int MODE_SEMI_TRANSPARENT = 1;
+    public static final int MODE_TRANSLUCENT = 2;
+    public static final int MODE_TRANSPARENT = 0;
+    public static final int MODE_WARNING = 5;
     private boolean mAlwaysOpaque = false;
     protected final BarBackgroundDrawable mBarBackground;
     private int mMode;
     private final String mTag;
     private final View mView;
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TransitionMode {
+    }
+
+    public void destroy() {
+    }
+
+    /* access modifiers changed from: protected */
     public boolean isLightsOut(int i) {
         return i == 3 || i == 6;
+    }
+
+    public void setAutoDim(boolean z) {
     }
 
     public BarTransitions(View view, int i) {
@@ -39,6 +64,10 @@ public class BarTransitions {
         return this.mMode;
     }
 
+    public void setAlwaysOpaque(boolean z) {
+        this.mAlwaysOpaque = z;
+    }
+
     public boolean isAlwaysOpaque() {
         return this.mAlwaysOpaque;
     }
@@ -51,19 +80,18 @@ public class BarTransitions {
             i = 3;
         }
         int i2 = this.mMode;
-        if (i2 == i) {
-            return;
+        if (i2 != i) {
+            this.mMode = i;
+            onTransition(i2, i, z);
         }
-        this.mMode = i;
-        onTransition(i2, i, z);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void onTransition(int i, int i2, boolean z) {
         applyModeBackground(i, i2, z);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void applyModeBackground(int i, int i2, boolean z) {
         this.mBarBackground.applyModeBackground(i, i2, z);
     }
@@ -97,9 +125,7 @@ public class BarTransitions {
         this.mBarBackground.finishAnimation();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* loaded from: classes.dex */
-    public static class BarBackgroundDrawable extends Drawable {
+    protected static class BarBackgroundDrawable extends Drawable {
         private boolean mAnimating;
         private int mColor;
         private int mColorStart;
@@ -108,34 +134,31 @@ public class BarTransitions {
         private final Drawable mGradient;
         private int mGradientAlpha;
         private int mGradientAlphaStart;
+        private int mMode = -1;
         private final int mOpaque;
+        private float mOverrideAlpha = 1.0f;
+        private Paint mPaint = new Paint();
         private final int mSemiTransparent;
         private long mStartTime;
         private PorterDuffColorFilter mTintFilter;
         private final int mTransparent;
         private final int mWarning;
-        private int mMode = -1;
-        private float mOverrideAlpha = 1.0f;
-        private Paint mPaint = new Paint();
 
-        @Override // android.graphics.drawable.Drawable
         public int getOpacity() {
             return -3;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void setAlpha(int i) {
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void setColorFilter(ColorFilter colorFilter) {
         }
 
         public BarBackgroundDrawable(Context context, int i) {
             context.getResources();
-            this.mOpaque = context.getColor(R$color.system_bar_background_opaque);
-            this.mSemiTransparent = context.getColor(17171090);
-            this.mTransparent = context.getColor(R$color.system_bar_background_transparent);
+            this.mOpaque = context.getColor(C1893R.C1894color.system_bar_background_opaque);
+            this.mSemiTransparent = context.getColor(FwkResIdLoader.color("system_bar_background_semi_transparent"));
+            this.mTransparent = context.getColor(C1893R.C1894color.system_bar_background_transparent);
             this.mWarning = Utils.getColorAttrDefaultColor(context, 16844099);
             this.mGradient = context.getDrawable(i);
         }
@@ -161,10 +184,14 @@ public class BarTransitions {
             return this.mFrame;
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void setTint(int i) {
+            PorterDuff.Mode mode;
             PorterDuffColorFilter porterDuffColorFilter = this.mTintFilter;
-            PorterDuff.Mode mode = porterDuffColorFilter == null ? PorterDuff.Mode.SRC_IN : porterDuffColorFilter.getMode();
+            if (porterDuffColorFilter == null) {
+                mode = PorterDuff.Mode.SRC_IN;
+            } else {
+                mode = porterDuffColorFilter.getMode();
+            }
             PorterDuffColorFilter porterDuffColorFilter2 = this.mTintFilter;
             if (porterDuffColorFilter2 == null || porterDuffColorFilter2.getColor() != i) {
                 this.mTintFilter = new PorterDuffColorFilter(i, mode);
@@ -172,7 +199,6 @@ public class BarTransitions {
             invalidateSelf();
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void setTintMode(PorterDuff.Mode mode) {
             PorterDuffColorFilter porterDuffColorFilter = this.mTintFilter;
             int color = porterDuffColorFilter == null ? 0 : porterDuffColorFilter.getColor();
@@ -183,26 +209,25 @@ public class BarTransitions {
             invalidateSelf();
         }
 
-        @Override // android.graphics.drawable.Drawable
-        protected void onBoundsChange(Rect rect) {
+        /* access modifiers changed from: protected */
+        public void onBoundsChange(Rect rect) {
             super.onBoundsChange(rect);
             this.mGradient.setBounds(rect);
         }
 
         public void applyModeBackground(int i, int i2, boolean z) {
-            if (this.mMode == i2) {
-                return;
+            if (this.mMode != i2) {
+                this.mMode = i2;
+                this.mAnimating = z;
+                if (z) {
+                    long elapsedRealtime = SystemClock.elapsedRealtime();
+                    this.mStartTime = elapsedRealtime;
+                    this.mEndTime = elapsedRealtime + 200;
+                    this.mGradientAlphaStart = this.mGradientAlpha;
+                    this.mColorStart = this.mColor;
+                }
+                invalidateSelf();
             }
-            this.mMode = i2;
-            this.mAnimating = z;
-            if (z) {
-                long elapsedRealtime = SystemClock.elapsedRealtime();
-                this.mStartTime = elapsedRealtime;
-                this.mEndTime = elapsedRealtime + 200;
-                this.mGradientAlphaStart = this.mGradientAlpha;
-                this.mColorStart = this.mColor;
-            }
-            invalidateSelf();
         }
 
         public void finishAnimation() {
@@ -212,7 +237,6 @@ public class BarTransitions {
             }
         }
 
-        @Override // android.graphics.drawable.Drawable
         public void draw(Canvas canvas) {
             int i;
             int i2 = this.mMode;
@@ -241,8 +265,8 @@ public class BarTransitions {
                     long j2 = this.mStartTime;
                     float max = Math.max(0.0f, Math.min(Interpolators.LINEAR.getInterpolation(((float) (elapsedRealtime - j2)) / ((float) (j - j2))), 1.0f));
                     float f = 1.0f - max;
-                    this.mGradientAlpha = (int) ((0 * max) + (this.mGradientAlphaStart * f));
-                    this.mColor = Color.argb((int) ((Color.alpha(i) * max) + (Color.alpha(this.mColorStart) * f)), (int) ((Color.red(i) * max) + (Color.red(this.mColorStart) * f)), (int) ((Color.green(i) * max) + (Color.green(this.mColorStart) * f)), (int) ((max * Color.blue(i)) + (Color.blue(this.mColorStart) * f)));
+                    this.mGradientAlpha = (int) ((((float) 0) * max) + (((float) this.mGradientAlphaStart) * f));
+                    this.mColor = Color.argb((int) ((((float) Color.alpha(i)) * max) + (((float) Color.alpha(this.mColorStart)) * f)), (int) ((((float) Color.red(i)) * max) + (((float) Color.red(this.mColorStart)) * f)), (int) ((((float) Color.green(i)) * max) + (((float) Color.green(this.mColorStart)) * f)), (int) ((max * ((float) Color.blue(i))) + (((float) Color.blue(this.mColorStart)) * f)));
                 }
             }
             int i3 = this.mGradientAlpha;
@@ -256,7 +280,7 @@ public class BarTransitions {
                 if (porterDuffColorFilter != null) {
                     this.mPaint.setColorFilter(porterDuffColorFilter);
                 }
-                this.mPaint.setAlpha((int) (Color.alpha(this.mColor) * this.mOverrideAlpha));
+                this.mPaint.setAlpha((int) (((float) Color.alpha(this.mColor)) * this.mOverrideAlpha));
                 Rect rect = this.mFrame;
                 if (rect != null) {
                     canvas.drawRect(rect, this.mPaint);

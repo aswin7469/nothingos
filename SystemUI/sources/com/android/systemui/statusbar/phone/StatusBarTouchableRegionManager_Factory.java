@@ -5,7 +5,7 @@ import com.android.systemui.statusbar.NotificationShadeWindowController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class StatusBarTouchableRegionManager_Factory implements Factory<StatusBarTouchableRegionManager> {
     private final Provider<ConfigurationController> configurationControllerProvider;
     private final Provider<Context> contextProvider;
@@ -19,10 +19,8 @@ public final class StatusBarTouchableRegionManager_Factory implements Factory<St
         this.headsUpManagerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public StatusBarTouchableRegionManager mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.notificationShadeWindowControllerProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.headsUpManagerProvider.mo1933get());
+    public StatusBarTouchableRegionManager get() {
+        return newInstance(this.contextProvider.get(), this.notificationShadeWindowControllerProvider.get(), this.configurationControllerProvider.get(), this.headsUpManagerProvider.get());
     }
 
     public static StatusBarTouchableRegionManager_Factory create(Provider<Context> provider, Provider<NotificationShadeWindowController> provider2, Provider<ConfigurationController> provider3, Provider<HeadsUpManagerPhone> provider4) {

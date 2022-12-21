@@ -6,75 +6,79 @@ import android.content.res.Configuration;
 import android.media.VolumePolicy;
 import android.os.Bundle;
 import com.android.settingslib.applications.InterestingConfigChanges;
-import com.android.systemui.Dependency;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.demomode.DemoMode;
 import com.android.systemui.demomode.DemoModeController;
 import com.android.systemui.keyguard.KeyguardViewMediator;
+import com.android.systemui.p012qs.tiles.DndTile;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.PluginDependencyProvider;
 import com.android.systemui.plugins.VolumeDialog;
 import com.android.systemui.plugins.VolumeDialogController;
-import com.android.systemui.qs.tiles.DndTile;
 import com.android.systemui.statusbar.policy.ExtensionController;
 import com.android.systemui.tuner.TunerService;
 import com.android.systemui.volume.VolumeDialogControllerImpl;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class VolumeDialogComponent implements VolumeComponent, TunerService.Tunable, VolumeDialogControllerImpl.UserActivityListener {
+    public static final boolean DEFAULT_DO_NOT_DISTURB_WHEN_SILENT = false;
+    public static final boolean DEFAULT_VOLUME_DOWN_TO_ENTER_SILENT = false;
+    public static final boolean DEFAULT_VOLUME_UP_TO_EXIT_SILENT = false;
+    public static final String VOLUME_DOWN_SILENT = "sysui_volume_down_silent";
+    public static final String VOLUME_SILENT_DO_NOT_DISTURB = "sysui_do_not_disturb";
+    public static final String VOLUME_UP_SILENT = "sysui_volume_up_silent";
+    /* access modifiers changed from: private */
+    public static final Intent ZEN_PRIORITY_SETTINGS = new Intent("android.settings.ZEN_MODE_PRIORITY_SETTINGS");
+    /* access modifiers changed from: private */
+    public static final Intent ZEN_SETTINGS = new Intent("android.settings.ZEN_MODE_SETTINGS");
+    private final ActivityStarter mActivityStarter;
+    private final InterestingConfigChanges mConfigChanges = new InterestingConfigChanges(-1073741308);
     protected final Context mContext;
     private final VolumeDialogControllerImpl mController;
     private VolumeDialog mDialog;
     private final KeyguardViewMediator mKeyguardViewMediator;
-    private final InterestingConfigChanges mConfigChanges = new InterestingConfigChanges(-1073741308);
-    private VolumePolicy mVolumePolicy = new VolumePolicy(false, false, false, 400);
-    private final VolumeDialog.Callback mVolumeDialogCallback = new VolumeDialog.Callback() { // from class: com.android.systemui.volume.VolumeDialogComponent.1
-        @Override // com.android.systemui.plugins.VolumeDialog.Callback
+    private final VolumeDialog.Callback mVolumeDialogCallback = new VolumeDialog.Callback() {
         public void onZenSettingsClicked() {
-            VolumeDialogComponent.this.startSettings(ZenModePanel.ZEN_SETTINGS);
+            VolumeDialogComponent.this.startSettings(VolumeDialogComponent.ZEN_SETTINGS);
         }
 
-        @Override // com.android.systemui.plugins.VolumeDialog.Callback
         public void onZenPrioritySettingsClicked() {
-            VolumeDialogComponent.this.startSettings(ZenModePanel.ZEN_PRIORITY_SETTINGS);
+            VolumeDialogComponent.this.startSettings(VolumeDialogComponent.ZEN_PRIORITY_SETTINGS);
         }
     };
+    private VolumePolicy mVolumePolicy = new VolumePolicy(false, false, false, 400);
 
-    @Override // com.android.systemui.demomode.DemoModeCommandReceiver
+    static /* synthetic */ VolumeDialog lambda$new$0(VolumeDialog volumeDialog) {
+        return volumeDialog;
+    }
+
     public void dispatchDemoCommand(String str, Bundle bundle) {
     }
 
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
     }
 
-    public VolumeDialogComponent(Context context, KeyguardViewMediator keyguardViewMediator, VolumeDialogControllerImpl volumeDialogControllerImpl, DemoModeController demoModeController) {
+    @Inject
+    public VolumeDialogComponent(Context context, KeyguardViewMediator keyguardViewMediator, ActivityStarter activityStarter, VolumeDialogControllerImpl volumeDialogControllerImpl, DemoModeController demoModeController, PluginDependencyProvider pluginDependencyProvider, ExtensionController extensionController, TunerService tunerService, VolumeDialog volumeDialog) {
         this.mContext = context;
         this.mKeyguardViewMediator = keyguardViewMediator;
+        this.mActivityStarter = activityStarter;
         this.mController = volumeDialogControllerImpl;
         volumeDialogControllerImpl.setUserActivityListener(this);
-        ((PluginDependencyProvider) Dependency.get(PluginDependencyProvider.class)).allowPluginDependency(VolumeDialogController.class);
-        ((ExtensionController) Dependency.get(ExtensionController.class)).mo1298newExtension(VolumeDialog.class).withPlugin(VolumeDialog.class).withDefault(new Supplier() { // from class: com.android.systemui.volume.VolumeDialogComponent$$ExternalSyntheticLambda1
-            @Override // java.util.function.Supplier
-            public final Object get() {
-                return VolumeDialogComponent.this.createDefault();
-            }
-        }).withCallback(new Consumer() { // from class: com.android.systemui.volume.VolumeDialogComponent$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                VolumeDialogComponent.this.lambda$new$0((VolumeDialog) obj);
-            }
-        }).build();
+        pluginDependencyProvider.allowPluginDependency(VolumeDialogController.class);
+        extensionController.newExtension(VolumeDialog.class).withPlugin(VolumeDialog.class).withDefault(new VolumeDialogComponent$$ExternalSyntheticLambda0(volumeDialog)).withCallback(new VolumeDialogComponent$$ExternalSyntheticLambda1(this)).build();
         applyConfiguration();
-        ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "sysui_volume_down_silent", "sysui_volume_up_silent", "sysui_do_not_disturb");
+        tunerService.addTunable(this, VOLUME_DOWN_SILENT, VOLUME_UP_SILENT, VOLUME_SILENT_DO_NOT_DISTURB);
         demoModeController.addCallback((DemoMode) this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(VolumeDialog volumeDialog) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$1$com-android-systemui-volume-VolumeDialogComponent  reason: not valid java name */
+    public /* synthetic */ void m3310lambda$new$1$comandroidsystemuivolumeVolumeDialogComponent(VolumeDialog volumeDialog) {
         VolumeDialog volumeDialog2 = this.mDialog;
         if (volumeDialog2 != null) {
             volumeDialog2.destroy();
@@ -83,26 +87,15 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
         volumeDialog.init(2020, this.mVolumeDialogCallback);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public VolumeDialog createDefault() {
-        VolumeDialogImpl volumeDialogImpl = new VolumeDialogImpl(this.mContext);
-        volumeDialogImpl.setStreamImportant(1, false);
-        volumeDialogImpl.setAutomute(true);
-        volumeDialogImpl.setSilentMode(false);
-        return volumeDialogImpl;
-    }
-
-    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
-        VolumePolicy volumePolicy = this.mVolumePolicy;
-        boolean z = volumePolicy.volumeDownToEnterSilent;
-        boolean z2 = volumePolicy.volumeUpToExitSilent;
-        boolean z3 = volumePolicy.doNotDisturbWhenSilent;
-        if ("sysui_volume_down_silent".equals(str)) {
+        boolean z = this.mVolumePolicy.volumeDownToEnterSilent;
+        boolean z2 = this.mVolumePolicy.volumeUpToExitSilent;
+        boolean z3 = this.mVolumePolicy.doNotDisturbWhenSilent;
+        if (VOLUME_DOWN_SILENT.equals(str)) {
             z = TunerService.parseIntegerSwitch(str2, false);
-        } else if ("sysui_volume_up_silent".equals(str)) {
+        } else if (VOLUME_UP_SILENT.equals(str)) {
             z2 = TunerService.parseIntegerSwitch(str2, false);
-        } else if ("sysui_do_not_disturb".equals(str)) {
+        } else if (VOLUME_SILENT_DO_NOT_DISTURB.equals(str)) {
             z3 = TunerService.parseIntegerSwitch(str2, false);
         }
         setVolumePolicy(z, z2, z3, this.mVolumePolicy.vibrateToSilentDebounce);
@@ -114,19 +107,18 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
         this.mController.setVolumePolicy(volumePolicy);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setEnableDialogs(boolean z, boolean z2) {
         this.mController.setEnableDialogs(z, z2);
     }
 
-    @Override // com.android.systemui.volume.VolumeDialogControllerImpl.UserActivityListener
     public void onUserActivity() {
         this.mKeyguardViewMediator.userActivity();
     }
 
     private void applyConfiguration() {
         this.mController.setVolumePolicy(this.mVolumePolicy);
-        this.mController.showDndTile(true);
+        this.mController.showDndTile();
     }
 
     public void onConfigurationChanged(Configuration configuration) {
@@ -135,12 +127,10 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
         }
     }
 
-    @Override // com.android.systemui.volume.VolumeComponent
     public void dismissNow() {
         this.mController.dismiss();
     }
 
-    @Override // com.android.systemui.demomode.DemoMode
     public List<String> demoCommands() {
         ArrayList arrayList = new ArrayList();
         arrayList.add("volume");
@@ -152,8 +142,8 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
         DndTile.setCombinedIcon(this.mContext, true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void startSettings(Intent intent) {
-        ((ActivityStarter) Dependency.get(ActivityStarter.class)).startActivity(intent, true, true);
+        this.mActivityStarter.startActivity(intent, true, true);
     }
 }

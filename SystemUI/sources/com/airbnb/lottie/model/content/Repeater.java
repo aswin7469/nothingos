@@ -6,7 +6,7 @@ import com.airbnb.lottie.animation.content.RepeaterContent;
 import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.animatable.AnimatableTransform;
 import com.airbnb.lottie.model.layer.BaseLayer;
-/* loaded from: classes.dex */
+
 public class Repeater implements ContentModel {
     private final AnimatableFloatValue copies;
     private final boolean hidden;
@@ -42,7 +42,6 @@ public class Repeater implements ContentModel {
         return this.hidden;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new RepeaterContent(lottieDrawable, baseLayer, this);
     }

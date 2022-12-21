@@ -5,7 +5,7 @@ import android.media.AudioManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideAudioManagerFactory implements Factory<AudioManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideAudioManagerFactory implements
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AudioManager mo1933get() {
-        return provideAudioManager(this.contextProvider.mo1933get());
+    public AudioManager get() {
+        return provideAudioManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideAudioManagerFactory create(Provider<Context> provider) {

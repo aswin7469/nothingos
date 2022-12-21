@@ -3,28 +3,27 @@ package com.android.systemui.settings;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import com.android.systemui.broadcast.BroadcastDispatcher;
-/* loaded from: classes.dex */
+
 public class CurrentUserObservable {
-    private final MutableLiveData<Integer> mCurrentUser = new MutableLiveData<Integer>() { // from class: com.android.systemui.settings.CurrentUserObservable.1
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.lifecycle.LiveData
+    /* access modifiers changed from: private */
+    public final MutableLiveData<Integer> mCurrentUser = new MutableLiveData<Integer>() {
+        /* access modifiers changed from: protected */
         public void onActive() {
             super.onActive();
             CurrentUserObservable.this.mTracker.startTracking();
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.lifecycle.LiveData
+        /* access modifiers changed from: protected */
         public void onInactive() {
             super.onInactive();
             CurrentUserObservable.this.mTracker.stopTracking();
         }
     };
-    private final CurrentUserTracker mTracker;
+    /* access modifiers changed from: private */
+    public final CurrentUserTracker mTracker;
 
     public CurrentUserObservable(BroadcastDispatcher broadcastDispatcher) {
-        this.mTracker = new CurrentUserTracker(broadcastDispatcher) { // from class: com.android.systemui.settings.CurrentUserObservable.2
-            @Override // com.android.systemui.settings.CurrentUserTracker
+        this.mTracker = new CurrentUserTracker(broadcastDispatcher) {
             public void onUserSwitched(int i) {
                 CurrentUserObservable.this.mCurrentUser.setValue(Integer.valueOf(i));
             }
@@ -32,7 +31,7 @@ public class CurrentUserObservable {
     }
 
     public LiveData<Integer> getCurrentUser() {
-        if (this.mCurrentUser.mo1438getValue() == null) {
+        if (this.mCurrentUser.getValue() == null) {
             this.mCurrentUser.setValue(Integer.valueOf(this.mTracker.getCurrentUserId()));
         }
         return this.mCurrentUser;

@@ -1,31 +1,33 @@
 package com.android.systemui.shortcut;
 
 import android.content.Context;
+import android.net.wifi.WifiManager;
 import android.os.RemoteException;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
-import com.android.internal.policy.DividerSnapAlgorithm;
-import com.android.systemui.SystemUI;
+import com.android.systemui.CoreStartable;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.shortcut.ShortcutKeyServiceProxy;
-import com.android.wm.shell.legacysplitscreen.DividerView;
-import com.android.wm.shell.legacysplitscreen.LegacySplitScreen;
-import java.util.Optional;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServiceProxy.Callbacks {
-    private final Optional<LegacySplitScreen> mSplitScreenOptional;
-    private ShortcutKeyServiceProxy mShortcutKeyServiceProxy = new ShortcutKeyServiceProxy(this);
-    private IWindowManager mWindowManagerService = WindowManagerGlobal.getWindowManagerService();
-    protected final long META_MASK = 281474976710656L;
-    protected final long ALT_MASK = 8589934592L;
-    protected final long CTRL_MASK = 17592186044416L;
-    protected final long SHIFT_MASK = 4294967296L;
+import javax.inject.Inject;
+
+@SysUISingleton
+public class ShortcutKeyDispatcher extends CoreStartable implements ShortcutKeyServiceProxy.Callbacks {
+    private static final String TAG = "ShortcutKeyDispatcher";
+    protected final long ALT_MASK = WifiManager.WIFI_FEATURE_CONNECTED_RAND_MAC;
+    protected final long CTRL_MASK = WifiManager.WIFI_FEATURE_ADDITIONAL_STA_LOCAL_ONLY;
+    protected final long META_MASK = WifiManager.WIFI_FEATURE_PASSPOINT_TERMS_AND_CONDITIONS;
     protected final long SC_DOCK_LEFT = 281474976710727L;
     protected final long SC_DOCK_RIGHT = 281474976710728L;
+    protected final long SHIFT_MASK = WifiManager.WIFI_FEATURE_P2P_RAND_MAC;
+    private ShortcutKeyServiceProxy mShortcutKeyServiceProxy = new ShortcutKeyServiceProxy(this);
+    private IWindowManager mWindowManagerService = WindowManagerGlobal.getWindowManagerService();
 
-    public ShortcutKeyDispatcher(Context context, Optional<LegacySplitScreen> optional) {
+    private void handleDockKey(long j) {
+    }
+
+    @Inject
+    public ShortcutKeyDispatcher(Context context) {
         super(context);
-        this.mSplitScreenOptional = optional;
     }
 
     public void registerShortcutKey(long j) {
@@ -35,7 +37,6 @@ public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServic
         }
     }
 
-    @Override // com.android.systemui.shortcut.ShortcutKeyServiceProxy.Callbacks
     public void onShortcutKeyPressed(long j) {
         int i = this.mContext.getResources().getConfiguration().orientation;
         if ((j == 281474976710727L || j == 281474976710728L) && i == 2) {
@@ -43,37 +44,8 @@ public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServic
         }
     }
 
-    @Override // com.android.systemui.SystemUI
     public void start() {
         registerShortcutKey(281474976710727L);
         registerShortcutKey(281474976710728L);
-    }
-
-    private void handleDockKey(final long j) {
-        this.mSplitScreenOptional.ifPresent(new Consumer() { // from class: com.android.systemui.shortcut.ShortcutKeyDispatcher$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ShortcutKeyDispatcher.this.lambda$handleDockKey$0(j, (LegacySplitScreen) obj);
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$handleDockKey$0(long j, LegacySplitScreen legacySplitScreen) {
-        DividerSnapAlgorithm.SnapTarget nextTarget;
-        if (legacySplitScreen.isDividerVisible()) {
-            DividerView dividerView = legacySplitScreen.getDividerView();
-            DividerSnapAlgorithm snapAlgorithm = dividerView.getSnapAlgorithm();
-            DividerSnapAlgorithm.SnapTarget calculateNonDismissingSnapTarget = snapAlgorithm.calculateNonDismissingSnapTarget(dividerView.getCurrentPosition());
-            if (j == 281474976710727L) {
-                nextTarget = snapAlgorithm.getPreviousTarget(calculateNonDismissingSnapTarget);
-            } else {
-                nextTarget = snapAlgorithm.getNextTarget(calculateNonDismissingSnapTarget);
-            }
-            dividerView.startDragging(true, false);
-            dividerView.stopDragging(nextTarget.position, 0.0f, false, true);
-            return;
-        }
-        legacySplitScreen.splitPrimaryTask();
     }
 }

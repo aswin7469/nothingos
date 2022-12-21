@@ -1,11 +1,9 @@
 package com.android.systemui.classifier;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class FalsingModule_ProvidesDoubleTapTimeoutMsFactory implements Factory<Long> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public Long mo1933get() {
+    public Long get() {
         return Long.valueOf(providesDoubleTapTimeoutMs());
     }
 
@@ -17,8 +15,11 @@ public final class FalsingModule_ProvidesDoubleTapTimeoutMsFactory implements Fa
         return FalsingModule.providesDoubleTapTimeoutMs();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final FalsingModule_ProvidesDoubleTapTimeoutMsFactory INSTANCE = new FalsingModule_ProvidesDoubleTapTimeoutMsFactory();
+        /* access modifiers changed from: private */
+        public static final FalsingModule_ProvidesDoubleTapTimeoutMsFactory INSTANCE = new FalsingModule_ProvidesDoubleTapTimeoutMsFactory();
+
+        private InstanceHolder() {
+        }
     }
 }

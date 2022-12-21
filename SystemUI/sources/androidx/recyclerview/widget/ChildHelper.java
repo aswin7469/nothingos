@@ -5,23 +5,22 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class ChildHelper {
-    final Callback mCallback;
+
+class ChildHelper {
+    private static final boolean DEBUG = false;
+    private static final String TAG = "ChildrenHelper";
     final Bucket mBucket = new Bucket();
+    final Callback mCallback;
     final List<View> mHiddenViews = new ArrayList();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public interface Callback {
-        void addView(View child, int index);
+    interface Callback {
+        void addView(View view, int i);
 
-        void attachViewToParent(View child, int index, ViewGroup.LayoutParams layoutParams);
+        void attachViewToParent(View view, int i, ViewGroup.LayoutParams layoutParams);
 
-        void detachViewFromParent(int offset);
+        void detachViewFromParent(int i);
 
-        View getChildAt(int offset);
+        View getChildAt(int i);
 
         int getChildCount();
 
@@ -29,112 +28,100 @@ public class ChildHelper {
 
         int indexOfChild(View view);
 
-        void onEnteredHiddenState(View child);
+        void onEnteredHiddenState(View view);
 
-        void onLeftHiddenState(View child);
+        void onLeftHiddenState(View view);
 
         void removeAllViews();
 
-        void removeViewAt(int index);
+        void removeViewAt(int i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ChildHelper(Callback callback) {
+    ChildHelper(Callback callback) {
         this.mCallback = callback;
     }
 
-    private void hideViewInternal(View child) {
-        this.mHiddenViews.add(child);
-        this.mCallback.onEnteredHiddenState(child);
+    private void hideViewInternal(View view) {
+        this.mHiddenViews.add(view);
+        this.mCallback.onEnteredHiddenState(view);
     }
 
-    private boolean unhideViewInternal(View child) {
-        if (this.mHiddenViews.remove(child)) {
-            this.mCallback.onLeftHiddenState(child);
-            return true;
+    private boolean unhideViewInternal(View view) {
+        if (!this.mHiddenViews.remove((Object) view)) {
+            return false;
         }
-        return false;
+        this.mCallback.onLeftHiddenState(view);
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void addView(View child, boolean hidden) {
-        addView(child, -1, hidden);
+    /* access modifiers changed from: package-private */
+    public void addView(View view, boolean z) {
+        addView(view, -1, z);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void addView(View child, int index, boolean hidden) {
-        int offset;
-        if (index < 0) {
-            offset = this.mCallback.getChildCount();
+    /* access modifiers changed from: package-private */
+    public void addView(View view, int i, boolean z) {
+        int i2;
+        if (i < 0) {
+            i2 = this.mCallback.getChildCount();
         } else {
-            offset = getOffset(index);
+            i2 = getOffset(i);
         }
-        this.mBucket.insert(offset, hidden);
-        if (hidden) {
-            hideViewInternal(child);
+        this.mBucket.insert(i2, z);
+        if (z) {
+            hideViewInternal(view);
         }
-        this.mCallback.addView(child, offset);
+        this.mCallback.addView(view, i2);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:12:0x001f, code lost:
-        if (r4.mBucket.get(r2) == false) goto L14;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:13:0x0021, code lost:
-        r2 = r2 + 1;
-     */
-    /* JADX WARN: Code restructure failed: missing block: B:15:0x0024, code lost:
-        return r2;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private int getOffset(int index) {
-        if (index < 0) {
+    private int getOffset(int i) {
+        if (i < 0) {
             return -1;
         }
         int childCount = this.mCallback.getChildCount();
-        int i = index;
-        while (i < childCount) {
-            int countOnesBefore = index - (i - this.mBucket.countOnesBefore(i));
+        int i2 = i;
+        while (i2 < childCount) {
+            int countOnesBefore = i - (i2 - this.mBucket.countOnesBefore(i2));
             if (countOnesBefore == 0) {
-                break;
+                while (this.mBucket.get(i2)) {
+                    i2++;
+                }
+                return i2;
             }
-            i += countOnesBefore;
+            i2 += countOnesBefore;
         }
         return -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void removeView(View view) {
         int indexOfChild = this.mCallback.indexOfChild(view);
-        if (indexOfChild < 0) {
-            return;
+        if (indexOfChild >= 0) {
+            if (this.mBucket.remove(indexOfChild)) {
+                unhideViewInternal(view);
+            }
+            this.mCallback.removeViewAt(indexOfChild);
         }
-        if (this.mBucket.remove(indexOfChild)) {
-            unhideViewInternal(view);
-        }
-        this.mCallback.removeViewAt(indexOfChild);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void removeViewAt(int index) {
-        int offset = getOffset(index);
+    /* access modifiers changed from: package-private */
+    public void removeViewAt(int i) {
+        int offset = getOffset(i);
         View childAt = this.mCallback.getChildAt(offset);
-        if (childAt == null) {
-            return;
+        if (childAt != null) {
+            if (this.mBucket.remove(offset)) {
+                unhideViewInternal(childAt);
+            }
+            this.mCallback.removeViewAt(offset);
         }
-        if (this.mBucket.remove(offset)) {
-            unhideViewInternal(childAt);
-        }
-        this.mCallback.removeViewAt(offset);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public View getChildAt(int index) {
-        return this.mCallback.getChildAt(getOffset(index));
+    /* access modifiers changed from: package-private */
+    public View getChildAt(int i) {
+        return this.mCallback.getChildAt(getOffset(i));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void removeAllViewsUnfiltered() {
         this.mBucket.reset();
         for (int size = this.mHiddenViews.size() - 1; size >= 0; size--) {
@@ -144,90 +131,91 @@ public class ChildHelper {
         this.mCallback.removeAllViews();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public View findHiddenNonRemovedView(int position) {
+    /* access modifiers changed from: package-private */
+    public View findHiddenNonRemovedView(int i) {
         int size = this.mHiddenViews.size();
-        for (int i = 0; i < size; i++) {
-            View view = this.mHiddenViews.get(i);
+        for (int i2 = 0; i2 < size; i2++) {
+            View view = this.mHiddenViews.get(i2);
             RecyclerView.ViewHolder childViewHolder = this.mCallback.getChildViewHolder(view);
-            if (childViewHolder.getLayoutPosition() == position && !childViewHolder.isInvalid() && !childViewHolder.isRemoved()) {
+            if (childViewHolder.getLayoutPosition() == i && !childViewHolder.isInvalid() && !childViewHolder.isRemoved()) {
                 return view;
             }
         }
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void attachViewToParent(View child, int index, ViewGroup.LayoutParams layoutParams, boolean hidden) {
-        int offset;
-        if (index < 0) {
-            offset = this.mCallback.getChildCount();
+    /* access modifiers changed from: package-private */
+    public void attachViewToParent(View view, int i, ViewGroup.LayoutParams layoutParams, boolean z) {
+        int i2;
+        if (i < 0) {
+            i2 = this.mCallback.getChildCount();
         } else {
-            offset = getOffset(index);
+            i2 = getOffset(i);
         }
-        this.mBucket.insert(offset, hidden);
-        if (hidden) {
-            hideViewInternal(child);
+        this.mBucket.insert(i2, z);
+        if (z) {
+            hideViewInternal(view);
         }
-        this.mCallback.attachViewToParent(child, offset, layoutParams);
+        this.mCallback.attachViewToParent(view, i2, layoutParams);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getChildCount() {
         return this.mCallback.getChildCount() - this.mHiddenViews.size();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getUnfilteredChildCount() {
         return this.mCallback.getChildCount();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public View getUnfilteredChildAt(int index) {
-        return this.mCallback.getChildAt(index);
+    /* access modifiers changed from: package-private */
+    public View getUnfilteredChildAt(int i) {
+        return this.mCallback.getChildAt(i);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void detachViewFromParent(int index) {
-        int offset = getOffset(index);
+    /* access modifiers changed from: package-private */
+    public void detachViewFromParent(int i) {
+        int offset = getOffset(i);
         this.mBucket.remove(offset);
         this.mCallback.detachViewFromParent(offset);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public int indexOfChild(View child) {
-        int indexOfChild = this.mCallback.indexOfChild(child);
+    /* access modifiers changed from: package-private */
+    public int indexOfChild(View view) {
+        int indexOfChild = this.mCallback.indexOfChild(view);
         if (indexOfChild != -1 && !this.mBucket.get(indexOfChild)) {
             return indexOfChild - this.mBucket.countOnesBefore(indexOfChild);
         }
         return -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isHidden(View view) {
         return this.mHiddenViews.contains(view);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void hide(View view) {
         int indexOfChild = this.mCallback.indexOfChild(view);
-        if (indexOfChild < 0) {
-            throw new IllegalArgumentException("view is not a child, cannot hide " + view);
+        if (indexOfChild >= 0) {
+            this.mBucket.set(indexOfChild);
+            hideViewInternal(view);
+            return;
         }
-        this.mBucket.set(indexOfChild);
-        hideViewInternal(view);
+        throw new IllegalArgumentException("view is not a child, cannot hide " + view);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void unhide(View view) {
         int indexOfChild = this.mCallback.indexOfChild(view);
         if (indexOfChild < 0) {
             throw new IllegalArgumentException("view is not a child, cannot hide " + view);
-        } else if (!this.mBucket.get(indexOfChild)) {
-            throw new RuntimeException("trying to unhide a view that was not hidden" + view);
-        } else {
+        } else if (this.mBucket.get(indexOfChild)) {
             this.mBucket.clear(indexOfChild);
             unhideViewInternal(view);
+        } else {
+            throw new RuntimeException("trying to unhide a view that was not hidden" + view);
         }
     }
 
@@ -235,7 +223,7 @@ public class ChildHelper {
         return this.mBucket.toString() + ", hidden list:" + this.mHiddenViews.size();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean removeViewIfHidden(View view) {
         int indexOfChild = this.mCallback.indexOfChild(view);
         if (indexOfChild == -1) {
@@ -251,22 +239,23 @@ public class ChildHelper {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class Bucket {
+    static class Bucket {
+        static final int BITS_PER_WORD = 64;
+        static final long LAST_BIT = Long.MIN_VALUE;
         long mData = 0;
         Bucket mNext;
 
         Bucket() {
         }
 
-        void set(int index) {
-            if (index >= 64) {
+        /* access modifiers changed from: package-private */
+        public void set(int i) {
+            if (i >= 64) {
                 ensureNext();
-                this.mNext.set(index - 64);
+                this.mNext.set(i - 64);
                 return;
             }
-            this.mData |= 1 << index;
+            this.mData |= 1 << i;
         }
 
         private void ensureNext() {
@@ -275,62 +264,66 @@ public class ChildHelper {
             }
         }
 
-        void clear(int index) {
-            if (index >= 64) {
+        /* access modifiers changed from: package-private */
+        public void clear(int i) {
+            if (i >= 64) {
                 Bucket bucket = this.mNext;
-                if (bucket == null) {
+                if (bucket != null) {
+                    bucket.clear(i - 64);
                     return;
                 }
-                bucket.clear(index - 64);
                 return;
             }
-            this.mData &= ~(1 << index);
+            this.mData &= ~(1 << i);
         }
 
-        boolean get(int index) {
-            if (index < 64) {
-                return ((1 << index) & this.mData) != 0;
+        /* access modifiers changed from: package-private */
+        public boolean get(int i) {
+            if (i >= 64) {
+                ensureNext();
+                return this.mNext.get(i - 64);
             }
-            ensureNext();
-            return this.mNext.get(index - 64);
+            return ((1 << i) & this.mData) != 0;
         }
 
-        void reset() {
-            this.mData = 0L;
+        /* access modifiers changed from: package-private */
+        public void reset() {
+            this.mData = 0;
             Bucket bucket = this.mNext;
             if (bucket != null) {
                 bucket.reset();
             }
         }
 
-        void insert(int index, boolean value) {
-            if (index >= 64) {
+        /* access modifiers changed from: package-private */
+        public void insert(int i, boolean z) {
+            if (i >= 64) {
                 ensureNext();
-                this.mNext.insert(index - 64, value);
+                this.mNext.insert(i - 64, z);
                 return;
             }
             long j = this.mData;
-            boolean z = (Long.MIN_VALUE & j) != 0;
-            long j2 = (1 << index) - 1;
+            boolean z2 = (Long.MIN_VALUE & j) != 0;
+            long j2 = (1 << i) - 1;
             this.mData = ((j & (~j2)) << 1) | (j & j2);
-            if (value) {
-                set(index);
+            if (z) {
+                set(i);
             } else {
-                clear(index);
+                clear(i);
             }
-            if (!z && this.mNext == null) {
-                return;
+            if (z2 || this.mNext != null) {
+                ensureNext();
+                this.mNext.insert(0, z2);
             }
-            ensureNext();
-            this.mNext.insert(0, z);
         }
 
-        boolean remove(int index) {
-            if (index >= 64) {
+        /* access modifiers changed from: package-private */
+        public boolean remove(int i) {
+            if (i >= 64) {
                 ensureNext();
-                return this.mNext.remove(index - 64);
+                return this.mNext.remove(i - 64);
             }
-            long j = 1 << index;
+            long j = 1 << i;
             long j2 = this.mData;
             boolean z = (j2 & j) != 0;
             long j3 = j2 & (~j);
@@ -347,17 +340,18 @@ public class ChildHelper {
             return z;
         }
 
-        int countOnesBefore(int index) {
+        /* access modifiers changed from: package-private */
+        public int countOnesBefore(int i) {
             Bucket bucket = this.mNext;
             if (bucket == null) {
-                if (index >= 64) {
+                if (i >= 64) {
                     return Long.bitCount(this.mData);
                 }
-                return Long.bitCount(((1 << index) - 1) & this.mData);
-            } else if (index < 64) {
-                return Long.bitCount(((1 << index) - 1) & this.mData);
+                return Long.bitCount(((1 << i) - 1) & this.mData);
+            } else if (i >= 64) {
+                return bucket.countOnesBefore(i - 64) + Long.bitCount(this.mData);
             } else {
-                return bucket.countOnesBefore(index - 64) + Long.bitCount(this.mData);
+                return Long.bitCount(((1 << i) - 1) & this.mData);
             }
         }
 

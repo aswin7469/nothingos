@@ -5,7 +5,7 @@ import com.android.systemui.shared.plugins.PluginManager;
 import com.android.systemui.util.concurrency.ThreadFactory;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class AsyncSensorManager_Factory implements Factory<AsyncSensorManager> {
     private final Provider<PluginManager> pluginManagerProvider;
     private final Provider<SensorManager> sensorManagerProvider;
@@ -17,10 +17,8 @@ public final class AsyncSensorManager_Factory implements Factory<AsyncSensorMana
         this.pluginManagerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AsyncSensorManager mo1933get() {
-        return newInstance(this.sensorManagerProvider.mo1933get(), this.threadFactoryProvider.mo1933get(), this.pluginManagerProvider.mo1933get());
+    public AsyncSensorManager get() {
+        return newInstance(this.sensorManagerProvider.get(), this.threadFactoryProvider.get(), this.pluginManagerProvider.get());
     }
 
     public static AsyncSensorManager_Factory create(Provider<SensorManager> provider, Provider<ThreadFactory> provider2, Provider<PluginManager> provider3) {

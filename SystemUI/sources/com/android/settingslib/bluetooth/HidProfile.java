@@ -7,64 +7,76 @@ import android.bluetooth.BluetoothHidHost;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.util.Log;
+import com.android.settingslib.C1757R;
 import java.util.List;
-/* loaded from: classes.dex */
-public class HidProfile implements LocalBluetoothProfile {
-    private final CachedBluetoothDeviceManager mDeviceManager;
-    private boolean mIsProfileReady;
-    private final LocalBluetoothProfileManager mProfileManager;
-    private BluetoothHidHost mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+public class HidProfile implements LocalBluetoothProfile {
+    static final String NAME = "HID";
+    private static final int ORDINAL = 3;
+    private static final String TAG = "HidProfile";
+    /* access modifiers changed from: private */
+    public final CachedBluetoothDeviceManager mDeviceManager;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    private final LocalBluetoothProfileManager mProfileManager;
+    /* access modifiers changed from: private */
+    public BluetoothHidHost mService;
+
     public boolean accessProfileEnabled() {
         return true;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public int getOrdinal() {
+        return 3;
+    }
+
     public int getProfileId() {
         return 4;
     }
 
-    public String toString() {
-        return "HID";
+    public boolean isAutoConnectable() {
+        return true;
     }
 
-    /* loaded from: classes.dex */
+    public String toString() {
+        return NAME;
+    }
+
     private final class HidHostServiceListener implements BluetoothProfile.ServiceListener {
         private HidHostServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
-            HidProfile.this.mService = (BluetoothHidHost) bluetoothProfile;
+            BluetoothHidHost unused = HidProfile.this.mService = (BluetoothHidHost) bluetoothProfile;
             List connectedDevices = HidProfile.this.mService.getConnectedDevices();
             while (!connectedDevices.isEmpty()) {
                 BluetoothDevice bluetoothDevice = (BluetoothDevice) connectedDevices.remove(0);
                 CachedBluetoothDevice findDevice = HidProfile.this.mDeviceManager.findDevice(bluetoothDevice);
                 if (findDevice == null) {
-                    Log.w("HidProfile", "HidProfile found new device: " + bluetoothDevice);
+                    Log.w(HidProfile.TAG, "HidProfile found new device: " + bluetoothDevice);
                     findDevice = HidProfile.this.mDeviceManager.addDevice(bluetoothDevice);
                 }
                 findDevice.onProfileStateChanged(HidProfile.this, 2);
                 findDevice.refresh();
             }
-            HidProfile.this.mIsProfileReady = true;
+            boolean unused2 = HidProfile.this.mIsProfileReady = true;
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
-            HidProfile.this.mIsProfileReady = false;
+            boolean unused = HidProfile.this.mIsProfileReady = false;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public HidProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
+    public boolean isProfileReady() {
+        return this.mIsProfileReady;
+    }
+
+    HidProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
         this.mDeviceManager = cachedBluetoothDeviceManager;
         this.mProfileManager = localBluetoothProfileManager;
         BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new HidHostServiceListener(), 4);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothHidHost bluetoothHidHost = this.mService;
         if (bluetoothHidHost == null) {
@@ -73,48 +85,78 @@ public class HidProfile implements LocalBluetoothProfile {
         return bluetoothHidHost.getConnectionState(bluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public boolean isEnabled(BluetoothDevice bluetoothDevice) {
+        BluetoothHidHost bluetoothHidHost = this.mService;
+        if (bluetoothHidHost == null || bluetoothHidHost.getConnectionPolicy(bluetoothDevice) == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public int getConnectionPolicy(BluetoothDevice bluetoothDevice) {
+        BluetoothHidHost bluetoothHidHost = this.mService;
+        if (bluetoothHidHost == null) {
+            return 0;
+        }
+        return bluetoothHidHost.getConnectionPolicy(bluetoothDevice);
+    }
+
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothHidHost bluetoothHidHost = this.mService;
         if (bluetoothHidHost == null) {
             return false;
         }
-        if (z) {
-            if (bluetoothHidHost.getConnectionPolicy(bluetoothDevice) >= 100) {
-                return false;
-            }
+        if (!z) {
+            return bluetoothHidHost.setConnectionPolicy(bluetoothDevice, 0);
+        }
+        if (bluetoothHidHost.getConnectionPolicy(bluetoothDevice) < 100) {
             return this.mService.setConnectionPolicy(bluetoothDevice, 100);
         }
-        return bluetoothHidHost.setConnectionPolicy(bluetoothDevice, 0);
+        return false;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public int getNameResource(BluetoothDevice bluetoothDevice) {
+        return C1757R.string.bluetooth_profile_hid;
+    }
+
+    public int getSummaryResourceForDevice(BluetoothDevice bluetoothDevice) {
+        int connectionStatus = getConnectionStatus(bluetoothDevice);
+        if (connectionStatus == 0) {
+            return C1757R.string.bluetooth_hid_profile_summary_use_for;
+        }
+        if (connectionStatus != 2) {
+            return BluetoothUtils.getConnectionStateSummary(connectionStatus);
+        }
+        return C1757R.string.bluetooth_hid_profile_summary_connected;
+    }
+
     public int getDrawableResource(BluetoothClass bluetoothClass) {
         if (bluetoothClass == null) {
-            return 17302519;
+            return 17302530;
         }
         return getHidClassDrawable(bluetoothClass);
     }
 
     public static int getHidClassDrawable(BluetoothClass bluetoothClass) {
         int deviceClass = bluetoothClass.getDeviceClass();
-        if (deviceClass != 1344) {
-            if (deviceClass == 1408) {
-                return 17302334;
-            }
-            return deviceClass != 1472 ? 17302332 : 17302519;
+        if (deviceClass == 1344) {
+            return 17302530;
         }
-        return 17302519;
+        if (deviceClass != 1408) {
+            return deviceClass != 1472 ? 17302340 : 17302530;
+        }
+        return 17302342;
     }
 
-    protected void finalize() {
-        Log.d("HidProfile", "finalize()");
+    /* access modifiers changed from: protected */
+    public void finalize() {
+        Log.d(TAG, "finalize()");
         if (this.mService != null) {
             try {
                 BluetoothAdapter.getDefaultAdapter().closeProfileProxy(4, this.mService);
                 this.mService = null;
             } catch (Throwable th) {
-                Log.w("HidProfile", "Error cleaning up HID proxy", th);
+                Log.w(TAG, "Error cleaning up HID proxy", th);
             }
         }
     }

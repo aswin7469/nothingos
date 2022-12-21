@@ -7,7 +7,7 @@ import com.android.systemui.util.settings.GlobalSettings;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DemoModeModule_ProvideDemoModeControllerFactory implements Factory<DemoModeController> {
     private final Provider<Context> contextProvider;
     private final Provider<DumpManager> dumpManagerProvider;
@@ -19,10 +19,8 @@ public final class DemoModeModule_ProvideDemoModeControllerFactory implements Fa
         this.globalSettingsProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DemoModeController mo1933get() {
-        return provideDemoModeController(this.contextProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.globalSettingsProvider.mo1933get());
+    public DemoModeController get() {
+        return provideDemoModeController(this.contextProvider.get(), this.dumpManagerProvider.get(), this.globalSettingsProvider.get());
     }
 
     public static DemoModeModule_ProvideDemoModeControllerFactory create(Provider<Context> provider, Provider<DumpManager> provider2, Provider<GlobalSettings> provider3) {

@@ -1,41 +1,48 @@
 package com.android.systemui.log;
 
+import android.app.ActivityManager;
+import com.android.settingslib.datetime.ZoneGetter;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dump.DumpManager;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+
+@SysUISingleton
+@Metadata(mo64986d1 = {"\u00004\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\b\u0007\u0018\u00002\u00020\u0001B\u0017\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005¢\u0006\u0002\u0010\u0006J\u0010\u0010\u0007\u001a\u00020\b2\u0006\u0010\t\u001a\u00020\bH\u0002J\"\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\r2\u0006\u0010\u000e\u001a\u00020\b2\b\b\u0002\u0010\u000f\u001a\u00020\u0010H\u0007R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000¨\u0006\u0011"}, mo64987d2 = {"Lcom/android/systemui/log/LogBufferFactory;", "", "dumpManager", "Lcom/android/systemui/dump/DumpManager;", "logcatEchoTracker", "Lcom/android/systemui/log/LogcatEchoTracker;", "(Lcom/android/systemui/dump/DumpManager;Lcom/android/systemui/log/LogcatEchoTracker;)V", "adjustMaxSize", "", "requestedMaxSize", "create", "Lcom/android/systemui/log/LogBuffer;", "name", "", "maxSize", "systrace", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: LogBufferFactory.kt */
-/* loaded from: classes.dex */
 public final class LogBufferFactory {
-    @NotNull
     private final DumpManager dumpManager;
-    @NotNull
     private final LogcatEchoTracker logcatEchoTracker;
 
-    @NotNull
-    public final LogBuffer create(@NotNull String name, int i) {
-        Intrinsics.checkNotNullParameter(name, "name");
-        return create$default(this, name, i, 0, 4, null);
+    public final LogBuffer create(String str, int i) {
+        Intrinsics.checkNotNullParameter(str, ZoneGetter.KEY_DISPLAYNAME);
+        return create$default(this, str, i, false, 4, (Object) null);
     }
 
-    public LogBufferFactory(@NotNull DumpManager dumpManager, @NotNull LogcatEchoTracker logcatEchoTracker) {
-        Intrinsics.checkNotNullParameter(dumpManager, "dumpManager");
-        Intrinsics.checkNotNullParameter(logcatEchoTracker, "logcatEchoTracker");
-        this.dumpManager = dumpManager;
-        this.logcatEchoTracker = logcatEchoTracker;
+    @Inject
+    public LogBufferFactory(DumpManager dumpManager2, LogcatEchoTracker logcatEchoTracker2) {
+        Intrinsics.checkNotNullParameter(dumpManager2, "dumpManager");
+        Intrinsics.checkNotNullParameter(logcatEchoTracker2, "logcatEchoTracker");
+        this.dumpManager = dumpManager2;
+        this.logcatEchoTracker = logcatEchoTracker2;
     }
 
-    public static /* synthetic */ LogBuffer create$default(LogBufferFactory logBufferFactory, String str, int i, int i2, int i3, Object obj) {
-        if ((i3 & 4) != 0) {
-            i2 = 10;
+    private final int adjustMaxSize(int i) {
+        return ActivityManager.isLowRamDeviceStatic() ? Math.min(i, 20) : i;
+    }
+
+    public static /* synthetic */ LogBuffer create$default(LogBufferFactory logBufferFactory, String str, int i, boolean z, int i2, Object obj) {
+        if ((i2 & 4) != 0) {
+            z = true;
         }
-        return logBufferFactory.create(str, i, i2);
+        return logBufferFactory.create(str, i, z);
     }
 
-    @NotNull
-    public final LogBuffer create(@NotNull String name, int i, int i2) {
-        Intrinsics.checkNotNullParameter(name, "name");
-        LogBuffer logBuffer = new LogBuffer(name, i, i2, this.logcatEchoTracker);
-        this.dumpManager.registerBuffer(name, logBuffer);
+    public final LogBuffer create(String str, int i, boolean z) {
+        Intrinsics.checkNotNullParameter(str, ZoneGetter.KEY_DISPLAYNAME);
+        LogBuffer logBuffer = new LogBuffer(str, adjustMaxSize(i), this.logcatEchoTracker, z);
+        this.dumpManager.registerBuffer(str, logBuffer);
         return logBuffer;
     }
 }

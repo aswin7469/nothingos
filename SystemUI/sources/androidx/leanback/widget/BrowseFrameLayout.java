@@ -6,65 +6,83 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-/* loaded from: classes.dex */
+
 public class BrowseFrameLayout extends FrameLayout {
     private OnFocusSearchListener mListener;
     private OnChildFocusListener mOnChildFocusListener;
     private View.OnKeyListener mOnDispatchKeyListener;
 
-    /* loaded from: classes.dex */
     public interface OnChildFocusListener {
-        void onRequestChildFocus(View child, View focused);
+        void onRequestChildFocus(View view, View view2);
 
-        boolean onRequestFocusInDescendants(int direction, Rect previouslyFocusedRect);
+        boolean onRequestFocusInDescendants(int i, Rect rect);
     }
 
-    /* loaded from: classes.dex */
     public interface OnFocusSearchListener {
-        View onFocusSearch(View focused, int direction);
+        View onFocusSearch(View view, int i);
     }
 
     public BrowseFrameLayout(Context context) {
-        this(context, null, 0);
+        this(context, (AttributeSet) null, 0);
     }
 
-    public BrowseFrameLayout(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public BrowseFrameLayout(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, 0);
     }
 
-    public BrowseFrameLayout(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public BrowseFrameLayout(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
     }
 
-    @Override // android.view.ViewGroup
-    protected boolean onRequestFocusInDescendants(int direction, Rect previouslyFocusedRect) {
+    public void setOnFocusSearchListener(OnFocusSearchListener onFocusSearchListener) {
+        this.mListener = onFocusSearchListener;
+    }
+
+    public OnFocusSearchListener getOnFocusSearchListener() {
+        return this.mListener;
+    }
+
+    public void setOnChildFocusListener(OnChildFocusListener onChildFocusListener) {
+        this.mOnChildFocusListener = onChildFocusListener;
+    }
+
+    public OnChildFocusListener getOnChildFocusListener() {
+        return this.mOnChildFocusListener;
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean onRequestFocusInDescendants(int i, Rect rect) {
         OnChildFocusListener onChildFocusListener = this.mOnChildFocusListener;
-        if (onChildFocusListener == null || !onChildFocusListener.onRequestFocusInDescendants(direction, previouslyFocusedRect)) {
-            return super.onRequestFocusInDescendants(direction, previouslyFocusedRect);
+        if (onChildFocusListener == null || !onChildFocusListener.onRequestFocusInDescendants(i, rect)) {
+            return super.onRequestFocusInDescendants(i, rect);
         }
         return true;
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewParent
-    public View focusSearch(View focused, int direction) {
+    public View focusSearch(View view, int i) {
         View onFocusSearch;
         OnFocusSearchListener onFocusSearchListener = this.mListener;
-        return (onFocusSearchListener == null || (onFocusSearch = onFocusSearchListener.onFocusSearch(focused, direction)) == null) ? super.focusSearch(focused, direction) : onFocusSearch;
+        if (onFocusSearchListener == null || (onFocusSearch = onFocusSearchListener.onFocusSearch(view, i)) == null) {
+            return super.focusSearch(view, i);
+        }
+        return onFocusSearch;
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewParent
-    public void requestChildFocus(View child, View focused) {
+    public void requestChildFocus(View view, View view2) {
         OnChildFocusListener onChildFocusListener = this.mOnChildFocusListener;
         if (onChildFocusListener != null) {
-            onChildFocusListener.onRequestChildFocus(child, focused);
+            onChildFocusListener.onRequestChildFocus(view, view2);
         }
-        super.requestChildFocus(child, focused);
+        super.requestChildFocus(view, view2);
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        boolean dispatchKeyEvent = super.dispatchKeyEvent(event);
+    public boolean dispatchKeyEvent(KeyEvent keyEvent) {
+        boolean dispatchKeyEvent = super.dispatchKeyEvent(keyEvent);
         View.OnKeyListener onKeyListener = this.mOnDispatchKeyListener;
-        return (onKeyListener == null || dispatchKeyEvent) ? dispatchKeyEvent : onKeyListener.onKey(getRootView(), event.getKeyCode(), event);
+        return (onKeyListener == null || dispatchKeyEvent) ? dispatchKeyEvent : onKeyListener.onKey(getRootView(), keyEvent.getKeyCode(), keyEvent);
+    }
+
+    public void setOnDispatchKeyListener(View.OnKeyListener onKeyListener) {
+        this.mOnDispatchKeyListener = onKeyListener;
     }
 }

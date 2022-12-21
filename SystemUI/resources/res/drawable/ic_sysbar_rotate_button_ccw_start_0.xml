@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<animated-vector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:aapt="http://schemas.android.com/aapt" android:drawable="@drawable/res_0x7f08024a_ic_sysbar_rotate_button_ccw_start_0__0">
-    <target android:name="root" android:animation="@drawable/res_0x7f08024b_ic_sysbar_rotate_button_ccw_start_0__1"/>
-    <target android:name="icon" android:animation="@drawable/res_0x7f08024c_ic_sysbar_rotate_button_ccw_start_0__2"/>
+<animated-vector xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:drawable="@drawable/$ic_sysbar_rotate_button_ccw_start_0__0">
+    <target android:name="root" android:animation="@drawable/$ic_sysbar_rotate_button_ccw_start_0__1"/>
+    <target android:name="icon" android:animation="@drawable/$ic_sysbar_rotate_button_ccw_start_0__2"/>
 </animated-vector>

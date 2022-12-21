@@ -1,15 +1,14 @@
 package androidx.coordinatorlayout.widget;
 
 import androidx.collection.SimpleArrayMap;
-import androidx.core.util.Pools$Pool;
-import androidx.core.util.Pools$SimplePool;
+import androidx.core.util.Pools;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public final class DirectedAcyclicGraph<T> {
-    private final Pools$Pool<ArrayList<T>> mListPool = new Pools$SimplePool(10);
     private final SimpleArrayMap<T, ArrayList<T>> mGraph = new SimpleArrayMap<>();
+    private final Pools.Pool<ArrayList<T>> mListPool = new Pools.SimplePool(10);
     private final ArrayList<T> mSortResult = new ArrayList<>();
     private final HashSet<T> mSortTmpMarked = new HashSet<>();
 
@@ -27,7 +26,7 @@ public final class DirectedAcyclicGraph<T> {
         if (!this.mGraph.containsKey(t) || !this.mGraph.containsKey(t2)) {
             throw new IllegalArgumentException("All nodes must be present in the graph before being added as an edge");
         }
-        ArrayList<T> arrayList = this.mGraph.get(t);
+        ArrayList arrayList = this.mGraph.get(t);
         if (arrayList == null) {
             arrayList = getEmptyList();
             this.mGraph.put(t, arrayList);
@@ -35,16 +34,7 @@ public final class DirectedAcyclicGraph<T> {
         arrayList.add(t2);
     }
 
-    public List<T> getIncomingEdges(T t) {
-        ArrayList<T> incomingEdgesInternal = getIncomingEdgesInternal(t);
-        if (incomingEdgesInternal == null) {
-            return null;
-        }
-        return new ArrayList(incomingEdgesInternal);
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public ArrayList<T> getIncomingEdgesInternal(T t) {
+    public List getIncomingEdges(T t) {
         return this.mGraph.get(t);
     }
 
@@ -52,7 +42,7 @@ public final class DirectedAcyclicGraph<T> {
         int size = this.mGraph.size();
         ArrayList arrayList = null;
         for (int i = 0; i < size; i++) {
-            ArrayList<T> valueAt = this.mGraph.valueAt(i);
+            ArrayList valueAt = this.mGraph.valueAt(i);
             if (valueAt != null && valueAt.contains(t)) {
                 if (arrayList == null) {
                     arrayList = new ArrayList();
@@ -66,7 +56,7 @@ public final class DirectedAcyclicGraph<T> {
     public boolean hasOutgoingEdges(T t) {
         int size = this.mGraph.size();
         for (int i = 0; i < size; i++) {
-            ArrayList<T> valueAt = this.mGraph.valueAt(i);
+            ArrayList valueAt = this.mGraph.valueAt(i);
             if (valueAt != null && valueAt.contains(t)) {
                 return true;
             }
@@ -77,7 +67,7 @@ public final class DirectedAcyclicGraph<T> {
     public void clear() {
         int size = this.mGraph.size();
         for (int i = 0; i < size; i++) {
-            ArrayList<T> valueAt = this.mGraph.valueAt(i);
+            ArrayList valueAt = this.mGraph.valueAt(i);
             if (valueAt != null) {
                 poolList(valueAt);
             }
@@ -96,22 +86,27 @@ public final class DirectedAcyclicGraph<T> {
     }
 
     private void dfs(T t, ArrayList<T> arrayList, HashSet<T> hashSet) {
-        if (arrayList.contains(t)) {
-            return;
-        }
-        if (hashSet.contains(t)) {
+        if (!arrayList.contains(t)) {
+            if (!hashSet.contains(t)) {
+                hashSet.add(t);
+                ArrayList arrayList2 = this.mGraph.get(t);
+                if (arrayList2 != null) {
+                    int size = arrayList2.size();
+                    for (int i = 0; i < size; i++) {
+                        dfs(arrayList2.get(i), arrayList, hashSet);
+                    }
+                }
+                hashSet.remove(t);
+                arrayList.add(t);
+                return;
+            }
             throw new RuntimeException("This graph contains cyclic dependencies");
         }
-        hashSet.add(t);
-        ArrayList<T> arrayList2 = this.mGraph.get(t);
-        if (arrayList2 != null) {
-            int size = arrayList2.size();
-            for (int i = 0; i < size; i++) {
-                dfs(arrayList2.get(i), arrayList, hashSet);
-            }
-        }
-        hashSet.remove(t);
-        arrayList.add(t);
+    }
+
+    /* access modifiers changed from: package-private */
+    public int size() {
+        return this.mGraph.size();
     }
 
     private ArrayList<T> getEmptyList() {

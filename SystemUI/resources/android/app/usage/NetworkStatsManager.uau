@@ -1,0 +1,2 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/app/usage/NetworkStatsManager;->setPollForce(Z)V,packages/modules/Connectivity/framework-t/src/android/app/usage/NetworkStatsManager.java,199,5,199,88,maxTargetSdk=30&trackingBug=170729553L

@@ -3,44 +3,54 @@ package com.android.systemui.people.widget;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.LauncherApps;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.os.UserManager;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.app.UnlaunchableAppActivity;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.logging.UiEventLoggerImpl;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
+import com.android.p019wm.shell.bubbles.Bubble;
 import com.android.systemui.people.PeopleSpaceUtils;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
+import com.android.systemui.statusbar.notification.collection.render.NotificationVisibilityProvider;
 import com.android.systemui.wmshell.BubblesManager;
-import com.android.wm.shell.bubbles.Bubble;
 import java.util.Optional;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class LaunchConversationActivity extends Activity {
-    private Bubble mBubble;
-    private final Optional<BubblesManager> mBubblesManagerOptional;
-    private CommandQueue mCommandQueue;
-    private NotificationEntry mEntryToBubble;
+    private static final boolean DEBUG = false;
+    private static final String TAG = "PeopleSpaceLaunchConv";
+    /* access modifiers changed from: private */
+    public Bubble mBubble;
+    /* access modifiers changed from: private */
+    public final Optional<BubblesManager> mBubblesManagerOptional;
+    /* access modifiers changed from: private */
+    public CommandQueue mCommandQueue;
+    private CommonNotifCollection mCommonNotifCollection;
+    /* access modifiers changed from: private */
+    public NotificationEntry mEntryToBubble;
     private IStatusBarService mIStatusBarService;
     private boolean mIsForTesting;
-    private NotificationEntryManager mNotificationEntryManager;
     private UiEventLogger mUiEventLogger = new UiEventLoggerImpl();
     private final UserManager mUserManager;
+    private NotificationVisibilityProvider mVisibilityProvider;
 
-    public LaunchConversationActivity(NotificationEntryManager notificationEntryManager, Optional<BubblesManager> optional, UserManager userManager, CommandQueue commandQueue) {
-        this.mNotificationEntryManager = notificationEntryManager;
+    @Inject
+    public LaunchConversationActivity(NotificationVisibilityProvider notificationVisibilityProvider, CommonNotifCollection commonNotifCollection, Optional<BubblesManager> optional, UserManager userManager, CommandQueue commandQueue) {
+        this.mVisibilityProvider = notificationVisibilityProvider;
+        this.mCommonNotifCollection = commonNotifCollection;
         this.mBubblesManagerOptional = optional;
         this.mUserManager = userManager;
         this.mCommandQueue = commandQueue;
-        commandQueue.addCallback(new CommandQueue.Callbacks() { // from class: com.android.systemui.people.widget.LaunchConversationActivity.1
-            @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
+        commandQueue.addCallback((CommandQueue.Callbacks) new CommandQueue.Callbacks() {
             public void appTransitionFinished(int i) {
                 if (LaunchConversationActivity.this.mBubblesManagerOptional.isPresent()) {
                     if (LaunchConversationActivity.this.mBubble != null) {
@@ -54,16 +64,15 @@ public class LaunchConversationActivity extends Activity {
         });
     }
 
-    @Override // android.app.Activity
     public void onCreate(Bundle bundle) {
         if (!this.mIsForTesting) {
             super.onCreate(bundle);
         }
         Intent intent = getIntent();
-        String stringExtra = intent.getStringExtra("extra_tile_id");
-        String stringExtra2 = intent.getStringExtra("extra_package_name");
-        UserHandle userHandle = (UserHandle) intent.getParcelableExtra("extra_user_handle");
-        String stringExtra3 = intent.getStringExtra("extra_notification_key");
+        String stringExtra = intent.getStringExtra(PeopleSpaceWidgetProvider.EXTRA_TILE_ID);
+        String stringExtra2 = intent.getStringExtra(PeopleSpaceWidgetProvider.EXTRA_PACKAGE_NAME);
+        UserHandle userHandle = (UserHandle) intent.getParcelableExtra(PeopleSpaceWidgetProvider.EXTRA_USER_HANDLE);
+        String stringExtra3 = intent.getStringExtra(PeopleSpaceWidgetProvider.EXTRA_NOTIFICATION_KEY);
         if (!TextUtils.isEmpty(stringExtra)) {
             this.mUiEventLogger.log(PeopleSpaceUtils.PeopleSpaceWidgetEvent.PEOPLE_SPACE_WIDGET_CLICKED);
             try {
@@ -72,11 +81,11 @@ public class LaunchConversationActivity extends Activity {
                     finish();
                     return;
                 }
-                if (this.mBubblesManagerOptional.isPresent()) {
+                if (this.mBubblesManagerOptional.isPresent() && stringExtra3 != null) {
                     this.mBubble = this.mBubblesManagerOptional.get().getBubbleWithShortcutId(stringExtra);
-                    NotificationEntry pendingOrActiveNotif = this.mNotificationEntryManager.getPendingOrActiveNotif(stringExtra3);
-                    if (this.mBubble != null || (pendingOrActiveNotif != null && pendingOrActiveNotif.canBubble())) {
-                        this.mEntryToBubble = pendingOrActiveNotif;
+                    NotificationEntry entry = this.mCommonNotifCollection.getEntry(stringExtra3);
+                    if (this.mBubble != null || (entry != null && entry.canBubble())) {
+                        this.mEntryToBubble = entry;
                         finish();
                         return;
                     }
@@ -85,31 +94,40 @@ public class LaunchConversationActivity extends Activity {
                     this.mIStatusBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
                 }
                 clearNotificationIfPresent(stringExtra3, stringExtra2, userHandle);
-                ((LauncherApps) getApplicationContext().getSystemService(LauncherApps.class)).startShortcut(stringExtra2, stringExtra, null, null, userHandle);
+                ((LauncherApps) getApplicationContext().getSystemService(LauncherApps.class)).startShortcut(stringExtra2, stringExtra, (Rect) null, (Bundle) null, userHandle);
             } catch (Exception e) {
-                Log.e("PeopleSpaceLaunchConv", "Exception launching shortcut:" + e);
+                Log.e(TAG, "Exception launching shortcut:" + e);
             }
         }
         finish();
     }
 
-    void clearNotificationIfPresent(String str, String str2, UserHandle userHandle) {
-        NotificationEntryManager notificationEntryManager;
-        NotificationEntry pendingOrActiveNotif;
-        if (TextUtils.isEmpty(str)) {
-            return;
-        }
-        try {
-            if (this.mIStatusBarService != null && (notificationEntryManager = this.mNotificationEntryManager) != null && (pendingOrActiveNotif = notificationEntryManager.getPendingOrActiveNotif(str)) != null && pendingOrActiveNotif.getRanking() != null) {
-                this.mIStatusBarService.onNotificationClear(str2, userHandle.getIdentifier(), str, 0, 2, NotificationVisibility.obtain(str, pendingOrActiveNotif.getRanking().getRank(), this.mNotificationEntryManager.getActiveNotificationsCount(), true));
+    /* access modifiers changed from: package-private */
+    public void clearNotificationIfPresent(String str, String str2, UserHandle userHandle) {
+        if (!TextUtils.isEmpty(str)) {
+            try {
+                if (this.mIStatusBarService != null) {
+                    CommonNotifCollection commonNotifCollection = this.mCommonNotifCollection;
+                    if (commonNotifCollection != null) {
+                        NotificationEntry entry = commonNotifCollection.getEntry(str);
+                        if (entry == null) {
+                            return;
+                        }
+                        if (entry.getRanking() != null) {
+                            NotificationVisibility obtain = this.mVisibilityProvider.obtain(entry, true);
+                            int i = obtain.rank;
+                            this.mIStatusBarService.onNotificationClear(str2, userHandle.getIdentifier(), str, 0, 2, obtain);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Exception cancelling notification:" + e);
             }
-        } catch (Exception e) {
-            Log.e("PeopleSpaceLaunchConv", "Exception cancelling notification:" + e);
         }
     }
 
-    @VisibleForTesting
-    void setIsForTesting(boolean z, IStatusBarService iStatusBarService) {
+    /* access modifiers changed from: package-private */
+    public void setIsForTesting(boolean z, IStatusBarService iStatusBarService) {
         this.mIsForTesting = z;
         this.mIStatusBarService = iStatusBarService;
     }

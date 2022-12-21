@@ -6,84 +6,89 @@ import androidx.core.util.Preconditions;
 import com.google.android.material.datepicker.CalendarConstraints;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes2.dex */
-public final class CompositeDateValidator implements CalendarConstraints.DateValidator {
-    private final Operator operator;
-    private final List<CalendarConstraints.DateValidator> validators;
-    private static final Operator ANY_OPERATOR = new Operator() { // from class: com.google.android.material.datepicker.CompositeDateValidator.1
-        @Override // com.google.android.material.datepicker.CompositeDateValidator.Operator
-        public int getId() {
-            return 1;
-        }
 
-        @Override // com.google.android.material.datepicker.CompositeDateValidator.Operator
-        public boolean isValid(List<CalendarConstraints.DateValidator> list, long j) {
-            for (CalendarConstraints.DateValidator dateValidator : list) {
-                if (dateValidator != null && dateValidator.isValid(j)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
-    private static final Operator ALL_OPERATOR = new Operator() { // from class: com.google.android.material.datepicker.CompositeDateValidator.2
-        @Override // com.google.android.material.datepicker.CompositeDateValidator.Operator
+public final class CompositeDateValidator implements CalendarConstraints.DateValidator {
+    /* access modifiers changed from: private */
+    public static final Operator ALL_OPERATOR = new Operator() {
         public int getId() {
             return 2;
         }
 
-        @Override // com.google.android.material.datepicker.CompositeDateValidator.Operator
         public boolean isValid(List<CalendarConstraints.DateValidator> list, long j) {
-            for (CalendarConstraints.DateValidator dateValidator : list) {
-                if (dateValidator != null && !dateValidator.isValid(j)) {
+            for (CalendarConstraints.DateValidator next : list) {
+                if (next != null && !next.isValid(j)) {
                     return false;
                 }
             }
             return true;
         }
     };
-    public static final Parcelable.Creator<CompositeDateValidator> CREATOR = new Parcelable.Creator<CompositeDateValidator>() { // from class: com.google.android.material.datepicker.CompositeDateValidator.3
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: createFromParcel */
-        public CompositeDateValidator mo1815createFromParcel(Parcel parcel) {
-            ArrayList readArrayList = parcel.readArrayList(CalendarConstraints.DateValidator.class.getClassLoader());
-            int readInt = parcel.readInt();
-            return new CompositeDateValidator((List) Preconditions.checkNotNull(readArrayList), readInt == 2 ? CompositeDateValidator.ALL_OPERATOR : readInt == 1 ? CompositeDateValidator.ANY_OPERATOR : CompositeDateValidator.ALL_OPERATOR);
+    /* access modifiers changed from: private */
+    public static final Operator ANY_OPERATOR = new Operator() {
+        public int getId() {
+            return 1;
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // android.os.Parcelable.Creator
-        /* renamed from: newArray */
-        public CompositeDateValidator[] mo1816newArray(int i) {
+        public boolean isValid(List<CalendarConstraints.DateValidator> list, long j) {
+            for (CalendarConstraints.DateValidator next : list) {
+                if (next != null && next.isValid(j)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+    private static final int COMPARATOR_ALL_ID = 2;
+    private static final int COMPARATOR_ANY_ID = 1;
+    public static final Parcelable.Creator<CompositeDateValidator> CREATOR = new Parcelable.Creator<CompositeDateValidator>() {
+        public CompositeDateValidator createFromParcel(Parcel parcel) {
+            Operator operator;
+            ArrayList readArrayList = parcel.readArrayList(CalendarConstraints.DateValidator.class.getClassLoader());
+            int readInt = parcel.readInt();
+            if (readInt == 2) {
+                operator = CompositeDateValidator.ALL_OPERATOR;
+            } else if (readInt == 1) {
+                operator = CompositeDateValidator.ANY_OPERATOR;
+            } else {
+                operator = CompositeDateValidator.ALL_OPERATOR;
+            }
+            return new CompositeDateValidator((List) Preconditions.checkNotNull(readArrayList), operator);
+        }
+
+        public CompositeDateValidator[] newArray(int i) {
             return new CompositeDateValidator[i];
         }
     };
+    private final Operator operator;
+    private final List<CalendarConstraints.DateValidator> validators;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public interface Operator {
+    private interface Operator {
         int getId();
 
         boolean isValid(List<CalendarConstraints.DateValidator> list, long j);
     }
 
-    @Override // android.os.Parcelable
     public int describeContents() {
         return 0;
     }
 
-    private CompositeDateValidator(List<CalendarConstraints.DateValidator> list, Operator operator) {
+    private CompositeDateValidator(List<CalendarConstraints.DateValidator> list, Operator operator2) {
         this.validators = list;
-        this.operator = operator;
+        this.operator = operator2;
     }
 
-    @Override // com.google.android.material.datepicker.CalendarConstraints.DateValidator
+    public static CalendarConstraints.DateValidator allOf(List<CalendarConstraints.DateValidator> list) {
+        return new CompositeDateValidator(list, ALL_OPERATOR);
+    }
+
+    public static CalendarConstraints.DateValidator anyOf(List<CalendarConstraints.DateValidator> list) {
+        return new CompositeDateValidator(list, ANY_OPERATOR);
+    }
+
     public boolean isValid(long j) {
         return this.operator.isValid(this.validators, j);
     }
 
-    @Override // android.os.Parcelable
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeList(this.validators);
         parcel.writeInt(this.operator.getId());
@@ -97,7 +102,10 @@ public final class CompositeDateValidator implements CalendarConstraints.DateVal
             return false;
         }
         CompositeDateValidator compositeDateValidator = (CompositeDateValidator) obj;
-        return this.validators.equals(compositeDateValidator.validators) && this.operator.getId() == compositeDateValidator.operator.getId();
+        if (!this.validators.equals(compositeDateValidator.validators) || this.operator.getId() != compositeDateValidator.operator.getId()) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {

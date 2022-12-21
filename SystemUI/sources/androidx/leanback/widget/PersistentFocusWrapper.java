@@ -9,16 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
-class PersistentFocusWrapper extends FrameLayout {
-    private int mSelectedPosition = -1;
-    private boolean mPersistFocusVertical = true;
 
-    public PersistentFocusWrapper(Context context, AttributeSet attrs) {
-        super(context, attrs);
+class PersistentFocusWrapper extends FrameLayout {
+    private static final boolean DEBUG = false;
+    private static final String TAG = "PersistentFocusWrapper";
+    private boolean mPersistFocusVertical = true;
+    private int mSelectedPosition = -1;
+
+    public PersistentFocusWrapper(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
     }
 
-    int getGrandChildCount() {
+    public PersistentFocusWrapper(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
+    }
+
+    /* access modifiers changed from: package-private */
+    public int getGrandChildCount() {
         ViewGroup viewGroup = (ViewGroup) getChildAt(0);
         if (viewGroup == null) {
             return 0;
@@ -26,89 +33,98 @@ class PersistentFocusWrapper extends FrameLayout {
         return viewGroup.getChildCount();
     }
 
-    private boolean shouldPersistFocusFromDirection(int direction) {
+    public void clearSelection() {
+        this.mSelectedPosition = -1;
+        if (hasFocus()) {
+            clearFocus();
+        }
+    }
+
+    public void persistFocusVertical() {
+        this.mPersistFocusVertical = true;
+    }
+
+    public void persistFocusHorizontal() {
+        this.mPersistFocusVertical = false;
+    }
+
+    private boolean shouldPersistFocusFromDirection(int i) {
         boolean z = this.mPersistFocusVertical;
-        return (z && (direction == 33 || direction == 130)) || (!z && (direction == 17 || direction == 66));
+        return (z && (i == 33 || i == 130)) || (!z && (i == 17 || i == 66));
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    public void addFocusables(ArrayList<View> views, int direction, int focusableMode) {
-        if (hasFocus() || getGrandChildCount() == 0 || !shouldPersistFocusFromDirection(direction)) {
-            super.addFocusables(views, direction, focusableMode);
+    public void addFocusables(ArrayList<View> arrayList, int i, int i2) {
+        if (hasFocus() || getGrandChildCount() == 0 || !shouldPersistFocusFromDirection(i)) {
+            super.addFocusables(arrayList, i, i2);
         } else {
-            views.add(this);
+            arrayList.add(this);
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewParent
-    public void requestChildFocus(View child, View focused) {
-        super.requestChildFocus(child, focused);
-        while (focused != null && focused.getParent() != child) {
-            focused = (View) focused.getParent();
-        }
-        this.mSelectedPosition = focused == null ? -1 : ((ViewGroup) child).indexOfChild(focused);
-    }
-
-    @Override // android.view.ViewGroup, android.view.View
-    public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
+    public void requestChildFocus(View view, View view2) {
         int i;
+        super.requestChildFocus(view, view2);
+        while (view2 != null && view2.getParent() != view) {
+            view2 = (View) view2.getParent();
+        }
+        if (view2 == null) {
+            i = -1;
+        } else {
+            i = ((ViewGroup) view).indexOfChild(view2);
+        }
+        this.mSelectedPosition = i;
+    }
+
+    public boolean requestFocus(int i, Rect rect) {
+        int i2;
         ViewGroup viewGroup = (ViewGroup) getChildAt(0);
-        if (viewGroup == null || (i = this.mSelectedPosition) < 0 || i >= getGrandChildCount() || !viewGroup.getChildAt(this.mSelectedPosition).requestFocus(direction, previouslyFocusedRect)) {
-            return super.requestFocus(direction, previouslyFocusedRect);
+        if (viewGroup == null || (i2 = this.mSelectedPosition) < 0 || i2 >= getGrandChildCount() || !viewGroup.getChildAt(this.mSelectedPosition).requestFocus(i, rect)) {
+            return super.requestFocus(i, rect);
         }
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class SavedState extends View.BaseSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() { // from class: androidx.leanback.widget.PersistentFocusWrapper.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo118createFromParcel(Parcel in) {
-                return new SavedState(in);
+    static class SavedState extends View.BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel) {
+                return new SavedState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo119newArray(int size) {
-                return new SavedState[size];
+            public SavedState[] newArray(int i) {
+                return new SavedState[i];
             }
         };
         int mSelectedPosition;
 
-        SavedState(Parcel in) {
-            super(in);
-            this.mSelectedPosition = in.readInt();
+        SavedState(Parcel parcel) {
+            super(parcel);
+            this.mSelectedPosition = parcel.readInt();
         }
 
-        SavedState(Parcelable superState) {
-            super(superState);
+        SavedState(Parcelable parcelable) {
+            super(parcelable);
         }
 
-        @Override // android.view.View.BaseSavedState, android.view.AbsSavedState, android.os.Parcelable
-        public void writeToParcel(Parcel dest, int flags) {
-            super.writeToParcel(dest, flags);
-            dest.writeInt(this.mSelectedPosition);
+        public void writeToParcel(Parcel parcel, int i) {
+            super.writeToParcel(parcel, i);
+            parcel.writeInt(this.mSelectedPosition);
         }
     }
 
-    @Override // android.view.View
-    protected Parcelable onSaveInstanceState() {
+    /* access modifiers changed from: protected */
+    public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState(super.onSaveInstanceState());
         savedState.mSelectedPosition = this.mSelectedPosition;
         return savedState;
     }
 
-    @Override // android.view.View
-    protected void onRestoreInstanceState(Parcelable state) {
-        if (!(state instanceof SavedState)) {
-            super.onRestoreInstanceState(state);
+    /* access modifiers changed from: protected */
+    public void onRestoreInstanceState(Parcelable parcelable) {
+        if (!(parcelable instanceof SavedState)) {
+            super.onRestoreInstanceState(parcelable);
             return;
         }
-        SavedState savedState = (SavedState) state;
+        SavedState savedState = (SavedState) parcelable;
         this.mSelectedPosition = savedState.mSelectedPosition;
         super.onRestoreInstanceState(savedState.getSuperState());
     }

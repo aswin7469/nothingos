@@ -1,24 +1,25 @@
 package androidx.slice;
 
 import android.net.Uri;
-/* loaded from: classes.dex */
+import androidx.slice.compat.SliceProviderCompat;
+
 public class SliceStructure {
     private final String mStructure;
     private final Uri mUri;
 
-    public SliceStructure(Slice s) {
+    public SliceStructure(Slice slice) {
         StringBuilder sb = new StringBuilder();
-        getStructure(s, sb);
+        getStructure(slice, sb);
         this.mStructure = sb.toString();
-        this.mUri = s.getUri();
+        this.mUri = slice.getUri();
     }
 
-    public SliceStructure(SliceItem s) {
+    public SliceStructure(SliceItem sliceItem) {
         StringBuilder sb = new StringBuilder();
-        getStructure(s, sb);
+        getStructure(sliceItem, sb);
         this.mStructure = sb.toString();
-        if ("action".equals(s.getFormat()) || "slice".equals(s.getFormat())) {
-            this.mUri = s.getSlice().getUri();
+        if ("action".equals(sliceItem.getFormat()) || SliceProviderCompat.EXTRA_SLICE.equals(sliceItem.getFormat())) {
+            this.mUri = sliceItem.getSlice().getUri();
         } else {
             this.mUri = null;
         }
@@ -39,92 +40,119 @@ public class SliceStructure {
         return this.mStructure.equals(((SliceStructure) obj).mStructure);
     }
 
-    private static void getStructure(Slice s, StringBuilder str) {
-        str.append("s{");
-        for (SliceItem sliceItem : s.getItems()) {
-            getStructure(sliceItem, str);
+    private static void getStructure(Slice slice, StringBuilder sb) {
+        sb.append("s{");
+        for (SliceItem structure : slice.getItems()) {
+            getStructure(structure, sb);
         }
-        str.append("}");
+        sb.append("}");
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    private static void getStructure(SliceItem item, StringBuilder str) {
-        char c;
-        String format = item.getFormat();
-        switch (format.hashCode()) {
-            case -1422950858:
-                if (format.equals("action")) {
-                    c = 1;
-                    break;
-                }
-                c = 65535;
-                break;
-            case -1377881982:
-                if (format.equals("bundle")) {
-                    c = 7;
-                    break;
-                }
-                c = 65535;
-                break;
-            case 104431:
-                if (format.equals("int")) {
-                    c = 4;
-                    break;
-                }
-                c = 65535;
-                break;
-            case 3327612:
-                if (format.equals("long")) {
-                    c = 5;
-                    break;
-                }
-                c = 65535;
-                break;
-            case 3556653:
-                if (format.equals("text")) {
-                    c = 2;
-                    break;
-                }
-                c = 65535;
-                break;
-            case 100313435:
-                if (format.equals("image")) {
-                    c = 3;
-                    break;
-                }
-                c = 65535;
-                break;
-            case 100358090:
-                if (format.equals("input")) {
-                    c = 6;
-                    break;
-                }
-                c = 65535;
-                break;
-            case 109526418:
-                if (format.equals("slice")) {
-                    c = 0;
-                    break;
-                }
-                c = 65535;
-                break;
-            default:
-                c = 65535;
-                break;
-        }
-        if (c == 0) {
-            getStructure(item.getSlice(), str);
-        } else if (c == 1) {
-            str.append('a');
-            if ("range".equals(item.getSubType())) {
-                str.append('r');
+    /* JADX WARNING: Can't fix incorrect switch cases order */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private static void getStructure(androidx.slice.SliceItem r5, java.lang.StringBuilder r6) {
+        /*
+            java.lang.String r0 = r5.getFormat()
+            int r1 = r0.hashCode()
+            r2 = 3
+            r3 = 2
+            r4 = 1
+            switch(r1) {
+                case -1422950858: goto L_0x0057;
+                case -1377881982: goto L_0x004d;
+                case 104431: goto L_0x0043;
+                case 3327612: goto L_0x0039;
+                case 3556653: goto L_0x002e;
+                case 100313435: goto L_0x0024;
+                case 100358090: goto L_0x001a;
+                case 109526418: goto L_0x000f;
+                default: goto L_0x000e;
             }
-            getStructure(item.getSlice(), str);
-        } else if (c == 2) {
-            str.append('t');
-        } else if (c != 3) {
-        } else {
-            str.append('i');
-        }
+        L_0x000e:
+            goto L_0x0061
+        L_0x000f:
+            java.lang.String r1 = "slice"
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x0061
+            r0 = 0
+            goto L_0x0062
+        L_0x001a:
+            java.lang.String r1 = "input"
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x0061
+            r0 = 6
+            goto L_0x0062
+        L_0x0024:
+            java.lang.String r1 = "image"
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x0061
+            r0 = r2
+            goto L_0x0062
+        L_0x002e:
+            java.lang.String r1 = "text"
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x0061
+            r0 = r3
+            goto L_0x0062
+        L_0x0039:
+            java.lang.String r1 = "long"
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x0061
+            r0 = 5
+            goto L_0x0062
+        L_0x0043:
+            java.lang.String r1 = "int"
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x0061
+            r0 = 4
+            goto L_0x0062
+        L_0x004d:
+            java.lang.String r1 = "bundle"
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x0061
+            r0 = 7
+            goto L_0x0062
+        L_0x0057:
+            java.lang.String r1 = "action"
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x0061
+            r0 = r4
+            goto L_0x0062
+        L_0x0061:
+            r0 = -1
+        L_0x0062:
+            if (r0 == 0) goto L_0x0095
+            if (r0 == r4) goto L_0x0077
+            if (r0 == r3) goto L_0x0071
+            if (r0 == r2) goto L_0x006b
+            goto L_0x009c
+        L_0x006b:
+            r5 = 105(0x69, float:1.47E-43)
+            r6.append((char) r5)
+            goto L_0x009c
+        L_0x0071:
+            r5 = 116(0x74, float:1.63E-43)
+            r6.append((char) r5)
+            goto L_0x009c
+        L_0x0077:
+            r0 = 97
+            r6.append((char) r0)
+            java.lang.String r0 = "range"
+            java.lang.String r1 = r5.getSubType()
+            boolean r0 = r0.equals(r1)
+            if (r0 == 0) goto L_0x008d
+            r0 = 114(0x72, float:1.6E-43)
+            r6.append((char) r0)
+        L_0x008d:
+            androidx.slice.Slice r5 = r5.getSlice()
+            getStructure((androidx.slice.Slice) r5, (java.lang.StringBuilder) r6)
+            goto L_0x009c
+        L_0x0095:
+            androidx.slice.Slice r5 = r5.getSlice()
+            getStructure((androidx.slice.Slice) r5, (java.lang.StringBuilder) r6)
+        L_0x009c:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.slice.SliceStructure.getStructure(androidx.slice.SliceItem, java.lang.StringBuilder):void");
     }
 }

@@ -1,24 +1,25 @@
 package com.android.systemui;
 
+import com.android.internal.logging.MetricsLogger;
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+import javax.inject.Provider;
+
 public final class ForegroundServicesDialog_Factory implements Factory<ForegroundServicesDialog> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ForegroundServicesDialog mo1933get() {
-        return newInstance();
+    private final Provider<MetricsLogger> metricsLoggerProvider;
+
+    public ForegroundServicesDialog_Factory(Provider<MetricsLogger> provider) {
+        this.metricsLoggerProvider = provider;
     }
 
-    public static ForegroundServicesDialog_Factory create() {
-        return InstanceHolder.INSTANCE;
+    public ForegroundServicesDialog get() {
+        return newInstance(this.metricsLoggerProvider.get());
     }
 
-    public static ForegroundServicesDialog newInstance() {
-        return new ForegroundServicesDialog();
+    public static ForegroundServicesDialog_Factory create(Provider<MetricsLogger> provider) {
+        return new ForegroundServicesDialog_Factory(provider);
     }
 
-    /* loaded from: classes.dex */
-    private static final class InstanceHolder {
-        private static final ForegroundServicesDialog_Factory INSTANCE = new ForegroundServicesDialog_Factory();
+    public static ForegroundServicesDialog newInstance(MetricsLogger metricsLogger) {
+        return new ForegroundServicesDialog(metricsLogger);
     }
 }

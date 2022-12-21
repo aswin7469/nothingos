@@ -8,7 +8,7 @@ import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardDisplayManager_Factory implements Factory<KeyguardDisplayManager> {
     private final Provider<Context> contextProvider;
     private final Provider<KeyguardStatusViewComponent.Factory> keyguardStatusViewComponentFactoryProvider;
@@ -22,10 +22,8 @@ public final class KeyguardDisplayManager_Factory implements Factory<KeyguardDis
         this.uiBgExecutorProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardDisplayManager mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), DoubleCheck.lazy(this.navigationBarControllerLazyProvider), this.keyguardStatusViewComponentFactoryProvider.mo1933get(), this.uiBgExecutorProvider.mo1933get());
+    public KeyguardDisplayManager get() {
+        return newInstance(this.contextProvider.get(), DoubleCheck.lazy(this.navigationBarControllerLazyProvider), this.keyguardStatusViewComponentFactoryProvider.get(), this.uiBgExecutorProvider.get());
     }
 
     public static KeyguardDisplayManager_Factory create(Provider<Context> provider, Provider<NavigationBarController> provider2, Provider<KeyguardStatusViewComponent.Factory> provider3, Provider<Executor> provider4) {

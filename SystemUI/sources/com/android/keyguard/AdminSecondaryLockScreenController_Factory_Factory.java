@@ -5,7 +5,7 @@ import android.os.Handler;
 import com.android.keyguard.AdminSecondaryLockScreenController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class AdminSecondaryLockScreenController_Factory_Factory implements Factory<AdminSecondaryLockScreenController.Factory> {
     private final Provider<Context> contextProvider;
     private final Provider<Handler> handlerProvider;
@@ -19,10 +19,8 @@ public final class AdminSecondaryLockScreenController_Factory_Factory implements
         this.handlerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AdminSecondaryLockScreenController.Factory mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.parentProvider.mo1933get(), this.updateMonitorProvider.mo1933get(), this.handlerProvider.mo1933get());
+    public AdminSecondaryLockScreenController.Factory get() {
+        return newInstance(this.contextProvider.get(), this.parentProvider.get(), this.updateMonitorProvider.get(), this.handlerProvider.get());
     }
 
     public static AdminSecondaryLockScreenController_Factory_Factory create(Provider<Context> provider, Provider<KeyguardSecurityContainer> provider2, Provider<KeyguardUpdateMonitor> provider3, Provider<Handler> provider4) {

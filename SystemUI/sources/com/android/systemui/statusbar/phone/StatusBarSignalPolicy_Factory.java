@@ -1,14 +1,14 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
-import com.android.systemui.statusbar.FeatureFlags;
-import com.android.systemui.statusbar.policy.NetworkController;
+import com.android.systemui.flags.FeatureFlags;
+import com.android.systemui.statusbar.connectivity.NetworkController;
 import com.android.systemui.statusbar.policy.SecurityController;
 import com.android.systemui.tuner.TunerService;
 import com.android.systemui.util.CarrierConfigTracker;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class StatusBarSignalPolicy_Factory implements Factory<StatusBarSignalPolicy> {
     private final Provider<CarrierConfigTracker> carrierConfigTrackerProvider;
     private final Provider<Context> contextProvider;
@@ -28,10 +28,8 @@ public final class StatusBarSignalPolicy_Factory implements Factory<StatusBarSig
         this.featureFlagsProvider = provider7;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public StatusBarSignalPolicy mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.iconControllerProvider.mo1933get(), this.carrierConfigTrackerProvider.mo1933get(), this.networkControllerProvider.mo1933get(), this.securityControllerProvider.mo1933get(), this.tunerServiceProvider.mo1933get(), this.featureFlagsProvider.mo1933get());
+    public StatusBarSignalPolicy get() {
+        return newInstance(this.contextProvider.get(), this.iconControllerProvider.get(), this.carrierConfigTrackerProvider.get(), this.networkControllerProvider.get(), this.securityControllerProvider.get(), this.tunerServiceProvider.get(), this.featureFlagsProvider.get());
     }
 
     public static StatusBarSignalPolicy_Factory create(Provider<Context> provider, Provider<StatusBarIconController> provider2, Provider<CarrierConfigTracker> provider3, Provider<NetworkController> provider4, Provider<SecurityController> provider5, Provider<TunerService> provider6, Provider<FeatureFlags> provider7) {

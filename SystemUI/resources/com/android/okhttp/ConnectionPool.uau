@@ -1,0 +1,5 @@
+signature,file,startline,startcol,endline,endcol,properties
+Lcom/android/okhttp/ConnectionPool;->systemDefault:Lcom/android/okhttp/ConnectionPool;,external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/ConnectionPool.java,63,3,63,49,
+Lcom/android/okhttp/ConnectionPool;->maxIdleConnections:I,external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/ConnectionPool.java,93,3,93,49,
+Lcom/android/okhttp/ConnectionPool;->keepAliveDurationNs:J,external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/ConnectionPool.java,95,3,95,49,
+Lcom/android/okhttp/ConnectionPool;->connections:Ljava/util/Deque;,external/okhttp/repackaged/okhttp/src/main/java/com/android/okhttp/ConnectionPool.java,116,3,116,49,

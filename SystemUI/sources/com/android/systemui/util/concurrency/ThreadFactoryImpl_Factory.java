@@ -1,11 +1,9 @@
 package com.android.systemui.util.concurrency;
 
 import dagger.internal.Factory;
-/* loaded from: classes2.dex */
+
 public final class ThreadFactoryImpl_Factory implements Factory<ThreadFactoryImpl> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ThreadFactoryImpl mo1933get() {
+    public ThreadFactoryImpl get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class ThreadFactoryImpl_Factory implements Factory<ThreadFactoryImp
         return new ThreadFactoryImpl();
     }
 
-    /* loaded from: classes2.dex */
     private static final class InstanceHolder {
-        private static final ThreadFactoryImpl_Factory INSTANCE = new ThreadFactoryImpl_Factory();
+        /* access modifiers changed from: private */
+        public static final ThreadFactoryImpl_Factory INSTANCE = new ThreadFactoryImpl_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

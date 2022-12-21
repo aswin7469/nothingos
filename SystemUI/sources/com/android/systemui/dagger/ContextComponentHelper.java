@@ -3,9 +3,8 @@ package com.android.systemui.dagger;
 import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
-import com.android.systemui.SystemUI;
 import com.android.systemui.recents.RecentsImplementation;
-/* loaded from: classes.dex */
+
 public interface ContextComponentHelper {
     Activity resolveActivity(String str);
 
@@ -14,6 +13,4 @@ public interface ContextComponentHelper {
     RecentsImplementation resolveRecents(String str);
 
     Service resolveService(String str);
-
-    SystemUI resolveSystemUI(String str);
 }

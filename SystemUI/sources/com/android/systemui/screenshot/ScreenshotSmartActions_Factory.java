@@ -1,11 +1,9 @@
 package com.android.systemui.screenshot;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class ScreenshotSmartActions_Factory implements Factory<ScreenshotSmartActions> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ScreenshotSmartActions mo1933get() {
+    public ScreenshotSmartActions get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class ScreenshotSmartActions_Factory implements Factory<ScreenshotS
         return new ScreenshotSmartActions();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final ScreenshotSmartActions_Factory INSTANCE = new ScreenshotSmartActions_Factory();
+        /* access modifiers changed from: private */
+        public static final ScreenshotSmartActions_Factory INSTANCE = new ScreenshotSmartActions_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

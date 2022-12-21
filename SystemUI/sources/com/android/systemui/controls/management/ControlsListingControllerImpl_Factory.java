@@ -5,7 +5,7 @@ import com.android.systemui.settings.UserTracker;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ControlsListingControllerImpl_Factory implements Factory<ControlsListingControllerImpl> {
     private final Provider<Context> contextProvider;
     private final Provider<Executor> executorProvider;
@@ -17,10 +17,8 @@ public final class ControlsListingControllerImpl_Factory implements Factory<Cont
         this.userTrackerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ControlsListingControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.executorProvider.mo1933get(), this.userTrackerProvider.mo1933get());
+    public ControlsListingControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.executorProvider.get(), this.userTrackerProvider.get());
     }
 
     public static ControlsListingControllerImpl_Factory create(Provider<Context> provider, Provider<Executor> provider2, Provider<UserTracker> provider3) {

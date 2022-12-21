@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:ordering="together">
+    <objectAnimator android:interpolator="@drawable/$nt_lock_face_loading__2" android:duration="500" android:startOffset="0" android:valueFrom="1" android:valueTo="0.9" android:valueType="floatType" android:propertyName="scaleX"/>
+    <objectAnimator android:interpolator="@drawable/$nt_lock_face_loading__3" android:duration="500" android:startOffset="0" android:valueFrom="1" android:valueTo="0.9" android:valueType="floatType" android:propertyName="scaleY"/>
+    <objectAnimator android:interpolator="@drawable/$nt_lock_face_loading__4" android:duration="500" android:startOffset="500" android:valueFrom="0.9" android:valueTo="1" android:valueType="floatType" android:propertyName="scaleX"/>
+    <objectAnimator android:interpolator="@drawable/$nt_lock_face_loading__5" android:duration="500" android:startOffset="500" android:valueFrom="0.9" android:valueTo="1" android:valueType="floatType" android:propertyName="scaleY"/>
+</set>

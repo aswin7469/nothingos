@@ -2,65 +2,71 @@ package com.android.systemui.accessibility;
 
 import android.content.Context;
 import android.hardware.display.DisplayManager;
+import android.os.Bundle;
 import android.view.Display;
-import com.android.internal.annotations.VisibleForTesting;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public class ModeSwitchesController {
+import com.android.systemui.accessibility.MagnificationModeSwitch;
+import com.android.systemui.dagger.SysUISingleton;
+import javax.inject.Inject;
+
+@SysUISingleton
+public class ModeSwitchesController implements MagnificationModeSwitch.SwitchListener {
+    private MagnificationModeSwitch.SwitchListener mSwitchListenerDelegate;
     private final DisplayIdIndexSupplier<MagnificationModeSwitch> mSwitchSupplier;
 
+    @Inject
     public ModeSwitchesController(Context context) {
-        this.mSwitchSupplier = new SwitchSupplier(context, (DisplayManager) context.getSystemService(DisplayManager.class));
+        this.mSwitchSupplier = new SwitchSupplier(context, (DisplayManager) context.getSystemService(DisplayManager.class), new ModeSwitchesController$$ExternalSyntheticLambda0(this));
     }
 
-    @VisibleForTesting
     ModeSwitchesController(DisplayIdIndexSupplier<MagnificationModeSwitch> displayIdIndexSupplier) {
         this.mSwitchSupplier = displayIdIndexSupplier;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void showButton(int i, int i2) {
         MagnificationModeSwitch magnificationModeSwitch = this.mSwitchSupplier.get(i);
-        if (magnificationModeSwitch == null) {
-            return;
+        if (magnificationModeSwitch != null) {
+            magnificationModeSwitch.showButton(i2);
         }
-        magnificationModeSwitch.showButton(i2);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void removeButton(int i) {
         MagnificationModeSwitch magnificationModeSwitch = this.mSwitchSupplier.get(i);
-        if (magnificationModeSwitch == null) {
-            return;
+        if (magnificationModeSwitch != null) {
+            magnificationModeSwitch.mo29909xbe988fce();
         }
-        magnificationModeSwitch.lambda$new$2();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void onConfigurationChanged(final int i) {
-        this.mSwitchSupplier.forEach(new Consumer() { // from class: com.android.systemui.accessibility.ModeSwitchesController$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ((MagnificationModeSwitch) obj).onConfigurationChanged(i);
-            }
-        });
+    /* access modifiers changed from: package-private */
+    public void onConfigurationChanged(int i) {
+        this.mSwitchSupplier.forEach(new ModeSwitchesController$$ExternalSyntheticLambda1(i));
     }
 
-    /* loaded from: classes.dex */
+    public void onSwitch(int i, int i2) {
+        MagnificationModeSwitch.SwitchListener switchListener = this.mSwitchListenerDelegate;
+        if (switchListener != null) {
+            switchListener.onSwitch(i, i2);
+        }
+    }
+
+    public void setSwitchListenerDelegate(MagnificationModeSwitch.SwitchListener switchListener) {
+        this.mSwitchListenerDelegate = switchListener;
+    }
+
     private static class SwitchSupplier extends DisplayIdIndexSupplier<MagnificationModeSwitch> {
         private final Context mContext;
+        private final MagnificationModeSwitch.SwitchListener mSwitchListener;
 
-        SwitchSupplier(Context context, DisplayManager displayManager) {
+        SwitchSupplier(Context context, DisplayManager displayManager, MagnificationModeSwitch.SwitchListener switchListener) {
             super(displayManager);
             this.mContext = context;
+            this.mSwitchListener = switchListener;
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // com.android.systemui.accessibility.DisplayIdIndexSupplier
-        /* renamed from: createInstance */
-        public MagnificationModeSwitch mo313createInstance(Display display) {
-            return new MagnificationModeSwitch(this.mContext.createWindowContext(display, 2039, null));
+        /* access modifiers changed from: protected */
+        public MagnificationModeSwitch createInstance(Display display) {
+            return new MagnificationModeSwitch(this.mContext.createWindowContext(display, 2039, (Bundle) null), this.mSwitchListener);
         }
     }
 }

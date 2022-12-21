@@ -1,0 +1,5 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/wifi/WifiSsid;->octets:Ljava/io/ByteArrayOutputStream;,packages/modules/Wifi/framework/java/android/net/wifi/WifiSsid.java,214,5,214,69,publicAlternatives=%22%7B%40link+%23getBytes%28%29%7D%22
+Landroid/net/wifi/WifiSsid;->NONE:Ljava/lang/String;,packages/modules/Wifi/framework/java/android/net/wifi/WifiSsid.java,222,5,222,99,publicAlternatives=%22%7B%40link+android.net.wifi.WifiManager%23UNKNOWN_SSID%7D%22
+Landroid/net/wifi/WifiSsid;->createFromAsciiEncoded(Ljava/lang/String;)Landroid/net/wifi/WifiSsid;,packages/modules/Wifi/framework/java/android/net/wifi/WifiSsid.java,230,5,230,76,publicAlternatives=%22%7B%40link+%23fromBytes%28byte%5B%5D%29%7D%22
+Landroid/net/wifi/WifiSsid;->getOctets()[B,packages/modules/Wifi/framework/java/android/net/wifi/WifiSsid.java,240,5,240,69,publicAlternatives=%22%7B%40link+%23getBytes%28%29%7D%22

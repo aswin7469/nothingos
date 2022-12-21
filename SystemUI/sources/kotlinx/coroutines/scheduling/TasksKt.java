@@ -1,45 +1,31 @@
 package kotlinx.coroutines.scheduling;
 
 import java.util.concurrent.TimeUnit;
-import kotlin.ranges.RangesKt___RangesKt;
+import kotlin.Metadata;
+import kotlin.ranges.RangesKt;
 import kotlinx.coroutines.internal.SystemPropsKt;
-import kotlinx.coroutines.internal.SystemPropsKt__SystemProps_commonKt;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000,\n\u0000\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0002\u0018\u0002\n\u0002\b\u0002\"\u0010\u0010\u0000\u001a\u00020\u00018\u0000X\u0004¢\u0006\u0002\n\u0000\"\u0010\u0010\u0002\u001a\u00020\u00018\u0000X\u0004¢\u0006\u0002\n\u0000\"\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000\"\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000\"\u0010\u0010\u0006\u001a\u00020\u00078\u0000X\u0004¢\u0006\u0002\n\u0000\"\u0010\u0010\b\u001a\u00020\u00018\u0000X\u0004¢\u0006\u0002\n\u0000\"\u000e\u0010\t\u001a\u00020\u0001XT¢\u0006\u0002\n\u0000\"\u000e\u0010\n\u001a\u00020\u0001XT¢\u0006\u0002\n\u0000\"\u0010\u0010\u000b\u001a\u00020\u00078\u0000X\u0004¢\u0006\u0002\n\u0000\"\u0012\u0010\f\u001a\u00020\r8\u0000@\u0000X\u000e¢\u0006\u0002\n\u0000\"\u0019\u0010\u000e\u001a\u00020\u000f*\u00020\u00108À\u0002X\u0004¢\u0006\u0006\u001a\u0004\b\u000e\u0010\u0011¨\u0006\u0012"}, mo64987d2 = {"BLOCKING_DEFAULT_PARALLELISM", "", "CORE_POOL_SIZE", "DEFAULT_DISPATCHER_NAME", "", "DEFAULT_SCHEDULER_NAME", "IDLE_WORKER_KEEP_ALIVE_NS", "", "MAX_POOL_SIZE", "TASK_NON_BLOCKING", "TASK_PROBABLY_BLOCKING", "WORK_STEALING_TIME_RESOLUTION_NS", "schedulerTimeSource", "Lkotlinx/coroutines/scheduling/SchedulerTimeSource;", "isBlocking", "", "Lkotlinx/coroutines/scheduling/Task;", "(Lkotlinx/coroutines/scheduling/Task;)Z", "kotlinx-coroutines-core"}, mo64988k = 2, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: Tasks.kt */
-/* loaded from: classes2.dex */
 public final class TasksKt {
-    public static final int BLOCKING_DEFAULT_PARALLELISM;
+    public static final int BLOCKING_DEFAULT_PARALLELISM = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.blocking.parallelism", 16, 0, 0, 12, (Object) null);
     public static final int CORE_POOL_SIZE;
-    public static final long IDLE_WORKER_KEEP_ALIVE_NS;
+    public static final String DEFAULT_DISPATCHER_NAME = "Dispatchers.Default";
+    public static final String DEFAULT_SCHEDULER_NAME = "DefaultDispatcher";
+    public static final long IDLE_WORKER_KEEP_ALIVE_NS = TimeUnit.SECONDS.toNanos(SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.keep.alive.sec", 60, 0, 0, 12, (Object) null));
     public static final int MAX_POOL_SIZE;
-    public static final int QUEUE_SIZE_OFFLOAD_THRESHOLD;
-    public static final long WORK_STEALING_TIME_RESOLUTION_NS;
-    @NotNull
-    public static TimeSource schedulerTimeSource = NanoTimeSource.INSTANCE;
+    public static final int TASK_NON_BLOCKING = 0;
+    public static final int TASK_PROBABLY_BLOCKING = 1;
+    public static final long WORK_STEALING_TIME_RESOLUTION_NS = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.resolution.ns", 100000, 0, 0, 12, (Object) null);
+    public static SchedulerTimeSource schedulerTimeSource = NanoTimeSource.INSTANCE;
 
     static {
-        long systemProp$default;
-        int systemProp$default2;
-        int systemProp$default3;
-        int coerceAtLeast;
-        int systemProp$default4;
-        int coerceIn;
-        int systemProp$default5;
-        long systemProp$default6;
-        systemProp$default = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.resolution.ns", 100000L, 0L, 0L, 12, (Object) null);
-        WORK_STEALING_TIME_RESOLUTION_NS = systemProp$default;
-        systemProp$default2 = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.offload.threshold", 96, 0, 128, 4, (Object) null);
-        QUEUE_SIZE_OFFLOAD_THRESHOLD = systemProp$default2;
-        systemProp$default3 = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.blocking.parallelism", 16, 0, 0, 12, (Object) null);
-        BLOCKING_DEFAULT_PARALLELISM = systemProp$default3;
-        coerceAtLeast = RangesKt___RangesKt.coerceAtLeast(SystemPropsKt.getAVAILABLE_PROCESSORS(), 2);
-        systemProp$default4 = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.core.pool.size", coerceAtLeast, 1, 0, 8, (Object) null);
-        CORE_POOL_SIZE = systemProp$default4;
-        coerceIn = RangesKt___RangesKt.coerceIn(SystemPropsKt.getAVAILABLE_PROCESSORS() * 128, systemProp$default4, 2097150);
-        systemProp$default5 = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.max.pool.size", coerceIn, 0, 2097150, 4, (Object) null);
-        MAX_POOL_SIZE = systemProp$default5;
-        TimeUnit timeUnit = TimeUnit.SECONDS;
-        systemProp$default6 = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.keep.alive.sec", 5L, 0L, 0L, 12, (Object) null);
-        IDLE_WORKER_KEEP_ALIVE_NS = timeUnit.toNanos(systemProp$default6);
+        int systemProp$default = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.core.pool.size", RangesKt.coerceAtLeast(SystemPropsKt.getAVAILABLE_PROCESSORS(), 2), 1, 0, 8, (Object) null);
+        CORE_POOL_SIZE = systemProp$default;
+        MAX_POOL_SIZE = SystemPropsKt__SystemProps_commonKt.systemProp$default("kotlinx.coroutines.scheduler.max.pool.size", RangesKt.coerceIn(SystemPropsKt.getAVAILABLE_PROCESSORS() * 128, systemProp$default, (int) CoroutineScheduler.MAX_SUPPORTED_POOL_SIZE), 0, (int) CoroutineScheduler.MAX_SUPPORTED_POOL_SIZE, 4, (Object) null);
+    }
+
+    public static final boolean isBlocking(Task task) {
+        return task.taskContext.getTaskMode() == 1;
     }
 }

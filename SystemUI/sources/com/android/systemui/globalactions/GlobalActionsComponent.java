@@ -4,17 +4,18 @@ import android.content.Context;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import com.android.internal.statusbar.IStatusBarService;
-import com.android.systemui.SystemUI;
+import com.android.systemui.CoreStartable;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.plugins.GlobalActions;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.ExtensionController;
 import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import javax.inject.Inject;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
-public class GlobalActionsComponent extends SystemUI implements CommandQueue.Callbacks, GlobalActions.GlobalActionsManager {
+
+@SysUISingleton
+public class GlobalActionsComponent extends CoreStartable implements CommandQueue.Callbacks, GlobalActions.GlobalActionsManager {
     private IStatusBarService mBarService;
     private final CommandQueue mCommandQueue;
     private ExtensionController.Extension<GlobalActions> mExtension;
@@ -23,6 +24,7 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
     private GlobalActions mPlugin;
     private StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
 
+    @Inject
     public GlobalActionsComponent(Context context, CommandQueue commandQueue, ExtensionController extensionController, Provider<GlobalActions> provider, StatusBarKeyguardViewManager statusBarKeyguardViewManager) {
         super(context);
         this.mCommandQueue = commandQueue;
@@ -31,29 +33,18 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
         this.mStatusBarKeyguardViewManager = statusBarKeyguardViewManager;
     }
 
-    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
-        ExtensionController.ExtensionBuilder withPlugin = this.mExtensionController.mo1298newExtension(GlobalActions.class).withPlugin(GlobalActions.class);
-        final Provider<GlobalActions> provider = this.mGlobalActionsProvider;
+        ExtensionController.ExtensionBuilder<GlobalActions> withPlugin = this.mExtensionController.newExtension(GlobalActions.class).withPlugin(GlobalActions.class);
+        Provider<GlobalActions> provider = this.mGlobalActionsProvider;
         Objects.requireNonNull(provider);
-        ExtensionController.Extension<GlobalActions> build = withPlugin.withDefault(new Supplier() { // from class: com.android.systemui.globalactions.GlobalActionsComponent$$ExternalSyntheticLambda1
-            @Override // java.util.function.Supplier
-            public final Object get() {
-                return (GlobalActions) Provider.this.mo1933get();
-            }
-        }).withCallback(new Consumer() { // from class: com.android.systemui.globalactions.GlobalActionsComponent$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                GlobalActionsComponent.this.onExtensionCallback((GlobalActions) obj);
-            }
-        }).build();
+        ExtensionController.Extension<GlobalActions> build = withPlugin.withDefault(new GlobalActionsComponent$$ExternalSyntheticLambda0(provider)).withCallback(new GlobalActionsComponent$$ExternalSyntheticLambda1(this)).build();
         this.mExtension = build;
         this.mPlugin = build.get();
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onExtensionCallback(GlobalActions globalActions) {
         GlobalActions globalActions2 = this.mPlugin;
         if (globalActions2 != null) {
@@ -62,18 +53,15 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
         this.mPlugin = globalActions;
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void handleShowShutdownUi(boolean z, String str) {
         this.mExtension.get().showShutdownUi(z, str);
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void handleShowGlobalActionsMenu() {
         this.mStatusBarKeyguardViewManager.setGlobalActionsVisible(true);
         this.mExtension.get().showGlobalActions(this);
     }
 
-    @Override // com.android.systemui.plugins.GlobalActions.GlobalActionsManager
     public void onGlobalActionsShown() {
         try {
             this.mBarService.onGlobalActionsShown();
@@ -81,7 +69,6 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
         }
     }
 
-    @Override // com.android.systemui.plugins.GlobalActions.GlobalActionsManager
     public void onGlobalActionsHidden() {
         try {
             this.mStatusBarKeyguardViewManager.setGlobalActionsVisible(false);
@@ -90,7 +77,6 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
         }
     }
 
-    @Override // com.android.systemui.plugins.GlobalActions.GlobalActionsManager
     public void shutdown() {
         try {
             this.mBarService.shutdown();
@@ -98,7 +84,6 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
         }
     }
 
-    @Override // com.android.systemui.plugins.GlobalActions.GlobalActionsManager
     public void reboot(boolean z) {
         try {
             this.mBarService.reboot(z);

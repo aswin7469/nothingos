@@ -2,16 +2,20 @@ package com.airbnb.lottie.parser;
 
 import android.graphics.Color;
 import android.graphics.PointF;
+import android.icu.text.DateFormat;
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
+import java.p026io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
-class JsonUtils {
-    private static final JsonReader.Options POINT_NAMES = JsonReader.Options.of("x", "y");
+import sun.util.locale.LanguageTag;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int jsonToColor(JsonReader jsonReader) throws IOException {
+class JsonUtils {
+    private static final JsonReader.Options POINT_NAMES = JsonReader.Options.m137of(LanguageTag.PRIVATEUSE, DateFormat.YEAR);
+
+    private JsonUtils() {
+    }
+
+    static int jsonToColor(JsonReader jsonReader) throws IOException {
         jsonReader.beginArray();
         int nextDouble = (int) (jsonReader.nextDouble() * 255.0d);
         int nextDouble2 = (int) (jsonReader.nextDouble() * 255.0d);
@@ -23,8 +27,7 @@ class JsonUtils {
         return Color.argb(255, nextDouble, nextDouble2, nextDouble3);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static List<PointF> jsonToPoints(JsonReader jsonReader, float f) throws IOException {
+    static List<PointF> jsonToPoints(JsonReader jsonReader, float f) throws IOException {
         ArrayList arrayList = new ArrayList();
         jsonReader.beginArray();
         while (jsonReader.peek() == JsonReader.Token.BEGIN_ARRAY) {
@@ -36,43 +39,55 @@ class JsonUtils {
         return arrayList;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.airbnb.lottie.parser.JsonUtils$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public static /* synthetic */ class AnonymousClass1 {
+    /* renamed from: com.airbnb.lottie.parser.JsonUtils$1 */
+    static /* synthetic */ class C15471 {
         static final /* synthetic */ int[] $SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token;
 
+        /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
         static {
-            int[] iArr = new int[JsonReader.Token.values().length];
-            $SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token = iArr;
-            try {
-                iArr[JsonReader.Token.NUMBER.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token[JsonReader.Token.BEGIN_ARRAY.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token[JsonReader.Token.BEGIN_OBJECT.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
+            /*
+                com.airbnb.lottie.parser.moshi.JsonReader$Token[] r0 = com.airbnb.lottie.parser.moshi.JsonReader.Token.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                $SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token = r0
+                com.airbnb.lottie.parser.moshi.JsonReader$Token r1 = com.airbnb.lottie.parser.moshi.JsonReader.Token.NUMBER     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = $SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.airbnb.lottie.parser.moshi.JsonReader$Token r1 = com.airbnb.lottie.parser.moshi.JsonReader.Token.BEGIN_ARRAY     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = $SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.airbnb.lottie.parser.moshi.JsonReader$Token r1 = com.airbnb.lottie.parser.moshi.JsonReader.Token.BEGIN_OBJECT     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.airbnb.lottie.parser.JsonUtils.C15471.<clinit>():void");
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static PointF jsonToPoint(JsonReader jsonReader, float f) throws IOException {
-        int i = AnonymousClass1.$SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token[jsonReader.peek().ordinal()];
-        if (i != 1) {
-            if (i == 2) {
-                return jsonArrayToPoint(jsonReader, f);
-            }
-            if (i == 3) {
-                return jsonObjectToPoint(jsonReader, f);
-            }
-            throw new IllegalArgumentException("Unknown point starts with " + jsonReader.peek());
+    static PointF jsonToPoint(JsonReader jsonReader, float f) throws IOException {
+        int i = C15471.$SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token[jsonReader.peek().ordinal()];
+        if (i == 1) {
+            return jsonNumbersToPoint(jsonReader, f);
         }
-        return jsonNumbersToPoint(jsonReader, f);
+        if (i == 2) {
+            return jsonArrayToPoint(jsonReader, f);
+        }
+        if (i == 3) {
+            return jsonObjectToPoint(jsonReader, f);
+        }
+        throw new IllegalArgumentException("Unknown point starts with " + jsonReader.peek());
     }
 
     private static PointF jsonNumbersToPoint(JsonReader jsonReader, float f) throws IOException {
@@ -103,33 +118,32 @@ class JsonUtils {
             int selectName = jsonReader.selectName(POINT_NAMES);
             if (selectName == 0) {
                 f2 = valueFromObject(jsonReader);
-            } else if (selectName == 1) {
-                f3 = valueFromObject(jsonReader);
-            } else {
+            } else if (selectName != 1) {
                 jsonReader.skipName();
                 jsonReader.skipValue();
+            } else {
+                f3 = valueFromObject(jsonReader);
             }
         }
         jsonReader.endObject();
         return new PointF(f2 * f, f3 * f);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static float valueFromObject(JsonReader jsonReader) throws IOException {
+    static float valueFromObject(JsonReader jsonReader) throws IOException {
         JsonReader.Token peek = jsonReader.peek();
-        int i = AnonymousClass1.$SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token[peek.ordinal()];
-        if (i != 1) {
-            if (i == 2) {
-                jsonReader.beginArray();
-                float nextDouble = (float) jsonReader.nextDouble();
-                while (jsonReader.hasNext()) {
-                    jsonReader.skipValue();
-                }
-                jsonReader.endArray();
-                return nextDouble;
-            }
-            throw new IllegalArgumentException("Unknown value for token of type " + peek);
+        int i = C15471.$SwitchMap$com$airbnb$lottie$parser$moshi$JsonReader$Token[peek.ordinal()];
+        if (i == 1) {
+            return (float) jsonReader.nextDouble();
         }
-        return (float) jsonReader.nextDouble();
+        if (i == 2) {
+            jsonReader.beginArray();
+            float nextDouble = (float) jsonReader.nextDouble();
+            while (jsonReader.hasNext()) {
+                jsonReader.skipValue();
+            }
+            jsonReader.endArray();
+            return nextDouble;
+        }
+        throw new IllegalArgumentException("Unknown value for token of type " + peek);
     }
 }

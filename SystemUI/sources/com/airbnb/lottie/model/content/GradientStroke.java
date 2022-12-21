@@ -10,7 +10,7 @@ import com.airbnb.lottie.model.animatable.AnimatablePointValue;
 import com.airbnb.lottie.model.content.ShapeStroke;
 import com.airbnb.lottie.model.layer.BaseLayer;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class GradientStroke implements ContentModel {
     private final ShapeStroke.LineCapType capType;
     private final AnimatableFloatValue dashOffset;
@@ -26,9 +26,9 @@ public class GradientStroke implements ContentModel {
     private final AnimatablePointValue startPoint;
     private final AnimatableFloatValue width;
 
-    public GradientStroke(String str, GradientType gradientType, AnimatableGradientColorValue animatableGradientColorValue, AnimatableIntegerValue animatableIntegerValue, AnimatablePointValue animatablePointValue, AnimatablePointValue animatablePointValue2, AnimatableFloatValue animatableFloatValue, ShapeStroke.LineCapType lineCapType, ShapeStroke.LineJoinType lineJoinType, float f, List<AnimatableFloatValue> list, AnimatableFloatValue animatableFloatValue2, boolean z) {
+    public GradientStroke(String str, GradientType gradientType2, AnimatableGradientColorValue animatableGradientColorValue, AnimatableIntegerValue animatableIntegerValue, AnimatablePointValue animatablePointValue, AnimatablePointValue animatablePointValue2, AnimatableFloatValue animatableFloatValue, ShapeStroke.LineCapType lineCapType, ShapeStroke.LineJoinType lineJoinType, float f, List<AnimatableFloatValue> list, AnimatableFloatValue animatableFloatValue2, boolean z) {
         this.name = str;
-        this.gradientType = gradientType;
+        this.gradientType = gradientType2;
         this.gradientColor = animatableGradientColorValue;
         this.opacity = animatableIntegerValue;
         this.startPoint = animatablePointValue;
@@ -94,7 +94,6 @@ public class GradientStroke implements ContentModel {
         return this.hidden;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new GradientStrokeContent(lottieDrawable, baseLayer, this);
     }

@@ -4,44 +4,63 @@ import android.app.Notification;
 import android.service.notification.StatusBarNotification;
 import com.android.systemui.ForegroundServiceController;
 import com.android.systemui.appops.AppOpsController;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.statusbar.notification.collection.ListEntry;
 import com.android.systemui.statusbar.notification.collection.NotifPipeline;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.collection.coordinator.dagger.CoordinatorScope;
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter;
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifSectioner;
 import com.android.systemui.util.concurrency.DelayableExecutor;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@CoordinatorScope
 public class AppOpsCoordinator implements Coordinator {
+    private static final String TAG = "AppOpsCoordinator";
     private final AppOpsController mAppOpsController;
-    private final ForegroundServiceController mForegroundServiceController;
+    /* access modifiers changed from: private */
+    public final ForegroundServiceController mForegroundServiceController;
     private final DelayableExecutor mMainExecutor;
-    private NotifPipeline mNotifPipeline;
-    private final NotifFilter mNotifFilter = new NotifFilter("AppOpsCoordinator") { // from class: com.android.systemui.statusbar.notification.collection.coordinator.AppOpsCoordinator.1
-        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
+    private final NotifFilter mNotifFilter = new NotifFilter(TAG) {
         public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
             StatusBarNotification sbn = notificationEntry.getSbn();
             return AppOpsCoordinator.this.mForegroundServiceController.isDisclosureNotification(sbn) && !AppOpsCoordinator.this.mForegroundServiceController.isDisclosureNeededForUser(sbn.getUser().getIdentifier());
         }
     };
-    private final NotifSectioner mNotifSectioner = new NotifSectioner("ForegroundService") { // from class: com.android.systemui.statusbar.notification.collection.coordinator.AppOpsCoordinator.2
-        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifSectioner
+    private NotifPipeline mNotifPipeline;
+    private final NotifSectioner mNotifSectioner = new NotifSectioner("ForegroundService", 3) {
         public boolean isInSection(ListEntry listEntry) {
             NotificationEntry representativeEntry = listEntry.getRepresentativeEntry();
-            if (representativeEntry != null) {
-                Notification notification = representativeEntry.getSbn().getNotification();
-                return notification.isForegroundService() && notification.isColorized() && listEntry.getRepresentativeEntry().getImportance() > 1;
+            if (representativeEntry == null) {
+                return false;
+            }
+            if (isColorizedForegroundService(representativeEntry) || isCall(representativeEntry)) {
+                return true;
             }
             return false;
         }
+
+        private boolean isColorizedForegroundService(NotificationEntry notificationEntry) {
+            Notification notification = notificationEntry.getSbn().getNotification();
+            return notification.isForegroundService() && notification.isColorized() && notificationEntry.getImportance() > 1;
+        }
+
+        private boolean isCall(NotificationEntry notificationEntry) {
+            Notification notification = notificationEntry.getSbn().getNotification();
+            if (notificationEntry.getImportance() <= 1 || !notification.isStyle(Notification.CallStyle.class)) {
+                return false;
+            }
+            return true;
+        }
     };
 
-    public AppOpsCoordinator(ForegroundServiceController foregroundServiceController, AppOpsController appOpsController, DelayableExecutor delayableExecutor) {
+    @Inject
+    public AppOpsCoordinator(ForegroundServiceController foregroundServiceController, AppOpsController appOpsController, @Main DelayableExecutor delayableExecutor) {
         this.mForegroundServiceController = foregroundServiceController;
         this.mAppOpsController = appOpsController;
         this.mMainExecutor = delayableExecutor;
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         this.mNotifPipeline = notifPipeline;
         notifPipeline.addPreGroupFilter(this.mNotifFilter);

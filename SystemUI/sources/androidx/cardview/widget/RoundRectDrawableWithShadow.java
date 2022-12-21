@@ -12,134 +12,128 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
-import androidx.cardview.R$color;
-import androidx.cardview.R$dimen;
-/* loaded from: classes.dex */
+import androidx.cardview.C0438R;
+
 class RoundRectDrawableWithShadow extends Drawable {
     private static final double COS_45 = Math.cos(Math.toRadians(45.0d));
+    private static final float SHADOW_MULTIPLIER = 1.5f;
     static RoundRectHelper sRoundRectHelper;
+    private boolean mAddPaddingForCorners = true;
     private ColorStateList mBackground;
+    private final RectF mCardBounds;
     private float mCornerRadius;
     private Paint mCornerShadowPaint;
     private Path mCornerShadowPath;
+    private boolean mDirty = true;
     private Paint mEdgeShadowPaint;
     private final int mInsetShadow;
+    private Paint mPaint;
+    private boolean mPrintedShadowClipWarning = false;
     private float mRawMaxShadowSize;
     private float mRawShadowSize;
     private final int mShadowEndColor;
     private float mShadowSize;
     private final int mShadowStartColor;
-    private boolean mDirty = true;
-    private boolean mAddPaddingForCorners = true;
-    private boolean mPrintedShadowClipWarning = false;
-    private Paint mPaint = new Paint(5);
-    private final RectF mCardBounds = new RectF();
 
-    /* loaded from: classes.dex */
     interface RoundRectHelper {
-        void drawRoundRect(Canvas canvas, RectF bounds, float cornerRadius, Paint paint);
+        void drawRoundRect(Canvas canvas, RectF rectF, float f, Paint paint);
     }
 
-    @Override // android.graphics.drawable.Drawable
     public int getOpacity() {
         return -3;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public RoundRectDrawableWithShadow(Resources resources, ColorStateList backgroundColor, float radius, float shadowSize, float maxShadowSize) {
-        this.mShadowStartColor = resources.getColor(R$color.cardview_shadow_start_color);
-        this.mShadowEndColor = resources.getColor(R$color.cardview_shadow_end_color);
-        this.mInsetShadow = resources.getDimensionPixelSize(R$dimen.cardview_compat_inset_shadow);
-        setBackground(backgroundColor);
+    RoundRectDrawableWithShadow(Resources resources, ColorStateList colorStateList, float f, float f2, float f3) {
+        this.mShadowStartColor = resources.getColor(C0438R.C0439color.cardview_shadow_start_color);
+        this.mShadowEndColor = resources.getColor(C0438R.C0439color.cardview_shadow_end_color);
+        this.mInsetShadow = resources.getDimensionPixelSize(C0438R.dimen.cardview_compat_inset_shadow);
+        this.mPaint = new Paint(5);
+        setBackground(colorStateList);
         Paint paint = new Paint(5);
         this.mCornerShadowPaint = paint;
         paint.setStyle(Paint.Style.FILL);
-        this.mCornerRadius = (int) (radius + 0.5f);
+        this.mCornerRadius = (float) ((int) (f + 0.5f));
+        this.mCardBounds = new RectF();
         Paint paint2 = new Paint(this.mCornerShadowPaint);
         this.mEdgeShadowPaint = paint2;
         paint2.setAntiAlias(false);
-        setShadowSize(shadowSize, maxShadowSize);
+        setShadowSize(f2, f3);
     }
 
-    private void setBackground(ColorStateList color) {
-        if (color == null) {
-            color = ColorStateList.valueOf(0);
+    private void setBackground(ColorStateList colorStateList) {
+        if (colorStateList == null) {
+            colorStateList = ColorStateList.valueOf(0);
         }
-        this.mBackground = color;
-        this.mPaint.setColor(color.getColorForState(getState(), this.mBackground.getDefaultColor()));
+        this.mBackground = colorStateList;
+        this.mPaint.setColor(colorStateList.getColorForState(getState(), this.mBackground.getDefaultColor()));
     }
 
-    private int toEven(float value) {
-        int i = (int) (value + 0.5f);
+    private int toEven(float f) {
+        int i = (int) (f + 0.5f);
         return i % 2 == 1 ? i - 1 : i;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setAddPaddingForCorners(boolean addPaddingForCorners) {
-        this.mAddPaddingForCorners = addPaddingForCorners;
+    /* access modifiers changed from: package-private */
+    public void setAddPaddingForCorners(boolean z) {
+        this.mAddPaddingForCorners = z;
         invalidateSelf();
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void setAlpha(int alpha) {
-        this.mPaint.setAlpha(alpha);
-        this.mCornerShadowPaint.setAlpha(alpha);
-        this.mEdgeShadowPaint.setAlpha(alpha);
+    public void setAlpha(int i) {
+        this.mPaint.setAlpha(i);
+        this.mCornerShadowPaint.setAlpha(i);
+        this.mEdgeShadowPaint.setAlpha(i);
     }
 
-    @Override // android.graphics.drawable.Drawable
-    protected void onBoundsChange(Rect bounds) {
-        super.onBoundsChange(bounds);
+    /* access modifiers changed from: protected */
+    public void onBoundsChange(Rect rect) {
+        super.onBoundsChange(rect);
         this.mDirty = true;
     }
 
-    private void setShadowSize(float shadowSize, float maxShadowSize) {
-        if (shadowSize < 0.0f) {
-            throw new IllegalArgumentException("Invalid shadow size " + shadowSize + ". Must be >= 0");
-        } else if (maxShadowSize < 0.0f) {
-            throw new IllegalArgumentException("Invalid max shadow size " + maxShadowSize + ". Must be >= 0");
-        } else {
-            float even = toEven(shadowSize);
-            float even2 = toEven(maxShadowSize);
+    private void setShadowSize(float f, float f2) {
+        if (f < 0.0f) {
+            throw new IllegalArgumentException("Invalid shadow size " + f + ". Must be >= 0");
+        } else if (f2 >= 0.0f) {
+            float even = (float) toEven(f);
+            float even2 = (float) toEven(f2);
             if (even > even2) {
                 if (!this.mPrintedShadowClipWarning) {
                     this.mPrintedShadowClipWarning = true;
                 }
                 even = even2;
             }
-            if (this.mRawShadowSize == even && this.mRawMaxShadowSize == even2) {
-                return;
+            if (this.mRawShadowSize != even || this.mRawMaxShadowSize != even2) {
+                this.mRawShadowSize = even;
+                this.mRawMaxShadowSize = even2;
+                this.mShadowSize = (float) ((int) ((even * 1.5f) + ((float) this.mInsetShadow) + 0.5f));
+                this.mDirty = true;
+                invalidateSelf();
             }
-            this.mRawShadowSize = even;
-            this.mRawMaxShadowSize = even2;
-            this.mShadowSize = (int) ((even * 1.5f) + this.mInsetShadow + 0.5f);
-            this.mDirty = true;
-            invalidateSelf();
+        } else {
+            throw new IllegalArgumentException("Invalid max shadow size " + f2 + ". Must be >= 0");
         }
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public boolean getPadding(Rect padding) {
-        int ceil = (int) Math.ceil(calculateVerticalPadding(this.mRawMaxShadowSize, this.mCornerRadius, this.mAddPaddingForCorners));
-        int ceil2 = (int) Math.ceil(calculateHorizontalPadding(this.mRawMaxShadowSize, this.mCornerRadius, this.mAddPaddingForCorners));
-        padding.set(ceil2, ceil, ceil2, ceil);
+    public boolean getPadding(Rect rect) {
+        int ceil = (int) Math.ceil((double) calculateVerticalPadding(this.mRawMaxShadowSize, this.mCornerRadius, this.mAddPaddingForCorners));
+        int ceil2 = (int) Math.ceil((double) calculateHorizontalPadding(this.mRawMaxShadowSize, this.mCornerRadius, this.mAddPaddingForCorners));
+        rect.set(ceil2, ceil, ceil2, ceil);
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static float calculateVerticalPadding(float maxShadowSize, float cornerRadius, boolean addPaddingForCorners) {
-        return addPaddingForCorners ? (float) ((maxShadowSize * 1.5f) + ((1.0d - COS_45) * cornerRadius)) : maxShadowSize * 1.5f;
+    static float calculateVerticalPadding(float f, float f2, boolean z) {
+        return z ? (float) (((double) (f * 1.5f)) + ((1.0d - COS_45) * ((double) f2))) : f * 1.5f;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static float calculateHorizontalPadding(float maxShadowSize, float cornerRadius, boolean addPaddingForCorners) {
-        return addPaddingForCorners ? (float) (maxShadowSize + ((1.0d - COS_45) * cornerRadius)) : maxShadowSize;
+    static float calculateHorizontalPadding(float f, float f2, boolean z) {
+        return z ? (float) (((double) f) + ((1.0d - COS_45) * ((double) f2))) : f;
     }
 
-    @Override // android.graphics.drawable.Drawable
-    protected boolean onStateChange(int[] stateSet) {
+    /* access modifiers changed from: protected */
+    public boolean onStateChange(int[] iArr) {
         ColorStateList colorStateList = this.mBackground;
-        int colorForState = colorStateList.getColorForState(stateSet, colorStateList.getDefaultColor());
+        int colorForState = colorStateList.getColorForState(iArr, colorStateList.getDefaultColor());
         if (this.mPaint.getColor() == colorForState) {
             return false;
         }
@@ -149,32 +143,30 @@ class RoundRectDrawableWithShadow extends Drawable {
         return true;
     }
 
-    @Override // android.graphics.drawable.Drawable
     public boolean isStateful() {
         ColorStateList colorStateList = this.mBackground;
         return (colorStateList != null && colorStateList.isStateful()) || super.isStateful();
     }
 
-    @Override // android.graphics.drawable.Drawable
-    public void setColorFilter(ColorFilter cf) {
-        this.mPaint.setColorFilter(cf);
+    public void setColorFilter(ColorFilter colorFilter) {
+        this.mPaint.setColorFilter(colorFilter);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void setCornerRadius(float radius) {
-        if (radius < 0.0f) {
-            throw new IllegalArgumentException("Invalid radius " + radius + ". Must be >= 0");
-        }
-        float f = (int) (radius + 0.5f);
-        if (this.mCornerRadius == f) {
+    /* access modifiers changed from: package-private */
+    public void setCornerRadius(float f) {
+        if (f >= 0.0f) {
+            float f2 = (float) ((int) (f + 0.5f));
+            if (this.mCornerRadius != f2) {
+                this.mCornerRadius = f2;
+                this.mDirty = true;
+                invalidateSelf();
+                return;
+            }
             return;
         }
-        this.mCornerRadius = f;
-        this.mDirty = true;
-        invalidateSelf();
+        throw new IllegalArgumentException("Invalid radius " + f + ". Must be >= 0");
     }
 
-    @Override // android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         if (this.mDirty) {
             buildComponents(getBounds());
@@ -189,21 +181,19 @@ class RoundRectDrawableWithShadow extends Drawable {
     private void drawShadow(Canvas canvas) {
         float f = this.mCornerRadius;
         float f2 = (-f) - this.mShadowSize;
-        float f3 = f + this.mInsetShadow + (this.mRawShadowSize / 2.0f);
+        float f3 = f + ((float) this.mInsetShadow) + (this.mRawShadowSize / 2.0f);
         float f4 = f3 * 2.0f;
         boolean z = this.mCardBounds.width() - f4 > 0.0f;
         boolean z2 = this.mCardBounds.height() - f4 > 0.0f;
         int save = canvas.save();
-        RectF rectF = this.mCardBounds;
-        canvas.translate(rectF.left + f3, rectF.top + f3);
+        canvas.translate(this.mCardBounds.left + f3, this.mCardBounds.top + f3);
         canvas.drawPath(this.mCornerShadowPath, this.mCornerShadowPaint);
         if (z) {
             canvas.drawRect(0.0f, f2, this.mCardBounds.width() - f4, -this.mCornerRadius, this.mEdgeShadowPaint);
         }
         canvas.restoreToCount(save);
         int save2 = canvas.save();
-        RectF rectF2 = this.mCardBounds;
-        canvas.translate(rectF2.right - f3, rectF2.bottom - f3);
+        canvas.translate(this.mCardBounds.right - f3, this.mCardBounds.bottom - f3);
         canvas.rotate(180.0f);
         canvas.drawPath(this.mCornerShadowPath, this.mCornerShadowPaint);
         if (z) {
@@ -211,8 +201,7 @@ class RoundRectDrawableWithShadow extends Drawable {
         }
         canvas.restoreToCount(save2);
         int save3 = canvas.save();
-        RectF rectF3 = this.mCardBounds;
-        canvas.translate(rectF3.left + f3, rectF3.bottom - f3);
+        canvas.translate(this.mCardBounds.left + f3, this.mCardBounds.bottom - f3);
         canvas.rotate(270.0f);
         canvas.drawPath(this.mCornerShadowPath, this.mCornerShadowPaint);
         if (z2) {
@@ -220,8 +209,7 @@ class RoundRectDrawableWithShadow extends Drawable {
         }
         canvas.restoreToCount(save3);
         int save4 = canvas.save();
-        RectF rectF4 = this.mCardBounds;
-        canvas.translate(rectF4.right - f3, rectF4.top + f3);
+        canvas.translate(this.mCardBounds.right - f3, this.mCardBounds.top + f3);
         canvas.rotate(90.0f);
         canvas.drawPath(this.mCornerShadowPath, this.mCornerShadowPaint);
         if (z2) {
@@ -262,46 +250,61 @@ class RoundRectDrawableWithShadow extends Drawable {
         this.mEdgeShadowPaint.setAntiAlias(false);
     }
 
-    private void buildComponents(Rect bounds) {
-        float f = this.mRawMaxShadowSize;
-        float f2 = 1.5f * f;
-        this.mCardBounds.set(bounds.left + f, bounds.top + f2, bounds.right - f, bounds.bottom - f2);
+    private void buildComponents(Rect rect) {
+        float f = this.mRawMaxShadowSize * 1.5f;
+        this.mCardBounds.set(((float) rect.left) + this.mRawMaxShadowSize, ((float) rect.top) + f, ((float) rect.right) - this.mRawMaxShadowSize, ((float) rect.bottom) - f);
         buildShadowCorners();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getCornerRadius() {
         return this.mCornerRadius;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void getMaxShadowAndCornerPadding(Rect into) {
-        getPadding(into);
+    /* access modifiers changed from: package-private */
+    public void getMaxShadowAndCornerPadding(Rect rect) {
+        getPadding(rect);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public void setShadowSize(float f) {
+        setShadowSize(f, this.mRawMaxShadowSize);
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setMaxShadowSize(float f) {
+        setShadowSize(this.mRawShadowSize, f);
+    }
+
+    /* access modifiers changed from: package-private */
     public float getShadowSize() {
         return this.mRawShadowSize;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getMaxShadowSize() {
         return this.mRawMaxShadowSize;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getMinWidth() {
         float f = this.mRawMaxShadowSize;
-        return (Math.max(f, this.mCornerRadius + this.mInsetShadow + (f / 2.0f)) * 2.0f) + ((this.mRawMaxShadowSize + this.mInsetShadow) * 2.0f);
+        return (Math.max(f, this.mCornerRadius + ((float) this.mInsetShadow) + (f / 2.0f)) * 2.0f) + ((this.mRawMaxShadowSize + ((float) this.mInsetShadow)) * 2.0f);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getMinHeight() {
         float f = this.mRawMaxShadowSize;
-        return (Math.max(f, this.mCornerRadius + this.mInsetShadow + ((f * 1.5f) / 2.0f)) * 2.0f) + (((this.mRawMaxShadowSize * 1.5f) + this.mInsetShadow) * 2.0f);
+        return (Math.max(f, this.mCornerRadius + ((float) this.mInsetShadow) + ((f * 1.5f) / 2.0f)) * 2.0f) + (((this.mRawMaxShadowSize * 1.5f) + ((float) this.mInsetShadow)) * 2.0f);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public void setColor(ColorStateList colorStateList) {
+        setBackground(colorStateList);
+        invalidateSelf();
+    }
+
+    /* access modifiers changed from: package-private */
     public ColorStateList getColor() {
         return this.mBackground;
     }

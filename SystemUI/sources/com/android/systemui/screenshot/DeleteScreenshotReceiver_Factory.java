@@ -3,7 +3,7 @@ package com.android.systemui.screenshot;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DeleteScreenshotReceiver_Factory implements Factory<DeleteScreenshotReceiver> {
     private final Provider<Executor> backgroundExecutorProvider;
     private final Provider<ScreenshotSmartActions> screenshotSmartActionsProvider;
@@ -13,10 +13,8 @@ public final class DeleteScreenshotReceiver_Factory implements Factory<DeleteScr
         this.backgroundExecutorProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DeleteScreenshotReceiver mo1933get() {
-        return newInstance(this.screenshotSmartActionsProvider.mo1933get(), this.backgroundExecutorProvider.mo1933get());
+    public DeleteScreenshotReceiver get() {
+        return newInstance(this.screenshotSmartActionsProvider.get(), this.backgroundExecutorProvider.get());
     }
 
     public static DeleteScreenshotReceiver_Factory create(Provider<ScreenshotSmartActions> provider, Provider<Executor> provider2) {

@@ -10,18 +10,19 @@ import android.media.AudioManager;
 import android.util.Log;
 import android.view.KeyEvent;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
-/* loaded from: classes2.dex */
+
 public abstract class SafetyWarningDialog extends SystemUIDialog implements DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
-    private static final String TAG = Util.logTag(SafetyWarningDialog.class);
+    private static final int KEY_CONFIRM_ALLOWED_AFTER = 1000;
+    /* access modifiers changed from: private */
+    public static final String TAG = Util.logTag(SafetyWarningDialog.class);
     private final AudioManager mAudioManager;
     private final Context mContext;
     private boolean mDisableOnVolumeUp;
     private boolean mNewVolumeUp;
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.systemui.volume.SafetyWarningDialog.1
-        @Override // android.content.BroadcastReceiver
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
-                if (D.BUG) {
+                if (C3265D.BUG) {
                     Log.d(SafetyWarningDialog.TAG, "Received ACTION_CLOSE_SYSTEM_DIALOGS");
                 }
                 SafetyWarningDialog.this.cancel();
@@ -31,27 +32,28 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
     };
     private long mShowTime;
 
-    protected abstract void cleanUp();
+    /* access modifiers changed from: protected */
+    public abstract void cleanUp();
 
     public SafetyWarningDialog(Context context, AudioManager audioManager) {
         super(context);
         this.mContext = context;
         this.mAudioManager = audioManager;
         try {
-            this.mDisableOnVolumeUp = context.getResources().getBoolean(17891620);
+            this.mDisableOnVolumeUp = context.getResources().getBoolean(17891736);
         } catch (Resources.NotFoundException unused) {
             this.mDisableOnVolumeUp = true;
         }
         getWindow().setType(2010);
         setShowForAllUsers(true);
-        setMessage(this.mContext.getString(17041319));
+        setMessage(this.mContext.getString(17041438));
         setButton(-1, this.mContext.getString(17039379), this);
+        DialogInterface.OnClickListener onClickListener = null;
         setButton(-2, this.mContext.getString(17039369), (DialogInterface.OnClickListener) null);
         setOnDismissListener(this);
-        context.registerReceiver(this.mReceiver, new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
+        context.registerReceiver(this.mReceiver, new IntentFilter("android.intent.action.CLOSE_SYSTEM_DIALOGS"), 2);
     }
 
-    @Override // android.app.AlertDialog, android.app.Dialog, android.view.KeyEvent.Callback
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
         if (this.mDisableOnVolumeUp && i == 24 && keyEvent.getRepeatCount() == 0) {
             this.mNewVolumeUp = true;
@@ -59,10 +61,9 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
         return super.onKeyDown(i, keyEvent);
     }
 
-    @Override // android.app.AlertDialog, android.app.Dialog, android.view.KeyEvent.Callback
     public boolean onKeyUp(int i, KeyEvent keyEvent) {
         if (i == 24 && this.mNewVolumeUp && System.currentTimeMillis() - this.mShowTime > 1000) {
-            if (D.BUG) {
+            if (C3265D.BUG) {
                 Log.d(TAG, "Confirmed warning via VOLUME_UP");
             }
             this.mAudioManager.disableSafeMediaVolume();
@@ -71,19 +72,16 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
         return super.onKeyUp(i, keyEvent);
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         this.mAudioManager.disableSafeMediaVolume();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.phone.SystemUIDialog, android.app.Dialog
+    /* access modifiers changed from: protected */
     public void onStart() {
         super.onStart();
         this.mShowTime = System.currentTimeMillis();
     }
 
-    @Override // android.content.DialogInterface.OnDismissListener
     public void onDismiss(DialogInterface dialogInterface) {
         try {
             this.mContext.unregisterReceiver(this.mReceiver);

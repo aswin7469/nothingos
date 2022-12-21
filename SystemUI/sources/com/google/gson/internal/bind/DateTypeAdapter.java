@@ -11,7 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
+import java.p026io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.ParsePosition;
@@ -19,10 +19,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-/* loaded from: classes2.dex */
+
 public final class DateTypeAdapter extends TypeAdapter<Date> {
-    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.DateTypeAdapter.1
-        @Override // com.google.gson.TypeAdapterFactory
+    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
             if (typeToken.getRawType() == Date.class) {
                 return new DateTypeAdapter();
@@ -35,9 +34,8 @@ public final class DateTypeAdapter extends TypeAdapter<Date> {
     public DateTypeAdapter() {
         ArrayList arrayList = new ArrayList();
         this.dateFormats = arrayList;
-        Locale locale = Locale.US;
-        arrayList.add(DateFormat.getDateTimeInstance(2, 2, locale));
-        if (!Locale.getDefault().equals(locale)) {
+        arrayList.add(DateFormat.getDateTimeInstance(2, 2, Locale.f700US));
+        if (!Locale.getDefault().equals(Locale.f700US)) {
             arrayList.add(DateFormat.getDateTimeInstance(2, 2));
         }
         if (JavaVersion.isJava9OrLater()) {
@@ -45,20 +43,18 @@ public final class DateTypeAdapter extends TypeAdapter<Date> {
         }
     }
 
-    @Override // com.google.gson.TypeAdapter
-    /* renamed from: read  reason: collision with other method in class */
-    public Date mo1911read(JsonReader jsonReader) throws IOException {
-        if (jsonReader.peek() == JsonToken.NULL) {
-            jsonReader.nextNull();
-            return null;
+    public Date read(JsonReader jsonReader) throws IOException {
+        if (jsonReader.peek() != JsonToken.NULL) {
+            return deserializeToDate(jsonReader.nextString());
         }
-        return deserializeToDate(jsonReader.nextString());
+        jsonReader.nextNull();
+        return null;
     }
 
     private synchronized Date deserializeToDate(String str) {
-        for (DateFormat dateFormat : this.dateFormats) {
+        for (DateFormat parse : this.dateFormats) {
             try {
-                return dateFormat.parse(str);
+                return parse.parse(str);
             } catch (ParseException unused) {
             }
         }
@@ -69,7 +65,6 @@ public final class DateTypeAdapter extends TypeAdapter<Date> {
         }
     }
 
-    @Override // com.google.gson.TypeAdapter
     public synchronized void write(JsonWriter jsonWriter, Date date) throws IOException {
         if (date == null) {
             jsonWriter.nullValue();

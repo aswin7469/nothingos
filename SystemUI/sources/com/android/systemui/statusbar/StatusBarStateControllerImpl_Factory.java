@@ -1,27 +1,31 @@
 package com.android.systemui.statusbar;
 
+import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.logging.UiEventLogger;
+import com.android.systemui.dump.DumpManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class StatusBarStateControllerImpl_Factory implements Factory<StatusBarStateControllerImpl> {
+    private final Provider<DumpManager> dumpManagerProvider;
+    private final Provider<InteractionJankMonitor> interactionJankMonitorProvider;
     private final Provider<UiEventLogger> uiEventLoggerProvider;
 
-    public StatusBarStateControllerImpl_Factory(Provider<UiEventLogger> provider) {
+    public StatusBarStateControllerImpl_Factory(Provider<UiEventLogger> provider, Provider<DumpManager> provider2, Provider<InteractionJankMonitor> provider3) {
         this.uiEventLoggerProvider = provider;
+        this.dumpManagerProvider = provider2;
+        this.interactionJankMonitorProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public StatusBarStateControllerImpl mo1933get() {
-        return newInstance(this.uiEventLoggerProvider.mo1933get());
+    public StatusBarStateControllerImpl get() {
+        return newInstance(this.uiEventLoggerProvider.get(), this.dumpManagerProvider.get(), this.interactionJankMonitorProvider.get());
     }
 
-    public static StatusBarStateControllerImpl_Factory create(Provider<UiEventLogger> provider) {
-        return new StatusBarStateControllerImpl_Factory(provider);
+    public static StatusBarStateControllerImpl_Factory create(Provider<UiEventLogger> provider, Provider<DumpManager> provider2, Provider<InteractionJankMonitor> provider3) {
+        return new StatusBarStateControllerImpl_Factory(provider, provider2, provider3);
     }
 
-    public static StatusBarStateControllerImpl newInstance(UiEventLogger uiEventLogger) {
-        return new StatusBarStateControllerImpl(uiEventLogger);
+    public static StatusBarStateControllerImpl newInstance(UiEventLogger uiEventLogger, DumpManager dumpManager, InteractionJankMonitor interactionJankMonitor) {
+        return new StatusBarStateControllerImpl(uiEventLogger, dumpManager, interactionJankMonitor);
     }
 }

@@ -1,38 +1,38 @@
 package com.android.keyguard;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.telephony.SubscriptionInfo;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
+import android.widget.ImageView;
+import androidx.core.graphics.drawable.DrawableCompat;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$array;
-import com.android.systemui.R$id;
-import com.android.systemui.R$plurals;
-import com.android.systemui.R$string;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class KeyguardSimPukView extends KeyguardPinBasedInputView {
+    private static final boolean DEBUG = KeyguardConstants.DEBUG;
+    public static final String TAG = "KeyguardSimPukView";
+    private ImageView mSimImageView;
     private Map<String, String> mWrongPukCodeMessageMap;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardPinBasedInputView, com.android.keyguard.KeyguardAbsKeyInputView
+    /* access modifiers changed from: protected */
+    public int getPasswordTextViewId() {
+        return C1893R.C1897id.pukEntry;
+    }
+
+    /* access modifiers changed from: protected */
     public int getPromptReasonStringRes(int i) {
         return 0;
     }
 
-    @Override // com.android.keyguard.KeyguardInputView
     public void startAppearAnimation() {
     }
 
-    @Override // com.android.keyguard.KeyguardInputView
-    public boolean startDisappearAnimation(Runnable runnable) {
-        return false;
-    }
-
     public KeyguardSimPukView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public KeyguardSimPukView(Context context, AttributeSet attributeSet) {
@@ -41,8 +41,9 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
         updateWrongPukMessageMap(context);
     }
 
-    void updateWrongPukMessageMap(Context context) {
-        String[] stringArray = context.getResources().getStringArray(R$array.kg_wrong_puk_code_message_list);
+    /* access modifiers changed from: package-private */
+    public void updateWrongPukMessageMap(Context context) {
+        String[] stringArray = context.getResources().getStringArray(C1893R.array.kg_wrong_puk_code_message_list);
         if (stringArray.length == 0) {
             Log.d("KeyguardSimPukView", "There is no customization PUK prompt");
             return;
@@ -59,62 +60,52 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView {
 
     private String getMessageTextForWrongPukCode(int i) {
         SubscriptionInfo subscriptionInfoForSubId = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getSubscriptionInfoForSubId(i);
-        if (subscriptionInfoForSubId != null) {
-            return this.mWrongPukCodeMessageMap.get(subscriptionInfoForSubId.getMccString() + subscriptionInfoForSubId.getMncString());
+        if (subscriptionInfoForSubId == null) {
+            return null;
         }
-        return null;
+        return this.mWrongPukCodeMessageMap.get(subscriptionInfoForSubId.getMccString() + subscriptionInfoForSubId.getMncString());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public String getPukPasswordErrorMessage(int i, boolean z, boolean z2, int i2) {
-        int i3;
-        String string;
-        int i4;
+        String str;
         if (i == 0) {
-            string = getMessageTextForWrongPukCode(i2);
-            if (string == null) {
-                string = getContext().getString(R$string.kg_password_wrong_puk_code_dead);
+            str = getMessageTextForWrongPukCode(i2);
+            if (str == null) {
+                str = getContext().getString(C1893R.string.kg_password_wrong_puk_code_dead);
             }
         } else if (i > 0) {
-            if (z) {
-                i4 = R$plurals.kg_password_default_puk_message;
-            } else {
-                i4 = R$plurals.kg_password_wrong_puk_code;
-            }
-            string = getContext().getResources().getQuantityString(i4, i, Integer.valueOf(i));
+            str = getContext().getResources().getQuantityString(z ? C1893R.plurals.kg_password_default_puk_message : C1893R.plurals.kg_password_wrong_puk_code, i, new Object[]{Integer.valueOf(i)});
         } else {
-            if (z) {
-                i3 = R$string.kg_puk_enter_puk_hint;
-            } else {
-                i3 = R$string.kg_password_puk_failed;
-            }
-            string = getContext().getString(i3);
+            str = getContext().getString(z ? C1893R.string.kg_puk_enter_puk_hint : C1893R.string.kg_password_puk_failed);
         }
         if (z2) {
-            string = getResources().getString(R$string.kg_sim_lock_esim_instructions, string);
+            str = getResources().getString(C1893R.string.kg_sim_lock_esim_instructions, new Object[]{str});
         }
-        Log.d("KeyguardSimPukView", "getPukPasswordErrorMessage: attemptsRemaining=" + i + " displayMessage=" + string);
-        return string;
+        if (DEBUG) {
+            Log.d("KeyguardSimPukView", "getPukPasswordErrorMessage: attemptsRemaining=" + i + " displayMessage=" + str);
+        }
+        return str;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardAbsKeyInputView
-    public int getPasswordTextViewId() {
-        return R$id.pukEntry;
-    }
-
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardPinBasedInputView, com.android.keyguard.KeyguardAbsKeyInputView, android.view.View
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
+        this.mSimImageView = (ImageView) findViewById(C1893R.C1897id.keyguard_sim);
         super.onFinishInflate();
-        View view = this.mEcaView;
-        if (view instanceof EmergencyCarrierArea) {
-            ((EmergencyCarrierArea) view).setCarrierTextVisible(true);
+        if (this.mEcaView instanceof EmergencyCarrierArea) {
+            ((EmergencyCarrierArea) this.mEcaView).setCarrierTextVisible(true);
         }
     }
 
-    @Override // com.android.keyguard.KeyguardPinBasedInputView, com.android.keyguard.KeyguardInputView
     public CharSequence getTitle() {
-        return getContext().getString(17040447);
+        return getContext().getString(17040523);
+    }
+
+    public void reloadColors() {
+        super.reloadColors();
+        TypedArray obtainStyledAttributes = getContext().obtainStyledAttributes(new int[]{16842808});
+        int color = obtainStyledAttributes.getColor(0, 0);
+        obtainStyledAttributes.recycle();
+        DrawableCompat.setTint(DrawableCompat.wrap(this.mSimImageView.getDrawable()), color);
     }
 }

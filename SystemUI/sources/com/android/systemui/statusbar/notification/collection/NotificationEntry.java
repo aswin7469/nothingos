@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.Person;
 import android.content.Context;
+import android.content.pm.ShortcutInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -12,7 +13,7 @@ import android.service.notification.SnoozeCriterion;
 import android.service.notification.StatusBarNotification;
 import android.util.ArraySet;
 import android.view.ContentInfo;
-import com.android.internal.annotations.VisibleForTesting;
+import androidx.core.app.NotificationCompat;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.systemui.statusbar.InflationTask;
@@ -27,43 +28,48 @@ import com.android.systemui.statusbar.notification.row.NotificationGuts;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public final class NotificationEntry extends ListEntry {
+    private static final int COLOR_INVALID = 1;
+    private static final long INITIALIZATION_DELAY = 400;
+    private static final long LAUNCH_COOLDOWN = 2000;
+    private static final long NOT_LAUNCHED_YET = -2000;
+    private static final long REMOTE_INPUT_COOLDOWN = 500;
     public EditedSuggestionInfo editedSuggestionInfo;
     private boolean hasSentReply;
     public CharSequence headsUpStatusBarText;
     public CharSequence headsUpStatusBarTextPublic;
-    private long initializationTime;
+    private long initializationTime = -1;
     private boolean interruption;
-    private long lastFullScreenIntentLaunchTime;
-    public long lastRemoteInputSent;
-    public final ArraySet<Integer> mActiveAppOps;
-    private boolean mAllowFgsDismissal;
+    private long lastFullScreenIntentLaunchTime = NOT_LAUNCHED_YET;
+    public long lastRemoteInputSent = NOT_LAUNCHED_YET;
+    public final ArraySet<Integer> mActiveAppOps = new ArraySet<>(3);
     private boolean mAutoHeadsUp;
     private Notification.BubbleMetadata mBubbleMetadata;
-    private int mBucket;
-    private int mCachedContrastColor;
-    private int mCachedContrastColorIsFor;
-    int mCancellationReason;
+    private int mBucket = 5;
+    private int mCachedContrastColor = 1;
+    private int mCachedContrastColorIsFor = 1;
+    int mCancellationReason = -1;
     private Throwable mDebugThrowable;
-    final List<NotifDismissInterceptor> mDismissInterceptors;
-    private DismissState mDismissState;
+    final List<NotifDismissInterceptor> mDismissInterceptors = new ArrayList();
+    private DismissState mDismissState = DismissState.NOT_DISMISSED;
     private boolean mExpandAnimationRunning;
-    private IconPack mIcons;
+    private IconPack mIcons = IconPack.buildEmptyPack((IconPack) null);
     private boolean mIsAlerting;
     private boolean mIsMarkedForUserTriggeredMovement;
-    public Boolean mIsSystemNotification;
     private final String mKey;
-    final List<NotifLifetimeExtender> mLifetimeExtenders;
-    private List<OnSensitivityChangedListener> mOnSensitivityChangedListeners;
+    final List<NotifLifetimeExtender> mLifetimeExtenders = new ArrayList();
+    private List<OnSensitivityChangedListener> mOnSensitivityChangedListeners = new ArrayList();
+    private Long mPendingAnimationDuration;
     private boolean mPulseSupressed;
     private NotificationListenerService.Ranking mRanking;
     public boolean mRemoteEditImeAnimatingAway;
     public boolean mRemoteEditImeVisible;
     private ExpandableNotificationRowController mRowController;
-    private InflationTask mRunningTask;
+    private InflationTask mRunningTask = null;
     private StatusBarNotification mSbn;
-    private boolean mSensitive;
+    private boolean mSensitive = true;
+    private ShortcutInfo mShortcutInfo;
     public ContentInfo remoteInputAttachment;
     public String remoteInputMimeType;
     public CharSequence remoteInputText;
@@ -72,59 +78,28 @@ public final class NotificationEntry extends ListEntry {
     private ExpandableNotificationRow row;
     public int targetSdk;
 
-    /* loaded from: classes.dex */
     public enum DismissState {
         NOT_DISMISSED,
         DISMISSED,
         PARENT_DISMISSED
     }
 
-    /* loaded from: classes.dex */
     public interface OnSensitivityChangedListener {
         void onSensitivityChanged(NotificationEntry notificationEntry);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.ListEntry
     public NotificationEntry getRepresentativeEntry() {
         return this;
     }
 
     public NotificationEntry(StatusBarNotification statusBarNotification, NotificationListenerService.Ranking ranking, long j) {
-        this(statusBarNotification, ranking, false, j);
-    }
-
-    /* JADX WARN: Illegal instructions before constructor call */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public NotificationEntry(StatusBarNotification statusBarNotification, NotificationListenerService.Ranking ranking, boolean z, long j) {
-        super(r0, j);
-        Objects.requireNonNull(statusBarNotification);
-        String key = statusBarNotification.getKey();
-        Objects.requireNonNull(key);
-        this.mLifetimeExtenders = new ArrayList();
-        this.mDismissInterceptors = new ArrayList();
-        this.mCancellationReason = -1;
-        this.mDismissState = DismissState.NOT_DISMISSED;
-        this.mIcons = IconPack.buildEmptyPack(null);
-        this.lastFullScreenIntentLaunchTime = -2000L;
-        this.mCachedContrastColor = 1;
-        this.mCachedContrastColorIsFor = 1;
-        this.mRunningTask = null;
-        this.lastRemoteInputSent = -2000L;
-        this.mActiveAppOps = new ArraySet<>(3);
-        this.initializationTime = -1L;
-        this.mSensitive = true;
-        this.mOnSensitivityChangedListeners = new ArrayList();
-        this.mBucket = 5;
+        super((String) Objects.requireNonNull(((StatusBarNotification) Objects.requireNonNull(statusBarNotification)).getKey()), j);
         Objects.requireNonNull(ranking);
         this.mKey = statusBarNotification.getKey();
         setSbn(statusBarNotification);
         setRanking(ranking);
-        this.mAllowFgsDismissal = z;
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.ListEntry
     public String getKey() {
         return this.mKey;
     }
@@ -136,11 +111,12 @@ public final class NotificationEntry extends ListEntry {
     public void setSbn(StatusBarNotification statusBarNotification) {
         Objects.requireNonNull(statusBarNotification);
         Objects.requireNonNull(statusBarNotification.getKey());
-        if (!statusBarNotification.getKey().equals(this.mKey)) {
-            throw new IllegalArgumentException("New key " + statusBarNotification.getKey() + " doesn't match existing key " + this.mKey);
+        if (statusBarNotification.getKey().equals(this.mKey)) {
+            this.mSbn = statusBarNotification;
+            this.mBubbleMetadata = statusBarNotification.getNotification().getBubbleMetadata();
+            return;
         }
-        this.mSbn = statusBarNotification;
-        this.mBubbleMetadata = statusBarNotification.getNotification().getBubbleMetadata();
+        throw new IllegalArgumentException("New key " + statusBarNotification.getKey() + " doesn't match existing key " + this.mKey);
     }
 
     public NotificationListenerService.Ranking getRanking() {
@@ -150,20 +126,20 @@ public final class NotificationEntry extends ListEntry {
     public void setRanking(NotificationListenerService.Ranking ranking) {
         Objects.requireNonNull(ranking);
         Objects.requireNonNull(ranking.getKey());
-        if (!ranking.getKey().equals(this.mKey)) {
-            throw new IllegalArgumentException("New key " + ranking.getKey() + " doesn't match existing key " + this.mKey);
+        if (ranking.getKey().equals(this.mKey)) {
+            this.mRanking = ranking.withAudiblyAlertedInfo(this.mRanking);
+            return;
         }
-        this.mRanking = ranking.withAudiblyAlertedInfo(this.mRanking);
+        throw new IllegalArgumentException("New key " + ranking.getKey() + " doesn't match existing key " + this.mKey);
     }
 
     public DismissState getDismissState() {
         return this.mDismissState;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setDismissState(DismissState dismissState) {
-        Objects.requireNonNull(dismissState);
-        this.mDismissState = dismissState;
+        this.mDismissState = (DismissState) Objects.requireNonNull(dismissState);
     }
 
     public NotifFilter getExcludingFilter() {
@@ -192,6 +168,10 @@ public final class NotificationEntry extends ListEntry {
 
     public List<SnoozeCriterion> getSnoozeCriteria() {
         return this.mRanking.getSnoozeCriteria();
+    }
+
+    public int getUserSentiment() {
+        return this.mRanking.getUserSentiment();
     }
 
     public int getSuppressedVisualEffects() {
@@ -234,6 +214,20 @@ public final class NotificationEntry extends ListEntry {
         return this.mBubbleMetadata;
     }
 
+    public void setBubbleMetadata(Notification.BubbleMetadata bubbleMetadata) {
+        this.mBubbleMetadata = bubbleMetadata;
+    }
+
+    public boolean setFlagBubble(boolean z) {
+        boolean isBubble = isBubble();
+        if (!z) {
+            this.mSbn.getNotification().flags &= -4097;
+        } else if (this.mBubbleMetadata != null && canBubble()) {
+            this.mSbn.getNotification().flags |= 4096;
+        }
+        return isBubble != isBubble();
+    }
+
     public int getBucket() {
         return this.mBucket;
     }
@@ -265,8 +259,8 @@ public final class NotificationEntry extends ListEntry {
             return null;
         }
         ArrayList arrayList = new ArrayList();
-        for (ExpandableNotificationRow expandableNotificationRow2 : attachedChildren) {
-            arrayList.add(expandableNotificationRow2.getEntry());
+        for (ExpandableNotificationRow entry : attachedChildren) {
+            arrayList.add(entry.getEntry());
         }
         return arrayList;
     }
@@ -285,19 +279,19 @@ public final class NotificationEntry extends ListEntry {
     }
 
     public boolean hasFinishedInitialization() {
-        return this.initializationTime != -1 && SystemClock.elapsedRealtime() > this.initializationTime + 400;
+        return this.initializationTime != -1 && SystemClock.elapsedRealtime() > this.initializationTime + INITIALIZATION_DELAY;
     }
 
     public int getContrastedColor(Context context, boolean z, int i) {
         int i2;
         int i3 = z ? 0 : this.mSbn.getNotification().color;
-        if (this.mCachedContrastColorIsFor != i3 || (i2 = this.mCachedContrastColor) == 1) {
-            int resolveContrastColor = ContrastColorUtil.resolveContrastColor(context, i3, i);
-            this.mCachedContrastColorIsFor = i3;
-            this.mCachedContrastColor = resolveContrastColor;
-            return resolveContrastColor;
+        if (this.mCachedContrastColorIsFor == i3 && (i2 = this.mCachedContrastColor) != 1) {
+            return i2;
         }
-        return i2;
+        int resolveContrastColor = ContrastColorUtil.resolveContrastColor(context, i3, i);
+        this.mCachedContrastColorIsFor = i3;
+        this.mCachedContrastColor = resolveContrastColor;
+        return resolveContrastColor;
     }
 
     public void abortTask() {
@@ -317,7 +311,6 @@ public final class NotificationEntry extends ListEntry {
         this.mRunningTask = null;
     }
 
-    @VisibleForTesting
     public InflationTask getRunningTask() {
         return this.mRunningTask;
     }
@@ -331,7 +324,7 @@ public final class NotificationEntry extends ListEntry {
     }
 
     public void onRemoteInputInserted() {
-        this.lastRemoteInputSent = -2000L;
+        this.lastRemoteInputSent = NOT_LAUNCHED_YET;
         this.remoteInputTextWhenReset = null;
     }
 
@@ -348,19 +341,19 @@ public final class NotificationEntry extends ListEntry {
         if (!ArrayUtils.isEmpty(bundle.getParcelableArray("android.remoteInputHistoryItems"))) {
             return true;
         }
-        List<Notification.MessagingStyle.Message> messagesFromBundleArray = Notification.MessagingStyle.Message.getMessagesFromBundleArray(bundle.getParcelableArray("android.messages"));
-        if (messagesFromBundleArray == null || messagesFromBundleArray.isEmpty() || (message = messagesFromBundleArray.get(messagesFromBundleArray.size() - 1)) == null) {
+        List messagesFromBundleArray = Notification.MessagingStyle.Message.getMessagesFromBundleArray(bundle.getParcelableArray(NotificationCompat.EXTRA_MESSAGES));
+        if (messagesFromBundleArray == null || messagesFromBundleArray.isEmpty() || (message = (Notification.MessagingStyle.Message) messagesFromBundleArray.get(messagesFromBundleArray.size() - 1)) == null) {
             return false;
         }
         Person senderPerson = message.getSenderPerson();
-        if (senderPerson != null) {
-            return Objects.equals((Person) bundle.getParcelable("android.messagingUser"), senderPerson);
+        if (senderPerson == null) {
+            return true;
         }
-        return true;
+        return Objects.equals((Person) bundle.getParcelable("android.messagingUser", Person.class), senderPerson);
     }
 
     public void resetInitializationTime() {
-        this.initializationTime = -1L;
+        this.initializationTime = -1;
     }
 
     public void setInitializationTime(long j) {
@@ -456,14 +449,6 @@ public final class NotificationEntry extends ListEntry {
         }
     }
 
-    public void setAutoHeadsUp(boolean z) {
-        this.mAutoHeadsUp = z;
-    }
-
-    public boolean isAutoHeadsUp() {
-        return this.mAutoHeadsUp;
-    }
-
     public boolean mustStayOnScreen() {
         ExpandableNotificationRow expandableNotificationRow = this.row;
         return expandableNotificationRow != null && expandableNotificationRow.mustStayOnScreen();
@@ -520,6 +505,11 @@ public final class NotificationEntry extends ListEntry {
         return expandableNotificationRow != null && expandableNotificationRow.areChildrenExpanded();
     }
 
+    public boolean keepInParent() {
+        ExpandableNotificationRow expandableNotificationRow = this.row;
+        return expandableNotificationRow != null && expandableNotificationRow.keepInParent();
+    }
+
     public boolean isGroupNotFullyVisible() {
         ExpandableNotificationRow expandableNotificationRow = this.row;
         return expandableNotificationRow == null || expandableNotificationRow.isGroupNotFullyVisible();
@@ -570,7 +560,7 @@ public final class NotificationEntry extends ListEntry {
     }
 
     public boolean isClearable() {
-        if (!isDismissable()) {
+        if (!this.mSbn.isClearable()) {
             return false;
         }
         List<NotificationEntry> attachedNotifChildren = getAttachedNotifChildren();
@@ -578,37 +568,63 @@ public final class NotificationEntry extends ListEntry {
             return true;
         }
         for (int i = 0; i < attachedNotifChildren.size(); i++) {
-            if (!attachedNotifChildren.get(i).isDismissable()) {
+            if (!attachedNotifChildren.get(i).getSbn().isClearable()) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean isDismissable() {
-        boolean z = (this.mSbn.getNotification().flags & 2) != 0;
-        boolean z2 = (this.mSbn.getNotification().flags & 32) != 0;
-        boolean z3 = (this.mSbn.getNotification().flags & 64) != 0;
-        if (this.mAllowFgsDismissal) {
-            return !z2 || z || z3;
+    public boolean isDismissable() {
+        if (this.mSbn.isOngoing()) {
+            return false;
         }
-        return this.mSbn.isClearable();
+        List<NotificationEntry> attachedNotifChildren = getAttachedNotifChildren();
+        if (attachedNotifChildren == null || attachedNotifChildren.size() <= 0) {
+            return true;
+        }
+        for (int i = 0; i < attachedNotifChildren.size(); i++) {
+            if (attachedNotifChildren.get(i).getSbn().isOngoing()) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    @VisibleForTesting
-    boolean isExemptFromDndVisualSuppression() {
+    public boolean canViewBeDismissed() {
+        ExpandableNotificationRow expandableNotificationRow = this.row;
+        if (expandableNotificationRow == null) {
+            return true;
+        }
+        return expandableNotificationRow.canViewBeDismissed();
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean isExemptFromDndVisualSuppression() {
         if (isNotificationBlockedByPolicy(this.mSbn.getNotification())) {
             return false;
         }
-        if ((this.mSbn.getNotification().flags & 64) != 0 || this.mSbn.getNotification().isMediaNotification()) {
+        if ((this.mSbn.getNotification().flags & 64) == 0 && !this.mSbn.getNotification().isMediaNotification() && isBlockable()) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isBlockable() {
+        if (getChannel() == null) {
+            return false;
+        }
+        if (!getChannel().isImportanceLockedByCriticalDeviceFunction() || getChannel().isBlockable()) {
             return true;
         }
-        Boolean bool = this.mIsSystemNotification;
-        return bool != null && bool.booleanValue();
+        return false;
     }
 
     private boolean shouldSuppressVisualEffect(int i) {
-        return !isExemptFromDndVisualSuppression() && (getSuppressedVisualEffects() & i) != 0;
+        if (!isExemptFromDndVisualSuppression() && (getSuppressedVisualEffects() & i) != 0) {
+            return true;
+        }
+        return false;
     }
 
     public boolean shouldSuppressFullScreenIntent() {
@@ -636,7 +652,7 @@ public final class NotificationEntry extends ListEntry {
     }
 
     private static boolean isNotificationBlockedByPolicy(Notification notification) {
-        return isCategory("call", notification) || isCategory("msg", notification) || isCategory("alarm", notification) || isCategory("event", notification) || isCategory("reminder", notification);
+        return isCategory(NotificationCompat.CATEGORY_CALL, notification) || isCategory(NotificationCompat.CATEGORY_MESSAGE, notification) || isCategory(NotificationCompat.CATEGORY_ALARM, notification) || isCategory(NotificationCompat.CATEGORY_EVENT, notification) || isCategory(NotificationCompat.CATEGORY_REMINDER, notification);
     }
 
     private static boolean isCategory(String str, Notification notification) {
@@ -662,7 +678,7 @@ public final class NotificationEntry extends ListEntry {
     }
 
     public void removeOnSensitivityChangedListener(OnSensitivityChangedListener onSensitivityChangedListener) {
-        this.mOnSensitivityChangedListeners.remove(onSensitivityChangedListener);
+        this.mOnSensitivityChangedListeners.remove((Object) onSensitivityChangedListener);
     }
 
     public boolean isPulseSuppressed() {
@@ -697,7 +713,6 @@ public final class NotificationEntry extends ListEntry {
         return this.mExpandAnimationRunning;
     }
 
-    /* loaded from: classes.dex */
     public static class EditedSuggestionInfo {
         public final int index;
         public final CharSequence originalText;

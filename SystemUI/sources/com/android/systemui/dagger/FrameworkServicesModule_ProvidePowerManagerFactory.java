@@ -5,7 +5,7 @@ import android.os.PowerManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvidePowerManagerFactory implements Factory<PowerManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvidePowerManagerFactory implements
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PowerManager mo1933get() {
-        return providePowerManager(this.contextProvider.mo1933get());
+    public PowerManager get() {
+        return providePowerManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvidePowerManagerFactory create(Provider<Context> provider) {

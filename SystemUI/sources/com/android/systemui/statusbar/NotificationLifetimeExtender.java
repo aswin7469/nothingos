@@ -1,10 +1,9 @@
 package com.android.systemui.statusbar;
 
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-/* loaded from: classes.dex */
+
 public interface NotificationLifetimeExtender {
 
-    /* loaded from: classes.dex */
     public interface NotificationSafeToRemoveCallback {
         void onSafeToRemove(String str);
     }
@@ -15,7 +14,7 @@ public interface NotificationLifetimeExtender {
 
     boolean shouldExtendLifetime(NotificationEntry notificationEntry);
 
-    default boolean shouldExtendLifetimeForPendingNotification(NotificationEntry notificationEntry) {
+    boolean shouldExtendLifetimeForPendingNotification(NotificationEntry notificationEntry) {
         return false;
     }
 }

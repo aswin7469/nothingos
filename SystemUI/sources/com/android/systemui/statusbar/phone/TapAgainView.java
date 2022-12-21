@@ -8,68 +8,65 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.R$color;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$drawable;
-import com.android.wm.shell.animation.Interpolators;
-/* loaded from: classes.dex */
+import com.android.p019wm.shell.animation.Interpolators;
+import com.android.systemui.C1893R;
+
 public class TapAgainView extends TextView {
+    private TextView mTextView;
+
     public TapAgainView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         super.onFinishInflate();
         updateColor();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void updateColor() {
-        setTextColor(getResources().getColor(R$color.notif_pill_text, ((TextView) this).mContext.getTheme()));
-        setBackground(getResources().getDrawable(R$drawable.rounded_bg_full, ((TextView) this).mContext.getTheme()));
+        setTextColor(getResources().getColor(C1893R.C1894color.notif_pill_text, this.mContext.getTheme()));
+        setBackground(getResources().getDrawable(C1893R.C1895drawable.rounded_bg_full, this.mContext.getTheme()));
     }
 
     public void animateIn() {
-        int dimensionPixelSize = ((TextView) this).mContext.getResources().getDimensionPixelSize(R$dimen.keyguard_indication_y_translation);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_indication_y_translation);
         AnimatorSet animatorSet = new AnimatorSet();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, 1.0f);
-        ofFloat.setStartDelay(150L);
-        ofFloat.setDuration(317L);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, new float[]{1.0f});
+        ofFloat.setStartDelay(150);
+        ofFloat.setDuration(317);
         ofFloat.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, dimensionPixelSize, 0.0f);
-        ofFloat2.setDuration(600L);
-        ofFloat2.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.TapAgainView.1
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, new float[]{(float) dimensionPixelSize, 0.0f});
+        ofFloat2.setDuration(600);
+        ofFloat2.addListener(new AnimatorListenerAdapter() {
             public void onAnimationCancel(Animator animator) {
                 TapAgainView.this.setTranslationY(0.0f);
             }
         });
-        animatorSet.playTogether(ofFloat2, ofFloat);
+        animatorSet.playTogether(new Animator[]{ofFloat2, ofFloat});
         animatorSet.start();
         setVisibility(0);
     }
 
     public void animateOut() {
-        int dimensionPixelSize = ((TextView) this).mContext.getResources().getDimensionPixelSize(R$dimen.keyguard_indication_y_translation);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C1893R.dimen.keyguard_indication_y_translation);
         AnimatorSet animatorSet = new AnimatorSet();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, 0.0f);
-        ofFloat.setDuration(167L);
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, View.ALPHA, new float[]{0.0f});
+        ofFloat.setDuration(167);
         ofFloat.setInterpolator(Interpolators.FAST_OUT_LINEAR_IN);
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, 0.0f, -dimensionPixelSize);
-        ofFloat2.setDuration(167L);
-        animatorSet.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.phone.TapAgainView.2
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, View.TRANSLATION_Y, new float[]{0.0f, (float) (-dimensionPixelSize)});
+        ofFloat2.setDuration(167);
+        animatorSet.addListener(new AnimatorListenerAdapter() {
             public void onAnimationEnd(Animator animator) {
                 TapAgainView.this.setVisibility(8);
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationCancel(Animator animator) {
                 TapAgainView.this.setVisibility(8);
             }
         });
-        animatorSet.playTogether(ofFloat2, ofFloat);
+        animatorSet.playTogether(new Animator[]{ofFloat2, ofFloat});
         animatorSet.start();
     }
 }

@@ -3,7 +3,7 @@ package com.android.systemui.sensorprivacy.television;
 import com.android.systemui.statusbar.policy.IndividualSensorPrivacyController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class TvUnblockSensorActivity_Factory implements Factory<TvUnblockSensorActivity> {
     private final Provider<IndividualSensorPrivacyController> individualSensorPrivacyControllerProvider;
 
@@ -11,10 +11,8 @@ public final class TvUnblockSensorActivity_Factory implements Factory<TvUnblockS
         this.individualSensorPrivacyControllerProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public TvUnblockSensorActivity mo1933get() {
-        return newInstance(this.individualSensorPrivacyControllerProvider.mo1933get());
+    public TvUnblockSensorActivity get() {
+        return newInstance(this.individualSensorPrivacyControllerProvider.get());
     }
 
     public static TvUnblockSensorActivity_Factory create(Provider<IndividualSensorPrivacyController> provider) {

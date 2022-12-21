@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">Helytelen SIM%d PIN-kód, még %d próbálkozása van, mielőtt a szolgáltatójához kell fordulnia a készülék feloldásához.</item>
+        <item quantity="other">Helytelen SIM%d PIN-kód, még %d próbálkozása van.</item>
+    </plurals>
+</resources>

@@ -16,6 +16,10 @@
         <item quantity="one">Ավելացվեց կառավարման %s տարր։</item>
         <item quantity="other">Ավելացվեց կառավարման %s տարր։</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s հավելված ակտիվ է</item>
+        <item quantity="other">%s հավելված ակտիվ է</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">Մուտքագրեք SIM քարտի PIN կոդը: Մնացել է %d փորձ:</item>
         <item quantity="other">Մուտքագրեք SIM քարտի PIN կոդը: Մնացել է %d փորձ:</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">SIM PUK կոդը սխալ է: Մնաց %d փորձ, որից հետո SIM քարտն այլևս հնարավոր չի լինի օգտագործել:</item>
         <item quantity="other">SIM PUK կոդը սխալ է: Մնաց %d փորձ, որից հետո SIM քարտն այլևս հնարավոր չի լինի օգտագործել:</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Սարքը չի ապակողպվել %d ժամվա ընթացքում: Հաստատեք գաղտնաբառը:</item>
-        <item quantity="other">Սարքը չի ապակողպվել %d ժամվա ընթացքում: Հաստատեք գաղտնաբառը:</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Սարքը չի ապակողպվել %d ժամվա ընթացքում: Հաստատեք նախշը:</item>
-        <item quantity="other">Սարքը չի ապակողպվել %d ժամվա ընթացքում: Հաստատեք նախշը:</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Սարքը չի ապակողպվել %d ժամվա ընթացքում: Հաստատեք PIN կոդը:</item>
-        <item quantity="other">Սարքը չի ապակողպվել %d ժամվա ընթացքում: Հաստատեք PIN կոդը:</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">Փորձեք %d վայրկյանից:</item>
-        <item quantity="other">Փորձեք %d վայրկյանից:</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d նոր ծանուցում</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">Հնարավոր է ավելացնել առավելագույնը %d օգտատեր։</item>
         <item quantity="other">Հնարավոր է ավելացնել առավելագույնը %d օգտատեր։</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">Միացված է %1$d սարք</item>
-        <item quantity="other">Միացված է %1$d սարք</item>
     </plurals>
 </resources>

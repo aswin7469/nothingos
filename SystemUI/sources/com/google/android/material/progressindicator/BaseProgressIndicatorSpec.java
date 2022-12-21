@@ -3,13 +3,11 @@ package com.google.android.material.progressindicator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import com.google.android.material.R$attr;
-import com.google.android.material.R$dimen;
-import com.google.android.material.R$styleable;
+import com.google.android.material.C3621R;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
-/* loaded from: classes2.dex */
+
 public abstract class BaseProgressIndicatorSpec {
     public int hideAnimationBehavior;
     public int[] indicatorColors = new int[0];
@@ -18,30 +16,28 @@ public abstract class BaseProgressIndicatorSpec {
     public int trackCornerRadius;
     public int trackThickness;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract void validateSpec();
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public BaseProgressIndicatorSpec(Context context, AttributeSet attributeSet, int i, int i2) {
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(R$dimen.mtrl_progress_track_thickness);
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, R$styleable.BaseProgressIndicator, i, i2, new int[0]);
-        this.trackThickness = MaterialResources.getDimensionPixelSize(context, obtainStyledAttributes, R$styleable.BaseProgressIndicator_trackThickness, dimensionPixelSize);
-        this.trackCornerRadius = Math.min(MaterialResources.getDimensionPixelSize(context, obtainStyledAttributes, R$styleable.BaseProgressIndicator_trackCornerRadius, 0), this.trackThickness / 2);
-        this.showAnimationBehavior = obtainStyledAttributes.getInt(R$styleable.BaseProgressIndicator_showAnimationBehavior, 0);
-        this.hideAnimationBehavior = obtainStyledAttributes.getInt(R$styleable.BaseProgressIndicator_hideAnimationBehavior, 0);
+    protected BaseProgressIndicatorSpec(Context context, AttributeSet attributeSet, int i, int i2) {
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C3621R.dimen.mtrl_progress_track_thickness);
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.BaseProgressIndicator, i, i2, new int[0]);
+        this.trackThickness = MaterialResources.getDimensionPixelSize(context, obtainStyledAttributes, C3621R.styleable.BaseProgressIndicator_trackThickness, dimensionPixelSize);
+        this.trackCornerRadius = Math.min(MaterialResources.getDimensionPixelSize(context, obtainStyledAttributes, C3621R.styleable.BaseProgressIndicator_trackCornerRadius, 0), this.trackThickness / 2);
+        this.showAnimationBehavior = obtainStyledAttributes.getInt(C3621R.styleable.BaseProgressIndicator_showAnimationBehavior, 0);
+        this.hideAnimationBehavior = obtainStyledAttributes.getInt(C3621R.styleable.BaseProgressIndicator_hideAnimationBehavior, 0);
         loadIndicatorColors(context, obtainStyledAttributes);
         loadTrackColor(context, obtainStyledAttributes);
         obtainStyledAttributes.recycle();
     }
 
     private void loadIndicatorColors(Context context, TypedArray typedArray) {
-        int i = R$styleable.BaseProgressIndicator_indicatorColor;
-        if (!typedArray.hasValue(i)) {
-            this.indicatorColors = new int[]{MaterialColors.getColor(context, R$attr.colorPrimary, -1)};
-        } else if (typedArray.peekValue(i).type != 1) {
-            this.indicatorColors = new int[]{typedArray.getColor(i, -1)};
+        if (!typedArray.hasValue(C3621R.styleable.BaseProgressIndicator_indicatorColor)) {
+            this.indicatorColors = new int[]{MaterialColors.getColor(context, C3621R.attr.colorPrimary, -1)};
+        } else if (typedArray.peekValue(C3621R.styleable.BaseProgressIndicator_indicatorColor).type != 1) {
+            this.indicatorColors = new int[]{typedArray.getColor(C3621R.styleable.BaseProgressIndicator_indicatorColor, -1)};
         } else {
-            int[] intArray = context.getResources().getIntArray(typedArray.getResourceId(i, -1));
+            int[] intArray = context.getResources().getIntArray(typedArray.getResourceId(C3621R.styleable.BaseProgressIndicator_indicatorColor, -1));
             this.indicatorColors = intArray;
             if (intArray.length == 0) {
                 throw new IllegalArgumentException("indicatorColors cannot be empty when indicatorColor is not used.");
@@ -50,9 +46,8 @@ public abstract class BaseProgressIndicatorSpec {
     }
 
     private void loadTrackColor(Context context, TypedArray typedArray) {
-        int i = R$styleable.BaseProgressIndicator_trackColor;
-        if (typedArray.hasValue(i)) {
-            this.trackColor = typedArray.getColor(i, -1);
+        if (typedArray.hasValue(C3621R.styleable.BaseProgressIndicator_trackColor)) {
+            this.trackColor = typedArray.getColor(C3621R.styleable.BaseProgressIndicator_trackColor, -1);
             return;
         }
         this.trackColor = this.indicatorColors[0];

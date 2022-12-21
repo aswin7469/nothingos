@@ -10,7 +10,7 @@ import com.android.systemui.util.time.SystemClock;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class MediaDataManager_Factory implements Factory<MediaDataManager> {
     private final Provider<ActivityStarter> activityStarterProvider;
     private final Provider<Executor> backgroundExecutorProvider;
@@ -19,17 +19,19 @@ public final class MediaDataManager_Factory implements Factory<MediaDataManager>
     private final Provider<Context> contextProvider;
     private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<DelayableExecutor> foregroundExecutorProvider;
+    private final Provider<MediaUiEventLogger> loggerProvider;
     private final Provider<MediaControllerFactory> mediaControllerFactoryProvider;
     private final Provider<MediaDataCombineLatest> mediaDataCombineLatestProvider;
     private final Provider<MediaDataFilter> mediaDataFilterProvider;
     private final Provider<MediaDeviceManager> mediaDeviceManagerProvider;
+    private final Provider<MediaFlags> mediaFlagsProvider;
     private final Provider<MediaResumeListener> mediaResumeListenerProvider;
     private final Provider<MediaSessionBasedFilter> mediaSessionBasedFilterProvider;
     private final Provider<MediaTimeoutListener> mediaTimeoutListenerProvider;
     private final Provider<SmartspaceMediaDataProvider> smartspaceMediaDataProvider;
     private final Provider<TunerService> tunerServiceProvider;
 
-    public MediaDataManager_Factory(Provider<Context> provider, Provider<Executor> provider2, Provider<DelayableExecutor> provider3, Provider<MediaControllerFactory> provider4, Provider<DumpManager> provider5, Provider<BroadcastDispatcher> provider6, Provider<MediaTimeoutListener> provider7, Provider<MediaResumeListener> provider8, Provider<MediaSessionBasedFilter> provider9, Provider<MediaDeviceManager> provider10, Provider<MediaDataCombineLatest> provider11, Provider<MediaDataFilter> provider12, Provider<ActivityStarter> provider13, Provider<SmartspaceMediaDataProvider> provider14, Provider<SystemClock> provider15, Provider<TunerService> provider16) {
+    public MediaDataManager_Factory(Provider<Context> provider, Provider<Executor> provider2, Provider<DelayableExecutor> provider3, Provider<MediaControllerFactory> provider4, Provider<DumpManager> provider5, Provider<BroadcastDispatcher> provider6, Provider<MediaTimeoutListener> provider7, Provider<MediaResumeListener> provider8, Provider<MediaSessionBasedFilter> provider9, Provider<MediaDeviceManager> provider10, Provider<MediaDataCombineLatest> provider11, Provider<MediaDataFilter> provider12, Provider<ActivityStarter> provider13, Provider<SmartspaceMediaDataProvider> provider14, Provider<SystemClock> provider15, Provider<TunerService> provider16, Provider<MediaFlags> provider17, Provider<MediaUiEventLogger> provider18) {
         this.contextProvider = provider;
         this.backgroundExecutorProvider = provider2;
         this.foregroundExecutorProvider = provider3;
@@ -46,19 +48,19 @@ public final class MediaDataManager_Factory implements Factory<MediaDataManager>
         this.smartspaceMediaDataProvider = provider14;
         this.clockProvider = provider15;
         this.tunerServiceProvider = provider16;
+        this.mediaFlagsProvider = provider17;
+        this.loggerProvider = provider18;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaDataManager mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.backgroundExecutorProvider.mo1933get(), this.foregroundExecutorProvider.mo1933get(), this.mediaControllerFactoryProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.mediaTimeoutListenerProvider.mo1933get(), this.mediaResumeListenerProvider.mo1933get(), this.mediaSessionBasedFilterProvider.mo1933get(), this.mediaDeviceManagerProvider.mo1933get(), this.mediaDataCombineLatestProvider.mo1933get(), this.mediaDataFilterProvider.mo1933get(), this.activityStarterProvider.mo1933get(), this.smartspaceMediaDataProvider.mo1933get(), this.clockProvider.mo1933get(), this.tunerServiceProvider.mo1933get());
+    public MediaDataManager get() {
+        return newInstance(this.contextProvider.get(), this.backgroundExecutorProvider.get(), this.foregroundExecutorProvider.get(), this.mediaControllerFactoryProvider.get(), this.dumpManagerProvider.get(), this.broadcastDispatcherProvider.get(), this.mediaTimeoutListenerProvider.get(), this.mediaResumeListenerProvider.get(), this.mediaSessionBasedFilterProvider.get(), this.mediaDeviceManagerProvider.get(), this.mediaDataCombineLatestProvider.get(), this.mediaDataFilterProvider.get(), this.activityStarterProvider.get(), this.smartspaceMediaDataProvider.get(), this.clockProvider.get(), this.tunerServiceProvider.get(), this.mediaFlagsProvider.get(), this.loggerProvider.get());
     }
 
-    public static MediaDataManager_Factory create(Provider<Context> provider, Provider<Executor> provider2, Provider<DelayableExecutor> provider3, Provider<MediaControllerFactory> provider4, Provider<DumpManager> provider5, Provider<BroadcastDispatcher> provider6, Provider<MediaTimeoutListener> provider7, Provider<MediaResumeListener> provider8, Provider<MediaSessionBasedFilter> provider9, Provider<MediaDeviceManager> provider10, Provider<MediaDataCombineLatest> provider11, Provider<MediaDataFilter> provider12, Provider<ActivityStarter> provider13, Provider<SmartspaceMediaDataProvider> provider14, Provider<SystemClock> provider15, Provider<TunerService> provider16) {
-        return new MediaDataManager_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16);
+    public static MediaDataManager_Factory create(Provider<Context> provider, Provider<Executor> provider2, Provider<DelayableExecutor> provider3, Provider<MediaControllerFactory> provider4, Provider<DumpManager> provider5, Provider<BroadcastDispatcher> provider6, Provider<MediaTimeoutListener> provider7, Provider<MediaResumeListener> provider8, Provider<MediaSessionBasedFilter> provider9, Provider<MediaDeviceManager> provider10, Provider<MediaDataCombineLatest> provider11, Provider<MediaDataFilter> provider12, Provider<ActivityStarter> provider13, Provider<SmartspaceMediaDataProvider> provider14, Provider<SystemClock> provider15, Provider<TunerService> provider16, Provider<MediaFlags> provider17, Provider<MediaUiEventLogger> provider18) {
+        return new MediaDataManager_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17, provider18);
     }
 
-    public static MediaDataManager newInstance(Context context, Executor executor, DelayableExecutor delayableExecutor, MediaControllerFactory mediaControllerFactory, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, MediaTimeoutListener mediaTimeoutListener, MediaResumeListener mediaResumeListener, MediaSessionBasedFilter mediaSessionBasedFilter, MediaDeviceManager mediaDeviceManager, MediaDataCombineLatest mediaDataCombineLatest, MediaDataFilter mediaDataFilter, ActivityStarter activityStarter, SmartspaceMediaDataProvider smartspaceMediaDataProvider, SystemClock systemClock, TunerService tunerService) {
-        return new MediaDataManager(context, executor, delayableExecutor, mediaControllerFactory, dumpManager, broadcastDispatcher, mediaTimeoutListener, mediaResumeListener, mediaSessionBasedFilter, mediaDeviceManager, mediaDataCombineLatest, mediaDataFilter, activityStarter, smartspaceMediaDataProvider, systemClock, tunerService);
+    public static MediaDataManager newInstance(Context context, Executor executor, DelayableExecutor delayableExecutor, MediaControllerFactory mediaControllerFactory, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, MediaTimeoutListener mediaTimeoutListener, MediaResumeListener mediaResumeListener, MediaSessionBasedFilter mediaSessionBasedFilter, MediaDeviceManager mediaDeviceManager, MediaDataCombineLatest mediaDataCombineLatest, MediaDataFilter mediaDataFilter, ActivityStarter activityStarter, SmartspaceMediaDataProvider smartspaceMediaDataProvider2, SystemClock systemClock, TunerService tunerService, MediaFlags mediaFlags, MediaUiEventLogger mediaUiEventLogger) {
+        return new MediaDataManager(context, executor, delayableExecutor, mediaControllerFactory, dumpManager, broadcastDispatcher, mediaTimeoutListener, mediaResumeListener, mediaSessionBasedFilter, mediaDeviceManager, mediaDataCombineLatest, mediaDataFilter, activityStarter, smartspaceMediaDataProvider2, systemClock, tunerService, mediaFlags, mediaUiEventLogger);
     }
 }

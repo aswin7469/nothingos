@@ -9,14 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.internal.colorextraction.ColorExtractor;
-import com.android.systemui.R$drawable;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.plugins.ClockPlugin;
 import java.util.TimeZone;
-/* loaded from: classes.dex */
+
 public class DefaultClockController implements ClockPlugin {
     private final SysuiColorExtractor mColorExtractor;
     private final LayoutInflater mLayoutInflater;
@@ -26,37 +23,29 @@ public class DefaultClockController implements ClockPlugin {
     private TextView mTextTime;
     private View mView;
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public String getName() {
         return "default";
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public View getView() {
         return null;
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public void onTimeTick() {
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public void onTimeZoneChanged(TimeZone timeZone) {
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public void setColorPalette(boolean z, int[] iArr) {
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public void setDarkAmount(float f) {
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public void setStyle(Paint.Style style) {
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public boolean shouldShowStatusArea() {
         return true;
     }
@@ -68,30 +57,26 @@ public class DefaultClockController implements ClockPlugin {
     }
 
     private void createViews() {
-        View inflate = this.mLayoutInflater.inflate(R$layout.default_clock_preview, (ViewGroup) null);
+        View inflate = this.mLayoutInflater.inflate(C1893R.layout.default_clock_preview, (ViewGroup) null);
         this.mView = inflate;
-        this.mTextTime = (TextView) inflate.findViewById(R$id.time);
-        this.mTextDate = (TextView) this.mView.findViewById(R$id.date);
+        this.mTextTime = (TextView) inflate.findViewById(C1893R.C1897id.time);
+        this.mTextDate = (TextView) this.mView.findViewById(C1893R.C1897id.date);
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public void onDestroyView() {
         this.mView = null;
         this.mTextTime = null;
         this.mTextDate = null;
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public String getTitle() {
-        return this.mResources.getString(R$string.clock_title_default);
+        return this.mResources.getString(C1893R.string.clock_title_default);
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public Bitmap getThumbnail() {
-        return BitmapFactory.decodeResource(this.mResources, R$drawable.default_thumbnail);
+        return BitmapFactory.decodeResource(this.mResources, C1893R.C1895drawable.default_thumbnail);
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public Bitmap getPreview(int i, int i2) {
         View bigClockView = getBigClockView();
         setDarkAmount(1.0f);
@@ -102,7 +87,6 @@ public class DefaultClockController implements ClockPlugin {
         return this.mRenderer.createPreview(bigClockView, i, i2);
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public View getBigClockView() {
         if (this.mView == null) {
             createViews();
@@ -110,12 +94,10 @@ public class DefaultClockController implements ClockPlugin {
         return this.mView;
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public int getPreferredY(int i) {
         return i / 2;
     }
 
-    @Override // com.android.systemui.plugins.ClockPlugin
     public void setTextColor(int i) {
         this.mTextTime.setTextColor(i);
         this.mTextDate.setTextColor(i);

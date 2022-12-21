@@ -1,13 +1,12 @@
 package com.android.systemui.statusbar.notification.row;
 
-import androidx.core.os.CancellationSignal;
+import androidx.core.p004os.CancellationSignal;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.NotifBindPipeline;
-/* loaded from: classes.dex */
+
 public abstract class BindRequester {
     private BindRequestListener mBindRequestListener;
 
-    /* loaded from: classes.dex */
     public interface BindRequestListener {
         void onBindRequest(NotificationEntry notificationEntry, CancellationSignal cancellationSignal, NotifBindPipeline.BindCallback bindCallback);
     }
@@ -21,7 +20,7 @@ public abstract class BindRequester {
         return cancellationSignal;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public final void setBindRequestListener(BindRequestListener bindRequestListener) {
         this.mBindRequestListener = bindRequestListener;
     }

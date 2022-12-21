@@ -2,35 +2,38 @@ package com.android.systemui.statusbar.notification.collection;
 
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.statusbar.NotificationInteractionTracker;
+import com.android.systemui.statusbar.notification.NotifPipelineFlags;
 import com.android.systemui.statusbar.notification.collection.listbuilder.ShadeListBuilderLogger;
 import com.android.systemui.util.time.SystemClock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ShadeListBuilder_Factory implements Factory<ShadeListBuilder> {
     private final Provider<DumpManager> dumpManagerProvider;
+    private final Provider<NotifPipelineFlags> flagsProvider;
     private final Provider<NotificationInteractionTracker> interactionTrackerProvider;
     private final Provider<ShadeListBuilderLogger> loggerProvider;
+    private final Provider<NotifPipelineChoreographer> pipelineChoreographerProvider;
     private final Provider<SystemClock> systemClockProvider;
 
-    public ShadeListBuilder_Factory(Provider<SystemClock> provider, Provider<ShadeListBuilderLogger> provider2, Provider<DumpManager> provider3, Provider<NotificationInteractionTracker> provider4) {
-        this.systemClockProvider = provider;
-        this.loggerProvider = provider2;
-        this.dumpManagerProvider = provider3;
+    public ShadeListBuilder_Factory(Provider<DumpManager> provider, Provider<NotifPipelineChoreographer> provider2, Provider<NotifPipelineFlags> provider3, Provider<NotificationInteractionTracker> provider4, Provider<ShadeListBuilderLogger> provider5, Provider<SystemClock> provider6) {
+        this.dumpManagerProvider = provider;
+        this.pipelineChoreographerProvider = provider2;
+        this.flagsProvider = provider3;
         this.interactionTrackerProvider = provider4;
+        this.loggerProvider = provider5;
+        this.systemClockProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ShadeListBuilder mo1933get() {
-        return newInstance(this.systemClockProvider.mo1933get(), this.loggerProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.interactionTrackerProvider.mo1933get());
+    public ShadeListBuilder get() {
+        return newInstance(this.dumpManagerProvider.get(), this.pipelineChoreographerProvider.get(), this.flagsProvider.get(), this.interactionTrackerProvider.get(), this.loggerProvider.get(), this.systemClockProvider.get());
     }
 
-    public static ShadeListBuilder_Factory create(Provider<SystemClock> provider, Provider<ShadeListBuilderLogger> provider2, Provider<DumpManager> provider3, Provider<NotificationInteractionTracker> provider4) {
-        return new ShadeListBuilder_Factory(provider, provider2, provider3, provider4);
+    public static ShadeListBuilder_Factory create(Provider<DumpManager> provider, Provider<NotifPipelineChoreographer> provider2, Provider<NotifPipelineFlags> provider3, Provider<NotificationInteractionTracker> provider4, Provider<ShadeListBuilderLogger> provider5, Provider<SystemClock> provider6) {
+        return new ShadeListBuilder_Factory(provider, provider2, provider3, provider4, provider5, provider6);
     }
 
-    public static ShadeListBuilder newInstance(SystemClock systemClock, ShadeListBuilderLogger shadeListBuilderLogger, DumpManager dumpManager, NotificationInteractionTracker notificationInteractionTracker) {
-        return new ShadeListBuilder(systemClock, shadeListBuilderLogger, dumpManager, notificationInteractionTracker);
+    public static ShadeListBuilder newInstance(DumpManager dumpManager, NotifPipelineChoreographer notifPipelineChoreographer, NotifPipelineFlags notifPipelineFlags, NotificationInteractionTracker notificationInteractionTracker, ShadeListBuilderLogger shadeListBuilderLogger, SystemClock systemClock) {
+        return new ShadeListBuilder(dumpManager, notifPipelineChoreographer, notifPipelineFlags, notificationInteractionTracker, shadeListBuilderLogger, systemClock);
     }
 }

@@ -2,49 +2,51 @@ package com.android.systemui.classifier;
 
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
-import com.android.systemui.classifier.FalsingDataProvider;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.dock.DockManager;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.statusbar.policy.BatteryController;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class FalsingDataProvider {
+    private static final long MOTION_EVENT_AGE_MS = 1000;
+    private static final float THREE_HUNDRED_SIXTY_DEG = 6.2831855f;
+    private float mAngle = 0.0f;
     private BatteryController mBatteryController;
+    private boolean mDirty = true;
     private final DockManager mDockManager;
     private MotionEvent mFirstRecentMotionEvent;
+    private final List<GestureFinalizedListener> mGestureFinalizedListeners = new ArrayList();
     private final int mHeightPixels;
     private boolean mJustUnlockedWithFace;
     private MotionEvent mLastMotionEvent;
+    private final List<MotionEventListener> mMotionEventListeners = new ArrayList();
+    private List<MotionEvent> mPriorMotionEvents = new ArrayList();
+    private TimeLimitedMotionEventBuffer mRecentMotionEvents = new TimeLimitedMotionEventBuffer(1000);
+    private final List<SessionListener> mSessionListeners = new ArrayList();
     private final int mWidthPixels;
     private final float mXdpi;
     private final float mYdpi;
-    private final List<SessionListener> mSessionListeners = new ArrayList();
-    private final List<MotionEventListener> mMotionEventListeners = new ArrayList();
-    private final List<GestureFinalizedListener> mGestureFinalizedListeners = new ArrayList();
-    private TimeLimitedMotionEventBuffer mRecentMotionEvents = new TimeLimitedMotionEventBuffer(1000);
-    private List<MotionEvent> mPriorMotionEvents = new ArrayList();
-    private boolean mDirty = true;
-    private float mAngle = 0.0f;
 
-    /* loaded from: classes.dex */
     public interface GestureFinalizedListener {
         void onGestureFinalized(long j);
     }
 
-    /* loaded from: classes.dex */
     public interface MotionEventListener {
         void onMotionEvent(MotionEvent motionEvent);
     }
 
-    /* loaded from: classes.dex */
     public interface SessionListener {
         void onSessionEnded();
 
         void onSessionStarted();
     }
 
+    @Inject
     public FalsingDataProvider(DisplayMetrics displayMetrics, BatteryController batteryController, DockManager dockManager) {
         this.mXdpi = displayMetrics.xdpi;
         this.mYdpi = displayMetrics.ydpi;
@@ -56,13 +58,13 @@ public class FalsingDataProvider {
         FalsingClassifier.logInfo("width, height: " + getWidthPixels() + ", " + getHeightPixels());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void onMotionEvent(final MotionEvent motionEvent) {
+    /* access modifiers changed from: package-private */
+    public void onMotionEvent(MotionEvent motionEvent) {
         List<MotionEvent> unpackMotionEvent = unpackMotionEvent(motionEvent);
         FalsingClassifier.logDebug("Unpacked into: " + unpackMotionEvent.size());
         if (BrightLineFalsingManager.DEBUG) {
-            for (MotionEvent motionEvent2 : unpackMotionEvent) {
-                FalsingClassifier.logDebug("x,y,t: " + motionEvent2.getX() + "," + motionEvent2.getY() + "," + motionEvent2.getEventTime());
+            for (MotionEvent next : unpackMotionEvent) {
+                FalsingClassifier.logDebug("x,y,t: " + next.getX() + NavigationBarInflaterView.BUTTON_SEPARATOR + next.getY() + NavigationBarInflaterView.BUTTON_SEPARATOR + next.getEventTime());
             }
         }
         if (motionEvent.getActionMasked() == 0) {
@@ -70,45 +72,34 @@ public class FalsingDataProvider {
         }
         this.mRecentMotionEvents.addAll(unpackMotionEvent);
         FalsingClassifier.logDebug("Size: " + this.mRecentMotionEvents.size());
-        this.mMotionEventListeners.forEach(new Consumer() { // from class: com.android.systemui.classifier.FalsingDataProvider$$ExternalSyntheticLambda0
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ((FalsingDataProvider.MotionEventListener) obj).onMotionEvent(motionEvent);
-            }
-        });
+        this.mMotionEventListeners.forEach(new FalsingDataProvider$$ExternalSyntheticLambda0(motionEvent));
         this.mDirty = true;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onMotionEventComplete() {
-        if (this.mRecentMotionEvents.isEmpty()) {
-            return;
+        if (!this.mRecentMotionEvents.isEmpty()) {
+            TimeLimitedMotionEventBuffer timeLimitedMotionEventBuffer = this.mRecentMotionEvents;
+            int actionMasked = timeLimitedMotionEventBuffer.get(timeLimitedMotionEventBuffer.size() - 1).getActionMasked();
+            if (actionMasked == 1 || actionMasked == 3) {
+                completePriorGesture();
+            }
         }
-        TimeLimitedMotionEventBuffer timeLimitedMotionEventBuffer = this.mRecentMotionEvents;
-        int actionMasked = timeLimitedMotionEventBuffer.mo391get(timeLimitedMotionEventBuffer.size() - 1).getActionMasked();
-        if (actionMasked != 1 && actionMasked != 3) {
-            return;
-        }
-        completePriorGesture();
     }
 
     private void completePriorGesture() {
         if (!this.mRecentMotionEvents.isEmpty()) {
-            this.mGestureFinalizedListeners.forEach(new Consumer() { // from class: com.android.systemui.classifier.FalsingDataProvider$$ExternalSyntheticLambda1
-                @Override // java.util.function.Consumer
-                public final void accept(Object obj) {
-                    FalsingDataProvider.this.lambda$completePriorGesture$1((FalsingDataProvider.GestureFinalizedListener) obj);
-                }
-            });
+            this.mGestureFinalizedListeners.forEach(new FalsingDataProvider$$ExternalSyntheticLambda3(this));
             this.mPriorMotionEvents = this.mRecentMotionEvents;
-            this.mRecentMotionEvents = new TimeLimitedMotionEventBuffer(1000L);
+            this.mRecentMotionEvents = new TimeLimitedMotionEventBuffer(1000);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$completePriorGesture$1(GestureFinalizedListener gestureFinalizedListener) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$completePriorGesture$1$com-android-systemui-classifier-FalsingDataProvider */
+    public /* synthetic */ void mo31248x8cafd2ed(GestureFinalizedListener gestureFinalizedListener) {
         TimeLimitedMotionEventBuffer timeLimitedMotionEventBuffer = this.mRecentMotionEvents;
-        gestureFinalizedListener.onGestureFinalized(timeLimitedMotionEventBuffer.mo391get(timeLimitedMotionEventBuffer.size() - 1).getEventTime());
+        gestureFinalizedListener.onGestureFinalized(timeLimitedMotionEventBuffer.get(timeLimitedMotionEventBuffer.size() - 1).getEventTime());
     }
 
     public int getWidthPixels() {
@@ -152,12 +143,18 @@ public class FalsingDataProvider {
 
     public boolean isHorizontal() {
         recalculateData();
-        return !this.mRecentMotionEvents.isEmpty() && Math.abs(this.mFirstRecentMotionEvent.getX() - this.mLastMotionEvent.getX()) > Math.abs(this.mFirstRecentMotionEvent.getY() - this.mLastMotionEvent.getY());
+        if (!this.mRecentMotionEvents.isEmpty() && Math.abs(this.mFirstRecentMotionEvent.getX() - this.mLastMotionEvent.getX()) > Math.abs(this.mFirstRecentMotionEvent.getY() - this.mLastMotionEvent.getY())) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isRight() {
         recalculateData();
-        return !this.mRecentMotionEvents.isEmpty() && this.mLastMotionEvent.getX() > this.mFirstRecentMotionEvent.getX();
+        if (!this.mRecentMotionEvents.isEmpty() && this.mLastMotionEvent.getX() > this.mFirstRecentMotionEvent.getX()) {
+            return true;
+        }
+        return false;
     }
 
     public boolean isVertical() {
@@ -166,23 +163,25 @@ public class FalsingDataProvider {
 
     public boolean isUp() {
         recalculateData();
-        return !this.mRecentMotionEvents.isEmpty() && this.mLastMotionEvent.getY() < this.mFirstRecentMotionEvent.getY();
+        if (!this.mRecentMotionEvents.isEmpty() && this.mLastMotionEvent.getY() < this.mFirstRecentMotionEvent.getY()) {
+            return true;
+        }
+        return false;
     }
 
     private void recalculateData() {
-        if (!this.mDirty) {
-            return;
+        if (this.mDirty) {
+            if (this.mRecentMotionEvents.isEmpty()) {
+                this.mFirstRecentMotionEvent = null;
+                this.mLastMotionEvent = null;
+            } else {
+                this.mFirstRecentMotionEvent = this.mRecentMotionEvents.get(0);
+                TimeLimitedMotionEventBuffer timeLimitedMotionEventBuffer = this.mRecentMotionEvents;
+                this.mLastMotionEvent = timeLimitedMotionEventBuffer.get(timeLimitedMotionEventBuffer.size() - 1);
+            }
+            calculateAngleInternal();
+            this.mDirty = false;
         }
-        if (this.mRecentMotionEvents.isEmpty()) {
-            this.mFirstRecentMotionEvent = null;
-            this.mLastMotionEvent = null;
-        } else {
-            this.mFirstRecentMotionEvent = this.mRecentMotionEvents.mo391get(0);
-            TimeLimitedMotionEventBuffer timeLimitedMotionEventBuffer = this.mRecentMotionEvents;
-            this.mLastMotionEvent = timeLimitedMotionEventBuffer.mo391get(timeLimitedMotionEventBuffer.size() - 1);
-        }
-        calculateAngleInternal();
-        this.mDirty = false;
     }
 
     private void calculateAngleInternal() {
@@ -190,30 +189,33 @@ public class FalsingDataProvider {
             this.mAngle = Float.MAX_VALUE;
             return;
         }
-        this.mAngle = (float) Math.atan2(this.mLastMotionEvent.getY() - this.mFirstRecentMotionEvent.getY(), this.mLastMotionEvent.getX() - this.mFirstRecentMotionEvent.getX());
+        this.mAngle = (float) Math.atan2((double) (this.mLastMotionEvent.getY() - this.mFirstRecentMotionEvent.getY()), (double) (this.mLastMotionEvent.getX() - this.mFirstRecentMotionEvent.getX()));
         while (true) {
             float f = this.mAngle;
-            if (f < 0.0f) {
-                this.mAngle = f + 6.2831855f;
+            if (f >= 0.0f) {
+                break;
             }
+            this.mAngle = f + THREE_HUNDRED_SIXTY_DEG;
         }
         while (true) {
             float f2 = this.mAngle;
-            if (f2 <= 6.2831855f) {
+            if (f2 > THREE_HUNDRED_SIXTY_DEG) {
+                this.mAngle = f2 - THREE_HUNDRED_SIXTY_DEG;
+            } else {
                 return;
             }
-            this.mAngle = f2 - 6.2831855f;
         }
     }
 
     private List<MotionEvent> unpackMotionEvent(MotionEvent motionEvent) {
+        MotionEvent motionEvent2 = motionEvent;
         ArrayList arrayList = new ArrayList();
         ArrayList arrayList2 = new ArrayList();
         int pointerCount = motionEvent.getPointerCount();
         int i = 0;
         for (int i2 = 0; i2 < pointerCount; i2++) {
             MotionEvent.PointerProperties pointerProperties = new MotionEvent.PointerProperties();
-            motionEvent.getPointerProperties(i2, pointerProperties);
+            motionEvent2.getPointerProperties(i2, pointerProperties);
             arrayList2.add(pointerProperties);
         }
         MotionEvent.PointerProperties[] pointerPropertiesArr = new MotionEvent.PointerProperties[arrayList2.size()];
@@ -224,10 +226,12 @@ public class FalsingDataProvider {
             ArrayList arrayList3 = new ArrayList();
             for (int i4 = i; i4 < pointerCount; i4++) {
                 MotionEvent.PointerCoords pointerCoords = new MotionEvent.PointerCoords();
-                motionEvent.getHistoricalPointerCoords(i4, i3, pointerCoords);
+                motionEvent2.getHistoricalPointerCoords(i4, i3, pointerCoords);
                 arrayList3.add(pointerCoords);
             }
-            arrayList.add(MotionEvent.obtain(motionEvent.getDownTime(), motionEvent.getHistoricalEventTime(i3), motionEvent.getAction(), pointerCount, pointerPropertiesArr, (MotionEvent.PointerCoords[]) arrayList3.toArray(new MotionEvent.PointerCoords[i]), motionEvent.getMetaState(), motionEvent.getButtonState(), motionEvent.getXPrecision(), motionEvent.getYPrecision(), motionEvent.getDeviceId(), motionEvent.getEdgeFlags(), motionEvent.getSource(), motionEvent.getFlags()));
+            long downTime = motionEvent.getDownTime();
+            long historicalEventTime = motionEvent2.getHistoricalEventTime(i3);
+            arrayList.add(MotionEvent.obtain(downTime, historicalEventTime, motionEvent.getAction(), pointerCount, pointerPropertiesArr, (MotionEvent.PointerCoords[]) arrayList3.toArray(new MotionEvent.PointerCoords[i]), motionEvent.getMetaState(), motionEvent.getButtonState(), motionEvent.getXPrecision(), motionEvent.getYPrecision(), motionEvent.getDeviceId(), motionEvent.getEdgeFlags(), motionEvent.getSource(), motionEvent.getFlags()));
             i3++;
             pointerPropertiesArr = pointerPropertiesArr;
             i = i;
@@ -242,7 +246,7 @@ public class FalsingDataProvider {
     }
 
     public void removeSessionListener(SessionListener sessionListener) {
-        this.mSessionListeners.remove(sessionListener);
+        this.mSessionListeners.remove((Object) sessionListener);
     }
 
     public void addMotionEventListener(MotionEventListener motionEventListener) {
@@ -250,7 +254,7 @@ public class FalsingDataProvider {
     }
 
     public void removeMotionEventListener(MotionEventListener motionEventListener) {
-        this.mMotionEventListeners.remove(motionEventListener);
+        this.mMotionEventListeners.remove((Object) motionEventListener);
     }
 
     public void addGestureCompleteListener(GestureFinalizedListener gestureFinalizedListener) {
@@ -258,15 +262,15 @@ public class FalsingDataProvider {
     }
 
     public void removeGestureCompleteListener(GestureFinalizedListener gestureFinalizedListener) {
-        this.mGestureFinalizedListeners.remove(gestureFinalizedListener);
+        this.mGestureFinalizedListeners.remove((Object) gestureFinalizedListener);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onSessionStarted() {
-        this.mSessionListeners.forEach(FalsingDataProvider$$ExternalSyntheticLambda3.INSTANCE);
+        this.mSessionListeners.forEach(new FalsingDataProvider$$ExternalSyntheticLambda2());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onSessionEnd() {
         Iterator<MotionEvent> it = this.mRecentMotionEvents.iterator();
         while (it.hasNext()) {
@@ -274,7 +278,7 @@ public class FalsingDataProvider {
         }
         this.mRecentMotionEvents.clear();
         this.mDirty = true;
-        this.mSessionListeners.forEach(FalsingDataProvider$$ExternalSyntheticLambda2.INSTANCE);
+        this.mSessionListeners.forEach(new FalsingDataProvider$$ExternalSyntheticLambda1());
     }
 
     public boolean isJustUnlockedWithFace() {

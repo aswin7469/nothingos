@@ -1,11 +1,9 @@
 package com.android.systemui.dock;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class DockManagerImpl_Factory implements Factory<DockManagerImpl> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DockManagerImpl mo1933get() {
+    public DockManagerImpl get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class DockManagerImpl_Factory implements Factory<DockManagerImpl> {
         return new DockManagerImpl();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final DockManagerImpl_Factory INSTANCE = new DockManagerImpl_Factory();
+        /* access modifiers changed from: private */
+        public static final DockManagerImpl_Factory INSTANCE = new DockManagerImpl_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

@@ -32,6 +32,14 @@
         <item quantity="many">تمت إضافة %s عنصر تحكّم.</item>
         <item quantity="other">تمت إضافة %s عنصر تحكّم.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="zero">%s تطبيق نشط</item>
+        <item quantity="one">تطبيق واحد نشط (%s)</item>
+        <item quantity="two">تطبيقَان نشطَان (%s)</item>
+        <item quantity="few">%s تطبيقات نشطة</item>
+        <item quantity="many">%s تطبيقًا نشطًا</item>
+        <item quantity="other">%s تطبيق نشط</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="zero">‏أدخل رقم التعريف الشخصي لشريحة SIM. تتبقى لديك %d محاولة.</item>
         <item quantity="one">‏أدخل رقم التعريف الشخصي لشريحة SIM. تتبقى لديك محاولة واحدة (%d) يجب أن تتصل بعدها بمشغّل شبكة الجوّال لفتح الجهاز.</item>
@@ -63,38 +71,6 @@
         <item quantity="few">‏رمز PUK لشريحة SIM غير صحيح، ويتبقى لديك %d محاولات تصبح بعدها شريحة SIM غير صالحة للاستخدام بشكل دائم.</item>
         <item quantity="many">‏رمز PUK لشريحة SIM غير صحيح، ويتبقى لديك %d محاولة تصبح بعدها شريحة SIM غير صالحة للاستخدام بشكل دائم.</item>
         <item quantity="other">‏رمز PUK لشريحة SIM غير صحيح، ويتبقى لديك %d من المحاولات تصبح بعدها شريحة SIM غير صالحة للاستخدام بشكل دائم.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="zero">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد كلمة المرور.</item>
-        <item quantity="one">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد كلمة المرور.</item>
-        <item quantity="two">لم يتم فتح قفل الجهاز لمدة ساعتين (%d). تأكيد كلمة المرور.</item>
-        <item quantity="few">لم يتم فتح قفل الجهاز لمدة %d ساعات. تأكيد كلمة المرور.</item>
-        <item quantity="many">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد كلمة المرور.</item>
-        <item quantity="other">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد كلمة المرور.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="zero">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد النقش.</item>
-        <item quantity="one">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد النقش.</item>
-        <item quantity="two">لم يتم فتح قفل الجهاز لمدة ساعتين (%d). تأكيد النقش.</item>
-        <item quantity="few">لم يتم فتح قفل الجهاز لمدة %d ساعات. تأكيد النقش.</item>
-        <item quantity="many">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد النقش.</item>
-        <item quantity="other">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد النقش.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="zero">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد رقم التعريف الشخصي.</item>
-        <item quantity="one">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد رقم التعريف الشخصي.</item>
-        <item quantity="two">لم يتم فتح قفل الجهاز لمدة ساعتين (%d). تأكيد رقم التعريف الشخصي.</item>
-        <item quantity="few">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد رقم التعريف الشخصي.</item>
-        <item quantity="many">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد رقم التعريف الشخصي.</item>
-        <item quantity="other">لم يتم فتح قفل الجهاز لمدة %d ساعة. تأكيد رقم التعريف الشخصي.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="zero">حاول مرة أخرى خلال %d ثانية.</item>
-        <item quantity="one">حاول مرة أخرى خلال ثانية واحدة.</item>
-        <item quantity="two">حاول مرة أخرى خلال ثانيتين (%d).</item>
-        <item quantity="few">حاول مرة أخرى خلال %d ثوانٍ.</item>
-        <item quantity="many">حاول مرة أخرى خلال %d ثانية.</item>
-        <item quantity="other">حاول مرة أخرى خلال %d ثانية.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="zero">%d إشعار جديد</item>
@@ -143,13 +119,5 @@
         <item quantity="few">يمكنك إضافة ما يصل إلى %d مستخدمين.</item>
         <item quantity="many">يمكنك إضافة ما يصل إلى %d مستخدمًا.</item>
         <item quantity="other">يمكنك إضافة ما يصل إلى %d مستخدم.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="zero">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="one">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="two">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="few">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="many">‏عدد الأجهزة المتصلة ‎%1$d</item>
-        <item quantity="other">‏عدد الأجهزة المتصلة ‎%1$d</item>
     </plurals>
 </resources>

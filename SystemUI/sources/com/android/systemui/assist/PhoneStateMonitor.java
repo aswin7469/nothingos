@@ -9,25 +9,40 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ResolveInfo;
 import com.android.systemui.BootCompleteCache;
-import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.PackageManagerWrapper;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.shared.system.TaskStackChangeListeners;
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
 import dagger.Lazy;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Optional;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public final class PhoneStateMonitor {
-    private static final String[] DEFAULT_HOME_CHANGE_ACTIONS = {"android.intent.action.ACTION_PREFERRED_ACTIVITY_CHANGED", "android.intent.action.PACKAGE_ADDED", "android.intent.action.PACKAGE_CHANGED", "android.intent.action.PACKAGE_REMOVED"};
+    private static final String[] DEFAULT_HOME_CHANGE_ACTIONS = {PackageManagerWrapper.ACTION_PREFERRED_ACTIVITY_CHANGED, "android.intent.action.PACKAGE_ADDED", "android.intent.action.PACKAGE_CHANGED", "android.intent.action.PACKAGE_REMOVED"};
+    public static final int PHONE_STATE_ALL_APPS = 7;
+    public static final int PHONE_STATE_AOD1 = 1;
+    public static final int PHONE_STATE_AOD2 = 2;
+    public static final int PHONE_STATE_APP_DEFAULT = 8;
+    public static final int PHONE_STATE_APP_FULLSCREEN = 10;
+    public static final int PHONE_STATE_APP_IMMERSIVE = 9;
+    public static final int PHONE_STATE_BOUNCER = 3;
+    public static final int PHONE_STATE_HOME = 5;
+    public static final int PHONE_STATE_OVERVIEW = 6;
+    public static final int PHONE_STATE_UNLOCKED_LOCKSCREEN = 4;
+    private final Lazy<Optional<CentralSurfaces>> mCentralSurfacesOptionalLazy;
     private final Context mContext;
-    private boolean mLauncherShowing;
-    private final Optional<Lazy<StatusBar>> mStatusBarOptionalLazy;
-    private final StatusBarStateController mStatusBarStateController = (StatusBarStateController) Dependency.get(StatusBarStateController.class);
-    private ComponentName mDefaultHome = getCurrentDefaultHome();
+    /* access modifiers changed from: private */
+    public ComponentName mDefaultHome = getCurrentDefaultHome();
+    /* access modifiers changed from: private */
+    public boolean mLauncherShowing;
+    private final StatusBarStateController mStatusBarStateController;
 
     private boolean isLauncherInAllApps() {
         return false;
@@ -37,38 +52,33 @@ public final class PhoneStateMonitor {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public PhoneStateMonitor(Context context, BroadcastDispatcher broadcastDispatcher, Optional<Lazy<StatusBar>> optional, BootCompleteCache bootCompleteCache) {
+    @Inject
+    PhoneStateMonitor(Context context, BroadcastDispatcher broadcastDispatcher, Lazy<Optional<CentralSurfaces>> lazy, BootCompleteCache bootCompleteCache, StatusBarStateController statusBarStateController) {
         this.mContext = context;
-        this.mStatusBarOptionalLazy = optional;
-        bootCompleteCache.addListener(new BootCompleteCache.BootCompleteListener() { // from class: com.android.systemui.assist.PhoneStateMonitor$$ExternalSyntheticLambda0
-            @Override // com.android.systemui.BootCompleteCache.BootCompleteListener
-            public final void onBootComplete() {
-                PhoneStateMonitor.this.lambda$new$0();
-            }
-        });
+        this.mCentralSurfacesOptionalLazy = lazy;
+        this.mStatusBarStateController = statusBarStateController;
+        bootCompleteCache.addListener(new PhoneStateMonitor$$ExternalSyntheticLambda0(this));
         IntentFilter intentFilter = new IntentFilter();
-        for (String str : DEFAULT_HOME_CHANGE_ACTIONS) {
-            intentFilter.addAction(str);
+        for (String addAction : DEFAULT_HOME_CHANGE_ACTIONS) {
+            intentFilter.addAction(addAction);
         }
-        broadcastDispatcher.registerReceiver(new BroadcastReceiver() { // from class: com.android.systemui.assist.PhoneStateMonitor.1
-            @Override // android.content.BroadcastReceiver
-            public void onReceive(Context context2, Intent intent) {
-                PhoneStateMonitor.this.mDefaultHome = PhoneStateMonitor.getCurrentDefaultHome();
+        broadcastDispatcher.registerReceiver(new BroadcastReceiver() {
+            public void onReceive(Context context, Intent intent) {
+                ComponentName unused = PhoneStateMonitor.this.mDefaultHome = PhoneStateMonitor.getCurrentDefaultHome();
             }
         }, intentFilter);
         this.mLauncherShowing = isLauncherShowing(ActivityManagerWrapper.getInstance().getRunningTask());
-        TaskStackChangeListeners.getInstance().registerTaskStackListener(new TaskStackChangeListener() { // from class: com.android.systemui.assist.PhoneStateMonitor.2
-            @Override // com.android.systemui.shared.system.TaskStackChangeListener
+        TaskStackChangeListeners.getInstance().registerTaskStackListener(new TaskStackChangeListener() {
             public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
                 PhoneStateMonitor phoneStateMonitor = PhoneStateMonitor.this;
-                phoneStateMonitor.mLauncherShowing = phoneStateMonitor.isLauncherShowing(runningTaskInfo);
+                boolean unused = phoneStateMonitor.mLauncherShowing = phoneStateMonitor.isLauncherShowing(runningTaskInfo);
             }
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-assist-PhoneStateMonitor  reason: not valid java name */
+    public /* synthetic */ void m2551lambda$new$0$comandroidsystemuiassistPhoneStateMonitor() {
         this.mDefaultHome = getCurrentDefaultHome();
     }
 
@@ -76,32 +86,34 @@ public final class PhoneStateMonitor {
         if (isShadeFullscreen()) {
             return getPhoneLockscreenState();
         }
-        if (!this.mLauncherShowing) {
-            return 9;
+        if (this.mLauncherShowing) {
+            return getPhoneLauncherState();
         }
-        return getPhoneLauncherState();
+        return 9;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public static ComponentName getCurrentDefaultHome() {
-        ArrayList<ResolveInfo> arrayList = new ArrayList();
+        ArrayList arrayList = new ArrayList();
         ComponentName homeActivities = PackageManagerWrapper.getInstance().getHomeActivities(arrayList);
         if (homeActivities != null) {
             return homeActivities;
         }
+        Iterator it = arrayList.iterator();
         int i = Integer.MIN_VALUE;
         while (true) {
             ComponentName componentName = null;
-            for (ResolveInfo resolveInfo : arrayList) {
-                int i2 = resolveInfo.priority;
-                if (i2 > i) {
+            while (true) {
+                if (!it.hasNext()) {
+                    return componentName;
+                }
+                ResolveInfo resolveInfo = (ResolveInfo) it.next();
+                if (resolveInfo.priority > i) {
                     componentName = resolveInfo.activityInfo.getComponentName();
                     i = resolveInfo.priority;
-                } else if (i2 == i) {
-                    break;
+                } else if (resolveInfo.priority == i) {
                 }
             }
-            return componentName;
         }
     }
 
@@ -131,21 +143,16 @@ public final class PhoneStateMonitor {
         return this.mStatusBarStateController.isDozing();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public boolean isLauncherShowing(ActivityManager.RunningTaskInfo runningTaskInfo) {
-        if (runningTaskInfo == null) {
+        if (runningTaskInfo == null || runningTaskInfo.topActivity == null) {
             return false;
         }
         return runningTaskInfo.topActivity.equals(this.mDefaultHome);
     }
 
     private boolean isBouncerShowing() {
-        return ((Boolean) this.mStatusBarOptionalLazy.map(PhoneStateMonitor$$ExternalSyntheticLambda1.INSTANCE).orElse(Boolean.FALSE)).booleanValue();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ Boolean lambda$isBouncerShowing$1(Lazy lazy) {
-        return Boolean.valueOf(((StatusBar) lazy.get()).isBouncerShowing());
+        return ((Boolean) this.mCentralSurfacesOptionalLazy.get().map(new PhoneStateMonitor$$ExternalSyntheticLambda1()).orElse(false)).booleanValue();
     }
 
     private boolean isKeyguardLocked() {

@@ -11,87 +11,86 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.TextView;
+import com.android.systemui.C1893R;
 import com.android.systemui.Prefs;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
 import com.android.systemui.recents.TriangleShape;
-import java.util.Objects;
+import kotlin.Metadata;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
+
+@Metadata(mo64986d1 = {"\u0000H\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\u0010\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\t\u0018\u0000 \"2\u00020\u0001:\u0001\"B)\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0002\u0010\u0006\u001a\u00020\u0007\u0012\b\b\u0002\u0010\b\u001a\u00020\t¢\u0006\u0002\u0010\nJ\u0010\u0010\u001b\u001a\u00020\u00152\b\b\u0002\u0010\u001c\u001a\u00020\tJ\b\u0010\u001d\u001a\u00020\tH\u0002J\u001e\u0010\u001e\u001a\u00020\u00152\u0006\u0010\u001f\u001a\u00020\u00072\u0006\u0010 \u001a\u00020\u00072\u0006\u0010!\u001a\u00020\u0007R\u0016\u0010\u000b\u001a\n \r*\u0004\u0018\u00010\f0\fX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u0016\u0010\u000e\u001a\n \r*\u0004\u0018\u00010\f0\fX\u0004¢\u0006\u0002\n\u0000R\u0011\u0010\u000f\u001a\u00020\u0010¢\u0006\b\n\u0000\u001a\u0004\b\u0011\u0010\u0012R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u001d\u0010\u0013\u001a\u000e\u0012\u0004\u0012\u00020\u0007\u0012\u0004\u0012\u00020\u00150\u0014¢\u0006\b\n\u0000\u001a\u0004\b\u0016\u0010\u0017R\u000e\u0010\u0018\u001a\u00020\u0007X\u000e¢\u0006\u0002\n\u0000R\u0016\u0010\u0019\u001a\n \r*\u0004\u0018\u00010\u001a0\u001aX\u0004¢\u0006\u0002\n\u0000¨\u0006#"}, mo64987d2 = {"Lcom/android/systemui/controls/TooltipManager;", "", "context", "Landroid/content/Context;", "preferenceName", "", "maxTimesShown", "", "below", "", "(Landroid/content/Context;Ljava/lang/String;IZ)V", "arrowView", "Landroid/view/View;", "kotlin.jvm.PlatformType", "dismissView", "layout", "Landroid/view/ViewGroup;", "getLayout", "()Landroid/view/ViewGroup;", "preferenceStorer", "Lkotlin/Function1;", "", "getPreferenceStorer", "()Lkotlin/jvm/functions/Function1;", "shown", "textView", "Landroid/widget/TextView;", "hide", "animate", "shouldShow", "show", "stringRes", "x", "y", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: TooltipManager.kt */
-/* loaded from: classes.dex */
 public final class TooltipManager {
-    @NotNull
-    public static final Companion Companion = new Companion(null);
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    private static final long HIDE_DURATION_MS = 100;
+    private static final long SHOW_DELAY_MS = 500;
+    private static final long SHOW_DURATION_MS = 300;
     private final View arrowView;
     private final boolean below;
     private final View dismissView;
-    @NotNull
     private final ViewGroup layout;
     private final int maxTimesShown;
-    @NotNull
-    private final String preferenceName;
-    @NotNull
+    /* access modifiers changed from: private */
+    public final String preferenceName;
     private final Function1<Integer, Unit> preferenceStorer;
     private int shown;
     private final TextView textView;
 
-    public TooltipManager(@NotNull Context context, @NotNull String preferenceName, int i, boolean z) {
+    public TooltipManager(Context context, String str, int i, boolean z) {
         Intrinsics.checkNotNullParameter(context, "context");
-        Intrinsics.checkNotNullParameter(preferenceName, "preferenceName");
-        this.preferenceName = preferenceName;
+        Intrinsics.checkNotNullParameter(str, "preferenceName");
+        this.preferenceName = str;
         this.maxTimesShown = i;
         this.below = z;
-        this.shown = Prefs.getInt(context, preferenceName, 0);
-        View inflate = LayoutInflater.from(context).inflate(R$layout.controls_onboarding, (ViewGroup) null);
-        Objects.requireNonNull(inflate, "null cannot be cast to non-null type android.view.ViewGroup");
-        ViewGroup viewGroup = (ViewGroup) inflate;
-        this.layout = viewGroup;
-        this.preferenceStorer = new TooltipManager$preferenceStorer$1(context, this);
-        viewGroup.setAlpha(0.0f);
-        this.textView = (TextView) viewGroup.requireViewById(R$id.onboarding_text);
-        View requireViewById = viewGroup.requireViewById(R$id.dismiss);
-        requireViewById.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.controls.TooltipManager$dismissView$1$1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                TooltipManager.this.hide(true);
+        this.shown = Prefs.getInt(context, str, 0);
+        View inflate = LayoutInflater.from(context).inflate(C1893R.layout.controls_onboarding, (ViewGroup) null);
+        if (inflate != null) {
+            ViewGroup viewGroup = (ViewGroup) inflate;
+            this.layout = viewGroup;
+            this.preferenceStorer = new TooltipManager$preferenceStorer$1(context, this);
+            viewGroup.setAlpha(0.0f);
+            this.textView = (TextView) viewGroup.requireViewById(C1893R.C1897id.onboarding_text);
+            View requireViewById = viewGroup.requireViewById(C1893R.C1897id.dismiss);
+            requireViewById.setOnClickListener(new TooltipManager$$ExternalSyntheticLambda2(this));
+            this.dismissView = requireViewById;
+            View requireViewById2 = viewGroup.requireViewById(C1893R.C1897id.arrow);
+            TypedValue typedValue = new TypedValue();
+            context.getTheme().resolveAttribute(16843829, typedValue, true);
+            int color = context.getResources().getColor(typedValue.resourceId, context.getTheme());
+            int dimensionPixelSize = context.getResources().getDimensionPixelSize(C1893R.dimen.recents_onboarding_toast_arrow_corner_radius);
+            ViewGroup.LayoutParams layoutParams = requireViewById2.getLayoutParams();
+            ShapeDrawable shapeDrawable = new ShapeDrawable(TriangleShape.create((float) layoutParams.width, (float) layoutParams.height, z));
+            Paint paint = shapeDrawable.getPaint();
+            paint.setColor(color);
+            paint.setPathEffect(new CornerPathEffect((float) dimensionPixelSize));
+            requireViewById2.setBackground(shapeDrawable);
+            this.arrowView = requireViewById2;
+            if (!z) {
+                viewGroup.removeView(requireViewById2);
+                viewGroup.addView(requireViewById2);
+                ViewGroup.LayoutParams layoutParams2 = requireViewById2.getLayoutParams();
+                if (layoutParams2 != null) {
+                    ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams2;
+                    marginLayoutParams.bottomMargin = marginLayoutParams.topMargin;
+                    marginLayoutParams.topMargin = 0;
+                    return;
+                }
+                throw new NullPointerException("null cannot be cast to non-null type android.view.ViewGroup.MarginLayoutParams");
             }
-        });
-        Unit unit = Unit.INSTANCE;
-        this.dismissView = requireViewById;
-        View requireViewById2 = viewGroup.requireViewById(R$id.arrow);
-        TypedValue typedValue = new TypedValue();
-        context.getTheme().resolveAttribute(16843829, typedValue, true);
-        int color = context.getResources().getColor(typedValue.resourceId, context.getTheme());
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(R$dimen.recents_onboarding_toast_arrow_corner_radius);
-        ViewGroup.LayoutParams layoutParams = requireViewById2.getLayoutParams();
-        ShapeDrawable shapeDrawable = new ShapeDrawable(TriangleShape.create(layoutParams.width, layoutParams.height, z));
-        Paint paint = shapeDrawable.getPaint();
-        paint.setColor(color);
-        paint.setPathEffect(new CornerPathEffect(dimensionPixelSize));
-        requireViewById2.setBackground(shapeDrawable);
-        this.arrowView = requireViewById2;
-        if (!z) {
-            viewGroup.removeView(requireViewById2);
-            viewGroup.addView(requireViewById2);
-            ViewGroup.LayoutParams layoutParams2 = requireViewById2.getLayoutParams();
-            Objects.requireNonNull(layoutParams2, "null cannot be cast to non-null type android.view.ViewGroup.MarginLayoutParams");
-            ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams2;
-            marginLayoutParams.bottomMargin = marginLayoutParams.topMargin;
-            marginLayoutParams.topMargin = 0;
+            return;
         }
+        throw new NullPointerException("null cannot be cast to non-null type android.view.ViewGroup");
     }
 
+    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public /* synthetic */ TooltipManager(Context context, String str, int i, boolean z, int i2, DefaultConstructorMarker defaultConstructorMarker) {
         this(context, str, (i2 & 4) != 0 ? 2 : i, (i2 & 8) != 0 ? true : z);
     }
 
+    @Metadata(mo64986d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\t\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000¨\u0006\u0007"}, mo64987d2 = {"Lcom/android/systemui/controls/TooltipManager$Companion;", "", "()V", "HIDE_DURATION_MS", "", "SHOW_DELAY_MS", "SHOW_DURATION_MS", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: TooltipManager.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -101,56 +100,73 @@ public final class TooltipManager {
         }
     }
 
-    @NotNull
     public final ViewGroup getLayout() {
         return this.layout;
     }
 
-    public final void show(int i, final int i2, final int i3) {
-        if (!shouldShow()) {
-            return;
-        }
-        this.textView.setText(i);
-        int i4 = this.shown + 1;
-        this.shown = i4;
-        this.preferenceStorer.mo1949invoke(Integer.valueOf(i4));
-        this.layout.post(new Runnable() { // from class: com.android.systemui.controls.TooltipManager$show$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                boolean z;
-                int[] iArr = new int[2];
-                TooltipManager.this.getLayout().getLocationOnScreen(iArr);
-                boolean z2 = false;
-                TooltipManager.this.getLayout().setTranslationX((i2 - iArr[0]) - (TooltipManager.this.getLayout().getWidth() / 2));
-                ViewGroup layout = TooltipManager.this.getLayout();
-                float f = i3 - iArr[1];
-                z = TooltipManager.this.below;
-                layout.setTranslationY(f - (!z ? TooltipManager.this.getLayout().getHeight() : 0));
-                if (TooltipManager.this.getLayout().getAlpha() == 0.0f) {
-                    z2 = true;
-                }
-                if (z2) {
-                    TooltipManager.this.getLayout().animate().alpha(1.0f).withLayer().setStartDelay(500L).setDuration(300L).setInterpolator(new DecelerateInterpolator()).start();
-                }
-            }
-        });
+    public final Function1<Integer, Unit> getPreferenceStorer() {
+        return this.preferenceStorer;
     }
 
-    public final void hide(final boolean z) {
-        if (this.layout.getAlpha() == 0.0f) {
+    /* access modifiers changed from: private */
+    /* renamed from: dismissView$lambda-1$lambda-0  reason: not valid java name */
+    public static final void m2599dismissView$lambda1$lambda0(TooltipManager tooltipManager, View view) {
+        Intrinsics.checkNotNullParameter(tooltipManager, "this$0");
+        tooltipManager.hide(true);
+    }
+
+    public final void show(int i, int i2, int i3) {
+        if (shouldShow()) {
+            this.textView.setText(i);
+            int i4 = this.shown + 1;
+            this.shown = i4;
+            this.preferenceStorer.invoke(Integer.valueOf(i4));
+            this.layout.post(new TooltipManager$$ExternalSyntheticLambda0(this, i2, i3));
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: show$lambda-4  reason: not valid java name */
+    public static final void m2601show$lambda4(TooltipManager tooltipManager, int i, int i2) {
+        Intrinsics.checkNotNullParameter(tooltipManager, "this$0");
+        int[] iArr = new int[2];
+        tooltipManager.layout.getLocationOnScreen(iArr);
+        ViewGroup viewGroup = tooltipManager.layout;
+        boolean z = false;
+        viewGroup.setTranslationX((float) ((i - iArr[0]) - (viewGroup.getWidth() / 2)));
+        ViewGroup viewGroup2 = tooltipManager.layout;
+        viewGroup2.setTranslationY(((float) (i2 - iArr[1])) - ((float) (!tooltipManager.below ? viewGroup2.getHeight() : 0)));
+        if (tooltipManager.layout.getAlpha() == 0.0f) {
+            z = true;
+        }
+        if (z) {
+            tooltipManager.layout.animate().alpha(1.0f).withLayer().setStartDelay(500).setDuration(300).setInterpolator(new DecelerateInterpolator()).start();
+        }
+    }
+
+    public static /* synthetic */ void hide$default(TooltipManager tooltipManager, boolean z, int i, Object obj) {
+        if ((i & 1) != 0) {
+            z = false;
+        }
+        tooltipManager.hide(z);
+    }
+
+    public final void hide(boolean z) {
+        if (!(this.layout.getAlpha() == 0.0f)) {
+            this.layout.post(new TooltipManager$$ExternalSyntheticLambda1(z, this));
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: hide$lambda-5  reason: not valid java name */
+    public static final void m2600hide$lambda5(boolean z, TooltipManager tooltipManager) {
+        Intrinsics.checkNotNullParameter(tooltipManager, "this$0");
+        if (z) {
+            tooltipManager.layout.animate().alpha(0.0f).withLayer().setStartDelay(0).setDuration(100).setInterpolator(new AccelerateInterpolator()).start();
             return;
         }
-        this.layout.post(new Runnable() { // from class: com.android.systemui.controls.TooltipManager$hide$1
-            @Override // java.lang.Runnable
-            public final void run() {
-                if (z) {
-                    this.getLayout().animate().alpha(0.0f).withLayer().setStartDelay(0L).setDuration(100L).setInterpolator(new AccelerateInterpolator()).start();
-                    return;
-                }
-                this.getLayout().animate().cancel();
-                this.getLayout().setAlpha(0.0f);
-            }
-        });
+        tooltipManager.layout.animate().cancel();
+        tooltipManager.layout.setAlpha(0.0f);
     }
 
     private final boolean shouldShow() {

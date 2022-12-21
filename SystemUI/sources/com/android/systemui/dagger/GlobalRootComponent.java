@@ -3,24 +3,23 @@ package com.android.systemui.dagger;
 import android.content.Context;
 import com.android.systemui.dagger.SysUIComponent;
 import com.android.systemui.dagger.WMComponent;
-import com.android.systemui.util.concurrency.ThreadFactory;
-/* loaded from: classes.dex */
+import dagger.BindsInstance;
+import dagger.Component;
+import javax.inject.Singleton;
+
+@Singleton
+@Component(modules = {GlobalModule.class})
 public interface GlobalRootComponent {
 
-    /* loaded from: classes.dex */
+    @Component.Builder
     public interface Builder {
-        /* renamed from: build */
-        GlobalRootComponent mo1380build();
+        GlobalRootComponent build();
 
-        /* renamed from: context */
-        Builder mo1381context(Context context);
+        @BindsInstance
+        Builder context(Context context);
     }
 
-    ThreadFactory createThreadFactory();
+    SysUIComponent.Builder getSysUIComponent();
 
-    /* renamed from: getSysUIComponent */
-    SysUIComponent.Builder mo1378getSysUIComponent();
-
-    /* renamed from: getWMComponentBuilder */
-    WMComponent.Builder mo1379getWMComponentBuilder();
+    WMComponent.Builder getWMComponentBuilder();
 }

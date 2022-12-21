@@ -1,16 +1,14 @@
 package com.android.systemui.statusbar.phone;
 
-import java.util.Objects;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class NotificationShadeWindowControllerImpl$$ExternalSyntheticLambda2 implements Predicate {
-    public static final /* synthetic */ NotificationShadeWindowControllerImpl$$ExternalSyntheticLambda2 INSTANCE = new NotificationShadeWindowControllerImpl$$ExternalSyntheticLambda2();
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class NotificationShadeWindowControllerImpl$$ExternalSyntheticLambda2 implements Runnable {
+    public final /* synthetic */ NotificationShadeWindowControllerImpl f$0;
 
-    private /* synthetic */ NotificationShadeWindowControllerImpl$$ExternalSyntheticLambda2() {
+    public /* synthetic */ NotificationShadeWindowControllerImpl$$ExternalSyntheticLambda2(NotificationShadeWindowControllerImpl notificationShadeWindowControllerImpl) {
+        this.f$0 = notificationShadeWindowControllerImpl;
     }
 
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        return Objects.nonNull((StatusBarWindowCallback) obj);
+    public final void run() {
+        this.f$0.mo44746x55fd2eea();
     }
 }

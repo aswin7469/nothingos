@@ -1,6 +1,5 @@
 package com.android.launcher3.icons;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -14,32 +13,43 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.graphics.drawable.AdaptiveIconDrawable;
 import android.graphics.drawable.Drawable;
+import androidx.core.view.ViewCompat;
 import java.nio.ByteBuffer;
-/* loaded from: classes.dex */
+
 public class IconNormalizer {
+    private static final float BOUND_RATIO_MARGIN = 0.05f;
+    private static final float CIRCLE_AREA_BY_RECT = 0.7853982f;
+    private static final boolean DEBUG = false;
+    public static final float ICON_VISIBLE_AREA_FACTOR = 0.92f;
+    private static final float LINEAR_SCALE_SLOPE = 0.040449437f;
+    private static final float MAX_CIRCLE_AREA_FACTOR = 0.6597222f;
+    private static final float MAX_SQUARE_AREA_FACTOR = 0.6510417f;
+    private static final int MIN_VISIBLE_ALPHA = 40;
+    private static final float PIXEL_DIFF_PERCENTAGE_THRESHOLD = 0.005f;
+    private static final float SCALE_NOT_INITIALIZED = 0.0f;
+    private static final String TAG = "IconNormalizer";
+    private final RectF mAdaptiveIconBounds = new RectF();
+    private float mAdaptiveIconScale;
     private final Bitmap mBitmap;
+    private final Rect mBounds = new Rect();
     private final Canvas mCanvas;
     private boolean mEnableShapeDetection;
     private final float[] mLeftBorder;
+    private final Matrix mMatrix;
     private final int mMaxSize;
     private final Paint mPaintMaskShape;
     private final Paint mPaintMaskShapeOutline;
     private final byte[] mPixels;
     private final float[] mRightBorder;
-    private final Rect mBounds = new Rect();
-    private final RectF mAdaptiveIconBounds = new RectF();
-    private final Path mShapePath = new Path();
-    private final Matrix mMatrix = new Matrix();
-    private float mAdaptiveIconScale = 0.0f;
+    private final Path mShapePath;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public IconNormalizer(Context context, int i, boolean z) {
+    IconNormalizer(Context context, int i, boolean z) {
         int i2 = i * 2;
         this.mMaxSize = i2;
         Bitmap createBitmap = Bitmap.createBitmap(i2, i2, Bitmap.Config.ALPHA_8);
         this.mBitmap = createBitmap;
         this.mCanvas = new Canvas(createBitmap);
-        this.mPixels = new byte[i2 * i2];
+        this.mPixels = new byte[(i2 * i2)];
         this.mLeftBorder = new float[i2];
         this.mRightBorder = new float[i2];
         Paint paint = new Paint();
@@ -51,22 +61,24 @@ public class IconNormalizer {
         this.mPaintMaskShapeOutline = paint2;
         paint2.setStrokeWidth(context.getResources().getDisplayMetrics().density * 2.0f);
         paint2.setStyle(Paint.Style.STROKE);
-        paint2.setColor(-16777216);
+        paint2.setColor(ViewCompat.MEASURED_STATE_MASK);
         paint2.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        this.mShapePath = new Path();
+        this.mMatrix = new Matrix();
+        this.mAdaptiveIconScale = 0.0f;
         this.mEnableShapeDetection = z;
     }
 
     private static float getScale(float f, float f2, float f3) {
         float f4 = f / f2;
-        float f5 = f4 < 0.7853982f ? 0.6597222f : ((1.0f - f4) * 0.040449437f) + 0.6510417f;
+        float f5 = f4 < CIRCLE_AREA_BY_RECT ? MAX_CIRCLE_AREA_FACTOR : ((1.0f - f4) * LINEAR_SCALE_SLOPE) + MAX_SQUARE_AREA_FACTOR;
         float f6 = f / f3;
         if (f6 > f5) {
-            return (float) Math.sqrt(f5 / f6);
+            return (float) Math.sqrt((double) (f5 / f6));
         }
         return 1.0f;
     }
 
-    @TargetApi(26)
     public static float normalizeAdaptiveIcon(Drawable drawable, int i, RectF rectF) {
         Rect rect = new Rect(drawable.getBounds());
         drawable.setBounds(0, 0, i, i);
@@ -76,23 +88,21 @@ public class IconNormalizer {
         Rect bounds = region.getBounds();
         int area = GraphicsUtils.getArea(region);
         if (rectF != null) {
-            float f = i;
-            rectF.set(bounds.left / f, bounds.top / f, 1.0f - (bounds.right / f), 1.0f - (bounds.bottom / f));
+            float f = (float) i;
+            rectF.set(((float) bounds.left) / f, ((float) bounds.top) / f, 1.0f - (((float) bounds.right) / f), 1.0f - (((float) bounds.bottom) / f));
         }
         drawable.setBounds(rect);
-        float f2 = area;
-        return getScale(f2, f2, i * i);
+        float f2 = (float) area;
+        return getScale(f2, f2, (float) (i * i));
     }
 
     private boolean isShape(Path path) {
-        if (Math.abs((this.mBounds.width() / this.mBounds.height()) - 1.0f) > 0.05f) {
+        if (Math.abs((((float) this.mBounds.width()) / ((float) this.mBounds.height())) - 1.0f) > 0.05f) {
             return false;
         }
         this.mMatrix.reset();
-        this.mMatrix.setScale(this.mBounds.width(), this.mBounds.height());
-        Matrix matrix = this.mMatrix;
-        Rect rect = this.mBounds;
-        matrix.postTranslate(rect.left, rect.top);
+        this.mMatrix.setScale((float) this.mBounds.width(), (float) this.mBounds.height());
+        this.mMatrix.postTranslate((float) this.mBounds.left, (float) this.mBounds.top);
         path.transform(this.mMatrix, this.mShapePath);
         this.mCanvas.drawPath(this.mShapePath, this.mPaintMaskShape);
         this.mCanvas.drawPath(this.mShapePath, this.mPaintMaskShapeOutline);
@@ -100,206 +110,279 @@ public class IconNormalizer {
     }
 
     private boolean isTransparentBitmap() {
-        Rect rect;
         ByteBuffer wrap = ByteBuffer.wrap(this.mPixels);
         wrap.rewind();
         this.mBitmap.copyPixelsToBuffer(wrap);
-        Rect rect2 = this.mBounds;
-        int i = rect2.top;
+        int i = this.mBounds.top;
         int i2 = this.mMaxSize;
         int i3 = i * i2;
-        int i4 = i2 - rect2.right;
+        int i4 = i2 - this.mBounds.right;
         int i5 = 0;
-        while (true) {
-            rect = this.mBounds;
-            if (i >= rect.bottom) {
-                break;
-            }
-            int i6 = rect.left;
-            int i7 = i3 + i6;
-            while (i6 < this.mBounds.right) {
-                if ((this.mPixels[i7] & 255) > 40) {
+        while (i < this.mBounds.bottom) {
+            int i6 = i3 + this.mBounds.left;
+            for (int i7 = this.mBounds.left; i7 < this.mBounds.right; i7++) {
+                if ((this.mPixels[i6] & 255) > 40) {
                     i5++;
                 }
-                i7++;
                 i6++;
             }
-            i3 = i7 + i4;
+            i3 = i6 + i4;
             i++;
         }
-        return ((float) i5) / ((float) (rect.width() * this.mBounds.height())) < 0.005f;
+        if (((float) i5) / ((float) (this.mBounds.width() * this.mBounds.height())) < PIXEL_DIFF_PERCENTAGE_THRESHOLD) {
+            return true;
+        }
+        return false;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:79:0x0050, code lost:
-        if (r4 <= r16.mMaxSize) goto L80;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:26:0x0084  */
-    /* JADX WARN: Removed duplicated region for block: B:53:0x00d8 A[Catch: all -> 0x012f, TryCatch #0 {, blocks: (B:4:0x0009, B:6:0x000e, B:8:0x0012, B:10:0x0018, B:12:0x0024, B:13:0x0029, B:17:0x002d, B:21:0x003a, B:24:0x005c, B:28:0x0089, B:35:0x0098, B:38:0x009f, B:42:0x00b0, B:44:0x00ba, B:51:0x00c9, B:53:0x00d8, B:57:0x00ec, B:58:0x00e3, B:61:0x00ef, B:63:0x00fb, B:66:0x010f, B:68:0x0113, B:70:0x0116, B:71:0x011f, B:76:0x0040, B:78:0x004e, B:81:0x0056, B:83:0x005a, B:84:0x0052), top: B:3:0x0009 }] */
-    /* JADX WARN: Removed duplicated region for block: B:63:0x00fb A[Catch: all -> 0x012f, TryCatch #0 {, blocks: (B:4:0x0009, B:6:0x000e, B:8:0x0012, B:10:0x0018, B:12:0x0024, B:13:0x0029, B:17:0x002d, B:21:0x003a, B:24:0x005c, B:28:0x0089, B:35:0x0098, B:38:0x009f, B:42:0x00b0, B:44:0x00ba, B:51:0x00c9, B:53:0x00d8, B:57:0x00ec, B:58:0x00e3, B:61:0x00ef, B:63:0x00fb, B:66:0x010f, B:68:0x0113, B:70:0x0116, B:71:0x011f, B:76:0x0040, B:78:0x004e, B:81:0x0056, B:83:0x005a, B:84:0x0052), top: B:3:0x0009 }] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public synchronized float getScale(Drawable drawable, RectF rectF, Path path, boolean[] zArr) {
-        int i;
-        int i2;
-        int i3;
-        int i4;
-        int i5;
-        int i6;
-        if (BaseIconFactory.ATLEAST_OREO && (drawable instanceof AdaptiveIconDrawable)) {
-            if (this.mAdaptiveIconScale == 0.0f) {
-                this.mAdaptiveIconScale = normalizeAdaptiveIcon(drawable, this.mMaxSize, this.mAdaptiveIconBounds);
-            }
-            if (rectF != null) {
-                rectF.set(this.mAdaptiveIconBounds);
-            }
-            return this.mAdaptiveIconScale;
-        }
-        int intrinsicWidth = drawable.getIntrinsicWidth();
-        int intrinsicHeight = drawable.getIntrinsicHeight();
-        if (intrinsicWidth > 0 && intrinsicHeight > 0) {
-            int i7 = this.mMaxSize;
-            if (intrinsicWidth > i7 || intrinsicHeight > i7) {
-                int max = Math.max(intrinsicWidth, intrinsicHeight);
-                int i8 = this.mMaxSize;
-                intrinsicWidth = (intrinsicWidth * i8) / max;
-                intrinsicHeight = (i8 * intrinsicHeight) / max;
-            }
-            int i9 = 0;
-            this.mBitmap.eraseColor(0);
-            drawable.setBounds(0, 0, intrinsicWidth, intrinsicHeight);
-            drawable.draw(this.mCanvas);
-            ByteBuffer wrap = ByteBuffer.wrap(this.mPixels);
-            wrap.rewind();
-            this.mBitmap.copyPixelsToBuffer(wrap);
-            int i10 = this.mMaxSize;
-            i = i10 + 1;
-            int i11 = i10 - intrinsicWidth;
-            i2 = 0;
-            int i12 = 0;
-            i3 = -1;
-            i4 = -1;
-            i5 = -1;
-            while (i2 < intrinsicHeight) {
-                int i13 = -1;
-                int i14 = -1;
-                for (int i15 = i9; i15 < intrinsicWidth; i15++) {
-                    if ((this.mPixels[i12] & 255) > 40) {
-                        if (i13 == -1) {
-                            i13 = i15;
-                        }
-                        i14 = i15;
-                    }
-                    i12++;
-                }
-                i12 += i11;
-                this.mLeftBorder[i2] = i13;
-                this.mRightBorder[i2] = i14;
-                if (i13 != -1) {
-                    if (i3 == -1) {
-                        i3 = i2;
-                    }
-                    int min = Math.min(i, i13);
-                    i4 = Math.max(i4, i14);
-                    i = min;
-                    i5 = i2;
-                }
-                i2++;
-                i9 = 0;
-            }
-            if (i3 != -1 && i4 != -1) {
-                convertToConvexArray(this.mLeftBorder, 1, i3, i5);
-                convertToConvexArray(this.mRightBorder, -1, i3, i5);
-                float f = 0.0f;
-                for (i6 = 0; i6 < intrinsicHeight; i6++) {
-                    float[] fArr = this.mLeftBorder;
-                    if (fArr[i6] > -1.0f) {
-                        f += (this.mRightBorder[i6] - fArr[i6]) + 1.0f;
-                    }
-                }
-                Rect rect = this.mBounds;
-                rect.left = i;
-                rect.right = i4;
-                rect.top = i3;
-                rect.bottom = i5;
-                if (rectF != null) {
-                    float f2 = intrinsicWidth;
-                    float f3 = intrinsicHeight;
-                    rectF.set(i / f2, i3 / f3, 1.0f - (i4 / f2), 1.0f - (i5 / f3));
-                }
-                if (zArr != null && this.mEnableShapeDetection && zArr.length > 0) {
-                    zArr[0] = isShape(path);
-                }
-                return getScale(f, ((i5 + 1) - i3) * ((i4 + 1) - i), intrinsicWidth * intrinsicHeight);
-            }
-            return 1.0f;
-        }
-        intrinsicWidth = this.mMaxSize;
-        if (intrinsicHeight <= 0 || intrinsicHeight > this.mMaxSize) {
-            intrinsicHeight = this.mMaxSize;
-        }
-        int i92 = 0;
-        this.mBitmap.eraseColor(0);
-        drawable.setBounds(0, 0, intrinsicWidth, intrinsicHeight);
-        drawable.draw(this.mCanvas);
-        ByteBuffer wrap2 = ByteBuffer.wrap(this.mPixels);
-        wrap2.rewind();
-        this.mBitmap.copyPixelsToBuffer(wrap2);
-        int i102 = this.mMaxSize;
-        i = i102 + 1;
-        int i112 = i102 - intrinsicWidth;
-        i2 = 0;
-        int i122 = 0;
-        i3 = -1;
-        i4 = -1;
-        i5 = -1;
-        while (i2 < intrinsicHeight) {
-        }
-        if (i3 != -1) {
-            convertToConvexArray(this.mLeftBorder, 1, i3, i5);
-            convertToConvexArray(this.mRightBorder, -1, i3, i5);
-            float f4 = 0.0f;
-            while (i6 < intrinsicHeight) {
-            }
-            Rect rect2 = this.mBounds;
-            rect2.left = i;
-            rect2.right = i4;
-            rect2.top = i3;
-            rect2.bottom = i5;
-            if (rectF != null) {
-            }
-            if (zArr != null) {
-                zArr[0] = isShape(path);
-            }
-            return getScale(f4, ((i5 + 1) - i3) * ((i4 + 1) - i), intrinsicWidth * intrinsicHeight);
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:72:0x013f, code lost:
         return 1.0f;
+     */
+    /* JADX WARNING: Removed duplicated region for block: B:32:0x0080  */
+    /* JADX WARNING: Removed duplicated region for block: B:49:0x00c2  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public synchronized float getScale(android.graphics.drawable.Drawable r17, android.graphics.RectF r18, android.graphics.Path r19, boolean[] r20) {
+        /*
+            r16 = this;
+            r1 = r16
+            r0 = r17
+            r2 = r18
+            r3 = r20
+            monitor-enter(r16)
+            boolean r4 = r0 instanceof android.graphics.drawable.AdaptiveIconDrawable     // Catch:{ all -> 0x0140 }
+            r5 = 0
+            if (r4 == 0) goto L_0x0029
+            float r3 = r1.mAdaptiveIconScale     // Catch:{ all -> 0x0140 }
+            int r3 = (r3 > r5 ? 1 : (r3 == r5 ? 0 : -1))
+            if (r3 != 0) goto L_0x001e
+            int r3 = r1.mMaxSize     // Catch:{ all -> 0x0140 }
+            android.graphics.RectF r4 = r1.mAdaptiveIconBounds     // Catch:{ all -> 0x0140 }
+            float r0 = normalizeAdaptiveIcon(r0, r3, r4)     // Catch:{ all -> 0x0140 }
+            r1.mAdaptiveIconScale = r0     // Catch:{ all -> 0x0140 }
+        L_0x001e:
+            if (r2 == 0) goto L_0x0025
+            android.graphics.RectF r0 = r1.mAdaptiveIconBounds     // Catch:{ all -> 0x0140 }
+            r2.set(r0)     // Catch:{ all -> 0x0140 }
+        L_0x0025:
+            float r0 = r1.mAdaptiveIconScale     // Catch:{ all -> 0x0140 }
+            monitor-exit(r16)
+            return r0
+        L_0x0029:
+            int r4 = r17.getIntrinsicWidth()     // Catch:{ all -> 0x0140 }
+            int r6 = r17.getIntrinsicHeight()     // Catch:{ all -> 0x0140 }
+            if (r4 <= 0) goto L_0x0048
+            if (r6 > 0) goto L_0x0036
+            goto L_0x0048
+        L_0x0036:
+            int r7 = r1.mMaxSize     // Catch:{ all -> 0x0140 }
+            if (r4 > r7) goto L_0x003c
+            if (r6 <= r7) goto L_0x0058
+        L_0x003c:
+            int r7 = java.lang.Math.max((int) r4, (int) r6)     // Catch:{ all -> 0x0140 }
+            int r8 = r1.mMaxSize     // Catch:{ all -> 0x0140 }
+            int r4 = r4 * r8
+            int r4 = r4 / r7
+            int r8 = r8 * r6
+            int r6 = r8 / r7
+            goto L_0x0058
+        L_0x0048:
+            if (r4 <= 0) goto L_0x004e
+            int r7 = r1.mMaxSize     // Catch:{ all -> 0x0140 }
+            if (r4 <= r7) goto L_0x0050
+        L_0x004e:
+            int r4 = r1.mMaxSize     // Catch:{ all -> 0x0140 }
+        L_0x0050:
+            if (r6 <= 0) goto L_0x0056
+            int r7 = r1.mMaxSize     // Catch:{ all -> 0x0140 }
+            if (r6 <= r7) goto L_0x0058
+        L_0x0056:
+            int r6 = r1.mMaxSize     // Catch:{ all -> 0x0140 }
+        L_0x0058:
+            android.graphics.Bitmap r7 = r1.mBitmap     // Catch:{ all -> 0x0140 }
+            r8 = 0
+            r7.eraseColor(r8)     // Catch:{ all -> 0x0140 }
+            r0.setBounds(r8, r8, r4, r6)     // Catch:{ all -> 0x0140 }
+            android.graphics.Canvas r7 = r1.mCanvas     // Catch:{ all -> 0x0140 }
+            r0.draw(r7)     // Catch:{ all -> 0x0140 }
+            byte[] r0 = r1.mPixels     // Catch:{ all -> 0x0140 }
+            java.nio.ByteBuffer r0 = java.nio.ByteBuffer.wrap(r0)     // Catch:{ all -> 0x0140 }
+            r0.rewind()     // Catch:{ all -> 0x0140 }
+            android.graphics.Bitmap r7 = r1.mBitmap     // Catch:{ all -> 0x0140 }
+            r7.copyPixelsToBuffer(r0)     // Catch:{ all -> 0x0140 }
+            int r0 = r1.mMaxSize     // Catch:{ all -> 0x0140 }
+            int r7 = r0 + 1
+            int r0 = r0 - r4
+            r10 = r8
+            r14 = r10
+            r11 = -1
+            r12 = -1
+            r13 = -1
+        L_0x007e:
+            if (r10 >= r6) goto L_0x00bd
+            r15 = r8
+            r5 = -1
+            r8 = -1
+        L_0x0083:
+            if (r15 >= r4) goto L_0x009b
+            byte[] r9 = r1.mPixels     // Catch:{ all -> 0x0140 }
+            byte r9 = r9[r14]     // Catch:{ all -> 0x0140 }
+            r9 = r9 & 255(0xff, float:3.57E-43)
+            r3 = 40
+            if (r9 <= r3) goto L_0x0094
+            r3 = -1
+            if (r5 != r3) goto L_0x0093
+            r5 = r15
+        L_0x0093:
+            r8 = r15
+        L_0x0094:
+            int r14 = r14 + 1
+            int r15 = r15 + 1
+            r3 = r20
+            goto L_0x0083
+        L_0x009b:
+            int r14 = r14 + r0
+            float[] r3 = r1.mLeftBorder     // Catch:{ all -> 0x0140 }
+            float r9 = (float) r5     // Catch:{ all -> 0x0140 }
+            r3[r10] = r9     // Catch:{ all -> 0x0140 }
+            float[] r3 = r1.mRightBorder     // Catch:{ all -> 0x0140 }
+            float r9 = (float) r8     // Catch:{ all -> 0x0140 }
+            r3[r10] = r9     // Catch:{ all -> 0x0140 }
+            r3 = -1
+            if (r5 == r3) goto L_0x00b6
+            if (r11 != r3) goto L_0x00ac
+            r11 = r10
+        L_0x00ac:
+            int r3 = java.lang.Math.min((int) r7, (int) r5)     // Catch:{ all -> 0x0140 }
+            int r12 = java.lang.Math.max((int) r12, (int) r8)     // Catch:{ all -> 0x0140 }
+            r7 = r3
+            r13 = r10
+        L_0x00b6:
+            int r10 = r10 + 1
+            r3 = r20
+            r5 = 0
+            r8 = 0
+            goto L_0x007e
+        L_0x00bd:
+            r0 = 1065353216(0x3f800000, float:1.0)
+            r3 = -1
+            if (r11 == r3) goto L_0x013e
+            if (r12 != r3) goto L_0x00c6
+            goto L_0x013e
+        L_0x00c6:
+            float[] r5 = r1.mLeftBorder     // Catch:{ all -> 0x0140 }
+            r8 = 1
+            convertToConvexArray(r5, r8, r11, r13)     // Catch:{ all -> 0x0140 }
+            float[] r5 = r1.mRightBorder     // Catch:{ all -> 0x0140 }
+            convertToConvexArray(r5, r3, r11, r13)     // Catch:{ all -> 0x0140 }
+            r3 = 0
+            r5 = 0
+        L_0x00d3:
+            if (r3 >= r6) goto L_0x00ea
+            float[] r9 = r1.mLeftBorder     // Catch:{ all -> 0x0140 }
+            r9 = r9[r3]     // Catch:{ all -> 0x0140 }
+            r10 = -1082130432(0xffffffffbf800000, float:-1.0)
+            int r10 = (r9 > r10 ? 1 : (r9 == r10 ? 0 : -1))
+            if (r10 > 0) goto L_0x00e0
+            goto L_0x00e7
+        L_0x00e0:
+            float[] r10 = r1.mRightBorder     // Catch:{ all -> 0x0140 }
+            r10 = r10[r3]     // Catch:{ all -> 0x0140 }
+            float r10 = r10 - r9
+            float r10 = r10 + r0
+            float r5 = r5 + r10
+        L_0x00e7:
+            int r3 = r3 + 1
+            goto L_0x00d3
+        L_0x00ea:
+            android.graphics.Rect r3 = r1.mBounds     // Catch:{ all -> 0x0140 }
+            r3.left = r7     // Catch:{ all -> 0x0140 }
+            android.graphics.Rect r3 = r1.mBounds     // Catch:{ all -> 0x0140 }
+            r3.right = r12     // Catch:{ all -> 0x0140 }
+            android.graphics.Rect r3 = r1.mBounds     // Catch:{ all -> 0x0140 }
+            r3.top = r11     // Catch:{ all -> 0x0140 }
+            android.graphics.Rect r3 = r1.mBounds     // Catch:{ all -> 0x0140 }
+            r3.bottom = r13     // Catch:{ all -> 0x0140 }
+            if (r2 == 0) goto L_0x011c
+            android.graphics.Rect r3 = r1.mBounds     // Catch:{ all -> 0x0140 }
+            int r3 = r3.left     // Catch:{ all -> 0x0140 }
+            float r3 = (float) r3     // Catch:{ all -> 0x0140 }
+            float r9 = (float) r4     // Catch:{ all -> 0x0140 }
+            float r3 = r3 / r9
+            android.graphics.Rect r10 = r1.mBounds     // Catch:{ all -> 0x0140 }
+            int r10 = r10.top     // Catch:{ all -> 0x0140 }
+            float r10 = (float) r10     // Catch:{ all -> 0x0140 }
+            float r14 = (float) r6     // Catch:{ all -> 0x0140 }
+            float r10 = r10 / r14
+            android.graphics.Rect r15 = r1.mBounds     // Catch:{ all -> 0x0140 }
+            int r15 = r15.right     // Catch:{ all -> 0x0140 }
+            float r15 = (float) r15     // Catch:{ all -> 0x0140 }
+            float r15 = r15 / r9
+            float r9 = r0 - r15
+            android.graphics.Rect r15 = r1.mBounds     // Catch:{ all -> 0x0140 }
+            int r15 = r15.bottom     // Catch:{ all -> 0x0140 }
+            float r15 = (float) r15     // Catch:{ all -> 0x0140 }
+            float r15 = r15 / r14
+            float r0 = r0 - r15
+            r2.set(r3, r10, r9, r0)     // Catch:{ all -> 0x0140 }
+        L_0x011c:
+            r0 = r20
+            if (r0 == 0) goto L_0x0130
+            boolean r2 = r1.mEnableShapeDetection     // Catch:{ all -> 0x0140 }
+            if (r2 == 0) goto L_0x0130
+            int r2 = r0.length     // Catch:{ all -> 0x0140 }
+            if (r2 <= 0) goto L_0x0130
+            r2 = r19
+            boolean r2 = r1.isShape(r2)     // Catch:{ all -> 0x0140 }
+            r3 = 0
+            r0[r3] = r2     // Catch:{ all -> 0x0140 }
+        L_0x0130:
+            int r13 = r13 + r8
+            int r13 = r13 - r11
+            int r12 = r12 + r8
+            int r12 = r12 - r7
+            int r13 = r13 * r12
+            float r0 = (float) r13     // Catch:{ all -> 0x0140 }
+            int r4 = r4 * r6
+            float r2 = (float) r4     // Catch:{ all -> 0x0140 }
+            float r0 = getScale(r5, r0, r2)     // Catch:{ all -> 0x0140 }
+            monitor-exit(r16)
+            return r0
+        L_0x013e:
+            monitor-exit(r16)
+            return r0
+        L_0x0140:
+            r0 = move-exception
+            monitor-exit(r16)
+            throw r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.launcher3.icons.IconNormalizer.getScale(android.graphics.drawable.Drawable, android.graphics.RectF, android.graphics.Path, boolean[]):float");
     }
 
     private static void convertToConvexArray(float[] fArr, int i, int i2, int i3) {
-        float[] fArr2 = new float[fArr.length - 1];
+        float[] fArr2 = new float[(fArr.length - 1)];
         int i4 = -1;
         float f = Float.MAX_VALUE;
         for (int i5 = i2 + 1; i5 <= i3; i5++) {
-            if (fArr[i5] > -1.0f) {
+            float f2 = fArr[i5];
+            if (f2 > -1.0f) {
                 if (f == Float.MAX_VALUE) {
                     i4 = i2;
                 } else {
-                    float f2 = ((fArr[i5] - fArr[i4]) / (i5 - i4)) - f;
-                    float f3 = i;
-                    if (f2 * f3 < 0.0f) {
+                    float f3 = ((f2 - fArr[i4]) / ((float) (i5 - i4))) - f;
+                    float f4 = (float) i;
+                    if (f3 * f4 < 0.0f) {
                         while (i4 > i2) {
                             i4--;
-                            if ((((fArr[i5] - fArr[i4]) / (i5 - i4)) - fArr2[i4]) * f3 >= 0.0f) {
+                            if ((((fArr[i5] - fArr[i4]) / ((float) (i5 - i4))) - fArr2[i4]) * f4 >= 0.0f) {
                                 break;
                             }
                         }
                     }
                 }
-                f = (fArr[i5] - fArr[i4]) / (i5 - i4);
+                f = (fArr[i5] - fArr[i4]) / ((float) (i5 - i4));
                 for (int i6 = i4; i6 < i5; i6++) {
                     fArr2[i6] = f;
-                    fArr[i6] = fArr[i4] + ((i6 - i4) * f);
+                    fArr[i6] = fArr[i4] + (((float) (i6 - i4)) * f);
                 }
                 i4 = i5;
             }
@@ -307,6 +390,6 @@ public class IconNormalizer {
     }
 
     public static int getNormalizedCircleSize(int i) {
-        return (int) Math.round(Math.sqrt((((i * i) * 0.6597222f) * 4.0f) / 3.141592653589793d));
+        return (int) Math.round(Math.sqrt(((double) ((((float) (i * i)) * MAX_CIRCLE_AREA_FACTOR) * 4.0f)) / 3.141592653589793d));
     }
 }

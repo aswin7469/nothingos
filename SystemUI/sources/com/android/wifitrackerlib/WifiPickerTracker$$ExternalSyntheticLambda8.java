@@ -1,18 +1,22 @@
 package com.android.wifitrackerlib;
 
-import android.net.wifi.WifiConfiguration;
-import java.util.function.Function;
-/* loaded from: classes2.dex */
-public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda8 implements Function {
-    public static final /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda8 INSTANCE = new WifiPickerTracker$$ExternalSyntheticLambda8();
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Consumer;
 
-    private /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda8() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class WifiPickerTracker$$ExternalSyntheticLambda8 implements Consumer {
+    public final /* synthetic */ Set f$0;
+    public final /* synthetic */ Map f$1;
+    public final /* synthetic */ Set f$2;
+
+    public /* synthetic */ WifiPickerTracker$$ExternalSyntheticLambda8(Set set, Map map, Set set2) {
+        this.f$0 = set;
+        this.f$1 = map;
+        this.f$2 = set2;
     }
 
-    @Override // java.util.function.Function
-    public final Object apply(Object obj) {
-        Integer lambda$updateWifiConfigurations$20;
-        lambda$updateWifiConfigurations$20 = WifiPickerTracker.lambda$updateWifiConfigurations$20((WifiConfiguration) obj);
-        return lambda$updateWifiConfigurations$20;
+    public final void accept(Object obj) {
+        WifiPickerTracker.lambda$updateSuggestedWifiEntryScans$13(this.f$0, this.f$1, this.f$2, (StandardWifiEntry) obj);
     }
 }

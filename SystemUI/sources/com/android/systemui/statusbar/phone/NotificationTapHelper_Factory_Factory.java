@@ -5,7 +5,7 @@ import com.android.systemui.statusbar.phone.NotificationTapHelper;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationTapHelper_Factory_Factory implements Factory<NotificationTapHelper.Factory> {
     private final Provider<DelayableExecutor> delayableExecutorProvider;
     private final Provider<FalsingManager> falsingManagerProvider;
@@ -15,10 +15,8 @@ public final class NotificationTapHelper_Factory_Factory implements Factory<Noti
         this.delayableExecutorProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationTapHelper.Factory mo1933get() {
-        return newInstance(this.falsingManagerProvider.mo1933get(), this.delayableExecutorProvider.mo1933get());
+    public NotificationTapHelper.Factory get() {
+        return newInstance(this.falsingManagerProvider.get(), this.delayableExecutorProvider.get());
     }
 
     public static NotificationTapHelper_Factory_Factory create(Provider<FalsingManager> provider, Provider<DelayableExecutor> provider2) {

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_mode_portrait_mode">Усправни режим</string>
+    <string name="click_again">Кликните поново</string>
+    <string name="empty_shade_text">Нема обавјештења</string>
+    <string name="mic_mode_ambient_sound">Околина</string>
+    <string name="mic_mode_standard">Нормално</string>
+    <string name="mic_mode_voice_focus">Гласовни фокус</string>
+    <string name="nt_face_recognition_error">Лице није препознато. Системска грешка.</string>
+    <string name="nt_face_recognition_fail">Лице није препознато. Покушајте поново.</string>
+    <string name="nt_face_recognition_timeout">Додирните икону и покушајте поново</string>
+    <string name="quick_settings_batteryshare_label">Дијељење батерије</string>
+    <string name="quick_settings_glyphs_label">Glyphs</string>
+    <string name="swipe_again">Превуците поново</string>
+</resources>

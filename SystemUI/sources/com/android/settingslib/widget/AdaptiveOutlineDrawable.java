@@ -7,15 +7,32 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.DrawableWrapper;
+import android.os.RemoteException;
 import android.util.PathParser;
-/* loaded from: classes.dex */
+import android.view.WindowManagerGlobal;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class AdaptiveOutlineDrawable extends DrawableWrapper {
+    private static final float ADVANCED_ICON_CENTER = 50.0f;
+    private static final float ADVANCED_ICON_RADIUS = 48.0f;
+    public static final int ICON_TYPE_ADVANCED = 1;
+    public static final int ICON_TYPE_DEFAULT = 0;
     private Bitmap mBitmap;
     private int mInsetPx;
     Paint mOutlinePaint;
     private Path mPath;
     private int mStrokeWidth;
     private int mType;
+
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface AdaptiveOutlineIconType {
+    }
+
+    public AdaptiveOutlineDrawable(Resources resources, Bitmap bitmap) {
+        super(new AdaptiveIconShapeDrawable(resources));
+        init(resources, bitmap, 0);
+    }
 
     public AdaptiveOutlineDrawable(Resources resources, Bitmap bitmap, int i) {
         super(new AdaptiveIconShapeDrawable(resources));
@@ -25,13 +42,13 @@ public class AdaptiveOutlineDrawable extends DrawableWrapper {
     private void init(Resources resources, Bitmap bitmap, int i) {
         this.mType = i;
         getDrawable().setTint(-1);
-        this.mPath = new Path(PathParser.createPathFromPathData(resources.getString(17039952)));
-        this.mStrokeWidth = resources.getDimensionPixelSize(R$dimen.adaptive_outline_stroke);
+        this.mPath = new Path(PathParser.createPathFromPathData(resources.getString(17039987)));
+        this.mStrokeWidth = resources.getDimensionPixelSize(C1860R.dimen.adaptive_outline_stroke);
         Paint paint = new Paint();
         this.mOutlinePaint = paint;
         paint.setColor(getColor(resources, i));
         this.mOutlinePaint.setStyle(Paint.Style.STROKE);
-        this.mOutlinePaint.setStrokeWidth(this.mStrokeWidth);
+        this.mOutlinePaint.setStrokeWidth((float) this.mStrokeWidth);
         this.mOutlinePaint.setAntiAlias(true);
         this.mInsetPx = getDimensionPixelSize(resources, i);
         this.mBitmap = bitmap;
@@ -39,48 +56,50 @@ public class AdaptiveOutlineDrawable extends DrawableWrapper {
 
     private int getColor(Resources resources, int i) {
         int i2;
-        if (i == 1) {
-            i2 = R$color.advanced_outline_color;
+        if (i != 1) {
+            i2 = C1860R.C1861color.bt_outline_color;
         } else {
-            i2 = R$color.bt_outline_color;
+            i2 = C1860R.C1861color.advanced_outline_color;
         }
-        return resources.getColor(i2, null);
+        return resources.getColor(i2, (Resources.Theme) null);
     }
 
     private int getDimensionPixelSize(Resources resources, int i) {
         int i2;
-        if (i == 1) {
-            i2 = R$dimen.advanced_dashboard_tile_foreground_image_inset;
+        if (i != 1) {
+            i2 = C1860R.dimen.dashboard_tile_foreground_image_inset;
         } else {
-            i2 = R$dimen.dashboard_tile_foreground_image_inset;
+            i2 = C1860R.dimen.advanced_dashboard_tile_foreground_image_inset;
         }
         return resources.getDimensionPixelSize(i2);
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public void draw(Canvas canvas) {
         super.draw(canvas);
         Rect bounds = getBounds();
         int save = canvas.save();
-        canvas.scale((bounds.right - bounds.left) / 100.0f, (bounds.bottom - bounds.top) / 100.0f);
+        canvas.scale(((float) (bounds.right - bounds.left)) / 100.0f, ((float) (bounds.bottom - bounds.top)) / 100.0f);
         if (this.mType == 0) {
             canvas.drawPath(this.mPath, this.mOutlinePaint);
         } else {
             canvas.drawCircle(50.0f, 50.0f, 48.0f, this.mOutlinePaint);
         }
         canvas.restoreToCount(save);
-        Bitmap bitmap = this.mBitmap;
-        int i = bounds.left;
-        int i2 = this.mInsetPx;
-        canvas.drawBitmap(bitmap, i + i2, bounds.top + i2, (Paint) null);
+        canvas.drawBitmap(this.mBitmap, (float) (bounds.left + this.mInsetPx), (float) (bounds.top + this.mInsetPx), (Paint) null);
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
+    private static int getDefaultDisplayDensity(int i) {
+        try {
+            return WindowManagerGlobal.getWindowManagerService().getInitialDisplayDensity(i);
+        } catch (RemoteException unused) {
+            return -1;
+        }
+    }
+
     public int getIntrinsicHeight() {
         return this.mBitmap.getHeight() + (this.mInsetPx * 2);
     }
 
-    @Override // android.graphics.drawable.DrawableWrapper, android.graphics.drawable.Drawable
     public int getIntrinsicWidth() {
         return this.mBitmap.getWidth() + (this.mInsetPx * 2);
     }

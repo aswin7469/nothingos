@@ -1,44 +1,65 @@
 package com.android.systemui.statusbar.notification.row;
 
+import android.util.Log;
 import android.view.View;
+import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.classifier.FalsingCollector;
+import com.android.systemui.flags.FeatureFlags;
+import com.android.systemui.flags.Flags;
 import com.android.systemui.plugins.FalsingManager;
-import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.shared.plugins.PluginManager;
 import com.android.systemui.statusbar.NotificationMediaManager;
 import com.android.systemui.statusbar.NotificationRemoteInputManager;
+import com.android.systemui.statusbar.SmartReplyController;
+import com.android.systemui.statusbar.notification.FeedbackIcon;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.render.GroupExpansionManager;
 import com.android.systemui.statusbar.notification.collection.render.GroupMembershipManager;
 import com.android.systemui.statusbar.notification.collection.render.NodeController;
+import com.android.systemui.statusbar.notification.collection.render.NotifViewController;
 import com.android.systemui.statusbar.notification.logging.NotificationLogger;
 import com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifier;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.dagger.AppName;
+import com.android.systemui.statusbar.notification.row.dagger.NotificationKey;
+import com.android.systemui.statusbar.notification.row.dagger.NotificationRowScope;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
+import com.android.systemui.statusbar.policy.SmartReplyConstants;
+import com.android.systemui.statusbar.policy.dagger.RemoteInputViewSubcomponent;
 import com.android.systemui.util.time.SystemClock;
 import com.android.systemui.wmshell.BubblesManager;
+import com.android.wifi.p018x.com.android.internal.util.Protocol;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-/* loaded from: classes.dex */
-public class ExpandableNotificationRowController implements NodeController {
+import javax.inject.Inject;
+import javax.inject.Named;
+
+@NotificationRowScope
+public class ExpandableNotificationRowController implements NotifViewController {
+    private static final String TAG = "NotifRowController";
     private final ActivatableNotificationViewController mActivatableNotificationViewController;
     private final boolean mAllowLongPress;
     private final String mAppName;
     private final Optional<BubblesManager> mBubblesManagerOptional;
-    private final SystemClock mClock;
+    /* access modifiers changed from: private */
+    public final SystemClock mClock;
+    private final ExpandableNotificationRowDragController mDragController;
+    private final ExpandableNotificationRow.ExpansionLogger mExpansionLogger = new ExpandableNotificationRowController$$ExternalSyntheticLambda0(this);
     private final FalsingCollector mFalsingCollector;
     private final FalsingManager mFalsingManager;
+    private final FeatureFlags mFeatureFlags;
     private final GroupExpansionManager mGroupExpansionManager;
     private final GroupMembershipManager mGroupMembershipManager;
     private final HeadsUpManager mHeadsUpManager;
     private final KeyguardBypassController mKeyguardBypassController;
     private final NotificationListContainer mListContainer;
     private final NotificationMediaManager mMediaManager;
+    private final MetricsLogger mMetricsLogger;
     private final NotificationGutsManager mNotificationGutsManager;
     private final String mNotificationKey;
     private final NotificationLogger mNotificationLogger;
@@ -46,31 +67,43 @@ public class ExpandableNotificationRowController implements NodeController {
     private final ExpandableNotificationRow.CoordinateOnClickListener mOnFeedbackClickListener;
     private final OnUserInteractionCallback mOnUserInteractionCallback;
     private final PeopleNotificationIdentifier mPeopleNotificationIdentifier;
-    private final PluginManager mPluginManager;
+    /* access modifiers changed from: private */
+    public final PluginManager mPluginManager;
+    private final RemoteInputViewSubcomponent.Factory mRemoteInputViewSubcomponentFactory;
     private final RowContentBindStage mRowContentBindStage;
-    private final StatusBarStateController mStatusBarStateController;
-    private final ExpandableNotificationRow mView;
-    private final ExpandableNotificationRow.ExpansionLogger mExpansionLogger = new ExpandableNotificationRow.ExpansionLogger() { // from class: com.android.systemui.statusbar.notification.row.ExpandableNotificationRowController$$ExternalSyntheticLambda1
-        @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.ExpansionLogger
-        public final void logNotificationExpansion(String str, boolean z, boolean z2) {
-            ExpandableNotificationRowController.this.logNotificationExpansion(str, z, z2);
-        }
-    };
-    private final StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() { // from class: com.android.systemui.statusbar.notification.row.ExpandableNotificationRowController.2
-        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
+    private final SmartReplyConstants mSmartReplyConstants;
+    private final SmartReplyController mSmartReplyController;
+    /* access modifiers changed from: private */
+    public final StatusBarStateController mStatusBarStateController;
+    /* access modifiers changed from: private */
+    public final StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() {
         public void onStateChanged(int i) {
-            ExpandableNotificationRow expandableNotificationRow = ExpandableNotificationRowController.this.mView;
+            ExpandableNotificationRow access$100 = ExpandableNotificationRowController.this.mView;
             boolean z = true;
             if (i != 1) {
                 z = false;
             }
-            expandableNotificationRow.setOnKeyguard(z);
+            access$100.setOnKeyguard(z);
         }
     };
+    /* access modifiers changed from: private */
+    public final ExpandableNotificationRow mView;
 
-    public ExpandableNotificationRowController(ExpandableNotificationRow expandableNotificationRow, NotificationListContainer notificationListContainer, ActivatableNotificationViewController activatableNotificationViewController, NotificationMediaManager notificationMediaManager, PluginManager pluginManager, SystemClock systemClock, String str, String str2, KeyguardBypassController keyguardBypassController, GroupMembershipManager groupMembershipManager, GroupExpansionManager groupExpansionManager, RowContentBindStage rowContentBindStage, NotificationLogger notificationLogger, HeadsUpManager headsUpManager, ExpandableNotificationRow.OnExpandClickListener onExpandClickListener, StatusBarStateController statusBarStateController, final NotificationGutsManager notificationGutsManager, boolean z, OnUserInteractionCallback onUserInteractionCallback, FalsingManager falsingManager, FalsingCollector falsingCollector, PeopleNotificationIdentifier peopleNotificationIdentifier, Optional<BubblesManager> optional) {
+    public void onViewAdded() {
+    }
+
+    public void onViewMoved() {
+    }
+
+    public void onViewRemoved() {
+    }
+
+    @Inject
+    public ExpandableNotificationRowController(ExpandableNotificationRow expandableNotificationRow, ActivatableNotificationViewController activatableNotificationViewController, RemoteInputViewSubcomponent.Factory factory, MetricsLogger metricsLogger, NotificationListContainer notificationListContainer, NotificationMediaManager notificationMediaManager, SmartReplyConstants smartReplyConstants, SmartReplyController smartReplyController, PluginManager pluginManager, SystemClock systemClock, @AppName String str, @NotificationKey String str2, KeyguardBypassController keyguardBypassController, GroupMembershipManager groupMembershipManager, GroupExpansionManager groupExpansionManager, RowContentBindStage rowContentBindStage, NotificationLogger notificationLogger, HeadsUpManager headsUpManager, ExpandableNotificationRow.OnExpandClickListener onExpandClickListener, StatusBarStateController statusBarStateController, NotificationGutsManager notificationGutsManager, @Named("allow_notif_longpress") boolean z, OnUserInteractionCallback onUserInteractionCallback, FalsingManager falsingManager, FalsingCollector falsingCollector, FeatureFlags featureFlags, PeopleNotificationIdentifier peopleNotificationIdentifier, Optional<BubblesManager> optional, ExpandableNotificationRowDragController expandableNotificationRowDragController) {
+        NotificationGutsManager notificationGutsManager2 = notificationGutsManager;
         this.mView = expandableNotificationRow;
         this.mListContainer = notificationListContainer;
+        this.mRemoteInputViewSubcomponentFactory = factory;
         this.mActivatableNotificationViewController = activatableNotificationViewController;
         this.mMediaManager = notificationMediaManager;
         this.mPluginManager = pluginManager;
@@ -85,54 +118,50 @@ public class ExpandableNotificationRowController implements NodeController {
         this.mHeadsUpManager = headsUpManager;
         this.mOnExpandClickListener = onExpandClickListener;
         this.mStatusBarStateController = statusBarStateController;
-        this.mNotificationGutsManager = notificationGutsManager;
+        this.mNotificationGutsManager = notificationGutsManager2;
         this.mOnUserInteractionCallback = onUserInteractionCallback;
         this.mFalsingManager = falsingManager;
         Objects.requireNonNull(notificationGutsManager);
-        this.mOnFeedbackClickListener = new ExpandableNotificationRow.CoordinateOnClickListener() { // from class: com.android.systemui.statusbar.notification.row.ExpandableNotificationRowController$$ExternalSyntheticLambda0
-            @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.CoordinateOnClickListener
-            public final boolean onClick(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
-                return NotificationGutsManager.this.openGuts(view, i, i2, menuItem);
-            }
-        };
+        this.mOnFeedbackClickListener = new ExpandableNotificationRowController$$ExternalSyntheticLambda1(notificationGutsManager2);
         this.mAllowLongPress = z;
         this.mFalsingCollector = falsingCollector;
+        this.mFeatureFlags = featureFlags;
         this.mPeopleNotificationIdentifier = peopleNotificationIdentifier;
         this.mBubblesManagerOptional = optional;
+        this.mDragController = expandableNotificationRowDragController;
+        this.mMetricsLogger = metricsLogger;
+        this.mSmartReplyConstants = smartReplyConstants;
+        this.mSmartReplyController = smartReplyController;
     }
 
     public void init(NotificationEntry notificationEntry) {
         this.mActivatableNotificationViewController.init();
-        this.mView.initialize(notificationEntry, this.mAppName, this.mNotificationKey, this.mExpansionLogger, this.mKeyguardBypassController, this.mGroupMembershipManager, this.mGroupExpansionManager, this.mHeadsUpManager, this.mRowContentBindStage, this.mOnExpandClickListener, this.mMediaManager, this.mOnFeedbackClickListener, this.mFalsingManager, this.mFalsingCollector, this.mStatusBarStateController, this.mPeopleNotificationIdentifier, this.mOnUserInteractionCallback, this.mBubblesManagerOptional, this.mNotificationGutsManager);
-        this.mView.setDescendantFocusability(393216);
+        ExpandableNotificationRow expandableNotificationRow = this.mView;
+        ExpandableNotificationRow expandableNotificationRow2 = expandableNotificationRow;
+        expandableNotificationRow2.initialize(notificationEntry, this.mRemoteInputViewSubcomponentFactory, this.mAppName, this.mNotificationKey, this.mExpansionLogger, this.mKeyguardBypassController, this.mGroupMembershipManager, this.mGroupExpansionManager, this.mHeadsUpManager, this.mRowContentBindStage, this.mOnExpandClickListener, this.mMediaManager, this.mOnFeedbackClickListener, this.mFalsingManager, this.mFalsingCollector, this.mStatusBarStateController, this.mPeopleNotificationIdentifier, this.mOnUserInteractionCallback, this.mBubblesManagerOptional, this.mNotificationGutsManager, this.mMetricsLogger, this.mSmartReplyConstants, this.mSmartReplyController);
+        this.mView.setDescendantFocusability(Protocol.BASE_NSD_MANAGER);
         if (this.mAllowLongPress) {
-            this.mView.setLongPressListener(new ExpandableNotificationRow.LongPressListener() { // from class: com.android.systemui.statusbar.notification.row.ExpandableNotificationRowController$$ExternalSyntheticLambda2
-                @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.LongPressListener
-                public final boolean onLongPress(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
-                    boolean lambda$init$0;
-                    lambda$init$0 = ExpandableNotificationRowController.this.lambda$init$0(view, i, i2, menuItem);
-                    return lambda$init$0;
-                }
-            });
+            if (this.mFeatureFlags.isEnabled(Flags.NOTIFICATION_DRAG_TO_CONTENTS)) {
+                this.mView.setDragController(this.mDragController);
+            }
+            this.mView.setLongPressListener(new ExpandableNotificationRowController$$ExternalSyntheticLambda2(this));
         }
         if (NotificationRemoteInputManager.ENABLE_REMOTE_INPUT) {
             this.mView.setDescendantFocusability(131072);
         }
-        this.mView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() { // from class: com.android.systemui.statusbar.notification.row.ExpandableNotificationRowController.1
-            @Override // android.view.View.OnAttachStateChangeListener
+        this.mView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             public void onViewAttachedToWindow(View view) {
                 ExpandableNotificationRowController.this.mView.getEntry().setInitializationTime(ExpandableNotificationRowController.this.mClock.elapsedRealtime());
                 boolean z = false;
-                ExpandableNotificationRowController.this.mPluginManager.addPluginListener((PluginListener) ExpandableNotificationRowController.this.mView, NotificationMenuRowPlugin.class, false);
-                ExpandableNotificationRow expandableNotificationRow = ExpandableNotificationRowController.this.mView;
+                ExpandableNotificationRowController.this.mPluginManager.addPluginListener(ExpandableNotificationRowController.this.mView, NotificationMenuRowPlugin.class, false);
+                ExpandableNotificationRow access$100 = ExpandableNotificationRowController.this.mView;
                 if (ExpandableNotificationRowController.this.mStatusBarStateController.getState() == 1) {
                     z = true;
                 }
-                expandableNotificationRow.setOnKeyguard(z);
+                access$100.setOnKeyguard(z);
                 ExpandableNotificationRowController.this.mStatusBarStateController.addCallback(ExpandableNotificationRowController.this.mStatusBarStateListener);
             }
 
-            @Override // android.view.View.OnAttachStateChangeListener
             public void onViewDetachedFromWindow(View view) {
                 ExpandableNotificationRowController.this.mPluginManager.removePluginListener(ExpandableNotificationRowController.this.mView);
                 ExpandableNotificationRowController.this.mStatusBarStateController.removeCallback(ExpandableNotificationRowController.this.mStatusBarStateListener);
@@ -140,63 +169,84 @@ public class ExpandableNotificationRowController implements NodeController {
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$init$0(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
-        if (this.mView.isSummaryWithChildren()) {
-            this.mView.expandNotification();
-            return true;
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$init$0$com-android-systemui-statusbar-notification-row-ExpandableNotificationRowController */
+    public /* synthetic */ boolean mo41255x51dbc3a3(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
+        if (!this.mView.isSummaryWithChildren()) {
+            return this.mNotificationGutsManager.openGuts(view, i, i2, menuItem);
         }
-        return this.mNotificationGutsManager.openGuts(view, i, i2, menuItem);
+        this.mView.expandNotification();
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void logNotificationExpansion(String str, boolean z, boolean z2) {
         this.mNotificationLogger.onExpansionChanged(str, z, z2);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.NodeController
     public String getNodeLabel() {
         return this.mView.getEntry().getKey();
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.NodeController
     public View getView() {
         return this.mView;
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.NodeController
     public View getChildAt(int i) {
         return this.mView.getChildNotificationAt(i);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.NodeController
     public void addChildAt(NodeController nodeController, int i) {
-        this.mView.addChildNotification((ExpandableNotificationRow) nodeController.getView());
-        this.mListContainer.notifyGroupChildAdded((ExpandableNotificationRow) nodeController.getView());
+        ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) nodeController.getView();
+        this.mView.addChildNotification((ExpandableNotificationRow) nodeController.getView(), i);
+        this.mListContainer.notifyGroupChildAdded(expandableNotificationRow);
+        expandableNotificationRow.setChangingPosition(false);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.NodeController
     public void moveChildTo(NodeController nodeController, int i) {
         ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) nodeController.getView();
+        expandableNotificationRow.setChangingPosition(true);
         this.mView.removeChildNotification(expandableNotificationRow);
         this.mView.addChildNotification(expandableNotificationRow, i);
+        expandableNotificationRow.setChangingPosition(false);
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.NodeController
     public void removeChild(NodeController nodeController, boolean z) {
         ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) nodeController.getView();
+        if (z) {
+            expandableNotificationRow.setChangingPosition(true);
+        }
         this.mView.removeChildNotification(expandableNotificationRow);
         if (!z) {
             this.mListContainer.notifyGroupChildRemoved(expandableNotificationRow, this.mView);
         }
     }
 
-    @Override // com.android.systemui.statusbar.notification.collection.render.NodeController
     public int getChildCount() {
         List<ExpandableNotificationRow> attachedChildren = this.mView.getAttachedChildren();
         if (attachedChildren != null) {
             return attachedChildren.size();
         }
         return 0;
+    }
+
+    public void setUntruncatedChildCount(int i) {
+        if (this.mView.isSummaryWithChildren()) {
+            this.mView.setUntruncatedChildCount(i);
+        } else {
+            Log.w(TAG, "Called setUntruncatedChildCount(" + i + ") on a leaf row");
+        }
+    }
+
+    public void setSystemExpanded(boolean z) {
+        this.mView.setSystemExpanded(z);
+    }
+
+    public void setLastAudiblyAlertedMs(long j) {
+        this.mView.setLastAudiblyAlertedMs(j);
+    }
+
+    public void setFeedbackIcon(FeedbackIcon feedbackIcon) {
+        this.mView.setFeedbackIcon(feedbackIcon);
     }
 }

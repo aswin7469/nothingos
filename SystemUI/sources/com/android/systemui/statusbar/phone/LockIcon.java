@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.AnimatedVectorDrawable;
@@ -11,52 +12,68 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.ViewTreeObserver;
-import com.android.systemui.R$anim;
-import com.android.systemui.R$string;
+import com.android.internal.graphics.ColorUtils;
+import com.android.systemui.C1893R;
+import com.android.systemui.animation.Interpolators;
 import com.android.systemui.statusbar.KeyguardAffordanceView;
-/* loaded from: classes.dex */
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class LockIcon extends KeyguardAffordanceView {
-    private static final int[][] LOCK_ANIM_RES_IDS = {new int[]{R$anim.lock_to_error, R$anim.lock_unlock, R$anim.lock_lock, R$anim.lock_scanning}, new int[]{R$anim.lock_to_error_circular, R$anim.lock_unlock_circular, R$anim.lock_lock_circular, R$anim.lock_scanning_circular}, new int[]{R$anim.lock_to_error_filled, R$anim.lock_unlock_filled, R$anim.lock_lock_filled, R$anim.lock_scanning_filled}, new int[]{R$anim.lock_to_error_rounded, R$anim.lock_unlock_rounded, R$anim.lock_lock_rounded, R$anim.lock_scanning_rounded}};
+    static final int ERROR = 0;
+    static final int LOCK = 2;
+    private static final int[][] LOCK_ANIM_RES_IDS = {new int[]{C1893R.anim.lock_to_error, C1893R.anim.lock_unlock, C1893R.anim.lock_lock, C1893R.anim.lock_scanning}, new int[]{C1893R.anim.lock_to_error_circular, C1893R.anim.lock_unlock_circular, C1893R.anim.lock_lock_circular, C1893R.anim.lock_scanning_circular}, new int[]{C1893R.anim.lock_to_error_filled, C1893R.anim.lock_unlock_filled, C1893R.anim.lock_lock_filled, C1893R.anim.lock_scanning_filled}, new int[]{C1893R.anim.lock_to_error_rounded, C1893R.anim.lock_unlock_rounded, C1893R.anim.lock_lock_rounded, C1893R.anim.lock_scanning_rounded}};
+    static final int SCANNING = 3;
+    static final int STATE_BIOMETRICS_ERROR = 3;
+    static final int STATE_LOCKED = 0;
+    static final int STATE_LOCK_OPEN = 1;
+    static final int STATE_SCANNING_FACE = 2;
+    static final int UNLOCK = 1;
+    private float mDozeAmount;
     private boolean mDozing;
+    private final SparseArray<Drawable> mDrawableCache = new SparseArray<>();
+    private int mIconColor = 0;
     private boolean mKeyguardJustShown;
     private int mOldState;
-    private boolean mPredrawRegistered;
-    private int mState;
-    private int mIconColor = 0;
-    private final SparseArray<Drawable> mDrawableCache = new SparseArray<>();
-    private final ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() { // from class: com.android.systemui.statusbar.phone.LockIcon.1
-        @Override // android.view.ViewTreeObserver.OnPreDrawListener
+    private final ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
         public boolean onPreDraw() {
             LockIcon.this.getViewTreeObserver().removeOnPreDrawListener(this);
-            LockIcon.this.mPredrawRegistered = false;
-            final int i = LockIcon.this.mState;
-            Drawable icon = LockIcon.this.getIcon(i);
-            LockIcon.this.setImageDrawable(icon, false);
-            if (i == 2) {
+            boolean unused = LockIcon.this.mPredrawRegistered = false;
+            final int access$100 = LockIcon.this.mState;
+            Drawable access$200 = LockIcon.this.getIcon(access$100);
+            LockIcon.this.setImageDrawable(access$200, false);
+            if (access$100 == 2) {
                 LockIcon lockIcon = LockIcon.this;
-                lockIcon.announceForAccessibility(lockIcon.getResources().getString(R$string.accessibility_scanning_face));
+                lockIcon.announceForAccessibility(lockIcon.getResources().getString(C1893R.string.accessibility_scanning_face));
             }
-            if (icon instanceof AnimatedVectorDrawable) {
-                final AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) icon;
-                animatedVectorDrawable.forceAnimationOnUI();
-                animatedVectorDrawable.clearAnimationCallbacks();
-                animatedVectorDrawable.registerAnimationCallback(new Animatable2.AnimationCallback() { // from class: com.android.systemui.statusbar.phone.LockIcon.1.1
-                    @Override // android.graphics.drawable.Animatable2.AnimationCallback
-                    public void onAnimationEnd(Drawable drawable) {
-                        if (LockIcon.this.getDrawable() == animatedVectorDrawable && i == LockIcon.this.mState && i == 2) {
-                            animatedVectorDrawable.start();
-                        } else {
-                            Trace.endAsyncSection("LockIcon#Animation", i);
-                        }
-                    }
-                });
-                Trace.beginAsyncSection("LockIcon#Animation", i);
-                animatedVectorDrawable.start();
+            if (!(access$200 instanceof AnimatedVectorDrawable)) {
                 return true;
             }
+            final AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) access$200;
+            animatedVectorDrawable.forceAnimationOnUI();
+            animatedVectorDrawable.clearAnimationCallbacks();
+            animatedVectorDrawable.registerAnimationCallback(new Animatable2.AnimationCallback() {
+                public void onAnimationEnd(Drawable drawable) {
+                    if (LockIcon.this.getDrawable() == animatedVectorDrawable && access$100 == LockIcon.this.mState && access$100 == 2) {
+                        animatedVectorDrawable.start();
+                    } else {
+                        Trace.endAsyncSection("LockIcon#Animation", access$100);
+                    }
+                }
+            });
+            Trace.beginAsyncSection("LockIcon#Animation", access$100);
+            animatedVectorDrawable.start();
             return true;
         }
     };
+    /* access modifiers changed from: private */
+    public boolean mPredrawRegistered;
+    /* access modifiers changed from: private */
+    public int mState;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @interface LockAnimIndex {
+    }
 
     private static int getAnimationIndexForTransition(int i, int i2, boolean z, boolean z2) {
         if (z) {
@@ -78,13 +95,63 @@ public class LockIcon extends KeyguardAffordanceView {
         super(context, attributeSet);
     }
 
-    @Override // android.view.View
-    protected void onConfigurationChanged(Configuration configuration) {
+    /* access modifiers changed from: protected */
+    public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         this.mDrawableCache.clear();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: package-private */
+    public boolean updateIconVisibility(boolean z) {
+        int i = 0;
+        if (z == (getVisibility() == 0)) {
+            return false;
+        }
+        if (!z) {
+            i = 4;
+        }
+        setVisibility(i);
+        animate().cancel();
+        if (z) {
+            setScaleX(0.0f);
+            setScaleY(0.0f);
+            animate().setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).scaleX(1.0f).scaleY(1.0f).withLayer().setDuration(233).start();
+        }
+        return true;
+    }
+
+    /* access modifiers changed from: package-private */
+    public void update(int i, boolean z, boolean z2) {
+        this.mOldState = this.mState;
+        this.mState = i;
+        this.mDozing = z;
+        this.mKeyguardJustShown = z2;
+        if (!this.mPredrawRegistered) {
+            this.mPredrawRegistered = true;
+            getViewTreeObserver().addOnPreDrawListener(this.mOnPreDrawListener);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void setDozeAmount(float f) {
+        this.mDozeAmount = f;
+        updateDarkTint();
+    }
+
+    /* access modifiers changed from: package-private */
+    public void updateColor(int i) {
+        if (this.mIconColor != i) {
+            this.mDrawableCache.clear();
+            this.mIconColor = i;
+            updateDarkTint();
+        }
+    }
+
+    private void updateDarkTint() {
+        setImageTintList(ColorStateList.valueOf(ColorUtils.blendARGB(this.mIconColor, -1, this.mDozeAmount)));
+    }
+
+    /* access modifiers changed from: private */
     public Drawable getIcon(int i) {
         int animationIndexForTransition = getAnimationIndexForTransition(this.mOldState, i, this.mDozing, this.mKeyguardJustShown);
         int themedAnimationResId = animationIndexForTransition != -1 ? getThemedAnimationResId(animationIndexForTransition) : getIconForState(i);
@@ -97,13 +164,13 @@ public class LockIcon extends KeyguardAffordanceView {
     private static int getIconForState(int i) {
         if (i != 0) {
             if (i == 1) {
-                return 17302490;
+                return 17302501;
             }
-            if (i != 2 && i != 3) {
+            if (!(i == 2 || i == 3)) {
                 throw new IllegalArgumentException();
             }
         }
-        return 17302481;
+        return 17302492;
     }
 
     private int getThemedAnimationResId(int i) {

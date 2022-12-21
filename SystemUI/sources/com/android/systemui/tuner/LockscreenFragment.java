@@ -1,5 +1,6 @@
 package com.android.systemui.tuner;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -19,73 +20,79 @@ import android.widget.TextView;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.SwitchPreference;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$string;
-import com.android.systemui.R$xml;
 import com.android.systemui.plugins.IntentButtonProvider;
 import com.android.systemui.statusbar.ScalingDrawableWrapper;
 import com.android.systemui.statusbar.phone.ExpandableIndicator;
 import com.android.systemui.statusbar.policy.ExtensionController;
-import com.android.systemui.tuner.LockscreenFragment;
 import com.android.systemui.tuner.ShortcutParser;
 import com.android.systemui.tuner.TunerService;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Consumer;
-/* loaded from: classes2.dex */
+
 public class LockscreenFragment extends PreferenceFragment {
+    private static final String KEY_CUSTOMIZE = "customize";
+    private static final String KEY_LEFT = "left";
+    private static final String KEY_RIGHT = "right";
+    private static final String KEY_SHORTCUT = "shortcut";
+    public static final String LOCKSCREEN_LEFT_BUTTON = "sysui_keyguard_left";
+    public static final String LOCKSCREEN_LEFT_UNLOCK = "sysui_keyguard_left_unlock";
+    public static final String LOCKSCREEN_RIGHT_BUTTON = "sysui_keyguard_right";
+    public static final String LOCKSCREEN_RIGHT_UNLOCK = "sysui_keyguard_right_unlock";
     private Handler mHandler;
     private final ArrayList<TunerService.Tunable> mTunables = new ArrayList<>();
     private TunerService mTunerService;
 
-    @Override // androidx.preference.PreferenceFragment
     public void onCreatePreferences(Bundle bundle, String str) {
         this.mTunerService = (TunerService) Dependency.get(TunerService.class);
         this.mHandler = new Handler();
-        addPreferencesFromResource(R$xml.lockscreen_settings);
-        setupGroup("sysui_keyguard_left", "sysui_keyguard_left_unlock");
-        setupGroup("sysui_keyguard_right", "sysui_keyguard_right_unlock");
+        addPreferencesFromResource(C1893R.C1901xml.lockscreen_settings);
+        setupGroup(LOCKSCREEN_LEFT_BUTTON, LOCKSCREEN_LEFT_UNLOCK);
+        setupGroup(LOCKSCREEN_RIGHT_BUTTON, LOCKSCREEN_RIGHT_UNLOCK);
     }
 
-    @Override // android.app.Fragment
     public void onDestroy() {
         super.onDestroy();
-        this.mTunables.forEach(new Consumer() { // from class: com.android.systemui.tuner.LockscreenFragment$$ExternalSyntheticLambda1
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                LockscreenFragment.this.lambda$onDestroy$0((TunerService.Tunable) obj);
-            }
-        });
+        this.mTunables.forEach(new LockscreenFragment$$ExternalSyntheticLambda1(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onDestroy$0(TunerService.Tunable tunable) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onDestroy$0$com-android-systemui-tuner-LockscreenFragment  reason: not valid java name */
+    public /* synthetic */ void m3252lambda$onDestroy$0$comandroidsystemuitunerLockscreenFragment(TunerService.Tunable tunable) {
         this.mTunerService.removeTunable(tunable);
     }
 
     private void setupGroup(String str, String str2) {
-        final Preference findPreference = findPreference(str);
-        final SwitchPreference switchPreference = (SwitchPreference) findPreference(str2);
-        addTunable(new TunerService.Tunable() { // from class: com.android.systemui.tuner.LockscreenFragment$$ExternalSyntheticLambda0
-            @Override // com.android.systemui.tuner.TunerService.Tunable
-            public final void onTuningChanged(String str3, String str4) {
-                LockscreenFragment.this.lambda$setupGroup$1(switchPreference, findPreference, str3, str4);
-            }
-        }, str);
+        addTunable(new LockscreenFragment$$ExternalSyntheticLambda2(this, (SwitchPreference) findPreference(str2), findPreference(str)), str);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$setupGroup$1(SwitchPreference switchPreference, Preference preference, String str, String str2) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$setupGroup$1$com-android-systemui-tuner-LockscreenFragment */
+    public /* synthetic */ void mo46393xd5944fa2(SwitchPreference switchPreference, Preference preference, String str, String str2) {
         switchPreference.setVisible(!TextUtils.isEmpty(str2));
         setSummary(preference, str2);
     }
 
+    private void showSelectDialog(String str) {
+        RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(getContext()).inflate(C1893R.layout.tuner_shortcut_list, (ViewGroup) null);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new Adapter(getContext(), new LockscreenFragment$$ExternalSyntheticLambda0(this, str, new AlertDialog.Builder(getContext()).setView(recyclerView).show())));
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$showSelectDialog$2$com-android-systemui-tuner-LockscreenFragment */
+    public /* synthetic */ void mo46394x9fc62522(String str, AlertDialog alertDialog, Item item) {
+        this.mTunerService.setValue(str, item.getSettingValue());
+        alertDialog.dismiss();
+    }
+
     private void setSummary(Preference preference, String str) {
         if (str == null) {
-            preference.setSummary(R$string.lockscreen_none);
+            preference.setSummary((int) C1893R.string.lockscreen_none);
             return;
         }
         CharSequence charSequence = null;
@@ -102,7 +109,7 @@ public class LockscreenFragment extends PreferenceFragment {
             }
             preference.setSummary(charSequence);
         } else {
-            preference.setSummary(R$string.lockscreen_none);
+            preference.setSummary((int) C1893R.string.lockscreen_none);
         }
     }
 
@@ -123,7 +130,6 @@ public class LockscreenFragment extends PreferenceFragment {
         return ShortcutParser.Shortcut.create(context, str);
     }
 
-    /* loaded from: classes2.dex */
     public static class Holder extends RecyclerView.ViewHolder {
         public final ExpandableIndicator expand;
         public final ImageView icon;
@@ -133,50 +139,66 @@ public class LockscreenFragment extends PreferenceFragment {
             super(view);
             this.icon = (ImageView) view.findViewById(16908294);
             this.title = (TextView) view.findViewById(16908310);
-            this.expand = (ExpandableIndicator) view.findViewById(R$id.expand);
+            this.expand = (ExpandableIndicator) view.findViewById(C1893R.C1897id.expand);
         }
     }
 
-    /* loaded from: classes2.dex */
     private static class StaticShortcut extends Item {
         private final Context mContext;
         private final ShortcutParser.Shortcut mShortcut;
 
-        @Override // com.android.systemui.tuner.LockscreenFragment.Item
         public Boolean getExpando() {
             return null;
         }
 
-        @Override // com.android.systemui.tuner.LockscreenFragment.Item
+        public StaticShortcut(Context context, ShortcutParser.Shortcut shortcut) {
+            super();
+            this.mContext = context;
+            this.mShortcut = shortcut;
+        }
+
         public Drawable getDrawable() {
             return this.mShortcut.icon.loadDrawable(this.mContext);
         }
 
-        @Override // com.android.systemui.tuner.LockscreenFragment.Item
         public String getLabel() {
             return this.mShortcut.label;
         }
+
+        public String getSettingValue() {
+            return this.mShortcut.toString();
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class App extends Item {
-        private final ArrayList<Item> mChildren;
+    private static class App extends Item {
+        private final ArrayList<Item> mChildren = new ArrayList<>();
         private final Context mContext;
         private boolean mExpanded;
         private final LauncherActivityInfo mInfo;
 
-        @Override // com.android.systemui.tuner.LockscreenFragment.Item
+        public App(Context context, LauncherActivityInfo launcherActivityInfo) {
+            super();
+            this.mContext = context;
+            this.mInfo = launcherActivityInfo;
+            this.mExpanded = false;
+        }
+
+        public void addChild(Item item) {
+            this.mChildren.add(item);
+        }
+
         public Drawable getDrawable() {
             return this.mInfo.getBadgedIcon(this.mContext.getResources().getConfiguration().densityDpi);
         }
 
-        @Override // com.android.systemui.tuner.LockscreenFragment.Item
         public String getLabel() {
             return this.mInfo.getLabel().toString();
         }
 
-        @Override // com.android.systemui.tuner.LockscreenFragment.Item
+        public String getSettingValue() {
+            return this.mInfo.getComponentName().flattenToString();
+        }
+
         public Boolean getExpando() {
             if (this.mChildren.size() != 0) {
                 return Boolean.valueOf(this.mExpanded);
@@ -184,41 +206,31 @@ public class LockscreenFragment extends PreferenceFragment {
             return null;
         }
 
-        @Override // com.android.systemui.tuner.LockscreenFragment.Item
-        public void toggleExpando(final Adapter adapter) {
+        public void toggleExpando(Adapter adapter) {
             boolean z = !this.mExpanded;
             this.mExpanded = z;
             if (z) {
-                this.mChildren.forEach(new Consumer() { // from class: com.android.systemui.tuner.LockscreenFragment$App$$ExternalSyntheticLambda1
-                    @Override // java.util.function.Consumer
-                    public final void accept(Object obj) {
-                        LockscreenFragment.App.this.lambda$toggleExpando$0(adapter, (LockscreenFragment.Item) obj);
-                    }
-                });
+                this.mChildren.forEach(new LockscreenFragment$App$$ExternalSyntheticLambda0(this, adapter));
             } else {
-                this.mChildren.forEach(new Consumer() { // from class: com.android.systemui.tuner.LockscreenFragment$App$$ExternalSyntheticLambda0
-                    @Override // java.util.function.Consumer
-                    public final void accept(Object obj) {
-                        LockscreenFragment.Adapter.this.remItem((LockscreenFragment.Item) obj);
-                    }
-                });
+                this.mChildren.forEach(new LockscreenFragment$App$$ExternalSyntheticLambda1(adapter));
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$toggleExpando$0(Adapter adapter, Item item) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$toggleExpando$0$com-android-systemui-tuner-LockscreenFragment$App */
+        public /* synthetic */ void mo46407xc35849c3(Adapter adapter, Item item) {
             adapter.addItem(this, item);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static abstract class Item {
+    private static abstract class Item {
         public abstract Drawable getDrawable();
 
         public abstract Boolean getExpando();
 
         public abstract String getLabel();
+
+        public abstract String getSettingValue();
 
         public void toggleExpando(Adapter adapter) {
         }
@@ -227,61 +239,59 @@ public class LockscreenFragment extends PreferenceFragment {
         }
     }
 
-    /* loaded from: classes2.dex */
     public static class Adapter extends RecyclerView.Adapter<Holder> {
         private final Consumer<Item> mCallback;
-        private ArrayList<Item> mItems;
+        private final Context mContext;
+        private ArrayList<Item> mItems = new ArrayList<>();
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        /* renamed from: onCreateViewHolder  reason: collision with other method in class */
-        public Holder mo1838onCreateViewHolder(ViewGroup viewGroup, int i) {
-            return new Holder(LayoutInflater.from(viewGroup.getContext()).inflate(R$layout.tuner_shortcut_item, viewGroup, false));
+        public Adapter(Context context, Consumer<Item> consumer) {
+            this.mContext = context;
+            this.mCallback = consumer;
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        public void onBindViewHolder(final Holder holder, int i) {
+        public Holder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            return new Holder(LayoutInflater.from(viewGroup.getContext()).inflate(C1893R.layout.tuner_shortcut_item, viewGroup, false));
+        }
+
+        public void onBindViewHolder(Holder holder, int i) {
             Item item = this.mItems.get(i);
             holder.icon.setImageDrawable(item.getDrawable());
             holder.title.setText(item.getLabel());
-            holder.itemView.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.tuner.LockscreenFragment$Adapter$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    LockscreenFragment.Adapter.this.lambda$onBindViewHolder$0(holder, view);
-                }
-            });
+            holder.itemView.setOnClickListener(new LockscreenFragment$Adapter$$ExternalSyntheticLambda0(this, holder));
             Boolean expando = item.getExpando();
             if (expando != null) {
                 holder.expand.setVisibility(0);
                 holder.expand.setExpanded(expando.booleanValue());
-                holder.expand.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.tuner.LockscreenFragment$Adapter$$ExternalSyntheticLambda1
-                    @Override // android.view.View.OnClickListener
-                    public final void onClick(View view) {
-                        LockscreenFragment.Adapter.this.lambda$onBindViewHolder$1(holder, view);
-                    }
-                });
+                holder.expand.setOnClickListener(new LockscreenFragment$Adapter$$ExternalSyntheticLambda1(this, holder));
                 return;
             }
             holder.expand.setVisibility(8);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onBindViewHolder$0(Holder holder, View view) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onBindViewHolder$0$com-android-systemui-tuner-LockscreenFragment$Adapter */
+        public /* synthetic */ void mo46398xa90486b7(Holder holder, View view) {
             this.mCallback.accept(this.mItems.get(holder.getAdapterPosition()));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onBindViewHolder$1(Holder holder, View view) {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onBindViewHolder$1$com-android-systemui-tuner-LockscreenFragment$Adapter */
+        public /* synthetic */ void mo46399xd258dbf8(Holder holder, View view) {
             this.mItems.get(holder.getAdapterPosition()).toggleExpando(this);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
         public int getItemCount() {
             return this.mItems.size();
         }
 
+        public void addItem(Item item) {
+            this.mItems.add(item);
+            notifyDataSetChanged();
+        }
+
         public void remItem(Item item) {
             int indexOf = this.mItems.indexOf(item);
-            this.mItems.remove(item);
+            this.mItems.remove((Object) item);
             notifyItemRemoved(indexOf);
         }
 
@@ -292,53 +302,40 @@ public class LockscreenFragment extends PreferenceFragment {
         }
     }
 
-    /* loaded from: classes2.dex */
     public static class LockButtonFactory implements ExtensionController.TunerFactory<IntentButtonProvider.IntentButton> {
         private final Context mContext;
         private final String mKey;
-
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.TunerFactory
-        /* renamed from: create  reason: collision with other method in class */
-        public /* bridge */ /* synthetic */ IntentButtonProvider.IntentButton mo1367create(Map map) {
-            return mo1367create((Map<String, String>) map);
-        }
 
         public LockButtonFactory(Context context, String str) {
             this.mContext = context;
             this.mKey = str;
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.TunerFactory
         public String[] keys() {
             return new String[]{this.mKey};
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.TunerFactory
-        /* renamed from: create */
-        public IntentButtonProvider.IntentButton mo1367create(Map<String, String> map) {
+        public IntentButtonProvider.IntentButton create(Map<String, String> map) {
             ActivityInfo activityinfo;
             String str = map.get(this.mKey);
-            if (!TextUtils.isEmpty(str)) {
-                if (str.contains("::")) {
-                    ShortcutParser.Shortcut shortcutInfo = LockscreenFragment.getShortcutInfo(this.mContext, str);
-                    if (shortcutInfo == null) {
-                        return null;
-                    }
-                    return new ShortcutButton(this.mContext, shortcutInfo);
-                } else if (str.contains("/") && (activityinfo = LockscreenFragment.getActivityinfo(this.mContext, str)) != null) {
-                    return new ActivityButton(this.mContext, activityinfo);
-                } else {
-                    return null;
-                }
+            if (TextUtils.isEmpty(str)) {
+                return null;
             }
-            return null;
+            if (str.contains("::")) {
+                ShortcutParser.Shortcut shortcutInfo = LockscreenFragment.getShortcutInfo(this.mContext, str);
+                if (shortcutInfo != null) {
+                    return new ShortcutButton(this.mContext, shortcutInfo);
+                }
+                return null;
+            } else if (!str.contains("/") || (activityinfo = LockscreenFragment.getActivityinfo(this.mContext, str)) == null) {
+                return null;
+            } else {
+                return new ActivityButton(this.mContext, activityinfo);
+            }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class ShortcutButton implements IntentButtonProvider.IntentButton {
+    private static class ShortcutButton implements IntentButtonProvider.IntentButton {
         private final IntentButtonProvider.IntentButton.IconState mIconState;
         private final ShortcutParser.Shortcut mShortcut;
 
@@ -349,25 +346,20 @@ public class LockscreenFragment extends PreferenceFragment {
             iconState.isVisible = true;
             iconState.drawable = shortcut.icon.loadDrawable(context).mutate();
             iconState.contentDescription = shortcut.label;
-            Drawable drawable = iconState.drawable;
-            iconState.drawable = new ScalingDrawableWrapper(drawable, ((int) TypedValue.applyDimension(1, 32.0f, context.getResources().getDisplayMetrics())) / drawable.getIntrinsicWidth());
+            iconState.drawable = new ScalingDrawableWrapper(iconState.drawable, ((float) ((int) TypedValue.applyDimension(1, 32.0f, context.getResources().getDisplayMetrics()))) / ((float) iconState.drawable.getIntrinsicWidth()));
             iconState.tint = false;
         }
 
-        @Override // com.android.systemui.plugins.IntentButtonProvider.IntentButton
         public IntentButtonProvider.IntentButton.IconState getIcon() {
             return this.mIconState;
         }
 
-        @Override // com.android.systemui.plugins.IntentButtonProvider.IntentButton
         public Intent getIntent() {
             return this.mShortcut.intent;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class ActivityButton implements IntentButtonProvider.IntentButton {
+    private static class ActivityButton implements IntentButtonProvider.IntentButton {
         private final IntentButtonProvider.IntentButton.IconState mIconState;
         private final Intent mIntent;
 
@@ -378,17 +370,14 @@ public class LockscreenFragment extends PreferenceFragment {
             iconState.isVisible = true;
             iconState.drawable = activityInfo.loadIcon(context.getPackageManager()).mutate();
             iconState.contentDescription = activityInfo.loadLabel(context.getPackageManager());
-            Drawable drawable = iconState.drawable;
-            iconState.drawable = new ScalingDrawableWrapper(drawable, ((int) TypedValue.applyDimension(1, 32.0f, context.getResources().getDisplayMetrics())) / drawable.getIntrinsicWidth());
+            iconState.drawable = new ScalingDrawableWrapper(iconState.drawable, ((float) ((int) TypedValue.applyDimension(1, 32.0f, context.getResources().getDisplayMetrics()))) / ((float) iconState.drawable.getIntrinsicWidth()));
             iconState.tint = false;
         }
 
-        @Override // com.android.systemui.plugins.IntentButtonProvider.IntentButton
         public IntentButtonProvider.IntentButton.IconState getIcon() {
             return this.mIconState;
         }
 
-        @Override // com.android.systemui.plugins.IntentButtonProvider.IntentButton
         public Intent getIntent() {
             return this.mIntent;
         }

@@ -8,62 +8,78 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.ViewParent;
 import androidx.constraintlayout.motion.widget.MotionLayout;
-import androidx.constraintlayout.widget.R$styleable;
-/* loaded from: classes.dex */
+import androidx.constraintlayout.widget.C0483R;
+
 public class MotionTelltales extends MockView {
+    private static final String TAG = "MotionTelltales";
+    Matrix mInvertMatrix = new Matrix();
     MotionLayout mMotionLayout;
     private Paint mPaintTelltales = new Paint();
-    float[] velocity = new float[2];
-    Matrix mInvertMatrix = new Matrix();
-    int mVelocityMode = 0;
     int mTailColor = -65281;
     float mTailScale = 0.25f;
+    int mVelocityMode = 0;
+    float[] velocity = new float[2];
+
+    public MotionTelltales(Context context) {
+        super(context);
+        init(context, (AttributeSet) null);
+    }
 
     public MotionTelltales(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         init(context, attributeSet);
     }
 
+    public MotionTelltales(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
+        init(context, attributeSet);
+    }
+
     private void init(Context context, AttributeSet attributeSet) {
         if (attributeSet != null) {
-            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.MotionTelltales);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0483R.styleable.MotionTelltales);
             int indexCount = obtainStyledAttributes.getIndexCount();
             for (int i = 0; i < indexCount; i++) {
                 int index = obtainStyledAttributes.getIndex(i);
-                if (index == R$styleable.MotionTelltales_telltales_tailColor) {
+                if (index == C0483R.styleable.MotionTelltales_telltales_tailColor) {
                     this.mTailColor = obtainStyledAttributes.getColor(index, this.mTailColor);
-                } else if (index == R$styleable.MotionTelltales_telltales_velocityMode) {
+                } else if (index == C0483R.styleable.MotionTelltales_telltales_velocityMode) {
                     this.mVelocityMode = obtainStyledAttributes.getInt(index, this.mVelocityMode);
-                } else if (index == R$styleable.MotionTelltales_telltales_tailScale) {
+                } else if (index == C0483R.styleable.MotionTelltales_telltales_tailScale) {
                     this.mTailScale = obtainStyledAttributes.getFloat(index, this.mTailScale);
                 }
             }
+            obtainStyledAttributes.recycle();
         }
         this.mPaintTelltales.setColor(this.mTailColor);
         this.mPaintTelltales.setStrokeWidth(5.0f);
     }
 
-    @Override // android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
     }
 
-    @Override // android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    public void setText(CharSequence charSequence) {
+        this.mText = charSequence.toString();
+        requestLayout();
+    }
+
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         postInvalidate();
     }
 
-    @Override // androidx.constraintlayout.utils.widget.MockView, android.view.View
     public void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         getMatrix().invert(this.mInvertMatrix);
         if (this.mMotionLayout == null) {
             ViewParent parent = getParent();
-            if (!(parent instanceof MotionLayout)) {
+            if (parent instanceof MotionLayout) {
+                this.mMotionLayout = (MotionLayout) parent;
                 return;
             }
-            this.mMotionLayout = (MotionLayout) parent;
             return;
         }
         int width = getWidth();
@@ -75,8 +91,8 @@ public class MotionTelltales extends MockView {
                 float f2 = fArr[i2];
                 this.mMotionLayout.getViewVelocity(this, f2, f, this.velocity, this.mVelocityMode);
                 this.mInvertMatrix.mapVectors(this.velocity);
-                float f3 = width * f2;
-                float f4 = height * f;
+                float f3 = ((float) width) * f2;
+                float f4 = ((float) height) * f;
                 float[] fArr2 = this.velocity;
                 float f5 = fArr2[0];
                 float f6 = this.mTailScale;

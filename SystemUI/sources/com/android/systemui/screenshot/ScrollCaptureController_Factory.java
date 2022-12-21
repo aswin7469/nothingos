@@ -5,7 +5,7 @@ import com.android.internal.logging.UiEventLogger;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ScrollCaptureController_Factory implements Factory<ScrollCaptureController> {
     private final Provider<Executor> bgExecutorProvider;
     private final Provider<ScrollCaptureClient> clientProvider;
@@ -21,10 +21,8 @@ public final class ScrollCaptureController_Factory implements Factory<ScrollCapt
         this.loggerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ScrollCaptureController mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.bgExecutorProvider.mo1933get(), this.clientProvider.mo1933get(), this.imageTileSetProvider.mo1933get(), this.loggerProvider.mo1933get());
+    public ScrollCaptureController get() {
+        return newInstance(this.contextProvider.get(), this.bgExecutorProvider.get(), this.clientProvider.get(), this.imageTileSetProvider.get(), this.loggerProvider.get());
     }
 
     public static ScrollCaptureController_Factory create(Provider<Context> provider, Provider<Executor> provider2, Provider<ScrollCaptureClient> provider3, Provider<ImageTileSet> provider4, Provider<UiEventLogger> provider5) {

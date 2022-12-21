@@ -1,14 +1,13 @@
 package androidx.transition;
 
-import android.annotation.SuppressLint;
 import android.view.View;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class ViewUtilsApi22 extends ViewUtilsApi21 {
+
+class ViewUtilsApi22 extends ViewUtilsApi21 {
     private static boolean sTryHiddenSetLeftTopRightBottom = true;
 
-    @Override // androidx.transition.ViewUtilsBase
-    @SuppressLint({"NewApi"})
+    ViewUtilsApi22() {
+    }
+
     public void setLeftTopRightBottom(View view, int i, int i2, int i3, int i4) {
         if (sTryHiddenSetLeftTopRightBottom) {
             try {

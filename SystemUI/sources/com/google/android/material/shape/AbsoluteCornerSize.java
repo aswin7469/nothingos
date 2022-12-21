@@ -2,7 +2,7 @@ package com.google.android.material.shape;
 
 import android.graphics.RectF;
 import java.util.Arrays;
-/* loaded from: classes2.dex */
+
 public final class AbsoluteCornerSize implements CornerSize {
     private final float size;
 
@@ -10,8 +10,11 @@ public final class AbsoluteCornerSize implements CornerSize {
         this.size = f;
     }
 
-    @Override // com.google.android.material.shape.CornerSize
     public float getCornerSize(RectF rectF) {
+        return this.size;
+    }
+
+    public float getCornerSize() {
         return this.size;
     }
 
@@ -19,7 +22,13 @@ public final class AbsoluteCornerSize implements CornerSize {
         if (this == obj) {
             return true;
         }
-        return (obj instanceof AbsoluteCornerSize) && this.size == ((AbsoluteCornerSize) obj).size;
+        if (!(obj instanceof AbsoluteCornerSize)) {
+            return false;
+        }
+        if (this.size == ((AbsoluteCornerSize) obj).size) {
+            return true;
+        }
+        return false;
     }
 
     public int hashCode() {

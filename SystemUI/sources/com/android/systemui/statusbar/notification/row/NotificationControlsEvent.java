@@ -1,7 +1,7 @@
 package com.android.systemui.statusbar.notification.row;
 
 import com.android.internal.logging.UiEventLogger;
-/* loaded from: classes.dex */
+
 enum NotificationControlsEvent implements UiEventLogger.UiEventEnum {
     NOTIFICATION_CONTROLS_OPEN(594),
     NOTIFICATION_CONTROLS_SAVE_IMPORTANCE(595),
@@ -9,7 +9,7 @@ enum NotificationControlsEvent implements UiEventLogger.UiEventEnum {
     
     private final int mId;
 
-    NotificationControlsEvent(int i) {
+    private NotificationControlsEvent(int i) {
         this.mId = i;
     }
 

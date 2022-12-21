@@ -16,6 +16,10 @@
         <item quantity="one">%s vezérlő hozzáadva.</item>
         <item quantity="other">%s vezérlő hozzáadva.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s alkalmazás aktív</item>
+        <item quantity="other">%s alkalmazás aktív</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">Adja meg a SIM-kártya PIN-kódját. %d próbálkozása maradt. Ha elfogynak a próbálkozási lehetőségek, az eszköz feloldásához fel kell vennie a kapcsolatot szolgáltatójával.</item>
         <item quantity="other">Adja meg a SIM-kártya PIN-kódját. %d próbálkozása maradt.</item>
@@ -31,22 +35,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">Helytelen PUK-kód a SIM-kártyához. Még %d próbálkozása maradt, mielőtt a SIM-kártya végleg használhatatlanná válik.</item>
         <item quantity="other">Helytelen PUK-kód a SIM-kártyához. Még %d próbálkozása maradt, mielőtt a SIM-kártya végleg használhatatlanná válik.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Az eszköz zárolása %d órája nem lett feloldva. Erősítse meg a jelszót.</item>
-        <item quantity="other">Az eszköz zárolása %d órája nem lett feloldva. Erősítse meg a jelszót.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Az eszköz zárolása %d órája nem lett feloldva. Erősítse meg a mintát.</item>
-        <item quantity="other">Az eszköz zárolása %d órája nem lett feloldva. Erősítse meg a mintát.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Az eszköz zárolása %d órája nem lett feloldva. Erősítse meg a PIN-kódot.</item>
-        <item quantity="other">Az eszköz zárolása %d órája nem lett feloldva. Erősítse meg a PIN-kódot.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">Próbálja újra 1 másodperc múlva.</item>
-        <item quantity="other">Próbálja újra %d másodperc múlva.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d új értesítés</item>
@@ -71,9 +59,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">Csak egy felhasználót lehet létrehozni.</item>
         <item quantity="other">Legfeljebb %d felhasználót adhat hozzá.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d eszköz csatlakozik</item>
-        <item quantity="other">%1$d eszköz csatlakozik</item>
     </plurals>
 </resources>

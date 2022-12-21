@@ -10,60 +10,68 @@ import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
-import java.io.FileNotFoundException;
+import java.p026io.FileNotFoundException;
 import java.util.List;
+import javax.inject.Inject;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ClockOptionsProvider extends ContentProvider {
+    private static final String AUTHORITY = "com.android.keyguard.clock";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_PREVIEW = "preview";
+    private static final String COLUMN_THUMBNAIL = "thumbnail";
+    private static final String COLUMN_TITLE = "title";
+    private static final String CONTENT_SCHEME = "content";
+    private static final String KEY_LIST_OPTIONS = "/list_options";
+    private static final String KEY_PREVIEW = "preview";
+    private static final String KEY_THUMBNAIL = "thumbnail";
+    private static final String MIME_TYPE_PNG = "image/png";
+    private static final String TAG = "ClockOptionsProvider";
+    @Inject
     public Provider<List<ClockInfo>> mClockInfosProvider;
 
-    @Override // android.content.ContentProvider
     public int delete(Uri uri, String str, String[] strArr) {
         return 0;
     }
 
-    @Override // android.content.ContentProvider
     public Uri insert(Uri uri, ContentValues contentValues) {
         return null;
     }
 
-    @Override // android.content.ContentProvider
     public boolean onCreate() {
         return true;
     }
 
-    @Override // android.content.ContentProvider
     public int update(Uri uri, ContentValues contentValues, String str, String[] strArr) {
         return 0;
     }
 
-    @VisibleForTesting
     ClockOptionsProvider(Provider<List<ClockInfo>> provider) {
         this.mClockInfosProvider = provider;
     }
 
-    @Override // android.content.ContentProvider
     public String getType(Uri uri) {
         List<String> pathSegments = uri.getPathSegments();
-        return pathSegments.size() > 0 ? ("preview".equals(pathSegments.get(0)) || "thumbnail".equals(pathSegments.get(0))) ? "image/png" : "vnd.android.cursor.dir/clock_faces" : "vnd.android.cursor.dir/clock_faces";
+        if (pathSegments.size() > 0) {
+            return ("preview".equals(pathSegments.get(0)) || "thumbnail".equals(pathSegments.get(0))) ? MIME_TYPE_PNG : "vnd.android.cursor.dir/clock_faces";
+        }
+        return "vnd.android.cursor.dir/clock_faces";
     }
 
-    @Override // android.content.ContentProvider
     public Cursor query(Uri uri, String[] strArr, String str, String[] strArr2, String str2) {
-        if (!"/list_options".equals(uri.getPath())) {
+        if (!KEY_LIST_OPTIONS.equals(uri.getPath())) {
             return null;
         }
-        MatrixCursor matrixCursor = new MatrixCursor(new String[]{"name", "title", "id", "thumbnail", "preview"});
-        List<ClockInfo> mo1933get = this.mClockInfosProvider.mo1933get();
-        for (int i = 0; i < mo1933get.size(); i++) {
-            ClockInfo clockInfo = mo1933get.get(i);
-            matrixCursor.newRow().add("name", clockInfo.getName()).add("title", clockInfo.getTitle()).add("id", clockInfo.getId()).add("thumbnail", createThumbnailUri(clockInfo)).add("preview", createPreviewUri(clockInfo));
+        MatrixCursor matrixCursor = new MatrixCursor(new String[]{"name", COLUMN_TITLE, "id", "thumbnail", "preview"});
+        List list = this.mClockInfosProvider.get();
+        for (int i = 0; i < list.size(); i++) {
+            ClockInfo clockInfo = (ClockInfo) list.get(i);
+            matrixCursor.newRow().add("name", clockInfo.getName()).add(COLUMN_TITLE, clockInfo.getTitle()).add("id", clockInfo.getId()).add("thumbnail", createThumbnailUri(clockInfo)).add("preview", createPreviewUri(clockInfo));
         }
         return matrixCursor;
     }
 
-    @Override // android.content.ContentProvider
     public ParcelFileDescriptor openFile(Uri uri, String str) throws FileNotFoundException {
         ClockInfo clockInfo;
         List<String> pathSegments = uri.getPathSegments();
@@ -71,50 +79,54 @@ public final class ClockOptionsProvider extends ContentProvider {
             throw new FileNotFoundException("Invalid preview url");
         }
         String str2 = pathSegments.get(1);
-        if (TextUtils.isEmpty(str2)) {
-            throw new FileNotFoundException("Invalid preview url, missing id");
-        }
-        List<ClockInfo> mo1933get = this.mClockInfosProvider.mo1933get();
-        int i = 0;
-        while (true) {
-            if (i >= mo1933get.size()) {
-                clockInfo = null;
-                break;
-            } else if (str2.equals(mo1933get.get(i).getId())) {
-                clockInfo = mo1933get.get(i);
-                break;
-            } else {
-                i++;
+        if (!TextUtils.isEmpty(str2)) {
+            List list = this.mClockInfosProvider.get();
+            int i = 0;
+            while (true) {
+                if (i >= list.size()) {
+                    clockInfo = null;
+                    break;
+                } else if (str2.equals(((ClockInfo) list.get(i)).getId())) {
+                    clockInfo = (ClockInfo) list.get(i);
+                    break;
+                } else {
+                    i++;
+                }
             }
-        }
-        if (clockInfo == null) {
+            if (clockInfo != null) {
+                return openPipeHelper(uri, MIME_TYPE_PNG, (Bundle) null, "preview".equals(pathSegments.get(0)) ? clockInfo.getPreview() : clockInfo.getThumbnail(), new MyWriter());
+            }
             throw new FileNotFoundException("Invalid preview url, id not found");
         }
-        return openPipeHelper(uri, "image/png", null, "preview".equals(pathSegments.get(0)) ? clockInfo.getPreview() : clockInfo.getThumbnail(), new MyWriter());
+        throw new FileNotFoundException("Invalid preview url, missing id");
     }
 
     private Uri createThumbnailUri(ClockInfo clockInfo) {
-        return new Uri.Builder().scheme("content").authority("com.android.keyguard.clock").appendPath("thumbnail").appendPath(clockInfo.getId()).build();
+        return new Uri.Builder().scheme(CONTENT_SCHEME).authority(AUTHORITY).appendPath("thumbnail").appendPath(clockInfo.getId()).build();
     }
 
     private Uri createPreviewUri(ClockInfo clockInfo) {
-        return new Uri.Builder().scheme("content").authority("com.android.keyguard.clock").appendPath("preview").appendPath(clockInfo.getId()).build();
+        return new Uri.Builder().scheme(CONTENT_SCHEME).authority(AUTHORITY).appendPath("preview").appendPath(clockInfo.getId()).build();
     }
 
-    /* loaded from: classes.dex */
     private static class MyWriter implements ContentProvider.PipeDataWriter<Bitmap> {
         private MyWriter() {
         }
 
-        @Override // android.content.ContentProvider.PipeDataWriter
         public void writeDataToPipe(ParcelFileDescriptor parcelFileDescriptor, Uri uri, String str, Bundle bundle, Bitmap bitmap) {
+            ParcelFileDescriptor.AutoCloseOutputStream autoCloseOutputStream;
             try {
-                ParcelFileDescriptor.AutoCloseOutputStream autoCloseOutputStream = new ParcelFileDescriptor.AutoCloseOutputStream(parcelFileDescriptor);
+                autoCloseOutputStream = new ParcelFileDescriptor.AutoCloseOutputStream(parcelFileDescriptor);
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, autoCloseOutputStream);
                 autoCloseOutputStream.close();
+                return;
             } catch (Exception e) {
-                Log.w("ClockOptionsProvider", "fail to write to pipe", e);
+                Log.w(ClockOptionsProvider.TAG, "fail to write to pipe", e);
+                return;
+            } catch (Throwable th) {
+                th.addSuppressed(th);
             }
+            throw th;
         }
     }
 }

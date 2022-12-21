@@ -1,76 +1,95 @@
 package androidx.lifecycle;
 
+import android.os.Bundle;
 import androidx.lifecycle.Lifecycle;
 import androidx.savedstate.SavedStateRegistry;
 import androidx.savedstate.SavedStateRegistryOwner;
-/* loaded from: classes.dex */
-final class SavedStateHandleController implements LifecycleEventObserver {
-    private boolean mIsAttached;
 
-    boolean isAttached() {
+final class SavedStateHandleController implements LifecycleEventObserver {
+    static final String TAG_SAVED_STATE_HANDLE_CONTROLLER = "androidx.lifecycle.savedstate.vm.tag";
+    private final SavedStateHandle mHandle;
+    private boolean mIsAttached = false;
+    private final String mKey;
+
+    SavedStateHandleController(String str, SavedStateHandle savedStateHandle) {
+        this.mKey = str;
+        this.mHandle = savedStateHandle;
+    }
+
+    /* access modifiers changed from: package-private */
+    public boolean isAttached() {
         return this.mIsAttached;
     }
 
-    void attachToLifecycle(SavedStateRegistry registry, Lifecycle lifecycle) {
-        if (this.mIsAttached) {
-            throw new IllegalStateException("Already attached to lifecycleOwner");
+    /* access modifiers changed from: package-private */
+    public void attachToLifecycle(SavedStateRegistry savedStateRegistry, Lifecycle lifecycle) {
+        if (!this.mIsAttached) {
+            this.mIsAttached = true;
+            lifecycle.addObserver(this);
+            savedStateRegistry.registerSavedStateProvider(this.mKey, this.mHandle.savedStateProvider());
+            return;
         }
-        this.mIsAttached = true;
-        lifecycle.addObserver(this);
-        throw null;
+        throw new IllegalStateException("Already attached to lifecycleOwner");
     }
 
-    @Override // androidx.lifecycle.LifecycleEventObserver
-    public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
+    public void onStateChanged(LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
         if (event == Lifecycle.Event.ON_DESTROY) {
             this.mIsAttached = false;
-            source.mo1437getLifecycle().removeObserver(this);
+            lifecycleOwner.getLifecycle().removeObserver(this);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static final class OnRecreation implements SavedStateRegistry.AutoRecreated {
+    /* access modifiers changed from: package-private */
+    public SavedStateHandle getHandle() {
+        return this.mHandle;
+    }
+
+    static SavedStateHandleController create(SavedStateRegistry savedStateRegistry, Lifecycle lifecycle, String str, Bundle bundle) {
+        SavedStateHandleController savedStateHandleController = new SavedStateHandleController(str, SavedStateHandle.createHandle(savedStateRegistry.consumeRestoredStateForKey(str), bundle));
+        savedStateHandleController.attachToLifecycle(savedStateRegistry, lifecycle);
+        tryToAddRecreator(savedStateRegistry, lifecycle);
+        return savedStateHandleController;
+    }
+
+    static final class OnRecreation implements SavedStateRegistry.AutoRecreated {
         OnRecreation() {
         }
 
-        @Override // androidx.savedstate.SavedStateRegistry.AutoRecreated
-        public void onRecreated(SavedStateRegistryOwner owner) {
-            if (!(owner instanceof ViewModelStoreOwner)) {
-                throw new IllegalStateException("Internal error: OnRecreation should be registered only on componentsthat implement ViewModelStoreOwner");
-            }
-            ViewModelStore viewModelStore = ((ViewModelStoreOwner) owner).getViewModelStore();
-            SavedStateRegistry savedStateRegistry = owner.getSavedStateRegistry();
-            for (String str : viewModelStore.keys()) {
-                SavedStateHandleController.attachHandleIfNeeded(viewModelStore.get(str), savedStateRegistry, owner.mo1437getLifecycle());
-            }
-            if (viewModelStore.keys().isEmpty()) {
+        public void onRecreated(SavedStateRegistryOwner savedStateRegistryOwner) {
+            if (savedStateRegistryOwner instanceof ViewModelStoreOwner) {
+                ViewModelStore viewModelStore = ((ViewModelStoreOwner) savedStateRegistryOwner).getViewModelStore();
+                SavedStateRegistry savedStateRegistry = savedStateRegistryOwner.getSavedStateRegistry();
+                for (String str : viewModelStore.keys()) {
+                    SavedStateHandleController.attachHandleIfNeeded(viewModelStore.get(str), savedStateRegistry, savedStateRegistryOwner.getLifecycle());
+                }
+                if (!viewModelStore.keys().isEmpty()) {
+                    savedStateRegistry.runOnNextRecreation(OnRecreation.class);
+                    return;
+                }
                 return;
             }
-            savedStateRegistry.runOnNextRecreation(OnRecreation.class);
+            throw new IllegalStateException("Internal error: OnRecreation should be registered only on componentsthat implement ViewModelStoreOwner");
         }
     }
 
-    static void attachHandleIfNeeded(ViewModel viewModel, SavedStateRegistry registry, Lifecycle lifecycle) {
-        SavedStateHandleController savedStateHandleController = (SavedStateHandleController) viewModel.getTag("androidx.lifecycle.savedstate.vm.tag");
-        if (savedStateHandleController == null || savedStateHandleController.isAttached()) {
-            return;
+    static void attachHandleIfNeeded(ViewModel viewModel, SavedStateRegistry savedStateRegistry, Lifecycle lifecycle) {
+        SavedStateHandleController savedStateHandleController = (SavedStateHandleController) viewModel.getTag(TAG_SAVED_STATE_HANDLE_CONTROLLER);
+        if (savedStateHandleController != null && !savedStateHandleController.isAttached()) {
+            savedStateHandleController.attachToLifecycle(savedStateRegistry, lifecycle);
+            tryToAddRecreator(savedStateRegistry, lifecycle);
         }
-        savedStateHandleController.attachToLifecycle(registry, lifecycle);
-        tryToAddRecreator(registry, lifecycle);
     }
 
-    private static void tryToAddRecreator(final SavedStateRegistry registry, final Lifecycle lifecycle) {
+    private static void tryToAddRecreator(final SavedStateRegistry savedStateRegistry, final Lifecycle lifecycle) {
         Lifecycle.State currentState = lifecycle.getCurrentState();
         if (currentState == Lifecycle.State.INITIALIZED || currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            registry.runOnNextRecreation(OnRecreation.class);
+            savedStateRegistry.runOnNextRecreation(OnRecreation.class);
         } else {
-            lifecycle.addObserver(new LifecycleEventObserver() { // from class: androidx.lifecycle.SavedStateHandleController.1
-                @Override // androidx.lifecycle.LifecycleEventObserver
-                public void onStateChanged(LifecycleOwner source, Lifecycle.Event event) {
+            lifecycle.addObserver(new LifecycleEventObserver() {
+                public void onStateChanged(LifecycleOwner lifecycleOwner, Lifecycle.Event event) {
                     if (event == Lifecycle.Event.ON_START) {
                         Lifecycle.this.removeObserver(this);
-                        registry.runOnNextRecreation(OnRecreation.class);
+                        savedStateRegistry.runOnNextRecreation(OnRecreation.class);
                     }
                 }
             });

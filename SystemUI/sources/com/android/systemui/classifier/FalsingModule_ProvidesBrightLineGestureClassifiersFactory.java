@@ -4,7 +4,7 @@ import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import java.util.Set;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FalsingModule_ProvidesBrightLineGestureClassifiersFactory implements Factory<Set<FalsingClassifier>> {
     private final Provider<DiagonalClassifier> diagonalClassifierProvider;
     private final Provider<DistanceClassifier> distanceClassifierProvider;
@@ -22,10 +22,8 @@ public final class FalsingModule_ProvidesBrightLineGestureClassifiersFactory imp
         this.zigZagClassifierProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get  reason: collision with other method in class */
-    public Set<FalsingClassifier> mo1933get() {
-        return providesBrightLineGestureClassifiers(this.distanceClassifierProvider.mo1933get(), this.proximityClassifierProvider.mo1933get(), this.pointerCountClassifierProvider.mo1933get(), this.typeClassifierProvider.mo1933get(), this.diagonalClassifierProvider.mo1933get(), this.zigZagClassifierProvider.mo1933get());
+    public Set<FalsingClassifier> get() {
+        return providesBrightLineGestureClassifiers(this.distanceClassifierProvider.get(), this.proximityClassifierProvider.get(), this.pointerCountClassifierProvider.get(), this.typeClassifierProvider.get(), this.diagonalClassifierProvider.get(), this.zigZagClassifierProvider.get());
     }
 
     public static FalsingModule_ProvidesBrightLineGestureClassifiersFactory create(Provider<DistanceClassifier> provider, Provider<ProximityClassifier> provider2, Provider<PointerCountClassifier> provider3, Provider<TypeClassifier> provider4, Provider<DiagonalClassifier> provider5, Provider<ZigZagClassifier> provider6) {

@@ -1,11 +1,12 @@
 package com.android.systemui.navigationbar.buttons;
 
 import android.view.View;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ContextualButtonGroup extends ButtonDispatcher {
+    private static final int INVALID_INDEX = -1;
     private final List<ButtonData> mButtonData = new ArrayList();
 
     public ContextualButtonGroup(int i) {
@@ -44,23 +45,28 @@ public class ContextualButtonGroup extends ButtonDispatcher {
 
     public int setButtonVisibility(int i, boolean z) {
         int contextButtonIndex = getContextButtonIndex(i);
-        if (contextButtonIndex == -1) {
-            throw new RuntimeException("Cannot find the button id of " + i + " in context group");
-        }
-        setVisibility(4);
-        this.mButtonData.get(contextButtonIndex).markedVisible = z;
-        boolean z2 = false;
-        for (int size = this.mButtonData.size() - 1; size >= 0; size--) {
-            ButtonData buttonData = this.mButtonData.get(size);
-            if (!z2 && buttonData.markedVisible) {
-                buttonData.setVisibility(0);
-                setVisibility(0);
-                z2 = true;
-            } else {
-                buttonData.setVisibility(4);
+        if (contextButtonIndex != -1) {
+            setVisibility(4);
+            this.mButtonData.get(contextButtonIndex).markedVisible = z;
+            boolean z2 = false;
+            for (int size = this.mButtonData.size() - 1; size >= 0; size--) {
+                ButtonData buttonData = this.mButtonData.get(size);
+                if (z2 || !buttonData.markedVisible) {
+                    buttonData.setVisibility(4);
+                } else {
+                    buttonData.setVisibility(0);
+                    setVisibility(0);
+                    z2 = true;
+                }
             }
+            return this.mButtonData.get(contextButtonIndex).button.getVisibility();
         }
-        return this.mButtonData.get(contextButtonIndex).button.getVisibility();
+        throw new RuntimeException("Cannot find the button id of " + i + " in context group");
+    }
+
+    public boolean isButtonVisibleWithinGroup(int i) {
+        int contextButtonIndex = getContextButtonIndex(i);
+        return contextButtonIndex != -1 && this.mButtonData.get(contextButtonIndex).markedVisible;
     }
 
     public void updateIcons(int i, int i2) {
@@ -74,26 +80,12 @@ public class ContextualButtonGroup extends ButtonDispatcher {
         printWriter.println("ContextualButtonGroup");
         printWriter.println("  getVisibleContextButton(): " + getVisibleContextButton());
         printWriter.println("  isVisible(): " + isVisible());
-        StringBuilder sb = new StringBuilder();
-        sb.append("  attached(): ");
-        sb.append(currentView != null && currentView.isAttachedToWindow());
-        printWriter.println(sb.toString());
+        printWriter.println("  attached(): " + (currentView != null && currentView.isAttachedToWindow()));
         printWriter.println("  mButtonData [ ");
         for (int size = this.mButtonData.size() - 1; size >= 0; size--) {
             ButtonData buttonData = this.mButtonData.get(size);
             View currentView2 = buttonData.button.getCurrentView();
-            StringBuilder sb2 = new StringBuilder();
-            sb2.append("    ");
-            sb2.append(size);
-            sb2.append(": markedVisible=");
-            sb2.append(buttonData.markedVisible);
-            sb2.append(" visible=");
-            sb2.append(buttonData.button.getVisibility());
-            sb2.append(" attached=");
-            sb2.append(currentView2 != null && currentView2.isAttachedToWindow());
-            sb2.append(" alpha=");
-            sb2.append(buttonData.button.getAlpha());
-            printWriter.println(sb2.toString());
+            printWriter.println("    " + size + ": markedVisible=" + buttonData.markedVisible + " visible=" + buttonData.button.getVisibility() + " attached=" + (currentView2 != null && currentView2.isAttachedToWindow()) + " alpha=" + buttonData.button.getAlpha());
         }
         printWriter.println("  ]");
     }
@@ -107,9 +99,7 @@ public class ContextualButtonGroup extends ButtonDispatcher {
         return -1;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class ButtonData {
+    private static final class ButtonData {
         ContextualButton button;
         boolean markedVisible = false;
 
@@ -117,7 +107,8 @@ public class ContextualButtonGroup extends ButtonDispatcher {
             this.button = contextualButton;
         }
 
-        void setVisibility(int i) {
+        /* access modifiers changed from: package-private */
+        public void setVisibility(int i) {
             this.button.setVisibility(i);
         }
     }

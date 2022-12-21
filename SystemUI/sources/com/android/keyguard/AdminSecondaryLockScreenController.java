@@ -15,150 +15,120 @@ import android.view.SurfaceControlViewHost;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.keyguard.AdminSecondaryLockScreenController;
+import com.android.keyguard.KeyguardSecurityModel;
+import com.android.keyguard.dagger.KeyguardBouncerScope;
+import com.android.systemui.dagger.qualifiers.Main;
 import java.util.NoSuchElementException;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class AdminSecondaryLockScreenController {
+    private static final int REMOTE_CONTENT_READY_TIMEOUT_MILLIS = 500;
+    private static final String TAG = "AdminSecondaryLockScreenController";
     private final IKeyguardCallback mCallback;
-    private IKeyguardClient mClient;
+    /* access modifiers changed from: private */
+    public IKeyguardClient mClient;
     private final ServiceConnection mConnection;
     private final Context mContext;
-    private Handler mHandler;
+    /* access modifiers changed from: private */
+    public Handler mHandler;
     private KeyguardSecurityCallback mKeyguardCallback;
-    private final IBinder.DeathRecipient mKeyguardClientDeathRecipient;
+    /* access modifiers changed from: private */
+    public final IBinder.DeathRecipient mKeyguardClientDeathRecipient;
     private final ViewGroup mParent;
-    @VisibleForTesting
     protected SurfaceHolder.Callback mSurfaceHolderCallback;
-    private final KeyguardUpdateMonitorCallback mUpdateCallback;
-    private final KeyguardUpdateMonitor mUpdateMonitor;
-    private AdminSecurityView mView;
+    /* access modifiers changed from: private */
+    public final KeyguardUpdateMonitorCallback mUpdateCallback;
+    /* access modifiers changed from: private */
+    public final KeyguardUpdateMonitor mUpdateMonitor;
+    /* access modifiers changed from: private */
+    public AdminSecurityView mView;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-keyguard-AdminSecondaryLockScreenController */
+    public /* synthetic */ void mo25483x660dd360() {
         hide();
-        Log.d("AdminSecondaryLockScreenController", "KeyguardClient service died");
+        Log.d(TAG, "KeyguardClient service died");
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.keyguard.AdminSecondaryLockScreenController$2  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass2 extends IKeyguardCallback.Stub {
-        AnonymousClass2() {
-        }
-
-        public void onDismiss() {
-            AdminSecondaryLockScreenController.this.mHandler.post(new Runnable() { // from class: com.android.keyguard.AdminSecondaryLockScreenController$2$$ExternalSyntheticLambda1
-                @Override // java.lang.Runnable
-                public final void run() {
-                    AdminSecondaryLockScreenController.AnonymousClass2.this.lambda$onDismiss$0();
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onDismiss$0() {
-            AdminSecondaryLockScreenController.this.dismiss(UserHandle.getCallingUserId());
-        }
-
-        public void onRemoteContentReady(SurfaceControlViewHost.SurfacePackage surfacePackage) {
-            if (AdminSecondaryLockScreenController.this.mHandler != null) {
-                AdminSecondaryLockScreenController.this.mHandler.removeCallbacksAndMessages(null);
-            }
-            if (surfacePackage != null) {
-                AdminSecondaryLockScreenController.this.mView.setChildSurfacePackage(surfacePackage);
-            } else {
-                AdminSecondaryLockScreenController.this.mHandler.post(new Runnable() { // from class: com.android.keyguard.AdminSecondaryLockScreenController$2$$ExternalSyntheticLambda0
-                    @Override // java.lang.Runnable
-                    public final void run() {
-                        AdminSecondaryLockScreenController.AnonymousClass2.this.lambda$onRemoteContentReady$1();
-                    }
-                });
-            }
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onRemoteContentReady$1() {
-            AdminSecondaryLockScreenController.this.dismiss(KeyguardUpdateMonitor.getCurrentUser());
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.keyguard.AdminSecondaryLockScreenController$4  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass4 implements SurfaceHolder.Callback {
-        @Override // android.view.SurfaceHolder.Callback
-        public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
-        }
-
-        AnonymousClass4() {
-        }
-
-        @Override // android.view.SurfaceHolder.Callback
-        public void surfaceCreated(SurfaceHolder surfaceHolder) {
-            final int currentUser = KeyguardUpdateMonitor.getCurrentUser();
-            AdminSecondaryLockScreenController.this.mUpdateMonitor.registerCallback(AdminSecondaryLockScreenController.this.mUpdateCallback);
-            if (AdminSecondaryLockScreenController.this.mClient != null) {
-                AdminSecondaryLockScreenController.this.onSurfaceReady();
-            }
-            AdminSecondaryLockScreenController.this.mHandler.postDelayed(new Runnable() { // from class: com.android.keyguard.AdminSecondaryLockScreenController$4$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    AdminSecondaryLockScreenController.AnonymousClass4.this.lambda$surfaceCreated$0(currentUser);
-                }
-            }, 500L);
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$surfaceCreated$0(int i) {
-            AdminSecondaryLockScreenController.this.dismiss(i);
-            Log.w("AdminSecondaryLockScreenController", "Timed out waiting for secondary lockscreen content.");
-        }
-
-        @Override // android.view.SurfaceHolder.Callback
-        public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-            AdminSecondaryLockScreenController.this.mUpdateMonitor.removeCallback(AdminSecondaryLockScreenController.this.mUpdateCallback);
-        }
-    }
-
-    private AdminSecondaryLockScreenController(Context context, KeyguardSecurityContainer keyguardSecurityContainer, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardSecurityCallback keyguardSecurityCallback, Handler handler) {
-        this.mConnection = new ServiceConnection() { // from class: com.android.keyguard.AdminSecondaryLockScreenController.1
-            @Override // android.content.ServiceConnection
+    private AdminSecondaryLockScreenController(Context context, KeyguardSecurityContainer keyguardSecurityContainer, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardSecurityCallback keyguardSecurityCallback, @Main Handler handler) {
+        this.mConnection = new ServiceConnection() {
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                AdminSecondaryLockScreenController.this.mClient = IKeyguardClient.Stub.asInterface(iBinder);
-                if (!AdminSecondaryLockScreenController.this.mView.isAttachedToWindow() || AdminSecondaryLockScreenController.this.mClient == null) {
-                    return;
-                }
-                AdminSecondaryLockScreenController.this.onSurfaceReady();
-                try {
-                    iBinder.linkToDeath(AdminSecondaryLockScreenController.this.mKeyguardClientDeathRecipient, 0);
-                } catch (RemoteException e) {
-                    Log.e("AdminSecondaryLockScreenController", "Lost connection to secondary lockscreen service", e);
-                    AdminSecondaryLockScreenController.this.dismiss(KeyguardUpdateMonitor.getCurrentUser());
+                IKeyguardClient unused = AdminSecondaryLockScreenController.this.mClient = IKeyguardClient.Stub.asInterface(iBinder);
+                if (AdminSecondaryLockScreenController.this.mView.isAttachedToWindow() && AdminSecondaryLockScreenController.this.mClient != null) {
+                    AdminSecondaryLockScreenController.this.onSurfaceReady();
+                    try {
+                        iBinder.linkToDeath(AdminSecondaryLockScreenController.this.mKeyguardClientDeathRecipient, 0);
+                    } catch (RemoteException e) {
+                        Log.e(AdminSecondaryLockScreenController.TAG, "Lost connection to secondary lockscreen service", e);
+                        AdminSecondaryLockScreenController.this.dismiss(KeyguardUpdateMonitor.getCurrentUser());
+                    }
                 }
             }
 
-            @Override // android.content.ServiceConnection
             public void onServiceDisconnected(ComponentName componentName) {
-                AdminSecondaryLockScreenController.this.mClient = null;
+                IKeyguardClient unused = AdminSecondaryLockScreenController.this.mClient = null;
             }
         };
-        this.mKeyguardClientDeathRecipient = new IBinder.DeathRecipient() { // from class: com.android.keyguard.AdminSecondaryLockScreenController$$ExternalSyntheticLambda0
-            @Override // android.os.IBinder.DeathRecipient
-            public final void binderDied() {
-                AdminSecondaryLockScreenController.this.lambda$new$0();
+        this.mKeyguardClientDeathRecipient = new AdminSecondaryLockScreenController$$ExternalSyntheticLambda0(this);
+        this.mCallback = new IKeyguardCallback.Stub() {
+            public void onDismiss() {
+                AdminSecondaryLockScreenController.this.mHandler.post(new AdminSecondaryLockScreenController$2$$ExternalSyntheticLambda0(this));
+            }
+
+            /* access modifiers changed from: package-private */
+            /* renamed from: lambda$onDismiss$0$com-android-keyguard-AdminSecondaryLockScreenController$2 */
+            public /* synthetic */ void mo25487x11024939() {
+                AdminSecondaryLockScreenController.this.dismiss(UserHandle.getCallingUserId());
+            }
+
+            public void onRemoteContentReady(SurfaceControlViewHost.SurfacePackage surfacePackage) {
+                if (AdminSecondaryLockScreenController.this.mHandler != null) {
+                    AdminSecondaryLockScreenController.this.mHandler.removeCallbacksAndMessages((Object) null);
+                }
+                if (surfacePackage != null) {
+                    AdminSecondaryLockScreenController.this.mView.setChildSurfacePackage(surfacePackage);
+                } else {
+                    AdminSecondaryLockScreenController.this.mHandler.post(new AdminSecondaryLockScreenController$2$$ExternalSyntheticLambda1(this));
+                }
+            }
+
+            /* access modifiers changed from: package-private */
+            /* renamed from: lambda$onRemoteContentReady$1$com-android-keyguard-AdminSecondaryLockScreenController$2 */
+            public /* synthetic */ void mo25488x7ac332f8() {
+                AdminSecondaryLockScreenController.this.dismiss(KeyguardUpdateMonitor.getCurrentUser());
             }
         };
-        this.mCallback = new AnonymousClass2();
-        this.mUpdateCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.keyguard.AdminSecondaryLockScreenController.3
-            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+        this.mUpdateCallback = new KeyguardUpdateMonitorCallback() {
             public void onSecondaryLockscreenRequirementChanged(int i) {
                 if (AdminSecondaryLockScreenController.this.mUpdateMonitor.getSecondaryLockscreenRequirement(i) == null) {
                     AdminSecondaryLockScreenController.this.dismiss(i);
                 }
             }
         };
-        this.mSurfaceHolderCallback = new AnonymousClass4();
+        this.mSurfaceHolderCallback = new SurfaceHolder.Callback() {
+            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
+            }
+
+            public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                int currentUser = KeyguardUpdateMonitor.getCurrentUser();
+                AdminSecondaryLockScreenController.this.mUpdateMonitor.registerCallback(AdminSecondaryLockScreenController.this.mUpdateCallback);
+                if (AdminSecondaryLockScreenController.this.mClient != null) {
+                    AdminSecondaryLockScreenController.this.onSurfaceReady();
+                }
+                AdminSecondaryLockScreenController.this.mHandler.postDelayed(new AdminSecondaryLockScreenController$4$$ExternalSyntheticLambda0(this, currentUser), 500);
+            }
+
+            /* access modifiers changed from: package-private */
+            /* renamed from: lambda$surfaceCreated$0$com-android-keyguard-AdminSecondaryLockScreenController$4 */
+            public /* synthetic */ void mo25492x79808f25(int i) {
+                AdminSecondaryLockScreenController.this.dismiss(i);
+                Log.w(AdminSecondaryLockScreenController.TAG, "Timed out waiting for secondary lockscreen content.");
+            }
+
+            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+                AdminSecondaryLockScreenController.this.mUpdateMonitor.removeCallback(AdminSecondaryLockScreenController.this.mUpdateCallback);
+            }
+        };
         this.mContext = context;
         this.mHandler = handler;
         this.mParent = keyguardSecurityContainer;
@@ -185,14 +155,14 @@ public class AdminSecondaryLockScreenController {
             try {
                 iKeyguardClient.asBinder().unlinkToDeath(this.mKeyguardClientDeathRecipient, 0);
             } catch (NoSuchElementException unused) {
-                Log.w("AdminSecondaryLockScreenController", "IKeyguardClient death recipient already released");
+                Log.w(TAG, "IKeyguardClient death recipient already released");
             }
             this.mContext.unbindService(this.mConnection);
             this.mClient = null;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void onSurfaceReady() {
         try {
             IBinder hostToken = this.mView.getHostToken();
@@ -202,28 +172,24 @@ public class AdminSecondaryLockScreenController {
                 hide();
             }
         } catch (RemoteException e) {
-            Log.e("AdminSecondaryLockScreenController", "Error in onCreateKeyguardSurface", e);
+            Log.e(TAG, "Error in onCreateKeyguardSurface", e);
             dismiss(KeyguardUpdateMonitor.getCurrentUser());
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void dismiss(int i) {
-        this.mHandler.removeCallbacksAndMessages(null);
-        if (!this.mView.isAttachedToWindow() || i != KeyguardUpdateMonitor.getCurrentUser()) {
-            return;
+        this.mHandler.removeCallbacksAndMessages((Object) null);
+        if (this.mView.isAttachedToWindow() && i == KeyguardUpdateMonitor.getCurrentUser()) {
+            hide();
+            KeyguardSecurityCallback keyguardSecurityCallback = this.mKeyguardCallback;
+            if (keyguardSecurityCallback != null) {
+                keyguardSecurityCallback.dismiss(true, i, true, KeyguardSecurityModel.SecurityMode.Invalid);
+            }
         }
-        hide();
-        KeyguardSecurityCallback keyguardSecurityCallback = this.mKeyguardCallback;
-        if (keyguardSecurityCallback == null) {
-            return;
-        }
-        keyguardSecurityCallback.dismiss(true, i, true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class AdminSecurityView extends SurfaceView {
+    private class AdminSecurityView extends SurfaceView {
         private SurfaceHolder.Callback mSurfaceHolderCallback;
 
         AdminSecurityView(Context context, SurfaceHolder.Callback callback) {
@@ -232,27 +198,28 @@ public class AdminSecondaryLockScreenController {
             setZOrderOnTop(true);
         }
 
-        @Override // android.view.SurfaceView, android.view.View
-        protected void onAttachedToWindow() {
+        /* access modifiers changed from: protected */
+        public void onAttachedToWindow() {
             super.onAttachedToWindow();
             getHolder().addCallback(this.mSurfaceHolderCallback);
         }
 
-        @Override // android.view.SurfaceView, android.view.View
-        protected void onDetachedFromWindow() {
+        /* access modifiers changed from: protected */
+        public void onDetachedFromWindow() {
             super.onDetachedFromWindow();
             getHolder().removeCallback(this.mSurfaceHolderCallback);
         }
     }
 
-    /* loaded from: classes.dex */
+    @KeyguardBouncerScope
     public static class Factory {
         private final Context mContext;
         private final Handler mHandler;
         private final KeyguardSecurityContainer mParent;
         private final KeyguardUpdateMonitor mUpdateMonitor;
 
-        public Factory(Context context, KeyguardSecurityContainer keyguardSecurityContainer, KeyguardUpdateMonitor keyguardUpdateMonitor, Handler handler) {
+        @Inject
+        public Factory(Context context, KeyguardSecurityContainer keyguardSecurityContainer, KeyguardUpdateMonitor keyguardUpdateMonitor, @Main Handler handler) {
             this.mContext = context;
             this.mParent = keyguardSecurityContainer;
             this.mUpdateMonitor = keyguardUpdateMonitor;

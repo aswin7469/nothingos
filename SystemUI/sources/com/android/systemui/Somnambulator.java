@@ -3,9 +3,8 @@ package com.android.systemui;
 import android.app.Activity;
 import android.content.Intent;
 import android.service.dreams.Sandman;
-/* loaded from: classes.dex */
+
 public class Somnambulator extends Activity {
-    @Override // android.app.Activity
     public void onStart() {
         super.onStart();
         Intent intent = getIntent();
@@ -13,9 +12,9 @@ public class Somnambulator extends Activity {
             Intent intent2 = new Intent(this, Somnambulator.class);
             intent2.setFlags(276824064);
             Intent intent3 = new Intent();
-            intent3.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(this, R$mipmap.ic_launcher_dreams));
+            intent3.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(this, C1893R.mipmap.ic_launcher_dreams));
             intent3.putExtra("android.intent.extra.shortcut.INTENT", intent2);
-            intent3.putExtra("android.intent.extra.shortcut.NAME", getString(R$string.start_dreams));
+            intent3.putExtra("android.intent.extra.shortcut.NAME", getString(C1893R.string.start_dreams));
             setResult(-1, intent3);
         } else if (intent.hasCategory("android.intent.category.DESK_DOCK")) {
             Sandman.startDreamWhenDockedIfAppropriate(this);

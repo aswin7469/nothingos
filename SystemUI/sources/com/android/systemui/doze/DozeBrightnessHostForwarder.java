@@ -1,7 +1,7 @@
 package com.android.systemui.doze;
 
 import com.android.systemui.doze.DozeMachine;
-/* loaded from: classes.dex */
+
 public class DozeBrightnessHostForwarder extends DozeMachine.Service.Delegate {
     private final DozeHost mHost;
 
@@ -10,7 +10,6 @@ public class DozeBrightnessHostForwarder extends DozeMachine.Service.Delegate {
         this.mHost = dozeHost;
     }
 
-    @Override // com.android.systemui.doze.DozeMachine.Service.Delegate, com.android.systemui.doze.DozeMachine.Service
     public void setDozeScreenBrightness(int i) {
         super.setDozeScreenBrightness(i);
         this.mHost.setDozeScreenBrightness(i);

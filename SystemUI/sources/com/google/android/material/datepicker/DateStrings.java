@@ -1,31 +1,27 @@
 package com.google.android.material.datepicker;
 
 import android.content.Context;
-import android.os.Build;
 import android.text.format.DateUtils;
 import androidx.core.util.Pair;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
-/* loaded from: classes2.dex */
+
 class DateStrings {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getYearMonth(Context context, long j) {
-        return DateUtils.formatDateTime(context, j - TimeZone.getDefault().getOffset(j), 36);
+    private DateStrings() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getYearMonthDay(long j) {
+    static String getYearMonth(long j) {
+        return DateUtils.formatDateTime((Context) null, j, 8228);
+    }
+
+    static String getYearMonthDay(long j) {
         return getYearMonthDay(j, Locale.getDefault());
     }
 
     static String getYearMonthDay(long j, Locale locale) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            return UtcDates.getYearAbbrMonthDayFormat(locale).format(new Date(j));
-        }
-        return UtcDates.getMediumFormat(locale).format(new Date(j));
+        return UtcDates.getYearAbbrMonthDayFormat(locale).format(new Date(j));
     }
 
     static String getMonthDay(long j) {
@@ -33,39 +29,27 @@ class DateStrings {
     }
 
     static String getMonthDay(long j, Locale locale) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            return UtcDates.getAbbrMonthDayFormat(locale).format(new Date(j));
-        }
-        return UtcDates.getMediumNoYear(locale).format(new Date(j));
+        return UtcDates.getAbbrMonthDayFormat(locale).format(new Date(j));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getMonthDayOfWeekDay(long j) {
+    static String getMonthDayOfWeekDay(long j) {
         return getMonthDayOfWeekDay(j, Locale.getDefault());
     }
 
     static String getMonthDayOfWeekDay(long j, Locale locale) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            return UtcDates.getAbbrMonthWeekdayDayFormat(locale).format(new Date(j));
-        }
-        return UtcDates.getFullFormat(locale).format(new Date(j));
+        return UtcDates.getAbbrMonthWeekdayDayFormat(locale).format(new Date(j));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getYearMonthDayOfWeekDay(long j) {
+    static String getYearMonthDayOfWeekDay(long j) {
         return getYearMonthDayOfWeekDay(j, Locale.getDefault());
     }
 
     static String getYearMonthDayOfWeekDay(long j, Locale locale) {
-        if (Build.VERSION.SDK_INT >= 24) {
-            return UtcDates.getYearAbbrMonthWeekdayDayFormat(locale).format(new Date(j));
-        }
-        return UtcDates.getFullFormat(locale).format(new Date(j));
+        return UtcDates.getYearAbbrMonthWeekdayDayFormat(locale).format(new Date(j));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static String getDateString(long j) {
-        return getDateString(j, null);
+    static String getDateString(long j) {
+        return getDateString(j, (SimpleDateFormat) null);
     }
 
     static String getDateString(long j, SimpleDateFormat simpleDateFormat) {
@@ -81,9 +65,8 @@ class DateStrings {
         return getYearMonthDay(j);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Pair<String, String> getDateRangeString(Long l, Long l2) {
-        return getDateRangeString(l, l2, null);
+    static Pair<String, String> getDateRangeString(Long l, Long l2) {
+        return getDateRangeString(l, l2, (SimpleDateFormat) null);
     }
 
     static Pair<String, String> getDateRangeString(Long l, Long l2, SimpleDateFormat simpleDateFormat) {
@@ -103,13 +86,13 @@ class DateStrings {
         utcCalendar2.setTimeInMillis(l2.longValue());
         if (simpleDateFormat != null) {
             return Pair.create(simpleDateFormat.format(new Date(l.longValue())), simpleDateFormat.format(new Date(l2.longValue())));
-        } else if (utcCalendar.get(1) == utcCalendar2.get(1)) {
+        } else if (utcCalendar.get(1) != utcCalendar2.get(1)) {
+            return Pair.create(getYearMonthDay(l.longValue(), Locale.getDefault()), getYearMonthDay(l2.longValue(), Locale.getDefault()));
+        } else {
             if (utcCalendar.get(1) == todayCalendar.get(1)) {
                 return Pair.create(getMonthDay(l.longValue(), Locale.getDefault()), getMonthDay(l2.longValue(), Locale.getDefault()));
             }
             return Pair.create(getMonthDay(l.longValue(), Locale.getDefault()), getYearMonthDay(l2.longValue(), Locale.getDefault()));
-        } else {
-            return Pair.create(getYearMonthDay(l.longValue(), Locale.getDefault()), getYearMonthDay(l2.longValue(), Locale.getDefault()));
         }
     }
 }

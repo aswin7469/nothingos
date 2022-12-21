@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:paddingMode="stack">
+<shape xmlns:androidprv="http://schemas.android.com/apk/prv/res/android" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:aapt="http://schemas.android.com/aapt" android:paddingMode="stack">
     <size android:width="@dimen/volume_ringer_drawer_item_size"/>
-    <solid android:color="?android:attr/colorBackgroundFloating"/>
-    <corners android:radius="@dimen/volume_ringer_drawer_item_size_half"/>
+    <solid android:color="?unknown_attr_ref: 10104e2"/>
+    <corners android:radius="@dimen/nt_volume_ringer_drawer_item_radius"/>
 </shape>

@@ -13,7 +13,7 @@ import dagger.Lazy;
 import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationRankingManager_Factory implements Factory<NotificationRankingManager> {
     private final Provider<NotificationGroupManagerLegacy> groupManagerProvider;
     private final Provider<HeadsUpManager> headsUpManagerProvider;
@@ -37,17 +37,15 @@ public final class NotificationRankingManager_Factory implements Factory<Notific
         this.keyguardEnvironmentProvider = provider9;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationRankingManager mo1933get() {
-        return newInstance(DoubleCheck.lazy(this.mediaManagerLazyProvider), this.groupManagerProvider.mo1933get(), this.headsUpManagerProvider.mo1933get(), this.notifFilterProvider.mo1933get(), this.loggerProvider.mo1933get(), this.sectionsFeatureManagerProvider.mo1933get(), this.peopleNotificationIdentifierProvider.mo1933get(), this.highPriorityProvider.mo1933get(), this.keyguardEnvironmentProvider.mo1933get());
+    public NotificationRankingManager get() {
+        return newInstance(DoubleCheck.lazy(this.mediaManagerLazyProvider), this.groupManagerProvider.get(), this.headsUpManagerProvider.get(), this.notifFilterProvider.get(), this.loggerProvider.get(), this.sectionsFeatureManagerProvider.get(), this.peopleNotificationIdentifierProvider.get(), this.highPriorityProvider.get(), this.keyguardEnvironmentProvider.get());
     }
 
     public static NotificationRankingManager_Factory create(Provider<NotificationMediaManager> provider, Provider<NotificationGroupManagerLegacy> provider2, Provider<HeadsUpManager> provider3, Provider<NotificationFilter> provider4, Provider<NotificationEntryManagerLogger> provider5, Provider<NotificationSectionsFeatureManager> provider6, Provider<PeopleNotificationIdentifier> provider7, Provider<HighPriorityProvider> provider8, Provider<NotificationEntryManager.KeyguardEnvironment> provider9) {
         return new NotificationRankingManager_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9);
     }
 
-    public static NotificationRankingManager newInstance(Lazy<NotificationMediaManager> lazy, NotificationGroupManagerLegacy notificationGroupManagerLegacy, HeadsUpManager headsUpManager, NotificationFilter notificationFilter, NotificationEntryManagerLogger notificationEntryManagerLogger, NotificationSectionsFeatureManager notificationSectionsFeatureManager, PeopleNotificationIdentifier peopleNotificationIdentifier, HighPriorityProvider highPriorityProvider, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment) {
-        return new NotificationRankingManager(lazy, notificationGroupManagerLegacy, headsUpManager, notificationFilter, notificationEntryManagerLogger, notificationSectionsFeatureManager, peopleNotificationIdentifier, highPriorityProvider, keyguardEnvironment);
+    public static NotificationRankingManager newInstance(Lazy<NotificationMediaManager> lazy, NotificationGroupManagerLegacy notificationGroupManagerLegacy, HeadsUpManager headsUpManager, NotificationFilter notificationFilter, NotificationEntryManagerLogger notificationEntryManagerLogger, NotificationSectionsFeatureManager notificationSectionsFeatureManager, PeopleNotificationIdentifier peopleNotificationIdentifier, HighPriorityProvider highPriorityProvider2, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment) {
+        return new NotificationRankingManager(lazy, notificationGroupManagerLegacy, headsUpManager, notificationFilter, notificationEntryManagerLogger, notificationSectionsFeatureManager, peopleNotificationIdentifier, highPriorityProvider2, keyguardEnvironment);
     }
 }

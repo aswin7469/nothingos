@@ -6,7 +6,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import com.airbnb.lottie.L;
+import com.airbnb.lottie.C1488L;
 import com.airbnb.lottie.LottieDrawable;
 import com.airbnb.lottie.LottieProperty;
 import com.airbnb.lottie.animation.LPaint;
@@ -20,7 +20,7 @@ import com.airbnb.lottie.utils.MiscUtils;
 import com.airbnb.lottie.value.LottieValueCallback;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class FillContent implements DrawingContent, BaseKeyframeAnimation.AnimationListener, KeyPathElementContent {
     private final BaseKeyframeAnimation<Integer, Integer> colorAnimation;
     private BaseKeyframeAnimation<ColorFilter, ColorFilter> colorFilterAnimation;
@@ -29,39 +29,37 @@ public class FillContent implements DrawingContent, BaseKeyframeAnimation.Animat
     private final LottieDrawable lottieDrawable;
     private final String name;
     private final BaseKeyframeAnimation<Integer, Integer> opacityAnimation;
-    private final Path path;
     private final Paint paint = new LPaint(1);
+    private final Path path;
     private final List<PathContent> paths = new ArrayList();
 
-    public FillContent(LottieDrawable lottieDrawable, BaseLayer baseLayer, ShapeFill shapeFill) {
-        Path path = new Path();
-        this.path = path;
+    public FillContent(LottieDrawable lottieDrawable2, BaseLayer baseLayer, ShapeFill shapeFill) {
+        Path path2 = new Path();
+        this.path = path2;
         this.layer = baseLayer;
         this.name = shapeFill.getName();
         this.hidden = shapeFill.isHidden();
-        this.lottieDrawable = lottieDrawable;
+        this.lottieDrawable = lottieDrawable2;
         if (shapeFill.getColor() == null || shapeFill.getOpacity() == null) {
             this.colorAnimation = null;
             this.opacityAnimation = null;
             return;
         }
-        path.setFillType(shapeFill.getFillType());
-        BaseKeyframeAnimation<Integer, Integer> mo192createAnimation = shapeFill.getColor().mo192createAnimation();
-        this.colorAnimation = mo192createAnimation;
-        mo192createAnimation.addUpdateListener(this);
-        baseLayer.addAnimation(mo192createAnimation);
-        BaseKeyframeAnimation<Integer, Integer> mo192createAnimation2 = shapeFill.getOpacity().mo192createAnimation();
-        this.opacityAnimation = mo192createAnimation2;
-        mo192createAnimation2.addUpdateListener(this);
-        baseLayer.addAnimation(mo192createAnimation2);
+        path2.setFillType(shapeFill.getFillType());
+        BaseKeyframeAnimation<Integer, Integer> createAnimation = shapeFill.getColor().createAnimation();
+        this.colorAnimation = createAnimation;
+        createAnimation.addUpdateListener(this);
+        baseLayer.addAnimation(createAnimation);
+        BaseKeyframeAnimation<Integer, Integer> createAnimation2 = shapeFill.getOpacity().createAnimation();
+        this.opacityAnimation = createAnimation2;
+        createAnimation2.addUpdateListener(this);
+        baseLayer.addAnimation(createAnimation2);
     }
 
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation.AnimationListener
     public void onValueChanged() {
         this.lottieDrawable.invalidateSelf();
     }
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public void setContents(List<Content> list, List<Content> list2) {
         for (int i = 0; i < list2.size(); i++) {
             Content content = list2.get(i);
@@ -71,32 +69,28 @@ public class FillContent implements DrawingContent, BaseKeyframeAnimation.Animat
         }
     }
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public String getName() {
         return this.name;
     }
 
-    @Override // com.airbnb.lottie.animation.content.DrawingContent
     public void draw(Canvas canvas, Matrix matrix, int i) {
-        if (this.hidden) {
-            return;
+        if (!this.hidden) {
+            C1488L.beginSection("FillContent#draw");
+            this.paint.setColor(((ColorKeyframeAnimation) this.colorAnimation).getIntValue());
+            this.paint.setAlpha(MiscUtils.clamp((int) ((((((float) i) / 255.0f) * ((float) this.opacityAnimation.getValue().intValue())) / 100.0f) * 255.0f), 0, 255));
+            BaseKeyframeAnimation<ColorFilter, ColorFilter> baseKeyframeAnimation = this.colorFilterAnimation;
+            if (baseKeyframeAnimation != null) {
+                this.paint.setColorFilter(baseKeyframeAnimation.getValue());
+            }
+            this.path.reset();
+            for (int i2 = 0; i2 < this.paths.size(); i2++) {
+                this.path.addPath(this.paths.get(i2).getPath(), matrix);
+            }
+            canvas.drawPath(this.path, this.paint);
+            C1488L.endSection("FillContent#draw");
         }
-        L.beginSection("FillContent#draw");
-        this.paint.setColor(((ColorKeyframeAnimation) this.colorAnimation).getIntValue());
-        this.paint.setAlpha(MiscUtils.clamp((int) ((((i / 255.0f) * this.opacityAnimation.mo189getValue().intValue()) / 100.0f) * 255.0f), 0, 255));
-        BaseKeyframeAnimation<ColorFilter, ColorFilter> baseKeyframeAnimation = this.colorFilterAnimation;
-        if (baseKeyframeAnimation != null) {
-            this.paint.setColorFilter(baseKeyframeAnimation.mo189getValue());
-        }
-        this.path.reset();
-        for (int i2 = 0; i2 < this.paths.size(); i2++) {
-            this.path.addPath(this.paths.get(i2).getPath(), matrix);
-        }
-        canvas.drawPath(this.path, this.paint);
-        L.endSection("FillContent#draw");
     }
 
-    @Override // com.airbnb.lottie.animation.content.DrawingContent
     public void getBounds(RectF rectF, Matrix matrix, boolean z) {
         this.path.reset();
         for (int i = 0; i < this.paths.size(); i++) {
@@ -106,19 +100,20 @@ public class FillContent implements DrawingContent, BaseKeyframeAnimation.Animat
         rectF.set(rectF.left - 1.0f, rectF.top - 1.0f, rectF.right + 1.0f, rectF.bottom + 1.0f);
     }
 
-    @Override // com.airbnb.lottie.model.KeyPathElement
     public void resolveKeyPath(KeyPath keyPath, int i, List<KeyPath> list, KeyPath keyPath2) {
         MiscUtils.resolveKeyPath(keyPath, i, list, keyPath2, this);
     }
 
-    @Override // com.airbnb.lottie.model.KeyPathElement
     public <T> void addValueCallback(T t, LottieValueCallback<T> lottieValueCallback) {
         if (t == LottieProperty.COLOR) {
             this.colorAnimation.setValueCallback(lottieValueCallback);
         } else if (t == LottieProperty.OPACITY) {
             this.opacityAnimation.setValueCallback(lottieValueCallback);
-        } else if (t != LottieProperty.COLOR_FILTER) {
-        } else {
+        } else if (t == LottieProperty.COLOR_FILTER) {
+            BaseKeyframeAnimation<ColorFilter, ColorFilter> baseKeyframeAnimation = this.colorFilterAnimation;
+            if (baseKeyframeAnimation != null) {
+                this.layer.removeAnimation(baseKeyframeAnimation);
+            }
             if (lottieValueCallback == null) {
                 this.colorFilterAnimation = null;
                 return;

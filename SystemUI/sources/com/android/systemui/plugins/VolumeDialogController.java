@@ -9,14 +9,13 @@ import android.util.SparseArray;
 import com.android.systemui.plugins.annotations.Dependencies;
 import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
+
 @Dependencies({@DependsOn(target = StreamState.class), @DependsOn(target = State.class), @DependsOn(target = Callbacks.class)})
 @ProvidesInterface(version = 1)
-/* loaded from: classes.dex */
 public interface VolumeDialogController {
     public static final int VERSION = 1;
 
     @ProvidesInterface(version = 1)
-    /* loaded from: classes.dex */
     public interface Callbacks {
         public static final int VERSION = 1;
 
@@ -32,7 +31,7 @@ public interface VolumeDialogController {
 
         void onScreenOff();
 
-        void onShowRequested(int i);
+        void onShowRequested(int i, boolean z, int i2);
 
         void onShowSafetyWarning(int i);
 
@@ -55,8 +54,6 @@ public interface VolumeDialogController {
 
     boolean hasVibrator();
 
-    boolean isCaptionStreamOptedOut();
-
     void notifyVisible(boolean z);
 
     void removeCallback(Callbacks callbacks);
@@ -76,7 +73,6 @@ public interface VolumeDialogController {
     void vibrate(VibrationEffect vibrationEffect);
 
     @ProvidesInterface(version = 1)
-    /* loaded from: classes.dex */
     public static final class StreamState {
         public static final int VERSION = 1;
         public boolean dynamic;
@@ -105,10 +101,10 @@ public interface VolumeDialogController {
     }
 
     @ProvidesInterface(version = 1)
-    /* loaded from: classes.dex */
     public static final class State {
         public static int NO_ACTIVE_STREAM = -1;
         public static final int VERSION = 1;
+        public int activeStream = NO_ACTIVE_STREAM;
         public boolean disallowAlarms;
         public boolean disallowMedia;
         public boolean disallowRinger;
@@ -117,9 +113,8 @@ public interface VolumeDialogController {
         public String effectsSuppressorName;
         public int ringerModeExternal;
         public int ringerModeInternal;
-        public int zenMode;
         public final SparseArray<StreamState> states = new SparseArray<>();
-        public int activeStream = NO_ACTIVE_STREAM;
+        public int zenMode;
 
         public State copy() {
             State state = new State();
@@ -157,14 +152,7 @@ public interface VolumeDialogController {
                 }
                 int keyAt = this.states.keyAt(i2);
                 StreamState valueAt = this.states.valueAt(i2);
-                sb.append(AudioSystem.streamToString(keyAt));
-                sb.append(":");
-                sb.append(valueAt.level);
-                sb.append('[');
-                sb.append(valueAt.levelMin);
-                sb.append("..");
-                sb.append(valueAt.levelMax);
-                sb.append(']');
+                sb.append(AudioSystem.streamToString(keyAt)).append(":").append(valueAt.level).append('[').append(valueAt.levelMin).append("..").append(valueAt.levelMax).append(']');
                 if (valueAt.muted) {
                     sb.append(" [MUTED]");
                 }
@@ -173,45 +161,34 @@ public interface VolumeDialogController {
                 }
             }
             sep(sb, i);
-            sb.append("ringerModeExternal:");
-            sb.append(this.ringerModeExternal);
+            sb.append("ringerModeExternal:").append(this.ringerModeExternal);
             sep(sb, i);
-            sb.append("ringerModeInternal:");
-            sb.append(this.ringerModeInternal);
+            sb.append("ringerModeInternal:").append(this.ringerModeInternal);
             sep(sb, i);
-            sb.append("zenMode:");
-            sb.append(this.zenMode);
+            sb.append("zenMode:").append(this.zenMode);
             sep(sb, i);
-            sb.append("effectsSuppressor:");
-            sb.append(this.effectsSuppressor);
+            sb.append("effectsSuppressor:").append((Object) this.effectsSuppressor);
             sep(sb, i);
-            sb.append("effectsSuppressorName:");
-            sb.append(this.effectsSuppressorName);
+            sb.append("effectsSuppressorName:").append(this.effectsSuppressorName);
             sep(sb, i);
-            sb.append("activeStream:");
-            sb.append(this.activeStream);
+            sb.append("activeStream:").append(this.activeStream);
             sep(sb, i);
-            sb.append("disallowAlarms:");
-            sb.append(this.disallowAlarms);
+            sb.append("disallowAlarms:").append(this.disallowAlarms);
             sep(sb, i);
-            sb.append("disallowMedia:");
-            sb.append(this.disallowMedia);
+            sb.append("disallowMedia:").append(this.disallowMedia);
             sep(sb, i);
-            sb.append("disallowSystem:");
-            sb.append(this.disallowSystem);
+            sb.append("disallowSystem:").append(this.disallowSystem);
             sep(sb, i);
-            sb.append("disallowRinger:");
-            sb.append(this.disallowRinger);
+            sb.append("disallowRinger:").append(this.disallowRinger);
             if (i > 0) {
                 sep(sb, i);
             }
-            sb.append('}');
-            return sb.toString();
+            return sb.append('}').toString();
         }
 
         private static void sep(StringBuilder sb, int i) {
             if (i > 0) {
-                sb.append('\n');
+                sb.append(10);
                 for (int i2 = 0; i2 < i; i2++) {
                     sb.append(' ');
                 }

@@ -11,30 +11,29 @@ import android.view.View;
 import android.widget.Toolbar;
 import androidx.preference.Preference;
 import com.android.settingslib.Utils;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.fragments.FragmentHostManager;
 import java.util.Objects;
-/* loaded from: classes2.dex */
+
 public class RadioListPreference extends CustomListPreference {
-    private DialogInterface.OnClickListener mOnClickListener;
+    /* access modifiers changed from: private */
+    public DialogInterface.OnClickListener mOnClickListener;
     private CharSequence mSummary;
 
     public RadioListPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    @Override // com.android.systemui.tuner.CustomListPreference
-    protected void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
+    /* access modifiers changed from: protected */
+    public void onPrepareDialogBuilder(AlertDialog.Builder builder, DialogInterface.OnClickListener onClickListener) {
         this.mOnClickListener = onClickListener;
     }
 
-    @Override // androidx.preference.ListPreference, androidx.preference.Preference
     public void setSummary(CharSequence charSequence) {
         super.setSummary(charSequence);
         this.mSummary = charSequence;
     }
 
-    @Override // androidx.preference.ListPreference, androidx.preference.Preference
     public CharSequence getSummary() {
         CharSequence charSequence = this.mSummary;
         if (charSequence == null || charSequence.toString().contains("%s")) {
@@ -43,49 +42,39 @@ public class RadioListPreference extends CustomListPreference {
         return this.mSummary;
     }
 
-    @Override // com.android.systemui.tuner.CustomListPreference
-    protected Dialog onDialogCreated(DialogFragment dialogFragment, Dialog dialog) {
-        final Dialog dialog2 = new Dialog(getContext(), 16974371);
-        Toolbar toolbar = (Toolbar) dialog2.findViewById(16908710);
+    /* access modifiers changed from: protected */
+    public Dialog onDialogCreated(DialogFragment dialogFragment, Dialog dialog) {
+        Dialog dialog2 = new Dialog(getContext(), 16974371);
+        Toolbar toolbar = (Toolbar) dialog2.findViewById(16908731);
         View view = new View(getContext());
-        view.setId(R$id.content);
+        view.setId(C1893R.C1897id.content);
         dialog2.setContentView(view);
         toolbar.setTitle(getTitle());
         toolbar.setNavigationIcon(Utils.getDrawable(dialog2.getContext(), 16843531));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.tuner.RadioListPreference$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view2) {
-                dialog2.dismiss();
-            }
-        });
+        toolbar.setNavigationOnClickListener(new RadioListPreference$$ExternalSyntheticLambda0(dialog2));
         RadioFragment radioFragment = new RadioFragment();
         radioFragment.setPreference(this);
         FragmentHostManager.get(view).getFragmentManager().beginTransaction().add(16908290, radioFragment).commit();
         return dialog2;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.tuner.CustomListPreference
+    /* access modifiers changed from: protected */
     public void onDialogStateRestored(DialogFragment dialogFragment, Dialog dialog, Bundle bundle) {
         super.onDialogStateRestored(dialogFragment, dialog, bundle);
-        int i = R$id.content;
-        RadioFragment radioFragment = (RadioFragment) FragmentHostManager.get(dialog.findViewById(i)).getFragmentManager().findFragmentById(i);
+        RadioFragment radioFragment = (RadioFragment) FragmentHostManager.get(dialog.findViewById(C1893R.C1897id.content)).getFragmentManager().findFragmentById(C1893R.C1897id.content);
         if (radioFragment != null) {
             radioFragment.setPreference(this);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.tuner.CustomListPreference
+    /* access modifiers changed from: protected */
     public void onDialogClosed(boolean z) {
         super.onDialogClosed(z);
     }
 
-    /* loaded from: classes2.dex */
     public static class RadioFragment extends TunerPreferenceFragment {
         private RadioListPreference mListPref;
 
-        @Override // androidx.preference.PreferenceFragment
         public void onCreatePreferences(Bundle bundle, String str) {
             setPreferenceScreen(getPreferenceManager().createPreferenceScreen(getPreferenceManager().getContext()));
             if (this.mListPref != null) {
@@ -108,9 +97,8 @@ public class RadioListPreference extends CustomListPreference {
             }
         }
 
-        @Override // androidx.preference.PreferenceFragment, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
         public boolean onPreferenceTreeClick(Preference preference) {
-            this.mListPref.mOnClickListener.onClick(null, Integer.parseInt(preference.getKey()));
+            this.mListPref.mOnClickListener.onClick((DialogInterface) null, Integer.parseInt(preference.getKey()));
             return true;
         }
 

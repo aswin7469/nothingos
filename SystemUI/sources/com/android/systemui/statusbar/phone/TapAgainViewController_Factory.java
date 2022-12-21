@@ -4,7 +4,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class TapAgainViewController_Factory implements Factory<TapAgainViewController> {
     private final Provider<ConfigurationController> configurationControllerProvider;
     private final Provider<DelayableExecutor> delayableExecutorProvider;
@@ -18,10 +18,8 @@ public final class TapAgainViewController_Factory implements Factory<TapAgainVie
         this.doubleTapTimeMsProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public TapAgainViewController mo1933get() {
-        return newInstance(this.viewProvider.mo1933get(), this.delayableExecutorProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.doubleTapTimeMsProvider.mo1933get().longValue());
+    public TapAgainViewController get() {
+        return newInstance(this.viewProvider.get(), this.delayableExecutorProvider.get(), this.configurationControllerProvider.get(), this.doubleTapTimeMsProvider.get().longValue());
     }
 
     public static TapAgainViewController_Factory create(Provider<TapAgainView> provider, Provider<DelayableExecutor> provider2, Provider<ConfigurationController> provider3, Provider<Long> provider4) {

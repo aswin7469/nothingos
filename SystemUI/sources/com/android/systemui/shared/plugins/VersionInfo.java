@@ -7,7 +7,7 @@ import com.android.systemui.plugins.annotations.ProvidesInterface;
 import com.android.systemui.plugins.annotations.Requirements;
 import com.android.systemui.plugins.annotations.Requires;
 import java.util.function.BiConsumer;
-/* loaded from: classes.dex */
+
 public class VersionInfo {
     private Class<?> mDefault;
     private final ArrayMap<Class<?>, Version> mVersions = new ArrayMap<>();
@@ -29,41 +29,37 @@ public class VersionInfo {
     }
 
     private void addClass(Class<?> cls, boolean z) {
-        Requires[] value;
-        if (this.mVersions.containsKey(cls)) {
-            return;
-        }
-        ProvidesInterface providesInterface = (ProvidesInterface) cls.getDeclaredAnnotation(ProvidesInterface.class);
-        if (providesInterface != null) {
-            this.mVersions.put(cls, new Version(providesInterface.version(), true));
-        }
-        Requires requires = (Requires) cls.getDeclaredAnnotation(Requires.class);
-        if (requires != null) {
-            this.mVersions.put(requires.target(), new Version(requires.version(), z));
-        }
-        Requirements requirements = (Requirements) cls.getDeclaredAnnotation(Requirements.class);
-        if (requirements != null) {
-            for (Requires requires2 : requirements.value()) {
-                this.mVersions.put(requires2.target(), new Version(requires2.version(), z));
+        if (!this.mVersions.containsKey(cls)) {
+            ProvidesInterface providesInterface = (ProvidesInterface) cls.getDeclaredAnnotation(ProvidesInterface.class);
+            if (providesInterface != null) {
+                this.mVersions.put(cls, new Version(providesInterface.version(), true));
             }
-        }
-        DependsOn dependsOn = (DependsOn) cls.getDeclaredAnnotation(DependsOn.class);
-        if (dependsOn != null) {
-            addClass(dependsOn.target(), true);
-        }
-        Dependencies dependencies = (Dependencies) cls.getDeclaredAnnotation(Dependencies.class);
-        if (dependencies == null) {
-            return;
-        }
-        for (DependsOn dependsOn2 : dependencies.value()) {
-            addClass(dependsOn2.target(), true);
+            Requires requires = (Requires) cls.getDeclaredAnnotation(Requires.class);
+            if (requires != null) {
+                this.mVersions.put(requires.target(), new Version(requires.version(), z));
+            }
+            Requirements requirements = (Requirements) cls.getDeclaredAnnotation(Requirements.class);
+            if (requirements != null) {
+                for (Requires requires2 : requirements.value()) {
+                    this.mVersions.put(requires2.target(), new Version(requires2.version(), z));
+                }
+            }
+            DependsOn dependsOn = (DependsOn) cls.getDeclaredAnnotation(DependsOn.class);
+            if (dependsOn != null) {
+                addClass(dependsOn.target(), true);
+            }
+            Dependencies dependencies = (Dependencies) cls.getDeclaredAnnotation(Dependencies.class);
+            if (dependencies != null) {
+                for (DependsOn target : dependencies.value()) {
+                    addClass(target.target(), true);
+                }
+            }
         }
     }
 
     public void checkVersion(VersionInfo versionInfo) throws InvalidVersionException {
         final ArrayMap arrayMap = new ArrayMap(this.mVersions);
-        versionInfo.mVersions.forEach(new BiConsumer<Class<?>, Version>() { // from class: com.android.systemui.shared.plugins.VersionInfo.1
-            @Override // java.util.function.BiConsumer
+        versionInfo.mVersions.forEach(new BiConsumer<Class<?>, Version>() {
             public void accept(Class<?> cls, Version version) {
                 Version version2 = (Version) arrayMap.remove(cls);
                 if (version2 == null) {
@@ -72,8 +68,7 @@ public class VersionInfo {
                 boolean z = false;
                 if (version2 == null) {
                     throw new InvalidVersionException(cls.getSimpleName() + " does not provide an interface", false);
-                } else if (version2.mVersion == version.mVersion) {
-                } else {
+                } else if (version2.mVersion != version.mVersion) {
                     if (version2.mVersion < version.mVersion) {
                         z = true;
                     }
@@ -81,18 +76,16 @@ public class VersionInfo {
                 }
             }
         });
-        arrayMap.forEach(new BiConsumer<Class<?>, Version>() { // from class: com.android.systemui.shared.plugins.VersionInfo.2
-            @Override // java.util.function.BiConsumer
+        arrayMap.forEach(new BiConsumer<Class<?>, Version>() {
             public void accept(Class<?> cls, Version version) {
-                if (!version.mRequired) {
-                    return;
+                if (version.mRequired) {
+                    throw new InvalidVersionException("Missing required dependency " + cls.getSimpleName(), false);
                 }
-                throw new InvalidVersionException("Missing required dependency " + cls.getSimpleName(), false);
             }
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public Version createVersion(Class<?> cls) {
         ProvidesInterface providesInterface = (ProvidesInterface) cls.getDeclaredAnnotation(ProvidesInterface.class);
         if (providesInterface != null) {
@@ -105,8 +98,9 @@ public class VersionInfo {
         return this.mVersions.containsKey(cls);
     }
 
-    /* loaded from: classes.dex */
     public static class InvalidVersionException extends RuntimeException {
+        private int mActual;
+        private int mExpected;
         private final boolean mTooNew;
 
         public InvalidVersionException(String str, boolean z) {
@@ -117,18 +111,28 @@ public class VersionInfo {
         public InvalidVersionException(Class<?> cls, boolean z, int i, int i2) {
             super(cls.getSimpleName() + " expected version " + i + " but had " + i2);
             this.mTooNew = z;
+            this.mExpected = i;
+            this.mActual = i2;
         }
 
         public boolean isTooNew() {
             return this.mTooNew;
         }
+
+        public int getExpectedVersion() {
+            return this.mExpected;
+        }
+
+        public int getActualVersion() {
+            return this.mActual;
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class Version {
-        private final boolean mRequired;
-        private final int mVersion;
+    private static class Version {
+        /* access modifiers changed from: private */
+        public final boolean mRequired;
+        /* access modifiers changed from: private */
+        public final int mVersion;
 
         public Version(int i, boolean z) {
             this.mVersion = i;

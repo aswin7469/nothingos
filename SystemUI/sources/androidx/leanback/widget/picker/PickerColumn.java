@@ -1,5 +1,5 @@
 package androidx.leanback.widget.picker;
-/* loaded from: classes.dex */
+
 public class PickerColumn {
     private int mCurrentValue;
     private String mLabelFormat;
@@ -7,25 +7,36 @@ public class PickerColumn {
     private int mMinValue;
     private CharSequence[] mStaticLabels;
 
-    public void setLabelFormat(String labelFormat) {
-        this.mLabelFormat = labelFormat;
+    public void setLabelFormat(String str) {
+        this.mLabelFormat = str;
     }
 
-    public void setStaticLabels(CharSequence[] labels) {
-        this.mStaticLabels = labels;
+    public String getLabelFormat() {
+        return this.mLabelFormat;
     }
 
-    public CharSequence getLabelFor(int value) {
+    public void setStaticLabels(CharSequence[] charSequenceArr) {
+        this.mStaticLabels = charSequenceArr;
+    }
+
+    public CharSequence[] getStaticLabels() {
+        return this.mStaticLabels;
+    }
+
+    public CharSequence getLabelFor(int i) {
         CharSequence[] charSequenceArr = this.mStaticLabels;
-        return charSequenceArr == null ? String.format(this.mLabelFormat, Integer.valueOf(value)) : charSequenceArr[value];
+        if (charSequenceArr != null) {
+            return charSequenceArr[i];
+        }
+        return String.format(this.mLabelFormat, Integer.valueOf(i));
     }
 
     public int getCurrentValue() {
         return this.mCurrentValue;
     }
 
-    public void setCurrentValue(int value) {
-        this.mCurrentValue = value;
+    public void setCurrentValue(int i) {
+        this.mCurrentValue = i;
     }
 
     public int getCount() {
@@ -40,11 +51,11 @@ public class PickerColumn {
         return this.mMaxValue;
     }
 
-    public void setMinValue(int minValue) {
-        this.mMinValue = minValue;
+    public void setMinValue(int i) {
+        this.mMinValue = i;
     }
 
-    public void setMaxValue(int maxValue) {
-        this.mMaxValue = maxValue;
+    public void setMaxValue(int i) {
+        this.mMaxValue = i;
     }
 }

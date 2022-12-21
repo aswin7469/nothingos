@@ -2,48 +2,53 @@ package androidx.slice;
 
 import androidx.core.util.ObjectsCompat;
 import java.lang.reflect.Array;
-/* loaded from: classes.dex */
+
 class ArrayUtils {
-    public static <T> boolean contains(T[] array, T item) {
-        for (T t : array) {
-            if (ObjectsCompat.equals(t, item)) {
+    public static <T> boolean contains(T[] tArr, T t) {
+        for (T equals : tArr) {
+            if (ObjectsCompat.equals(equals, t)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static <T> T[] appendElement(Class<T> kind, T[] array, T element) {
-        T[] tArr;
+    public static <T> T[] appendElement(Class<T> cls, T[] tArr, T t) {
+        T[] tArr2;
         int i = 0;
-        if (array != null) {
-            int length = array.length;
-            tArr = (T[]) ((Object[]) Array.newInstance((Class<?>) kind, length + 1));
-            System.arraycopy(array, 0, tArr, 0, length);
+        if (tArr != null) {
+            int length = tArr.length;
+            tArr2 = (Object[]) Array.newInstance((Class<?>) cls, length + 1);
+            System.arraycopy((Object) tArr, 0, (Object) tArr2, 0, length);
             i = length;
         } else {
-            tArr = (T[]) ((Object[]) Array.newInstance((Class<?>) kind, 1));
+            tArr2 = (Object[]) Array.newInstance((Class<?>) cls, 1);
         }
-        tArr[i] = element;
+        tArr2[i] = t;
+        return tArr2;
+    }
+
+    public static <T> T[] removeElement(Class<T> cls, T[] tArr, T t) {
+        if (tArr == null || !contains(tArr, t)) {
+            return tArr;
+        }
+        int length = tArr.length;
+        int i = 0;
+        while (i < length) {
+            if (!ObjectsCompat.equals(tArr[i], t)) {
+                i++;
+            } else if (length == 1) {
+                return null;
+            } else {
+                T[] tArr2 = (Object[]) Array.newInstance((Class<?>) cls, length - 1);
+                System.arraycopy((Object) tArr, 0, (Object) tArr2, 0, i);
+                System.arraycopy((Object) tArr, i + 1, (Object) tArr2, i, (length - i) - 1);
+                return tArr2;
+            }
+        }
         return tArr;
     }
 
-    public static <T> T[] removeElement(Class<T> kind, T[] array, T element) {
-        if (array == null || !contains(array, element)) {
-            return array;
-        }
-        int length = array.length;
-        for (int i = 0; i < length; i++) {
-            if (ObjectsCompat.equals(array[i], element)) {
-                if (length == 1) {
-                    return null;
-                }
-                T[] tArr = (T[]) ((Object[]) Array.newInstance((Class<?>) kind, length - 1));
-                System.arraycopy(array, 0, tArr, 0, i);
-                System.arraycopy(array, i + 1, tArr, i, (length - i) - 1);
-                return tArr;
-            }
-        }
-        return array;
+    private ArrayUtils() {
     }
 }

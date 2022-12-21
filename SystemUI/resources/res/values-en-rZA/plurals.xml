@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">Incorrect SIM%d PIN code, you have %d remaining attempts before you must contact your carrier to unlock your device.</item>
+        <item quantity="other">Incorrect SIM%d PIN code, you have %d remaining attempts.</item>
+    </plurals>
+</resources>

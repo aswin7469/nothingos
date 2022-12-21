@@ -9,7 +9,7 @@ import com.android.systemui.statusbar.policy.IndividualSensorPrivacyController;
 import com.android.systemui.util.time.SystemClock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class AppOpsControllerImpl_Factory implements Factory<AppOpsControllerImpl> {
     private final Provider<AudioManager> audioManagerProvider;
     private final Provider<Looper> bgLooperProvider;
@@ -29,10 +29,8 @@ public final class AppOpsControllerImpl_Factory implements Factory<AppOpsControl
         this.clockProvider = provider7;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public AppOpsControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.bgLooperProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.audioManagerProvider.mo1933get(), this.sensorPrivacyControllerProvider.mo1933get(), this.dispatcherProvider.mo1933get(), this.clockProvider.mo1933get());
+    public AppOpsControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.bgLooperProvider.get(), this.dumpManagerProvider.get(), this.audioManagerProvider.get(), this.sensorPrivacyControllerProvider.get(), this.dispatcherProvider.get(), this.clockProvider.get());
     }
 
     public static AppOpsControllerImpl_Factory create(Provider<Context> provider, Provider<Looper> provider2, Provider<DumpManager> provider3, Provider<AudioManager> provider4, Provider<IndividualSensorPrivacyController> provider5, Provider<BroadcastDispatcher> provider6, Provider<SystemClock> provider7) {

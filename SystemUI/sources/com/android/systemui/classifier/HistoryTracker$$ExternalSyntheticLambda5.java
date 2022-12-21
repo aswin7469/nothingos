@@ -2,15 +2,16 @@ package com.android.systemui.classifier;
 
 import com.android.systemui.classifier.HistoryTracker;
 import java.util.function.Function;
-/* loaded from: classes.dex */
-public final /* synthetic */ class HistoryTracker$$ExternalSyntheticLambda5 implements Function {
-    public static final /* synthetic */ HistoryTracker$$ExternalSyntheticLambda5 INSTANCE = new HistoryTracker$$ExternalSyntheticLambda5();
 
-    private /* synthetic */ HistoryTracker$$ExternalSyntheticLambda5() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class HistoryTracker$$ExternalSyntheticLambda5 implements Function {
+    public final /* synthetic */ double f$0;
+
+    public /* synthetic */ HistoryTracker$$ExternalSyntheticLambda5(double d) {
+        this.f$0 = d;
     }
 
-    @Override // java.util.function.Function
     public final Object apply(Object obj) {
-        return Double.valueOf(((HistoryTracker.CombinedResult) obj).getScore());
+        return Double.valueOf(Math.pow(((HistoryTracker.CombinedResult) obj).getScore() - this.f$0, 2.0d));
     }
 }

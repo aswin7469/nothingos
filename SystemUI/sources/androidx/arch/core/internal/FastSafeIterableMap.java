@@ -3,18 +3,17 @@ package androidx.arch.core.internal;
 import androidx.arch.core.internal.SafeIterableMap;
 import java.util.HashMap;
 import java.util.Map;
-/* loaded from: classes.dex */
+
 public class FastSafeIterableMap<K, V> extends SafeIterableMap<K, V> {
     private HashMap<K, SafeIterableMap.Entry<K, V>> mHashMap = new HashMap<>();
 
-    @Override // androidx.arch.core.internal.SafeIterableMap
-    protected SafeIterableMap.Entry<K, V> get(K k) {
+    /* access modifiers changed from: protected */
+    public SafeIterableMap.Entry<K, V> get(K k) {
         return this.mHashMap.get(k);
     }
 
-    @Override // androidx.arch.core.internal.SafeIterableMap
     public V putIfAbsent(K k, V v) {
-        SafeIterableMap.Entry<K, V> entry = get(k);
+        SafeIterableMap.Entry entry = get(k);
         if (entry != null) {
             return entry.mValue;
         }
@@ -22,11 +21,10 @@ public class FastSafeIterableMap<K, V> extends SafeIterableMap<K, V> {
         return null;
     }
 
-    @Override // androidx.arch.core.internal.SafeIterableMap
     public V remove(K k) {
-        V v = (V) super.remove(k);
+        V remove = super.remove(k);
         this.mHashMap.remove(k);
-        return v;
+        return remove;
     }
 
     public boolean contains(K k) {

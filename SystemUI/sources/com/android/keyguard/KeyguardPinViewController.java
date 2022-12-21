@@ -5,53 +5,61 @@ import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardMessageAreaController;
 import com.android.keyguard.KeyguardSecurityModel;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.classifier.FalsingCollector;
-/* loaded from: classes.dex */
+import com.android.systemui.statusbar.policy.DevicePostureController;
+
 public class KeyguardPinViewController extends KeyguardPinBasedInputViewController<KeyguardPINView> {
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private final DevicePostureController.Callback mPostureCallback = new KeyguardPinViewController$$ExternalSyntheticLambda1(this);
+    private final DevicePostureController mPostureController;
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public KeyguardPinViewController(KeyguardPINView keyguardPINView, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardSecurityModel.SecurityMode securityMode, LockPatternUtils lockPatternUtils, KeyguardSecurityCallback keyguardSecurityCallback, KeyguardMessageAreaController.Factory factory, LatencyTracker latencyTracker, LiftToActivateListener liftToActivateListener, EmergencyButtonController emergencyButtonController, FalsingCollector falsingCollector) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-keyguard-KeyguardPinViewController  reason: not valid java name */
+    public /* synthetic */ void m2289lambda$new$0$comandroidkeyguardKeyguardPinViewController(int i) {
+        ((KeyguardPINView) this.mView).onDevicePostureChanged(i);
+    }
+
+    protected KeyguardPinViewController(KeyguardPINView keyguardPINView, KeyguardUpdateMonitor keyguardUpdateMonitor, KeyguardSecurityModel.SecurityMode securityMode, LockPatternUtils lockPatternUtils, KeyguardSecurityCallback keyguardSecurityCallback, KeyguardMessageAreaController.Factory factory, LatencyTracker latencyTracker, LiftToActivateListener liftToActivateListener, EmergencyButtonController emergencyButtonController, FalsingCollector falsingCollector, DevicePostureController devicePostureController) {
         super(keyguardPINView, keyguardUpdateMonitor, securityMode, lockPatternUtils, keyguardSecurityCallback, factory, latencyTracker, liftToActivateListener, emergencyButtonController, falsingCollector);
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
+        this.mPostureController = devicePostureController;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.keyguard.KeyguardPinBasedInputViewController, com.android.keyguard.KeyguardAbsKeyInputViewController, com.android.keyguard.KeyguardInputViewController, com.android.systemui.util.ViewController
+    /* access modifiers changed from: protected */
     public void onViewAttached() {
         super.onViewAttached();
-        View findViewById = ((KeyguardPINView) this.mView).findViewById(R$id.cancel_button);
+        View findViewById = ((KeyguardPINView) this.mView).findViewById(C1893R.C1897id.cancel_button);
         if (findViewById != null) {
-            findViewById.setOnClickListener(new View.OnClickListener() { // from class: com.android.keyguard.KeyguardPinViewController$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnClickListener
-                public final void onClick(View view) {
-                    KeyguardPinViewController.this.lambda$onViewAttached$0(view);
-                }
-            });
+            findViewById.setOnClickListener(new KeyguardPinViewController$$ExternalSyntheticLambda0(this));
         }
+        this.mPostureController.addCallback(this.mPostureCallback);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onViewAttached$0(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onViewAttached$1$com-android-keyguard-KeyguardPinViewController */
+    public /* synthetic */ void mo26001x82dd84a5(View view) {
         getKeyguardSecurityCallback().reset();
         getKeyguardSecurityCallback().onCancelClicked();
     }
 
-    @Override // com.android.keyguard.KeyguardAbsKeyInputViewController, com.android.keyguard.KeyguardInputViewController
+    /* access modifiers changed from: protected */
+    public void onViewDetached() {
+        super.onViewDetached();
+        this.mPostureController.removeCallback(this.mPostureCallback);
+    }
+
     public void reloadColors() {
         super.reloadColors();
         ((KeyguardPINView) this.mView).reloadColors();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @Override // com.android.keyguard.KeyguardPinBasedInputViewController, com.android.keyguard.KeyguardAbsKeyInputViewController
+    /* access modifiers changed from: package-private */
     public void resetState() {
         super.resetState();
-        this.mMessageAreaController.setMessage("");
+        this.mMessageAreaController.setMessage((CharSequence) "");
     }
 
-    @Override // com.android.keyguard.KeyguardInputViewController
     public boolean startDisappearAnimation(Runnable runnable) {
         return ((KeyguardPINView) this.mView).startDisappearAnimation(this.mKeyguardUpdateMonitor.needsSlowUnlockTransition(), runnable);
     }

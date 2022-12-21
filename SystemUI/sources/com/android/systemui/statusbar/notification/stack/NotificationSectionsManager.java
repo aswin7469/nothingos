@@ -1,290 +1,209 @@
 package com.android.systemui.statusbar.notification.stack;
 
+import android.os.Trace;
+import android.util.Log;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.R$layout;
 import com.android.systemui.media.KeyguardMediaController;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
+import com.android.systemui.statusbar.notification.NotifPipelineFlags;
 import com.android.systemui.statusbar.notification.NotificationSectionsFeatureManager;
-import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.collection.render.MediaContainerController;
 import com.android.systemui.statusbar.notification.collection.render.SectionHeaderController;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
-import com.android.systemui.statusbar.notification.stack.NotificationSectionsManager;
 import com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.ConvenienceExtensionsKt;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.NoWhenBranchMatchedException;
 import kotlin.Unit;
-import kotlin.collections.CollectionsKt__CollectionsKt;
-import kotlin.collections.CollectionsKt___CollectionsKt;
+import kotlin.collections.CollectionsKt;
 import kotlin.collections.Grouping;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u0000­\u0001\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\b\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u0011\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\f\n\u0002\u0010 \n\u0002\b\u0004\n\u0002\u0010\u000e\n\u0002\b\u0005*\u0001\u001d\u0018\u0000 \\2\u00020\u0001:\u0003\\]^Bg\b\u0001\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u0012\u0006\u0010\n\u001a\u00020\u000b\u0012\u0006\u0010\f\u001a\u00020\r\u0012\u0006\u0010\u000e\u001a\u00020\u000f\u0012\b\b\u0001\u0010\u0010\u001a\u00020\u0011\u0012\b\b\u0001\u0010\u0012\u001a\u00020\u0011\u0012\b\b\u0001\u0010\u0013\u001a\u00020\u0011\u0012\b\b\u0001\u0010\u0014\u001a\u00020\u0011¢\u0006\u0002\u0010\u0015J\u001a\u00103\u001a\u00020#2\u0006\u00104\u001a\u0002052\b\u00106\u001a\u0004\u0018\u000105H\u0016J\u0011\u00107\u001a\b\u0012\u0004\u0012\u00020908¢\u0006\u0002\u0010:J%\u0010;\u001a\b\u0012\u0004\u0012\u0002H=0<\"\b\b\u0000\u0010=*\u00020>2\u0006\u0010?\u001a\u0002H=H\u0002¢\u0006\u0002\u0010@J%\u0010A\u001a\b\u0012\u0004\u0012\u0002H=0<\"\b\b\u0000\u0010=*\u00020B2\u0006\u0010?\u001a\u0002H=H\u0002¢\u0006\u0002\u0010CJ\u0019\u0010D\u001a\u0004\u0018\u00010E2\b\u00104\u001a\u0004\u0018\u000105H\u0002¢\u0006\u0002\u0010FJ\u000e\u0010G\u001a\u00020H2\u0006\u0010+\u001a\u00020,J\u001b\u0010I\u001a\u00020H2\f\u0010J\u001a\b\u0012\u0004\u0012\u00020908H\u0002¢\u0006\u0002\u0010KJ\u0018\u0010L\u001a\u00020H2\u0006\u0010M\u001a\u00020E2\u0006\u0010N\u001a\u000205H\u0002J\b\u0010O\u001a\u00020HH\u0002J\u0006\u0010P\u001a\u00020HJ\u000e\u0010Q\u001a\u00020H2\u0006\u0010R\u001a\u00020EJ'\u0010S\u001a\u00020#2\f\u0010J\u001a\b\u0012\u0004\u0012\u000209082\f\u0010T\u001a\b\u0012\u0004\u0012\u00020B0U¢\u0006\u0002\u0010VJ\u000f\u0010W\u001a\u0004\u0018\u00010HH\u0007¢\u0006\u0002\u0010XJ\u0015\u0010W\u001a\u0004\u0018\u00010H2\u0006\u0010Y\u001a\u00020Z¢\u0006\u0002\u0010[R\u000e\u0010\u0013\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u001c\u0010\u0016\u001a\u0004\u0018\u00010\u00178FX\u0004¢\u0006\f\u0012\u0004\b\u0018\u0010\u0019\u001a\u0004\b\u001a\u0010\u001bR\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u001c\u001a\u00020\u001dX\u0004¢\u0006\u0004\n\u0002\u0010\u001eR\u000e\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u001c\u0010\u001f\u001a\u0004\u0018\u00010\u00178FX\u0004¢\u0006\f\u0012\u0004\b \u0010\u0019\u001a\u0004\b!\u0010\u001bR\u000e\u0010\"\u001a\u00020#X\u000e¢\u0006\u0002\n\u0000R\u0014\u0010$\u001a\u00020#8BX\u0004¢\u0006\u0006\u001a\u0004\b$\u0010%R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u000bX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000e\u001a\u00020\u000fX\u0004¢\u0006\u0002\n\u0000R\u001c\u0010&\u001a\u0004\u0018\u00010'8FX\u0004¢\u0006\f\u0012\u0004\b(\u0010\u0019\u001a\u0004\b)\u0010*R\u000e\u0010\f\u001a\u00020\rX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010+\u001a\u00020,X.¢\u0006\u0002\n\u0000R\u000e\u0010\u0012\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u001c\u0010-\u001a\u0004\u0018\u00010\u00178FX\u0004¢\u0006\f\u0012\u0004\b.\u0010\u0019\u001a\u0004\b/\u0010\u001bR\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0014\u001a\u00020\u0011X\u0004¢\u0006\u0002\n\u0000R\u001c\u00100\u001a\u0004\u0018\u00010\u00178FX\u0004¢\u0006\f\u0012\u0004\b1\u0010\u0019\u001a\u0004\b2\u0010\u001bR\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000¨\u0006_"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager;", "Lcom/android/systemui/statusbar/notification/stack/StackScrollAlgorithm$SectionProvider;", "statusBarStateController", "Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "configurationController", "Lcom/android/systemui/statusbar/policy/ConfigurationController;", "keyguardMediaController", "Lcom/android/systemui/media/KeyguardMediaController;", "sectionsFeatureManager", "Lcom/android/systemui/statusbar/notification/NotificationSectionsFeatureManager;", "logger", "Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsLogger;", "notifPipelineFlags", "Lcom/android/systemui/statusbar/notification/NotifPipelineFlags;", "mediaContainerController", "Lcom/android/systemui/statusbar/notification/collection/render/MediaContainerController;", "incomingHeaderController", "Lcom/android/systemui/statusbar/notification/collection/render/SectionHeaderController;", "peopleHeaderController", "alertingHeaderController", "silentHeaderController", "(Lcom/android/systemui/plugins/statusbar/StatusBarStateController;Lcom/android/systemui/statusbar/policy/ConfigurationController;Lcom/android/systemui/media/KeyguardMediaController;Lcom/android/systemui/statusbar/notification/NotificationSectionsFeatureManager;Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsLogger;Lcom/android/systemui/statusbar/notification/NotifPipelineFlags;Lcom/android/systemui/statusbar/notification/collection/render/MediaContainerController;Lcom/android/systemui/statusbar/notification/collection/render/SectionHeaderController;Lcom/android/systemui/statusbar/notification/collection/render/SectionHeaderController;Lcom/android/systemui/statusbar/notification/collection/render/SectionHeaderController;Lcom/android/systemui/statusbar/notification/collection/render/SectionHeaderController;)V", "alertingHeaderView", "Lcom/android/systemui/statusbar/notification/stack/SectionHeaderView;", "getAlertingHeaderView$annotations", "()V", "getAlertingHeaderView", "()Lcom/android/systemui/statusbar/notification/stack/SectionHeaderView;", "configurationListener", "com/android/systemui/statusbar/notification/stack/NotificationSectionsManager$configurationListener$1", "Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$configurationListener$1;", "incomingHeaderView", "getIncomingHeaderView$annotations", "getIncomingHeaderView", "initialized", "", "isUsingMultipleSections", "()Z", "mediaControlsView", "Lcom/android/systemui/statusbar/notification/stack/MediaContainerView;", "getMediaControlsView$annotations", "getMediaControlsView", "()Lcom/android/systemui/statusbar/notification/stack/MediaContainerView;", "parent", "Lcom/android/systemui/statusbar/notification/stack/NotificationStackScrollLayout;", "peopleHeaderView", "getPeopleHeaderView$annotations", "getPeopleHeaderView", "silentHeaderView", "getSilentHeaderView$annotations", "getSilentHeaderView", "beginsSection", "view", "Landroid/view/View;", "previous", "createSectionsForBuckets", "", "Lcom/android/systemui/statusbar/notification/stack/NotificationSection;", "()[Lcom/android/systemui/statusbar/notification/stack/NotificationSection;", "decorViewHeaderState", "Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionUpdateState;", "T", "Lcom/android/systemui/statusbar/notification/row/StackScrollerDecorView;", "header", "(Lcom/android/systemui/statusbar/notification/row/StackScrollerDecorView;)Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionUpdateState;", "expandableViewHeaderState", "Lcom/android/systemui/statusbar/notification/row/ExpandableView;", "(Lcom/android/systemui/statusbar/notification/row/ExpandableView;)Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionUpdateState;", "getBucket", "", "(Landroid/view/View;)Ljava/lang/Integer;", "initialize", "", "logSections", "sections", "([Lcom/android/systemui/statusbar/notification/stack/NotificationSection;)V", "logShadeChild", "i", "child", "logShadeContents", "reinflateViews", "setHeaderForegroundColor", "color", "updateFirstAndLastViewsForAllSections", "children", "", "([Lcom/android/systemui/statusbar/notification/stack/NotificationSection;Ljava/util/List;)Z", "updateSectionBoundaries", "()Lkotlin/Unit;", "reason", "", "(Ljava/lang/String;)Lkotlin/Unit;", "Companion", "SectionBounds", "SectionUpdateState", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: NotificationSectionsManager.kt */
-/* loaded from: classes.dex */
 public final class NotificationSectionsManager implements StackScrollAlgorithm.SectionProvider {
-    @NotNull
-    public static final Companion Companion = new Companion(null);
-    @NotNull
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    private static final boolean DEBUG = false;
+    private static final String TAG = "NotifSectionsManager";
     private final SectionHeaderController alertingHeaderController;
-    @NotNull
     private final ConfigurationController configurationController;
-    @NotNull
-    private final NotificationSectionsManager$configurationListener$1 configurationListener = new ConfigurationController.ConfigurationListener() { // from class: com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$configurationListener$1
-        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
-        public void onLocaleListChanged() {
-            NotificationStackScrollLayout notificationStackScrollLayout;
-            NotificationSectionsManager notificationSectionsManager = NotificationSectionsManager.this;
-            notificationStackScrollLayout = notificationSectionsManager.parent;
-            if (notificationStackScrollLayout == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("parent");
-                throw null;
-            }
-            LayoutInflater from = LayoutInflater.from(notificationStackScrollLayout.getContext());
-            Intrinsics.checkNotNullExpressionValue(from, "from(parent.context)");
-            notificationSectionsManager.reinflateViews(from);
-        }
-    };
-    @NotNull
+    private final NotificationSectionsManager$configurationListener$1 configurationListener = new NotificationSectionsManager$configurationListener$1(this);
     private final SectionHeaderController incomingHeaderController;
     private boolean initialized;
-    @NotNull
     private final KeyguardMediaController keyguardMediaController;
-    @NotNull
     private final NotificationSectionsLogger logger;
-    @Nullable
-    private MediaHeaderView mediaControlsView;
-    private NotificationStackScrollLayout parent;
-    @NotNull
+    private final MediaContainerController mediaContainerController;
+    /* access modifiers changed from: private */
+    public final NotifPipelineFlags notifPipelineFlags;
+    /* access modifiers changed from: private */
+    public NotificationStackScrollLayout parent;
     private final SectionHeaderController peopleHeaderController;
-    @NotNull
     private final NotificationSectionsFeatureManager sectionsFeatureManager;
-    @NotNull
     private final SectionHeaderController silentHeaderController;
-    @NotNull
     private final StatusBarStateController statusBarStateController;
 
-    /* JADX INFO: Access modifiers changed from: private */
+    @Metadata(mo64986d1 = {"\u0000\u001e\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0002\b\u000b\n\u0002\u0010\u0002\n\u0000\bb\u0018\u0000*\n\b\u0000\u0010\u0001 \u0001*\u00020\u00022\u00020\u0003J\b\u0010\u0010\u001a\u00020\u0011H&R\u001a\u0010\u0004\u001a\u0004\u0018\u00010\u0005X¦\u000e¢\u0006\f\u001a\u0004\b\u0006\u0010\u0007\"\u0004\b\b\u0010\tR\u0012\u0010\n\u001a\u00028\u0000X¦\u0004¢\u0006\u0006\u001a\u0004\b\u000b\u0010\fR\u001a\u0010\r\u001a\u0004\u0018\u00010\u0005X¦\u000e¢\u0006\f\u001a\u0004\b\u000e\u0010\u0007\"\u0004\b\u000f\u0010\tø\u0001\u0000\u0002\u0006\n\u0004\b!0\u0001¨\u0006\u0012À\u0006\u0001"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionUpdateState;", "T", "Lcom/android/systemui/statusbar/notification/row/ExpandableView;", "", "currentPosition", "", "getCurrentPosition", "()Ljava/lang/Integer;", "setCurrentPosition", "(Ljava/lang/Integer;)V", "header", "getHeader", "()Lcom/android/systemui/statusbar/notification/row/ExpandableView;", "targetPosition", "getTargetPosition", "setTargetPosition", "adjustViewPosition", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: NotificationSectionsManager.kt */
-    /* loaded from: classes.dex */
-    public interface SectionUpdateState<T extends ExpandableView> {
+    private interface SectionUpdateState<T extends ExpandableView> {
         void adjustViewPosition();
 
-        @Nullable
         Integer getCurrentPosition();
 
-        @Nullable
+        T getHeader();
+
         Integer getTargetPosition();
 
-        void setCurrentPosition(@Nullable Integer num);
+        void setCurrentPosition(Integer num);
 
-        void setTargetPosition(@Nullable Integer num);
+        void setTargetPosition(Integer num);
     }
 
-    @VisibleForTesting
     public static /* synthetic */ void getAlertingHeaderView$annotations() {
     }
 
-    @VisibleForTesting
     public static /* synthetic */ void getIncomingHeaderView$annotations() {
     }
 
-    @VisibleForTesting
+    public static /* synthetic */ void getMediaControlsView$annotations() {
+    }
+
     public static /* synthetic */ void getPeopleHeaderView$annotations() {
     }
 
-    @VisibleForTesting
     public static /* synthetic */ void getSilentHeaderView$annotations() {
     }
 
-    /* JADX WARN: Type inference failed for: r2v1, types: [com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$configurationListener$1] */
-    public NotificationSectionsManager(@NotNull StatusBarStateController statusBarStateController, @NotNull ConfigurationController configurationController, @NotNull KeyguardMediaController keyguardMediaController, @NotNull NotificationSectionsFeatureManager sectionsFeatureManager, @NotNull NotificationSectionsLogger logger, @NotNull SectionHeaderController incomingHeaderController, @NotNull SectionHeaderController peopleHeaderController, @NotNull SectionHeaderController alertingHeaderController, @NotNull SectionHeaderController silentHeaderController) {
-        Intrinsics.checkNotNullParameter(statusBarStateController, "statusBarStateController");
-        Intrinsics.checkNotNullParameter(configurationController, "configurationController");
-        Intrinsics.checkNotNullParameter(keyguardMediaController, "keyguardMediaController");
-        Intrinsics.checkNotNullParameter(sectionsFeatureManager, "sectionsFeatureManager");
-        Intrinsics.checkNotNullParameter(logger, "logger");
-        Intrinsics.checkNotNullParameter(incomingHeaderController, "incomingHeaderController");
-        Intrinsics.checkNotNullParameter(peopleHeaderController, "peopleHeaderController");
-        Intrinsics.checkNotNullParameter(alertingHeaderController, "alertingHeaderController");
-        Intrinsics.checkNotNullParameter(silentHeaderController, "silentHeaderController");
-        this.statusBarStateController = statusBarStateController;
-        this.configurationController = configurationController;
-        this.keyguardMediaController = keyguardMediaController;
-        this.sectionsFeatureManager = sectionsFeatureManager;
-        this.logger = logger;
-        this.incomingHeaderController = incomingHeaderController;
-        this.peopleHeaderController = peopleHeaderController;
-        this.alertingHeaderController = alertingHeaderController;
-        this.silentHeaderController = silentHeaderController;
+    @Inject
+    public NotificationSectionsManager(StatusBarStateController statusBarStateController2, ConfigurationController configurationController2, KeyguardMediaController keyguardMediaController2, NotificationSectionsFeatureManager notificationSectionsFeatureManager, NotificationSectionsLogger notificationSectionsLogger, NotifPipelineFlags notifPipelineFlags2, MediaContainerController mediaContainerController2, SectionHeaderController sectionHeaderController, SectionHeaderController sectionHeaderController2, SectionHeaderController sectionHeaderController3, SectionHeaderController sectionHeaderController4) {
+        Intrinsics.checkNotNullParameter(statusBarStateController2, "statusBarStateController");
+        Intrinsics.checkNotNullParameter(configurationController2, "configurationController");
+        Intrinsics.checkNotNullParameter(keyguardMediaController2, "keyguardMediaController");
+        Intrinsics.checkNotNullParameter(notificationSectionsFeatureManager, "sectionsFeatureManager");
+        Intrinsics.checkNotNullParameter(notificationSectionsLogger, "logger");
+        Intrinsics.checkNotNullParameter(notifPipelineFlags2, "notifPipelineFlags");
+        Intrinsics.checkNotNullParameter(mediaContainerController2, "mediaContainerController");
+        Intrinsics.checkNotNullParameter(sectionHeaderController, "incomingHeaderController");
+        Intrinsics.checkNotNullParameter(sectionHeaderController2, "peopleHeaderController");
+        Intrinsics.checkNotNullParameter(sectionHeaderController3, "alertingHeaderController");
+        Intrinsics.checkNotNullParameter(sectionHeaderController4, "silentHeaderController");
+        this.statusBarStateController = statusBarStateController2;
+        this.configurationController = configurationController2;
+        this.keyguardMediaController = keyguardMediaController2;
+        this.sectionsFeatureManager = notificationSectionsFeatureManager;
+        this.logger = notificationSectionsLogger;
+        this.notifPipelineFlags = notifPipelineFlags2;
+        this.mediaContainerController = mediaContainerController2;
+        this.incomingHeaderController = sectionHeaderController;
+        this.peopleHeaderController = sectionHeaderController2;
+        this.alertingHeaderController = sectionHeaderController3;
+        this.silentHeaderController = sectionHeaderController4;
     }
 
-    @Nullable
     public final SectionHeaderView getSilentHeaderView() {
         return this.silentHeaderController.getHeaderView();
     }
 
-    @Nullable
     public final SectionHeaderView getAlertingHeaderView() {
         return this.alertingHeaderController.getHeaderView();
     }
 
-    @Nullable
     public final SectionHeaderView getIncomingHeaderView() {
         return this.incomingHeaderController.getHeaderView();
     }
 
-    @Nullable
     public final SectionHeaderView getPeopleHeaderView() {
         return this.peopleHeaderController.getHeaderView();
     }
 
-    @VisibleForTesting
-    @Nullable
-    public final MediaHeaderView getMediaControlsView() {
-        return this.mediaControlsView;
+    public final MediaContainerView getMediaControlsView() {
+        return this.mediaContainerController.getMediaContainerView();
     }
 
-    public final void initialize(@NotNull NotificationStackScrollLayout parent, @NotNull LayoutInflater layoutInflater) {
-        Intrinsics.checkNotNullParameter(parent, "parent");
-        Intrinsics.checkNotNullParameter(layoutInflater, "layoutInflater");
-        if (!(!this.initialized)) {
-            throw new IllegalStateException("NotificationSectionsManager already initialized".toString());
+    public final void initialize(NotificationStackScrollLayout notificationStackScrollLayout) {
+        Intrinsics.checkNotNullParameter(notificationStackScrollLayout, "parent");
+        if (!this.initialized) {
+            this.initialized = true;
+            this.parent = notificationStackScrollLayout;
+            reinflateViews();
+            this.configurationController.addCallback(this.configurationListener);
+            return;
         }
-        this.initialized = true;
-        this.parent = parent;
-        reinflateViews(layoutInflater);
-        this.configurationController.addCallback(this.configurationListener);
+        throw new IllegalStateException("NotificationSectionsManager already initialized".toString());
     }
 
-    /* JADX WARN: Removed duplicated region for block: B:15:0x0051  */
-    /* JADX WARN: Removed duplicated region for block: B:6:0x0036  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private final <T extends ExpandableView> T reinflateView(T t, LayoutInflater layoutInflater, int i) {
-        int indexOfChild;
-        NotificationStackScrollLayout notificationStackScrollLayout;
-        if (t != null) {
-            ViewGroup transientContainer = t.getTransientContainer();
-            if (transientContainer != null) {
-                transientContainer.removeView(t);
-            }
-            ViewParent parent = t.getParent();
-            NotificationStackScrollLayout notificationStackScrollLayout2 = this.parent;
-            if (notificationStackScrollLayout2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("parent");
-                throw null;
-            } else if (parent == notificationStackScrollLayout2) {
-                if (notificationStackScrollLayout2 != null) {
-                    indexOfChild = notificationStackScrollLayout2.indexOfChild(t);
-                    NotificationStackScrollLayout notificationStackScrollLayout3 = this.parent;
-                    if (notificationStackScrollLayout3 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("parent");
-                        throw null;
-                    }
-                    notificationStackScrollLayout3.removeView(t);
-                    notificationStackScrollLayout = this.parent;
-                    if (notificationStackScrollLayout != null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("parent");
-                        throw null;
-                    }
-                    View inflate = layoutInflater.inflate(i, (ViewGroup) notificationStackScrollLayout, false);
-                    Objects.requireNonNull(inflate, "null cannot be cast to non-null type T of com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.reinflateView");
-                    T t2 = (T) inflate;
-                    if (indexOfChild != -1) {
-                        NotificationStackScrollLayout notificationStackScrollLayout4 = this.parent;
-                        if (notificationStackScrollLayout4 == null) {
-                            Intrinsics.throwUninitializedPropertyAccessException("parent");
-                            throw null;
-                        }
-                        notificationStackScrollLayout4.addView(t2, indexOfChild);
-                    }
-                    return t2;
-                }
-                Intrinsics.throwUninitializedPropertyAccessException("parent");
-                throw null;
-            }
-        }
-        indexOfChild = -1;
-        notificationStackScrollLayout = this.parent;
-        if (notificationStackScrollLayout != null) {
-        }
-    }
-
-    @NotNull
     public final NotificationSection[] createSectionsForBuckets() {
         int[] notificationBuckets = this.sectionsFeatureManager.getNotificationBuckets();
-        ArrayList arrayList = new ArrayList(notificationBuckets.length);
+        Collection arrayList = new ArrayList(notificationBuckets.length);
         for (int i : notificationBuckets) {
             NotificationStackScrollLayout notificationStackScrollLayout = this.parent;
             if (notificationStackScrollLayout == null) {
                 Intrinsics.throwUninitializedPropertyAccessException("parent");
-                throw null;
+                notificationStackScrollLayout = null;
             }
             arrayList.add(new NotificationSection(notificationStackScrollLayout, i));
         }
-        Object[] array = arrayList.toArray(new NotificationSection[0]);
-        Objects.requireNonNull(array, "null cannot be cast to non-null type kotlin.Array<T>");
+        Object[] array = ((List) arrayList).toArray((T[]) new NotificationSection[0]);
+        Intrinsics.checkNotNull(array, "null cannot be cast to non-null type kotlin.Array<T of kotlin.collections.ArraysKt__ArraysJVMKt.toTypedArray>");
         return (NotificationSection[]) array;
     }
 
-    public final void reinflateViews(@NotNull LayoutInflater layoutInflater) {
-        Intrinsics.checkNotNullParameter(layoutInflater, "layoutInflater");
+    public final void reinflateViews() {
         SectionHeaderController sectionHeaderController = this.silentHeaderController;
         NotificationStackScrollLayout notificationStackScrollLayout = this.parent;
+        NotificationStackScrollLayout notificationStackScrollLayout2 = null;
         if (notificationStackScrollLayout == null) {
             Intrinsics.throwUninitializedPropertyAccessException("parent");
-            throw null;
+            notificationStackScrollLayout = null;
         }
         sectionHeaderController.reinflateView(notificationStackScrollLayout);
         SectionHeaderController sectionHeaderController2 = this.alertingHeaderController;
-        NotificationStackScrollLayout notificationStackScrollLayout2 = this.parent;
-        if (notificationStackScrollLayout2 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("parent");
-            throw null;
-        }
-        sectionHeaderController2.reinflateView(notificationStackScrollLayout2);
-        SectionHeaderController sectionHeaderController3 = this.peopleHeaderController;
         NotificationStackScrollLayout notificationStackScrollLayout3 = this.parent;
         if (notificationStackScrollLayout3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("parent");
-            throw null;
+            notificationStackScrollLayout3 = null;
         }
-        sectionHeaderController3.reinflateView(notificationStackScrollLayout3);
-        SectionHeaderController sectionHeaderController4 = this.incomingHeaderController;
+        sectionHeaderController2.reinflateView(notificationStackScrollLayout3);
+        SectionHeaderController sectionHeaderController3 = this.peopleHeaderController;
         NotificationStackScrollLayout notificationStackScrollLayout4 = this.parent;
         if (notificationStackScrollLayout4 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("parent");
-            throw null;
+            notificationStackScrollLayout4 = null;
         }
-        sectionHeaderController4.reinflateView(notificationStackScrollLayout4);
-        MediaHeaderView mediaHeaderView = (MediaHeaderView) reinflateView(this.mediaControlsView, layoutInflater, R$layout.keyguard_media_header);
-        this.mediaControlsView = mediaHeaderView;
-        this.keyguardMediaController.attachSinglePaneContainer(mediaHeaderView);
+        sectionHeaderController3.reinflateView(notificationStackScrollLayout4);
+        SectionHeaderController sectionHeaderController4 = this.incomingHeaderController;
+        NotificationStackScrollLayout notificationStackScrollLayout5 = this.parent;
+        if (notificationStackScrollLayout5 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("parent");
+            notificationStackScrollLayout5 = null;
+        }
+        sectionHeaderController4.reinflateView(notificationStackScrollLayout5);
+        MediaContainerController mediaContainerController2 = this.mediaContainerController;
+        NotificationStackScrollLayout notificationStackScrollLayout6 = this.parent;
+        if (notificationStackScrollLayout6 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("parent");
+        } else {
+            notificationStackScrollLayout2 = notificationStackScrollLayout6;
+        }
+        mediaContainerController2.reinflateView(notificationStackScrollLayout2);
+        this.keyguardMediaController.attachSinglePaneContainer(getMediaControlsView());
     }
 
-    @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm.SectionProvider
-    public boolean beginsSection(@NotNull View view, @Nullable View view2) {
+    public boolean beginsSection(View view, View view2) {
         Intrinsics.checkNotNullParameter(view, "view");
-        return view == getSilentHeaderView() || view == this.mediaControlsView || view == getPeopleHeaderView() || view == getAlertingHeaderView() || view == getIncomingHeaderView() || !Intrinsics.areEqual(getBucket(view), getBucket(view2));
+        return view == getSilentHeaderView() || view == getMediaControlsView() || view == getPeopleHeaderView() || view == getAlertingHeaderView() || view == getIncomingHeaderView() || !Intrinsics.areEqual((Object) getBucket(view), (Object) getBucket(view2));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public final Integer getBucket(View view) {
         if (view == getSilentHeaderView()) {
             return 6;
@@ -292,7 +211,7 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
         if (view == getIncomingHeaderView()) {
             return 2;
         }
-        if (view == this.mediaControlsView) {
+        if (view == getMediaControlsView()) {
             return 1;
         }
         if (view == getPeopleHeaderView()) {
@@ -301,16 +220,16 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
         if (view == getAlertingHeaderView()) {
             return 5;
         }
-        if (!(view instanceof ExpandableNotificationRow)) {
-            return null;
+        if (view instanceof ExpandableNotificationRow) {
+            return Integer.valueOf(((ExpandableNotificationRow) view).getEntry().getBucket());
         }
-        return Integer.valueOf(((ExpandableNotificationRow) view).getEntry().getBucket());
+        return null;
     }
 
     private final void logShadeChild(int i, View view) {
         if (view == getIncomingHeaderView()) {
             this.logger.logIncomingHeader(i);
-        } else if (view == this.mediaControlsView) {
+        } else if (view == getMediaControlsView()) {
             this.logger.logMediaControls(i);
         } else if (view == getPeopleHeaderView()) {
             this.logger.logConversationsHeader(i);
@@ -330,27 +249,9 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
                 this.logger.logConversation(i, isHeadsUp);
             } else if (bucket == 5) {
                 this.logger.logAlerting(i, isHeadsUp);
-            } else if (bucket != 6) {
-            } else {
+            } else if (bucket == 6) {
                 this.logger.logSilent(i, isHeadsUp);
             }
-        }
-    }
-
-    private final void logShadeContents() {
-        NotificationStackScrollLayout notificationStackScrollLayout = this.parent;
-        if (notificationStackScrollLayout == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("parent");
-            throw null;
-        }
-        int i = 0;
-        for (View view : ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout)) {
-            int i2 = i + 1;
-            if (i < 0) {
-                CollectionsKt__CollectionsKt.throwIndexOverflow();
-            }
-            logShadeChild(i, view);
-            i = i2;
         }
     }
 
@@ -358,344 +259,22 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
         return this.sectionsFeatureManager.getNumberOfBuckets() > 1;
     }
 
-    @VisibleForTesting
-    public final void updateSectionBoundaries() {
-        updateSectionBoundaries("test");
+    public final Unit updateSectionBoundaries() {
+        return updateSectionBoundaries("test");
     }
 
-    private final <T extends ExpandableView> SectionUpdateState<T> expandableViewHeaderState(final T t) {
-        return (SectionUpdateState<T>) new SectionUpdateState<T>(this) { // from class: com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$expandableViewHeaderState$1
-            @Nullable
-            private Integer currentPosition;
-            @NotNull
-            private final ExpandableView header;
-            @Nullable
-            private Integer targetPosition;
-            final /* synthetic */ NotificationSectionsManager this$0;
-
-            /* JADX INFO: Access modifiers changed from: package-private */
-            /* JADX WARN: Incorrect types in method signature: (TT;Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager;)V */
-            {
-                this.this$0 = this;
-                this.header = ExpandableView.this;
-            }
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            @Nullable
-            public Integer getCurrentPosition() {
-                return this.currentPosition;
-            }
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            public void setCurrentPosition(@Nullable Integer num) {
-                this.currentPosition = num;
-            }
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            @Nullable
-            public Integer getTargetPosition() {
-                return this.targetPosition;
-            }
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            public void setTargetPosition(@Nullable Integer num) {
-                this.targetPosition = num;
-            }
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            public void adjustViewPosition() {
-                NotificationStackScrollLayout notificationStackScrollLayout;
-                NotificationStackScrollLayout notificationStackScrollLayout2;
-                NotificationStackScrollLayout notificationStackScrollLayout3;
-                Integer targetPosition = getTargetPosition();
-                Integer currentPosition = getCurrentPosition();
-                if (targetPosition == null) {
-                    if (currentPosition == null) {
-                        return;
-                    }
-                    notificationStackScrollLayout3 = this.this$0.parent;
-                    if (notificationStackScrollLayout3 != null) {
-                        notificationStackScrollLayout3.removeView(ExpandableView.this);
-                    } else {
-                        Intrinsics.throwUninitializedPropertyAccessException("parent");
-                        throw null;
-                    }
-                } else if (currentPosition != null) {
-                    notificationStackScrollLayout = this.this$0.parent;
-                    if (notificationStackScrollLayout != null) {
-                        notificationStackScrollLayout.changeViewPosition(ExpandableView.this, targetPosition.intValue());
-                    } else {
-                        Intrinsics.throwUninitializedPropertyAccessException("parent");
-                        throw null;
-                    }
-                } else {
-                    ViewGroup transientContainer = ExpandableView.this.getTransientContainer();
-                    if (transientContainer != null) {
-                        transientContainer.removeTransientView(ExpandableView.this);
-                    }
-                    ExpandableView.this.setTransientContainer(null);
-                    notificationStackScrollLayout2 = this.this$0.parent;
-                    if (notificationStackScrollLayout2 != null) {
-                        notificationStackScrollLayout2.addView(ExpandableView.this, targetPosition.intValue());
-                    } else {
-                        Intrinsics.throwUninitializedPropertyAccessException("parent");
-                        throw null;
-                    }
-                }
-            }
-        };
+    private final <T extends ExpandableView> SectionUpdateState<T> expandableViewHeaderState(T t) {
+        return new NotificationSectionsManager$expandableViewHeaderState$1(t, this);
     }
 
-    private final <T extends StackScrollerDecorView> SectionUpdateState<T> decorViewHeaderState(final T t) {
-        final SectionUpdateState expandableViewHeaderState = expandableViewHeaderState(t);
-        return (SectionUpdateState<T>) new SectionUpdateState<T>(t) { // from class: com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$decorViewHeaderState$1
-            private final /* synthetic */ NotificationSectionsManager.SectionUpdateState<T> $$delegate_0;
-            final /* synthetic */ StackScrollerDecorView $header;
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            @Nullable
-            public Integer getCurrentPosition() {
-                return this.$$delegate_0.getCurrentPosition();
-            }
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            @Nullable
-            public Integer getTargetPosition() {
-                return this.$$delegate_0.getTargetPosition();
-            }
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            public void setCurrentPosition(@Nullable Integer num) {
-                this.$$delegate_0.setCurrentPosition(num);
-            }
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            public void setTargetPosition(@Nullable Integer num) {
-                this.$$delegate_0.setTargetPosition(num);
-            }
-
-            /* JADX INFO: Access modifiers changed from: package-private */
-            /* JADX WARN: Incorrect types in method signature: (Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionUpdateState<+TT;>;TT;)V */
-            {
-                this.$header = t;
-                this.$$delegate_0 = NotificationSectionsManager.SectionUpdateState.this;
-            }
-
-            @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
-            public void adjustViewPosition() {
-                NotificationSectionsManager.SectionUpdateState.this.adjustViewPosition();
-                if (getTargetPosition() == null || getCurrentPosition() != null) {
-                    return;
-                }
-                this.$header.setContentVisible(true);
-            }
-        };
+    private final <T extends StackScrollerDecorView> SectionUpdateState<T> decorViewHeaderState(T t) {
+        this.notifPipelineFlags.checkLegacyPipelineEnabled();
+        return new NotificationSectionsManager$decorViewHeaderState$1(expandableViewHeaderState((ExpandableView) t), t);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:142:0x0118, code lost:
-        if ((r1.getVisibility() == 8) == false) goto L38;
-     */
-    /* JADX WARN: Removed duplicated region for block: B:117:0x0198  */
-    /* JADX WARN: Removed duplicated region for block: B:43:0x0145  */
-    /* JADX WARN: Removed duplicated region for block: B:45:0x014c  */
-    /* JADX WARN: Removed duplicated region for block: B:50:0x015f A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:56:0x0176 A[ADDED_TO_REGION] */
-    /* JADX WARN: Removed duplicated region for block: B:65:0x0195  */
-    /* JADX WARN: Removed duplicated region for block: B:67:0x01bc A[LOOP:0: B:28:0x0096->B:67:0x01bc, LOOP_END] */
-    /* JADX WARN: Removed duplicated region for block: B:68:0x01cd A[EDGE_INSN: B:68:0x01cd->B:69:0x01cd ?: BREAK  , SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public final void updateSectionBoundaries(@NotNull String reason) {
-        int i;
-        Sequence sequence;
-        int i2;
-        SectionUpdateState sectionUpdateState;
-        Integer targetPosition;
-        Integer targetPosition2;
-        Integer targetPosition3;
-        Integer targetPosition4;
-        List<SectionUpdateState> reversed;
-        Integer targetPosition5;
-        int i3;
-        int i4;
-        SectionUpdateState sectionUpdateState2;
-        View view;
-        Boolean valueOf;
-        Intrinsics.checkNotNullParameter(reason, "reason");
-        if (!isUsingMultipleSections()) {
-            return;
-        }
-        this.logger.logStartSectionUpdate(reason);
-        boolean z = this.statusBarStateController.getState() != 1;
-        boolean isMediaControlsEnabled = this.sectionsFeatureManager.isMediaControlsEnabled();
-        MediaHeaderView mediaHeaderView = this.mediaControlsView;
-        SectionUpdateState expandableViewHeaderState = mediaHeaderView == null ? null : expandableViewHeaderState(mediaHeaderView);
-        SectionHeaderView incomingHeaderView = getIncomingHeaderView();
-        SectionUpdateState decorViewHeaderState = incomingHeaderView == null ? null : decorViewHeaderState(incomingHeaderView);
-        SectionHeaderView peopleHeaderView = getPeopleHeaderView();
-        SectionUpdateState decorViewHeaderState2 = peopleHeaderView == null ? null : decorViewHeaderState(peopleHeaderView);
-        SectionHeaderView alertingHeaderView = getAlertingHeaderView();
-        SectionUpdateState decorViewHeaderState3 = alertingHeaderView == null ? null : decorViewHeaderState(alertingHeaderView);
-        SectionHeaderView silentHeaderView = getSilentHeaderView();
-        SectionUpdateState decorViewHeaderState4 = silentHeaderView == null ? null : decorViewHeaderState(silentHeaderView);
-        Sequence filterNotNull = SequencesKt.filterNotNull(SequencesKt.sequenceOf(expandableViewHeaderState, decorViewHeaderState, decorViewHeaderState2, decorViewHeaderState3, decorViewHeaderState4));
-        NotificationStackScrollLayout notificationStackScrollLayout = this.parent;
-        if (notificationStackScrollLayout == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("parent");
-            throw null;
-        }
-        int childCount = notificationStackScrollLayout.getChildCount() - 1;
-        if (-1 <= childCount) {
-            int i5 = childCount;
-            boolean z2 = false;
-            boolean z3 = false;
-            Integer num = null;
-            while (true) {
-                int i6 = i5 - 1;
-                NotificationStackScrollLayout notificationStackScrollLayout2 = this.parent;
-                if (notificationStackScrollLayout2 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("parent");
-                    throw null;
-                }
-                View childAt = notificationStackScrollLayout2.getChildAt(i5);
-                if (childAt == null) {
-                    i3 = i6;
-                    i4 = i5;
-                    view = childAt;
-                    sequence = filterNotNull;
-                    sectionUpdateState2 = decorViewHeaderState4;
-                } else {
-                    logShadeChild(i5, childAt);
-                    i3 = i6;
-                    i4 = i5;
-                    sequence = filterNotNull;
-                    sectionUpdateState2 = decorViewHeaderState4;
-                    SectionUpdateState<ExpandableView> updateSectionBoundaries$getSectionState = updateSectionBoundaries$getSectionState(this, expandableViewHeaderState, decorViewHeaderState, decorViewHeaderState2, decorViewHeaderState3, decorViewHeaderState4, childAt);
-                    if (updateSectionBoundaries$getSectionState != null) {
-                        updateSectionBoundaries$getSectionState.setCurrentPosition(Integer.valueOf(i4));
-                        for (SectionUpdateState sectionUpdateState3 : ConvenienceExtensionsKt.takeUntil(sequence, new NotificationSectionsManager$updateSectionBoundaries$1$1$1(updateSectionBoundaries$getSectionState))) {
-                            Integer targetPosition6 = sectionUpdateState3.getTargetPosition();
-                            sectionUpdateState3.setTargetPosition(targetPosition6 == null ? null : Integer.valueOf(targetPosition6.intValue() - 1));
-                        }
-                        Unit unit = Unit.INSTANCE;
-                    }
-                    view = childAt;
-                }
-                ExpandableNotificationRow expandableNotificationRow = view instanceof ExpandableNotificationRow ? (ExpandableNotificationRow) view : null;
-                if (expandableNotificationRow != null) {
-                }
-                expandableNotificationRow = null;
-                if (!z2) {
-                    if (num != null) {
-                        int intValue = num.intValue();
-                        NotificationEntry entry = expandableNotificationRow == null ? null : expandableNotificationRow.getEntry();
-                        if (entry != null) {
-                            valueOf = Boolean.valueOf(intValue < entry.getBucket());
-                            if (!Intrinsics.areEqual(valueOf, Boolean.TRUE)) {
-                                z2 = false;
-                                if (z2) {
-                                    NotificationEntry entry2 = expandableNotificationRow == null ? null : expandableNotificationRow.getEntry();
-                                    if (entry2 != null) {
-                                        i2 = 2;
-                                        entry2.setBucket(2);
-                                        if ((num == null && (view == null || !(expandableNotificationRow == null || num.intValue() == expandableNotificationRow.getEntry().getBucket()))) || !z || num == null || num.intValue() != 6) {
-                                            sectionUpdateState = sectionUpdateState2;
-                                        } else {
-                                            sectionUpdateState = sectionUpdateState2;
-                                            if (sectionUpdateState != null) {
-                                                sectionUpdateState.setTargetPosition(Integer.valueOf(i4 + 1));
-                                            }
-                                        }
-                                        if (expandableNotificationRow == null) {
-                                            i = -1;
-                                        } else {
-                                            if (!z3 && expandableNotificationRow.getEntry().getBucket() != 4) {
-                                                z3 = false;
-                                                num = Integer.valueOf(expandableNotificationRow.getEntry().getBucket());
-                                                i = -1;
-                                            }
-                                            z3 = true;
-                                            num = Integer.valueOf(expandableNotificationRow.getEntry().getBucket());
-                                            i = -1;
-                                        }
-                                        if (i > i3) {
-                                            break;
-                                        }
-                                        decorViewHeaderState4 = sectionUpdateState;
-                                        i5 = i3;
-                                        filterNotNull = sequence;
-                                    }
-                                }
-                                i2 = 2;
-                                if (num == null && (view == null || !(expandableNotificationRow == null || num.intValue() == expandableNotificationRow.getEntry().getBucket()))) {
-                                }
-                                sectionUpdateState = sectionUpdateState2;
-                                if (expandableNotificationRow == null) {
-                                }
-                                if (i > i3) {
-                                }
-                            }
-                        }
-                    }
-                    valueOf = null;
-                    if (!Intrinsics.areEqual(valueOf, Boolean.TRUE)) {
-                    }
-                }
-                z2 = true;
-                if (z2) {
-                }
-                i2 = 2;
-                if (num == null && (view == null || !(expandableNotificationRow == null || num.intValue() == expandableNotificationRow.getEntry().getBucket()))) {
-                }
-                sectionUpdateState = sectionUpdateState2;
-                if (expandableNotificationRow == null) {
-                }
-                if (i > i3) {
-                }
-            }
-        } else {
-            i = -1;
-            sequence = filterNotNull;
-            i2 = 2;
-            sectionUpdateState = decorViewHeaderState4;
-        }
-        if (expandableViewHeaderState != null) {
-            expandableViewHeaderState.setTargetPosition(isMediaControlsEnabled ? 0 : null);
-        }
-        this.logger.logStr("New header target positions:");
-        this.logger.logMediaControls((expandableViewHeaderState == null || (targetPosition = expandableViewHeaderState.getTargetPosition()) == null) ? i : targetPosition.intValue());
-        this.logger.logIncomingHeader((decorViewHeaderState == null || (targetPosition2 = decorViewHeaderState.getTargetPosition()) == null) ? i : targetPosition2.intValue());
-        this.logger.logConversationsHeader((decorViewHeaderState2 == null || (targetPosition3 = decorViewHeaderState2.getTargetPosition()) == null) ? i : targetPosition3.intValue());
-        this.logger.logAlertingHeader((decorViewHeaderState3 == null || (targetPosition4 = decorViewHeaderState3.getTargetPosition()) == null) ? i : targetPosition4.intValue());
-        NotificationSectionsLogger notificationSectionsLogger = this.logger;
-        if (sectionUpdateState != null && (targetPosition5 = sectionUpdateState.getTargetPosition()) != null) {
-            i = targetPosition5.intValue();
-        }
-        notificationSectionsLogger.logSilentHeader(i);
-        reversed = CollectionsKt___CollectionsKt.reversed(SequencesKt.asIterable(sequence));
-        for (SectionUpdateState sectionUpdateState4 : reversed) {
-            sectionUpdateState4.adjustViewPosition();
-        }
-        this.logger.logStr("Final order:");
-        logShadeContents();
-        this.logger.logStr("Section boundary update complete");
-        SectionHeaderView silentHeaderView2 = getSilentHeaderView();
-        if (silentHeaderView2 == null) {
-            return;
-        }
-        NotificationStackScrollLayout notificationStackScrollLayout3 = this.parent;
-        if (notificationStackScrollLayout3 == null) {
-            Intrinsics.throwUninitializedPropertyAccessException("parent");
-            throw null;
-        }
-        silentHeaderView2.setAreThereDismissableGentleNotifs(notificationStackScrollLayout3.hasActiveClearableNotifications(i2));
-        Unit unit2 = Unit.INSTANCE;
-    }
-
-    /* JADX WARN: Multi-variable type inference failed */
-    private static final SectionUpdateState<ExpandableView> updateSectionBoundaries$getSectionState(NotificationSectionsManager notificationSectionsManager, SectionUpdateState<? extends MediaHeaderView> sectionUpdateState, SectionUpdateState<? extends SectionHeaderView> sectionUpdateState2, SectionUpdateState<? extends SectionHeaderView> sectionUpdateState3, SectionUpdateState<? extends SectionHeaderView> sectionUpdateState4, SectionUpdateState<? extends SectionHeaderView> sectionUpdateState5, View view) {
-        if (view == notificationSectionsManager.mediaControlsView) {
+    /* renamed from: updateSectionBoundaries$lambda-16$getSectionState  reason: not valid java name */
+    private static final SectionUpdateState<ExpandableView> m3148updateSectionBoundaries$lambda16$getSectionState(NotificationSectionsManager notificationSectionsManager, SectionUpdateState<MediaContainerView> sectionUpdateState, SectionUpdateState<? extends SectionHeaderView> sectionUpdateState2, SectionUpdateState<? extends SectionHeaderView> sectionUpdateState3, SectionUpdateState<? extends SectionHeaderView> sectionUpdateState4, SectionUpdateState<? extends SectionHeaderView> sectionUpdateState5, View view) {
+        if (view == notificationSectionsManager.getMediaControlsView()) {
             return sectionUpdateState;
         }
         if (view == notificationSectionsManager.getIncomingHeaderView()) {
@@ -707,16 +286,15 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
         if (view == notificationSectionsManager.getAlertingHeaderView()) {
             return sectionUpdateState4;
         }
-        if (view != notificationSectionsManager.getSilentHeaderView()) {
-            return null;
+        if (view == notificationSectionsManager.getSilentHeaderView()) {
+            return sectionUpdateState5;
         }
-        return sectionUpdateState5;
+        return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    @Metadata(mo64986d1 = {"\u0000.\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000b\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\b2\u0018\u00002\u00020\u0001:\u0003\r\u000e\u000fB\u0007\b\u0004¢\u0006\u0002\u0010\u0002J\u000e\u0010\u0003\u001a\u00020\u00002\u0006\u0010\u0004\u001a\u00020\u0005J\u000e\u0010\u0006\u001a\u00020\u00072\u0006\u0010\b\u001a\u00020\tJ \u0010\n\u001a\u00020\u0007*\u00020\t2\b\u0010\u000b\u001a\u0004\u0018\u00010\u00052\b\u0010\f\u001a\u0004\u0018\u00010\u0005H\u0002\u0001\u0003\u0010\u0011\u0012¨\u0006\u0013"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds;", "", "()V", "addNotif", "notif", "Lcom/android/systemui/statusbar/notification/row/ExpandableView;", "updateSection", "", "section", "Lcom/android/systemui/statusbar/notification/stack/NotificationSection;", "setFirstAndLastVisibleChildren", "first", "last", "Many", "None", "One", "Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds$Many;", "Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds$One;", "Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds$None;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: NotificationSectionsManager.kt */
-    /* loaded from: classes.dex */
-    public static abstract class SectionBounds {
+    private static abstract class SectionBounds {
         public /* synthetic */ SectionBounds(DefaultConstructorMarker defaultConstructorMarker) {
             this();
         }
@@ -724,12 +302,10 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
         private SectionBounds() {
         }
 
+        @Metadata(mo64986d1 = {"\u0000*\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\t\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B\u0015\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0003¢\u0006\u0002\u0010\u0005J\t\u0010\t\u001a\u00020\u0003HÆ\u0003J\t\u0010\n\u001a\u00020\u0003HÆ\u0003J\u001d\u0010\u000b\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u0003HÆ\u0001J\u0013\u0010\f\u001a\u00020\r2\b\u0010\u000e\u001a\u0004\u0018\u00010\u000fHÖ\u0003J\t\u0010\u0010\u001a\u00020\u0011HÖ\u0001J\t\u0010\u0012\u001a\u00020\u0013HÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0006\u0010\u0007R\u0011\u0010\u0004\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\b\u0010\u0007¨\u0006\u0014"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds$Many;", "Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds;", "first", "Lcom/android/systemui/statusbar/notification/row/ExpandableView;", "last", "(Lcom/android/systemui/statusbar/notification/row/ExpandableView;Lcom/android/systemui/statusbar/notification/row/ExpandableView;)V", "getFirst", "()Lcom/android/systemui/statusbar/notification/row/ExpandableView;", "getLast", "component1", "component2", "copy", "equals", "", "other", "", "hashCode", "", "toString", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
         /* compiled from: NotificationSectionsManager.kt */
-        /* loaded from: classes.dex */
         public static final class Many extends SectionBounds {
-            @NotNull
             private final ExpandableView first;
-            @NotNull
             private final ExpandableView last;
 
             public static /* synthetic */ Many copy$default(Many many, ExpandableView expandableView, ExpandableView expandableView2, int i, Object obj) {
@@ -742,14 +318,21 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
                 return many.copy(expandableView, expandableView2);
             }
 
-            @NotNull
-            public final Many copy(@NotNull ExpandableView first, @NotNull ExpandableView last) {
-                Intrinsics.checkNotNullParameter(first, "first");
-                Intrinsics.checkNotNullParameter(last, "last");
-                return new Many(first, last);
+            public final ExpandableView component1() {
+                return this.first;
             }
 
-            public boolean equals(@Nullable Object obj) {
+            public final ExpandableView component2() {
+                return this.last;
+            }
+
+            public final Many copy(ExpandableView expandableView, ExpandableView expandableView2) {
+                Intrinsics.checkNotNullParameter(expandableView, "first");
+                Intrinsics.checkNotNullParameter(expandableView2, "last");
+                return new Many(expandableView, expandableView2);
+            }
+
+            public boolean equals(Object obj) {
                 if (this == obj) {
                     return true;
                 }
@@ -757,112 +340,120 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
                     return false;
                 }
                 Many many = (Many) obj;
-                return Intrinsics.areEqual(this.first, many.first) && Intrinsics.areEqual(this.last, many.last);
+                return Intrinsics.areEqual((Object) this.first, (Object) many.first) && Intrinsics.areEqual((Object) this.last, (Object) many.last);
             }
 
             public int hashCode() {
                 return (this.first.hashCode() * 31) + this.last.hashCode();
             }
 
-            @NotNull
             public String toString() {
                 return "Many(first=" + this.first + ", last=" + this.last + ')';
             }
 
-            @NotNull
             public final ExpandableView getFirst() {
                 return this.first;
             }
 
-            @NotNull
             public final ExpandableView getLast() {
                 return this.last;
             }
 
-            /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-            public Many(@NotNull ExpandableView first, @NotNull ExpandableView last) {
-                super(null);
-                Intrinsics.checkNotNullParameter(first, "first");
-                Intrinsics.checkNotNullParameter(last, "last");
-                this.first = first;
-                this.last = last;
+            /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+            public Many(ExpandableView expandableView, ExpandableView expandableView2) {
+                super((DefaultConstructorMarker) null);
+                Intrinsics.checkNotNullParameter(expandableView, "first");
+                Intrinsics.checkNotNullParameter(expandableView2, "last");
+                this.first = expandableView;
+                this.last = expandableView2;
             }
         }
 
+        @Metadata(mo64986d1 = {"\u0000*\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000e\n\u0000\b\b\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003¢\u0006\u0002\u0010\u0004J\t\u0010\u0007\u001a\u00020\u0003HÆ\u0003J\u0013\u0010\b\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u0003HÆ\u0001J\u0013\u0010\t\u001a\u00020\n2\b\u0010\u000b\u001a\u0004\u0018\u00010\fHÖ\u0003J\t\u0010\r\u001a\u00020\u000eHÖ\u0001J\t\u0010\u000f\u001a\u00020\u0010HÖ\u0001R\u0011\u0010\u0002\u001a\u00020\u0003¢\u0006\b\n\u0000\u001a\u0004\b\u0005\u0010\u0006¨\u0006\u0011"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds$One;", "Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds;", "lone", "Lcom/android/systemui/statusbar/notification/row/ExpandableView;", "(Lcom/android/systemui/statusbar/notification/row/ExpandableView;)V", "getLone", "()Lcom/android/systemui/statusbar/notification/row/ExpandableView;", "component1", "copy", "equals", "", "other", "", "hashCode", "", "toString", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
         /* compiled from: NotificationSectionsManager.kt */
-        /* loaded from: classes.dex */
         public static final class One extends SectionBounds {
-            @NotNull
             private final ExpandableView lone;
 
-            public boolean equals(@Nullable Object obj) {
+            public static /* synthetic */ One copy$default(One one, ExpandableView expandableView, int i, Object obj) {
+                if ((i & 1) != 0) {
+                    expandableView = one.lone;
+                }
+                return one.copy(expandableView);
+            }
+
+            public final ExpandableView component1() {
+                return this.lone;
+            }
+
+            public final One copy(ExpandableView expandableView) {
+                Intrinsics.checkNotNullParameter(expandableView, "lone");
+                return new One(expandableView);
+            }
+
+            public boolean equals(Object obj) {
                 if (this == obj) {
                     return true;
                 }
-                return (obj instanceof One) && Intrinsics.areEqual(this.lone, ((One) obj).lone);
+                return (obj instanceof One) && Intrinsics.areEqual((Object) this.lone, (Object) ((One) obj).lone);
             }
 
             public int hashCode() {
                 return this.lone.hashCode();
             }
 
-            @NotNull
             public String toString() {
                 return "One(lone=" + this.lone + ')';
             }
 
-            /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-            public One(@NotNull ExpandableView lone) {
-                super(null);
-                Intrinsics.checkNotNullParameter(lone, "lone");
-                this.lone = lone;
+            /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+            public One(ExpandableView expandableView) {
+                super((DefaultConstructorMarker) null);
+                Intrinsics.checkNotNullParameter(expandableView, "lone");
+                this.lone = expandableView;
             }
 
-            @NotNull
             public final ExpandableView getLone() {
                 return this.lone;
             }
         }
 
+        @Metadata(mo64986d1 = {"\u0000\f\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\bÆ\u0002\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002¨\u0006\u0003"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds$None;", "Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$SectionBounds;", "()V", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
         /* compiled from: NotificationSectionsManager.kt */
-        /* loaded from: classes.dex */
         public static final class None extends SectionBounds {
-            @NotNull
             public static final None INSTANCE = new None();
 
             private None() {
-                super(null);
+                super((DefaultConstructorMarker) null);
             }
         }
 
-        @NotNull
-        public final SectionBounds addNotif(@NotNull ExpandableView notif) {
-            Intrinsics.checkNotNullParameter(notif, "notif");
+        public final SectionBounds addNotif(ExpandableView expandableView) {
+            Intrinsics.checkNotNullParameter(expandableView, "notif");
             if (this instanceof None) {
-                return new One(notif);
+                return new One(expandableView);
             }
             if (this instanceof One) {
-                return new Many(((One) this).getLone(), notif);
+                return new Many(((One) this).getLone(), expandableView);
             }
-            if (!(this instanceof Many)) {
-                throw new NoWhenBranchMatchedException();
+            if (this instanceof Many) {
+                return Many.copy$default((Many) this, (ExpandableView) null, expandableView, 1, (Object) null);
             }
-            return Many.copy$default((Many) this, null, notif, 1, null);
+            throw new NoWhenBranchMatchedException();
         }
 
-        public final boolean updateSection(@NotNull NotificationSection section) {
-            Intrinsics.checkNotNullParameter(section, "section");
+        public final boolean updateSection(NotificationSection notificationSection) {
+            Intrinsics.checkNotNullParameter(notificationSection, "section");
             if (this instanceof None) {
-                return setFirstAndLastVisibleChildren(section, null, null);
+                return setFirstAndLastVisibleChildren(notificationSection, (ExpandableView) null, (ExpandableView) null);
             }
             if (this instanceof One) {
                 One one = (One) this;
-                return setFirstAndLastVisibleChildren(section, one.getLone(), one.getLone());
-            } else if (!(this instanceof Many)) {
-                throw new NoWhenBranchMatchedException();
-            } else {
+                return setFirstAndLastVisibleChildren(notificationSection, one.getLone(), one.getLone());
+            } else if (this instanceof Many) {
                 Many many = (Many) this;
-                return setFirstAndLastVisibleChildren(section, many.getFirst(), many.getLast());
+                return setFirstAndLastVisibleChildren(notificationSection, many.getFirst(), many.getLast());
+            } else {
+                throw new NoWhenBranchMatchedException();
             }
         }
 
@@ -871,55 +462,66 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
         }
     }
 
-    public final boolean updateFirstAndLastViewsForAllSections(@NotNull NotificationSection[] sections, @NotNull List<? extends ExpandableView> children) {
-        final Sequence asSequence;
+    public final boolean updateFirstAndLastViewsForAllSections(NotificationSection[] notificationSectionArr, List<? extends ExpandableView> list) {
         SparseArray sparseArray;
-        Intrinsics.checkNotNullParameter(sections, "sections");
-        Intrinsics.checkNotNullParameter(children, "children");
-        asSequence = CollectionsKt___CollectionsKt.asSequence(children);
-        Grouping<ExpandableView, Integer> grouping = new Grouping<ExpandableView, Integer>() { // from class: com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$updateFirstAndLastViewsForAllSections$$inlined$groupingBy$1
-            @Override // kotlin.collections.Grouping
-            @NotNull
-            public Iterator<ExpandableView> sourceIterator() {
-                return Sequence.this.iterator();
-            }
-
-            @Override // kotlin.collections.Grouping
-            public Integer keyOf(ExpandableView expandableView) {
-                Integer bucket;
-                bucket = this.getBucket(expandableView);
-                if (bucket != null) {
-                    return Integer.valueOf(bucket.intValue());
-                }
-                throw new IllegalArgumentException("Cannot find section bucket for view");
-            }
-        };
+        Intrinsics.checkNotNullParameter(notificationSectionArr, "sections");
+        Intrinsics.checkNotNullParameter(list, "children");
+        Grouping notificationSectionsManager$updateFirstAndLastViewsForAllSections$$inlined$groupingBy$1 = new C2788x74c1ef3e(CollectionsKt.asSequence(list), this);
         SectionBounds.None none = SectionBounds.None.INSTANCE;
-        int length = sections.length;
+        int length = notificationSectionArr.length;
         if (length < 0) {
             sparseArray = new SparseArray();
         } else {
             sparseArray = new SparseArray(length);
         }
-        Iterator<ExpandableView> sourceIterator = grouping.sourceIterator();
+        Iterator sourceIterator = notificationSectionsManager$updateFirstAndLastViewsForAllSections$$inlined$groupingBy$1.sourceIterator();
         while (sourceIterator.hasNext()) {
-            ExpandableView next = sourceIterator.next();
-            int intValue = grouping.keyOf(next).intValue();
+            Object next = sourceIterator.next();
+            int intValue = ((Number) notificationSectionsManager$updateFirstAndLastViewsForAllSections$$inlined$groupingBy$1.keyOf(next)).intValue();
             Object obj = sparseArray.get(intValue);
             if (obj == null) {
                 obj = none;
             }
-            sparseArray.put(intValue, ((SectionBounds) obj).addNotif(next));
+            sparseArray.put(intValue, ((SectionBounds) obj).addNotif((ExpandableView) next));
         }
         boolean z = false;
-        for (NotificationSection notificationSection : sections) {
+        for (NotificationSection notificationSection : notificationSectionArr) {
             SectionBounds sectionBounds = (SectionBounds) sparseArray.get(notificationSection.getBucket());
             if (sectionBounds == null) {
                 sectionBounds = SectionBounds.None.INSTANCE;
+            } else {
+                Intrinsics.checkNotNullExpressionValue(sectionBounds, "sectionBounds[section.bu…et] ?: SectionBounds.None");
             }
             z = sectionBounds.updateSection(notificationSection) || z;
         }
         return z;
+    }
+
+    private final void logSections(NotificationSection[] notificationSectionArr) {
+        String str;
+        int length = notificationSectionArr.length;
+        for (int i = 0; i < length; i++) {
+            NotificationSection notificationSection = notificationSectionArr[i];
+            ExpandableView firstVisibleChild = notificationSection.getFirstVisibleChild();
+            String str2 = "(null)";
+            if (firstVisibleChild == null) {
+                str = str2;
+            } else if (firstVisibleChild instanceof ExpandableNotificationRow) {
+                str = ((ExpandableNotificationRow) firstVisibleChild).getEntry().getKey();
+            } else {
+                str = Integer.toHexString(System.identityHashCode(firstVisibleChild));
+            }
+            ExpandableView lastVisibleChild = notificationSection.getLastVisibleChild();
+            if (lastVisibleChild != null) {
+                if (lastVisibleChild instanceof ExpandableNotificationRow) {
+                    str2 = ((ExpandableNotificationRow) lastVisibleChild).getEntry().getKey();
+                } else {
+                    str2 = Integer.toHexString(System.identityHashCode(lastVisibleChild));
+                }
+            }
+            Log.d(TAG, "updateSections: f=" + str + " s=" + i);
+            Log.d(TAG, "updateSections: l=" + str2 + " s=" + i);
+        }
     }
 
     public final void setHeaderForegroundColor(int i) {
@@ -932,14 +534,13 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
             silentHeaderView.setForegroundColor(i);
         }
         SectionHeaderView alertingHeaderView = getAlertingHeaderView();
-        if (alertingHeaderView == null) {
-            return;
+        if (alertingHeaderView != null) {
+            alertingHeaderView.setForegroundColor(i);
         }
-        alertingHeaderView.setForegroundColor(i);
     }
 
+    @Metadata(mo64986d1 = {"\u0000\u0018\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u000e\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000¨\u0006\u0007"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/stack/NotificationSectionsManager$Companion;", "", "()V", "DEBUG", "", "TAG", "", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: NotificationSectionsManager.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -947,5 +548,430 @@ public final class NotificationSectionsManager implements StackScrollAlgorithm.S
 
         private Companion() {
         }
+    }
+
+    private final void logShadeContents() {
+        Trace.beginSection("NotifSectionsManager.logShadeContents");
+        try {
+            NotificationStackScrollLayout notificationStackScrollLayout = this.parent;
+            if (notificationStackScrollLayout == null) {
+                Intrinsics.throwUninitializedPropertyAccessException("parent");
+                notificationStackScrollLayout = null;
+            }
+            int i = 0;
+            for (View next : ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout)) {
+                int i2 = i + 1;
+                if (i < 0) {
+                    CollectionsKt.throwIndexOverflow();
+                }
+                logShadeChild(i, next);
+                i = i2;
+            }
+            Unit unit = Unit.INSTANCE;
+        } finally {
+            Trace.endSection();
+        }
+    }
+
+    /* JADX WARNING: Removed duplicated region for block: B:100:0x019a A[Catch:{ all -> 0x02a3 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:101:0x019b A[Catch:{ all -> 0x02a3 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:109:0x01b5 A[Catch:{ all -> 0x02a3 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:110:0x01b7 A[Catch:{ all -> 0x02a3 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:66:0x013a A[Catch:{ all -> 0x02a3 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:84:0x016f A[Catch:{ all -> 0x02a3 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:91:0x017f A[ADDED_TO_REGION, Catch:{ all -> 0x02a3 }] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public final kotlin.Unit updateSectionBoundaries(java.lang.String r24) {
+        /*
+            r23 = this;
+            r0 = r23
+            r1 = r24
+            java.lang.String r2 = "reason"
+            kotlin.jvm.internal.Intrinsics.checkNotNullParameter(r1, r2)
+            java.lang.String r2 = "NotifSectionsManager.update"
+            android.os.Trace.beginSection(r2)
+            com.android.systemui.statusbar.notification.NotifPipelineFlags r2 = r0.notifPipelineFlags     // Catch:{ all -> 0x02a3 }
+            r2.checkLegacyPipelineEnabled()     // Catch:{ all -> 0x02a3 }
+            boolean r2 = r23.isUsingMultipleSections()     // Catch:{ all -> 0x02a3 }
+            if (r2 != 0) goto L_0x001c
+            goto L_0x029d
+        L_0x001c:
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r0.logger     // Catch:{ all -> 0x02a3 }
+            r2.logStartSectionUpdate(r1)     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.plugins.statusbar.StatusBarStateController r1 = r0.statusBarStateController     // Catch:{ all -> 0x02a3 }
+            int r1 = r1.getState()     // Catch:{ all -> 0x02a3 }
+            r8 = 0
+            r9 = 1
+            if (r1 == r9) goto L_0x002d
+            r10 = r9
+            goto L_0x002e
+        L_0x002d:
+            r10 = r8
+        L_0x002e:
+            com.android.systemui.statusbar.notification.NotificationSectionsFeatureManager r1 = r0.sectionsFeatureManager     // Catch:{ all -> 0x02a3 }
+            boolean r11 = r1.isMediaControlsEnabled()     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.MediaContainerView r1 = r23.getMediaControlsView()     // Catch:{ all -> 0x02a3 }
+            if (r1 == 0) goto L_0x0042
+            com.android.systemui.statusbar.notification.row.ExpandableView r1 = (com.android.systemui.statusbar.notification.row.ExpandableView) r1     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState r1 = r0.expandableViewHeaderState(r1)     // Catch:{ all -> 0x02a3 }
+            r13 = r1
+            goto L_0x0043
+        L_0x0042:
+            r13 = 0
+        L_0x0043:
+            com.android.systemui.statusbar.notification.stack.SectionHeaderView r1 = r23.getIncomingHeaderView()     // Catch:{ all -> 0x02a3 }
+            if (r1 == 0) goto L_0x0051
+            com.android.systemui.statusbar.notification.row.StackScrollerDecorView r1 = (com.android.systemui.statusbar.notification.row.StackScrollerDecorView) r1     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState r1 = r0.decorViewHeaderState(r1)     // Catch:{ all -> 0x02a3 }
+            r14 = r1
+            goto L_0x0052
+        L_0x0051:
+            r14 = 0
+        L_0x0052:
+            com.android.systemui.statusbar.notification.stack.SectionHeaderView r1 = r23.getPeopleHeaderView()     // Catch:{ all -> 0x02a3 }
+            if (r1 == 0) goto L_0x0060
+            com.android.systemui.statusbar.notification.row.StackScrollerDecorView r1 = (com.android.systemui.statusbar.notification.row.StackScrollerDecorView) r1     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState r1 = r0.decorViewHeaderState(r1)     // Catch:{ all -> 0x02a3 }
+            r15 = r1
+            goto L_0x0061
+        L_0x0060:
+            r15 = 0
+        L_0x0061:
+            com.android.systemui.statusbar.notification.stack.SectionHeaderView r1 = r23.getAlertingHeaderView()     // Catch:{ all -> 0x02a3 }
+            if (r1 == 0) goto L_0x0070
+            com.android.systemui.statusbar.notification.row.StackScrollerDecorView r1 = (com.android.systemui.statusbar.notification.row.StackScrollerDecorView) r1     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState r1 = r0.decorViewHeaderState(r1)     // Catch:{ all -> 0x02a3 }
+            r16 = r1
+            goto L_0x0072
+        L_0x0070:
+            r16 = 0
+        L_0x0072:
+            com.android.systemui.statusbar.notification.stack.SectionHeaderView r1 = r23.getSilentHeaderView()     // Catch:{ all -> 0x02a3 }
+            if (r1 == 0) goto L_0x0080
+            com.android.systemui.statusbar.notification.row.StackScrollerDecorView r1 = (com.android.systemui.statusbar.notification.row.StackScrollerDecorView) r1     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState r1 = r0.decorViewHeaderState(r1)     // Catch:{ all -> 0x02a3 }
+            r7 = r1
+            goto L_0x0081
+        L_0x0080:
+            r7 = 0
+        L_0x0081:
+            r1 = 5
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState[] r1 = new com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState[r1]     // Catch:{ all -> 0x02a3 }
+            r1[r8] = r13     // Catch:{ all -> 0x02a3 }
+            r1[r9] = r14     // Catch:{ all -> 0x02a3 }
+            r6 = 2
+            r1[r6] = r15     // Catch:{ all -> 0x02a3 }
+            r2 = 3
+            r1[r2] = r16     // Catch:{ all -> 0x02a3 }
+            r5 = 4
+            r1[r5] = r7     // Catch:{ all -> 0x02a3 }
+            kotlin.sequences.Sequence r1 = kotlin.sequences.SequencesKt.sequenceOf(r1)     // Catch:{ all -> 0x02a3 }
+            kotlin.sequences.Sequence r4 = kotlin.sequences.SequencesKt.filterNotNull(r1)     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout r1 = r0.parent     // Catch:{ all -> 0x02a3 }
+            java.lang.String r17 = "parent"
+            if (r1 != 0) goto L_0x00a4
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r17)     // Catch:{ all -> 0x02a3 }
+            r1 = 0
+        L_0x00a4:
+            int r1 = r1.getChildCount()     // Catch:{ all -> 0x02a3 }
+            int r1 = r1 - r9
+            r3 = r1
+            r19 = r8
+            r20 = r19
+            r18 = 0
+        L_0x00b0:
+            r1 = -2
+            if (r1 >= r3) goto L_0x01e0
+            com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout r1 = r0.parent     // Catch:{ all -> 0x02a3 }
+            if (r1 != 0) goto L_0x00bb
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r17)     // Catch:{ all -> 0x02a3 }
+            r1 = 0
+        L_0x00bb:
+            android.view.View r2 = r1.getChildAt(r3)     // Catch:{ all -> 0x02a3 }
+            if (r2 == 0) goto L_0x0114
+            r0.logShadeChild(r3, r2)     // Catch:{ all -> 0x02a3 }
+            r1 = r23
+            r24 = r2
+            r2 = r13
+            r21 = r3
+            r3 = r14
+            r12 = r4
+            r4 = r15
+            r8 = r5
+            r5 = r16
+            r8 = r6
+            r6 = r7
+            r22 = r7
+            r7 = r24
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState r1 = m3148updateSectionBoundaries$lambda16$getSectionState(r1, r2, r3, r4, r5, r6, r7)     // Catch:{ all -> 0x02a3 }
+            if (r1 == 0) goto L_0x011c
+            java.lang.Integer r2 = java.lang.Integer.valueOf((int) r21)     // Catch:{ all -> 0x02a3 }
+            r1.setCurrentPosition(r2)     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$updateSectionBoundaries$1$1$1$1 r2 = new com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$updateSectionBoundaries$1$1$1$1     // Catch:{ all -> 0x02a3 }
+            r2.<init>(r1)     // Catch:{ all -> 0x02a3 }
+            kotlin.jvm.functions.Function1 r2 = (kotlin.jvm.functions.Function1) r2     // Catch:{ all -> 0x02a3 }
+            kotlin.sequences.Sequence r1 = com.android.systemui.util.ConvenienceExtensionsKt.takeUntil(r12, r2)     // Catch:{ all -> 0x02a3 }
+            java.util.Iterator r1 = r1.iterator()     // Catch:{ all -> 0x02a3 }
+        L_0x00f3:
+            boolean r2 = r1.hasNext()     // Catch:{ all -> 0x02a3 }
+            if (r2 == 0) goto L_0x011c
+            java.lang.Object r2 = r1.next()     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState r2 = (com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState) r2     // Catch:{ all -> 0x02a3 }
+            java.lang.Integer r3 = r2.getTargetPosition()     // Catch:{ all -> 0x02a3 }
+            if (r3 == 0) goto L_0x010f
+            int r3 = r3.intValue()     // Catch:{ all -> 0x02a3 }
+            int r3 = r3 - r9
+            java.lang.Integer r3 = java.lang.Integer.valueOf((int) r3)     // Catch:{ all -> 0x02a3 }
+            goto L_0x0110
+        L_0x010f:
+            r3 = 0
+        L_0x0110:
+            r2.setTargetPosition(r3)     // Catch:{ all -> 0x02a3 }
+            goto L_0x00f3
+        L_0x0114:
+            r24 = r2
+            r21 = r3
+            r12 = r4
+            r8 = r6
+            r22 = r7
+        L_0x011c:
+            r1 = r24
+            boolean r2 = r1 instanceof com.android.systemui.statusbar.notification.row.ExpandableNotificationRow     // Catch:{ all -> 0x02a3 }
+            if (r2 == 0) goto L_0x0126
+            r2 = r1
+            com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r2 = (com.android.systemui.statusbar.notification.row.ExpandableNotificationRow) r2     // Catch:{ all -> 0x02a3 }
+            goto L_0x0127
+        L_0x0126:
+            r2 = 0
+        L_0x0127:
+            if (r2 == 0) goto L_0x0137
+            int r3 = r2.getVisibility()     // Catch:{ all -> 0x02a3 }
+            r4 = 8
+            if (r3 != r4) goto L_0x0133
+            r3 = r9
+            goto L_0x0134
+        L_0x0133:
+            r3 = 0
+        L_0x0134:
+            if (r3 != 0) goto L_0x0137
+            goto L_0x0138
+        L_0x0137:
+            r2 = 0
+        L_0x0138:
+            if (r19 != 0) goto L_0x016b
+            if (r18 == 0) goto L_0x0164
+            r3 = r18
+            java.lang.Number r3 = (java.lang.Number) r3     // Catch:{ all -> 0x02a3 }
+            int r3 = r3.intValue()     // Catch:{ all -> 0x02a3 }
+            if (r2 == 0) goto L_0x015a
+            com.android.systemui.statusbar.notification.collection.NotificationEntry r4 = r2.getEntry()     // Catch:{ all -> 0x02a3 }
+            if (r4 == 0) goto L_0x015a
+            int r4 = r4.getBucket()     // Catch:{ all -> 0x02a3 }
+            if (r3 >= r4) goto L_0x0154
+            r3 = r9
+            goto L_0x0155
+        L_0x0154:
+            r3 = 0
+        L_0x0155:
+            java.lang.Boolean r3 = java.lang.Boolean.valueOf((boolean) r3)     // Catch:{ all -> 0x02a3 }
+            goto L_0x015b
+        L_0x015a:
+            r3 = 0
+        L_0x015b:
+            java.lang.Boolean r4 = java.lang.Boolean.valueOf((boolean) r9)     // Catch:{ all -> 0x02a3 }
+            boolean r3 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r3, (java.lang.Object) r4)     // Catch:{ all -> 0x02a3 }
+            goto L_0x0165
+        L_0x0164:
+            r3 = 0
+        L_0x0165:
+            if (r3 == 0) goto L_0x0168
+            goto L_0x016b
+        L_0x0168:
+            r19 = 0
+            goto L_0x016d
+        L_0x016b:
+            r19 = r9
+        L_0x016d:
+            if (r19 == 0) goto L_0x017d
+            if (r2 == 0) goto L_0x0176
+            com.android.systemui.statusbar.notification.collection.NotificationEntry r3 = r2.getEntry()     // Catch:{ all -> 0x02a3 }
+            goto L_0x0177
+        L_0x0176:
+            r3 = 0
+        L_0x0177:
+            if (r3 != 0) goto L_0x017a
+            goto L_0x017d
+        L_0x017a:
+            r3.setBucket(r8)     // Catch:{ all -> 0x02a3 }
+        L_0x017d:
+            if (r18 == 0) goto L_0x0193
+            if (r1 == 0) goto L_0x0191
+            if (r2 == 0) goto L_0x0193
+            com.android.systemui.statusbar.notification.collection.NotificationEntry r1 = r2.getEntry()     // Catch:{ all -> 0x02a3 }
+            int r1 = r1.getBucket()     // Catch:{ all -> 0x02a3 }
+            int r3 = r18.intValue()     // Catch:{ all -> 0x02a3 }
+            if (r3 == r1) goto L_0x0193
+        L_0x0191:
+            r1 = r9
+            goto L_0x0194
+        L_0x0193:
+            r1 = 0
+        L_0x0194:
+            if (r1 == 0) goto L_0x01b1
+            if (r10 == 0) goto L_0x01b1
+            if (r18 != 0) goto L_0x019b
+            goto L_0x01b1
+        L_0x019b:
+            int r1 = r18.intValue()     // Catch:{ all -> 0x02a3 }
+            r3 = 6
+            if (r1 != r3) goto L_0x01b1
+            r1 = r22
+            if (r1 != 0) goto L_0x01a7
+            goto L_0x01b3
+        L_0x01a7:
+            int r3 = r21 + 1
+            java.lang.Integer r3 = java.lang.Integer.valueOf((int) r3)     // Catch:{ all -> 0x02a3 }
+            r1.setTargetPosition(r3)     // Catch:{ all -> 0x02a3 }
+            goto L_0x01b3
+        L_0x01b1:
+            r1 = r22
+        L_0x01b3:
+            if (r2 != 0) goto L_0x01b7
+            r4 = 4
+            goto L_0x01d7
+        L_0x01b7:
+            if (r20 != 0) goto L_0x01c8
+            com.android.systemui.statusbar.notification.collection.NotificationEntry r3 = r2.getEntry()     // Catch:{ all -> 0x02a3 }
+            int r3 = r3.getBucket()     // Catch:{ all -> 0x02a3 }
+            r4 = 4
+            if (r3 != r4) goto L_0x01c5
+            goto L_0x01c9
+        L_0x01c5:
+            r20 = 0
+            goto L_0x01cb
+        L_0x01c8:
+            r4 = 4
+        L_0x01c9:
+            r20 = r9
+        L_0x01cb:
+            com.android.systemui.statusbar.notification.collection.NotificationEntry r2 = r2.getEntry()     // Catch:{ all -> 0x02a3 }
+            int r2 = r2.getBucket()     // Catch:{ all -> 0x02a3 }
+            java.lang.Integer r18 = java.lang.Integer.valueOf((int) r2)     // Catch:{ all -> 0x02a3 }
+        L_0x01d7:
+            int r3 = r21 + -1
+            r7 = r1
+            r5 = r4
+            r6 = r8
+            r4 = r12
+            r8 = 0
+            goto L_0x00b0
+        L_0x01e0:
+            r12 = r4
+            r8 = r6
+            r1 = r7
+            if (r13 != 0) goto L_0x01e6
+            goto L_0x01f2
+        L_0x01e6:
+            if (r11 == 0) goto L_0x01ee
+            r2 = 0
+            java.lang.Integer r2 = java.lang.Integer.valueOf((int) r2)     // Catch:{ all -> 0x02a3 }
+            goto L_0x01ef
+        L_0x01ee:
+            r2 = 0
+        L_0x01ef:
+            r13.setTargetPosition(r2)     // Catch:{ all -> 0x02a3 }
+        L_0x01f2:
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r0.logger     // Catch:{ all -> 0x02a3 }
+            java.lang.String r3 = "New header target positions:"
+            r2.logStr(r3)     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r0.logger     // Catch:{ all -> 0x02a3 }
+            r3 = -1
+            if (r13 == 0) goto L_0x0209
+            java.lang.Integer r4 = r13.getTargetPosition()     // Catch:{ all -> 0x02a3 }
+            if (r4 == 0) goto L_0x0209
+            int r4 = r4.intValue()     // Catch:{ all -> 0x02a3 }
+            goto L_0x020a
+        L_0x0209:
+            r4 = r3
+        L_0x020a:
+            r2.logMediaControls(r4)     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r0.logger     // Catch:{ all -> 0x02a3 }
+            if (r14 == 0) goto L_0x021c
+            java.lang.Integer r4 = r14.getTargetPosition()     // Catch:{ all -> 0x02a3 }
+            if (r4 == 0) goto L_0x021c
+            int r4 = r4.intValue()     // Catch:{ all -> 0x02a3 }
+            goto L_0x021d
+        L_0x021c:
+            r4 = r3
+        L_0x021d:
+            r2.logIncomingHeader(r4)     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r0.logger     // Catch:{ all -> 0x02a3 }
+            if (r15 == 0) goto L_0x022f
+            java.lang.Integer r4 = r15.getTargetPosition()     // Catch:{ all -> 0x02a3 }
+            if (r4 == 0) goto L_0x022f
+            int r4 = r4.intValue()     // Catch:{ all -> 0x02a3 }
+            goto L_0x0230
+        L_0x022f:
+            r4 = r3
+        L_0x0230:
+            r2.logConversationsHeader(r4)     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r0.logger     // Catch:{ all -> 0x02a3 }
+            if (r16 == 0) goto L_0x0242
+            java.lang.Integer r4 = r16.getTargetPosition()     // Catch:{ all -> 0x02a3 }
+            if (r4 == 0) goto L_0x0242
+            int r4 = r4.intValue()     // Catch:{ all -> 0x02a3 }
+            goto L_0x0243
+        L_0x0242:
+            r4 = r3
+        L_0x0243:
+            r2.logAlertingHeader(r4)     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r2 = r0.logger     // Catch:{ all -> 0x02a3 }
+            if (r1 == 0) goto L_0x0254
+            java.lang.Integer r1 = r1.getTargetPosition()     // Catch:{ all -> 0x02a3 }
+            if (r1 == 0) goto L_0x0254
+            int r3 = r1.intValue()     // Catch:{ all -> 0x02a3 }
+        L_0x0254:
+            r2.logSilentHeader(r3)     // Catch:{ all -> 0x02a3 }
+            java.lang.Iterable r1 = kotlin.sequences.SequencesKt.asIterable(r12)     // Catch:{ all -> 0x02a3 }
+            java.util.List r1 = kotlin.collections.CollectionsKt.reversed(r1)     // Catch:{ all -> 0x02a3 }
+            java.lang.Iterable r1 = (java.lang.Iterable) r1     // Catch:{ all -> 0x02a3 }
+            java.util.Iterator r1 = r1.iterator()     // Catch:{ all -> 0x02a3 }
+        L_0x0265:
+            boolean r2 = r1.hasNext()     // Catch:{ all -> 0x02a3 }
+            if (r2 == 0) goto L_0x0275
+            java.lang.Object r2 = r1.next()     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsManager$SectionUpdateState r2 = (com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState) r2     // Catch:{ all -> 0x02a3 }
+            r2.adjustViewPosition()     // Catch:{ all -> 0x02a3 }
+            goto L_0x0265
+        L_0x0275:
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r1 = r0.logger     // Catch:{ all -> 0x02a3 }
+            java.lang.String r2 = "Final order:"
+            r1.logStr(r2)     // Catch:{ all -> 0x02a3 }
+            r23.logShadeContents()     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger r1 = r0.logger     // Catch:{ all -> 0x02a3 }
+            java.lang.String r2 = "Section boundary update complete"
+            r1.logStr(r2)     // Catch:{ all -> 0x02a3 }
+            com.android.systemui.statusbar.notification.stack.SectionHeaderView r1 = r23.getSilentHeaderView()     // Catch:{ all -> 0x02a3 }
+            if (r1 == 0) goto L_0x029d
+            com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout r0 = r0.parent     // Catch:{ all -> 0x02a3 }
+            if (r0 != 0) goto L_0x0295
+            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r17)     // Catch:{ all -> 0x02a3 }
+            r12 = 0
+            goto L_0x0296
+        L_0x0295:
+            r12 = r0
+        L_0x0296:
+            boolean r0 = r12.hasActiveClearableNotifications(r8)     // Catch:{ all -> 0x02a3 }
+            r1.setClearSectionButtonEnabled(r0)     // Catch:{ all -> 0x02a3 }
+        L_0x029d:
+            kotlin.Unit r0 = kotlin.Unit.INSTANCE     // Catch:{ all -> 0x02a3 }
+            android.os.Trace.endSection()
+            return r0
+        L_0x02a3:
+            r0 = move-exception
+            android.os.Trace.endSection()
+            throw r0
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.updateSectionBoundaries(java.lang.String):kotlin.Unit");
     }
 }

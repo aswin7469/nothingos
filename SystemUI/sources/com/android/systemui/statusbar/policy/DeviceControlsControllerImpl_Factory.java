@@ -6,7 +6,7 @@ import com.android.systemui.settings.UserContextProvider;
 import com.android.systemui.util.settings.SecureSettings;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class DeviceControlsControllerImpl_Factory implements Factory<DeviceControlsControllerImpl> {
     private final Provider<Context> contextProvider;
     private final Provider<ControlsComponent> controlsComponentProvider;
@@ -20,17 +20,15 @@ public final class DeviceControlsControllerImpl_Factory implements Factory<Devic
         this.secureSettingsProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DeviceControlsControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.controlsComponentProvider.mo1933get(), this.userContextProvider.mo1933get(), this.secureSettingsProvider.mo1933get());
+    public DeviceControlsControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.controlsComponentProvider.get(), this.userContextProvider.get(), this.secureSettingsProvider.get());
     }
 
     public static DeviceControlsControllerImpl_Factory create(Provider<Context> provider, Provider<ControlsComponent> provider2, Provider<UserContextProvider> provider3, Provider<SecureSettings> provider4) {
         return new DeviceControlsControllerImpl_Factory(provider, provider2, provider3, provider4);
     }
 
-    public static DeviceControlsControllerImpl newInstance(Context context, ControlsComponent controlsComponent, UserContextProvider userContextProvider, SecureSettings secureSettings) {
-        return new DeviceControlsControllerImpl(context, controlsComponent, userContextProvider, secureSettings);
+    public static DeviceControlsControllerImpl newInstance(Context context, ControlsComponent controlsComponent, UserContextProvider userContextProvider2, SecureSettings secureSettings) {
+        return new DeviceControlsControllerImpl(context, controlsComponent, userContextProvider2, secureSettings);
     }
 }

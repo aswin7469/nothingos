@@ -6,12 +6,13 @@ import android.media.MediaMuxer;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.Pair;
-import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.p026io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-/* loaded from: classes.dex */
+
 public class ScreenRecordingMuxer {
+    private static final int BUFFER_SIZE = 4194304;
     private static String TAG = "ScreenRecordingMuxer";
     private ArrayMap<Pair<MediaExtractor, Integer>, Integer> mExtractorIndexToMuxerIndex = new ArrayMap<>();
     private ArrayList<MediaExtractor> mExtractors = new ArrayList<>();
@@ -23,12 +24,10 @@ public class ScreenRecordingMuxer {
         this.mFiles = strArr;
         this.mOutFile = str;
         this.mFormat = i;
-        String str2 = TAG;
-        Log.d(str2, "out: " + this.mOutFile + " , in: " + this.mFiles[0]);
+        Log.d(TAG, "out: " + this.mOutFile + " , in: " + this.mFiles[0]);
     }
 
     public void mux() throws IOException {
-        String[] strArr;
         MediaMuxer mediaMuxer = new MediaMuxer(this.mOutFile, this.mFormat);
         for (String str : this.mFiles) {
             MediaExtractor mediaExtractor = new MediaExtractor();
@@ -47,24 +46,22 @@ public class ScreenRecordingMuxer {
             }
         }
         mediaMuxer.start();
-        for (Pair<MediaExtractor, Integer> pair : this.mExtractorIndexToMuxerIndex.keySet()) {
-            MediaExtractor mediaExtractor2 = (MediaExtractor) pair.first;
-            mediaExtractor2.selectTrack(((Integer) pair.second).intValue());
-            int intValue = this.mExtractorIndexToMuxerIndex.get(pair).intValue();
-            Log.d(TAG, "track format: " + mediaExtractor2.getTrackFormat(((Integer) pair.second).intValue()));
-            mediaExtractor2.seekTo(0L, 2);
+        for (Pair next : this.mExtractorIndexToMuxerIndex.keySet()) {
+            MediaExtractor mediaExtractor2 = (MediaExtractor) next.first;
+            mediaExtractor2.selectTrack(((Integer) next.second).intValue());
+            int intValue = this.mExtractorIndexToMuxerIndex.get(next).intValue();
+            Log.d(TAG, "track format: " + mediaExtractor2.getTrackFormat(((Integer) next.second).intValue()));
+            mediaExtractor2.seekTo(0, 2);
             ByteBuffer allocate = ByteBuffer.allocate(4194304);
             MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
             while (true) {
-                int readSampleData = mediaExtractor2.readSampleData(allocate, allocate.arrayOffset());
-                bufferInfo.size = readSampleData;
-                if (readSampleData < 0) {
-                    break;
+                bufferInfo.size = mediaExtractor2.readSampleData(allocate, allocate.arrayOffset());
+                if (bufferInfo.size >= 0) {
+                    bufferInfo.presentationTimeUs = mediaExtractor2.getSampleTime();
+                    bufferInfo.flags = mediaExtractor2.getSampleFlags();
+                    mediaMuxer.writeSampleData(intValue, allocate, bufferInfo);
+                    mediaExtractor2.advance();
                 }
-                bufferInfo.presentationTimeUs = mediaExtractor2.getSampleTime();
-                bufferInfo.flags = mediaExtractor2.getSampleFlags();
-                mediaMuxer.writeSampleData(intValue, allocate, bufferInfo);
-                mediaExtractor2.advance();
             }
         }
         Iterator<MediaExtractor> it = this.mExtractors.iterator();

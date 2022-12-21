@@ -17,6 +17,8 @@
         <item>Máximo 3 procesos</item>
         <item>Máximo 4 procesos</item>
     </array>
+    <array name="avatar_image_descriptions">
+    </array>
     <array name="battery_labels">
         <item>0%</item>
         <item>50%</item>
@@ -67,6 +69,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_sample_rate_titles">
         <item>Usar selección del sistema (predeterminado)</item>
@@ -74,6 +78,8 @@
         <item>48.0 kHz</item>
         <item>88.2 kHz</item>
         <item>96.0 kHz</item>
+        <item>176.4 kHz</item>
+        <item>192.0 kHz</item>
     </array>
     <array name="bluetooth_a2dp_codec_summaries">
         <item>Usar selección del sistema (predeterminado)</item>
@@ -84,6 +90,10 @@
         <item>LDAC</item>
         <item>Audio Qualcomm® aptX™ Adaptive</item>
         <item>Audio Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_a2dp_codec_titles">
         <item>Usar selección del sistema (predeterminado)</item>
@@ -94,6 +104,10 @@
         <item>LDAC</item>
         <item>Audio Qualcomm® aptX™ Adaptive</item>
         <item>Audio Qualcomm® aptX™ TWS+</item>
+        <item>Savitech LHDC V1</item>
+        <item>Savitech LHDC V2</item>
+        <item>Savitech LHDC V3</item>
+        <item>Savitech LHDC V5</item>
     </array>
     <array name="bluetooth_audio_active_device_summaries">
         <item />
@@ -264,6 +278,11 @@
         <item>Desactivado</item>
         <item>Activado</item>
     </array>
+    <array name="tile_states_color_correction">
+        <item>No disponible</item>
+        <item>Desactivada</item>
+        <item>Activada</item>
+    </array>
     <array name="tile_states_controls">
         <item>No disponible</item>
         <item>Desactivado</item>
@@ -291,8 +310,8 @@
     </array>
     <array name="tile_states_internet">
         <item>No disponible</item>
-        <item>Desactivado</item>
-        <item>Activado</item>
+        <item>Desactivada</item>
+        <item>Activada</item>
     </array>
     <array name="tile_states_inversion">
         <item>No disponible</item>
@@ -313,6 +332,16 @@
         <item>No disponible</item>
         <item>Desactivada</item>
         <item>Activada</item>
+    </array>
+    <array name="tile_states_onehanded">
+        <item>No disponible</item>
+        <item>Desactivado</item>
+        <item>Sí</item>
+    </array>
+    <array name="tile_states_qr_code_scanner">
+        <item>No disponible</item>
+        <item>No</item>
+        <item>Sí</item>
     </array>
     <array name="tile_states_reduce_brightness">
         <item>No disponible</item>
@@ -374,10 +403,16 @@
         <item>Normal</item>
         <item>Ligera</item>
         <item>Muy ligera</item>
-        <item>A velocidad muy alta</item>
+        <item>Muy rápida</item>
         <item>Rápida</item>
         <item>Muy rápida</item>
         <item>A velocidad máxima</item>
+    </array>
+    <array name="udfps_accessibility_touch_hints">
+        <item>Mover hacia la izquierda</item>
+        <item>Mover hacia abajo</item>
+        <item>Mover hacia la derecha</item>
+        <item>Mover hacia arriba</item>
     </array>
     <array name="usb_configuration_titles">
         <item>En carga</item>

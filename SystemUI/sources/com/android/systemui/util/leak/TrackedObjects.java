@@ -2,7 +2,7 @@ package com.android.systemui.util.leak;
 
 import java.util.Collection;
 import java.util.WeakHashMap;
-/* loaded from: classes2.dex */
+
 public class TrackedObjects {
     private final WeakHashMap<Class<?>, TrackedClass<?>> mTrackedClasses = new WeakHashMap<>();
     private final TrackedCollections mTrackedCollections;
@@ -13,9 +13,9 @@ public class TrackedObjects {
 
     public synchronized <T> void track(T t) {
         Class<?> cls = t.getClass();
-        TrackedClass<?> trackedClass = this.mTrackedClasses.get(cls);
+        TrackedClass trackedClass = this.mTrackedClasses.get(cls);
         if (trackedClass == null) {
-            trackedClass = new TrackedClass<>();
+            trackedClass = new TrackedClass();
             this.mTrackedClasses.put(cls, trackedClass);
         }
         trackedClass.track(t);
@@ -26,7 +26,6 @@ public class TrackedObjects {
         return collection instanceof TrackedClass;
     }
 
-    /* loaded from: classes2.dex */
     private static class TrackedClass<T> extends AbstractCollection<T> {
         final WeakIdentityHashMap<T, Void> instances;
 
@@ -34,16 +33,15 @@ public class TrackedObjects {
             this.instances = new WeakIdentityHashMap<>();
         }
 
-        void track(T t) {
+        /* access modifiers changed from: package-private */
+        public void track(T t) {
             this.instances.put(t, null);
         }
 
-        @Override // java.util.Collection
         public int size() {
             return this.instances.size();
         }
 
-        @Override // java.util.Collection
         public boolean isEmpty() {
             return this.instances.isEmpty();
         }

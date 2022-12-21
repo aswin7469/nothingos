@@ -1,11 +1,13 @@
 package com.android.systemui.statusbar.notification.row;
-/* loaded from: classes.dex */
+
+import javax.inject.Inject;
+
 public class NotifBindPipelineInitializer {
     NotifBindPipeline mNotifBindPipeline;
     RowContentBindStage mRowContentBindStage;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public NotifBindPipelineInitializer(NotifBindPipeline notifBindPipeline, RowContentBindStage rowContentBindStage) {
+    @Inject
+    NotifBindPipelineInitializer(NotifBindPipeline notifBindPipeline, RowContentBindStage rowContentBindStage) {
         this.mNotifBindPipeline = notifBindPipeline;
         this.mRowContentBindStage = rowContentBindStage;
     }

@@ -1,50 +1,41 @@
 package androidx.slice;
 
-import android.os.Bundle;
-import android.os.Parcelable;
 import androidx.slice.SliceItemHolder;
 import androidx.versionedparcelable.VersionedParcel;
-import androidx.versionedparcelable.VersionedParcelable;
-/* loaded from: classes.dex */
+
 public final class SliceItemHolderParcelizer {
     private static SliceItemHolder.SliceItemPool sBuilder = new SliceItemHolder.SliceItemPool();
 
-    public static SliceItemHolder read(VersionedParcel parcel) {
+    public static SliceItemHolder read(VersionedParcel versionedParcel) {
         SliceItemHolder sliceItemHolder = sBuilder.get();
-        sliceItemHolder.mVersionedParcelable = parcel.readVersionedParcelable(sliceItemHolder.mVersionedParcelable, 1);
-        sliceItemHolder.mParcelable = parcel.readParcelable(sliceItemHolder.mParcelable, 2);
-        sliceItemHolder.mStr = parcel.readString(sliceItemHolder.mStr, 3);
-        sliceItemHolder.mInt = parcel.readInt(sliceItemHolder.mInt, 4);
-        sliceItemHolder.mLong = parcel.readLong(sliceItemHolder.mLong, 5);
-        sliceItemHolder.mBundle = parcel.readBundle(sliceItemHolder.mBundle, 6);
+        sliceItemHolder.mVersionedParcelable = versionedParcel.readVersionedParcelable(sliceItemHolder.mVersionedParcelable, 1);
+        sliceItemHolder.mParcelable = versionedParcel.readParcelable(sliceItemHolder.mParcelable, 2);
+        sliceItemHolder.mStr = versionedParcel.readString(sliceItemHolder.mStr, 3);
+        sliceItemHolder.mInt = versionedParcel.readInt(sliceItemHolder.mInt, 4);
+        sliceItemHolder.mLong = versionedParcel.readLong(sliceItemHolder.mLong, 5);
+        sliceItemHolder.mBundle = versionedParcel.readBundle(sliceItemHolder.mBundle, 6);
         return sliceItemHolder;
     }
 
-    public static void write(SliceItemHolder obj, VersionedParcel parcel) {
-        parcel.setSerializationFlags(true, true);
-        VersionedParcelable versionedParcelable = obj.mVersionedParcelable;
-        if (versionedParcelable != null) {
-            parcel.writeVersionedParcelable(versionedParcelable, 1);
+    public static void write(SliceItemHolder sliceItemHolder, VersionedParcel versionedParcel) {
+        versionedParcel.setSerializationFlags(true, true);
+        if (sliceItemHolder.mVersionedParcelable != null) {
+            versionedParcel.writeVersionedParcelable(sliceItemHolder.mVersionedParcelable, 1);
         }
-        Parcelable parcelable = obj.mParcelable;
-        if (parcelable != null) {
-            parcel.writeParcelable(parcelable, 2);
+        if (sliceItemHolder.mParcelable != null) {
+            versionedParcel.writeParcelable(sliceItemHolder.mParcelable, 2);
         }
-        String str = obj.mStr;
-        if (str != null) {
-            parcel.writeString(str, 3);
+        if (sliceItemHolder.mStr != null) {
+            versionedParcel.writeString(sliceItemHolder.mStr, 3);
         }
-        int i = obj.mInt;
-        if (i != 0) {
-            parcel.writeInt(i, 4);
+        if (sliceItemHolder.mInt != 0) {
+            versionedParcel.writeInt(sliceItemHolder.mInt, 4);
         }
-        long j = obj.mLong;
-        if (0 != j) {
-            parcel.writeLong(j, 5);
+        if (0 != sliceItemHolder.mLong) {
+            versionedParcel.writeLong(sliceItemHolder.mLong, 5);
         }
-        Bundle bundle = obj.mBundle;
-        if (bundle != null) {
-            parcel.writeBundle(bundle, 6);
+        if (sliceItemHolder.mBundle != null) {
+            versionedParcel.writeBundle(sliceItemHolder.mBundle, 6);
         }
     }
 }

@@ -14,152 +14,147 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import androidx.leanback.R$styleable;
-/* loaded from: classes.dex */
+import androidx.leanback.C0742R;
+
 public class FadeAndShortSlide extends Visibility {
+    private static final String PROPNAME_SCREEN_POSITION = "android:fadeAndShortSlideTransition:screenPosition";
+    static final CalculateSlide sCalculateBottom = new CalculateSlide() {
+        public float getGoneY(FadeAndShortSlide fadeAndShortSlide, ViewGroup viewGroup, View view, int[] iArr) {
+            return view.getTranslationY() + fadeAndShortSlide.getVerticalDistance(viewGroup);
+        }
+    };
+    static final CalculateSlide sCalculateEnd = new CalculateSlide() {
+        public float getGoneX(FadeAndShortSlide fadeAndShortSlide, ViewGroup viewGroup, View view, int[] iArr) {
+            boolean z = true;
+            if (viewGroup.getLayoutDirection() != 1) {
+                z = false;
+            }
+            if (z) {
+                return view.getTranslationX() - fadeAndShortSlide.getHorizontalDistance(viewGroup);
+            }
+            return view.getTranslationX() + fadeAndShortSlide.getHorizontalDistance(viewGroup);
+        }
+    };
+    static final CalculateSlide sCalculateStart = new CalculateSlide() {
+        public float getGoneX(FadeAndShortSlide fadeAndShortSlide, ViewGroup viewGroup, View view, int[] iArr) {
+            boolean z = true;
+            if (viewGroup.getLayoutDirection() != 1) {
+                z = false;
+            }
+            if (z) {
+                return view.getTranslationX() + fadeAndShortSlide.getHorizontalDistance(viewGroup);
+            }
+            return view.getTranslationX() - fadeAndShortSlide.getHorizontalDistance(viewGroup);
+        }
+    };
+    static final CalculateSlide sCalculateStartEnd = new CalculateSlide() {
+        public float getGoneX(FadeAndShortSlide fadeAndShortSlide, ViewGroup viewGroup, View view, int[] iArr) {
+            int i;
+            int width = iArr[0] + (view.getWidth() / 2);
+            viewGroup.getLocationOnScreen(iArr);
+            Rect epicenter = fadeAndShortSlide.getEpicenter();
+            if (epicenter == null) {
+                i = iArr[0] + (viewGroup.getWidth() / 2);
+            } else {
+                i = epicenter.centerX();
+            }
+            if (width < i) {
+                return view.getTranslationX() - fadeAndShortSlide.getHorizontalDistance(viewGroup);
+            }
+            return view.getTranslationX() + fadeAndShortSlide.getHorizontalDistance(viewGroup);
+        }
+    };
+    static final CalculateSlide sCalculateTop = new CalculateSlide() {
+        public float getGoneY(FadeAndShortSlide fadeAndShortSlide, ViewGroup viewGroup, View view, int[] iArr) {
+            return view.getTranslationY() - fadeAndShortSlide.getVerticalDistance(viewGroup);
+        }
+    };
+    private static final TimeInterpolator sDecelerate = new DecelerateInterpolator();
     private float mDistance;
     private Visibility mFade;
     private CalculateSlide mSlideCalculator;
     final CalculateSlide sCalculateTopBottom;
-    private static final TimeInterpolator sDecelerate = new DecelerateInterpolator();
-    static final CalculateSlide sCalculateStart = new CalculateSlide() { // from class: androidx.leanback.transition.FadeAndShortSlide.1
-        @Override // androidx.leanback.transition.FadeAndShortSlide.CalculateSlide
-        public float getGoneX(FadeAndShortSlide t, ViewGroup sceneRoot, View view, int[] position) {
-            boolean z = true;
-            if (sceneRoot.getLayoutDirection() != 1) {
-                z = false;
-            }
-            if (z) {
-                return view.getTranslationX() + t.getHorizontalDistance(sceneRoot);
-            }
-            return view.getTranslationX() - t.getHorizontalDistance(sceneRoot);
-        }
-    };
-    static final CalculateSlide sCalculateEnd = new CalculateSlide() { // from class: androidx.leanback.transition.FadeAndShortSlide.2
-        @Override // androidx.leanback.transition.FadeAndShortSlide.CalculateSlide
-        public float getGoneX(FadeAndShortSlide t, ViewGroup sceneRoot, View view, int[] position) {
-            boolean z = true;
-            if (sceneRoot.getLayoutDirection() != 1) {
-                z = false;
-            }
-            if (z) {
-                return view.getTranslationX() - t.getHorizontalDistance(sceneRoot);
-            }
-            return view.getTranslationX() + t.getHorizontalDistance(sceneRoot);
-        }
-    };
-    static final CalculateSlide sCalculateStartEnd = new CalculateSlide() { // from class: androidx.leanback.transition.FadeAndShortSlide.3
-        @Override // androidx.leanback.transition.FadeAndShortSlide.CalculateSlide
-        public float getGoneX(FadeAndShortSlide t, ViewGroup sceneRoot, View view, int[] position) {
-            int centerX;
-            int width = position[0] + (view.getWidth() / 2);
-            sceneRoot.getLocationOnScreen(position);
-            Rect epicenter = t.getEpicenter();
-            if (epicenter == null) {
-                centerX = position[0] + (sceneRoot.getWidth() / 2);
-            } else {
-                centerX = epicenter.centerX();
-            }
-            if (width < centerX) {
-                return view.getTranslationX() - t.getHorizontalDistance(sceneRoot);
-            }
-            return view.getTranslationX() + t.getHorizontalDistance(sceneRoot);
-        }
-    };
-    static final CalculateSlide sCalculateBottom = new CalculateSlide() { // from class: androidx.leanback.transition.FadeAndShortSlide.4
-        @Override // androidx.leanback.transition.FadeAndShortSlide.CalculateSlide
-        public float getGoneY(FadeAndShortSlide t, ViewGroup sceneRoot, View view, int[] position) {
-            return view.getTranslationY() + t.getVerticalDistance(sceneRoot);
-        }
-    };
-    static final CalculateSlide sCalculateTop = new CalculateSlide() { // from class: androidx.leanback.transition.FadeAndShortSlide.5
-        @Override // androidx.leanback.transition.FadeAndShortSlide.CalculateSlide
-        public float getGoneY(FadeAndShortSlide t, ViewGroup sceneRoot, View view, int[] position) {
-            return view.getTranslationY() - t.getVerticalDistance(sceneRoot);
-        }
-    };
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static abstract class CalculateSlide {
+    private static abstract class CalculateSlide {
         CalculateSlide() {
         }
 
-        float getGoneX(FadeAndShortSlide t, ViewGroup sceneRoot, View view, int[] position) {
+        /* access modifiers changed from: package-private */
+        public float getGoneX(FadeAndShortSlide fadeAndShortSlide, ViewGroup viewGroup, View view, int[] iArr) {
             return view.getTranslationX();
         }
 
-        float getGoneY(FadeAndShortSlide t, ViewGroup sceneRoot, View view, int[] position) {
+        /* access modifiers changed from: package-private */
+        public float getGoneY(FadeAndShortSlide fadeAndShortSlide, ViewGroup viewGroup, View view, int[] iArr) {
             return view.getTranslationY();
         }
     }
 
-    float getHorizontalDistance(ViewGroup sceneRoot) {
+    /* access modifiers changed from: package-private */
+    public float getHorizontalDistance(ViewGroup viewGroup) {
         float f = this.mDistance;
-        return f >= 0.0f ? f : sceneRoot.getWidth() / 4;
+        return f >= 0.0f ? f : (float) (viewGroup.getWidth() / 4);
     }
 
-    float getVerticalDistance(ViewGroup sceneRoot) {
+    /* access modifiers changed from: package-private */
+    public float getVerticalDistance(ViewGroup viewGroup) {
         float f = this.mDistance;
-        return f >= 0.0f ? f : sceneRoot.getHeight() / 4;
+        return f >= 0.0f ? f : (float) (viewGroup.getHeight() / 4);
     }
 
     public FadeAndShortSlide() {
         this(8388611);
     }
 
-    public FadeAndShortSlide(int slideEdge) {
+    public FadeAndShortSlide(int i) {
         this.mFade = new Fade();
         this.mDistance = -1.0f;
-        this.sCalculateTopBottom = new CalculateSlide() { // from class: androidx.leanback.transition.FadeAndShortSlide.6
-            @Override // androidx.leanback.transition.FadeAndShortSlide.CalculateSlide
-            public float getGoneY(FadeAndShortSlide t, ViewGroup sceneRoot, View view, int[] position) {
-                int centerY;
-                int height = position[1] + (view.getHeight() / 2);
-                sceneRoot.getLocationOnScreen(position);
+        this.sCalculateTopBottom = new CalculateSlide() {
+            public float getGoneY(FadeAndShortSlide fadeAndShortSlide, ViewGroup viewGroup, View view, int[] iArr) {
+                int i;
+                int height = iArr[1] + (view.getHeight() / 2);
+                viewGroup.getLocationOnScreen(iArr);
                 Rect epicenter = FadeAndShortSlide.this.getEpicenter();
                 if (epicenter == null) {
-                    centerY = position[1] + (sceneRoot.getHeight() / 2);
+                    i = iArr[1] + (viewGroup.getHeight() / 2);
                 } else {
-                    centerY = epicenter.centerY();
+                    i = epicenter.centerY();
                 }
-                if (height < centerY) {
-                    return view.getTranslationY() - t.getVerticalDistance(sceneRoot);
+                if (height < i) {
+                    return view.getTranslationY() - fadeAndShortSlide.getVerticalDistance(viewGroup);
                 }
-                return view.getTranslationY() + t.getVerticalDistance(sceneRoot);
+                return view.getTranslationY() + fadeAndShortSlide.getVerticalDistance(viewGroup);
             }
         };
-        setSlideEdge(slideEdge);
+        setSlideEdge(i);
     }
 
-    public FadeAndShortSlide(Context context, AttributeSet attrs) {
-        super(context, attrs);
+    public FadeAndShortSlide(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
         this.mFade = new Fade();
         this.mDistance = -1.0f;
-        this.sCalculateTopBottom = new CalculateSlide() { // from class: androidx.leanback.transition.FadeAndShortSlide.6
-            @Override // androidx.leanback.transition.FadeAndShortSlide.CalculateSlide
-            public float getGoneY(FadeAndShortSlide t, ViewGroup sceneRoot, View view, int[] position) {
-                int centerY;
-                int height = position[1] + (view.getHeight() / 2);
-                sceneRoot.getLocationOnScreen(position);
+        this.sCalculateTopBottom = new CalculateSlide() {
+            public float getGoneY(FadeAndShortSlide fadeAndShortSlide, ViewGroup viewGroup, View view, int[] iArr) {
+                int i;
+                int height = iArr[1] + (view.getHeight() / 2);
+                viewGroup.getLocationOnScreen(iArr);
                 Rect epicenter = FadeAndShortSlide.this.getEpicenter();
                 if (epicenter == null) {
-                    centerY = position[1] + (sceneRoot.getHeight() / 2);
+                    i = iArr[1] + (viewGroup.getHeight() / 2);
                 } else {
-                    centerY = epicenter.centerY();
+                    i = epicenter.centerY();
                 }
-                if (height < centerY) {
-                    return view.getTranslationY() - t.getVerticalDistance(sceneRoot);
+                if (height < i) {
+                    return view.getTranslationY() - fadeAndShortSlide.getVerticalDistance(viewGroup);
                 }
-                return view.getTranslationY() + t.getVerticalDistance(sceneRoot);
+                return view.getTranslationY() + fadeAndShortSlide.getVerticalDistance(viewGroup);
             }
         };
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attrs, R$styleable.lbSlide);
-        setSlideEdge(obtainStyledAttributes.getInt(R$styleable.lbSlide_lb_slideEdge, 8388611));
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0742R.styleable.lbSlide);
+        setSlideEdge(obtainStyledAttributes.getInt(C0742R.styleable.lbSlide_lb_slideEdge, 8388611));
         obtainStyledAttributes.recycle();
     }
 
-    @Override // android.transition.Transition
     public void setEpicenterCallback(Transition.EpicenterCallback epicenterCallback) {
         this.mFade.setEpicenterCallback(epicenterCallback);
         super.setEpicenterCallback(epicenterCallback);
@@ -168,52 +163,54 @@ public class FadeAndShortSlide extends Visibility {
     private void captureValues(TransitionValues transitionValues) {
         int[] iArr = new int[2];
         transitionValues.view.getLocationOnScreen(iArr);
-        transitionValues.values.put("android:fadeAndShortSlideTransition:screenPosition", iArr);
+        transitionValues.values.put(PROPNAME_SCREEN_POSITION, iArr);
     }
 
-    @Override // android.transition.Visibility, android.transition.Transition
     public void captureStartValues(TransitionValues transitionValues) {
         this.mFade.captureStartValues(transitionValues);
         super.captureStartValues(transitionValues);
         captureValues(transitionValues);
     }
 
-    @Override // android.transition.Visibility, android.transition.Transition
     public void captureEndValues(TransitionValues transitionValues) {
         this.mFade.captureEndValues(transitionValues);
         super.captureEndValues(transitionValues);
         captureValues(transitionValues);
     }
 
-    public void setSlideEdge(int slideEdge) {
-        if (slideEdge == 48) {
+    public void setSlideEdge(int i) {
+        if (i == 48) {
             this.mSlideCalculator = sCalculateTop;
-        } else if (slideEdge == 80) {
+        } else if (i == 80) {
             this.mSlideCalculator = sCalculateBottom;
-        } else if (slideEdge == 112) {
+        } else if (i == 112) {
             this.mSlideCalculator = this.sCalculateTopBottom;
-        } else if (slideEdge == 8388611) {
+        } else if (i == 8388611) {
             this.mSlideCalculator = sCalculateStart;
-        } else if (slideEdge == 8388613) {
+        } else if (i == 8388613) {
             this.mSlideCalculator = sCalculateEnd;
-        } else if (slideEdge == 8388615) {
+        } else if (i == 8388615) {
             this.mSlideCalculator = sCalculateStartEnd;
         } else {
             throw new IllegalArgumentException("Invalid slide direction");
         }
     }
 
-    @Override // android.transition.Visibility
-    public Animator onAppear(ViewGroup sceneRoot, View view, TransitionValues startValues, TransitionValues endValues) {
-        if (endValues == null || sceneRoot == view) {
+    public Animator onAppear(ViewGroup viewGroup, View view, TransitionValues transitionValues, TransitionValues transitionValues2) {
+        ViewGroup viewGroup2 = viewGroup;
+        ViewGroup viewGroup3 = view;
+        TransitionValues transitionValues3 = transitionValues2;
+        if (transitionValues3 == null || viewGroup2 == viewGroup3) {
             return null;
         }
-        int[] iArr = (int[]) endValues.values.get("android:fadeAndShortSlideTransition:screenPosition");
+        int[] iArr = (int[]) transitionValues3.values.get(PROPNAME_SCREEN_POSITION);
         int i = iArr[0];
         int i2 = iArr[1];
         float translationX = view.getTranslationX();
-        Animator createAnimation = TranslationAnimationCreator.createAnimation(view, endValues, i, i2, this.mSlideCalculator.getGoneX(this, sceneRoot, view, iArr), this.mSlideCalculator.getGoneY(this, sceneRoot, view, iArr), translationX, view.getTranslationY(), sDecelerate, this);
-        Animator onAppear = this.mFade.onAppear(sceneRoot, view, startValues, endValues);
+        View view2 = view;
+        TransitionValues transitionValues4 = transitionValues2;
+        Animator createAnimation = TranslationAnimationCreator.createAnimation(view2, transitionValues4, i, i2, this.mSlideCalculator.getGoneX(this, viewGroup, viewGroup3, iArr), this.mSlideCalculator.getGoneY(this, viewGroup, viewGroup3, iArr), translationX, view.getTranslationY(), sDecelerate, this);
+        Animator onAppear = this.mFade.onAppear(viewGroup, viewGroup3, transitionValues, transitionValues3);
         if (createAnimation == null) {
             return onAppear;
         }
@@ -225,14 +222,20 @@ public class FadeAndShortSlide extends Visibility {
         return animatorSet;
     }
 
-    @Override // android.transition.Visibility
-    public Animator onDisappear(ViewGroup sceneRoot, View view, TransitionValues startValues, TransitionValues endValues) {
-        if (startValues == null || sceneRoot == view) {
+    public Animator onDisappear(ViewGroup viewGroup, View view, TransitionValues transitionValues, TransitionValues transitionValues2) {
+        ViewGroup viewGroup2 = viewGroup;
+        ViewGroup viewGroup3 = view;
+        TransitionValues transitionValues3 = transitionValues;
+        if (transitionValues3 == null || viewGroup2 == viewGroup3) {
             return null;
         }
-        int[] iArr = (int[]) startValues.values.get("android:fadeAndShortSlideTransition:screenPosition");
-        Animator createAnimation = TranslationAnimationCreator.createAnimation(view, startValues, iArr[0], iArr[1], view.getTranslationX(), view.getTranslationY(), this.mSlideCalculator.getGoneX(this, sceneRoot, view, iArr), this.mSlideCalculator.getGoneY(this, sceneRoot, view, iArr), sDecelerate, this);
-        Animator onDisappear = this.mFade.onDisappear(sceneRoot, view, startValues, endValues);
+        int[] iArr = (int[]) transitionValues3.values.get(PROPNAME_SCREEN_POSITION);
+        int i = iArr[0];
+        int i2 = iArr[1];
+        float translationX = view.getTranslationX();
+        float goneX = this.mSlideCalculator.getGoneX(this, viewGroup, viewGroup3, iArr);
+        Animator createAnimation = TranslationAnimationCreator.createAnimation(view, transitionValues, i, i2, translationX, view.getTranslationY(), goneX, this.mSlideCalculator.getGoneY(this, viewGroup, viewGroup3, iArr), sDecelerate, this);
+        Animator onDisappear = this.mFade.onDisappear(viewGroup, viewGroup3, transitionValues3, transitionValues2);
         if (createAnimation == null) {
             return onDisappear;
         }
@@ -244,21 +247,25 @@ public class FadeAndShortSlide extends Visibility {
         return animatorSet;
     }
 
-    @Override // android.transition.Transition
-    public Transition addListener(Transition.TransitionListener listener) {
-        this.mFade.addListener(listener);
-        return super.addListener(listener);
+    public Transition addListener(Transition.TransitionListener transitionListener) {
+        this.mFade.addListener(transitionListener);
+        return super.addListener(transitionListener);
     }
 
-    @Override // android.transition.Transition
-    public Transition removeListener(Transition.TransitionListener listener) {
-        this.mFade.removeListener(listener);
-        return super.removeListener(listener);
+    public Transition removeListener(Transition.TransitionListener transitionListener) {
+        this.mFade.removeListener(transitionListener);
+        return super.removeListener(transitionListener);
     }
 
-    @Override // android.transition.Transition
-    /* renamed from: clone */
-    public Transition mo110clone() {
+    public float getDistance() {
+        return this.mDistance;
+    }
+
+    public void setDistance(float f) {
+        this.mDistance = f;
+    }
+
+    public Transition clone() {
         FadeAndShortSlide fadeAndShortSlide = (FadeAndShortSlide) super.clone();
         fadeAndShortSlide.mFade = (Visibility) this.mFade.clone();
         return fadeAndShortSlide;

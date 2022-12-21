@@ -8,7 +8,7 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-/* loaded from: classes.dex */
+
 public class NotificationUiAdjustment {
     public final boolean isConversation;
     public final String key;
@@ -54,10 +54,10 @@ public class NotificationUiAdjustment {
         if (icon == icon2) {
             return false;
         }
-        if (icon != null && icon2 != null) {
-            return !icon.sameAs(icon2);
+        if (icon == null || icon2 == null) {
+            return true;
         }
-        return true;
+        return !icon.sameAs(icon2);
     }
 
     private static boolean areDifferent(RemoteInput[] remoteInputArr, RemoteInput[] remoteInputArr2) {

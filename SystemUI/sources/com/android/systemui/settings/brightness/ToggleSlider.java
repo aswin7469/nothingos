@@ -2,15 +2,21 @@ package com.android.systemui.settings.brightness;
 
 import android.view.MotionEvent;
 import com.android.settingslib.RestrictedLockUtils;
-/* loaded from: classes.dex */
+import com.android.systemui.statusbar.policy.BrightnessMirrorController;
+
 public interface ToggleSlider {
 
-    /* loaded from: classes.dex */
     public interface Listener {
         void onChanged(boolean z, int i, boolean z2);
     }
 
+    int getMax();
+
     int getValue();
+
+    void hideView();
+
+    boolean isVisible();
 
     boolean mirrorTouchEvent(MotionEvent motionEvent);
 
@@ -18,7 +24,11 @@ public interface ToggleSlider {
 
     void setMax(int i);
 
+    void setMirrorControllerAndMirror(BrightnessMirrorController brightnessMirrorController);
+
     void setOnChangedListener(Listener listener);
 
     void setValue(int i);
+
+    void showView();
 }

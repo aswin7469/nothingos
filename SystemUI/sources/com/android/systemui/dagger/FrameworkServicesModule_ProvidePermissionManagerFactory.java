@@ -5,7 +5,7 @@ import android.permission.PermissionManager;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvidePermissionManagerFactory implements Factory<PermissionManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvidePermissionManagerFactory imple
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PermissionManager mo1933get() {
-        return providePermissionManager(this.contextProvider.mo1933get());
+    public PermissionManager get() {
+        return providePermissionManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvidePermissionManagerFactory create(Provider<Context> provider) {

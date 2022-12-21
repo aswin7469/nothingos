@@ -1,11 +1,9 @@
 package com.android.systemui.dump;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class DumpManager_Factory implements Factory<DumpManager> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DumpManager mo1933get() {
+    public DumpManager get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class DumpManager_Factory implements Factory<DumpManager> {
         return new DumpManager();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final DumpManager_Factory INSTANCE = new DumpManager_Factory();
+        /* access modifiers changed from: private */
+        public static final DumpManager_Factory INSTANCE = new DumpManager_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

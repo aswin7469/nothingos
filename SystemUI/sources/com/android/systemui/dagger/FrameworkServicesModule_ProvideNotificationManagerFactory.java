@@ -5,7 +5,7 @@ import android.content.Context;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideNotificationManagerFactory implements Factory<NotificationManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideNotificationManagerFactory imp
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationManager mo1933get() {
-        return provideNotificationManager(this.contextProvider.mo1933get());
+    public NotificationManager get() {
+        return provideNotificationManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideNotificationManagerFactory create(Provider<Context> provider) {

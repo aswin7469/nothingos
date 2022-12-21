@@ -8,7 +8,7 @@ import com.android.systemui.statusbar.phone.DozeParameters;
 import com.android.systemui.util.wakelock.WakeLock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DozeScreenState_Factory implements Factory<DozeScreenState> {
     private final Provider<AuthController> authControllerProvider;
     private final Provider<DozeLog> dozeLogProvider;
@@ -32,10 +32,8 @@ public final class DozeScreenState_Factory implements Factory<DozeScreenState> {
         this.dozeScreenBrightnessProvider = provider9;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DozeScreenState mo1933get() {
-        return newInstance(this.serviceProvider.mo1933get(), this.handlerProvider.mo1933get(), this.hostProvider.mo1933get(), this.parametersProvider.mo1933get(), this.wakeLockProvider.mo1933get(), this.authControllerProvider.mo1933get(), this.udfpsControllerProvider, this.dozeLogProvider.mo1933get(), this.dozeScreenBrightnessProvider.mo1933get());
+    public DozeScreenState get() {
+        return newInstance(this.serviceProvider.get(), this.handlerProvider.get(), this.hostProvider.get(), this.parametersProvider.get(), this.wakeLockProvider.get(), this.authControllerProvider.get(), this.udfpsControllerProvider, this.dozeLogProvider.get(), this.dozeScreenBrightnessProvider.get());
     }
 
     public static DozeScreenState_Factory create(Provider<DozeMachine.Service> provider, Provider<Handler> provider2, Provider<DozeHost> provider3, Provider<DozeParameters> provider4, Provider<WakeLock> provider5, Provider<AuthController> provider6, Provider<UdfpsController> provider7, Provider<DozeLog> provider8, Provider<DozeScreenBrightness> provider9) {

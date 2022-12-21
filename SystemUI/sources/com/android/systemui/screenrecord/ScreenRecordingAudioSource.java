@@ -1,5 +1,5 @@
 package com.android.systemui.screenrecord;
-/* loaded from: classes.dex */
+
 public enum ScreenRecordingAudioSource {
     NONE,
     INTERNAL,

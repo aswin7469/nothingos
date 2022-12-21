@@ -3,36 +3,38 @@ package com.android.systemui.assist;
 import android.content.Context;
 import com.android.systemui.BootCompleteCache;
 import com.android.systemui.broadcast.BroadcastDispatcher;
-import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
+import com.android.systemui.statusbar.phone.CentralSurfaces;
 import dagger.Lazy;
+import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class PhoneStateMonitor_Factory implements Factory<PhoneStateMonitor> {
     private final Provider<BootCompleteCache> bootCompleteCacheProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
+    private final Provider<Optional<CentralSurfaces>> centralSurfacesOptionalLazyProvider;
     private final Provider<Context> contextProvider;
-    private final Provider<Optional<Lazy<StatusBar>>> statusBarOptionalLazyProvider;
+    private final Provider<StatusBarStateController> statusBarStateControllerProvider;
 
-    public PhoneStateMonitor_Factory(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<Optional<Lazy<StatusBar>>> provider3, Provider<BootCompleteCache> provider4) {
+    public PhoneStateMonitor_Factory(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<Optional<CentralSurfaces>> provider3, Provider<BootCompleteCache> provider4, Provider<StatusBarStateController> provider5) {
         this.contextProvider = provider;
         this.broadcastDispatcherProvider = provider2;
-        this.statusBarOptionalLazyProvider = provider3;
+        this.centralSurfacesOptionalLazyProvider = provider3;
         this.bootCompleteCacheProvider = provider4;
+        this.statusBarStateControllerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public PhoneStateMonitor mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.statusBarOptionalLazyProvider.mo1933get(), this.bootCompleteCacheProvider.mo1933get());
+    public PhoneStateMonitor get() {
+        return newInstance(this.contextProvider.get(), this.broadcastDispatcherProvider.get(), DoubleCheck.lazy(this.centralSurfacesOptionalLazyProvider), this.bootCompleteCacheProvider.get(), this.statusBarStateControllerProvider.get());
     }
 
-    public static PhoneStateMonitor_Factory create(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<Optional<Lazy<StatusBar>>> provider3, Provider<BootCompleteCache> provider4) {
-        return new PhoneStateMonitor_Factory(provider, provider2, provider3, provider4);
+    public static PhoneStateMonitor_Factory create(Provider<Context> provider, Provider<BroadcastDispatcher> provider2, Provider<Optional<CentralSurfaces>> provider3, Provider<BootCompleteCache> provider4, Provider<StatusBarStateController> provider5) {
+        return new PhoneStateMonitor_Factory(provider, provider2, provider3, provider4, provider5);
     }
 
-    public static PhoneStateMonitor newInstance(Context context, BroadcastDispatcher broadcastDispatcher, Optional<Lazy<StatusBar>> optional, BootCompleteCache bootCompleteCache) {
-        return new PhoneStateMonitor(context, broadcastDispatcher, optional, bootCompleteCache);
+    public static PhoneStateMonitor newInstance(Context context, BroadcastDispatcher broadcastDispatcher, Lazy<Optional<CentralSurfaces>> lazy, BootCompleteCache bootCompleteCache, StatusBarStateController statusBarStateController) {
+        return new PhoneStateMonitor(context, broadcastDispatcher, lazy, bootCompleteCache, statusBarStateController);
     }
 }

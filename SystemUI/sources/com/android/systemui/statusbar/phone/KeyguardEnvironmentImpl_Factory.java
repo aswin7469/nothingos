@@ -1,24 +1,28 @@
 package com.android.systemui.statusbar.phone;
 
+import com.android.systemui.statusbar.NotificationLockscreenUserManager;
+import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+import javax.inject.Provider;
+
 public final class KeyguardEnvironmentImpl_Factory implements Factory<KeyguardEnvironmentImpl> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardEnvironmentImpl mo1933get() {
-        return newInstance();
+    private final Provider<DeviceProvisionedController> deviceProvisionedControllerProvider;
+    private final Provider<NotificationLockscreenUserManager> notificationLockscreenUserManagerProvider;
+
+    public KeyguardEnvironmentImpl_Factory(Provider<NotificationLockscreenUserManager> provider, Provider<DeviceProvisionedController> provider2) {
+        this.notificationLockscreenUserManagerProvider = provider;
+        this.deviceProvisionedControllerProvider = provider2;
     }
 
-    public static KeyguardEnvironmentImpl_Factory create() {
-        return InstanceHolder.INSTANCE;
+    public KeyguardEnvironmentImpl get() {
+        return newInstance(this.notificationLockscreenUserManagerProvider.get(), this.deviceProvisionedControllerProvider.get());
     }
 
-    public static KeyguardEnvironmentImpl newInstance() {
-        return new KeyguardEnvironmentImpl();
+    public static KeyguardEnvironmentImpl_Factory create(Provider<NotificationLockscreenUserManager> provider, Provider<DeviceProvisionedController> provider2) {
+        return new KeyguardEnvironmentImpl_Factory(provider, provider2);
     }
 
-    /* loaded from: classes.dex */
-    private static final class InstanceHolder {
-        private static final KeyguardEnvironmentImpl_Factory INSTANCE = new KeyguardEnvironmentImpl_Factory();
+    public static KeyguardEnvironmentImpl newInstance(NotificationLockscreenUserManager notificationLockscreenUserManager, DeviceProvisionedController deviceProvisionedController) {
+        return new KeyguardEnvironmentImpl(notificationLockscreenUserManager, deviceProvisionedController);
     }
 }

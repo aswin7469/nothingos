@@ -3,32 +3,41 @@ package com.android.systemui.util.settings;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.provider.Settings;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
 class SystemSettingsImpl implements SystemSettings {
     private final ContentResolver mContentResolver;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public SystemSettingsImpl(ContentResolver contentResolver) {
+    @Inject
+    SystemSettingsImpl(ContentResolver contentResolver) {
         this.mContentResolver = contentResolver;
     }
 
-    @Override // com.android.systemui.util.settings.SettingsProxy
     public ContentResolver getContentResolver() {
         return this.mContentResolver;
     }
 
-    @Override // com.android.systemui.util.settings.SettingsProxy
     public Uri getUriFor(String str) {
         return Settings.System.getUriFor(str);
     }
 
-    @Override // com.android.systemui.util.settings.SettingsProxy
     public String getStringForUser(String str, int i) {
         return Settings.System.getStringForUser(this.mContentResolver, str, i);
     }
 
-    @Override // com.android.systemui.util.settings.SettingsProxy
+    public boolean putString(String str, String str2, boolean z) {
+        return Settings.System.putString(this.mContentResolver, str, str2, z);
+    }
+
     public boolean putStringForUser(String str, String str2, int i) {
         return Settings.System.putStringForUser(this.mContentResolver, str, str2, i);
+    }
+
+    public boolean putStringForUser(String str, String str2, String str3, boolean z, int i, boolean z2) {
+        throw new UnsupportedOperationException("This method only exists publicly for Settings.Secure and Settings.Global");
+    }
+
+    public boolean putString(String str, String str2, String str3, boolean z) {
+        throw new UnsupportedOperationException("This method only exists publicly for Settings.Secure and Settings.Global");
     }
 }

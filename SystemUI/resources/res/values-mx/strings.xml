@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera_mode_portrait_mode">Modo retrato</string>
+    <string name="click_again">Haga clic nuevamente</string>
+    <string name="empty_shade_text">Sin notificaciones</string>
+    <string name="mic_mode_ambient_sound">Entorno</string>
+    <string name="mic_mode_standard">Normal</string>
+    <string name="mic_mode_voice_focus">Enfoque de voz</string>
+    <string name="nt_face_recognition_error">No se reconoce el rostro. Error del sistema.</string>
+    <string name="nt_face_recognition_fail">No se reconoce el rostro. Inténtelo de nuevo.</string>
+    <string name="nt_face_recognition_timeout">Pulse el ícono e inténtelo de nuevo</string>
+    <string name="quick_settings_batteryshare_label">Uso compartido de la batería</string>
+    <string name="quick_settings_glyphs_label">Glyph</string>
+    <string name="swipe_again">Deslizar de nuevo</string>
+</resources>

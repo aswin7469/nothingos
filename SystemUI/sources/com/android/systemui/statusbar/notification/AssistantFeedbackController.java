@@ -4,41 +4,53 @@ import android.content.Context;
 import android.os.Handler;
 import android.provider.DeviceConfig;
 import android.service.notification.NotificationListenerService;
-import android.util.Pair;
-import com.android.systemui.R$string;
+import android.util.SparseArray;
+import com.android.systemui.C1893R;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.util.DeviceConfigProxy;
-import java.util.concurrent.Executor;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class AssistantFeedbackController {
+    public static final int STATUS_ALERTED = 1;
+    public static final int STATUS_DEMOTED = 4;
+    public static final int STATUS_PROMOTED = 3;
+    public static final int STATUS_SILENCED = 2;
+    public static final int STATUS_UNCHANGED = 0;
     private final Context mContext;
     private final DeviceConfigProxy mDeviceConfigProxy;
-    private volatile boolean mFeedbackEnabled;
+    /* access modifiers changed from: private */
+    public volatile boolean mFeedbackEnabled;
     private final Handler mHandler;
+    private final SparseArray<FeedbackIcon> mIcons;
     private final DeviceConfig.OnPropertiesChangedListener mPropertiesChangedListener;
 
-    public AssistantFeedbackController(Handler handler, Context context, DeviceConfigProxy deviceConfigProxy) {
-        DeviceConfig.OnPropertiesChangedListener onPropertiesChangedListener = new DeviceConfig.OnPropertiesChangedListener() { // from class: com.android.systemui.statusbar.notification.AssistantFeedbackController.1
+    @Inject
+    public AssistantFeedbackController(@Main Handler handler, Context context, DeviceConfigProxy deviceConfigProxy) {
+        C26451 r0 = new DeviceConfig.OnPropertiesChangedListener() {
             public void onPropertiesChanged(DeviceConfig.Properties properties) {
                 if (properties.getKeyset().contains("enable_nas_feedback")) {
-                    AssistantFeedbackController.this.mFeedbackEnabled = properties.getBoolean("enable_nas_feedback", false);
+                    boolean unused = AssistantFeedbackController.this.mFeedbackEnabled = properties.getBoolean("enable_nas_feedback", false);
                 }
             }
         };
-        this.mPropertiesChangedListener = onPropertiesChangedListener;
+        this.mPropertiesChangedListener = r0;
         this.mHandler = handler;
         this.mContext = context;
         this.mDeviceConfigProxy = deviceConfigProxy;
         this.mFeedbackEnabled = deviceConfigProxy.getBoolean("systemui", "enable_nas_feedback", false);
-        deviceConfigProxy.addOnPropertiesChangedListener("systemui", new Executor() { // from class: com.android.systemui.statusbar.notification.AssistantFeedbackController$$ExternalSyntheticLambda0
-            @Override // java.util.concurrent.Executor
-            public final void execute(Runnable runnable) {
-                AssistantFeedbackController.this.postToHandler(runnable);
-            }
-        }, onPropertiesChangedListener);
+        deviceConfigProxy.addOnPropertiesChangedListener("systemui", new AssistantFeedbackController$$ExternalSyntheticLambda0(this), r0);
+        SparseArray<FeedbackIcon> sparseArray = new SparseArray<>(4);
+        this.mIcons = sparseArray;
+        sparseArray.set(1, new FeedbackIcon(17302449, 17040909));
+        sparseArray.set(2, new FeedbackIcon(17302452, 17040912));
+        sparseArray.set(3, new FeedbackIcon(17302453, 17040911));
+        sparseArray.set(4, new FeedbackIcon(17302450, 17040910));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void postToHandler(Runnable runnable) {
         this.mHandler.post(runnable);
     }
@@ -63,44 +75,27 @@ public class AssistantFeedbackController {
         if (importance < importance2 || ranking.getRankingAdjustment() == 1) {
             return 3;
         }
-        return (importance > importance2 || ranking.getRankingAdjustment() == -1) ? 4 : 0;
-    }
-
-    public boolean showFeedbackIndicator(NotificationEntry notificationEntry) {
-        return getFeedbackStatus(notificationEntry) != 0;
-    }
-
-    public Pair<Integer, Integer> getFeedbackResources(NotificationEntry notificationEntry) {
-        int feedbackStatus = getFeedbackStatus(notificationEntry);
-        if (feedbackStatus != 1) {
-            if (feedbackStatus == 2) {
-                return new Pair<>(17302443, 17040823);
-            }
-            if (feedbackStatus == 3) {
-                return new Pair<>(17302444, 17040822);
-            }
-            if (feedbackStatus == 4) {
-                return new Pair<>(17302441, 17040821);
-            }
-            return new Pair<>(0, 0);
+        if (importance > importance2 || ranking.getRankingAdjustment() == -1) {
+            return 4;
         }
-        return new Pair<>(17302440, 17040820);
+        return 0;
+    }
+
+    public FeedbackIcon getFeedbackIcon(NotificationEntry notificationEntry) {
+        return this.mIcons.get(getFeedbackStatus(notificationEntry));
     }
 
     public int getInlineDescriptionResource(NotificationEntry notificationEntry) {
         int feedbackStatus = getFeedbackStatus(notificationEntry);
-        if (feedbackStatus != 1) {
-            if (feedbackStatus == 2) {
-                return R$string.notification_channel_summary_automatic_silenced;
-            }
-            if (feedbackStatus == 3) {
-                return R$string.notification_channel_summary_automatic_promoted;
-            }
-            if (feedbackStatus == 4) {
-                return R$string.notification_channel_summary_automatic_demoted;
-            }
-            return R$string.notification_channel_summary_automatic;
+        if (feedbackStatus == 1) {
+            return C1893R.string.notification_channel_summary_automatic_alerted;
         }
-        return R$string.notification_channel_summary_automatic_alerted;
+        if (feedbackStatus == 2) {
+            return C1893R.string.notification_channel_summary_automatic_silenced;
+        }
+        if (feedbackStatus != 3) {
+            return feedbackStatus != 4 ? C1893R.string.notification_channel_summary_automatic : C1893R.string.notification_channel_summary_automatic_demoted;
+        }
+        return C1893R.string.notification_channel_summary_automatic_promoted;
     }
 }

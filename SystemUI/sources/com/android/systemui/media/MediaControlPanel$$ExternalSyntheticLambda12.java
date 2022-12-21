@@ -1,17 +1,16 @@
 package com.android.systemui.media;
 
-import android.view.View;
-/* loaded from: classes.dex */
-public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda12 implements View.OnLongClickListener {
-    public static final /* synthetic */ MediaControlPanel$$ExternalSyntheticLambda12 INSTANCE = new MediaControlPanel$$ExternalSyntheticLambda12();
+import kotlin.jvm.functions.Function0;
 
-    private /* synthetic */ MediaControlPanel$$ExternalSyntheticLambda12() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class MediaControlPanel$$ExternalSyntheticLambda12 implements Function0 {
+    public final /* synthetic */ MediaControlPanel f$0;
+
+    public /* synthetic */ MediaControlPanel$$ExternalSyntheticLambda12(MediaControlPanel mediaControlPanel) {
+        this.f$0 = mediaControlPanel;
     }
 
-    @Override // android.view.View.OnLongClickListener
-    public final boolean onLongClick(View view) {
-        boolean lambda$bindRecommendation$12;
-        lambda$bindRecommendation$12 = MediaControlPanel.lambda$bindRecommendation$12(view);
-        return lambda$bindRecommendation$12;
+    public final Object invoke() {
+        return this.f$0.m2780lambda$new$0$comandroidsystemuimediaMediaControlPanel();
     }
 }

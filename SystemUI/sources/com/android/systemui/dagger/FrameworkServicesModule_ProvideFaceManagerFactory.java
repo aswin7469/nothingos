@@ -4,7 +4,7 @@ import android.content.Context;
 import android.hardware.face.FaceManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideFaceManagerFactory implements Factory<FaceManager> {
     private final Provider<Context> contextProvider;
 
@@ -12,10 +12,8 @@ public final class FrameworkServicesModule_ProvideFaceManagerFactory implements 
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public FaceManager mo1933get() {
-        return provideFaceManager(this.contextProvider.mo1933get());
+    public FaceManager get() {
+        return provideFaceManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideFaceManagerFactory create(Provider<Context> provider) {

@@ -1,10 +1,10 @@
 package androidx.leanback.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
 import android.view.ViewGroup;
@@ -13,13 +13,21 @@ import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Transformation;
 import android.widget.FrameLayout;
-import androidx.leanback.R$attr;
-import androidx.leanback.R$integer;
-import androidx.leanback.R$styleable;
+import androidx.leanback.C0742R;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class BaseCardView extends FrameLayout {
+    public static final int CARD_REGION_VISIBLE_ACTIVATED = 1;
+    public static final int CARD_REGION_VISIBLE_ALWAYS = 0;
+    public static final int CARD_REGION_VISIBLE_SELECTED = 2;
+    public static final int CARD_TYPE_INFO_OVER = 1;
+    public static final int CARD_TYPE_INFO_UNDER = 2;
+    public static final int CARD_TYPE_INFO_UNDER_WITH_EXTRA = 3;
+    private static final int CARD_TYPE_INVALID = 4;
+    public static final int CARD_TYPE_MAIN_ONLY = 0;
+    private static final boolean DEBUG = false;
     private static final int[] LB_PRESSED_STATE_SET = {16842919};
+    private static final String TAG = "BaseCardView";
     private final int mActivatedAnimDuration;
     private Animation mAnim;
     private final Runnable mAnimationTrigger;
@@ -38,45 +46,47 @@ public class BaseCardView extends FrameLayout {
     private final int mSelectedAnimDuration;
     private int mSelectedAnimationDelay;
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
     public boolean shouldDelayChildPressedState() {
         return false;
     }
 
-    public BaseCardView(Context context, AttributeSet attrs) {
-        this(context, attrs, R$attr.baseCardViewStyle);
+    public BaseCardView(Context context) {
+        this(context, (AttributeSet) null);
     }
 
-    @SuppressLint({"CustomViewStyleable"})
-    public BaseCardView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        this.mAnimationTrigger = new Runnable() { // from class: androidx.leanback.widget.BaseCardView.1
-            @Override // java.lang.Runnable
+    public BaseCardView(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, C0742R.attr.baseCardViewStyle);
+    }
+
+    /* JADX INFO: finally extract failed */
+    public BaseCardView(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
+        this.mAnimationTrigger = new Runnable() {
             public void run() {
                 BaseCardView.this.animateInfoOffset(true);
             }
         };
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attrs, R$styleable.lbBaseCardView, defStyleAttr, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0742R.styleable.lbBaseCardView, i, 0);
         try {
-            this.mCardType = obtainStyledAttributes.getInteger(R$styleable.lbBaseCardView_cardType, 0);
-            Drawable drawable = obtainStyledAttributes.getDrawable(R$styleable.lbBaseCardView_cardForeground);
+            this.mCardType = obtainStyledAttributes.getInteger(C0742R.styleable.lbBaseCardView_cardType, 0);
+            Drawable drawable = obtainStyledAttributes.getDrawable(C0742R.styleable.lbBaseCardView_cardForeground);
             if (drawable != null) {
                 setForeground(drawable);
             }
-            Drawable drawable2 = obtainStyledAttributes.getDrawable(R$styleable.lbBaseCardView_cardBackground);
+            Drawable drawable2 = obtainStyledAttributes.getDrawable(C0742R.styleable.lbBaseCardView_cardBackground);
             if (drawable2 != null) {
                 setBackground(drawable2);
             }
-            this.mInfoVisibility = obtainStyledAttributes.getInteger(R$styleable.lbBaseCardView_infoVisibility, 1);
-            int integer = obtainStyledAttributes.getInteger(R$styleable.lbBaseCardView_extraVisibility, 2);
+            this.mInfoVisibility = obtainStyledAttributes.getInteger(C0742R.styleable.lbBaseCardView_infoVisibility, 1);
+            int integer = obtainStyledAttributes.getInteger(C0742R.styleable.lbBaseCardView_extraVisibility, 2);
             this.mExtraVisibility = integer;
-            int i = this.mInfoVisibility;
-            if (integer < i) {
-                this.mExtraVisibility = i;
+            int i2 = this.mInfoVisibility;
+            if (integer < i2) {
+                this.mExtraVisibility = i2;
             }
-            this.mSelectedAnimationDelay = obtainStyledAttributes.getInteger(R$styleable.lbBaseCardView_selectedAnimationDelay, getResources().getInteger(R$integer.lb_card_selected_animation_delay));
-            this.mSelectedAnimDuration = obtainStyledAttributes.getInteger(R$styleable.lbBaseCardView_selectedAnimationDuration, getResources().getInteger(R$integer.lb_card_selected_animation_duration));
-            this.mActivatedAnimDuration = obtainStyledAttributes.getInteger(R$styleable.lbBaseCardView_activatedAnimationDuration, getResources().getInteger(R$integer.lb_card_activated_animation_duration));
+            this.mSelectedAnimationDelay = obtainStyledAttributes.getInteger(C0742R.styleable.lbBaseCardView_selectedAnimationDelay, getResources().getInteger(C0742R.integer.lb_card_selected_animation_delay));
+            this.mSelectedAnimDuration = obtainStyledAttributes.getInteger(C0742R.styleable.lbBaseCardView_selectedAnimationDuration, getResources().getInteger(C0742R.integer.lb_card_selected_animation_duration));
+            this.mActivatedAnimDuration = obtainStyledAttributes.getInteger(C0742R.styleable.lbBaseCardView_activatedAnimationDuration, getResources().getInteger(C0742R.integer.lb_card_activated_animation_duration));
             obtainStyledAttributes.recycle();
             this.mDelaySelectedAnim = true;
             this.mMainViewList = new ArrayList<>();
@@ -91,130 +101,191 @@ public class BaseCardView extends FrameLayout {
         }
     }
 
-    final float getFinalInfoVisFraction() {
+    public void setSelectedAnimationDelayed(boolean z) {
+        this.mDelaySelectedAnim = z;
+    }
+
+    public boolean isSelectedAnimationDelayed() {
+        return this.mDelaySelectedAnim;
+    }
+
+    public void setCardType(int i) {
+        if (this.mCardType != i) {
+            if (i < 0 || i >= 4) {
+                Log.e(TAG, "Invalid card type specified: " + i + ". Defaulting to type CARD_TYPE_MAIN_ONLY.");
+                this.mCardType = 0;
+            } else {
+                this.mCardType = i;
+            }
+            requestLayout();
+        }
+    }
+
+    public int getCardType() {
+        return this.mCardType;
+    }
+
+    public void setInfoVisibility(int i) {
+        if (this.mInfoVisibility != i) {
+            cancelAnimations();
+            this.mInfoVisibility = i;
+            this.mInfoVisFraction = getFinalInfoVisFraction();
+            requestLayout();
+            float finalInfoAlpha = getFinalInfoAlpha();
+            if (finalInfoAlpha != this.mInfoAlpha) {
+                this.mInfoAlpha = finalInfoAlpha;
+                for (int i2 = 0; i2 < this.mInfoViewList.size(); i2++) {
+                    this.mInfoViewList.get(i2).setAlpha(this.mInfoAlpha);
+                }
+            }
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public final float getFinalInfoVisFraction() {
         return (this.mCardType == 2 && this.mInfoVisibility == 2 && !isSelected()) ? 0.0f : 1.0f;
     }
 
-    final float getFinalInfoAlpha() {
+    /* access modifiers changed from: package-private */
+    public final float getFinalInfoAlpha() {
         return (this.mCardType == 1 && this.mInfoVisibility == 2 && !isSelected()) ? 0.0f : 1.0f;
     }
 
-    @Override // android.view.View
-    public void setActivated(boolean activated) {
-        if (activated != isActivated()) {
-            super.setActivated(activated);
+    public int getInfoVisibility() {
+        return this.mInfoVisibility;
+    }
+
+    @Deprecated
+    public void setExtraVisibility(int i) {
+        if (this.mExtraVisibility != i) {
+            this.mExtraVisibility = i;
+        }
+    }
+
+    @Deprecated
+    public int getExtraVisibility() {
+        return this.mExtraVisibility;
+    }
+
+    public void setActivated(boolean z) {
+        if (z != isActivated()) {
+            super.setActivated(z);
             applyActiveState();
         }
     }
 
-    @Override // android.view.View
-    public void setSelected(boolean selected) {
-        if (selected != isSelected()) {
-            super.setSelected(selected);
+    public void setSelected(boolean z) {
+        if (z != isSelected()) {
+            super.setSelected(z);
             applySelectedState(isSelected());
         }
     }
 
-    @Override // android.widget.FrameLayout, android.view.View
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int i;
-        int i2;
+    /* access modifiers changed from: protected */
+    public void onMeasure(int i, int i2) {
+        int i3;
+        int i4;
+        float f;
         boolean z = false;
         this.mMeasuredWidth = 0;
         this.mMeasuredHeight = 0;
         findChildrenViews();
         int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, 0);
-        int i3 = 0;
-        int i4 = 0;
-        for (int i5 = 0; i5 < this.mMainViewList.size(); i5++) {
-            View view = this.mMainViewList.get(i5);
+        int i5 = 0;
+        int i6 = 0;
+        for (int i7 = 0; i7 < this.mMainViewList.size(); i7++) {
+            View view = this.mMainViewList.get(i7);
             if (view.getVisibility() != 8) {
                 measureChild(view, makeMeasureSpec, makeMeasureSpec);
                 this.mMeasuredWidth = Math.max(this.mMeasuredWidth, view.getMeasuredWidth());
-                i3 += view.getMeasuredHeight();
-                i4 = View.combineMeasuredStates(i4, view.getMeasuredState());
+                i5 += view.getMeasuredHeight();
+                i6 = View.combineMeasuredStates(i6, view.getMeasuredState());
             }
         }
-        setPivotX(this.mMeasuredWidth / 2);
-        setPivotY(i3 / 2);
+        setPivotX((float) (this.mMeasuredWidth / 2));
+        setPivotY((float) (i5 / 2));
         int makeMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(this.mMeasuredWidth, 1073741824);
         if (hasInfoRegion()) {
-            i = 0;
-            for (int i6 = 0; i6 < this.mInfoViewList.size(); i6++) {
-                View view2 = this.mInfoViewList.get(i6);
+            i4 = 0;
+            for (int i8 = 0; i8 < this.mInfoViewList.size(); i8++) {
+                View view2 = this.mInfoViewList.get(i8);
                 if (view2.getVisibility() != 8) {
                     measureChild(view2, makeMeasureSpec2, makeMeasureSpec);
                     if (this.mCardType != 1) {
-                        i += view2.getMeasuredHeight();
+                        i4 += view2.getMeasuredHeight();
                     }
-                    i4 = View.combineMeasuredStates(i4, view2.getMeasuredState());
+                    i6 = View.combineMeasuredStates(i6, view2.getMeasuredState());
                 }
             }
             if (hasExtraRegion()) {
-                i2 = 0;
-                for (int i7 = 0; i7 < this.mExtraViewList.size(); i7++) {
-                    View view3 = this.mExtraViewList.get(i7);
+                i3 = 0;
+                for (int i9 = 0; i9 < this.mExtraViewList.size(); i9++) {
+                    View view3 = this.mExtraViewList.get(i9);
                     if (view3.getVisibility() != 8) {
                         measureChild(view3, makeMeasureSpec2, makeMeasureSpec);
-                        i2 += view3.getMeasuredHeight();
-                        i4 = View.combineMeasuredStates(i4, view3.getMeasuredState());
+                        i3 += view3.getMeasuredHeight();
+                        i6 = View.combineMeasuredStates(i6, view3.getMeasuredState());
                     }
                 }
             } else {
-                i2 = 0;
+                i3 = 0;
             }
         } else {
-            i = 0;
-            i2 = 0;
+            i4 = 0;
+            i3 = 0;
         }
         if (hasInfoRegion() && this.mInfoVisibility == 2) {
             z = true;
         }
-        float f = i3;
-        float f2 = i;
+        float f2 = (float) i5;
+        float f3 = (float) i4;
         if (z) {
-            f2 *= this.mInfoVisFraction;
+            f3 *= this.mInfoVisFraction;
         }
-        this.mMeasuredHeight = (int) (((f + f2) + i2) - (z ? 0.0f : this.mInfoOffset));
-        setMeasuredDimension(View.resolveSizeAndState(this.mMeasuredWidth + getPaddingLeft() + getPaddingRight(), widthMeasureSpec, i4), View.resolveSizeAndState(this.mMeasuredHeight + getPaddingTop() + getPaddingBottom(), heightMeasureSpec, i4 << 16));
+        float f4 = f2 + f3 + ((float) i3);
+        if (z) {
+            f = 0.0f;
+        } else {
+            f = this.mInfoOffset;
+        }
+        this.mMeasuredHeight = (int) (f4 - f);
+        setMeasuredDimension(View.resolveSizeAndState(this.mMeasuredWidth + getPaddingLeft() + getPaddingRight(), i, i6), View.resolveSizeAndState(this.mMeasuredHeight + getPaddingTop() + getPaddingBottom(), i2, i6 << 16));
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        float paddingTop = getPaddingTop();
-        for (int i = 0; i < this.mMainViewList.size(); i++) {
-            View view = this.mMainViewList.get(i);
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
+        float paddingTop = (float) getPaddingTop();
+        for (int i5 = 0; i5 < this.mMainViewList.size(); i5++) {
+            View view = this.mMainViewList.get(i5);
             if (view.getVisibility() != 8) {
-                view.layout(getPaddingLeft(), (int) paddingTop, this.mMeasuredWidth + getPaddingLeft(), (int) (view.getMeasuredHeight() + paddingTop));
-                paddingTop += view.getMeasuredHeight();
+                view.layout(getPaddingLeft(), (int) paddingTop, this.mMeasuredWidth + getPaddingLeft(), (int) (((float) view.getMeasuredHeight()) + paddingTop));
+                paddingTop += (float) view.getMeasuredHeight();
             }
         }
         if (hasInfoRegion()) {
             float f = 0.0f;
-            for (int i2 = 0; i2 < this.mInfoViewList.size(); i2++) {
-                f += this.mInfoViewList.get(i2).getMeasuredHeight();
+            for (int i6 = 0; i6 < this.mInfoViewList.size(); i6++) {
+                f += (float) this.mInfoViewList.get(i6).getMeasuredHeight();
             }
-            int i3 = this.mCardType;
-            if (i3 == 1) {
+            int i7 = this.mCardType;
+            if (i7 == 1) {
                 paddingTop -= f;
                 if (paddingTop < 0.0f) {
                     paddingTop = 0.0f;
                 }
-            } else if (i3 == 2) {
-                if (this.mInfoVisibility == 2) {
-                    f *= this.mInfoVisFraction;
-                }
-            } else {
+            } else if (i7 != 2) {
                 paddingTop -= this.mInfoOffset;
+            } else if (this.mInfoVisibility == 2) {
+                f *= this.mInfoVisFraction;
             }
-            for (int i4 = 0; i4 < this.mInfoViewList.size(); i4++) {
-                View view2 = this.mInfoViewList.get(i4);
+            for (int i8 = 0; i8 < this.mInfoViewList.size(); i8++) {
+                View view2 = this.mInfoViewList.get(i8);
                 if (view2.getVisibility() != 8) {
                     int measuredHeight = view2.getMeasuredHeight();
-                    if (measuredHeight > f) {
+                    if (((float) measuredHeight) > f) {
                         measuredHeight = (int) f;
                     }
-                    float f2 = measuredHeight;
+                    float f2 = (float) measuredHeight;
                     paddingTop += f2;
                     view2.layout(getPaddingLeft(), (int) paddingTop, this.mMeasuredWidth + getPaddingLeft(), (int) paddingTop);
                     f -= f2;
@@ -224,20 +295,19 @@ public class BaseCardView extends FrameLayout {
                 }
             }
             if (hasExtraRegion()) {
-                for (int i5 = 0; i5 < this.mExtraViewList.size(); i5++) {
-                    View view3 = this.mExtraViewList.get(i5);
+                for (int i9 = 0; i9 < this.mExtraViewList.size(); i9++) {
+                    View view3 = this.mExtraViewList.get(i9);
                     if (view3.getVisibility() != 8) {
-                        view3.layout(getPaddingLeft(), (int) paddingTop, this.mMeasuredWidth + getPaddingLeft(), (int) (view3.getMeasuredHeight() + paddingTop));
-                        paddingTop += view3.getMeasuredHeight();
+                        view3.layout(getPaddingLeft(), (int) paddingTop, this.mMeasuredWidth + getPaddingLeft(), (int) (((float) view3.getMeasuredHeight()) + paddingTop));
+                        paddingTop += (float) view3.getMeasuredHeight();
                     }
                 }
             }
         }
-        onSizeChanged(0, 0, right - left, bottom - top);
+        onSizeChanged(0, 0, i3 - i, i4 - i2);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         removeCallbacks(this.mAnimationTrigger);
@@ -252,33 +322,36 @@ public class BaseCardView extends FrameLayout {
         return this.mCardType == 3;
     }
 
-    private boolean isRegionVisible(int regionVisibility) {
-        if (regionVisibility != 0) {
-            if (regionVisibility == 1) {
-                return isActivated();
-            }
-            if (regionVisibility == 2) {
-                return isSelected();
-            }
+    private boolean isRegionVisible(int i) {
+        if (i == 0) {
+            return true;
+        }
+        if (i == 1) {
+            return isActivated();
+        }
+        if (i != 2) {
             return false;
         }
-        return true;
+        return isSelected();
     }
 
-    private boolean isCurrentRegionVisible(int regionVisibility) {
-        if (regionVisibility != 0) {
-            if (regionVisibility == 1) {
-                return isActivated();
-            }
-            if (regionVisibility != 2) {
-                return false;
-            }
-            if (this.mCardType != 2) {
-                return isSelected();
-            }
-            return this.mInfoVisFraction > 0.0f;
+    private boolean isCurrentRegionVisible(int i) {
+        if (i == 0) {
+            return true;
         }
-        return true;
+        if (i == 1) {
+            return isActivated();
+        }
+        if (i != 2) {
+            return false;
+        }
+        if (this.mCardType != 2) {
+            return isSelected();
+        }
+        if (this.mInfoVisFraction > 0.0f) {
+            return true;
+        }
+        return false;
     }
 
     private void findChildrenViews() {
@@ -291,21 +364,21 @@ public class BaseCardView extends FrameLayout {
         for (int i = 0; i < childCount; i++) {
             View childAt = getChildAt(i);
             if (childAt != null) {
-                int i2 = ((LayoutParams) childAt.getLayoutParams()).viewType;
-                int i3 = 8;
-                if (i2 == 1) {
+                LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
+                int i2 = 8;
+                if (layoutParams.viewType == 1) {
                     childAt.setAlpha(this.mInfoAlpha);
                     this.mInfoViewList.add(childAt);
                     if (z) {
-                        i3 = 0;
+                        i2 = 0;
                     }
-                    childAt.setVisibility(i3);
-                } else if (i2 == 2) {
+                    childAt.setVisibility(i2);
+                } else if (layoutParams.viewType == 2) {
                     this.mExtraViewList.add(childAt);
                     if (z2) {
-                        i3 = 0;
+                        i2 = 0;
                     }
-                    childAt.setVisibility(i3);
+                    childAt.setVisibility(i2);
                 } else {
                     this.mMainViewList.add(childAt);
                     childAt.setVisibility(0);
@@ -314,92 +387,84 @@ public class BaseCardView extends FrameLayout {
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected int[] onCreateDrawableState(int extraSpace) {
-        int[] onCreateDrawableState = super.onCreateDrawableState(extraSpace);
-        int length = onCreateDrawableState.length;
+    /* access modifiers changed from: protected */
+    public int[] onCreateDrawableState(int i) {
         boolean z = false;
         boolean z2 = false;
-        for (int i = 0; i < length; i++) {
-            if (onCreateDrawableState[i] == 16842919) {
+        for (int i2 : super.onCreateDrawableState(i)) {
+            if (i2 == 16842919) {
                 z = true;
             }
-            if (onCreateDrawableState[i] == 16842910) {
+            if (i2 == 16842910) {
                 z2 = true;
             }
         }
-        if (!z || !z2) {
-            if (z) {
-                return LB_PRESSED_STATE_SET;
-            }
-            if (z2) {
-                return View.ENABLED_STATE_SET;
-            }
-            return View.EMPTY_STATE_SET;
+        if (z && z2) {
+            return View.PRESSED_ENABLED_STATE_SET;
         }
-        return View.PRESSED_ENABLED_STATE_SET;
+        if (z) {
+            return LB_PRESSED_STATE_SET;
+        }
+        if (z2) {
+            return View.ENABLED_STATE_SET;
+        }
+        return View.EMPTY_STATE_SET;
     }
 
     private void applyActiveState() {
         int i;
-        if (!hasInfoRegion() || (i = this.mInfoVisibility) != 1) {
-            return;
+        if (hasInfoRegion() && (i = this.mInfoVisibility) == 1) {
+            setInfoViewVisibility(isRegionVisible(i));
         }
-        setInfoViewVisibility(isRegionVisible(i));
     }
 
-    private void setInfoViewVisibility(boolean visible) {
+    private void setInfoViewVisibility(boolean z) {
         int i = this.mCardType;
-        if (i != 3) {
-            if (i == 2) {
-                if (this.mInfoVisibility == 2) {
-                    animateInfoHeight(visible);
-                } else {
-                    for (int i2 = 0; i2 < this.mInfoViewList.size(); i2++) {
-                        this.mInfoViewList.get(i2).setVisibility(visible ? 0 : 8);
-                    }
+        if (i == 3) {
+            if (z) {
+                for (int i2 = 0; i2 < this.mInfoViewList.size(); i2++) {
+                    this.mInfoViewList.get(i2).setVisibility(0);
                 }
-            } else {
-                if (i != 1) {
-                    return;
-                }
-                animateInfoAlpha(visible);
+                return;
             }
-        } else if (visible) {
             for (int i3 = 0; i3 < this.mInfoViewList.size(); i3++) {
-                this.mInfoViewList.get(i3).setVisibility(0);
+                this.mInfoViewList.get(i3).setVisibility(8);
             }
-        } else {
-            for (int i4 = 0; i4 < this.mInfoViewList.size(); i4++) {
-                this.mInfoViewList.get(i4).setVisibility(8);
-            }
-            for (int i5 = 0; i5 < this.mExtraViewList.size(); i5++) {
-                this.mExtraViewList.get(i5).setVisibility(8);
+            for (int i4 = 0; i4 < this.mExtraViewList.size(); i4++) {
+                this.mExtraViewList.get(i4).setVisibility(8);
             }
             this.mInfoOffset = 0.0f;
+        } else if (i == 2) {
+            if (this.mInfoVisibility == 2) {
+                animateInfoHeight(z);
+                return;
+            }
+            for (int i5 = 0; i5 < this.mInfoViewList.size(); i5++) {
+                this.mInfoViewList.get(i5).setVisibility(z ? 0 : 8);
+            }
+        } else if (i == 1) {
+            animateInfoAlpha(z);
         }
     }
 
-    private void applySelectedState(boolean focused) {
+    private void applySelectedState(boolean z) {
         removeCallbacks(this.mAnimationTrigger);
-        if (this.mCardType != 3) {
-            if (this.mInfoVisibility != 2) {
-                return;
-            }
-            setInfoViewVisibility(focused);
-        } else if (focused) {
-            if (!this.mDelaySelectedAnim) {
+        if (this.mCardType == 3) {
+            if (!z) {
+                animateInfoOffset(false);
+            } else if (!this.mDelaySelectedAnim) {
                 post(this.mAnimationTrigger);
                 this.mDelaySelectedAnim = true;
-                return;
+            } else {
+                postDelayed(this.mAnimationTrigger, (long) this.mSelectedAnimationDelay);
             }
-            postDelayed(this.mAnimationTrigger, this.mSelectedAnimationDelay);
-        } else {
-            animateInfoOffset(false);
+        } else if (this.mInfoVisibility == 2) {
+            setInfoViewVisibility(z);
         }
     }
 
-    void cancelAnimations() {
+    /* access modifiers changed from: package-private */
+    public void cancelAnimations() {
         Animation animation = this.mAnim;
         if (animation != null) {
             animation.cancel();
@@ -408,10 +473,11 @@ public class BaseCardView extends FrameLayout {
         }
     }
 
-    void animateInfoOffset(boolean shown) {
+    /* access modifiers changed from: package-private */
+    public void animateInfoOffset(boolean z) {
         cancelAnimations();
         int i = 0;
-        if (shown) {
+        if (z) {
             int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(this.mMeasuredWidth, 1073741824);
             int makeMeasureSpec2 = View.MeasureSpec.makeMeasureSpec(0, 0);
             int i2 = 0;
@@ -423,24 +489,21 @@ public class BaseCardView extends FrameLayout {
             }
             i = i2;
         }
-        InfoOffsetAnimation infoOffsetAnimation = new InfoOffsetAnimation(this.mInfoOffset, shown ? i : 0.0f);
+        InfoOffsetAnimation infoOffsetAnimation = new InfoOffsetAnimation(this.mInfoOffset, z ? (float) i : 0.0f);
         this.mAnim = infoOffsetAnimation;
-        infoOffsetAnimation.setDuration(this.mSelectedAnimDuration);
+        infoOffsetAnimation.setDuration((long) this.mSelectedAnimDuration);
         this.mAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-        this.mAnim.setAnimationListener(new Animation.AnimationListener() { // from class: androidx.leanback.widget.BaseCardView.2
-            @Override // android.view.animation.Animation.AnimationListener
+        this.mAnim.setAnimationListener(new Animation.AnimationListener() {
             public void onAnimationRepeat(Animation animation) {
             }
 
-            @Override // android.view.animation.Animation.AnimationListener
             public void onAnimationStart(Animation animation) {
             }
 
-            @Override // android.view.animation.Animation.AnimationListener
             public void onAnimationEnd(Animation animation) {
                 if (BaseCardView.this.mInfoOffset == 0.0f) {
-                    for (int i4 = 0; i4 < BaseCardView.this.mExtraViewList.size(); i4++) {
-                        BaseCardView.this.mExtraViewList.get(i4).setVisibility(8);
+                    for (int i = 0; i < BaseCardView.this.mExtraViewList.size(); i++) {
+                        BaseCardView.this.mExtraViewList.get(i).setVisibility(8);
                     }
                 }
             }
@@ -448,217 +511,193 @@ public class BaseCardView extends FrameLayout {
         startAnimation(this.mAnim);
     }
 
-    private void animateInfoHeight(boolean shown) {
+    private void animateInfoHeight(boolean z) {
         cancelAnimations();
-        if (shown) {
+        if (z) {
             for (int i = 0; i < this.mInfoViewList.size(); i++) {
                 this.mInfoViewList.get(i).setVisibility(0);
             }
         }
-        float f = shown ? 1.0f : 0.0f;
-        if (this.mInfoVisFraction == f) {
-            return;
-        }
-        InfoHeightAnimation infoHeightAnimation = new InfoHeightAnimation(this.mInfoVisFraction, f);
-        this.mAnim = infoHeightAnimation;
-        infoHeightAnimation.setDuration(this.mSelectedAnimDuration);
-        this.mAnim.setInterpolator(new AccelerateDecelerateInterpolator());
-        this.mAnim.setAnimationListener(new Animation.AnimationListener() { // from class: androidx.leanback.widget.BaseCardView.3
-            @Override // android.view.animation.Animation.AnimationListener
-            public void onAnimationRepeat(Animation animation) {
-            }
+        float f = z ? 1.0f : 0.0f;
+        if (this.mInfoVisFraction != f) {
+            InfoHeightAnimation infoHeightAnimation = new InfoHeightAnimation(this.mInfoVisFraction, f);
+            this.mAnim = infoHeightAnimation;
+            infoHeightAnimation.setDuration((long) this.mSelectedAnimDuration);
+            this.mAnim.setInterpolator(new AccelerateDecelerateInterpolator());
+            this.mAnim.setAnimationListener(new Animation.AnimationListener() {
+                public void onAnimationRepeat(Animation animation) {
+                }
 
-            @Override // android.view.animation.Animation.AnimationListener
-            public void onAnimationStart(Animation animation) {
-            }
+                public void onAnimationStart(Animation animation) {
+                }
 
-            @Override // android.view.animation.Animation.AnimationListener
-            public void onAnimationEnd(Animation animation) {
-                if (BaseCardView.this.mInfoVisFraction == 0.0f) {
-                    for (int i2 = 0; i2 < BaseCardView.this.mInfoViewList.size(); i2++) {
-                        BaseCardView.this.mInfoViewList.get(i2).setVisibility(8);
+                public void onAnimationEnd(Animation animation) {
+                    if (BaseCardView.this.mInfoVisFraction == 0.0f) {
+                        for (int i = 0; i < BaseCardView.this.mInfoViewList.size(); i++) {
+                            BaseCardView.this.mInfoViewList.get(i).setVisibility(8);
+                        }
                     }
                 }
-            }
-        });
-        startAnimation(this.mAnim);
+            });
+            startAnimation(this.mAnim);
+        }
     }
 
-    private void animateInfoAlpha(boolean shown) {
+    private void animateInfoAlpha(boolean z) {
         cancelAnimations();
-        if (shown) {
+        if (z) {
             for (int i = 0; i < this.mInfoViewList.size(); i++) {
                 this.mInfoViewList.get(i).setVisibility(0);
             }
         }
         float f = 1.0f;
-        if ((shown ? 1.0f : 0.0f) == this.mInfoAlpha) {
-            return;
-        }
-        float f2 = this.mInfoAlpha;
-        if (!shown) {
-            f = 0.0f;
-        }
-        InfoAlphaAnimation infoAlphaAnimation = new InfoAlphaAnimation(f2, f);
-        this.mAnim = infoAlphaAnimation;
-        infoAlphaAnimation.setDuration(this.mActivatedAnimDuration);
-        this.mAnim.setInterpolator(new DecelerateInterpolator());
-        this.mAnim.setAnimationListener(new Animation.AnimationListener() { // from class: androidx.leanback.widget.BaseCardView.4
-            @Override // android.view.animation.Animation.AnimationListener
-            public void onAnimationRepeat(Animation animation) {
+        if ((z ? 1.0f : 0.0f) != this.mInfoAlpha) {
+            float f2 = this.mInfoAlpha;
+            if (!z) {
+                f = 0.0f;
             }
+            InfoAlphaAnimation infoAlphaAnimation = new InfoAlphaAnimation(f2, f);
+            this.mAnim = infoAlphaAnimation;
+            infoAlphaAnimation.setDuration((long) this.mActivatedAnimDuration);
+            this.mAnim.setInterpolator(new DecelerateInterpolator());
+            this.mAnim.setAnimationListener(new Animation.AnimationListener() {
+                public void onAnimationRepeat(Animation animation) {
+                }
 
-            @Override // android.view.animation.Animation.AnimationListener
-            public void onAnimationStart(Animation animation) {
-            }
+                public void onAnimationStart(Animation animation) {
+                }
 
-            @Override // android.view.animation.Animation.AnimationListener
-            public void onAnimationEnd(Animation animation) {
-                if (BaseCardView.this.mInfoAlpha == 0.0d) {
-                    for (int i2 = 0; i2 < BaseCardView.this.mInfoViewList.size(); i2++) {
-                        BaseCardView.this.mInfoViewList.get(i2).setVisibility(8);
+                public void onAnimationEnd(Animation animation) {
+                    if (((double) BaseCardView.this.mInfoAlpha) == 0.0d) {
+                        for (int i = 0; i < BaseCardView.this.mInfoViewList.size(); i++) {
+                            BaseCardView.this.mInfoViewList.get(i).setVisibility(8);
+                        }
                     }
                 }
-            }
-        });
-        startAnimation(this.mAnim);
+            });
+            startAnimation(this.mAnim);
+        }
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
-    /* renamed from: generateLayoutParams  reason: collision with other method in class */
-    public LayoutParams mo113generateLayoutParams(AttributeSet attrs) {
-        return new LayoutParams(getContext(), attrs);
+    public LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return new LayoutParams(getContext(), attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
-    /* renamed from: generateDefaultLayoutParams  reason: collision with other method in class */
-    public LayoutParams mo111generateDefaultLayoutParams() {
+    /* access modifiers changed from: protected */
+    public LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(-2, -2);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
-    public LayoutParams generateLayoutParams(ViewGroup.LayoutParams lp) {
-        if (lp instanceof LayoutParams) {
-            return new LayoutParams((LayoutParams) lp);
+    /* access modifiers changed from: protected */
+    public LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        if (layoutParams instanceof LayoutParams) {
+            return new LayoutParams((LayoutParams) layoutParams);
         }
-        return new LayoutParams(lp);
+        return new LayoutParams(layoutParams);
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
-    protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-        return p instanceof LayoutParams;
+    /* access modifiers changed from: protected */
+    public boolean checkLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        return layoutParams instanceof LayoutParams;
     }
 
-    /* loaded from: classes.dex */
     public static class LayoutParams extends FrameLayout.LayoutParams {
+        public static final int VIEW_TYPE_EXTRA = 2;
+        public static final int VIEW_TYPE_INFO = 1;
+        public static final int VIEW_TYPE_MAIN = 0;
         @ViewDebug.ExportedProperty(category = "layout", mapping = {@ViewDebug.IntToString(from = 0, to = "MAIN"), @ViewDebug.IntToString(from = 1, to = "INFO"), @ViewDebug.IntToString(from = 2, to = "EXTRA")})
-        public int viewType;
+        public int viewType = 0;
 
-        @SuppressLint({"CustomViewStyleable"})
-        public LayoutParams(Context c, AttributeSet attrs) {
-            super(c, attrs);
-            this.viewType = 0;
-            TypedArray obtainStyledAttributes = c.obtainStyledAttributes(attrs, R$styleable.lbBaseCardView_Layout);
-            this.viewType = obtainStyledAttributes.getInt(R$styleable.lbBaseCardView_Layout_layout_viewType, 0);
+        public LayoutParams(Context context, AttributeSet attributeSet) {
+            super(context, attributeSet);
+            TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0742R.styleable.lbBaseCardView_Layout);
+            this.viewType = obtainStyledAttributes.getInt(C0742R.styleable.lbBaseCardView_Layout_layout_viewType, 0);
             obtainStyledAttributes.recycle();
         }
 
-        public LayoutParams(int width, int height) {
-            super(width, height);
-            this.viewType = 0;
+        public LayoutParams(int i, int i2) {
+            super(i, i2);
         }
 
-        public LayoutParams(ViewGroup.LayoutParams p) {
-            super(p);
-            this.viewType = 0;
+        public LayoutParams(ViewGroup.LayoutParams layoutParams) {
+            super(layoutParams);
         }
 
-        public LayoutParams(LayoutParams source) {
-            super((ViewGroup.MarginLayoutParams) source);
-            this.viewType = 0;
-            this.viewType = source.viewType;
+        public LayoutParams(LayoutParams layoutParams) {
+            super(layoutParams);
+            this.viewType = layoutParams.viewType;
         }
     }
 
-    /* loaded from: classes.dex */
     class AnimationBase extends Animation {
         AnimationBase() {
         }
 
-        final void mockStart() {
-            getTransformation(0L, null);
+        /* access modifiers changed from: package-private */
+        public final void mockStart() {
+            getTransformation(0, (Transformation) null);
         }
 
-        final void mockEnd() {
-            applyTransformation(1.0f, null);
+        /* access modifiers changed from: package-private */
+        public final void mockEnd() {
+            applyTransformation(1.0f, (Transformation) null);
             BaseCardView.this.cancelAnimations();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public final class InfoOffsetAnimation extends AnimationBase {
+    final class InfoOffsetAnimation extends AnimationBase {
         private float mDelta;
         private float mStartValue;
 
-        public InfoOffsetAnimation(float start, float end) {
+        public InfoOffsetAnimation(float f, float f2) {
             super();
-            this.mStartValue = start;
-            this.mDelta = end - start;
+            this.mStartValue = f;
+            this.mDelta = f2 - f;
         }
 
-        @Override // android.view.animation.Animation
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            BaseCardView baseCardView = BaseCardView.this;
-            baseCardView.mInfoOffset = this.mStartValue + (interpolatedTime * this.mDelta);
-            baseCardView.requestLayout();
+        /* access modifiers changed from: protected */
+        public void applyTransformation(float f, Transformation transformation) {
+            BaseCardView.this.mInfoOffset = this.mStartValue + (f * this.mDelta);
+            BaseCardView.this.requestLayout();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public final class InfoHeightAnimation extends AnimationBase {
+    final class InfoHeightAnimation extends AnimationBase {
         private float mDelta;
         private float mStartValue;
 
-        public InfoHeightAnimation(float start, float end) {
+        public InfoHeightAnimation(float f, float f2) {
             super();
-            this.mStartValue = start;
-            this.mDelta = end - start;
+            this.mStartValue = f;
+            this.mDelta = f2 - f;
         }
 
-        @Override // android.view.animation.Animation
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            BaseCardView baseCardView = BaseCardView.this;
-            baseCardView.mInfoVisFraction = this.mStartValue + (interpolatedTime * this.mDelta);
-            baseCardView.requestLayout();
+        /* access modifiers changed from: protected */
+        public void applyTransformation(float f, Transformation transformation) {
+            BaseCardView.this.mInfoVisFraction = this.mStartValue + (f * this.mDelta);
+            BaseCardView.this.requestLayout();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public final class InfoAlphaAnimation extends AnimationBase {
+    final class InfoAlphaAnimation extends AnimationBase {
         private float mDelta;
         private float mStartValue;
 
-        public InfoAlphaAnimation(float start, float end) {
+        public InfoAlphaAnimation(float f, float f2) {
             super();
-            this.mStartValue = start;
-            this.mDelta = end - start;
+            this.mStartValue = f;
+            this.mDelta = f2 - f;
         }
 
-        @Override // android.view.animation.Animation
-        protected void applyTransformation(float interpolatedTime, Transformation t) {
-            BaseCardView.this.mInfoAlpha = this.mStartValue + (interpolatedTime * this.mDelta);
+        /* access modifiers changed from: protected */
+        public void applyTransformation(float f, Transformation transformation) {
+            BaseCardView.this.mInfoAlpha = this.mStartValue + (f * this.mDelta);
             for (int i = 0; i < BaseCardView.this.mInfoViewList.size(); i++) {
                 BaseCardView.this.mInfoViewList.get(i).setAlpha(BaseCardView.this.mInfoAlpha);
             }
         }
     }
 
-    @Override // android.view.View
     public String toString() {
         return super.toString();
     }

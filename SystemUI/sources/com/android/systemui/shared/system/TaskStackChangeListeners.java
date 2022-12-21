@@ -14,10 +14,11 @@ import com.android.internal.os.SomeArgs;
 import com.android.systemui.shared.recents.model.ThumbnailData;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class TaskStackChangeListeners {
     private static final TaskStackChangeListeners INSTANCE = new TaskStackChangeListeners();
-    private static final String TAG = "TaskStackChangeListeners";
+    /* access modifiers changed from: private */
+    public static final String TAG = "TaskStackChangeListeners";
     private final Impl mImpl = new Impl(Looper.getMainLooper());
 
     private TaskStackChangeListeners() {
@@ -39,9 +40,28 @@ public class TaskStackChangeListeners {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class Impl extends TaskStackListener implements Handler.Callback {
+    private static class Impl extends TaskStackListener implements Handler.Callback {
+        private static final int ON_ACTIVITY_DISMISSING_DOCKED_STACK = 7;
+        private static final int ON_ACTIVITY_FORCED_RESIZABLE = 6;
+        private static final int ON_ACTIVITY_LAUNCH_ON_SECONDARY_DISPLAY_FAILED = 11;
+        private static final int ON_ACTIVITY_LAUNCH_ON_SECONDARY_DISPLAY_REROUTED = 16;
+        private static final int ON_ACTIVITY_PINNED = 3;
+        private static final int ON_ACTIVITY_REQUESTED_ORIENTATION_CHANGE = 15;
+        private static final int ON_ACTIVITY_RESTART_ATTEMPT = 4;
+        private static final int ON_ACTIVITY_ROTATION = 22;
+        private static final int ON_ACTIVITY_UNPINNED = 10;
+        private static final int ON_BACK_PRESSED_ON_TASK_ROOT = 17;
+        private static final int ON_LOCK_TASK_MODE_CHANGED = 23;
+        private static final int ON_TASK_CREATED = 12;
+        private static final int ON_TASK_DESCRIPTION_CHANGED = 21;
+        private static final int ON_TASK_DISPLAY_CHANGED = 18;
+        private static final int ON_TASK_LIST_FROZEN_UNFROZEN = 20;
+        private static final int ON_TASK_LIST_UPDATED = 19;
+        private static final int ON_TASK_MOVED_TO_FRONT = 14;
+        private static final int ON_TASK_PROFILE_LOCKED = 8;
+        private static final int ON_TASK_REMOVED = 13;
+        private static final int ON_TASK_SNAPSHOT_CHANGED = 2;
+        private static final int ON_TASK_STACK_CHANGED = 1;
         private final Handler mHandler;
         private boolean mRegistered;
         private final List<TaskStackChangeListener> mTaskStackListeners = new ArrayList();
@@ -68,17 +88,16 @@ public class TaskStackChangeListeners {
         public void removeListener(TaskStackChangeListener taskStackChangeListener) {
             boolean isEmpty;
             synchronized (this.mTaskStackListeners) {
-                this.mTaskStackListeners.remove(taskStackChangeListener);
+                this.mTaskStackListeners.remove((Object) taskStackChangeListener);
                 isEmpty = this.mTaskStackListeners.isEmpty();
             }
-            if (!isEmpty || !this.mRegistered) {
-                return;
-            }
-            try {
-                ActivityTaskManager.getService().unregisterTaskStackListener(this);
-                this.mRegistered = false;
-            } catch (Exception e) {
-                Log.w(TaskStackChangeListeners.TAG, "Failed to call unregisterTaskStackListener", e);
+            if (isEmpty && this.mRegistered) {
+                try {
+                    ActivityTaskManager.getService().unregisterTaskStackListener(this);
+                    this.mRegistered = false;
+                } catch (Exception e) {
+                    Log.w(TaskStackChangeListeners.TAG, "Failed to call unregisterTaskStackListener", e);
+                }
             }
         }
 
@@ -130,8 +149,8 @@ public class TaskStackChangeListeners {
             this.mHandler.obtainMessage(16, i, 0, runningTaskInfo).sendToTarget();
         }
 
-        public void onTaskProfileLocked(int i, int i2) {
-            this.mHandler.obtainMessage(8, i, i2).sendToTarget();
+        public void onTaskProfileLocked(ActivityManager.RunningTaskInfo runningTaskInfo) {
+            this.mHandler.obtainMessage(8, runningTaskInfo).sendToTarget();
         }
 
         public void onTaskSnapshotChanged(int i, TaskSnapshot taskSnapshot) {
@@ -182,7 +201,6 @@ public class TaskStackChangeListeners {
             this.mHandler.obtainMessage(23, i, 0).sendToTarget();
         }
 
-        @Override // android.os.Handler.Callback
         public boolean handleMessage(Message message) {
             synchronized (this.mTaskStackListeners) {
                 boolean z = false;
@@ -196,9 +214,16 @@ public class TaskStackChangeListeners {
                         break;
                     case 2:
                         Trace.beginSection("onTaskSnapshotChanged");
-                        ThumbnailData thumbnailData = new ThumbnailData((TaskSnapshot) message.obj);
+                        TaskSnapshot taskSnapshot = (TaskSnapshot) message.obj;
+                        ThumbnailData thumbnailData = new ThumbnailData(taskSnapshot);
                         for (int size2 = this.mTaskStackListeners.size() - 1; size2 >= 0; size2--) {
-                            this.mTaskStackListeners.get(size2).onTaskSnapshotChanged(message.arg1, thumbnailData);
+                            z |= this.mTaskStackListeners.get(size2).onTaskSnapshotChanged(message.arg1, thumbnailData);
+                        }
+                        if (!z) {
+                            thumbnailData.recycleBitmap();
+                            if (taskSnapshot.getHardwareBuffer() != null) {
+                                taskSnapshot.getHardwareBuffer().close();
+                            }
                         }
                         Trace.endSection();
                         break;
@@ -231,8 +256,9 @@ public class TaskStackChangeListeners {
                         }
                         break;
                     case 8:
+                        ActivityManager.RunningTaskInfo runningTaskInfo2 = (ActivityManager.RunningTaskInfo) message.obj;
                         for (int size7 = this.mTaskStackListeners.size() - 1; size7 >= 0; size7--) {
-                            this.mTaskStackListeners.get(size7).onTaskProfileLocked(message.arg1, message.arg2);
+                            this.mTaskStackListeners.get(size7).onTaskProfileLocked(runningTaskInfo2);
                         }
                         break;
                     case 10:
@@ -241,9 +267,9 @@ public class TaskStackChangeListeners {
                         }
                         break;
                     case 11:
-                        ActivityManager.RunningTaskInfo runningTaskInfo2 = (ActivityManager.RunningTaskInfo) message.obj;
+                        ActivityManager.RunningTaskInfo runningTaskInfo3 = (ActivityManager.RunningTaskInfo) message.obj;
                         for (int size9 = this.mTaskStackListeners.size() - 1; size9 >= 0; size9--) {
-                            this.mTaskStackListeners.get(size9).onActivityLaunchOnSecondaryDisplayFailed(runningTaskInfo2);
+                            this.mTaskStackListeners.get(size9).onActivityLaunchOnSecondaryDisplayFailed(runningTaskInfo3);
                         }
                         break;
                     case 12:
@@ -257,9 +283,9 @@ public class TaskStackChangeListeners {
                         }
                         break;
                     case 14:
-                        ActivityManager.RunningTaskInfo runningTaskInfo3 = (ActivityManager.RunningTaskInfo) message.obj;
+                        ActivityManager.RunningTaskInfo runningTaskInfo4 = (ActivityManager.RunningTaskInfo) message.obj;
                         for (int size12 = this.mTaskStackListeners.size() - 1; size12 >= 0; size12--) {
-                            this.mTaskStackListeners.get(size12).onTaskMovedToFront(runningTaskInfo3);
+                            this.mTaskStackListeners.get(size12).onTaskMovedToFront(runningTaskInfo4);
                         }
                         break;
                     case 15:
@@ -268,9 +294,9 @@ public class TaskStackChangeListeners {
                         }
                         break;
                     case 16:
-                        ActivityManager.RunningTaskInfo runningTaskInfo4 = (ActivityManager.RunningTaskInfo) message.obj;
+                        ActivityManager.RunningTaskInfo runningTaskInfo5 = (ActivityManager.RunningTaskInfo) message.obj;
                         for (int size14 = this.mTaskStackListeners.size() - 1; size14 >= 0; size14--) {
-                            this.mTaskStackListeners.get(size14).onActivityLaunchOnSecondaryDisplayRerouted(runningTaskInfo4);
+                            this.mTaskStackListeners.get(size14).onActivityLaunchOnSecondaryDisplayRerouted(runningTaskInfo5);
                         }
                         break;
                     case 17:
@@ -294,9 +320,9 @@ public class TaskStackChangeListeners {
                         }
                         break;
                     case 21:
-                        ActivityManager.RunningTaskInfo runningTaskInfo5 = (ActivityManager.RunningTaskInfo) message.obj;
+                        ActivityManager.RunningTaskInfo runningTaskInfo6 = (ActivityManager.RunningTaskInfo) message.obj;
                         for (int size19 = this.mTaskStackListeners.size() - 1; size19 >= 0; size19--) {
-                            this.mTaskStackListeners.get(size19).onTaskDescriptionChanged(runningTaskInfo5);
+                            this.mTaskStackListeners.get(size19).onTaskDescriptionChanged(runningTaskInfo6);
                         }
                         break;
                     case 22:
@@ -311,15 +337,13 @@ public class TaskStackChangeListeners {
                         break;
                 }
             }
-            Object obj = message.obj;
-            if (obj instanceof SomeArgs) {
-                ((SomeArgs) obj).recycle();
+            if (message.obj instanceof SomeArgs) {
+                ((SomeArgs) message.obj).recycle();
             }
             return true;
         }
     }
 
-    /* loaded from: classes.dex */
     private static class PinnedActivityInfo {
         final String mPackageName;
         final int mStackId;

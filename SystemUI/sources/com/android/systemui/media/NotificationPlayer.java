@@ -4,39 +4,44 @@ import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.media.PlayerBase;
 import android.net.Uri;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.Log;
-import com.android.internal.annotations.GuardedBy;
 import java.lang.Thread;
 import java.util.LinkedList;
-/* loaded from: classes.dex */
-public class NotificationPlayer implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
-    @GuardedBy({"mQueueAudioFocusLock"})
-    private AudioManager mAudioManagerWithAudioFocus;
-    @GuardedBy({"mCompletionHandlingLock"})
-    private CreationAndCompletionThread mCompletionThread;
-    @GuardedBy({"mCompletionHandlingLock"})
-    private Looper mLooper;
-    @GuardedBy({"mPlayerLock"})
-    private MediaPlayer mPlayer;
-    private String mTag;
-    @GuardedBy({"mCmdQueue"})
-    private CmdThread mThread;
-    @GuardedBy({"mCmdQueue"})
-    private PowerManager.WakeLock mWakeLock;
-    private final LinkedList<Command> mCmdQueue = new LinkedList<>();
-    private final Object mCompletionHandlingLock = new Object();
-    private final Object mPlayerLock = new Object();
-    private final Object mQueueAudioFocusLock = new Object();
-    private int mNotificationRampTimeMs = 0;
-    private int mState = 2;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static final class Command {
+public class NotificationPlayer implements MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener {
+    private static final boolean DEBUG = false;
+    private static final int PLAY = 1;
+    private static final int STOP = 2;
+    /* access modifiers changed from: private */
+    public AudioManager mAudioManagerWithAudioFocus;
+    /* access modifiers changed from: private */
+    public final LinkedList<Command> mCmdQueue = new LinkedList<>();
+    /* access modifiers changed from: private */
+    public final Object mCompletionHandlingLock = new Object();
+    private CreationAndCompletionThread mCompletionThread;
+    /* access modifiers changed from: private */
+    public Looper mLooper;
+    /* access modifiers changed from: private */
+    public int mNotificationRampTimeMs = 0;
+    /* access modifiers changed from: private */
+    public MediaPlayer mPlayer;
+    /* access modifiers changed from: private */
+    public final Object mPlayerLock = new Object();
+    /* access modifiers changed from: private */
+    public final Object mQueueAudioFocusLock = new Object();
+    private int mState = 2;
+    /* access modifiers changed from: private */
+    public String mTag;
+    /* access modifiers changed from: private */
+    public CmdThread mThread;
+    private PowerManager.WakeLock mWakeLock;
+
+    private static final class Command {
         AudioAttributes attributes;
         int code;
         Context context;
@@ -52,115 +57,241 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class CreationAndCompletionThread extends Thread {
+    private final class CreationAndCompletionThread extends Thread {
         public Command mCmd;
 
         public CreationAndCompletionThread(Command command) {
             this.mCmd = command;
         }
 
-        /* JADX WARN: Removed duplicated region for block: B:42:0x0103 A[Catch: all -> 0x0124, TRY_ENTER, TryCatch #3 {, blocks: (B:4:0x000d, B:7:0x001a, B:10:0x001f, B:12:0x0025, B:13:0x003a, B:15:0x0064, B:17:0x006a, B:19:0x0078, B:21:0x007e, B:22:0x0084, B:35:0x00b1, B:38:0x00b2, B:58:0x00be, B:39:0x00c9, B:40:0x00fc, B:41:0x0102, B:45:0x0111, B:48:0x0116, B:49:0x0119, B:52:0x011c, B:53:0x011f, B:61:0x00d3, B:62:0x00d8, B:42:0x0103, B:43:0x010e), top: B:3:0x000d }] */
-        @Override // java.lang.Thread, java.lang.Runnable
-        /*
-            Code decompiled incorrectly, please refer to instructions dump.
-        */
+        /*  JADX ERROR: IndexOutOfBoundsException in pass: RegionMakerVisitor
+            java.lang.IndexOutOfBoundsException: Index 0 out of bounds for length 0
+            	at java.base/jdk.internal.util.Preconditions.outOfBounds(Preconditions.java:64)
+            	at java.base/jdk.internal.util.Preconditions.outOfBoundsCheckIndex(Preconditions.java:70)
+            	at java.base/jdk.internal.util.Preconditions.checkIndex(Preconditions.java:248)
+            	at java.base/java.util.Objects.checkIndex(Objects.java:372)
+            	at java.base/java.util.ArrayList.get(ArrayList.java:458)
+            	at jadx.core.dex.nodes.InsnNode.getArg(InsnNode.java:101)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:611)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverseMonitorExits(RegionMaker.java:619)
+            	at jadx.core.dex.visitors.regions.RegionMaker.processMonitorEnter(RegionMaker.java:561)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverse(RegionMaker.java:133)
+            	at jadx.core.dex.visitors.regions.RegionMaker.makeRegion(RegionMaker.java:86)
+            	at jadx.core.dex.visitors.regions.RegionMaker.processIf(RegionMaker.java:693)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverse(RegionMaker.java:123)
+            	at jadx.core.dex.visitors.regions.RegionMaker.makeRegion(RegionMaker.java:86)
+            	at jadx.core.dex.visitors.regions.RegionMaker.processMonitorEnter(RegionMaker.java:598)
+            	at jadx.core.dex.visitors.regions.RegionMaker.traverse(RegionMaker.java:133)
+            	at jadx.core.dex.visitors.regions.RegionMaker.makeRegion(RegionMaker.java:86)
+            	at jadx.core.dex.visitors.regions.RegionMakerVisitor.visit(RegionMakerVisitor.java:49)
+            */
         public void run() {
-            MediaPlayer mediaPlayer;
-            MediaPlayer mediaPlayer2;
-            Looper.prepare();
-            NotificationPlayer.this.mLooper = Looper.myLooper();
-            synchronized (this) {
-                AudioManager audioManager = (AudioManager) this.mCmd.context.getSystemService("audio");
-                MediaPlayer mediaPlayer3 = null;
-                try {
-                    mediaPlayer = new MediaPlayer();
-                } catch (Exception e) {
-                    e = e;
-                    mediaPlayer = null;
-                }
-                try {
-                    Command command = this.mCmd;
-                    if (command.attributes == null) {
-                        command.attributes = new AudioAttributes.Builder().setUsage(5).setContentType(4).build();
-                    }
-                    mediaPlayer.setAudioAttributes(this.mCmd.attributes);
-                    Command command2 = this.mCmd;
-                    mediaPlayer.setDataSource(command2.context, command2.uri);
-                    mediaPlayer.setLooping(this.mCmd.looping);
-                    mediaPlayer.setOnCompletionListener(NotificationPlayer.this);
-                    mediaPlayer.setOnErrorListener(NotificationPlayer.this);
-                    mediaPlayer.prepare();
-                    Uri uri = this.mCmd.uri;
-                    if (uri != null && uri.getEncodedPath() != null && this.mCmd.uri.getEncodedPath().length() > 0 && !audioManager.isMusicActiveRemotely()) {
-                        synchronized (NotificationPlayer.this.mQueueAudioFocusLock) {
-                            if (NotificationPlayer.this.mAudioManagerWithAudioFocus == null) {
-                                int i = 3;
-                                Command command3 = this.mCmd;
-                                if (command3.looping) {
-                                    i = 1;
-                                }
-                                NotificationPlayer.this.mNotificationRampTimeMs = audioManager.getFocusRampTimeMs(i, command3.attributes);
-                                audioManager.requestAudioFocus(null, this.mCmd.attributes, i, 0);
-                                NotificationPlayer.this.mAudioManagerWithAudioFocus = audioManager;
-                            }
-                        }
-                    }
-                    try {
-                        Thread.sleep(NotificationPlayer.this.mNotificationRampTimeMs);
-                    } catch (InterruptedException e2) {
-                        Log.e(NotificationPlayer.this.mTag, "Exception while sleeping to sync notification playback with ducking", e2);
-                    }
-                    mediaPlayer.start();
-                } catch (Exception e3) {
-                    e = e3;
-                    if (mediaPlayer != null) {
-                        mediaPlayer.release();
-                    } else {
-                        mediaPlayer3 = mediaPlayer;
-                    }
-                    Log.w(NotificationPlayer.this.mTag, "error loading sound for " + this.mCmd.uri, e);
-                    NotificationPlayer.this.abandonAudioFocusAfterError();
-                    mediaPlayer = mediaPlayer3;
-                    synchronized (NotificationPlayer.this.mPlayerLock) {
-                    }
-                }
-                synchronized (NotificationPlayer.this.mPlayerLock) {
-                    mediaPlayer2 = NotificationPlayer.this.mPlayer;
-                    NotificationPlayer.this.mPlayer = mediaPlayer;
-                }
-                if (mediaPlayer2 != null) {
-                    mediaPlayer2.pause();
-                    try {
-                        Thread.sleep(100L);
-                    } catch (InterruptedException unused) {
-                    }
-                    mediaPlayer2.release();
-                }
-                notify();
-            }
-            Looper.loop();
+            /*
+                r7 = this;
+                android.os.Looper.prepare()
+                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this
+                android.os.Looper r1 = android.os.Looper.myLooper()
+                android.os.Looper unused = r0.mLooper = r1
+                monitor-enter(r7)
+                com.android.systemui.media.NotificationPlayer$Command r0 = r7.mCmd     // Catch:{ all -> 0x0134 }
+                android.content.Context r0 = r0.context     // Catch:{ all -> 0x0134 }
+                java.lang.String r1 = "audio"
+                java.lang.Object r0 = r0.getSystemService(r1)     // Catch:{ all -> 0x0134 }
+                android.media.AudioManager r0 = (android.media.AudioManager) r0     // Catch:{ all -> 0x0134 }
+                r1 = 0
+                android.media.MediaPlayer r2 = new android.media.MediaPlayer     // Catch:{ Exception -> 0x00da }
+                r2.<init>()     // Catch:{ Exception -> 0x00da }
+                com.android.systemui.media.NotificationPlayer$Command r3 = r7.mCmd     // Catch:{ Exception -> 0x00d8 }
+                android.media.AudioAttributes r3 = r3.attributes     // Catch:{ Exception -> 0x00d8 }
+                if (r3 != 0) goto L_0x003c
+                com.android.systemui.media.NotificationPlayer$Command r3 = r7.mCmd     // Catch:{ Exception -> 0x00d8 }
+                android.media.AudioAttributes$Builder r4 = new android.media.AudioAttributes$Builder     // Catch:{ Exception -> 0x00d8 }
+                r4.<init>()     // Catch:{ Exception -> 0x00d8 }
+                r5 = 5
+                android.media.AudioAttributes$Builder r4 = r4.setUsage(r5)     // Catch:{ Exception -> 0x00d8 }
+                r5 = 4
+                android.media.AudioAttributes$Builder r4 = r4.setContentType(r5)     // Catch:{ Exception -> 0x00d8 }
+                android.media.AudioAttributes r4 = r4.build()     // Catch:{ Exception -> 0x00d8 }
+                r3.attributes = r4     // Catch:{ Exception -> 0x00d8 }
+            L_0x003c:
+                com.android.systemui.media.NotificationPlayer$Command r3 = r7.mCmd     // Catch:{ Exception -> 0x00d8 }
+                android.media.AudioAttributes r3 = r3.attributes     // Catch:{ Exception -> 0x00d8 }
+                r2.setAudioAttributes(r3)     // Catch:{ Exception -> 0x00d8 }
+                com.android.systemui.media.NotificationPlayer$Command r3 = r7.mCmd     // Catch:{ Exception -> 0x00d8 }
+                android.content.Context r3 = r3.context     // Catch:{ Exception -> 0x00d8 }
+                com.android.systemui.media.NotificationPlayer$Command r4 = r7.mCmd     // Catch:{ Exception -> 0x00d8 }
+                android.net.Uri r4 = r4.uri     // Catch:{ Exception -> 0x00d8 }
+                r2.setDataSource(r3, r4)     // Catch:{ Exception -> 0x00d8 }
+                com.android.systemui.media.NotificationPlayer$Command r3 = r7.mCmd     // Catch:{ Exception -> 0x00d8 }
+                boolean r3 = r3.looping     // Catch:{ Exception -> 0x00d8 }
+                r2.setLooping(r3)     // Catch:{ Exception -> 0x00d8 }
+                com.android.systemui.media.NotificationPlayer r3 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ Exception -> 0x00d8 }
+                r2.setOnCompletionListener(r3)     // Catch:{ Exception -> 0x00d8 }
+                com.android.systemui.media.NotificationPlayer r3 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ Exception -> 0x00d8 }
+                r2.setOnErrorListener(r3)     // Catch:{ Exception -> 0x00d8 }
+                r2.prepare()     // Catch:{ Exception -> 0x00d8 }
+                com.android.systemui.media.NotificationPlayer$Command r3 = r7.mCmd     // Catch:{ Exception -> 0x00d8 }
+                android.net.Uri r3 = r3.uri     // Catch:{ Exception -> 0x00d8 }
+                if (r3 == 0) goto L_0x00bd
+                com.android.systemui.media.NotificationPlayer$Command r3 = r7.mCmd     // Catch:{ Exception -> 0x00d8 }
+                android.net.Uri r3 = r3.uri     // Catch:{ Exception -> 0x00d8 }
+                java.lang.String r3 = r3.getEncodedPath()     // Catch:{ Exception -> 0x00d8 }
+                if (r3 == 0) goto L_0x00bd
+                com.android.systemui.media.NotificationPlayer$Command r3 = r7.mCmd     // Catch:{ Exception -> 0x00d8 }
+                android.net.Uri r3 = r3.uri     // Catch:{ Exception -> 0x00d8 }
+                java.lang.String r3 = r3.getEncodedPath()     // Catch:{ Exception -> 0x00d8 }
+                int r3 = r3.length()     // Catch:{ Exception -> 0x00d8 }
+                if (r3 <= 0) goto L_0x00bd
+                boolean r3 = r0.isMusicActiveRemotely()     // Catch:{ Exception -> 0x00d8 }
+                if (r3 != 0) goto L_0x00bd
+                com.android.systemui.media.NotificationPlayer r3 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ Exception -> 0x00d8 }
+                java.lang.Object r3 = r3.mQueueAudioFocusLock     // Catch:{ Exception -> 0x00d8 }
+                monitor-enter(r3)     // Catch:{ Exception -> 0x00d8 }
+                com.android.systemui.media.NotificationPlayer r4 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x00ba }
+                android.media.AudioManager r4 = r4.mAudioManagerWithAudioFocus     // Catch:{ all -> 0x00ba }
+                if (r4 != 0) goto L_0x00b8
+                com.android.systemui.media.NotificationPlayer$Command r4 = r7.mCmd     // Catch:{ all -> 0x00ba }
+                boolean r4 = r4.looping     // Catch:{ all -> 0x00ba }
+                if (r4 == 0) goto L_0x009d
+                r4 = 1
+                goto L_0x009e
+            L_0x009d:
+                r4 = 3
+            L_0x009e:
+                com.android.systemui.media.NotificationPlayer r5 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x00ba }
+                com.android.systemui.media.NotificationPlayer$Command r6 = r7.mCmd     // Catch:{ all -> 0x00ba }
+                android.media.AudioAttributes r6 = r6.attributes     // Catch:{ all -> 0x00ba }
+                int r6 = r0.getFocusRampTimeMs(r4, r6)     // Catch:{ all -> 0x00ba }
+                int unused = r5.mNotificationRampTimeMs = r6     // Catch:{ all -> 0x00ba }
+                com.android.systemui.media.NotificationPlayer$Command r5 = r7.mCmd     // Catch:{ all -> 0x00ba }
+                android.media.AudioAttributes r5 = r5.attributes     // Catch:{ all -> 0x00ba }
+                r6 = 0
+                r0.requestAudioFocus(r1, r5, r4, r6)     // Catch:{ all -> 0x00ba }
+                com.android.systemui.media.NotificationPlayer r4 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x00ba }
+                android.media.AudioManager unused = r4.mAudioManagerWithAudioFocus = r0     // Catch:{ all -> 0x00ba }
+            L_0x00b8:
+                monitor-exit(r3)     // Catch:{ all -> 0x00ba }
+                goto L_0x00bd
+            L_0x00ba:
+                r0 = move-exception
+                monitor-exit(r3)     // Catch:{ all -> 0x00ba }
+                throw r0     // Catch:{ Exception -> 0x00d8 }
+            L_0x00bd:
+                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ InterruptedException -> 0x00c8 }
+                int r0 = r0.mNotificationRampTimeMs     // Catch:{ InterruptedException -> 0x00c8 }
+                long r3 = (long) r0     // Catch:{ InterruptedException -> 0x00c8 }
+                java.lang.Thread.sleep(r3)     // Catch:{ InterruptedException -> 0x00c8 }
+                goto L_0x00d4
+            L_0x00c8:
+                r0 = move-exception
+                com.android.systemui.media.NotificationPlayer r3 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ Exception -> 0x00d8 }
+                java.lang.String r3 = r3.mTag     // Catch:{ Exception -> 0x00d8 }
+                java.lang.String r4 = "Exception while sleeping to sync notification playback with ducking"
+                android.util.Log.e(r3, r4, r0)     // Catch:{ Exception -> 0x00d8 }
+            L_0x00d4:
+                r2.start()     // Catch:{ Exception -> 0x00d8 }
+                goto L_0x0109
+            L_0x00d8:
+                r0 = move-exception
+                goto L_0x00dc
+            L_0x00da:
+                r0 = move-exception
+                r2 = r1
+            L_0x00dc:
+                if (r2 == 0) goto L_0x00e2
+                r2.release()     // Catch:{ all -> 0x0134 }
+                goto L_0x00e3
+            L_0x00e2:
+                r1 = r2
+            L_0x00e3:
+                com.android.systemui.media.NotificationPlayer r2 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x0134 }
+                java.lang.String r2 = r2.mTag     // Catch:{ all -> 0x0134 }
+                java.lang.StringBuilder r3 = new java.lang.StringBuilder     // Catch:{ all -> 0x0134 }
+                r3.<init>()     // Catch:{ all -> 0x0134 }
+                java.lang.String r4 = "error loading sound for "
+                java.lang.StringBuilder r3 = r3.append((java.lang.String) r4)     // Catch:{ all -> 0x0134 }
+                com.android.systemui.media.NotificationPlayer$Command r4 = r7.mCmd     // Catch:{ all -> 0x0134 }
+                android.net.Uri r4 = r4.uri     // Catch:{ all -> 0x0134 }
+                java.lang.StringBuilder r3 = r3.append((java.lang.Object) r4)     // Catch:{ all -> 0x0134 }
+                java.lang.String r3 = r3.toString()     // Catch:{ all -> 0x0134 }
+                android.util.Log.w(r2, r3, r0)     // Catch:{ all -> 0x0134 }
+                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x0134 }
+                r0.abandonAudioFocusAfterError()     // Catch:{ all -> 0x0134 }
+                r2 = r1
+            L_0x0109:
+                com.android.systemui.media.NotificationPlayer r0 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x0134 }
+                java.lang.Object r0 = r0.mPlayerLock     // Catch:{ all -> 0x0134 }
+                monitor-enter(r0)     // Catch:{ all -> 0x0134 }
+                com.android.systemui.media.NotificationPlayer r1 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x0131 }
+                android.media.MediaPlayer r1 = r1.mPlayer     // Catch:{ all -> 0x0131 }
+                com.android.systemui.media.NotificationPlayer r3 = com.android.systemui.media.NotificationPlayer.this     // Catch:{ all -> 0x0131 }
+                android.media.MediaPlayer unused = r3.mPlayer = r2     // Catch:{ all -> 0x0131 }
+                monitor-exit(r0)     // Catch:{ all -> 0x0131 }
+                if (r1 == 0) goto L_0x0129
+                r1.pause()     // Catch:{ all -> 0x0134 }
+                r2 = 100
+                java.lang.Thread.sleep(r2)     // Catch:{ InterruptedException -> 0x0126 }
+            L_0x0126:
+                r1.release()     // Catch:{ all -> 0x0134 }
+            L_0x0129:
+                r7.notify()     // Catch:{ all -> 0x0134 }
+                monitor-exit(r7)     // Catch:{ all -> 0x0134 }
+                android.os.Looper.loop()
+                return
+            L_0x0131:
+                r1 = move-exception
+                monitor-exit(r0)     // Catch:{ all -> 0x0131 }
+                throw r1     // Catch:{ all -> 0x0134 }
+            L_0x0134:
+                r0 = move-exception
+                monitor-exit(r7)     // Catch:{ all -> 0x0134 }
+                throw r0
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.NotificationPlayer.CreationAndCompletionThread.run():void");
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void abandonAudioFocusAfterError() {
         synchronized (this.mQueueAudioFocusLock) {
             AudioManager audioManager = this.mAudioManagerWithAudioFocus;
             if (audioManager != null) {
-                audioManager.abandonAudioFocus(null);
+                audioManager.abandonAudioFocus((AudioManager.OnAudioFocusChangeListener) null);
                 this.mAudioManagerWithAudioFocus = null;
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void startSound(Command command) {
         try {
             synchronized (this.mCompletionHandlingLock) {
                 Looper looper = this.mLooper;
-                if (looper != null && looper.getThread().getState() != Thread.State.TERMINATED) {
+                if (!(looper == null || looper.getThread().getState() == Thread.State.TERMINATED)) {
                     this.mLooper.quit();
                 }
                 CreationAndCompletionThread creationAndCompletionThread = new CreationAndCompletionThread(command);
@@ -171,28 +302,22 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                 }
             }
             long uptimeMillis = SystemClock.uptimeMillis() - command.requestTime;
-            if (uptimeMillis <= 1000) {
-                return;
+            if (uptimeMillis > 1000) {
+                Log.w(this.mTag, "Notification sound delayed by " + uptimeMillis + "msecs");
             }
-            String str = this.mTag;
-            Log.w(str, "Notification sound delayed by " + uptimeMillis + "msecs");
         } catch (Exception e) {
-            String str2 = this.mTag;
-            Log.w(str2, "error loading sound for " + command.uri, e);
+            Log.w(this.mTag, "error loading sound for " + command.uri, e);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public final class CmdThread extends Thread {
+    private final class CmdThread extends Thread {
         CmdThread() {
             super("NotificationPlayer-" + NotificationPlayer.this.mTag);
         }
 
-        @Override // java.lang.Thread, java.lang.Runnable
         public void run() {
             Command command;
-            MediaPlayer mediaPlayer;
+            MediaPlayer access$700;
             while (true) {
                 synchronized (NotificationPlayer.this.mCmdQueue) {
                     command = (Command) NotificationPlayer.this.mCmdQueue.removeFirst();
@@ -202,52 +327,52 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
                     NotificationPlayer.this.startSound(command);
                 } else if (i == 2) {
                     synchronized (NotificationPlayer.this.mPlayerLock) {
-                        mediaPlayer = NotificationPlayer.this.mPlayer;
-                        NotificationPlayer.this.mPlayer = null;
+                        access$700 = NotificationPlayer.this.mPlayer;
+                        MediaPlayer unused = NotificationPlayer.this.mPlayer = null;
                     }
-                    if (mediaPlayer == null) {
-                        Log.w(NotificationPlayer.this.mTag, "STOP command without a player");
-                    } else {
+                    if (access$700 != null) {
                         long uptimeMillis = SystemClock.uptimeMillis() - command.requestTime;
                         if (uptimeMillis > 1000) {
-                            String str = NotificationPlayer.this.mTag;
-                            Log.w(str, "Notification stop delayed by " + uptimeMillis + "msecs");
+                            Log.w(NotificationPlayer.this.mTag, "Notification stop delayed by " + uptimeMillis + "msecs");
                         }
                         try {
-                            mediaPlayer.stop();
-                        } catch (Exception unused) {
+                            access$700.stop();
+                        } catch (Exception unused2) {
                         }
-                        mediaPlayer.release();
+                        access$700.release();
                         synchronized (NotificationPlayer.this.mQueueAudioFocusLock) {
                             if (NotificationPlayer.this.mAudioManagerWithAudioFocus != null) {
-                                NotificationPlayer.this.mAudioManagerWithAudioFocus.abandonAudioFocus(null);
-                                NotificationPlayer.this.mAudioManagerWithAudioFocus = null;
+                                NotificationPlayer.this.mAudioManagerWithAudioFocus.abandonAudioFocus((AudioManager.OnAudioFocusChangeListener) null);
+                                AudioManager unused3 = NotificationPlayer.this.mAudioManagerWithAudioFocus = null;
                             }
                         }
                         synchronized (NotificationPlayer.this.mCompletionHandlingLock) {
-                            if (NotificationPlayer.this.mLooper != null && NotificationPlayer.this.mLooper.getThread().getState() != Thread.State.TERMINATED) {
+                            if (!(NotificationPlayer.this.mLooper == null || NotificationPlayer.this.mLooper.getThread().getState() == Thread.State.TERMINATED)) {
                                 NotificationPlayer.this.mLooper.quit();
                             }
                         }
+                    } else {
+                        Log.w(NotificationPlayer.this.mTag, "STOP command without a player");
                     }
                 }
                 synchronized (NotificationPlayer.this.mCmdQueue) {
                     if (NotificationPlayer.this.mCmdQueue.size() == 0) {
-                        NotificationPlayer.this.mThread = null;
+                        CmdThread unused4 = NotificationPlayer.this.mThread = null;
                         NotificationPlayer.this.releaseWakeLock();
                         return;
                     }
                 }
             }
+            while (true) {
+            }
         }
     }
 
-    @Override // android.media.MediaPlayer.OnCompletionListener
     public void onCompletion(MediaPlayer mediaPlayer) {
         synchronized (this.mQueueAudioFocusLock) {
             AudioManager audioManager = this.mAudioManagerWithAudioFocus;
             if (audioManager != null) {
-                audioManager.abandonAudioFocus(null);
+                audioManager.abandonAudioFocus((AudioManager.OnAudioFocusChangeListener) null);
                 this.mAudioManagerWithAudioFocus = null;
             }
         }
@@ -272,10 +397,8 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
         }
     }
 
-    @Override // android.media.MediaPlayer.OnErrorListener
     public boolean onError(MediaPlayer mediaPlayer, int i, int i2) {
-        String str = this.mTag;
-        Log.e(str, "error " + i + " (extra=" + i2 + ") playing notification");
+        Log.e(this.mTag, "error " + i + " (extra=" + i2 + ") playing notification");
         onCompletion(mediaPlayer);
         return true;
     }
@@ -285,6 +408,22 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
             this.mTag = str;
         } else {
             this.mTag = "NotificationPlayer";
+        }
+    }
+
+    @Deprecated
+    public void play(Context context, Uri uri, boolean z, int i) {
+        PlayerBase.deprecateStreamTypeForPlayback(i, "NotificationPlayer", "play");
+        Command command = new Command();
+        command.requestTime = SystemClock.uptimeMillis();
+        command.code = 1;
+        command.context = context;
+        command.uri = uri;
+        command.looping = z;
+        command.attributes = new AudioAttributes.Builder().setInternalLegacyStreamType(i).build();
+        synchronized (this.mCmdQueue) {
+            enqueueLocked(command);
+            this.mState = 1;
         }
     }
 
@@ -314,7 +453,6 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
         }
     }
 
-    @GuardedBy({"mCmdQueue"})
     private void enqueueLocked(Command command) {
         this.mCmdQueue.add(command);
         if (this.mThread == null) {
@@ -327,14 +465,14 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
 
     public void setUsesWakeLock(Context context) {
         synchronized (this.mCmdQueue) {
-            if (this.mWakeLock != null || this.mThread != null) {
+            if (this.mWakeLock == null && this.mThread == null) {
+                this.mWakeLock = ((PowerManager) context.getSystemService("power")).newWakeLock(1, this.mTag);
+            } else {
                 throw new RuntimeException("assertion failed mWakeLock=" + this.mWakeLock + " mThread=" + this.mThread);
             }
-            this.mWakeLock = ((PowerManager) context.getSystemService("power")).newWakeLock(1, this.mTag);
         }
     }
 
-    @GuardedBy({"mCmdQueue"})
     private void acquireWakeLock() {
         PowerManager.WakeLock wakeLock = this.mWakeLock;
         if (wakeLock != null) {
@@ -342,8 +480,7 @@ public class NotificationPlayer implements MediaPlayer.OnCompletionListener, Med
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    @GuardedBy({"mCmdQueue"})
+    /* access modifiers changed from: private */
     public void releaseWakeLock() {
         PowerManager.WakeLock wakeLock = this.mWakeLock;
         if (wakeLock != null) {

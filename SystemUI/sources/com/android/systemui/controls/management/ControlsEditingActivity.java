@@ -2,8 +2,8 @@ package com.android.systemui.controls.management;
 
 import android.app.ActivityOptions;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
@@ -12,125 +12,88 @@ import android.view.ViewStub;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.systemui.R$dimen;
-import com.android.systemui.R$id;
-import com.android.systemui.R$layout;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.CustomIconCache;
 import com.android.systemui.controls.controller.ControlInfo;
 import com.android.systemui.controls.controller.ControlsControllerImpl;
 import com.android.systemui.controls.controller.StructureInfo;
-import com.android.systemui.controls.management.FavoritesModel;
-import com.android.systemui.controls.ui.ControlsActivity;
-import com.android.systemui.controls.ui.ControlsUiController;
-import com.android.systemui.settings.CurrentUserTracker;
+import com.android.systemui.controls.management.ControlAdapter;
+import com.android.systemui.controls.p010ui.ControlsActivity;
+import com.android.systemui.controls.p010ui.ControlsUiController;
 import com.android.systemui.util.LifecycleActivity;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import javax.inject.Inject;
+import kotlin.Metadata;
 import kotlin.Unit;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u0000^\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\b\u0003\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\r\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0007*\u0002\u000e\u0011\u0018\u0000 (2\u00020\u0001:\u0001(B'\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t¢\u0006\u0002\u0010\nJ\b\u0010\u001b\u001a\u00020\u001cH\u0002J\b\u0010\u001d\u001a\u00020\u001cH\u0002J\b\u0010\u001e\u001a\u00020\u001cH\u0002J\b\u0010\u001f\u001a\u00020\u001cH\u0016J\u0012\u0010 \u001a\u00020\u001c2\b\u0010!\u001a\u0004\u0018\u00010\"H\u0014J\b\u0010#\u001a\u00020\u001cH\u0014J\b\u0010$\u001a\u00020\u001cH\u0014J\b\u0010%\u001a\u00020\u001cH\u0014J\b\u0010&\u001a\u00020\u001cH\u0002J\b\u0010'\u001a\u00020\u001cH\u0002R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX.¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\r\u001a\u00020\u000eX\u0004¢\u0006\u0004\n\u0002\u0010\u000fR\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u0010\u0010\u0010\u001a\u00020\u0011X\u0004¢\u0006\u0004\n\u0002\u0010\u0012R\u000e\u0010\u0013\u001a\u00020\u0014X.¢\u0006\u0002\n\u0000R\u000e\u0010\u0015\u001a\u00020\u0016X.¢\u0006\u0002\n\u0000R\u000e\u0010\u0017\u001a\u00020\u0018X.¢\u0006\u0002\n\u0000R\u000e\u0010\u0019\u001a\u00020\u001aX.¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000¨\u0006)"}, mo64987d2 = {"Lcom/android/systemui/controls/management/ControlsEditingActivity;", "Lcom/android/systemui/util/LifecycleActivity;", "controller", "Lcom/android/systemui/controls/controller/ControlsControllerImpl;", "broadcastDispatcher", "Lcom/android/systemui/broadcast/BroadcastDispatcher;", "customIconCache", "Lcom/android/systemui/controls/CustomIconCache;", "uiController", "Lcom/android/systemui/controls/ui/ControlsUiController;", "(Lcom/android/systemui/controls/controller/ControlsControllerImpl;Lcom/android/systemui/broadcast/BroadcastDispatcher;Lcom/android/systemui/controls/CustomIconCache;Lcom/android/systemui/controls/ui/ControlsUiController;)V", "component", "Landroid/content/ComponentName;", "currentUserTracker", "com/android/systemui/controls/management/ControlsEditingActivity$currentUserTracker$1", "Lcom/android/systemui/controls/management/ControlsEditingActivity$currentUserTracker$1;", "favoritesModelCallback", "com/android/systemui/controls/management/ControlsEditingActivity$favoritesModelCallback$1", "Lcom/android/systemui/controls/management/ControlsEditingActivity$favoritesModelCallback$1;", "model", "Lcom/android/systemui/controls/management/FavoritesModel;", "saveButton", "Landroid/view/View;", "structure", "", "subtitle", "Landroid/widget/TextView;", "animateExitAndFinish", "", "bindButtons", "bindViews", "onBackPressed", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onDestroy", "onStart", "onStop", "saveFavorites", "setUpList", "Companion", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ControlsEditingActivity.kt */
-/* loaded from: classes.dex */
 public final class ControlsEditingActivity extends LifecycleActivity {
-    @NotNull
+    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    /* access modifiers changed from: private */
+    public static final int EMPTY_TEXT_ID = C1893R.string.controls_favorite_removed;
+    private static final String EXTRA_STRUCTURE = "extra_structure";
+    /* access modifiers changed from: private */
+    public static final int SUBTITLE_ID = C1893R.string.controls_favorite_rearrange;
+    private static final String TAG = "ControlsEditingActivity";
+    public Map<Integer, View> _$_findViewCache = new LinkedHashMap();
     private final BroadcastDispatcher broadcastDispatcher;
     private ComponentName component;
-    @NotNull
-    private final ControlsControllerImpl controller;
-    @NotNull
+    /* access modifiers changed from: private */
+    public final ControlsControllerImpl controller;
     private final ControlsEditingActivity$currentUserTracker$1 currentUserTracker;
-    @NotNull
     private final CustomIconCache customIconCache;
-    @NotNull
-    private final ControlsEditingActivity$favoritesModelCallback$1 favoritesModelCallback = new FavoritesModel.FavoritesModelCallback() { // from class: com.android.systemui.controls.management.ControlsEditingActivity$favoritesModelCallback$1
-        @Override // com.android.systemui.controls.management.FavoritesModel.FavoritesModelCallback
-        public void onNoneChanged(boolean z) {
-            TextView textView;
-            int i;
-            TextView textView2;
-            int i2;
-            if (z) {
-                textView2 = ControlsEditingActivity.this.subtitle;
-                if (textView2 == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("subtitle");
-                    throw null;
-                }
-                i2 = ControlsEditingActivity.EMPTY_TEXT_ID;
-                textView2.setText(i2);
-                return;
-            }
-            textView = ControlsEditingActivity.this.subtitle;
-            if (textView == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("subtitle");
-                throw null;
-            }
-            i = ControlsEditingActivity.SUBTITLE_ID;
-            textView.setText(i);
-        }
-
-        @Override // com.android.systemui.controls.management.ControlsModel.ControlsModelCallback
-        public void onFirstChange() {
-            View view;
-            view = ControlsEditingActivity.this.saveButton;
-            if (view != null) {
-                view.setEnabled(true);
-            } else {
-                Intrinsics.throwUninitializedPropertyAccessException("saveButton");
-                throw null;
-            }
-        }
-    };
+    private final ControlsEditingActivity$favoritesModelCallback$1 favoritesModelCallback;
     private FavoritesModel model;
-    private View saveButton;
+    /* access modifiers changed from: private */
+    public View saveButton;
     private CharSequence structure;
-    private TextView subtitle;
-    @NotNull
+    /* access modifiers changed from: private */
+    public TextView subtitle;
     private final ControlsUiController uiController;
-    @NotNull
-    public static final Companion Companion = new Companion(null);
-    private static final int SUBTITLE_ID = R$string.controls_favorite_rearrange;
-    private static final int EMPTY_TEXT_ID = R$string.controls_favorite_removed;
 
-    /* JADX WARN: Type inference failed for: r2v1, types: [com.android.systemui.controls.management.ControlsEditingActivity$currentUserTracker$1] */
-    /* JADX WARN: Type inference failed for: r2v2, types: [com.android.systemui.controls.management.ControlsEditingActivity$favoritesModelCallback$1] */
-    public ControlsEditingActivity(@NotNull ControlsControllerImpl controller, @NotNull final BroadcastDispatcher broadcastDispatcher, @NotNull CustomIconCache customIconCache, @NotNull ControlsUiController uiController) {
-        Intrinsics.checkNotNullParameter(controller, "controller");
-        Intrinsics.checkNotNullParameter(broadcastDispatcher, "broadcastDispatcher");
-        Intrinsics.checkNotNullParameter(customIconCache, "customIconCache");
-        Intrinsics.checkNotNullParameter(uiController, "uiController");
-        this.controller = controller;
-        this.broadcastDispatcher = broadcastDispatcher;
-        this.customIconCache = customIconCache;
-        this.uiController = uiController;
-        this.currentUserTracker = new CurrentUserTracker(broadcastDispatcher) { // from class: com.android.systemui.controls.management.ControlsEditingActivity$currentUserTracker$1
-            private final int startingUser;
-
-            /* JADX INFO: Access modifiers changed from: package-private */
-            {
-                ControlsControllerImpl controlsControllerImpl;
-                controlsControllerImpl = ControlsEditingActivity.this.controller;
-                this.startingUser = controlsControllerImpl.getCurrentUserId();
-            }
-
-            @Override // com.android.systemui.settings.CurrentUserTracker
-            public void onUserSwitched(int i) {
-                if (i != this.startingUser) {
-                    stopTracking();
-                    ControlsEditingActivity.this.finish();
-                }
-            }
-        };
+    public void _$_clearFindViewByIdCache() {
+        this._$_findViewCache.clear();
     }
 
+    public View _$_findCachedViewById(int i) {
+        Map<Integer, View> map = this._$_findViewCache;
+        View view = map.get(Integer.valueOf(i));
+        if (view != null) {
+            return view;
+        }
+        View findViewById = findViewById(i);
+        if (findViewById == null) {
+            return null;
+        }
+        map.put(Integer.valueOf(i), findViewById);
+        return findViewById;
+    }
+
+    @Inject
+    public ControlsEditingActivity(ControlsControllerImpl controlsControllerImpl, BroadcastDispatcher broadcastDispatcher2, CustomIconCache customIconCache2, ControlsUiController controlsUiController) {
+        Intrinsics.checkNotNullParameter(controlsControllerImpl, "controller");
+        Intrinsics.checkNotNullParameter(broadcastDispatcher2, "broadcastDispatcher");
+        Intrinsics.checkNotNullParameter(customIconCache2, "customIconCache");
+        Intrinsics.checkNotNullParameter(controlsUiController, "uiController");
+        this.controller = controlsControllerImpl;
+        this.broadcastDispatcher = broadcastDispatcher2;
+        this.customIconCache = customIconCache2;
+        this.uiController = controlsUiController;
+        this.currentUserTracker = new ControlsEditingActivity$currentUserTracker$1(this, broadcastDispatcher2);
+        this.favoritesModelCallback = new ControlsEditingActivity$favoritesModelCallback$1(this);
+    }
+
+    @Metadata(mo64986d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0003\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0004XD¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0006XT¢\u0006\u0002\n\u0000¨\u0006\t"}, mo64987d2 = {"Lcom/android/systemui/controls/management/ControlsEditingActivity$Companion;", "", "()V", "EMPTY_TEXT_ID", "", "EXTRA_STRUCTURE", "", "SUBTITLE_ID", "TAG", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: ControlsEditingActivity.kt */
-    /* loaded from: classes.dex */
     public static final class Companion {
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -140,18 +103,17 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.LifecycleActivity, android.app.Activity
-    public void onCreate(@Nullable Bundle bundle) {
+    /* access modifiers changed from: protected */
+    public void onCreate(Bundle bundle) {
         Unit unit;
         super.onCreate(bundle);
         ComponentName componentName = (ComponentName) getIntent().getParcelableExtra("android.intent.extra.COMPONENT_NAME");
         Unit unit2 = null;
-        if (componentName == null) {
-            unit = null;
-        } else {
+        if (componentName != null) {
             this.component = componentName;
             unit = Unit.INSTANCE;
+        } else {
+            unit = null;
         }
         if (unit == null) {
             finish();
@@ -168,195 +130,168 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         bindButtons();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.LifecycleActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onStart() {
         super.onStart();
         setUpList();
-        startTracking();
+        this.currentUserTracker.startTracking();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.LifecycleActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onStop() {
         super.onStop();
-        stopTracking();
+        this.currentUserTracker.stopTracking();
     }
 
-    @Override // android.app.Activity
     public void onBackPressed() {
         animateExitAndFinish();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void animateExitAndFinish() {
-        ViewGroup rootView = (ViewGroup) requireViewById(R$id.controls_management_root);
-        ControlsAnimations controlsAnimations = ControlsAnimations.INSTANCE;
-        Intrinsics.checkNotNullExpressionValue(rootView, "rootView");
-        ControlsAnimations.exitAnimation(rootView, new Runnable() { // from class: com.android.systemui.controls.management.ControlsEditingActivity$animateExitAndFinish$1
-            @Override // java.lang.Runnable
-            public void run() {
-                ControlsEditingActivity.this.finish();
-            }
-        }).start();
+    private final void animateExitAndFinish() {
+        ViewGroup viewGroup = (ViewGroup) requireViewById(C1893R.C1897id.controls_management_root);
+        Intrinsics.checkNotNullExpressionValue(viewGroup, "rootView");
+        ControlsAnimations.exitAnimation(viewGroup, new ControlsEditingActivity$animateExitAndFinish$1(this)).start();
     }
 
     private final void bindViews() {
-        setContentView(R$layout.controls_management);
-        Lifecycle mo1437getLifecycle = mo1437getLifecycle();
+        setContentView(C1893R.layout.controls_management);
+        Lifecycle lifecycle = getLifecycle();
         ControlsAnimations controlsAnimations = ControlsAnimations.INSTANCE;
-        View requireViewById = requireViewById(R$id.controls_management_root);
-        Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<ViewGroup>(R.id.controls_management_root)");
+        View requireViewById = requireViewById(C1893R.C1897id.controls_management_root);
+        Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<ViewGrou…controls_management_root)");
         Window window = getWindow();
         Intrinsics.checkNotNullExpressionValue(window, "window");
         Intent intent = getIntent();
         Intrinsics.checkNotNullExpressionValue(intent, "intent");
-        mo1437getLifecycle.addObserver(controlsAnimations.observerForAnimations((ViewGroup) requireViewById, window, intent));
-        ViewStub viewStub = (ViewStub) requireViewById(R$id.stub);
-        viewStub.setLayoutResource(R$layout.controls_management_editing);
+        lifecycle.addObserver(controlsAnimations.observerForAnimations((ViewGroup) requireViewById, window, intent));
+        ViewStub viewStub = (ViewStub) requireViewById(C1893R.C1897id.stub);
+        viewStub.setLayoutResource(C1893R.layout.controls_management_editing);
         viewStub.inflate();
-        TextView textView = (TextView) requireViewById(R$id.title);
+        TextView textView = (TextView) requireViewById(C1893R.C1897id.title);
         CharSequence charSequence = this.structure;
+        CharSequence charSequence2 = null;
         if (charSequence == null) {
             Intrinsics.throwUninitializedPropertyAccessException("structure");
-            throw null;
+            charSequence = null;
         }
         textView.setText(charSequence);
-        CharSequence charSequence2 = this.structure;
-        if (charSequence2 == null) {
+        CharSequence charSequence3 = this.structure;
+        if (charSequence3 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("structure");
-            throw null;
+        } else {
+            charSequence2 = charSequence3;
         }
         setTitle(charSequence2);
-        View requireViewById2 = requireViewById(R$id.subtitle);
+        View requireViewById2 = requireViewById(C1893R.C1897id.subtitle);
         TextView textView2 = (TextView) requireViewById2;
         textView2.setText(SUBTITLE_ID);
-        Unit unit = Unit.INSTANCE;
-        Intrinsics.checkNotNullExpressionValue(requireViewById2, "requireViewById<TextView>(R.id.subtitle).apply {\n            setText(SUBTITLE_ID)\n        }");
+        Intrinsics.checkNotNullExpressionValue(requireViewById2, "requireViewById<TextView…xt(SUBTITLE_ID)\n        }");
         this.subtitle = textView2;
     }
 
     private final void bindButtons() {
-        View requireViewById = requireViewById(R$id.done);
+        View requireViewById = requireViewById(C1893R.C1897id.done);
         Button button = (Button) requireViewById;
         button.setEnabled(false);
-        button.setText(R$string.save);
-        button.setOnClickListener(new View.OnClickListener() { // from class: com.android.systemui.controls.management.ControlsEditingActivity$bindButtons$1$1
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                ControlsEditingActivity.this.saveFavorites();
-                ControlsEditingActivity.this.startActivity(new Intent(ControlsEditingActivity.this.getApplicationContext(), ControlsActivity.class), ActivityOptions.makeSceneTransitionAnimation(ControlsEditingActivity.this, new Pair[0]).toBundle());
-                ControlsEditingActivity.this.animateExitAndFinish();
-            }
-        });
-        Unit unit = Unit.INSTANCE;
-        Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<Button>(R.id.done).apply {\n            isEnabled = false\n            setText(R.string.save)\n            setOnClickListener {\n                saveFavorites()\n                startActivity(\n                    Intent(applicationContext, ControlsActivity::class.java),\n                    ActivityOptions\n                        .makeSceneTransitionAnimation(this@ControlsEditingActivity).toBundle()\n                )\n                animateExitAndFinish()\n            }\n        }");
+        button.setText(C1893R.string.save);
+        button.setOnClickListener(new ControlsEditingActivity$$ExternalSyntheticLambda0(this));
+        Intrinsics.checkNotNullExpressionValue(requireViewById, "requireViewById<Button>(…)\n            }\n        }");
         this.saveButton = requireViewById;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void saveFavorites() {
+    /* access modifiers changed from: private */
+    /* renamed from: bindButtons$lambda-6$lambda-5  reason: not valid java name */
+    public static final void m2638bindButtons$lambda6$lambda5(ControlsEditingActivity controlsEditingActivity, View view) {
+        Intrinsics.checkNotNullParameter(controlsEditingActivity, "this$0");
+        controlsEditingActivity.saveFavorites();
+        controlsEditingActivity.startActivity(new Intent(controlsEditingActivity.getApplicationContext(), ControlsActivity.class), ActivityOptions.makeSceneTransitionAnimation(controlsEditingActivity, new Pair[0]).toBundle());
+        controlsEditingActivity.animateExitAndFinish();
+    }
+
+    private final void saveFavorites() {
         ControlsControllerImpl controlsControllerImpl = this.controller;
         ComponentName componentName = this.component;
+        FavoritesModel favoritesModel = null;
         if (componentName == null) {
             Intrinsics.throwUninitializedPropertyAccessException("component");
-            throw null;
+            componentName = null;
         }
         CharSequence charSequence = this.structure;
         if (charSequence == null) {
             Intrinsics.throwUninitializedPropertyAccessException("structure");
-            throw null;
+            charSequence = null;
         }
-        FavoritesModel favoritesModel = this.model;
-        if (favoritesModel != null) {
-            controlsControllerImpl.replaceFavoritesForStructure(new StructureInfo(componentName, charSequence, favoritesModel.getFavorites()));
-        } else {
+        FavoritesModel favoritesModel2 = this.model;
+        if (favoritesModel2 == null) {
             Intrinsics.throwUninitializedPropertyAccessException("model");
-            throw null;
+        } else {
+            favoritesModel = favoritesModel2;
         }
+        controlsControllerImpl.replaceFavoritesForStructure(new StructureInfo(componentName, charSequence, favoritesModel.getFavorites()));
     }
 
     private final void setUpList() {
         ControlsControllerImpl controlsControllerImpl = this.controller;
         ComponentName componentName = this.component;
+        FavoritesModel favoritesModel = null;
         if (componentName == null) {
             Intrinsics.throwUninitializedPropertyAccessException("component");
-            throw null;
+            componentName = null;
         }
         CharSequence charSequence = this.structure;
         if (charSequence == null) {
             Intrinsics.throwUninitializedPropertyAccessException("structure");
-            throw null;
+            charSequence = null;
         }
         List<ControlInfo> favoritesForStructure = controlsControllerImpl.getFavoritesForStructure(componentName, charSequence);
-        CustomIconCache customIconCache = this.customIconCache;
+        CustomIconCache customIconCache2 = this.customIconCache;
         ComponentName componentName2 = this.component;
-        if (componentName2 != null) {
-            this.model = new FavoritesModel(customIconCache, componentName2, favoritesForStructure, this.favoritesModelCallback);
-            float f = getResources().getFloat(R$dimen.control_card_elevation);
-            final RecyclerView recyclerView = (RecyclerView) requireViewById(R$id.list);
-            recyclerView.setAlpha(0.0f);
-            ControlAdapter controlAdapter = new ControlAdapter(f);
-            controlAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() { // from class: com.android.systemui.controls.management.ControlsEditingActivity$setUpList$adapter$1$1
-                private boolean hasAnimated;
-
-                @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
-                public void onChanged() {
-                    if (!this.hasAnimated) {
-                        this.hasAnimated = true;
-                        ControlsAnimations controlsAnimations = ControlsAnimations.INSTANCE;
-                        RecyclerView recyclerView2 = RecyclerView.this;
-                        Intrinsics.checkNotNullExpressionValue(recyclerView2, "recyclerView");
-                        controlsAnimations.enterAnimation(recyclerView2).start();
-                    }
-                }
-            });
-            int dimensionPixelSize = getResources().getDimensionPixelSize(R$dimen.controls_card_margin);
-            MarginItemDecorator marginItemDecorator = new MarginItemDecorator(dimensionPixelSize, dimensionPixelSize);
-            recyclerView.setAdapter(controlAdapter);
-            final Context context = recyclerView.getContext();
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(context) { // from class: com.android.systemui.controls.management.ControlsEditingActivity$setUpList$1$1
-                @Override // androidx.recyclerview.widget.GridLayoutManager, androidx.recyclerview.widget.RecyclerView.LayoutManager
-                public int getRowCountForAccessibility(@NotNull RecyclerView.Recycler recycler, @NotNull RecyclerView.State state) {
-                    Intrinsics.checkNotNullParameter(recycler, "recycler");
-                    Intrinsics.checkNotNullParameter(state, "state");
-                    int rowCountForAccessibility = super.getRowCountForAccessibility(recycler, state);
-                    return rowCountForAccessibility > 0 ? rowCountForAccessibility - 1 : rowCountForAccessibility;
-                }
-            };
-            gridLayoutManager.setSpanSizeLookup(controlAdapter.getSpanSizeLookup());
-            Unit unit = Unit.INSTANCE;
-            recyclerView.setLayoutManager(gridLayoutManager);
-            recyclerView.addItemDecoration(marginItemDecorator);
-            FavoritesModel favoritesModel = this.model;
-            if (favoritesModel == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("model");
-                throw null;
-            }
-            controlAdapter.changeModel(favoritesModel);
-            FavoritesModel favoritesModel2 = this.model;
-            if (favoritesModel2 == null) {
-                Intrinsics.throwUninitializedPropertyAccessException("model");
-                throw null;
-            }
-            favoritesModel2.attachAdapter(controlAdapter);
-            FavoritesModel favoritesModel3 = this.model;
-            if (favoritesModel3 != null) {
-                new ItemTouchHelper(favoritesModel3.getItemTouchHelperCallback()).attachToRecyclerView(recyclerView);
-                return;
-            } else {
-                Intrinsics.throwUninitializedPropertyAccessException("model");
-                throw null;
-            }
+        if (componentName2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("component");
+            componentName2 = null;
         }
-        Intrinsics.throwUninitializedPropertyAccessException("component");
-        throw null;
+        this.model = new FavoritesModel(customIconCache2, componentName2, favoritesForStructure, this.favoritesModelCallback);
+        float f = getResources().getFloat(C1893R.dimen.control_card_elevation);
+        RecyclerView recyclerView = (RecyclerView) requireViewById(C1893R.C1897id.list);
+        recyclerView.setAlpha(0.0f);
+        ControlAdapter controlAdapter = new ControlAdapter(f);
+        controlAdapter.registerAdapterDataObserver(new ControlsEditingActivity$setUpList$adapter$1$1(recyclerView));
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C1893R.dimen.controls_card_margin);
+        MarginItemDecorator marginItemDecorator = new MarginItemDecorator(dimensionPixelSize, dimensionPixelSize);
+        ControlAdapter.Companion companion = ControlAdapter.Companion;
+        Resources resources = getResources();
+        Intrinsics.checkNotNullExpressionValue(resources, "resources");
+        int findMaxColumns = companion.findMaxColumns(resources);
+        RecyclerView.Adapter adapter = controlAdapter;
+        recyclerView.setAdapter(adapter);
+        ControlsEditingActivity$setUpList$1$1 controlsEditingActivity$setUpList$1$1 = new ControlsEditingActivity$setUpList$1$1(findMaxColumns, recyclerView.getContext());
+        controlsEditingActivity$setUpList$1$1.setSpanSizeLookup(new ControlsEditingActivity$setUpList$1$2$1(controlAdapter, findMaxColumns));
+        recyclerView.setLayoutManager(controlsEditingActivity$setUpList$1$1);
+        recyclerView.addItemDecoration(marginItemDecorator);
+        FavoritesModel favoritesModel2 = this.model;
+        if (favoritesModel2 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("model");
+            favoritesModel2 = null;
+        }
+        controlAdapter.changeModel(favoritesModel2);
+        FavoritesModel favoritesModel3 = this.model;
+        if (favoritesModel3 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("model");
+            favoritesModel3 = null;
+        }
+        favoritesModel3.attachAdapter(adapter);
+        FavoritesModel favoritesModel4 = this.model;
+        if (favoritesModel4 == null) {
+            Intrinsics.throwUninitializedPropertyAccessException("model");
+        } else {
+            favoritesModel = favoritesModel4;
+        }
+        new ItemTouchHelper(favoritesModel.getItemTouchHelperCallback()).attachToRecyclerView(recyclerView);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.android.systemui.util.LifecycleActivity, android.app.Activity
+    /* access modifiers changed from: protected */
     public void onDestroy() {
-        stopTracking();
+        this.currentUserTracker.stopTracking();
         super.onDestroy();
     }
 }

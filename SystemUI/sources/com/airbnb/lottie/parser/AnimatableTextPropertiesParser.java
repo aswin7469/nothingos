@@ -5,25 +5,28 @@ import com.airbnb.lottie.model.animatable.AnimatableColorValue;
 import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.animatable.AnimatableTextProperties;
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
-/* loaded from: classes.dex */
+import java.p026io.IOException;
+
 public class AnimatableTextPropertiesParser {
-    private static JsonReader.Options PROPERTIES_NAMES = JsonReader.Options.of("a");
-    private static JsonReader.Options ANIMATABLE_PROPERTIES_NAMES = JsonReader.Options.of("fc", "sc", "sw", "t");
+    private static JsonReader.Options ANIMATABLE_PROPERTIES_NAMES = JsonReader.Options.m137of("fc", "sc", "sw", "t");
+    private static JsonReader.Options PROPERTIES_NAMES = JsonReader.Options.m137of("a");
+
+    private AnimatableTextPropertiesParser() {
+    }
 
     public static AnimatableTextProperties parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         jsonReader.beginObject();
         AnimatableTextProperties animatableTextProperties = null;
         while (jsonReader.hasNext()) {
-            if (jsonReader.selectName(PROPERTIES_NAMES) == 0) {
-                animatableTextProperties = parseAnimatableTextProperties(jsonReader, lottieComposition);
-            } else {
+            if (jsonReader.selectName(PROPERTIES_NAMES) != 0) {
                 jsonReader.skipName();
                 jsonReader.skipValue();
+            } else {
+                animatableTextProperties = parseAnimatableTextProperties(jsonReader, lottieComposition);
             }
         }
         jsonReader.endObject();
-        return animatableTextProperties == null ? new AnimatableTextProperties(null, null, null, null) : animatableTextProperties;
+        return animatableTextProperties == null ? new AnimatableTextProperties((AnimatableColorValue) null, (AnimatableColorValue) null, (AnimatableFloatValue) null, (AnimatableFloatValue) null) : animatableTextProperties;
     }
 
     private static AnimatableTextProperties parseAnimatableTextProperties(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
@@ -40,11 +43,11 @@ public class AnimatableTextPropertiesParser {
                 animatableColorValue2 = AnimatableValueParser.parseColor(jsonReader, lottieComposition);
             } else if (selectName == 2) {
                 animatableFloatValue = AnimatableValueParser.parseFloat(jsonReader, lottieComposition);
-            } else if (selectName == 3) {
-                animatableFloatValue2 = AnimatableValueParser.parseFloat(jsonReader, lottieComposition);
-            } else {
+            } else if (selectName != 3) {
                 jsonReader.skipName();
                 jsonReader.skipValue();
+            } else {
+                animatableFloatValue2 = AnimatableValueParser.parseFloat(jsonReader, lottieComposition);
             }
         }
         jsonReader.endObject();

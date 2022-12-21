@@ -4,10 +4,9 @@ import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.systemui.Dumpable;
 import java.util.Collection;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 public interface BluetoothController extends CallbackController<Callback>, Dumpable {
 
-    /* loaded from: classes2.dex */
     public interface Callback {
         void onBluetoothDevicesChanged();
 
@@ -26,9 +25,13 @@ public interface BluetoothController extends CallbackController<Callback>, Dumpa
 
     int getBondState(CachedBluetoothDevice cachedBluetoothDevice);
 
+    String getConnectedDeviceName();
+
     List<CachedBluetoothDevice> getConnectedDevices();
 
     Collection<CachedBluetoothDevice> getDevices();
+
+    int getMaxConnectionState(CachedBluetoothDevice cachedBluetoothDevice);
 
     boolean isBluetoothAudioActive();
 

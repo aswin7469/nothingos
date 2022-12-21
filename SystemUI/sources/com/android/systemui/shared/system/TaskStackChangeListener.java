@@ -3,83 +3,84 @@ package com.android.systemui.shared.system;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import com.android.systemui.shared.recents.model.ThumbnailData;
-/* loaded from: classes.dex */
-public abstract class TaskStackChangeListener {
-    public void onActivityDismissingDockedStack() {
+
+public interface TaskStackChangeListener {
+    void onActivityDismissingDockedStack() {
     }
 
-    public void onActivityForcedResizable(String str, int i, int i2) {
+    void onActivityForcedResizable(String str, int i, int i2) {
     }
 
-    public void onActivityLaunchOnSecondaryDisplayFailed() {
+    void onActivityLaunchOnSecondaryDisplayFailed() {
     }
 
-    public void onActivityLaunchOnSecondaryDisplayRerouted() {
+    void onActivityLaunchOnSecondaryDisplayRerouted() {
     }
 
-    public void onActivityPinned(String str, int i, int i2, int i3) {
+    void onActivityPinned(String str, int i, int i2, int i3) {
     }
 
-    public void onActivityRequestedOrientationChanged(int i, int i2) {
+    void onActivityRequestedOrientationChanged(int i, int i2) {
     }
 
-    public void onActivityRestartAttempt(ActivityManager.RunningTaskInfo runningTaskInfo, boolean z, boolean z2, boolean z3) {
+    void onActivityRestartAttempt(ActivityManager.RunningTaskInfo runningTaskInfo, boolean z, boolean z2, boolean z3) {
     }
 
-    public void onActivityRotation(int i) {
+    void onActivityRotation(int i) {
     }
 
-    public void onActivityUnpinned() {
+    void onActivityUnpinned() {
     }
 
-    public void onBackPressedOnTaskRoot(ActivityManager.RunningTaskInfo runningTaskInfo) {
+    void onBackPressedOnTaskRoot(ActivityManager.RunningTaskInfo runningTaskInfo) {
     }
 
-    public void onLockTaskModeChanged(int i) {
+    void onLockTaskModeChanged(int i) {
     }
 
-    public void onRecentTaskListFrozenChanged(boolean z) {
+    void onRecentTaskListFrozenChanged(boolean z) {
     }
 
-    public void onRecentTaskListUpdated() {
+    void onRecentTaskListUpdated() {
     }
 
-    public void onTaskCreated(int i, ComponentName componentName) {
+    void onTaskCreated(int i, ComponentName componentName) {
     }
 
-    public void onTaskDescriptionChanged(ActivityManager.RunningTaskInfo runningTaskInfo) {
+    void onTaskDescriptionChanged(ActivityManager.RunningTaskInfo runningTaskInfo) {
     }
 
-    public void onTaskDisplayChanged(int i, int i2) {
+    void onTaskDisplayChanged(int i, int i2) {
     }
 
-    public void onTaskMovedToFront(int i) {
+    void onTaskMovedToFront(int i) {
     }
 
-    public void onTaskProfileLocked(int i, int i2) {
+    void onTaskProfileLocked(ActivityManager.RunningTaskInfo runningTaskInfo) {
     }
 
-    public void onTaskRemoved(int i) {
+    void onTaskRemoved(int i) {
     }
 
-    public void onTaskSnapshotChanged(int i, ThumbnailData thumbnailData) {
+    boolean onTaskSnapshotChanged(int i, ThumbnailData thumbnailData) {
+        return false;
     }
 
-    public void onTaskStackChanged() {
+    void onTaskStackChanged() {
     }
 
-    public void onTaskStackChangedBackground() {
+    void onTaskStackChangedBackground() {
     }
 
-    public void onActivityLaunchOnSecondaryDisplayFailed(ActivityManager.RunningTaskInfo runningTaskInfo) {
+    void onActivityLaunchOnSecondaryDisplayFailed(ActivityManager.RunningTaskInfo runningTaskInfo) {
         onActivityLaunchOnSecondaryDisplayFailed();
     }
 
-    public void onActivityLaunchOnSecondaryDisplayRerouted(ActivityManager.RunningTaskInfo runningTaskInfo) {
+    void onActivityLaunchOnSecondaryDisplayRerouted(ActivityManager.RunningTaskInfo runningTaskInfo) {
         onActivityLaunchOnSecondaryDisplayRerouted();
     }
 
-    public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
+    void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
         onTaskMovedToFront(runningTaskInfo.taskId);
     }
 }

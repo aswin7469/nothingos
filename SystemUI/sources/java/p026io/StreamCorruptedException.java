@@ -1,0 +1,13 @@
+package java.p026io;
+
+/* renamed from: java.io.StreamCorruptedException */
+public class StreamCorruptedException extends ObjectStreamException {
+    private static final long serialVersionUID = 8983558202217591746L;
+
+    public StreamCorruptedException(String str) {
+        super(str);
+    }
+
+    public StreamCorruptedException() {
+    }
+}

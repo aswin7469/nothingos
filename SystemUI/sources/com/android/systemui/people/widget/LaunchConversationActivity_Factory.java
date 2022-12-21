@@ -2,36 +2,37 @@ package com.android.systemui.people.widget;
 
 import android.os.UserManager;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
+import com.android.systemui.statusbar.notification.collection.render.NotificationVisibilityProvider;
 import com.android.systemui.wmshell.BubblesManager;
 import dagger.internal.Factory;
 import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class LaunchConversationActivity_Factory implements Factory<LaunchConversationActivity> {
     private final Provider<Optional<BubblesManager>> bubblesManagerOptionalProvider;
     private final Provider<CommandQueue> commandQueueProvider;
-    private final Provider<NotificationEntryManager> notificationEntryManagerProvider;
+    private final Provider<CommonNotifCollection> commonNotifCollectionProvider;
     private final Provider<UserManager> userManagerProvider;
+    private final Provider<NotificationVisibilityProvider> visibilityProvider;
 
-    public LaunchConversationActivity_Factory(Provider<NotificationEntryManager> provider, Provider<Optional<BubblesManager>> provider2, Provider<UserManager> provider3, Provider<CommandQueue> provider4) {
-        this.notificationEntryManagerProvider = provider;
-        this.bubblesManagerOptionalProvider = provider2;
-        this.userManagerProvider = provider3;
-        this.commandQueueProvider = provider4;
+    public LaunchConversationActivity_Factory(Provider<NotificationVisibilityProvider> provider, Provider<CommonNotifCollection> provider2, Provider<Optional<BubblesManager>> provider3, Provider<UserManager> provider4, Provider<CommandQueue> provider5) {
+        this.visibilityProvider = provider;
+        this.commonNotifCollectionProvider = provider2;
+        this.bubblesManagerOptionalProvider = provider3;
+        this.userManagerProvider = provider4;
+        this.commandQueueProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LaunchConversationActivity mo1933get() {
-        return newInstance(this.notificationEntryManagerProvider.mo1933get(), this.bubblesManagerOptionalProvider.mo1933get(), this.userManagerProvider.mo1933get(), this.commandQueueProvider.mo1933get());
+    public LaunchConversationActivity get() {
+        return newInstance(this.visibilityProvider.get(), this.commonNotifCollectionProvider.get(), this.bubblesManagerOptionalProvider.get(), this.userManagerProvider.get(), this.commandQueueProvider.get());
     }
 
-    public static LaunchConversationActivity_Factory create(Provider<NotificationEntryManager> provider, Provider<Optional<BubblesManager>> provider2, Provider<UserManager> provider3, Provider<CommandQueue> provider4) {
-        return new LaunchConversationActivity_Factory(provider, provider2, provider3, provider4);
+    public static LaunchConversationActivity_Factory create(Provider<NotificationVisibilityProvider> provider, Provider<CommonNotifCollection> provider2, Provider<Optional<BubblesManager>> provider3, Provider<UserManager> provider4, Provider<CommandQueue> provider5) {
+        return new LaunchConversationActivity_Factory(provider, provider2, provider3, provider4, provider5);
     }
 
-    public static LaunchConversationActivity newInstance(NotificationEntryManager notificationEntryManager, Optional<BubblesManager> optional, UserManager userManager, CommandQueue commandQueue) {
-        return new LaunchConversationActivity(notificationEntryManager, optional, userManager, commandQueue);
+    public static LaunchConversationActivity newInstance(NotificationVisibilityProvider notificationVisibilityProvider, CommonNotifCollection commonNotifCollection, Optional<BubblesManager> optional, UserManager userManager, CommandQueue commandQueue) {
+        return new LaunchConversationActivity(notificationVisibilityProvider, commonNotifCollection, optional, userManager, commandQueue);
     }
 }

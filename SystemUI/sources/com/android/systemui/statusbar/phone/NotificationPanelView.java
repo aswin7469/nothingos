@@ -6,20 +6,22 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
-import com.android.systemui.R$id;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+
 public class NotificationPanelView extends PanelView {
+    static final String COUNTER_PANEL_OPEN = "panel_open";
+    static final String COUNTER_PANEL_OPEN_QS = "panel_open_qs";
+    private static final boolean DEBUG = false;
+    public static final int FLING_EXPAND = 0;
     private final Paint mAlphaPaint;
     private int mCurrentPanelAlpha;
     private boolean mDozing;
     private RtlChangeListener mRtlChangeListener;
 
-    /* loaded from: classes.dex */
     interface RtlChangeListener {
         void onRtlPropertielsChanged(int i);
     }
 
-    @Override // android.widget.FrameLayout, android.view.ViewGroup
     public boolean shouldDelayChildPressedState() {
         return true;
     }
@@ -33,7 +35,6 @@ public class NotificationPanelView extends PanelView {
         setBackgroundColor(0);
     }
 
-    @Override // android.view.View
     public void onRtlPropertiesChanged(int i) {
         RtlChangeListener rtlChangeListener = this.mRtlChangeListener;
         if (rtlChangeListener != null) {
@@ -41,20 +42,20 @@ public class NotificationPanelView extends PanelView {
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void dispatchDraw(Canvas canvas) {
+    /* access modifiers changed from: protected */
+    public void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
         if (this.mCurrentPanelAlpha != 255) {
-            canvas.drawRect(0.0f, 0.0f, canvas.getWidth(), canvas.getHeight(), this.mAlphaPaint);
+            canvas.drawRect(0.0f, 0.0f, (float) canvas.getWidth(), (float) canvas.getHeight(), this.mAlphaPaint);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getCurrentPanelAlpha() {
-        return this.mCurrentPanelAlpha;
+        return (float) this.mCurrentPanelAlpha;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setPanelAlphaInternal(float f) {
         int i = (int) f;
         this.mCurrentPanelAlpha = i;
@@ -66,17 +67,16 @@ public class NotificationPanelView extends PanelView {
         this.mDozing = z;
     }
 
-    @Override // android.view.View
     public boolean hasOverlappingRendering() {
         return !this.mDozing;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void setRtlChangeListener(RtlChangeListener rtlChangeListener) {
         this.mRtlChangeListener = rtlChangeListener;
     }
 
     public TapAgainView getTapAgainView() {
-        return (TapAgainView) findViewById(R$id.shade_falsing_tap_again);
+        return (TapAgainView) findViewById(C1893R.C1897id.shade_falsing_tap_again);
     }
 }

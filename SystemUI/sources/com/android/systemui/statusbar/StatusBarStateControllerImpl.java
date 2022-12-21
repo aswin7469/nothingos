@@ -4,84 +4,110 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.os.SystemProperties;
+import android.os.Trace;
 import android.text.format.DateFormat;
 import android.util.FloatProperty;
 import android.util.Log;
+import android.view.Choreographer;
+import android.view.InsetsFlags;
+import android.view.InsetsVisibilities;
 import android.view.View;
+import android.view.ViewDebug;
 import android.view.animation.Interpolator;
-import com.android.internal.annotations.GuardedBy;
 import com.android.internal.jank.InteractionJankMonitor;
 import com.android.internal.logging.UiEventLogger;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dumpable;
 import com.android.systemui.animation.Interpolators;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dump.DumpManager;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.policy.CallbackController;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import com.nothing.systemui.util.NTLogUtil;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class StatusBarStateControllerImpl implements SysuiStatusBarStateController, CallbackController<StatusBarStateController.StateListener>, Dumpable {
+    private static final boolean DEBUG_IMMERSIVE_APPS = SystemProperties.getBoolean("persist.debug.immersive_apps", false);
+    private static final int HISTORY_SIZE = 32;
+    private static final int MAX_STATE = 2;
+    private static final int MIN_STATE = 0;
+    private static final FloatProperty<StatusBarStateControllerImpl> SET_DARK_AMOUNT_PROPERTY = new FloatProperty<StatusBarStateControllerImpl>("mDozeAmount") {
+        public /* bridge */ /* synthetic */ void set(Object obj, Object obj2) {
+            super.set(obj, (Float) obj2);
+        }
+
+        public void setValue(StatusBarStateControllerImpl statusBarStateControllerImpl, float f) {
+            statusBarStateControllerImpl.setDozeAmountInternal(f);
+        }
+
+        public Float get(StatusBarStateControllerImpl statusBarStateControllerImpl) {
+            return Float.valueOf(statusBarStateControllerImpl.mDozeAmount);
+        }
+    };
+    private static final String TAG = "SbStateController";
+    private static final Comparator<SysuiStatusBarStateController.RankedListener> sComparator = Comparator.comparingInt(new StatusBarStateControllerImpl$$ExternalSyntheticLambda2());
     private ValueAnimator mDarkAnimator;
-    private float mDozeAmount;
+    /* access modifiers changed from: private */
+    public float mDozeAmount;
     private float mDozeAmountTarget;
+    private Interpolator mDozeInterpolator;
+    private HistoricalState[] mHistoricalRecords;
+    private int mHistoryIndex;
+    private final InteractionJankMonitor mInteractionJankMonitor;
     private boolean mIsDozing;
     private boolean mIsExpanded;
+    private boolean mIsFullscreen;
     private boolean mKeyguardRequested;
     private int mLastState;
     private boolean mLeaveOpenOnKeyguardHide;
+    private final ArrayList<SysuiStatusBarStateController.RankedListener> mListeners = new ArrayList<>();
     private boolean mPulsing;
     private int mState;
     private final UiEventLogger mUiEventLogger;
     private int mUpcomingState;
     private View mView;
-    private static final Comparator<SysuiStatusBarStateController.RankedListener> sComparator = Comparator.comparingInt(StatusBarStateControllerImpl$$ExternalSyntheticLambda1.INSTANCE);
-    private static final FloatProperty<StatusBarStateControllerImpl> SET_DARK_AMOUNT_PROPERTY = new FloatProperty<StatusBarStateControllerImpl>("mDozeAmount") { // from class: com.android.systemui.statusbar.StatusBarStateControllerImpl.1
-        @Override // android.util.FloatProperty
-        public void setValue(StatusBarStateControllerImpl statusBarStateControllerImpl, float f) {
-            statusBarStateControllerImpl.setDozeAmountInternal(f);
-        }
 
-        @Override // android.util.Property
-        public Float get(StatusBarStateControllerImpl statusBarStateControllerImpl) {
-            return Float.valueOf(statusBarStateControllerImpl.mDozeAmount);
-        }
-    };
-    private final ArrayList<SysuiStatusBarStateController.RankedListener> mListeners = new ArrayList<>();
-    private int mHistoryIndex = 0;
-    private HistoricalState[] mHistoricalRecords = new HistoricalState[32];
-    private boolean mIsFullscreen = false;
-    private Interpolator mDozeInterpolator = Interpolators.FAST_OUT_SLOW_IN;
-
-    public StatusBarStateControllerImpl(UiEventLogger uiEventLogger) {
+    @Inject
+    public StatusBarStateControllerImpl(UiEventLogger uiEventLogger, DumpManager dumpManager, InteractionJankMonitor interactionJankMonitor) {
+        this.mHistoryIndex = 0;
+        this.mHistoricalRecords = new HistoricalState[32];
+        this.mIsFullscreen = false;
+        this.mDozeInterpolator = Interpolators.FAST_OUT_SLOW_IN;
         this.mUiEventLogger = uiEventLogger;
+        this.mInteractionJankMonitor = interactionJankMonitor;
         for (int i = 0; i < 32; i++) {
             this.mHistoricalRecords[i] = new HistoricalState();
         }
+        dumpManager.registerDumpable(this);
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public int getState() {
         return this.mState;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean setState(int i, boolean z) {
-        if (i > 3 || i < 0) {
+        if (i > 2 || i < 0) {
             throw new IllegalArgumentException("Invalid state " + i);
-        } else if (!z && i == this.mState) {
+        } else if (!z && i == this.mState && i == this.mUpcomingState) {
             return false;
         } else {
-            recordHistoricalState(i, this.mState);
+            if (i != this.mUpcomingState) {
+                Log.d(TAG, "setState: requested state " + StatusBarState.toString(i) + "!= upcomingState: " + StatusBarState.toString(this.mUpcomingState) + ". This usually means the status bar state transition was interrupted before the upcoming state could be applied.");
+            }
+            recordHistoricalState(i, this.mState, false);
             if (this.mState == 0 && i == 2) {
-                Log.e("SbStateController", "Invalid state transition: SHADE -> SHADE_LOCKED", new Throwable());
+                Log.e(TAG, "Invalid state transition: SHADE -> SHADE_LOCKED", new Throwable());
             }
             synchronized (this.mListeners) {
-                String str = StatusBarStateControllerImpl.class.getSimpleName() + "#setState(" + i + ")";
+                String str = getClass().getSimpleName() + "#setState(" + i + NavigationBarInflaterView.KEY_CODE_END;
                 DejankUtils.startDetectingBlockingIpcs(str);
                 Iterator it = new ArrayList(this.mListeners).iterator();
                 while (it.hasNext()) {
@@ -89,8 +115,9 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
                 }
                 this.mLastState = this.mState;
                 this.mState = i;
-                this.mUpcomingState = i;
-                this.mUiEventLogger.log(StatusBarStateEvent.fromState(i));
+                updateUpcomingState(i);
+                this.mUiEventLogger.log(StatusBarStateEvent.fromState(this.mState));
+                Trace.instantForTrack(4096, "UI Events", "StatusBarState " + str);
                 Iterator it2 = new ArrayList(this.mListeners).iterator();
                 while (it2.hasNext()) {
                     ((SysuiStatusBarStateController.RankedListener) it2.next()).mListener.onStateChanged(this.mState);
@@ -105,43 +132,47 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         }
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public void setUpcomingState(int i) {
-        this.mUpcomingState = i;
+        recordHistoricalState(i, this.mState, true);
+        updateUpcomingState(i);
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
+    private void updateUpcomingState(int i) {
+        if (this.mUpcomingState != i) {
+            this.mUpcomingState = i;
+            Iterator it = new ArrayList(this.mListeners).iterator();
+            while (it.hasNext()) {
+                ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onUpcomingStateChanged(this.mUpcomingState);
+            }
+        }
+    }
+
     public int getCurrentOrUpcomingState() {
         return this.mUpcomingState;
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public boolean isDozing() {
         return this.mIsDozing;
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public boolean isPulsing() {
         return this.mPulsing;
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public float getDozeAmount() {
         return this.mDozeAmount;
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public boolean isExpanded() {
         return this.mIsExpanded;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean setPanelExpanded(boolean z) {
         if (this.mIsExpanded == z) {
             return false;
         }
         this.mIsExpanded = z;
-        String str = StatusBarStateControllerImpl.class.getSimpleName() + "#setIsExpanded";
+        String str = getClass().getSimpleName() + "#setIsExpanded";
         DejankUtils.startDetectingBlockingIpcs(str);
         Iterator it = new ArrayList(this.mListeners).iterator();
         while (it.hasNext()) {
@@ -151,19 +182,17 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         return true;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public float getInterpolatedDozeAmount() {
         return this.mDozeInterpolator.getInterpolation(this.mDozeAmount);
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean setIsDozing(boolean z) {
         if (this.mIsDozing == z) {
             return false;
         }
         this.mIsDozing = z;
         synchronized (this.mListeners) {
-            String str = StatusBarStateControllerImpl.class.getSimpleName() + "#setIsDozing";
+            String str = getClass().getSimpleName() + "#setIsDozing";
             DejankUtils.startDetectingBlockingIpcs(str);
             Iterator it = new ArrayList(this.mListeners).iterator();
             while (it.hasNext()) {
@@ -174,14 +203,18 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         return true;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
+    public void setDozeAmount(float f, boolean z) {
+        setAndInstrumentDozeAmount((View) null, f, z);
+    }
+
     public void setAndInstrumentDozeAmount(View view, float f, boolean z) {
         ValueAnimator valueAnimator = this.mDarkAnimator;
         if (valueAnimator != null && valueAnimator.isRunning()) {
-            if (z && this.mDozeAmountTarget == f) {
+            if (!z || this.mDozeAmountTarget != f) {
+                this.mDarkAnimator.cancel();
+            } else {
                 return;
             }
-            this.mDarkAnimator.cancel();
         }
         View view2 = this.mView;
         if ((view2 == null || !view2.isAttachedToWindow()) && view != null && view.isAttachedToWindow()) {
@@ -206,96 +239,109 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
             }
             this.mDozeInterpolator = interpolator;
         }
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, SET_DARK_AMOUNT_PROPERTY, this.mDozeAmountTarget);
-        this.mDarkAnimator = ofFloat;
+        if (this.mDozeAmount == 1.0f && !this.mIsDozing) {
+            setDozeAmountInternal(0.99f);
+        }
+        this.mDarkAnimator = createDarkAnimator();
+    }
+
+    /* access modifiers changed from: protected */
+    public ObjectAnimator createDarkAnimator() {
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, SET_DARK_AMOUNT_PROPERTY, new float[]{this.mDozeAmountTarget});
         ofFloat.setInterpolator(Interpolators.LINEAR);
-        this.mDarkAnimator.setDuration(500L);
-        this.mDarkAnimator.addListener(new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.StatusBarStateControllerImpl.2
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+        ofFloat.setDuration(500);
+        ofFloat.addListener(new AnimatorListenerAdapter() {
             public void onAnimationCancel(Animator animator) {
+                NTLogUtil.m1680d(StatusBarStateControllerImpl.TAG, "onAnimationCancel");
                 StatusBarStateControllerImpl.this.cancelInteractionJankMonitor();
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
+                NTLogUtil.m1680d(StatusBarStateControllerImpl.TAG, "onAnimationEnd");
                 StatusBarStateControllerImpl.this.endInteractionJankMonitor();
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationStart(Animator animator) {
                 StatusBarStateControllerImpl.this.beginInteractionJankMonitor();
             }
         });
-        this.mDarkAnimator.start();
+        ofFloat.start();
+        return ofFloat;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setDozeAmountInternal(float f) {
-        this.mDozeAmount = f;
-        float interpolation = this.mDozeInterpolator.getInterpolation(f);
-        synchronized (this.mListeners) {
-            String str = StatusBarStateControllerImpl.class.getSimpleName() + "#setDozeAmount";
-            DejankUtils.startDetectingBlockingIpcs(str);
-            Iterator it = new ArrayList(this.mListeners).iterator();
-            while (it.hasNext()) {
-                ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onDozeAmountChanged(this.mDozeAmount, interpolation);
+        if (Float.compare(f, this.mDozeAmount) != 0) {
+            this.mDozeAmount = f;
+            float interpolation = this.mDozeInterpolator.getInterpolation(f);
+            synchronized (this.mListeners) {
+                String str = getClass().getSimpleName() + "#setDozeAmount";
+                DejankUtils.startDetectingBlockingIpcs(str);
+                Iterator it = new ArrayList(this.mListeners).iterator();
+                while (it.hasNext()) {
+                    ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onDozeAmountChanged(this.mDozeAmount, interpolation);
+                }
+                DejankUtils.stopDetectingBlockingIpcs(str);
             }
-            DejankUtils.stopDetectingBlockingIpcs(str);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void beginInteractionJankMonitor() {
-        View view = this.mView;
-        if (view == null || !view.isAttachedToWindow()) {
-            return;
+        View view;
+        boolean z = this.mIsDozing;
+        boolean z2 = (z && this.mDozeAmount == 0.0f) || (!z && this.mDozeAmount == 1.0f);
+        if (this.mInteractionJankMonitor != null && (view = this.mView) != null && view.isAttachedToWindow()) {
+            if (z2) {
+                Choreographer.getInstance().postCallback(1, new StatusBarStateControllerImpl$$ExternalSyntheticLambda1(this), (Object) null);
+            } else {
+                this.mInteractionJankMonitor.begin(InteractionJankMonitor.Configuration.Builder.withView(getCujType(), this.mView).setDeferMonitorForAnimationStart(false));
+            }
         }
-        InteractionJankMonitor.getInstance().begin(this.mView, getCujType());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void endInteractionJankMonitor() {
-        InteractionJankMonitor.getInstance().end(getCujType());
+        InteractionJankMonitor interactionJankMonitor = this.mInteractionJankMonitor;
+        if (interactionJankMonitor != null) {
+            interactionJankMonitor.end(getCujType());
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void cancelInteractionJankMonitor() {
-        InteractionJankMonitor.getInstance().cancel(getCujType());
+        InteractionJankMonitor interactionJankMonitor = this.mInteractionJankMonitor;
+        if (interactionJankMonitor != null) {
+            interactionJankMonitor.cancel(getCujType());
+        }
     }
 
     private int getCujType() {
         return this.mIsDozing ? 24 : 23;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean goingToFullShade() {
         return this.mState == 0 && this.mLeaveOpenOnKeyguardHide;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public void setLeaveOpenOnKeyguardHide(boolean z) {
         this.mLeaveOpenOnKeyguardHide = z;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean leaveOpenOnKeyguardHide() {
         return this.mLeaveOpenOnKeyguardHide;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean fromShadeLocked() {
         return this.mLastState == 2;
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void addCallback(StatusBarStateController.StateListener stateListener) {
         synchronized (this.mListeners) {
             addListenerInternalLocked(stateListener, Integer.MAX_VALUE);
         }
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     @Deprecated
     public void addCallback(StatusBarStateController.StateListener stateListener, int i) {
         synchronized (this.mListeners) {
@@ -303,7 +349,6 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         }
     }
 
-    @GuardedBy({"mListeners"})
     private void addListenerInternalLocked(StatusBarStateController.StateListener stateListener, int i) {
         Iterator<SysuiStatusBarStateController.RankedListener> it = this.mListeners.iterator();
         while (it.hasNext()) {
@@ -315,50 +360,45 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         this.mListeners.sort(sComparator);
     }
 
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.android.systemui.statusbar.policy.CallbackController
-    public void removeCallback(final StatusBarStateController.StateListener stateListener) {
+    public void removeCallback(StatusBarStateController.StateListener stateListener) {
         synchronized (this.mListeners) {
-            this.mListeners.removeIf(new Predicate() { // from class: com.android.systemui.statusbar.StatusBarStateControllerImpl$$ExternalSyntheticLambda0
-                @Override // java.util.function.Predicate
-                public final boolean test(Object obj) {
-                    boolean lambda$removeCallback$1;
-                    lambda$removeCallback$1 = StatusBarStateControllerImpl.lambda$removeCallback$1(StatusBarStateController.StateListener.this, (SysuiStatusBarStateController.RankedListener) obj);
-                    return lambda$removeCallback$1;
-                }
-            });
+            this.mListeners.removeIf(new StatusBarStateControllerImpl$$ExternalSyntheticLambda0(stateListener));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$removeCallback$1(StatusBarStateController.StateListener stateListener, SysuiStatusBarStateController.RankedListener rankedListener) {
-        return rankedListener.mListener.equals(stateListener);
-    }
-
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public void setKeyguardRequested(boolean z) {
         this.mKeyguardRequested = z;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean isKeyguardRequested() {
         return this.mKeyguardRequested;
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
-    public void setFullscreenState(boolean z) {
-        if (this.mIsFullscreen != z) {
-            this.mIsFullscreen = z;
+    public void setSystemBarAttributes(int i, int i2, InsetsVisibilities insetsVisibilities, String str) {
+        boolean z = false;
+        boolean z2 = !insetsVisibilities.getVisibility(0) || !insetsVisibilities.getVisibility(1);
+        if (this.mIsFullscreen != z2) {
+            this.mIsFullscreen = z2;
             synchronized (this.mListeners) {
                 Iterator it = new ArrayList(this.mListeners).iterator();
                 while (it.hasNext()) {
-                    ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onFullscreenStateChanged(z, true);
+                    ((SysuiStatusBarStateController.RankedListener) it.next()).mListener.onFullscreenStateChanged(z2);
                 }
             }
         }
+        if (DEBUG_IMMERSIVE_APPS) {
+            if ((i & 4) != 0) {
+                z = true;
+            }
+            String flagsToString = ViewDebug.flagsToString(InsetsFlags.class, "behavior", i2);
+            String insetsVisibilities2 = insetsVisibilities.toString();
+            if (insetsVisibilities2.isEmpty()) {
+                insetsVisibilities2 = "none";
+            }
+            Log.d(TAG, str + " dim=" + z + " behavior=" + flagsToString + " requested visibilities: " + insetsVisibilities2);
+        }
     }
 
-    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public void setPulsing(boolean z) {
         if (this.mPulsing != z) {
             this.mPulsing = z;
@@ -372,20 +412,21 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
     }
 
     public static String describe(int i) {
-        return StatusBarState.toShortString(i);
+        return StatusBarState.toString(i);
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("StatusBarStateController: ");
-        printWriter.println(" mState=" + this.mState + " (" + describe(this.mState) + ")");
-        printWriter.println(" mLastState=" + this.mLastState + " (" + describe(this.mLastState) + ")");
-        StringBuilder sb = new StringBuilder();
-        sb.append(" mLeaveOpenOnKeyguardHide=");
-        sb.append(this.mLeaveOpenOnKeyguardHide);
-        printWriter.println(sb.toString());
+        printWriter.println(" mState=" + this.mState + " (" + describe(this.mState) + NavigationBarInflaterView.KEY_CODE_END);
+        printWriter.println(" mLastState=" + this.mLastState + " (" + describe(this.mLastState) + NavigationBarInflaterView.KEY_CODE_END);
+        printWriter.println(" mLeaveOpenOnKeyguardHide=" + this.mLeaveOpenOnKeyguardHide);
         printWriter.println(" mKeyguardRequested=" + this.mKeyguardRequested);
         printWriter.println(" mIsDozing=" + this.mIsDozing);
+        printWriter.println(" mListeners{" + this.mListeners.size() + "}=");
+        Iterator<SysuiStatusBarStateController.RankedListener> it = this.mListeners.iterator();
+        while (it.hasNext()) {
+            printWriter.println("    " + it.next().mListener);
+        }
         printWriter.println(" Historical states:");
         int i = 0;
         for (int i2 = 0; i2 < 32; i2++) {
@@ -393,35 +434,43 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
                 i++;
             }
         }
-        for (int i3 = this.mHistoryIndex + 32; i3 >= ((this.mHistoryIndex + 32) - i) + 1; i3 += -1) {
-            printWriter.println("  (" + (((this.mHistoryIndex + 32) - i3) + 1) + ")" + this.mHistoricalRecords[i3 & 31]);
+        for (int i3 = this.mHistoryIndex + 32; i3 >= ((this.mHistoryIndex + 32) - i) + 1; i3--) {
+            printWriter.println("  (" + (((this.mHistoryIndex + 32) - i3) + 1) + NavigationBarInflaterView.KEY_CODE_END + this.mHistoricalRecords[i3 & 31]);
         }
     }
 
-    private void recordHistoricalState(int i, int i2) {
+    private void recordHistoricalState(int i, int i2, boolean z) {
+        Trace.traceCounter(4096, "statusBarState", i);
         int i3 = (this.mHistoryIndex + 1) % 32;
         this.mHistoryIndex = i3;
         HistoricalState historicalState = this.mHistoricalRecords[i3];
-        historicalState.mState = i;
+        historicalState.mNewState = i;
         historicalState.mLastState = i2;
         historicalState.mTimestamp = System.currentTimeMillis();
+        historicalState.mUpcoming = z;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class HistoricalState {
+    private static class HistoricalState {
         int mLastState;
-        int mState;
+        int mNewState;
         long mTimestamp;
+        boolean mUpcoming;
 
         private HistoricalState() {
         }
 
         public String toString() {
-            if (this.mTimestamp != 0) {
-                return "state=" + this.mState + " (" + StatusBarStateControllerImpl.describe(this.mState) + ")lastState=" + this.mLastState + " (" + StatusBarStateControllerImpl.describe(this.mLastState) + ")timestamp=" + DateFormat.format("MM-dd HH:mm:ss", this.mTimestamp);
+            if (this.mTimestamp == 0) {
+                return "Empty " + getClass().getSimpleName();
             }
-            return "Empty " + HistoricalState.class.getSimpleName();
+            StringBuilder sb = new StringBuilder();
+            if (this.mUpcoming) {
+                sb.append("upcoming-");
+            }
+            sb.append("newState=").append(this.mNewState).append(NavigationBarInflaterView.KEY_CODE_START).append(StatusBarStateControllerImpl.describe(this.mNewState)).append(") lastState=");
+            sb.append(this.mLastState).append(NavigationBarInflaterView.KEY_CODE_START).append(StatusBarStateControllerImpl.describe(this.mLastState)).append(") timestamp=");
+            sb.append(DateFormat.format("MM-dd HH:mm:ss", this.mTimestamp));
+            return sb.toString();
         }
     }
 }

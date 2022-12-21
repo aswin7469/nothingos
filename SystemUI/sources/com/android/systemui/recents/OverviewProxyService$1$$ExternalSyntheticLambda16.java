@@ -1,16 +1,16 @@
 package com.android.systemui.recents;
 
-import com.android.wm.shell.pip.Pip;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public final /* synthetic */ class OverviewProxyService$1$$ExternalSyntheticLambda16 implements Consumer {
-    public static final /* synthetic */ OverviewProxyService$1$$ExternalSyntheticLambda16 INSTANCE = new OverviewProxyService$1$$ExternalSyntheticLambda16();
+import com.android.systemui.recents.OverviewProxyService;
 
-    private /* synthetic */ OverviewProxyService$1$$ExternalSyntheticLambda16() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class OverviewProxyService$1$$ExternalSyntheticLambda16 implements Runnable {
+    public final /* synthetic */ OverviewProxyService.C24161 f$0;
+
+    public /* synthetic */ OverviewProxyService$1$$ExternalSyntheticLambda16(OverviewProxyService.C24161 r1) {
+        this.f$0 = r1;
     }
 
-    @Override // java.util.function.Consumer
-    public final void accept(Object obj) {
-        ((Pip) obj).setPinnedStackAnimationType(1);
+    public final void run() {
+        this.f$0.mo37153x794b3fd7();
     }
 }

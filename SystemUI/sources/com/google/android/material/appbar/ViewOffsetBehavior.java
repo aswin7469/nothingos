@@ -4,11 +4,11 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
-/* loaded from: classes2.dex */
+
 class ViewOffsetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
-    private ViewOffsetHelper viewOffsetHelper;
-    private int tempTopBottomOffset = 0;
     private int tempLeftRightOffset = 0;
+    private int tempTopBottomOffset = 0;
+    private ViewOffsetHelper viewOffsetHelper;
 
     public ViewOffsetBehavior() {
     }
@@ -17,7 +17,6 @@ class ViewOffsetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
         super(context, attributeSet);
     }
 
-    @Override // androidx.coordinatorlayout.widget.CoordinatorLayout.Behavior
     public boolean onLayoutChild(CoordinatorLayout coordinatorLayout, V v, int i) {
         layoutChild(coordinatorLayout, v, i);
         if (this.viewOffsetHelper == null) {
@@ -31,33 +30,74 @@ class ViewOffsetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
             this.tempTopBottomOffset = 0;
         }
         int i3 = this.tempLeftRightOffset;
-        if (i3 != 0) {
-            this.viewOffsetHelper.setLeftAndRightOffset(i3);
-            this.tempLeftRightOffset = 0;
+        if (i3 == 0) {
             return true;
         }
+        this.viewOffsetHelper.setLeftAndRightOffset(i3);
+        this.tempLeftRightOffset = 0;
         return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void layoutChild(CoordinatorLayout coordinatorLayout, V v, int i) {
         coordinatorLayout.onLayoutChild(v, i);
     }
 
     public boolean setTopAndBottomOffset(int i) {
-        ViewOffsetHelper viewOffsetHelper = this.viewOffsetHelper;
-        if (viewOffsetHelper != null) {
-            return viewOffsetHelper.setTopAndBottomOffset(i);
+        ViewOffsetHelper viewOffsetHelper2 = this.viewOffsetHelper;
+        if (viewOffsetHelper2 != null) {
+            return viewOffsetHelper2.setTopAndBottomOffset(i);
         }
         this.tempTopBottomOffset = i;
         return false;
     }
 
+    public boolean setLeftAndRightOffset(int i) {
+        ViewOffsetHelper viewOffsetHelper2 = this.viewOffsetHelper;
+        if (viewOffsetHelper2 != null) {
+            return viewOffsetHelper2.setLeftAndRightOffset(i);
+        }
+        this.tempLeftRightOffset = i;
+        return false;
+    }
+
     public int getTopAndBottomOffset() {
-        ViewOffsetHelper viewOffsetHelper = this.viewOffsetHelper;
-        if (viewOffsetHelper != null) {
-            return viewOffsetHelper.getTopAndBottomOffset();
+        ViewOffsetHelper viewOffsetHelper2 = this.viewOffsetHelper;
+        if (viewOffsetHelper2 != null) {
+            return viewOffsetHelper2.getTopAndBottomOffset();
         }
         return 0;
+    }
+
+    public int getLeftAndRightOffset() {
+        ViewOffsetHelper viewOffsetHelper2 = this.viewOffsetHelper;
+        if (viewOffsetHelper2 != null) {
+            return viewOffsetHelper2.getLeftAndRightOffset();
+        }
+        return 0;
+    }
+
+    public void setVerticalOffsetEnabled(boolean z) {
+        ViewOffsetHelper viewOffsetHelper2 = this.viewOffsetHelper;
+        if (viewOffsetHelper2 != null) {
+            viewOffsetHelper2.setVerticalOffsetEnabled(z);
+        }
+    }
+
+    public boolean isVerticalOffsetEnabled() {
+        ViewOffsetHelper viewOffsetHelper2 = this.viewOffsetHelper;
+        return viewOffsetHelper2 != null && viewOffsetHelper2.isVerticalOffsetEnabled();
+    }
+
+    public void setHorizontalOffsetEnabled(boolean z) {
+        ViewOffsetHelper viewOffsetHelper2 = this.viewOffsetHelper;
+        if (viewOffsetHelper2 != null) {
+            viewOffsetHelper2.setHorizontalOffsetEnabled(z);
+        }
+    }
+
+    public boolean isHorizontalOffsetEnabled() {
+        ViewOffsetHelper viewOffsetHelper2 = this.viewOffsetHelper;
+        return viewOffsetHelper2 != null && viewOffsetHelper2.isHorizontalOffsetEnabled();
     }
 }

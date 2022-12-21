@@ -3,10 +3,9 @@ package com.android.systemui.statusbar.notification.collection.render;
 import com.android.systemui.Dumpable;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
-/* loaded from: classes.dex */
+
 public interface GroupExpansionManager extends Dumpable {
 
-    /* loaded from: classes.dex */
     public interface OnGroupExpansionChangeListener {
         void onGroupExpansionChange(ExpandableNotificationRow expandableNotificationRow, boolean z);
     }

@@ -1,10 +1,12 @@
 package com.android.systemui.statusbar.policy;
 
 import android.hardware.SensorPrivacyManager;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.policy.SensorPrivacyController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes2.dex */
+
+@SysUISingleton
 public class SensorPrivacyControllerImpl implements SensorPrivacyController, SensorPrivacyManager.OnAllSensorPrivacyChangedListener {
     private final List<SensorPrivacyController.OnSensorPrivacyChangedListener> mListeners = new ArrayList(1);
     private Object mLock = new Object();
@@ -15,13 +17,11 @@ public class SensorPrivacyControllerImpl implements SensorPrivacyController, Sen
         this.mSensorPrivacyManager = sensorPrivacyManager;
     }
 
-    @Override // com.android.systemui.statusbar.policy.SensorPrivacyController
     public void init() {
         this.mSensorPrivacyEnabled = this.mSensorPrivacyManager.isAllSensorPrivacyEnabled();
         this.mSensorPrivacyManager.addAllSensorPrivacyListener(this);
     }
 
-    @Override // com.android.systemui.statusbar.policy.SensorPrivacyController
     public boolean isSensorPrivacyEnabled() {
         boolean z;
         synchronized (this.mLock) {
@@ -30,7 +30,6 @@ public class SensorPrivacyControllerImpl implements SensorPrivacyController, Sen
         return z;
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void addCallback(SensorPrivacyController.OnSensorPrivacyChangedListener onSensorPrivacyChangedListener) {
         synchronized (this.mLock) {
             this.mListeners.add(onSensorPrivacyChangedListener);
@@ -38,18 +37,17 @@ public class SensorPrivacyControllerImpl implements SensorPrivacyController, Sen
         }
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void removeCallback(SensorPrivacyController.OnSensorPrivacyChangedListener onSensorPrivacyChangedListener) {
         synchronized (this.mLock) {
-            this.mListeners.remove(onSensorPrivacyChangedListener);
+            this.mListeners.remove((Object) onSensorPrivacyChangedListener);
         }
     }
 
     public void onAllSensorPrivacyChanged(boolean z) {
         synchronized (this.mLock) {
             this.mSensorPrivacyEnabled = z;
-            for (SensorPrivacyController.OnSensorPrivacyChangedListener onSensorPrivacyChangedListener : this.mListeners) {
-                notifyListenerLocked(onSensorPrivacyChangedListener);
+            for (SensorPrivacyController.OnSensorPrivacyChangedListener notifyListenerLocked : this.mListeners) {
+                notifyListenerLocked(notifyListenerLocked);
             }
         }
     }

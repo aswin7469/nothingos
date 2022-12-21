@@ -1,11 +1,9 @@
 package com.android.systemui.statusbar.notification.row;
 
 import dagger.internal.Factory;
-/* loaded from: classes.dex */
+
 public final class RowInflaterTask_Factory implements Factory<RowInflaterTask> {
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public RowInflaterTask mo1933get() {
+    public RowInflaterTask get() {
         return newInstance();
     }
 
@@ -17,8 +15,11 @@ public final class RowInflaterTask_Factory implements Factory<RowInflaterTask> {
         return new RowInflaterTask();
     }
 
-    /* loaded from: classes.dex */
     private static final class InstanceHolder {
-        private static final RowInflaterTask_Factory INSTANCE = new RowInflaterTask_Factory();
+        /* access modifiers changed from: private */
+        public static final RowInflaterTask_Factory INSTANCE = new RowInflaterTask_Factory();
+
+        private InstanceHolder() {
+        }
     }
 }

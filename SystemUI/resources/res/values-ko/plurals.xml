@@ -16,6 +16,10 @@
         <item quantity="one">제어 기능 %s개가 추가되었습니다.</item>
         <item quantity="other">제어 기능 %s개가 추가되었습니다.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">활성 상태인 앱 %s개</item>
+        <item quantity="other">활성 상태인 앱 %s개</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">SIM PIN을 입력하세요. 입력에 %d번 더 실패하면 이동통신사에 문의하여 기기를 잠금 해제해야 합니다.</item>
         <item quantity="other">SIM PIN을 입력하세요. 입력은 %d번 더 시도할 수 있습니다.</item>
@@ -28,25 +32,13 @@
         <item quantity="one">잘못된 SIM PIN 코드입니다. 입력에 %d번 더 실패할 경우 이동통신사에 문의하여 기기를 잠금 해제해야 합니다.</item>
         <item quantity="other">잘못된 SIM PIN 코드입니다. 입력을 %d번 더 시도할 수 있습니다.</item>
     </plurals>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">잘못된 SIM%d PIN 코드입니다. 이동통신사에 문의하여 기기 잠금을 해제하기 전에 %d회 더 시도해야 합니다.</item>
+        <item quantity="other">잘못된 SIM%d PIN 코드입니다. %d회 더 시도할 수 있습니다.</item>
+    </plurals>
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">잘못된 SIM PUK 코드입니다. 입력에 %d번 더 실패할 경우 SIM이 영구적으로 사용 중지됩니다.</item>
         <item quantity="other">잘못된 SIM PUK 코드입니다. 입력에 %d번 더 실패할 경우 SIM이 영구적으로 사용 중지됩니다.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">기기가 %d시간 동안 잠금 해제되지 않았습니다. 비밀번호를 입력하세요.</item>
-        <item quantity="other">기기가 %d시간 동안 잠금 해제되지 않았습니다. 비밀번호를 입력하세요.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">기기가 %d시간 동안 잠금 해제되지 않았습니다. 패턴을 입력하세요.</item>
-        <item quantity="other">기기가 %d시간 동안 잠금 해제되지 않았습니다. 패턴을 입력하세요.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">기기가 %d시간 동안 잠금 해제되지 않았습니다. PIN을 입력하세요.</item>
-        <item quantity="other">기기가 %d시간 동안 잠금 해제되지 않았습니다. PIN을 입력하세요.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">1초 후에 다시 시도하세요.</item>
-        <item quantity="other">%d초 후에 다시 시도하세요.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">새 알림 %d개</item>
@@ -71,9 +63,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">사용자를 한 명만 만들 수 있습니다.</item>
         <item quantity="other">사용자를 %d명까지 추가할 수 있습니다.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">기기 %1$d개 연결됨</item>
-        <item quantity="other">기기 %1$d개 연결됨</item>
     </plurals>
 </resources>

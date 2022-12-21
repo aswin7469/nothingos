@@ -3,17 +3,17 @@ package com.android.keyguard;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 class LiftToActivateListener implements View.OnHoverListener {
     private final AccessibilityManager mAccessibilityManager;
     private boolean mCachedClickableState;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public LiftToActivateListener(AccessibilityManager accessibilityManager) {
+    @Inject
+    LiftToActivateListener(AccessibilityManager accessibilityManager) {
         this.mAccessibilityManager = accessibilityManager;
     }
 
-    @Override // android.view.View.OnHoverListener
     public boolean onHover(View view, MotionEvent motionEvent) {
         if (this.mAccessibilityManager.isEnabled() && this.mAccessibilityManager.isTouchExplorationEnabled()) {
             int actionMasked = motionEvent.getActionMasked();

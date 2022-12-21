@@ -3,20 +3,54 @@ package com.android.settingslib.bluetooth;
 import android.content.Context;
 import android.os.Handler;
 import android.os.UserHandle;
-/* loaded from: classes.dex */
+import android.util.Log;
+import java.lang.ref.WeakReference;
+
 public class LocalBluetoothManager {
+    private static final String TAG = "LocalBluetoothManager";
+    private static LocalBluetoothManager sInstance;
     private final CachedBluetoothDeviceManager mCachedDeviceManager;
     private final Context mContext;
     private final BluetoothEventManager mEventManager;
+    private WeakReference<Context> mForegroundActivity;
     private final LocalBluetoothAdapter mLocalAdapter;
     private final LocalBluetoothProfileManager mProfileManager;
 
-    public static LocalBluetoothManager create(Context context, Handler handler, UserHandle userHandle) {
-        LocalBluetoothAdapter localBluetoothAdapter = LocalBluetoothAdapter.getInstance();
-        if (localBluetoothAdapter == null) {
+    public interface BluetoothManagerCallback {
+        void onBluetoothManagerInitialized(Context context, LocalBluetoothManager localBluetoothManager);
+    }
+
+    public static synchronized LocalBluetoothManager getInstance(Context context, BluetoothManagerCallback bluetoothManagerCallback) {
+        synchronized (LocalBluetoothManager.class) {
+            if (sInstance == null) {
+                LocalBluetoothAdapter instance = LocalBluetoothAdapter.getInstance();
+                if (instance == null) {
+                    return null;
+                }
+                sInstance = new LocalBluetoothManager(instance, context, (Handler) null, (UserHandle) null);
+                if (bluetoothManagerCallback != null) {
+                    bluetoothManagerCallback.onBluetoothManagerInitialized(context.getApplicationContext(), sInstance);
+                }
+            }
+            LocalBluetoothManager localBluetoothManager = sInstance;
+            return localBluetoothManager;
+        }
+    }
+
+    public static LocalBluetoothManager create(Context context, Handler handler) {
+        LocalBluetoothAdapter instance = LocalBluetoothAdapter.getInstance();
+        if (instance == null) {
             return null;
         }
-        return new LocalBluetoothManager(localBluetoothAdapter, context, handler, userHandle);
+        return new LocalBluetoothManager(instance, context, handler, (UserHandle) null);
+    }
+
+    public static LocalBluetoothManager create(Context context, Handler handler, UserHandle userHandle) {
+        LocalBluetoothAdapter instance = LocalBluetoothAdapter.getInstance();
+        if (instance == null) {
+            return null;
+        }
+        return new LocalBluetoothManager(instance, context, handler, userHandle);
     }
 
     private LocalBluetoothManager(LocalBluetoothAdapter localBluetoothAdapter, Context context, Handler handler, UserHandle userHandle) {
@@ -35,6 +69,33 @@ public class LocalBluetoothManager {
 
     public LocalBluetoothAdapter getBluetoothAdapter() {
         return this.mLocalAdapter;
+    }
+
+    public Context getContext() {
+        return this.mContext;
+    }
+
+    public Context getForegroundActivity() {
+        WeakReference<Context> weakReference = this.mForegroundActivity;
+        if (weakReference == null) {
+            return null;
+        }
+        return weakReference.get();
+    }
+
+    public boolean isForegroundActivity() {
+        WeakReference<Context> weakReference = this.mForegroundActivity;
+        return (weakReference == null || weakReference.get() == null) ? false : true;
+    }
+
+    public synchronized void setForegroundActivity(Context context) {
+        if (context != null) {
+            Log.d(TAG, "setting foreground activity to non-null context");
+            this.mForegroundActivity = new WeakReference<>(context);
+        } else if (this.mForegroundActivity != null) {
+            Log.d(TAG, "setting foreground activity to null");
+            this.mForegroundActivity = null;
+        }
     }
 
     public CachedBluetoothDeviceManager getCachedDeviceManager() {

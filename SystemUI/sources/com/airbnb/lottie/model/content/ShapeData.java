@@ -6,7 +6,7 @@ import com.airbnb.lottie.utils.Logger;
 import com.airbnb.lottie.utils.MiscUtils;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ShapeData {
     private boolean closed;
     private final List<CubicCurveData> curves;
@@ -60,9 +60,9 @@ public class ShapeData {
                 list.remove(list.size() - 1);
             }
         }
-        PointF initialPoint = shapeData.getInitialPoint();
-        PointF initialPoint2 = shapeData2.getInitialPoint();
-        setInitialPoint(MiscUtils.lerp(initialPoint.x, initialPoint2.x, f), MiscUtils.lerp(initialPoint.y, initialPoint2.y, f));
+        PointF initialPoint2 = shapeData.getInitialPoint();
+        PointF initialPoint3 = shapeData2.getInitialPoint();
+        setInitialPoint(MiscUtils.lerp(initialPoint2.x, initialPoint3.x, f), MiscUtils.lerp(initialPoint2.y, initialPoint3.y, f));
         for (int size3 = this.curves.size() - 1; size3 >= 0; size3--) {
             CubicCurveData cubicCurveData = shapeData.getCurves().get(size3);
             CubicCurveData cubicCurveData2 = shapeData2.getCurves().get(size3);

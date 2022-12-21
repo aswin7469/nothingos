@@ -5,28 +5,23 @@ import android.content.Intent;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import com.android.internal.accessibility.AccessibilityShortcutController;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.accessibility.floatingmenu.AnnotationLinkSpan;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class MigrationTooltipView extends BaseTooltipView {
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MigrationTooltipView(Context context, AccessibilityFloatingMenuView accessibilityFloatingMenuView) {
+
+class MigrationTooltipView extends BaseTooltipView {
+    MigrationTooltipView(Context context, AccessibilityFloatingMenuView accessibilityFloatingMenuView) {
         super(context, accessibilityFloatingMenuView);
-        final Intent intent = new Intent("android.settings.ACCESSIBILITY_DETAILS_SETTINGS");
+        Intent intent = new Intent("android.settings.ACCESSIBILITY_DETAILS_SETTINGS");
         intent.addFlags(268435456);
         intent.putExtra("android.intent.extra.COMPONENT_NAME", AccessibilityShortcutController.ACCESSIBILITY_BUTTON_COMPONENT_NAME.flattenToShortString());
-        setDescription(AnnotationLinkSpan.linkify(getContext().getText(R$string.accessibility_floating_button_migration_tooltip), new AnnotationLinkSpan.LinkInfo("link", new View.OnClickListener() { // from class: com.android.systemui.accessibility.floatingmenu.MigrationTooltipView$$ExternalSyntheticLambda0
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                MigrationTooltipView.this.lambda$new$0(intent, view);
-            }
-        })));
+        AnnotationLinkSpan.LinkInfo linkInfo = new AnnotationLinkSpan.LinkInfo(AnnotationLinkSpan.LinkInfo.DEFAULT_ANNOTATION, new MigrationTooltipView$$ExternalSyntheticLambda0(this, intent));
+        setDescription(AnnotationLinkSpan.linkify(getContext().getText(C1893R.string.accessibility_floating_button_migration_tooltip), linkInfo));
         setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(Intent intent, View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-accessibility-floatingmenu-MigrationTooltipView */
+    public /* synthetic */ void mo30092x76f5a678(Intent intent, View view) {
         getContext().startActivity(intent);
         hide();
     }

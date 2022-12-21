@@ -1,103 +1,112 @@
 package androidx.transition;
 
 import android.animation.LayoutTransition;
-import android.annotation.SuppressLint;
 import android.util.Log;
-import android.view.ViewGroup;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-/* loaded from: classes.dex */
+
 class ViewGroupUtilsApi14 {
+    private static final int LAYOUT_TRANSITION_CHANGING = 4;
+    private static final String TAG = "ViewGroupUtilsApi14";
     private static Method sCancelMethod;
     private static boolean sCancelMethodFetched;
     private static LayoutTransition sEmptyLayoutTransition;
     private static Field sLayoutSuppressedField;
     private static boolean sLayoutSuppressedFieldFetched;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* JADX WARN: Removed duplicated region for block: B:21:0x0081  */
-    /* JADX WARN: Removed duplicated region for block: B:24:0x008e  */
-    /* JADX WARN: Removed duplicated region for block: B:26:? A[RETURN, SYNTHETIC] */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static void suppressLayout(ViewGroup viewGroup, boolean z) {
-        LayoutTransition layoutTransition;
-        boolean z2 = false;
-        if (sEmptyLayoutTransition == null) {
-            LayoutTransition layoutTransition2 = new LayoutTransition() { // from class: androidx.transition.ViewGroupUtilsApi14.1
-                @Override // android.animation.LayoutTransition
-                public boolean isChangingLayout() {
-                    return true;
-                }
-            };
-            sEmptyLayoutTransition = layoutTransition2;
-            layoutTransition2.setAnimator(2, null);
-            sEmptyLayoutTransition.setAnimator(0, null);
-            sEmptyLayoutTransition.setAnimator(1, null);
-            sEmptyLayoutTransition.setAnimator(3, null);
-            sEmptyLayoutTransition.setAnimator(4, null);
-        }
-        if (z) {
-            LayoutTransition layoutTransition3 = viewGroup.getLayoutTransition();
-            if (layoutTransition3 != null) {
-                if (layoutTransition3.isRunning()) {
-                    cancelLayoutTransition(layoutTransition3);
-                }
-                if (layoutTransition3 != sEmptyLayoutTransition) {
-                    viewGroup.setTag(R$id.transition_layout_save, layoutTransition3);
-                }
-            }
-            viewGroup.setLayoutTransition(sEmptyLayoutTransition);
-            return;
-        }
-        viewGroup.setLayoutTransition(null);
-        if (!sLayoutSuppressedFieldFetched) {
-            try {
-                Field declaredField = ViewGroup.class.getDeclaredField("mLayoutSuppressed");
-                sLayoutSuppressedField = declaredField;
-                declaredField.setAccessible(true);
-            } catch (NoSuchFieldException unused) {
-                Log.i("ViewGroupUtilsApi14", "Failed to access mLayoutSuppressed field by reflection");
-            }
-            sLayoutSuppressedFieldFetched = true;
-        }
-        Field field = sLayoutSuppressedField;
-        if (field != null) {
-            try {
-                boolean z3 = field.getBoolean(viewGroup);
-                if (z3) {
-                    try {
-                        sLayoutSuppressedField.setBoolean(viewGroup, false);
-                    } catch (IllegalAccessException unused2) {
-                        z2 = z3;
-                        Log.i("ViewGroupUtilsApi14", "Failed to get mLayoutSuppressed field by reflection");
-                        if (z2) {
-                        }
-                        int i = R$id.transition_layout_save;
-                        layoutTransition = (LayoutTransition) viewGroup.getTag(i);
-                        if (layoutTransition != null) {
-                        }
-                    }
-                }
-                z2 = z3;
-            } catch (IllegalAccessException unused3) {
-            }
-        }
-        if (z2) {
-            viewGroup.requestLayout();
-        }
-        int i2 = R$id.transition_layout_save;
-        layoutTransition = (LayoutTransition) viewGroup.getTag(i2);
-        if (layoutTransition != null) {
-            return;
-        }
-        viewGroup.setTag(i2, null);
-        viewGroup.setLayoutTransition(layoutTransition);
+    /* JADX WARNING: Removed duplicated region for block: B:34:0x0081  */
+    /* JADX WARNING: Removed duplicated region for block: B:37:0x008e  */
+    /* JADX WARNING: Removed duplicated region for block: B:40:? A[RETURN, SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    static void suppressLayout(android.view.ViewGroup r5, boolean r6) {
+        /*
+            android.animation.LayoutTransition r0 = sEmptyLayoutTransition
+            r1 = 1
+            r2 = 0
+            r3 = 0
+            if (r0 != 0) goto L_0x0028
+            androidx.transition.ViewGroupUtilsApi14$1 r0 = new androidx.transition.ViewGroupUtilsApi14$1
+            r0.<init>()
+            sEmptyLayoutTransition = r0
+            r4 = 2
+            r0.setAnimator(r4, r3)
+            android.animation.LayoutTransition r0 = sEmptyLayoutTransition
+            r0.setAnimator(r2, r3)
+            android.animation.LayoutTransition r0 = sEmptyLayoutTransition
+            r0.setAnimator(r1, r3)
+            android.animation.LayoutTransition r0 = sEmptyLayoutTransition
+            r4 = 3
+            r0.setAnimator(r4, r3)
+            android.animation.LayoutTransition r0 = sEmptyLayoutTransition
+            r4 = 4
+            r0.setAnimator(r4, r3)
+        L_0x0028:
+            if (r6 == 0) goto L_0x0048
+            android.animation.LayoutTransition r6 = r5.getLayoutTransition()
+            if (r6 == 0) goto L_0x0042
+            boolean r0 = r6.isRunning()
+            if (r0 == 0) goto L_0x0039
+            cancelLayoutTransition(r6)
+        L_0x0039:
+            android.animation.LayoutTransition r0 = sEmptyLayoutTransition
+            if (r6 == r0) goto L_0x0042
+            int r0 = androidx.transition.C1419R.C1422id.transition_layout_save
+            r5.setTag(r0, r6)
+        L_0x0042:
+            android.animation.LayoutTransition r6 = sEmptyLayoutTransition
+            r5.setLayoutTransition(r6)
+            goto L_0x0096
+        L_0x0048:
+            r5.setLayoutTransition(r3)
+            boolean r6 = sLayoutSuppressedFieldFetched
+            java.lang.String r0 = "ViewGroupUtilsApi14"
+            if (r6 != 0) goto L_0x0066
+            java.lang.Class<android.view.ViewGroup> r6 = android.view.ViewGroup.class
+            java.lang.String r4 = "mLayoutSuppressed"
+            java.lang.reflect.Field r6 = r6.getDeclaredField(r4)     // Catch:{ NoSuchFieldException -> 0x005f }
+            sLayoutSuppressedField = r6     // Catch:{ NoSuchFieldException -> 0x005f }
+            r6.setAccessible(r1)     // Catch:{ NoSuchFieldException -> 0x005f }
+            goto L_0x0064
+        L_0x005f:
+            java.lang.String r6 = "Failed to access mLayoutSuppressed field by reflection"
+            android.util.Log.i(r0, r6)
+        L_0x0064:
+            sLayoutSuppressedFieldFetched = r1
+        L_0x0066:
+            java.lang.reflect.Field r6 = sLayoutSuppressedField
+            if (r6 == 0) goto L_0x007f
+            boolean r6 = r6.getBoolean(r5)     // Catch:{ IllegalAccessException -> 0x007a }
+            if (r6 == 0) goto L_0x0078
+            java.lang.reflect.Field r1 = sLayoutSuppressedField     // Catch:{ IllegalAccessException -> 0x0076 }
+            r1.setBoolean(r5, r2)     // Catch:{ IllegalAccessException -> 0x0076 }
+            goto L_0x0078
+        L_0x0076:
+            r2 = r6
+            goto L_0x007a
+        L_0x0078:
+            r2 = r6
+            goto L_0x007f
+        L_0x007a:
+            java.lang.String r6 = "Failed to get mLayoutSuppressed field by reflection"
+            android.util.Log.i(r0, r6)
+        L_0x007f:
+            if (r2 == 0) goto L_0x0084
+            r5.requestLayout()
+        L_0x0084:
+            int r6 = androidx.transition.C1419R.C1422id.transition_layout_save
+            java.lang.Object r6 = r5.getTag(r6)
+            android.animation.LayoutTransition r6 = (android.animation.LayoutTransition) r6
+            if (r6 == 0) goto L_0x0096
+            int r0 = androidx.transition.C1419R.C1422id.transition_layout_save
+            r5.setTag(r0, r3)
+            r5.setLayoutTransition(r6)
+        L_0x0096:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: androidx.transition.ViewGroupUtilsApi14.suppressLayout(android.view.ViewGroup, boolean):void");
     }
 
-    @SuppressLint({"SoonBlockedPrivateApi"})
     private static void cancelLayoutTransition(LayoutTransition layoutTransition) {
         if (!sCancelMethodFetched) {
             try {
@@ -105,7 +114,7 @@ class ViewGroupUtilsApi14 {
                 sCancelMethod = declaredMethod;
                 declaredMethod.setAccessible(true);
             } catch (NoSuchMethodException unused) {
-                Log.i("ViewGroupUtilsApi14", "Failed to access cancel method by reflection");
+                Log.i(TAG, "Failed to access cancel method by reflection");
             }
             sCancelMethodFetched = true;
         }
@@ -114,10 +123,13 @@ class ViewGroupUtilsApi14 {
             try {
                 method.invoke(layoutTransition, new Object[0]);
             } catch (IllegalAccessException unused2) {
-                Log.i("ViewGroupUtilsApi14", "Failed to access cancel method by reflection");
+                Log.i(TAG, "Failed to access cancel method by reflection");
             } catch (InvocationTargetException unused3) {
-                Log.i("ViewGroupUtilsApi14", "Failed to invoke cancel method by reflection");
+                Log.i(TAG, "Failed to invoke cancel method by reflection");
             }
         }
+    }
+
+    private ViewGroupUtilsApi14() {
     }
 }

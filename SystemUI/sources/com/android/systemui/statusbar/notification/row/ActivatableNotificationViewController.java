@@ -11,65 +11,55 @@ import com.android.systemui.statusbar.notification.row.ActivatableNotificationVi
 import com.android.systemui.statusbar.phone.NotificationTapHelper;
 import com.android.systemui.util.ViewController;
 import java.util.Objects;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class ActivatableNotificationViewController extends ViewController<ActivatableNotificationView> {
-    private final AccessibilityManager mAccessibilityManager;
+    /* access modifiers changed from: private */
+    public final AccessibilityManager mAccessibilityManager;
     private final ExpandableOutlineViewController mExpandableOutlineViewController;
-    private final FalsingCollector mFalsingCollector;
-    private final FalsingManager mFalsingManager;
+    /* access modifiers changed from: private */
+    public final FalsingCollector mFalsingCollector;
+    /* access modifiers changed from: private */
+    public final FalsingManager mFalsingManager;
+    private boolean mNeedsDimming;
     private final NotificationTapHelper mNotificationTapHelper;
     private final TouchHandler mTouchHandler = new TouchHandler();
 
-    @Override // com.android.systemui.util.ViewController
-    protected void onViewAttached() {
+    /* access modifiers changed from: protected */
+    public void onViewAttached() {
     }
 
-    @Override // com.android.systemui.util.ViewController
-    protected void onViewDetached() {
+    /* access modifiers changed from: protected */
+    public void onViewDetached() {
     }
 
+    @Inject
     public ActivatableNotificationViewController(ActivatableNotificationView activatableNotificationView, NotificationTapHelper.Factory factory, ExpandableOutlineViewController expandableOutlineViewController, AccessibilityManager accessibilityManager, FalsingManager falsingManager, FalsingCollector falsingCollector) {
         super(activatableNotificationView);
         this.mExpandableOutlineViewController = expandableOutlineViewController;
         this.mAccessibilityManager = accessibilityManager;
         this.mFalsingManager = falsingManager;
         this.mFalsingCollector = falsingCollector;
-        NotificationTapHelper.ActivationListener activationListener = new NotificationTapHelper.ActivationListener() { // from class: com.android.systemui.statusbar.notification.row.ActivatableNotificationViewController$$ExternalSyntheticLambda0
-            @Override // com.android.systemui.statusbar.phone.NotificationTapHelper.ActivationListener
-            public final void onActiveChanged(boolean z) {
-                ActivatableNotificationViewController.this.lambda$new$0(z);
-            }
-        };
-        final ActivatableNotificationView activatableNotificationView2 = (ActivatableNotificationView) this.mView;
+        ActivatableNotificationViewController$$ExternalSyntheticLambda0 activatableNotificationViewController$$ExternalSyntheticLambda0 = new ActivatableNotificationViewController$$ExternalSyntheticLambda0(this);
+        ActivatableNotificationView activatableNotificationView2 = (ActivatableNotificationView) this.mView;
         Objects.requireNonNull(activatableNotificationView2);
-        NotificationTapHelper.DoubleTapListener doubleTapListener = new NotificationTapHelper.DoubleTapListener() { // from class: com.android.systemui.statusbar.notification.row.ActivatableNotificationViewController$$ExternalSyntheticLambda1
-            @Override // com.android.systemui.statusbar.phone.NotificationTapHelper.DoubleTapListener
-            public final boolean onDoubleTap() {
-                return ActivatableNotificationView.this.performClick();
-            }
-        };
-        final ActivatableNotificationView activatableNotificationView3 = (ActivatableNotificationView) this.mView;
+        ActivatableNotificationViewController$$ExternalSyntheticLambda1 activatableNotificationViewController$$ExternalSyntheticLambda1 = new ActivatableNotificationViewController$$ExternalSyntheticLambda1(activatableNotificationView2);
+        ActivatableNotificationView activatableNotificationView3 = (ActivatableNotificationView) this.mView;
         Objects.requireNonNull(activatableNotificationView3);
-        this.mNotificationTapHelper = factory.create(activationListener, doubleTapListener, new NotificationTapHelper.SlideBackListener() { // from class: com.android.systemui.statusbar.notification.row.ActivatableNotificationViewController$$ExternalSyntheticLambda2
-            @Override // com.android.systemui.statusbar.phone.NotificationTapHelper.SlideBackListener
-            public final boolean onSlideBack() {
-                return ActivatableNotificationView.this.handleSlideBack();
-            }
-        });
-        ((ActivatableNotificationView) this.mView).setOnActivatedListener(new ActivatableNotificationView.OnActivatedListener() { // from class: com.android.systemui.statusbar.notification.row.ActivatableNotificationViewController.1
-            @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView.OnActivatedListener
-            public void onActivationReset(ActivatableNotificationView activatableNotificationView4) {
+        this.mNotificationTapHelper = factory.create(activatableNotificationViewController$$ExternalSyntheticLambda0, activatableNotificationViewController$$ExternalSyntheticLambda1, new ActivatableNotificationViewController$$ExternalSyntheticLambda2(activatableNotificationView3));
+        ((ActivatableNotificationView) this.mView).setOnActivatedListener(new ActivatableNotificationView.OnActivatedListener() {
+            public void onActivationReset(ActivatableNotificationView activatableNotificationView) {
             }
 
-            @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView.OnActivatedListener
-            public void onActivated(ActivatableNotificationView activatableNotificationView4) {
+            public void onActivated(ActivatableNotificationView activatableNotificationView) {
                 ActivatableNotificationViewController.this.mFalsingCollector.onNotificationActive();
             }
         });
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(boolean z) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-row-ActivatableNotificationViewController */
+    public /* synthetic */ void mo40937x68f3f9da(boolean z) {
         if (z) {
             ((ActivatableNotificationView) this.mView).makeActive();
             this.mFalsingCollector.onNotificationActive();
@@ -78,7 +68,6 @@ public class ActivatableNotificationViewController extends ViewController<Activa
         ((ActivatableNotificationView) this.mView).makeInactive(true);
     }
 
-    @Override // com.android.systemui.util.ViewController
     public void onInit() {
         this.mExpandableOutlineViewController.init();
         ((ActivatableNotificationView) this.mView).setOnTouchListener(this.mTouchHandler);
@@ -86,16 +75,13 @@ public class ActivatableNotificationViewController extends ViewController<Activa
         ((ActivatableNotificationView) this.mView).setAccessibilityManager(this.mAccessibilityManager);
     }
 
-    /* loaded from: classes.dex */
     class TouchHandler implements Gefingerpoken, View.OnTouchListener {
         private boolean mBlockNextTouch;
 
-        @Override // com.android.systemui.Gefingerpoken
         public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
             return false;
         }
 
-        @Override // com.android.systemui.Gefingerpoken
         public boolean onTouchEvent(MotionEvent motionEvent) {
             return false;
         }
@@ -103,14 +89,13 @@ public class ActivatableNotificationViewController extends ViewController<Activa
         TouchHandler() {
         }
 
-        @Override // android.view.View.OnTouchListener
         public boolean onTouch(View view, MotionEvent motionEvent) {
             if (this.mBlockNextTouch) {
                 this.mBlockNextTouch = false;
                 return true;
             }
             if (motionEvent.getAction() == 1) {
-                ((ActivatableNotificationView) ((ViewController) ActivatableNotificationViewController.this).mView).setLastActionUpTime(SystemClock.uptimeMillis());
+                ((ActivatableNotificationView) ActivatableNotificationViewController.this.mView).setLastActionUpTime(SystemClock.uptimeMillis());
             }
             if (ActivatableNotificationViewController.this.mAccessibilityManager.isTouchExplorationEnabled() || motionEvent.getAction() != 1) {
                 return false;

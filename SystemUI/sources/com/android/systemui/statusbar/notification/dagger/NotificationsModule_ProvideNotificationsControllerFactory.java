@@ -4,12 +4,10 @@ import android.content.Context;
 import com.android.systemui.statusbar.notification.init.NotificationsController;
 import com.android.systemui.statusbar.notification.init.NotificationsControllerImpl;
 import com.android.systemui.statusbar.notification.init.NotificationsControllerStub;
-import dagger.Lazy;
-import dagger.internal.DoubleCheck;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationsModule_ProvideNotificationsControllerFactory implements Factory<NotificationsController> {
     private final Provider<Context> contextProvider;
     private final Provider<NotificationsControllerImpl> realControllerProvider;
@@ -21,17 +19,15 @@ public final class NotificationsModule_ProvideNotificationsControllerFactory imp
         this.stubControllerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationsController mo1933get() {
-        return provideNotificationsController(this.contextProvider.mo1933get(), DoubleCheck.lazy(this.realControllerProvider), DoubleCheck.lazy(this.stubControllerProvider));
+    public NotificationsController get() {
+        return provideNotificationsController(this.contextProvider.get(), this.realControllerProvider, this.stubControllerProvider);
     }
 
     public static NotificationsModule_ProvideNotificationsControllerFactory create(Provider<Context> provider, Provider<NotificationsControllerImpl> provider2, Provider<NotificationsControllerStub> provider3) {
         return new NotificationsModule_ProvideNotificationsControllerFactory(provider, provider2, provider3);
     }
 
-    public static NotificationsController provideNotificationsController(Context context, Lazy<NotificationsControllerImpl> lazy, Lazy<NotificationsControllerStub> lazy2) {
-        return (NotificationsController) Preconditions.checkNotNullFromProvides(NotificationsModule.provideNotificationsController(context, lazy, lazy2));
+    public static NotificationsController provideNotificationsController(Context context, Provider<NotificationsControllerImpl> provider, Provider<NotificationsControllerStub> provider2) {
+        return (NotificationsController) Preconditions.checkNotNullFromProvides(NotificationsModule.provideNotificationsController(context, provider, provider2));
     }
 }

@@ -1,137 +1,168 @@
 package com.android.systemui.keyguard;
 
 import android.content.res.ColorStateList;
+import android.net.wifi.WifiEnterpriseConfig;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import com.android.systemui.Dumpable;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.keyguard.KeyguardIndication;
-import com.android.systemui.keyguard.KeyguardIndicationRotateTextViewController;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.phone.KeyguardIndicationTextView;
 import com.android.systemui.util.ViewController;
 import com.android.systemui.util.concurrency.DelayableExecutor;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.p026io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
+
 public class KeyguardIndicationRotateTextViewController extends ViewController<KeyguardIndicationTextView> implements Dumpable {
-    private final DelayableExecutor mExecutor;
+    private static final long DEFAULT_INDICATION_SHOW_LENGTH = 3500;
+    public static final long IMPORTANT_MSG_MIN_DURATION = 2600;
+    public static final int INDICATION_TYPE_ALIGNMENT = 4;
+    public static final int INDICATION_TYPE_BATTERY = 3;
+    public static final int INDICATION_TYPE_BIOMETRIC_MESSAGE = 11;
+    public static final int INDICATION_TYPE_DISCLOSURE = 1;
+    public static final int INDICATION_TYPE_LOGOUT = 2;
+    static final int INDICATION_TYPE_NONE = -1;
+    public static final int INDICATION_TYPE_OWNER_INFO = 0;
+    public static final int INDICATION_TYPE_RESTING = 7;
+    public static final int INDICATION_TYPE_REVERSE_CHARGING = 10;
+    public static final int INDICATION_TYPE_TRANSIENT = 5;
+    public static final int INDICATION_TYPE_TRUST = 6;
+    public static final int INDICATION_TYPE_USER_LOCKED = 8;
+    public static String TAG = "KgIndicationRotatingCtrl";
+    private int mCurrIndicationType = -1;
+    private CharSequence mCurrMessage;
+    /* access modifiers changed from: private */
+    public final DelayableExecutor mExecutor;
+    private final Map<Integer, KeyguardIndication> mIndicationMessages = new HashMap();
+    /* access modifiers changed from: private */
+    public final List<Integer> mIndicationQueue = new LinkedList();
     private final ColorStateList mInitialTextColorState;
-    private boolean mIsDozing;
-    private final float mMaxAlpha;
+    /* access modifiers changed from: private */
+    public boolean mIsDozing;
+    private long mLastIndicationSwitch;
+    /* access modifiers changed from: private */
+    public final float mMaxAlpha;
     private ShowNextIndication mShowNextIndicationRunnable;
     private final StatusBarStateController mStatusBarStateController;
-    private final Map<Integer, KeyguardIndication> mIndicationMessages = new HashMap();
-    private final List<Integer> mIndicationQueue = new LinkedList();
-    private int mCurrIndicationType = -1;
-    private StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() { // from class: com.android.systemui.keyguard.KeyguardIndicationRotateTextViewController.1
-        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
+    private StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() {
         public void onDozeAmountChanged(float f, float f2) {
-            ((KeyguardIndicationTextView) ((ViewController) KeyguardIndicationRotateTextViewController.this).mView).setAlpha((1.0f - f) * KeyguardIndicationRotateTextViewController.this.mMaxAlpha);
+            ((KeyguardIndicationTextView) KeyguardIndicationRotateTextViewController.this.mView).setAlpha((1.0f - f) * KeyguardIndicationRotateTextViewController.this.mMaxAlpha);
         }
 
-        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onDozingChanged(boolean z) {
-            if (z == KeyguardIndicationRotateTextViewController.this.mIsDozing) {
-                return;
-            }
-            KeyguardIndicationRotateTextViewController.this.mIsDozing = z;
-            if (KeyguardIndicationRotateTextViewController.this.mIsDozing) {
-                KeyguardIndicationRotateTextViewController.this.showIndication(-1);
-            } else if (KeyguardIndicationRotateTextViewController.this.mIndicationQueue.size() <= 0) {
-            } else {
-                KeyguardIndicationRotateTextViewController keyguardIndicationRotateTextViewController = KeyguardIndicationRotateTextViewController.this;
-                keyguardIndicationRotateTextViewController.showIndication(((Integer) keyguardIndicationRotateTextViewController.mIndicationQueue.remove(0)).intValue());
+            if (z != KeyguardIndicationRotateTextViewController.this.mIsDozing) {
+                boolean unused = KeyguardIndicationRotateTextViewController.this.mIsDozing = z;
+                if (KeyguardIndicationRotateTextViewController.this.mIsDozing) {
+                    KeyguardIndicationRotateTextViewController.this.showIndication(-1);
+                } else if (KeyguardIndicationRotateTextViewController.this.mIndicationQueue.size() > 0) {
+                    KeyguardIndicationRotateTextViewController keyguardIndicationRotateTextViewController = KeyguardIndicationRotateTextViewController.this;
+                    keyguardIndicationRotateTextViewController.showIndication(((Integer) keyguardIndicationRotateTextViewController.mIndicationQueue.get(0)).intValue());
+                }
             }
         }
     };
 
-    public KeyguardIndicationRotateTextViewController(KeyguardIndicationTextView keyguardIndicationTextView, DelayableExecutor delayableExecutor, StatusBarStateController statusBarStateController) {
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface IndicationType {
+    }
+
+    public KeyguardIndicationRotateTextViewController(KeyguardIndicationTextView keyguardIndicationTextView, @Main DelayableExecutor delayableExecutor, StatusBarStateController statusBarStateController) {
         super(keyguardIndicationTextView);
         this.mMaxAlpha = keyguardIndicationTextView.getAlpha();
         this.mExecutor = delayableExecutor;
-        T t = this.mView;
-        this.mInitialTextColorState = t != 0 ? ((KeyguardIndicationTextView) t).getTextColors() : ColorStateList.valueOf(-1);
+        this.mInitialTextColorState = this.mView != null ? ((KeyguardIndicationTextView) this.mView).getTextColors() : ColorStateList.valueOf(-1);
         this.mStatusBarStateController = statusBarStateController;
         init();
     }
 
-    @Override // com.android.systemui.util.ViewController
-    protected void onViewAttached() {
+    /* access modifiers changed from: protected */
+    public void onViewAttached() {
         this.mStatusBarStateController.addCallback(this.mStatusBarStateListener);
     }
 
-    @Override // com.android.systemui.util.ViewController
-    protected void onViewDetached() {
+    /* access modifiers changed from: protected */
+    public void onViewDetached() {
         this.mStatusBarStateController.removeCallback(this.mStatusBarStateListener);
         cancelScheduledIndication();
     }
 
-    public void updateIndication(final int i, KeyguardIndication keyguardIndication, boolean z) {
-        int i2;
-        if (i == 10) {
-            return;
-        }
-        boolean z2 = true;
-        boolean z3 = this.mIndicationMessages.get(Integer.valueOf(i)) != null;
-        boolean z4 = keyguardIndication != null;
-        if (!z4) {
-            this.mIndicationMessages.remove(Integer.valueOf(i));
-            this.mIndicationQueue.removeIf(new Predicate() { // from class: com.android.systemui.keyguard.KeyguardIndicationRotateTextViewController$$ExternalSyntheticLambda0
-                @Override // java.util.function.Predicate
-                public final boolean test(Object obj) {
-                    boolean lambda$updateIndication$0;
-                    lambda$updateIndication$0 = KeyguardIndicationRotateTextViewController.lambda$updateIndication$0(i, (Integer) obj);
-                    return lambda$updateIndication$0;
-                }
-            });
-        } else {
+    public void updateIndication(int i, KeyguardIndication keyguardIndication, boolean z) {
+        if (i != 10) {
+            long minVisibilityMillis = getMinVisibilityMillis(this.mIndicationMessages.get(Integer.valueOf(this.mCurrIndicationType)));
+            boolean z2 = true;
+            boolean z3 = keyguardIndication != null && !TextUtils.isEmpty(keyguardIndication.getMessage());
             if (!z3) {
-                this.mIndicationQueue.add(Integer.valueOf(i));
-            }
-            this.mIndicationMessages.put(Integer.valueOf(i), keyguardIndication);
-        }
-        if (this.mIsDozing) {
-            return;
-        }
-        if (!z && (i2 = this.mCurrIndicationType) != -1 && i2 != i) {
-            z2 = false;
-        }
-        if (z4) {
-            if (z2) {
-                showIndication(i);
-            } else if (isNextIndicationScheduled()) {
+                this.mIndicationMessages.remove(Integer.valueOf(i));
+                this.mIndicationQueue.removeIf(new C2147x419da85b(i));
             } else {
-                scheduleShowNextIndication();
+                if (!this.mIndicationQueue.contains(Integer.valueOf(i))) {
+                    this.mIndicationQueue.add(Integer.valueOf(i));
+                }
+                this.mIndicationMessages.put(Integer.valueOf(i), keyguardIndication);
             }
-        } else if (this.mCurrIndicationType != i || z4 || !z) {
-        } else {
-            ShowNextIndication showNextIndication = this.mShowNextIndicationRunnable;
-            if (showNextIndication != null) {
-                showNextIndication.runImmediately();
-            } else {
-                showIndication(-1);
+            if (!this.mIsDozing) {
+                long uptimeMillis = SystemClock.uptimeMillis() - this.mLastIndicationSwitch;
+                if (uptimeMillis < minVisibilityMillis) {
+                    z2 = false;
+                }
+                if (z3) {
+                    int i2 = this.mCurrIndicationType;
+                    if (i2 == -1 || i2 == i) {
+                        showIndication(i);
+                    } else if (z) {
+                        if (z2) {
+                            showIndication(i);
+                            return;
+                        }
+                        this.mIndicationQueue.removeIf(new C2148x419da85c(i));
+                        this.mIndicationQueue.add(0, Integer.valueOf(i));
+                        scheduleShowNextIndication(minVisibilityMillis - uptimeMillis);
+                    } else if (!isNextIndicationScheduled()) {
+                        long max = Math.max(getMinVisibilityMillis(this.mIndicationMessages.get(Integer.valueOf(i))), (long) DEFAULT_INDICATION_SHOW_LENGTH);
+                        if (uptimeMillis >= max) {
+                            showIndication(i);
+                        } else {
+                            scheduleShowNextIndication(max - uptimeMillis);
+                        }
+                    }
+                } else if (this.mCurrIndicationType == i && !z3 && z) {
+                    if (z2) {
+                        ShowNextIndication showNextIndication = this.mShowNextIndicationRunnable;
+                        if (showNextIndication != null) {
+                            showNextIndication.runImmediately();
+                        } else {
+                            showIndication(-1);
+                        }
+                    } else {
+                        scheduleShowNextIndication(minVisibilityMillis - uptimeMillis);
+                    }
+                }
             }
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$updateIndication$0(int i, Integer num) {
+    static /* synthetic */ boolean lambda$updateIndication$0(int i, Integer num) {
+        return num.intValue() == i;
+    }
+
+    static /* synthetic */ boolean lambda$updateIndication$1(int i, Integer num) {
         return num.intValue() == i;
     }
 
     public void hideIndication(int i) {
-        if (!this.mIndicationMessages.containsKey(Integer.valueOf(i)) || TextUtils.isEmpty(this.mIndicationMessages.get(Integer.valueOf(i)).getMessage())) {
-            return;
+        if (this.mIndicationMessages.containsKey(Integer.valueOf(i)) && !TextUtils.isEmpty(this.mIndicationMessages.get(Integer.valueOf(i)).getMessage())) {
+            updateIndication(i, (KeyguardIndication) null, true);
         }
-        updateIndication(i, null, true);
     }
 
     public void showTransient(CharSequence charSequence) {
-        updateIndication(5, new KeyguardIndication.Builder().setMessage(charSequence).setMinVisibilityMillis(2600L).setTextColor(this.mInitialTextColorState).build(), true);
+        updateIndication(5, new KeyguardIndication.Builder().setMessage(charSequence).setMinVisibilityMillis(Long.valueOf((long) IMPORTANT_MSG_MIN_DURATION)).setTextColor(this.mInitialTextColorState).build(), true);
     }
 
     public void hideTransient() {
@@ -142,40 +173,52 @@ public class KeyguardIndicationRotateTextViewController extends ViewController<K
         return this.mIndicationMessages.keySet().size() > 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public void showIndication(final int i) {
+    public void clearMessages() {
+        this.mCurrIndicationType = -1;
+        this.mIndicationQueue.clear();
+        this.mIndicationMessages.clear();
+        ((KeyguardIndicationTextView) this.mView).clearMessages();
+    }
+
+    /* access modifiers changed from: private */
+    public void showIndication(int i) {
         cancelScheduledIndication();
+        CharSequence charSequence = this.mCurrMessage;
+        int i2 = this.mCurrIndicationType;
         this.mCurrIndicationType = i;
-        this.mIndicationQueue.removeIf(new Predicate() { // from class: com.android.systemui.keyguard.KeyguardIndicationRotateTextViewController$$ExternalSyntheticLambda1
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$showIndication$1;
-                lambda$showIndication$1 = KeyguardIndicationRotateTextViewController.lambda$showIndication$1(i, (Integer) obj);
-                return lambda$showIndication$1;
-            }
-        });
+        this.mCurrMessage = this.mIndicationMessages.get(Integer.valueOf(i)) != null ? this.mIndicationMessages.get(Integer.valueOf(i)).getMessage() : null;
+        this.mIndicationQueue.removeIf(new C2146x419da85a(i));
         if (this.mCurrIndicationType != -1) {
             this.mIndicationQueue.add(Integer.valueOf(i));
         }
-        ((KeyguardIndicationTextView) this.mView).switchIndication(this.mIndicationMessages.get(Integer.valueOf(i)));
-        if (this.mCurrIndicationType == -1 || this.mIndicationQueue.size() <= 1) {
-            return;
+        this.mLastIndicationSwitch = SystemClock.uptimeMillis();
+        if (!TextUtils.equals(charSequence, this.mCurrMessage) || i2 != this.mCurrIndicationType) {
+            ((KeyguardIndicationTextView) this.mView).switchIndication(this.mIndicationMessages.get(Integer.valueOf(i)));
         }
-        scheduleShowNextIndication();
+        if (this.mCurrIndicationType != -1 && this.mIndicationQueue.size() > 1) {
+            scheduleShowNextIndication(Math.max(getMinVisibilityMillis(this.mIndicationMessages.get(Integer.valueOf(i))), (long) DEFAULT_INDICATION_SHOW_LENGTH));
+        }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$showIndication$1(int i, Integer num) {
+    static /* synthetic */ boolean lambda$showIndication$2(int i, Integer num) {
         return num.intValue() == i;
     }
 
-    protected boolean isNextIndicationScheduled() {
+    private long getMinVisibilityMillis(KeyguardIndication keyguardIndication) {
+        if (keyguardIndication == null || keyguardIndication.getMinVisibilityMillis() == null) {
+            return 0;
+        }
+        return keyguardIndication.getMinVisibilityMillis().longValue();
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean isNextIndicationScheduled() {
         return this.mShowNextIndicationRunnable != null;
     }
 
-    private void scheduleShowNextIndication() {
+    private void scheduleShowNextIndication(long j) {
         cancelScheduledIndication();
-        this.mShowNextIndicationRunnable = new ShowNextIndication(3500L);
+        this.mShowNextIndicationRunnable = new ShowNextIndication(j);
     }
 
     private void cancelScheduledIndication() {
@@ -186,26 +229,26 @@ public class KeyguardIndicationRotateTextViewController extends ViewController<K
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class ShowNextIndication {
+    class ShowNextIndication {
         private Runnable mCancelDelayedRunnable;
         private final Runnable mShowIndicationRunnable;
 
         ShowNextIndication(long j) {
-            Runnable runnable = new Runnable() { // from class: com.android.systemui.keyguard.KeyguardIndicationRotateTextViewController$ShowNextIndication$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    KeyguardIndicationRotateTextViewController.ShowNextIndication.this.lambda$new$0();
-                }
-            };
-            this.mShowIndicationRunnable = runnable;
-            this.mCancelDelayedRunnable = KeyguardIndicationRotateTextViewController.this.mExecutor.executeDelayed(runnable, j);
+            C2149x49118fb4 keyguardIndicationRotateTextViewController$ShowNextIndication$$ExternalSyntheticLambda0 = new C2149x49118fb4(this);
+            this.mShowIndicationRunnable = keyguardIndicationRotateTextViewController$ShowNextIndication$$ExternalSyntheticLambda0;
+            this.mCancelDelayedRunnable = KeyguardIndicationRotateTextViewController.this.mExecutor.executeDelayed(keyguardIndicationRotateTextViewController$ShowNextIndication$$ExternalSyntheticLambda0, j);
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$new$0() {
-            KeyguardIndicationRotateTextViewController.this.showIndication(KeyguardIndicationRotateTextViewController.this.mIndicationQueue.size() == 0 ? -1 : ((Integer) KeyguardIndicationRotateTextViewController.this.mIndicationQueue.remove(0)).intValue());
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$new$0$com-android-systemui-keyguard-KeyguardIndicationRotateTextViewController$ShowNextIndication */
+        public /* synthetic */ void mo33120x7d3b789() {
+            int i;
+            if (KeyguardIndicationRotateTextViewController.this.mIndicationQueue.size() == 0) {
+                i = -1;
+            } else {
+                i = ((Integer) KeyguardIndicationRotateTextViewController.this.mIndicationQueue.get(0)).intValue();
+            }
+            KeyguardIndicationRotateTextViewController.this.showIndication(i);
         }
 
         public void runImmediately() {
@@ -222,18 +265,17 @@ public class KeyguardIndicationRotateTextViewController extends ViewController<K
         }
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("KeyguardIndicationRotatingTextViewController:");
-        printWriter.println("    currentMessage=" + ((Object) ((KeyguardIndicationTextView) this.mView).getText()));
+        printWriter.println("    currentMessage=" + ((KeyguardIndicationTextView) this.mView).getText());
         printWriter.println("    dozing:" + this.mIsDozing);
         printWriter.println("    queue:" + this.mIndicationQueue.toString());
         printWriter.println("    showNextIndicationRunnable:" + this.mShowNextIndicationRunnable);
         if (hasIndications()) {
             printWriter.println("    All messages:");
-            for (Integer num : this.mIndicationMessages.keySet()) {
-                int intValue = num.intValue();
-                printWriter.println("        type=" + intValue + " " + this.mIndicationMessages.get(Integer.valueOf(intValue)));
+            for (Integer intValue : this.mIndicationMessages.keySet()) {
+                int intValue2 = intValue.intValue();
+                printWriter.println("        type=" + intValue2 + WifiEnterpriseConfig.CA_CERT_ALIAS_DELIMITER + this.mIndicationMessages.get(Integer.valueOf(intValue2)));
             }
         }
     }

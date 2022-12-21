@@ -1,140 +1,262 @@
 package okio;
 
-import kotlin.collections.ArraysKt;
-import kotlin.jvm.internal.Intrinsics;
-import okio.internal.SegmentedByteStringKt;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-/* compiled from: SegmentedByteString.kt */
-/* loaded from: classes2.dex */
-public final class SegmentedByteString extends ByteString {
-    @NotNull
-    private final transient int[] directory;
-    @NotNull
-    private final transient byte[][] segments;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.p026io.IOException;
+import java.p026io.OutputStream;
+import java.util.Arrays;
 
-    @NotNull
-    public final byte[][] getSegments$external__okio__android_common__okio_lib() {
-        return this.segments;
+final class SegmentedByteString extends ByteString {
+    final transient int[] directory;
+    final transient byte[][] segments;
+
+    SegmentedByteString(Buffer buffer, int i) {
+        super((byte[]) null);
+        Util.checkOffsetAndCount(buffer.size, 0, (long) i);
+        Segment segment = buffer.head;
+        int i2 = 0;
+        int i3 = 0;
+        int i4 = 0;
+        while (i3 < i) {
+            if (segment.limit != segment.pos) {
+                i3 += segment.limit - segment.pos;
+                i4++;
+                segment = segment.next;
+            } else {
+                throw new AssertionError((Object) "s.limit == s.pos");
+            }
+        }
+        this.segments = new byte[i4][];
+        this.directory = new int[(i4 * 2)];
+        Segment segment2 = buffer.head;
+        int i5 = 0;
+        while (i2 < i) {
+            this.segments[i5] = segment2.data;
+            i2 += segment2.limit - segment2.pos;
+            if (i2 > i) {
+                i2 = i;
+            }
+            int[] iArr = this.directory;
+            iArr[i5] = i2;
+            iArr[this.segments.length + i5] = segment2.pos;
+            segment2.shared = true;
+            i5++;
+            segment2 = segment2.next;
+        }
     }
 
-    @NotNull
-    public final int[] getDirectory$external__okio__android_common__okio_lib() {
-        return this.directory;
+    public String utf8() {
+        return toByteString().utf8();
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public SegmentedByteString(@NotNull byte[][] segments, @NotNull int[] directory) {
-        super(ByteString.EMPTY.getData$external__okio__android_common__okio_lib());
-        Intrinsics.checkNotNullParameter(segments, "segments");
-        Intrinsics.checkNotNullParameter(directory, "directory");
-        this.segments = segments;
-        this.directory = directory;
+    public String string(Charset charset) {
+        return toByteString().string(charset);
     }
 
-    @Override // okio.ByteString
-    @NotNull
+    public String base64() {
+        return toByteString().base64();
+    }
+
     public String hex() {
         return toByteString().hex();
     }
 
-    private final ByteString toByteString() {
-        return new ByteString(toByteArray());
+    public ByteString toAsciiLowercase() {
+        return toByteString().toAsciiLowercase();
     }
 
-    @Override // okio.ByteString
-    @NotNull
-    public byte[] internalArray$external__okio__android_common__okio_lib() {
-        return toByteArray();
+    public ByteString toAsciiUppercase() {
+        return toByteString().toAsciiUppercase();
     }
 
-    @Override // okio.ByteString
-    @NotNull
-    public String toString() {
-        return toByteString().toString();
+    public ByteString md5() {
+        return toByteString().md5();
     }
 
-    private final Object writeReplace() {
-        return toByteString();
+    public ByteString sha1() {
+        return toByteString().sha1();
     }
 
-    @Override // okio.ByteString
-    public byte internalGet$external__okio__android_common__okio_lib(int i) {
-        Util.checkOffsetAndCount(getDirectory$external__okio__android_common__okio_lib()[getSegments$external__okio__android_common__okio_lib().length - 1], i, 1L);
-        int segment = SegmentedByteStringKt.segment(this, i);
-        return getSegments$external__okio__android_common__okio_lib()[segment][(i - (segment == 0 ? 0 : getDirectory$external__okio__android_common__okio_lib()[segment - 1])) + getDirectory$external__okio__android_common__okio_lib()[getSegments$external__okio__android_common__okio_lib().length + segment]];
+    public ByteString sha256() {
+        return toByteString().sha256();
     }
 
-    @Override // okio.ByteString
-    public int getSize$external__okio__android_common__okio_lib() {
-        return getDirectory$external__okio__android_common__okio_lib()[getSegments$external__okio__android_common__okio_lib().length - 1];
+    public ByteString hmacSha1(ByteString byteString) {
+        return toByteString().hmacSha1(byteString);
     }
 
-    @NotNull
+    public ByteString hmacSha256(ByteString byteString) {
+        return toByteString().hmacSha256(byteString);
+    }
+
+    public String base64Url() {
+        return toByteString().base64Url();
+    }
+
+    public ByteString substring(int i) {
+        return toByteString().substring(i);
+    }
+
+    public ByteString substring(int i, int i2) {
+        return toByteString().substring(i, i2);
+    }
+
+    public byte getByte(int i) {
+        int i2;
+        Util.checkOffsetAndCount((long) this.directory[this.segments.length - 1], (long) i, 1);
+        int segment = segment(i);
+        if (segment == 0) {
+            i2 = 0;
+        } else {
+            i2 = this.directory[segment - 1];
+        }
+        int[] iArr = this.directory;
+        byte[][] bArr = this.segments;
+        return bArr[segment][(i - i2) + iArr[bArr.length + segment]];
+    }
+
+    private int segment(int i) {
+        int binarySearch = Arrays.binarySearch(this.directory, 0, this.segments.length, i + 1);
+        return binarySearch >= 0 ? binarySearch : ~binarySearch;
+    }
+
+    public int size() {
+        return this.directory[this.segments.length - 1];
+    }
+
     public byte[] toByteArray() {
-        byte[] bArr = new byte[size()];
-        int length = getSegments$external__okio__android_common__okio_lib().length;
+        int[] iArr = this.directory;
+        byte[][] bArr = this.segments;
+        byte[] bArr2 = new byte[iArr[bArr.length - 1]];
+        int length = bArr.length;
         int i = 0;
         int i2 = 0;
-        int i3 = 0;
         while (i < length) {
-            int i4 = getDirectory$external__okio__android_common__okio_lib()[length + i];
-            int i5 = getDirectory$external__okio__android_common__okio_lib()[i];
-            int i6 = i5 - i2;
-            ArraysKt.copyInto(getSegments$external__okio__android_common__okio_lib()[i], bArr, i3, i4, i4 + i6);
-            i3 += i6;
+            int[] iArr2 = this.directory;
+            int i3 = iArr2[length + i];
+            int i4 = iArr2[i];
+            System.arraycopy((Object) this.segments[i], i3, (Object) bArr2, i2, i4 - i2);
             i++;
-            i2 = i5;
+            i2 = i4;
         }
-        return bArr;
+        return bArr2;
     }
 
-    @Override // okio.ByteString
-    public boolean rangeEquals(int i, @NotNull ByteString other, int i2, int i3) {
-        Intrinsics.checkNotNullParameter(other, "other");
+    public ByteBuffer asByteBuffer() {
+        return ByteBuffer.wrap(toByteArray()).asReadOnlyBuffer();
+    }
+
+    public void write(OutputStream outputStream) throws IOException {
+        if (outputStream != null) {
+            int length = this.segments.length;
+            int i = 0;
+            int i2 = 0;
+            while (i < length) {
+                int[] iArr = this.directory;
+                int i3 = iArr[length + i];
+                int i4 = iArr[i];
+                outputStream.write(this.segments[i], i3, i4 - i2);
+                i++;
+                i2 = i4;
+            }
+            return;
+        }
+        throw new IllegalArgumentException("out == null");
+    }
+
+    /* access modifiers changed from: package-private */
+    public void write(Buffer buffer) {
+        int length = this.segments.length;
+        int i = 0;
+        int i2 = 0;
+        while (i < length) {
+            int[] iArr = this.directory;
+            int i3 = iArr[length + i];
+            int i4 = iArr[i];
+            Segment segment = new Segment(this.segments[i], i3, (i3 + i4) - i2, true, false);
+            if (buffer.head == null) {
+                segment.prev = segment;
+                segment.next = segment;
+                buffer.head = segment;
+            } else {
+                buffer.head.prev.push(segment);
+            }
+            i++;
+            i2 = i4;
+        }
+        buffer.size += (long) i2;
+    }
+
+    public boolean rangeEquals(int i, ByteString byteString, int i2, int i3) {
+        int i4;
         if (i < 0 || i > size() - i3) {
             return false;
         }
-        int i4 = i3 + i;
-        int segment = SegmentedByteStringKt.segment(this, i);
-        while (i < i4) {
-            int i5 = segment == 0 ? 0 : getDirectory$external__okio__android_common__okio_lib()[segment - 1];
-            int i6 = getDirectory$external__okio__android_common__okio_lib()[getSegments$external__okio__android_common__okio_lib().length + segment];
-            int min = Math.min(i4, (getDirectory$external__okio__android_common__okio_lib()[segment] - i5) + i5) - i;
-            if (!other.rangeEquals(i2, getSegments$external__okio__android_common__okio_lib()[segment], i6 + (i - i5), min)) {
+        int segment = segment(i);
+        while (i3 > 0) {
+            if (segment == 0) {
+                i4 = 0;
+            } else {
+                i4 = this.directory[segment - 1];
+            }
+            int min = Math.min(i3, ((this.directory[segment] - i4) + i4) - i);
+            int[] iArr = this.directory;
+            byte[][] bArr = this.segments;
+            if (!byteString.rangeEquals(i2, bArr[segment], (i - i4) + iArr[bArr.length + segment], min)) {
                 return false;
             }
-            i2 += min;
             i += min;
+            i2 += min;
+            i3 -= min;
             segment++;
         }
         return true;
     }
 
-    @Override // okio.ByteString
-    public boolean rangeEquals(int i, @NotNull byte[] other, int i2, int i3) {
-        Intrinsics.checkNotNullParameter(other, "other");
-        if (i < 0 || i > size() - i3 || i2 < 0 || i2 > other.length - i3) {
+    public boolean rangeEquals(int i, byte[] bArr, int i2, int i3) {
+        int i4;
+        if (i < 0 || i > size() - i3 || i2 < 0 || i2 > bArr.length - i3) {
             return false;
         }
-        int i4 = i3 + i;
-        int segment = SegmentedByteStringKt.segment(this, i);
-        while (i < i4) {
-            int i5 = segment == 0 ? 0 : getDirectory$external__okio__android_common__okio_lib()[segment - 1];
-            int i6 = getDirectory$external__okio__android_common__okio_lib()[getSegments$external__okio__android_common__okio_lib().length + segment];
-            int min = Math.min(i4, (getDirectory$external__okio__android_common__okio_lib()[segment] - i5) + i5) - i;
-            if (!Util.arrayRangeEquals(getSegments$external__okio__android_common__okio_lib()[segment], i6 + (i - i5), other, i2, min)) {
+        int segment = segment(i);
+        while (i3 > 0) {
+            if (segment == 0) {
+                i4 = 0;
+            } else {
+                i4 = this.directory[segment - 1];
+            }
+            int min = Math.min(i3, ((this.directory[segment] - i4) + i4) - i);
+            int[] iArr = this.directory;
+            byte[][] bArr2 = this.segments;
+            if (!Util.arrayRangeEquals(bArr2[segment], (i - i4) + iArr[bArr2.length + segment], bArr, i2, min)) {
                 return false;
             }
-            i2 += min;
             i += min;
+            i2 += min;
+            i3 -= min;
             segment++;
         }
         return true;
     }
 
-    @Override // okio.ByteString
-    public boolean equals(@Nullable Object obj) {
+    public int indexOf(byte[] bArr, int i) {
+        return toByteString().indexOf(bArr, i);
+    }
+
+    public int lastIndexOf(byte[] bArr, int i) {
+        return toByteString().lastIndexOf(bArr, i);
+    }
+
+    private ByteString toByteString() {
+        return new ByteString(toByteArray());
+    }
+
+    /* access modifiers changed from: package-private */
+    public byte[] internalArray() {
+        return toByteArray();
+    }
+
+    public boolean equals(Object obj) {
         if (obj == this) {
             return true;
         }
@@ -147,29 +269,37 @@ public final class SegmentedByteString extends ByteString {
         return false;
     }
 
-    @Override // okio.ByteString
     public int hashCode() {
-        int hashCode$external__okio__android_common__okio_lib = getHashCode$external__okio__android_common__okio_lib();
-        if (hashCode$external__okio__android_common__okio_lib != 0) {
-            return hashCode$external__okio__android_common__okio_lib;
+        int i = this.hashCode;
+        if (i != 0) {
+            return i;
         }
-        int length = getSegments$external__okio__android_common__okio_lib().length;
-        int i = 0;
-        int i2 = 1;
-        int i3 = 0;
-        while (i < length) {
-            int i4 = getDirectory$external__okio__android_common__okio_lib()[length + i];
-            int i5 = getDirectory$external__okio__android_common__okio_lib()[i];
-            byte[] bArr = getSegments$external__okio__android_common__okio_lib()[i];
-            int i6 = (i5 - i3) + i4;
-            while (i4 < i6) {
-                i2 = (i2 * 31) + bArr[i4];
-                i4++;
+        int length = this.segments.length;
+        int i2 = 0;
+        int i3 = 1;
+        int i4 = 0;
+        while (i2 < length) {
+            byte[] bArr = this.segments[i2];
+            int[] iArr = this.directory;
+            int i5 = iArr[length + i2];
+            int i6 = iArr[i2];
+            int i7 = (i6 - i4) + i5;
+            while (i5 < i7) {
+                i3 = (i3 * 31) + bArr[i5];
+                i5++;
             }
-            i++;
-            i3 = i5;
+            i2++;
+            i4 = i6;
         }
-        setHashCode$external__okio__android_common__okio_lib(i2);
-        return i2;
+        this.hashCode = i3;
+        return i3;
+    }
+
+    public String toString() {
+        return toByteString().toString();
+    }
+
+    private Object writeReplace() {
+        return toByteString();
     }
 }

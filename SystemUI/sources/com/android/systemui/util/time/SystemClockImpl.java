@@ -1,17 +1,24 @@
 package com.android.systemui.util.time;
-/* loaded from: classes2.dex */
+
+import android.os.SystemClock;
+
 public class SystemClockImpl implements SystemClock {
-    @Override // com.android.systemui.util.time.SystemClock
     public long uptimeMillis() {
-        return android.os.SystemClock.uptimeMillis();
+        return SystemClock.uptimeMillis();
     }
 
-    @Override // com.android.systemui.util.time.SystemClock
     public long elapsedRealtime() {
-        return android.os.SystemClock.elapsedRealtime();
+        return SystemClock.elapsedRealtime();
     }
 
-    @Override // com.android.systemui.util.time.SystemClock
+    public long elapsedRealtimeNanos() {
+        return SystemClock.elapsedRealtimeNanos();
+    }
+
+    public long currentThreadTimeMillis() {
+        return SystemClock.currentThreadTimeMillis();
+    }
+
     public long currentTimeMillis() {
         return System.currentTimeMillis();
     }

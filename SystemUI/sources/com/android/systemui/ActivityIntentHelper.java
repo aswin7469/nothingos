@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import com.android.systemui.dagger.SysUISingleton;
 import java.util.List;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class ActivityIntentHelper {
     private final Context mContext;
 
+    @Inject
     public ActivityIntentHelper(Context context) {
         this.mContext = context;
     }
@@ -22,8 +26,8 @@ public class ActivityIntentHelper {
         ResolveInfo resolveActivityAsUser;
         PackageManager packageManager = this.mContext.getPackageManager();
         int i2 = !z ? 851968 : 65536;
-        List<ResolveInfo> queryIntentActivitiesAsUser = packageManager.queryIntentActivitiesAsUser(intent, i2, i);
-        if (queryIntentActivitiesAsUser.size() == 0 || (resolveActivityAsUser = packageManager.resolveActivityAsUser(intent, i2 | 128, i)) == null || wouldLaunchResolverActivity(resolveActivityAsUser, queryIntentActivitiesAsUser)) {
+        List queryIntentActivitiesAsUser = packageManager.queryIntentActivitiesAsUser(intent, i2, i);
+        if (queryIntentActivitiesAsUser.size() == 0 || (resolveActivityAsUser = packageManager.resolveActivityAsUser(intent, i2 | 128, i)) == null || wouldLaunchResolverActivity(resolveActivityAsUser, (List<ResolveInfo>) queryIntentActivitiesAsUser)) {
             return null;
         }
         return resolveActivityAsUser.activityInfo;
@@ -31,7 +35,10 @@ public class ActivityIntentHelper {
 
     public boolean wouldShowOverLockscreen(Intent intent, int i) {
         ActivityInfo targetActivityInfo = getTargetActivityInfo(intent, i, false);
-        return targetActivityInfo != null && (targetActivityInfo.flags & 8389632) > 0;
+        if (targetActivityInfo == null || (targetActivityInfo.flags & 8389632) <= 0) {
+            return false;
+        }
+        return true;
     }
 
     public boolean wouldLaunchResolverActivity(ResolveInfo resolveInfo, List<ResolveInfo> list) {

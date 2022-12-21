@@ -4,7 +4,7 @@ import android.content.pm.IPackageManager;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DeviceProvisionedCoordinator_Factory implements Factory<DeviceProvisionedCoordinator> {
     private final Provider<DeviceProvisionedController> deviceProvisionedControllerProvider;
     private final Provider<IPackageManager> packageManagerProvider;
@@ -14,10 +14,8 @@ public final class DeviceProvisionedCoordinator_Factory implements Factory<Devic
         this.packageManagerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DeviceProvisionedCoordinator mo1933get() {
-        return newInstance(this.deviceProvisionedControllerProvider.mo1933get(), this.packageManagerProvider.mo1933get());
+    public DeviceProvisionedCoordinator get() {
+        return newInstance(this.deviceProvisionedControllerProvider.get(), this.packageManagerProvider.get());
     }
 
     public static DeviceProvisionedCoordinator_Factory create(Provider<DeviceProvisionedController> provider, Provider<IPackageManager> provider2) {

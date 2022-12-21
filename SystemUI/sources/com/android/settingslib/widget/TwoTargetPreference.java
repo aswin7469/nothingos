@@ -7,13 +7,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceViewHolder;
-/* loaded from: classes.dex */
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class TwoTargetPreference extends Preference {
+    public static final int ICON_SIZE_DEFAULT = 0;
+    public static final int ICON_SIZE_MEDIUM = 1;
+    public static final int ICON_SIZE_SMALL = 2;
     private int mIconSize;
     private int mMediumIconSize;
     private int mSmallIconSize;
 
-    protected int getSecondTargetResId() {
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface IconSize {
+    }
+
+    /* access modifiers changed from: protected */
+    public int getSecondTargetResId() {
         return 0;
     }
 
@@ -22,22 +32,35 @@ public class TwoTargetPreference extends Preference {
         init(context);
     }
 
+    public TwoTargetPreference(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
+        init(context);
+    }
+
     public TwoTargetPreference(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         init(context);
     }
 
+    public TwoTargetPreference(Context context) {
+        super(context);
+        init(context);
+    }
+
     private void init(Context context) {
-        setLayoutResource(R$layout.preference_two_target);
-        this.mSmallIconSize = context.getResources().getDimensionPixelSize(R$dimen.two_target_pref_small_icon_size);
-        this.mMediumIconSize = context.getResources().getDimensionPixelSize(R$dimen.two_target_pref_medium_icon_size);
+        setLayoutResource(C1860R.layout.preference_two_target);
+        this.mSmallIconSize = context.getResources().getDimensionPixelSize(C1860R.dimen.two_target_pref_small_icon_size);
+        this.mMediumIconSize = context.getResources().getDimensionPixelSize(C1860R.dimen.two_target_pref_medium_icon_size);
         int secondTargetResId = getSecondTargetResId();
         if (secondTargetResId != 0) {
             setWidgetLayoutResource(secondTargetResId);
         }
     }
 
-    @Override // androidx.preference.Preference
+    public void setIconSize(int i) {
+        this.mIconSize = i;
+    }
+
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         ImageView imageView = (ImageView) preferenceViewHolder.itemView.findViewById(16908294);
@@ -49,7 +72,7 @@ public class TwoTargetPreference extends Preference {
             int i3 = this.mSmallIconSize;
             imageView.setLayoutParams(new LinearLayout.LayoutParams(i3, i3));
         }
-        View findViewById = preferenceViewHolder.findViewById(R$id.two_target_divider);
+        View findViewById = preferenceViewHolder.findViewById(C1860R.C1863id.two_target_divider);
         View findViewById2 = preferenceViewHolder.findViewById(16908312);
         boolean shouldHideSecondTarget = shouldHideSecondTarget();
         int i4 = 8;
@@ -64,7 +87,8 @@ public class TwoTargetPreference extends Preference {
         }
     }
 
-    protected boolean shouldHideSecondTarget() {
+    /* access modifiers changed from: protected */
+    public boolean shouldHideSecondTarget() {
         return getSecondTargetResId() == 0;
     }
 }

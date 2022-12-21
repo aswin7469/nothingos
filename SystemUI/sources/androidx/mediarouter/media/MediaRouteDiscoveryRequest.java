@@ -1,20 +1,27 @@
 package androidx.mediarouter.media;
 
 import android.os.Bundle;
-/* loaded from: classes.dex */
+
 public final class MediaRouteDiscoveryRequest {
+    private static final String KEY_ACTIVE_SCAN = "activeScan";
+    private static final String KEY_SELECTOR = "selector";
     private final Bundle mBundle;
     private MediaRouteSelector mSelector;
 
-    public MediaRouteDiscoveryRequest(MediaRouteSelector selector, boolean activeScan) {
-        if (selector == null) {
-            throw new IllegalArgumentException("selector must not be null");
+    public MediaRouteDiscoveryRequest(MediaRouteSelector mediaRouteSelector, boolean z) {
+        if (mediaRouteSelector != null) {
+            Bundle bundle = new Bundle();
+            this.mBundle = bundle;
+            this.mSelector = mediaRouteSelector;
+            bundle.putBundle(KEY_SELECTOR, mediaRouteSelector.asBundle());
+            bundle.putBoolean(KEY_ACTIVE_SCAN, z);
+            return;
         }
-        Bundle bundle = new Bundle();
+        throw new IllegalArgumentException("selector must not be null");
+    }
+
+    private MediaRouteDiscoveryRequest(Bundle bundle) {
         this.mBundle = bundle;
-        this.mSelector = selector;
-        bundle.putBundle("selector", selector.asBundle());
-        bundle.putBoolean("activeScan", activeScan);
     }
 
     public MediaRouteSelector getSelector() {
@@ -24,17 +31,16 @@ public final class MediaRouteDiscoveryRequest {
 
     private void ensureSelector() {
         if (this.mSelector == null) {
-            MediaRouteSelector fromBundle = MediaRouteSelector.fromBundle(this.mBundle.getBundle("selector"));
+            MediaRouteSelector fromBundle = MediaRouteSelector.fromBundle(this.mBundle.getBundle(KEY_SELECTOR));
             this.mSelector = fromBundle;
-            if (fromBundle != null) {
-                return;
+            if (fromBundle == null) {
+                this.mSelector = MediaRouteSelector.EMPTY;
             }
-            this.mSelector = MediaRouteSelector.EMPTY;
         }
     }
 
     public boolean isActiveScan() {
-        return this.mBundle.getBoolean("activeScan");
+        return this.mBundle.getBoolean(KEY_ACTIVE_SCAN);
     }
 
     public boolean isValid() {
@@ -42,23 +48,38 @@ public final class MediaRouteDiscoveryRequest {
         return this.mSelector.isValid();
     }
 
-    public boolean equals(Object o) {
-        if (o instanceof MediaRouteDiscoveryRequest) {
-            MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest = (MediaRouteDiscoveryRequest) o;
-            return getSelector().equals(mediaRouteDiscoveryRequest.getSelector()) && isActiveScan() == mediaRouteDiscoveryRequest.isActiveScan();
+    public boolean equals(Object obj) {
+        if (!(obj instanceof MediaRouteDiscoveryRequest)) {
+            return false;
         }
-        return false;
+        MediaRouteDiscoveryRequest mediaRouteDiscoveryRequest = (MediaRouteDiscoveryRequest) obj;
+        if (!getSelector().equals(mediaRouteDiscoveryRequest.getSelector()) || isActiveScan() != mediaRouteDiscoveryRequest.isActiveScan()) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {
-        return isActiveScan() ^ getSelector().hashCode();
+        return isActiveScan() ^ getSelector().hashCode() ? 1 : 0;
     }
 
     public String toString() {
-        return "DiscoveryRequest{ selector=" + getSelector() + ", activeScan=" + isActiveScan() + ", isValid=" + isValid() + " }";
+        StringBuilder sb = new StringBuilder("DiscoveryRequest{ selector=");
+        sb.append((Object) getSelector());
+        sb.append(", activeScan=").append(isActiveScan());
+        sb.append(", isValid=").append(isValid());
+        sb.append(" }");
+        return sb.toString();
     }
 
     public Bundle asBundle() {
         return this.mBundle;
+    }
+
+    public static MediaRouteDiscoveryRequest fromBundle(Bundle bundle) {
+        if (bundle != null) {
+            return new MediaRouteDiscoveryRequest(bundle);
+        }
+        return null;
     }
 }

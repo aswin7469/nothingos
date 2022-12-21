@@ -4,7 +4,7 @@ import android.app.IActivityManager;
 import com.android.settingslib.users.EditUserInfoController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class CreateUserActivity_Factory implements Factory<CreateUserActivity> {
     private final Provider<IActivityManager> activityManagerProvider;
     private final Provider<EditUserInfoController> editUserInfoControllerProvider;
@@ -16,10 +16,8 @@ public final class CreateUserActivity_Factory implements Factory<CreateUserActiv
         this.activityManagerProvider = provider3;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public CreateUserActivity mo1933get() {
-        return newInstance(this.userCreatorProvider.mo1933get(), this.editUserInfoControllerProvider.mo1933get(), this.activityManagerProvider.mo1933get());
+    public CreateUserActivity get() {
+        return newInstance(this.userCreatorProvider.get(), this.editUserInfoControllerProvider.get(), this.activityManagerProvider.get());
     }
 
     public static CreateUserActivity_Factory create(Provider<UserCreator> provider, Provider<EditUserInfoController> provider2, Provider<IActivityManager> provider3) {

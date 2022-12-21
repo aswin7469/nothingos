@@ -1,132 +1,147 @@
 package com.android.systemui.statusbar;
 
+import android.graphics.Region;
 import android.view.ViewGroup;
 import com.android.systemui.statusbar.RemoteInputController;
 import com.android.systemui.statusbar.phone.StatusBarWindowCallback;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
+
 public interface NotificationShadeWindowController extends RemoteInputController.Callback {
 
-    /* loaded from: classes.dex */
     public interface ForcePluginOpenListener {
         void onChange(boolean z);
     }
 
-    /* loaded from: classes.dex */
     public interface OtherwisedCollapsedListener {
         void setWouldOtherwiseCollapse(boolean z);
     }
 
-    default void attach() {
+    void attach() {
     }
 
-    default boolean getForcePluginOpen() {
+    boolean getForcePluginOpen() {
         return false;
     }
 
-    default boolean getPanelExpanded() {
+    ViewGroup getNotificationShadeView() {
+        return null;
+    }
+
+    boolean getPanelExpanded() {
         return false;
     }
 
-    default boolean isLaunchingActivity() {
+    boolean isLaunchingActivity() {
         return false;
     }
 
-    default boolean isShowingWallpaper() {
+    boolean isShowingWallpaper() {
         return false;
     }
 
-    default void notifyStateChangedCallbacks() {
+    void notifyStateChangedCallbacks() {
     }
 
-    @Override // com.android.systemui.statusbar.RemoteInputController.Callback
-    default void onRemoteInputActive(boolean z) {
+    void onRemoteInputActive(boolean z) {
     }
 
-    default void registerCallback(StatusBarWindowCallback statusBarWindowCallback) {
+    void registerCallback(StatusBarWindowCallback statusBarWindowCallback) {
     }
 
-    default void setBackdropShowing(boolean z) {
+    void setBackdropShowing(boolean z) {
     }
 
-    default void setBackgroundBlurRadius(int i) {
+    void setBackgroundBlurRadius(int i) {
     }
 
-    default void setBouncerShowing(boolean z) {
+    void setBouncerShowing(boolean z) {
     }
 
-    default void setDozeScreenBrightness(int i) {
+    void setDozeScreenBrightness(int i) {
     }
 
-    default void setFaceAuthDisplayBrightness(float f) {
+    void setDozing(boolean z) {
     }
 
-    default void setForceDozeBrightness(boolean z) {
+    void setForceDozeBrightness(boolean z) {
     }
 
-    default void setForcePluginOpen(boolean z, Object obj) {
+    void setForcePluginOpen(boolean z, Object obj) {
     }
 
-    default void setForcePluginOpenListener(ForcePluginOpenListener forcePluginOpenListener) {
+    void setForcePluginOpenListener(ForcePluginOpenListener forcePluginOpenListener) {
     }
 
-    default void setForceWindowCollapsed(boolean z) {
+    void setForceUserActivity(boolean z) {
     }
 
-    default void setHeadsUpShowing(boolean z) {
+    void setForceWindowCollapsed(boolean z) {
     }
 
-    default void setKeyguardFadingAway(boolean z) {
+    void setHeadsUpShowing(boolean z) {
     }
 
-    default void setKeyguardGoingAway(boolean z) {
+    void setKeyguardFadingAway(boolean z) {
     }
 
-    default void setKeyguardNeedsInput(boolean z) {
+    void setKeyguardGoingAway(boolean z) {
     }
 
-    default void setKeyguardOccluded(boolean z) {
+    void setKeyguardNeedsInput(boolean z) {
     }
 
-    default void setKeyguardShowing(boolean z) {
+    void setKeyguardOccluded(boolean z) {
     }
 
-    default void setLaunchingActivity(boolean z) {
+    void setKeyguardShowing(boolean z) {
     }
 
-    default void setLightRevealScrimOpaque(boolean z) {
+    void setLaunchingActivity(boolean z) {
     }
 
-    default void setNotTouchable(boolean z) {
+    void setLightRevealScrimOpaque(boolean z) {
     }
 
-    default void setNotificationShadeFocusable(boolean z) {
+    void setNotTouchable(boolean z) {
     }
 
-    default void setNotificationShadeView(ViewGroup viewGroup) {
+    void setNotificationShadeFocusable(boolean z) {
     }
 
-    default void setPanelExpanded(boolean z) {
+    void setNotificationShadeView(ViewGroup viewGroup) {
     }
 
-    default void setPanelVisible(boolean z) {
+    void setPanelExpanded(boolean z) {
     }
 
-    default void setQsExpanded(boolean z) {
+    void setPanelVisible(boolean z) {
     }
 
-    default void setRequestTopUi(boolean z, String str) {
+    void setQsExpanded(boolean z) {
     }
 
-    default void setScrimsVisibility(int i) {
+    void setRequestTopUi(boolean z, String str) {
     }
 
-    default void setScrimsVisibilityListener(Consumer<Integer> consumer) {
+    void setScrimsVisibility(int i) {
     }
 
-    default void setStateListener(OtherwisedCollapsedListener otherwisedCollapsedListener) {
+    void setScrimsVisibilityListener(Consumer<Integer> consumer) {
     }
 
-    default void setWallpaperSupportsAmbientMode(boolean z) {
+    void setStateListener(OtherwisedCollapsedListener otherwisedCollapsedListener) {
+    }
+
+    void setTouchExclusionRegion(Region region) {
+    }
+
+    void setWallpaperSupportsAmbientMode(boolean z) {
+    }
+
+    void unregisterCallback(StatusBarWindowCallback statusBarWindowCallback) {
+    }
+
+    void batchApplyWindowLayoutParams(Runnable runnable) {
+        runnable.run();
     }
 }

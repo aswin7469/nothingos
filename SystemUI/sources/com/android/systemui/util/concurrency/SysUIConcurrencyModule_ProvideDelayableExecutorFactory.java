@@ -4,7 +4,7 @@ import android.os.Looper;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class SysUIConcurrencyModule_ProvideDelayableExecutorFactory implements Factory<DelayableExecutor> {
     private final Provider<Looper> looperProvider;
 
@@ -12,10 +12,8 @@ public final class SysUIConcurrencyModule_ProvideDelayableExecutorFactory implem
         this.looperProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DelayableExecutor mo1933get() {
-        return provideDelayableExecutor(this.looperProvider.mo1933get());
+    public DelayableExecutor get() {
+        return provideDelayableExecutor(this.looperProvider.get());
     }
 
     public static SysUIConcurrencyModule_ProvideDelayableExecutorFactory create(Provider<Looper> provider) {

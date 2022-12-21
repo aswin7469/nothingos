@@ -6,7 +6,7 @@ import com.android.systemui.util.wakelock.WakeLock;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DozeModule_ProvidesDozeWakeLockFactory implements Factory<WakeLock> {
     private final Provider<DelayedWakeLock.Builder> delayedWakeLockBuilderProvider;
     private final Provider<Handler> handlerProvider;
@@ -16,10 +16,8 @@ public final class DozeModule_ProvidesDozeWakeLockFactory implements Factory<Wak
         this.handlerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public WakeLock mo1933get() {
-        return providesDozeWakeLock(this.delayedWakeLockBuilderProvider.mo1933get(), this.handlerProvider.mo1933get());
+    public WakeLock get() {
+        return providesDozeWakeLock(this.delayedWakeLockBuilderProvider.get(), this.handlerProvider.get());
     }
 
     public static DozeModule_ProvidesDozeWakeLockFactory create(Provider<DelayedWakeLock.Builder> provider, Provider<Handler> provider2) {

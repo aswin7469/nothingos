@@ -5,47 +5,59 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class AutoReinflateContainer extends FrameLayout implements ConfigurationController.ConfigurationListener {
     private final List<InflateListener> mInflateListeners = new ArrayList();
     private final int mLayout;
 
-    /* loaded from: classes.dex */
     public interface InflateListener {
         void onInflated(View view);
     }
 
-    public AutoReinflateContainer(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.AutoReinflateContainer);
-        int i = R$styleable.AutoReinflateContainer_android_layout;
-        if (!obtainStyledAttributes.hasValue(i)) {
-            throw new IllegalArgumentException("AutoReinflateContainer must contain a layout");
-        }
-        this.mLayout = obtainStyledAttributes.getResourceId(i, 0);
-        obtainStyledAttributes.recycle();
-        inflateLayout();
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup, android.view.View
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
+
+    public AutoReinflateContainer(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1893R.styleable.AutoReinflateContainer);
+        if (obtainStyledAttributes.hasValue(0)) {
+            this.mLayout = obtainStyledAttributes.getResourceId(0, 0);
+            obtainStyledAttributes.recycle();
+            inflateLayout();
+            return;
+        }
+        throw new IllegalArgumentException("AutoReinflateContainer must contain a layout");
+    }
+
+    /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // android.view.ViewGroup, android.view.View
+    /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void inflateLayoutImpl() {
         LayoutInflater.from(getContext()).inflate(this.mLayout, this);
     }
@@ -59,22 +71,23 @@ public class AutoReinflateContainer extends FrameLayout implements Configuration
         }
     }
 
-    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+    public void addInflateListener(InflateListener inflateListener) {
+        this.mInflateListeners.add(inflateListener);
+        inflateListener.onInflated(getChildAt(0));
+    }
+
     public void onDensityOrFontScaleChanged() {
         inflateLayout();
     }
 
-    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
-    public void onOverlayChanged() {
+    public void onThemeChanged() {
         inflateLayout();
     }
 
-    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
         inflateLayout();
     }
 
-    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onLocaleListChanged() {
         inflateLayout();
     }

@@ -7,7 +7,7 @@ import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.TaskStackChangeListeners;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class HomeSoundEffectController_Factory implements Factory<HomeSoundEffectController> {
     private final Provider<ActivityManagerWrapper> activityManagerWrapperProvider;
     private final Provider<AudioManager> audioManagerProvider;
@@ -23,10 +23,8 @@ public final class HomeSoundEffectController_Factory implements Factory<HomeSoun
         this.packageManagerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public HomeSoundEffectController mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.audioManagerProvider.mo1933get(), this.taskStackChangeListenersProvider.mo1933get(), this.activityManagerWrapperProvider.mo1933get(), this.packageManagerProvider.mo1933get());
+    public HomeSoundEffectController get() {
+        return newInstance(this.contextProvider.get(), this.audioManagerProvider.get(), this.taskStackChangeListenersProvider.get(), this.activityManagerWrapperProvider.get(), this.packageManagerProvider.get());
     }
 
     public static HomeSoundEffectController_Factory create(Provider<Context> provider, Provider<AudioManager> provider2, Provider<TaskStackChangeListeners> provider3, Provider<ActivityManagerWrapper> provider4, Provider<PackageManager> provider5) {

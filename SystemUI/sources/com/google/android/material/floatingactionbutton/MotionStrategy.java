@@ -5,14 +5,19 @@ import android.animation.AnimatorSet;
 import com.google.android.material.animation.MotionSpec;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import java.util.List;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes2.dex */
-public interface MotionStrategy {
+
+interface MotionStrategy {
+    void addAnimationListener(Animator.AnimatorListener animatorListener);
+
     AnimatorSet createAnimator();
+
+    MotionSpec getCurrentMotionSpec();
 
     int getDefaultMotionSpecResource();
 
     List<Animator.AnimatorListener> getListeners();
+
+    MotionSpec getMotionSpec();
 
     void onAnimationCancel();
 
@@ -23,6 +28,8 @@ public interface MotionStrategy {
     void onChange(ExtendedFloatingActionButton.OnChangedCallback onChangedCallback);
 
     void performNow();
+
+    void removeAnimationListener(Animator.AnimatorListener animatorListener);
 
     void setMotionSpec(MotionSpec motionSpec);
 

@@ -1,34 +1,41 @@
 package com.android.systemui.screenshot;
 
+import android.app.admin.DevicePolicyManager;
+import android.content.Context;
 import android.os.UserManager;
 import com.android.internal.logging.UiEventLogger;
 import dagger.internal.Factory;
+import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class TakeScreenshotService_Factory implements Factory<TakeScreenshotService> {
+    private final Provider<Executor> bgExecutorProvider;
+    private final Provider<Context> contextProvider;
+    private final Provider<DevicePolicyManager> devicePolicyManagerProvider;
     private final Provider<ScreenshotNotificationsController> notificationsControllerProvider;
     private final Provider<ScreenshotController> screenshotControllerProvider;
     private final Provider<UiEventLogger> uiEventLoggerProvider;
     private final Provider<UserManager> userManagerProvider;
 
-    public TakeScreenshotService_Factory(Provider<ScreenshotController> provider, Provider<UserManager> provider2, Provider<UiEventLogger> provider3, Provider<ScreenshotNotificationsController> provider4) {
+    public TakeScreenshotService_Factory(Provider<ScreenshotController> provider, Provider<UserManager> provider2, Provider<DevicePolicyManager> provider3, Provider<UiEventLogger> provider4, Provider<ScreenshotNotificationsController> provider5, Provider<Context> provider6, Provider<Executor> provider7) {
         this.screenshotControllerProvider = provider;
         this.userManagerProvider = provider2;
-        this.uiEventLoggerProvider = provider3;
-        this.notificationsControllerProvider = provider4;
+        this.devicePolicyManagerProvider = provider3;
+        this.uiEventLoggerProvider = provider4;
+        this.notificationsControllerProvider = provider5;
+        this.contextProvider = provider6;
+        this.bgExecutorProvider = provider7;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public TakeScreenshotService mo1933get() {
-        return newInstance(this.screenshotControllerProvider.mo1933get(), this.userManagerProvider.mo1933get(), this.uiEventLoggerProvider.mo1933get(), this.notificationsControllerProvider.mo1933get());
+    public TakeScreenshotService get() {
+        return newInstance(this.screenshotControllerProvider.get(), this.userManagerProvider.get(), this.devicePolicyManagerProvider.get(), this.uiEventLoggerProvider.get(), this.notificationsControllerProvider.get(), this.contextProvider.get(), this.bgExecutorProvider.get());
     }
 
-    public static TakeScreenshotService_Factory create(Provider<ScreenshotController> provider, Provider<UserManager> provider2, Provider<UiEventLogger> provider3, Provider<ScreenshotNotificationsController> provider4) {
-        return new TakeScreenshotService_Factory(provider, provider2, provider3, provider4);
+    public static TakeScreenshotService_Factory create(Provider<ScreenshotController> provider, Provider<UserManager> provider2, Provider<DevicePolicyManager> provider3, Provider<UiEventLogger> provider4, Provider<ScreenshotNotificationsController> provider5, Provider<Context> provider6, Provider<Executor> provider7) {
+        return new TakeScreenshotService_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7);
     }
 
-    public static TakeScreenshotService newInstance(ScreenshotController screenshotController, UserManager userManager, UiEventLogger uiEventLogger, ScreenshotNotificationsController screenshotNotificationsController) {
-        return new TakeScreenshotService(screenshotController, userManager, uiEventLogger, screenshotNotificationsController);
+    public static TakeScreenshotService newInstance(ScreenshotController screenshotController, UserManager userManager, DevicePolicyManager devicePolicyManager, UiEventLogger uiEventLogger, ScreenshotNotificationsController screenshotNotificationsController, Context context, Executor executor) {
+        return new TakeScreenshotService(screenshotController, userManager, devicePolicyManager, uiEventLogger, screenshotNotificationsController, context, executor);
     }
 }

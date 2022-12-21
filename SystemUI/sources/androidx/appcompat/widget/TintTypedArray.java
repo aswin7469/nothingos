@@ -2,6 +2,7 @@ package androidx.appcompat.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -9,7 +10,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.res.ResourcesCompat;
-/* loaded from: classes.dex */
+
 public class TintTypedArray {
     private final Context mContext;
     private TypedValue mTypedValue;
@@ -38,10 +39,10 @@ public class TintTypedArray {
 
     public Drawable getDrawable(int i) {
         int resourceId;
-        if (this.mWrapped.hasValue(i) && (resourceId = this.mWrapped.getResourceId(i, 0)) != 0) {
-            return AppCompatResources.getDrawable(this.mContext, resourceId);
+        if (!this.mWrapped.hasValue(i) || (resourceId = this.mWrapped.getResourceId(i, 0)) == 0) {
+            return this.mWrapped.getDrawable(i);
         }
-        return this.mWrapped.getDrawable(i);
+        return AppCompatResources.getDrawable(this.mContext, resourceId);
     }
 
     public Drawable getDrawableIfKnown(int i) {
@@ -63,12 +64,32 @@ public class TintTypedArray {
         return ResourcesCompat.getFont(this.mContext, resourceId, this.mTypedValue, i2, fontCallback);
     }
 
+    public int length() {
+        return this.mWrapped.length();
+    }
+
+    public int getIndexCount() {
+        return this.mWrapped.getIndexCount();
+    }
+
+    public int getIndex(int i) {
+        return this.mWrapped.getIndex(i);
+    }
+
+    public Resources getResources() {
+        return this.mWrapped.getResources();
+    }
+
     public CharSequence getText(int i) {
         return this.mWrapped.getText(i);
     }
 
     public String getString(int i) {
         return this.mWrapped.getString(i);
+    }
+
+    public String getNonResourceString(int i) {
+        return this.mWrapped.getNonResourceString(i);
     }
 
     public boolean getBoolean(int i, boolean z) {
@@ -90,7 +111,10 @@ public class TintTypedArray {
     public ColorStateList getColorStateList(int i) {
         int resourceId;
         ColorStateList colorStateList;
-        return (!this.mWrapped.hasValue(i) || (resourceId = this.mWrapped.getResourceId(i, 0)) == 0 || (colorStateList = AppCompatResources.getColorStateList(this.mContext, resourceId)) == null) ? this.mWrapped.getColorStateList(i) : colorStateList;
+        if (!this.mWrapped.hasValue(i) || (resourceId = this.mWrapped.getResourceId(i, 0)) == 0 || (colorStateList = AppCompatResources.getColorStateList(this.mContext, resourceId)) == null) {
+            return this.mWrapped.getColorStateList(i);
+        }
+        return colorStateList;
     }
 
     public int getInteger(int i, int i2) {
@@ -109,8 +133,16 @@ public class TintTypedArray {
         return this.mWrapped.getDimensionPixelSize(i, i2);
     }
 
+    public int getLayoutDimension(int i, String str) {
+        return this.mWrapped.getLayoutDimension(i, str);
+    }
+
     public int getLayoutDimension(int i, int i2) {
         return this.mWrapped.getLayoutDimension(i, i2);
+    }
+
+    public float getFraction(int i, int i2, int i3, float f) {
+        return this.mWrapped.getFraction(i, i2, i3, f);
     }
 
     public int getResourceId(int i, int i2) {
@@ -121,11 +153,31 @@ public class TintTypedArray {
         return this.mWrapped.getTextArray(i);
     }
 
+    public boolean getValue(int i, TypedValue typedValue) {
+        return this.mWrapped.getValue(i, typedValue);
+    }
+
+    public int getType(int i) {
+        return this.mWrapped.getType(i);
+    }
+
     public boolean hasValue(int i) {
         return this.mWrapped.hasValue(i);
     }
 
+    public TypedValue peekValue(int i) {
+        return this.mWrapped.peekValue(i);
+    }
+
+    public String getPositionDescription() {
+        return this.mWrapped.getPositionDescription();
+    }
+
     public void recycle() {
         this.mWrapped.recycle();
+    }
+
+    public int getChangingConfigurations() {
+        return this.mWrapped.getChangingConfigurations();
     }
 }

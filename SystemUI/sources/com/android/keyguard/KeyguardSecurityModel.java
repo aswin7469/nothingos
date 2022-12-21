@@ -4,14 +4,16 @@ import android.content.res.Resources;
 import android.telephony.SubscriptionManager;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.systemui.DejankUtils;
-import java.util.function.Supplier;
-/* loaded from: classes.dex */
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
+import javax.inject.Inject;
+
+@SysUISingleton
 public class KeyguardSecurityModel {
     private final boolean mIsPukScreenAvailable;
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final LockPatternUtils mLockPatternUtils;
 
-    /* loaded from: classes.dex */
     public enum SecurityMode {
         Invalid,
         None,
@@ -22,28 +24,21 @@ public class KeyguardSecurityModel {
         SimPuk
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public KeyguardSecurityModel(Resources resources, LockPatternUtils lockPatternUtils, KeyguardUpdateMonitor keyguardUpdateMonitor) {
-        this.mIsPukScreenAvailable = resources.getBoolean(17891554);
+    @Inject
+    KeyguardSecurityModel(@Main Resources resources, LockPatternUtils lockPatternUtils, KeyguardUpdateMonitor keyguardUpdateMonitor) {
+        this.mIsPukScreenAvailable = resources.getBoolean(17891656);
         this.mLockPatternUtils = lockPatternUtils;
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
     }
 
-    public SecurityMode getSecurityMode(final int i) {
+    public SecurityMode getSecurityMode(int i) {
         if (this.mIsPukScreenAvailable && SubscriptionManager.isValidSubscriptionId(this.mKeyguardUpdateMonitor.getNextSubIdForState(3))) {
             return SecurityMode.SimPuk;
         }
         if (SubscriptionManager.isValidSubscriptionId(this.mKeyguardUpdateMonitor.getUnlockedSubIdForState(2))) {
             return SecurityMode.SimPin;
         }
-        int intValue = ((Integer) DejankUtils.whitelistIpcs(new Supplier() { // from class: com.android.keyguard.KeyguardSecurityModel$$ExternalSyntheticLambda0
-            @Override // java.util.function.Supplier
-            public final Object get() {
-                Integer lambda$getSecurityMode$0;
-                lambda$getSecurityMode$0 = KeyguardSecurityModel.this.lambda$getSecurityMode$0(i);
-                return lambda$getSecurityMode$0;
-            }
-        })).intValue();
+        int intValue = ((Integer) DejankUtils.whitelistIpcs(new KeyguardSecurityModel$$ExternalSyntheticLambda0(this, i))).intValue();
         if (intValue == 0) {
             return SecurityMode.None;
         }
@@ -59,12 +54,9 @@ public class KeyguardSecurityModel {
         throw new IllegalStateException("Unknown security quality:" + intValue);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ Integer lambda$getSecurityMode$0(int i) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$getSecurityMode$0$com-android-keyguard-KeyguardSecurityModel */
+    public /* synthetic */ Integer mo26075x719217a2(int i) {
         return Integer.valueOf(this.mLockPatternUtils.getActivePasswordQuality(i));
-    }
-
-    public static boolean isSecurityViewOneHanded(SecurityMode securityMode) {
-        return securityMode == SecurityMode.Pattern || securityMode == SecurityMode.PIN;
     }
 }

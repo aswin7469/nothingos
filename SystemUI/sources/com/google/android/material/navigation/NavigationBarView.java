@@ -2,15 +2,15 @@ package com.google.android.material.navigation;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,39 +21,49 @@ import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.customview.view.AbsSavedState;
-import com.google.android.material.R$dimen;
-import com.google.android.material.R$styleable;
+import com.google.android.material.C3621R;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.internal.ThemeEnforcement;
-import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.ripple.RippleUtils;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.MaterialShapeUtils;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.theme.overlay.MaterialThemeOverlay;
-/* loaded from: classes2.dex */
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public abstract class NavigationBarView extends FrameLayout {
+    public static final int LABEL_VISIBILITY_AUTO = -1;
+    public static final int LABEL_VISIBILITY_LABELED = 1;
+    public static final int LABEL_VISIBILITY_SELECTED = 0;
+    public static final int LABEL_VISIBILITY_UNLABELED = 2;
+    private static final int MENU_PRESENTER_ID = 1;
     private ColorStateList itemRippleColor;
     private final NavigationBarMenu menu;
     private MenuInflater menuInflater;
     private final NavigationBarMenuView menuView;
     private final NavigationBarPresenter presenter;
-    private OnItemReselectedListener reselectedListener;
-    private OnItemSelectedListener selectedListener;
+    /* access modifiers changed from: private */
+    public OnItemReselectedListener reselectedListener;
+    /* access modifiers changed from: private */
+    public OnItemSelectedListener selectedListener;
 
-    /* loaded from: classes2.dex */
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface LabelVisibility {
+    }
+
     public interface OnItemReselectedListener {
         void onNavigationItemReselected(MenuItem menuItem);
     }
 
-    /* loaded from: classes2.dex */
     public interface OnItemSelectedListener {
         boolean onNavigationItemSelected(MenuItem menuItem);
     }
 
-    /* renamed from: createNavigationBarMenuView */
-    protected abstract NavigationBarMenuView mo1854createNavigationBarMenuView(Context context);
+    /* access modifiers changed from: protected */
+    public abstract NavigationBarMenuView createNavigationBarMenuView(Context context);
 
     public abstract int getMaxItemCount();
 
@@ -62,93 +72,80 @@ public abstract class NavigationBarView extends FrameLayout {
         NavigationBarPresenter navigationBarPresenter = new NavigationBarPresenter();
         this.presenter = navigationBarPresenter;
         Context context2 = getContext();
-        int[] iArr = R$styleable.NavigationBarView;
-        int i3 = R$styleable.NavigationBarView_itemTextAppearanceInactive;
-        int i4 = R$styleable.NavigationBarView_itemTextAppearanceActive;
-        TintTypedArray obtainTintedStyledAttributes = ThemeEnforcement.obtainTintedStyledAttributes(context2, attributeSet, iArr, i, i2, i3, i4);
+        TintTypedArray obtainTintedStyledAttributes = ThemeEnforcement.obtainTintedStyledAttributes(context2, attributeSet, C3621R.styleable.NavigationBarView, i, i2, C3621R.styleable.NavigationBarView_itemTextAppearanceInactive, C3621R.styleable.NavigationBarView_itemTextAppearanceActive);
         NavigationBarMenu navigationBarMenu = new NavigationBarMenu(context2, getClass(), getMaxItemCount());
         this.menu = navigationBarMenu;
-        NavigationBarMenuView mo1854createNavigationBarMenuView = mo1854createNavigationBarMenuView(context2);
-        this.menuView = mo1854createNavigationBarMenuView;
-        navigationBarPresenter.setMenuView(mo1854createNavigationBarMenuView);
+        NavigationBarMenuView createNavigationBarMenuView = createNavigationBarMenuView(context2);
+        this.menuView = createNavigationBarMenuView;
+        navigationBarPresenter.setMenuView(createNavigationBarMenuView);
         navigationBarPresenter.setId(1);
-        mo1854createNavigationBarMenuView.setPresenter(navigationBarPresenter);
+        createNavigationBarMenuView.setPresenter(navigationBarPresenter);
         navigationBarMenu.addMenuPresenter(navigationBarPresenter);
         navigationBarPresenter.initForMenu(getContext(), navigationBarMenu);
-        int i5 = R$styleable.NavigationBarView_itemIconTint;
-        if (obtainTintedStyledAttributes.hasValue(i5)) {
-            mo1854createNavigationBarMenuView.setIconTintList(obtainTintedStyledAttributes.getColorStateList(i5));
+        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemIconTint)) {
+            createNavigationBarMenuView.setIconTintList(obtainTintedStyledAttributes.getColorStateList(C3621R.styleable.NavigationBarView_itemIconTint));
         } else {
-            mo1854createNavigationBarMenuView.setIconTintList(mo1854createNavigationBarMenuView.createDefaultColorStateList(16842808));
+            createNavigationBarMenuView.setIconTintList(createNavigationBarMenuView.createDefaultColorStateList(16842808));
         }
-        setItemIconSize(obtainTintedStyledAttributes.getDimensionPixelSize(R$styleable.NavigationBarView_itemIconSize, getResources().getDimensionPixelSize(R$dimen.mtrl_navigation_bar_item_default_icon_size)));
-        if (obtainTintedStyledAttributes.hasValue(i3)) {
-            setItemTextAppearanceInactive(obtainTintedStyledAttributes.getResourceId(i3, 0));
+        setItemIconSize(obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarView_itemIconSize, getResources().getDimensionPixelSize(C3621R.dimen.mtrl_navigation_bar_item_default_icon_size)));
+        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemTextAppearanceInactive)) {
+            setItemTextAppearanceInactive(obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_itemTextAppearanceInactive, 0));
         }
-        if (obtainTintedStyledAttributes.hasValue(i4)) {
-            setItemTextAppearanceActive(obtainTintedStyledAttributes.getResourceId(i4, 0));
+        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemTextAppearanceActive)) {
+            setItemTextAppearanceActive(obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_itemTextAppearanceActive, 0));
         }
-        int i6 = R$styleable.NavigationBarView_itemTextColor;
-        if (obtainTintedStyledAttributes.hasValue(i6)) {
-            setItemTextColor(obtainTintedStyledAttributes.getColorStateList(i6));
+        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemTextColor)) {
+            setItemTextColor(obtainTintedStyledAttributes.getColorStateList(C3621R.styleable.NavigationBarView_itemTextColor));
         }
         if (getBackground() == null || (getBackground() instanceof ColorDrawable)) {
             ViewCompat.setBackground(this, createMaterialShapeDrawableBackground(context2));
         }
-        int i7 = R$styleable.NavigationBarView_elevation;
-        if (obtainTintedStyledAttributes.hasValue(i7)) {
-            setElevation(obtainTintedStyledAttributes.getDimensionPixelSize(i7, 0));
+        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemPaddingTop)) {
+            setItemPaddingTop(obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarView_itemPaddingTop, 0));
         }
-        DrawableCompat.setTintList(getBackground().mutate(), MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, R$styleable.NavigationBarView_backgroundTint));
-        setLabelVisibilityMode(obtainTintedStyledAttributes.getInteger(R$styleable.NavigationBarView_labelVisibilityMode, -1));
-        int resourceId = obtainTintedStyledAttributes.getResourceId(R$styleable.NavigationBarView_itemBackground, 0);
+        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_itemPaddingBottom)) {
+            setItemPaddingBottom(obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarView_itemPaddingBottom, 0));
+        }
+        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_elevation)) {
+            setElevation((float) obtainTintedStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarView_elevation, 0));
+        }
+        DrawableCompat.setTintList(getBackground().mutate(), MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, C3621R.styleable.NavigationBarView_backgroundTint));
+        setLabelVisibilityMode(obtainTintedStyledAttributes.getInteger(C3621R.styleable.NavigationBarView_labelVisibilityMode, -1));
+        int resourceId = obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_itemBackground, 0);
         if (resourceId != 0) {
-            mo1854createNavigationBarMenuView.setItemBackgroundRes(resourceId);
+            createNavigationBarMenuView.setItemBackgroundRes(resourceId);
         } else {
-            setItemRippleColor(MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, R$styleable.NavigationBarView_itemRippleColor));
+            setItemRippleColor(MaterialResources.getColorStateList(context2, obtainTintedStyledAttributes, C3621R.styleable.NavigationBarView_itemRippleColor));
         }
-        int i8 = R$styleable.NavigationBarView_menu;
-        if (obtainTintedStyledAttributes.hasValue(i8)) {
-            inflateMenu(obtainTintedStyledAttributes.getResourceId(i8, 0));
+        int resourceId2 = obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_itemActiveIndicatorStyle, 0);
+        if (resourceId2 != 0) {
+            setItemActiveIndicatorEnabled(true);
+            TypedArray obtainStyledAttributes = context2.obtainStyledAttributes(resourceId2, C3621R.styleable.NavigationBarActiveIndicator);
+            setItemActiveIndicatorWidth(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarActiveIndicator_android_width, 0));
+            setItemActiveIndicatorHeight(obtainStyledAttributes.getDimensionPixelSize(C3621R.styleable.NavigationBarActiveIndicator_android_height, 0));
+            setItemActiveIndicatorMarginHorizontal(obtainStyledAttributes.getDimensionPixelOffset(C3621R.styleable.NavigationBarActiveIndicator_marginHorizontal, 0));
+            setItemActiveIndicatorColor(MaterialResources.getColorStateList(context2, obtainStyledAttributes, C3621R.styleable.NavigationBarActiveIndicator_android_color));
+            setItemActiveIndicatorShapeAppearance(ShapeAppearanceModel.builder(context2, obtainStyledAttributes.getResourceId(C3621R.styleable.NavigationBarActiveIndicator_shapeAppearance, 0), 0).build());
+            obtainStyledAttributes.recycle();
+        }
+        if (obtainTintedStyledAttributes.hasValue(C3621R.styleable.NavigationBarView_menu)) {
+            inflateMenu(obtainTintedStyledAttributes.getResourceId(C3621R.styleable.NavigationBarView_menu, 0));
         }
         obtainTintedStyledAttributes.recycle();
-        addView(mo1854createNavigationBarMenuView);
-        navigationBarMenu.setCallback(new MenuBuilder.Callback() { // from class: com.google.android.material.navigation.NavigationBarView.1
-            @Override // androidx.appcompat.view.menu.MenuBuilder.Callback
+        addView(createNavigationBarMenuView);
+        navigationBarMenu.setCallback(new MenuBuilder.Callback() {
             public void onMenuModeChange(MenuBuilder menuBuilder) {
             }
 
-            @Override // androidx.appcompat.view.menu.MenuBuilder.Callback
             public boolean onMenuItemSelected(MenuBuilder menuBuilder, MenuItem menuItem) {
-                if (NavigationBarView.this.reselectedListener == null || menuItem.getItemId() != NavigationBarView.this.getSelectedItemId()) {
-                    return NavigationBarView.this.selectedListener != null && !NavigationBarView.this.selectedListener.onNavigationItemSelected(menuItem);
+                if (NavigationBarView.this.reselectedListener != null && menuItem.getItemId() == NavigationBarView.this.getSelectedItemId()) {
+                    NavigationBarView.this.reselectedListener.onNavigationItemReselected(menuItem);
+                    return true;
+                } else if (NavigationBarView.this.selectedListener == null || NavigationBarView.this.selectedListener.onNavigationItemSelected(menuItem)) {
+                    return false;
+                } else {
+                    return true;
                 }
-                NavigationBarView.this.reselectedListener.onNavigationItemReselected(menuItem);
-                return true;
-            }
-        });
-        applyWindowInsets();
-    }
-
-    private void applyWindowInsets() {
-        ViewUtils.doOnApplyWindowInsets(this, new ViewUtils.OnApplyWindowInsetsListener() { // from class: com.google.android.material.navigation.NavigationBarView.2
-            @Override // com.google.android.material.internal.ViewUtils.OnApplyWindowInsetsListener
-            public WindowInsetsCompat onApplyWindowInsets(View view, WindowInsetsCompat windowInsetsCompat, ViewUtils.RelativePadding relativePadding) {
-                relativePadding.bottom += windowInsetsCompat.getSystemWindowInsetBottom();
-                boolean z = true;
-                if (ViewCompat.getLayoutDirection(view) != 1) {
-                    z = false;
-                }
-                int systemWindowInsetLeft = windowInsetsCompat.getSystemWindowInsetLeft();
-                int systemWindowInsetRight = windowInsetsCompat.getSystemWindowInsetRight();
-                relativePadding.start += z ? systemWindowInsetRight : systemWindowInsetLeft;
-                int i = relativePadding.end;
-                if (!z) {
-                    systemWindowInsetLeft = systemWindowInsetRight;
-                }
-                relativePadding.end = i + systemWindowInsetLeft;
-                relativePadding.applyToView(view);
-                return windowInsetsCompat;
             }
         });
     }
@@ -163,18 +160,27 @@ public abstract class NavigationBarView extends FrameLayout {
         return materialShapeDrawable;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         MaterialShapeUtils.setParentAbsoluteElevation(this);
     }
 
-    @Override // android.view.View
     public void setElevation(float f) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            super.setElevation(f);
-        }
+        super.setElevation(f);
         MaterialShapeUtils.setElevation(this, f);
+    }
+
+    public void setOnItemSelectedListener(OnItemSelectedListener onItemSelectedListener) {
+        this.selectedListener = onItemSelectedListener;
+    }
+
+    public void setOnItemReselectedListener(OnItemReselectedListener onItemReselectedListener) {
+        this.reselectedListener = onItemReselectedListener;
+    }
+
+    public Menu getMenu() {
+        return this.menu;
     }
 
     public MenuView getMenuView() {
@@ -188,41 +194,143 @@ public abstract class NavigationBarView extends FrameLayout {
         this.presenter.updateMenuView(true);
     }
 
+    public ColorStateList getItemIconTintList() {
+        return this.menuView.getIconTintList();
+    }
+
+    public void setItemIconTintList(ColorStateList colorStateList) {
+        this.menuView.setIconTintList(colorStateList);
+    }
+
     public void setItemIconSize(int i) {
         this.menuView.setItemIconSize(i);
+    }
+
+    public void setItemIconSizeRes(int i) {
+        setItemIconSize(getResources().getDimensionPixelSize(i));
+    }
+
+    public int getItemIconSize() {
+        return this.menuView.getItemIconSize();
+    }
+
+    public ColorStateList getItemTextColor() {
+        return this.menuView.getItemTextColor();
     }
 
     public void setItemTextColor(ColorStateList colorStateList) {
         this.menuView.setItemTextColor(colorStateList);
     }
 
+    @Deprecated
+    public int getItemBackgroundResource() {
+        return this.menuView.getItemBackgroundRes();
+    }
+
+    public void setItemBackgroundResource(int i) {
+        this.menuView.setItemBackgroundRes(i);
+        this.itemRippleColor = null;
+    }
+
+    public Drawable getItemBackground() {
+        return this.menuView.getItemBackground();
+    }
+
+    public void setItemBackground(Drawable drawable) {
+        this.menuView.setItemBackground(drawable);
+        this.itemRippleColor = null;
+    }
+
+    public ColorStateList getItemRippleColor() {
+        return this.itemRippleColor;
+    }
+
     public void setItemRippleColor(ColorStateList colorStateList) {
-        if (this.itemRippleColor == colorStateList) {
-            if (colorStateList != null || this.menuView.getItemBackground() == null) {
+        if (this.itemRippleColor != colorStateList) {
+            this.itemRippleColor = colorStateList;
+            if (colorStateList == null) {
+                this.menuView.setItemBackground((Drawable) null);
                 return;
             }
-            this.menuView.setItemBackground(null);
-            return;
+            this.menuView.setItemBackground(new RippleDrawable(RippleUtils.convertToRippleDrawableColor(colorStateList), (Drawable) null, (Drawable) null));
+        } else if (colorStateList == null && this.menuView.getItemBackground() != null) {
+            this.menuView.setItemBackground((Drawable) null);
         }
-        this.itemRippleColor = colorStateList;
-        if (colorStateList == null) {
-            this.menuView.setItemBackground(null);
-            return;
-        }
-        ColorStateList convertToRippleDrawableColor = RippleUtils.convertToRippleDrawableColor(colorStateList);
-        if (Build.VERSION.SDK_INT >= 21) {
-            this.menuView.setItemBackground(new RippleDrawable(convertToRippleDrawableColor, null, null));
-            return;
-        }
-        GradientDrawable gradientDrawable = new GradientDrawable();
-        gradientDrawable.setCornerRadius(1.0E-5f);
-        Drawable wrap = DrawableCompat.wrap(gradientDrawable);
-        DrawableCompat.setTintList(wrap, convertToRippleDrawableColor);
-        this.menuView.setItemBackground(wrap);
+    }
+
+    public int getItemPaddingTop() {
+        return this.menuView.getItemPaddingTop();
+    }
+
+    public void setItemPaddingTop(int i) {
+        this.menuView.setItemPaddingTop(i);
+    }
+
+    public int getItemPaddingBottom() {
+        return this.menuView.getItemPaddingBottom();
+    }
+
+    public void setItemPaddingBottom(int i) {
+        this.menuView.setItemPaddingBottom(i);
+    }
+
+    public boolean isItemActiveIndicatorEnabled() {
+        return this.menuView.getItemActiveIndicatorEnabled();
+    }
+
+    public void setItemActiveIndicatorEnabled(boolean z) {
+        this.menuView.setItemActiveIndicatorEnabled(z);
+    }
+
+    public int getItemActiveIndicatorWidth() {
+        return this.menuView.getItemActiveIndicatorWidth();
+    }
+
+    public void setItemActiveIndicatorWidth(int i) {
+        this.menuView.setItemActiveIndicatorWidth(i);
+    }
+
+    public int getItemActiveIndicatorHeight() {
+        return this.menuView.getItemActiveIndicatorHeight();
+    }
+
+    public void setItemActiveIndicatorHeight(int i) {
+        this.menuView.setItemActiveIndicatorHeight(i);
+    }
+
+    public int getItemActiveIndicatorMarginHorizontal() {
+        return this.menuView.getItemActiveIndicatorMarginHorizontal();
+    }
+
+    public void setItemActiveIndicatorMarginHorizontal(int i) {
+        this.menuView.setItemActiveIndicatorMarginHorizontal(i);
+    }
+
+    public ShapeAppearanceModel getItemActiveIndicatorShapeAppearance() {
+        return this.menuView.getItemActiveIndicatorShapeAppearance();
+    }
+
+    public void setItemActiveIndicatorShapeAppearance(ShapeAppearanceModel shapeAppearanceModel) {
+        this.menuView.setItemActiveIndicatorShapeAppearance(shapeAppearanceModel);
+    }
+
+    public ColorStateList getItemActiveIndicatorColor() {
+        return this.menuView.getItemActiveIndicatorColor();
+    }
+
+    public void setItemActiveIndicatorColor(ColorStateList colorStateList) {
+        this.menuView.setItemActiveIndicatorColor(colorStateList);
     }
 
     public int getSelectedItemId() {
         return this.menuView.getSelectedItemId();
+    }
+
+    public void setSelectedItemId(int i) {
+        MenuItem findItem = this.menu.findItem(i);
+        if (findItem != null && !this.menu.performItemAction(findItem, this.presenter, 0)) {
+            findItem.setChecked(true);
+        }
     }
 
     public void setLabelVisibilityMode(int i) {
@@ -232,12 +340,40 @@ public abstract class NavigationBarView extends FrameLayout {
         }
     }
 
+    public int getLabelVisibilityMode() {
+        return this.menuView.getLabelVisibilityMode();
+    }
+
     public void setItemTextAppearanceInactive(int i) {
         this.menuView.setItemTextAppearanceInactive(i);
     }
 
+    public int getItemTextAppearanceInactive() {
+        return this.menuView.getItemTextAppearanceInactive();
+    }
+
     public void setItemTextAppearanceActive(int i) {
         this.menuView.setItemTextAppearanceActive(i);
+    }
+
+    public int getItemTextAppearanceActive() {
+        return this.menuView.getItemTextAppearanceActive();
+    }
+
+    public void setItemOnTouchListener(int i, View.OnTouchListener onTouchListener) {
+        this.menuView.setItemOnTouchListener(i, onTouchListener);
+    }
+
+    public BadgeDrawable getBadge(int i) {
+        return this.menuView.getBadge(i);
+    }
+
+    public BadgeDrawable getOrCreateBadge(int i) {
+        return this.menuView.getOrCreateBadge(i);
+    }
+
+    public void removeBadge(int i) {
+        this.menuView.removeBadge(i);
     }
 
     private MenuInflater getMenuInflater() {
@@ -247,22 +383,20 @@ public abstract class NavigationBarView extends FrameLayout {
         return this.menuInflater;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
     public NavigationBarPresenter getPresenter() {
         return this.presenter;
     }
 
-    @Override // android.view.View
-    protected Parcelable onSaveInstanceState() {
+    /* access modifiers changed from: protected */
+    public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState(super.onSaveInstanceState());
-        Bundle bundle = new Bundle();
-        savedState.menuPresenterState = bundle;
-        this.menu.savePresenterStates(bundle);
+        savedState.menuPresenterState = new Bundle();
+        this.menu.savePresenterStates(savedState.menuPresenterState);
         return savedState;
     }
 
-    @Override // android.view.View
-    protected void onRestoreInstanceState(Parcelable parcelable) {
+    /* access modifiers changed from: protected */
+    public void onRestoreInstanceState(Parcelable parcelable) {
         if (!(parcelable instanceof SavedState)) {
             super.onRestoreInstanceState(parcelable);
             return;
@@ -272,26 +406,17 @@ public abstract class NavigationBarView extends FrameLayout {
         this.menu.restorePresenterStates(savedState.menuPresenterState);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static class SavedState extends AbsSavedState {
-        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() { // from class: com.google.android.material.navigation.NavigationBarView.SavedState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.ClassLoaderCreator
-            /* renamed from: createFromParcel */
-            public SavedState mo1849createFromParcel(Parcel parcel, ClassLoader classLoader) {
+    static class SavedState extends AbsSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.ClassLoaderCreator<SavedState>() {
+            public SavedState createFromParcel(Parcel parcel, ClassLoader classLoader) {
                 return new SavedState(parcel, classLoader);
             }
 
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public SavedState mo1848createFromParcel(Parcel parcel) {
-                return new SavedState(parcel, null);
+            public SavedState createFromParcel(Parcel parcel) {
+                return new SavedState(parcel, (ClassLoader) null);
             }
 
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public SavedState[] mo1850newArray(int i) {
+            public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
         };
@@ -306,7 +431,6 @@ public abstract class NavigationBarView extends FrameLayout {
             readFromParcel(parcel, classLoader == null ? getClass().getClassLoader() : classLoader);
         }
 
-        @Override // androidx.customview.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeBundle(this.menuPresenterState);

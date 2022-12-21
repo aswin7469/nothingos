@@ -1,35 +1,29 @@
 package androidx.core.widget;
 
-import android.os.Build;
-import android.view.View;
 import android.widget.ListView;
-/* loaded from: classes.dex */
+
 public final class ListViewCompat {
-    public static void scrollListBy(ListView listView, int y) {
-        View childAt;
-        if (Build.VERSION.SDK_INT >= 19) {
-            listView.scrollListBy(y);
-            return;
-        }
-        int firstVisiblePosition = listView.getFirstVisiblePosition();
-        if (firstVisiblePosition == -1 || (childAt = listView.getChildAt(0)) == null) {
-            return;
-        }
-        listView.setSelectionFromTop(firstVisiblePosition, childAt.getTop() - y);
+    public static void scrollListBy(ListView listView, int i) {
+        Api19Impl.scrollListBy(listView, i);
     }
 
-    public static boolean canScrollList(ListView listView, int direction) {
-        if (Build.VERSION.SDK_INT >= 19) {
-            return listView.canScrollList(direction);
+    public static boolean canScrollList(ListView listView, int i) {
+        return Api19Impl.canScrollList(listView, i);
+    }
+
+    private ListViewCompat() {
+    }
+
+    static class Api19Impl {
+        private Api19Impl() {
         }
-        int childCount = listView.getChildCount();
-        if (childCount == 0) {
-            return false;
+
+        static void scrollListBy(ListView listView, int i) {
+            listView.scrollListBy(i);
         }
-        int firstVisiblePosition = listView.getFirstVisiblePosition();
-        if (direction > 0) {
-            return firstVisiblePosition + childCount < listView.getCount() || listView.getChildAt(childCount + (-1)).getBottom() > listView.getHeight() - listView.getListPaddingBottom();
+
+        static boolean canScrollList(ListView listView, int i) {
+            return listView.canScrollList(i);
         }
-        return firstVisiblePosition > 0 || listView.getChildAt(0).getTop() < listView.getListPaddingTop();
     }
 }

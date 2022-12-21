@@ -10,23 +10,36 @@ import android.os.HandlerThread;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dump.DumpManager;
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
 import com.android.systemui.statusbar.policy.FlashlightController;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class FlashlightControllerImpl implements FlashlightController {
-    private static final boolean DEBUG = Log.isLoggable("FlashlightController", 3);
-    private String mCameraId;
+    private static final String ACTION_FLASHLIGHT_CHANGED = "com.android.settings.flashlight.action.FLASHLIGHT_CHANGED";
+    /* access modifiers changed from: private */
+    public static final boolean DEBUG = Log.isLoggable(TAG, 3);
+    private static final int DISPATCH_AVAILABILITY_CHANGED = 2;
+    private static final int DISPATCH_CHANGED = 1;
+    private static final int DISPATCH_ERROR = 0;
+    private static final String TAG = "FlashlightController";
+    /* access modifiers changed from: private */
+    public String mCameraId;
     private final CameraManager mCameraManager;
-    private final Context mContext;
-    private boolean mFlashlightEnabled;
+    /* access modifiers changed from: private */
+    public final Context mContext;
+    /* access modifiers changed from: private */
+    public boolean mFlashlightEnabled;
     private Handler mHandler;
-    private boolean mTorchAvailable;
     private final ArrayList<WeakReference<FlashlightController.FlashlightListener>> mListeners = new ArrayList<>(1);
-    private final CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() { // from class: com.android.systemui.statusbar.policy.FlashlightControllerImpl.1
-        @Override // android.hardware.camera2.CameraManager.TorchCallback
+    /* access modifiers changed from: private */
+    public boolean mTorchAvailable;
+    private final CameraManager.TorchCallback mTorchCallback = new CameraManager.TorchCallback() {
         public void onTorchModeUnavailable(String str) {
             if (TextUtils.equals(str, FlashlightControllerImpl.this.mCameraId)) {
                 setCameraAvailable(false);
@@ -34,14 +47,13 @@ public class FlashlightControllerImpl implements FlashlightController {
             }
         }
 
-        @Override // android.hardware.camera2.CameraManager.TorchCallback
         public void onTorchModeChanged(String str, boolean z) {
             if (TextUtils.equals(str, FlashlightControllerImpl.this.mCameraId)) {
                 setCameraAvailable(true);
                 setTorchMode(z);
                 Settings.Secure.putInt(FlashlightControllerImpl.this.mContext.getContentResolver(), "flashlight_available", 1);
                 Settings.Secure.putInt(FlashlightControllerImpl.this.mContext.getContentResolver(), "flashlight_enabled", z ? 1 : 0);
-                FlashlightControllerImpl.this.mContext.sendBroadcast(new Intent("com.android.settings.flashlight.action.FLASHLIGHT_CHANGED"));
+                FlashlightControllerImpl.this.mContext.sendBroadcast(new Intent(FlashlightControllerImpl.ACTION_FLASHLIGHT_CHANGED));
             }
         }
 
@@ -49,11 +61,11 @@ public class FlashlightControllerImpl implements FlashlightController {
             boolean z2;
             synchronized (FlashlightControllerImpl.this) {
                 z2 = FlashlightControllerImpl.this.mTorchAvailable != z;
-                FlashlightControllerImpl.this.mTorchAvailable = z;
+                boolean unused = FlashlightControllerImpl.this.mTorchAvailable = z;
             }
             if (z2) {
                 if (FlashlightControllerImpl.DEBUG) {
-                    Log.d("FlashlightController", "dispatchAvailabilityChanged(" + z + ")");
+                    Log.d(FlashlightControllerImpl.TAG, "dispatchAvailabilityChanged(" + z + NavigationBarInflaterView.KEY_CODE_END);
                 }
                 FlashlightControllerImpl.this.dispatchAvailabilityChanged(z);
             }
@@ -63,20 +75,22 @@ public class FlashlightControllerImpl implements FlashlightController {
             boolean z2;
             synchronized (FlashlightControllerImpl.this) {
                 z2 = FlashlightControllerImpl.this.mFlashlightEnabled != z;
-                FlashlightControllerImpl.this.mFlashlightEnabled = z;
+                boolean unused = FlashlightControllerImpl.this.mFlashlightEnabled = z;
             }
             if (z2) {
                 if (FlashlightControllerImpl.DEBUG) {
-                    Log.d("FlashlightController", "dispatchModeChanged(" + z + ")");
+                    Log.d(FlashlightControllerImpl.TAG, "dispatchModeChanged(" + z + NavigationBarInflaterView.KEY_CODE_END);
                 }
                 FlashlightControllerImpl.this.dispatchModeChanged(z);
             }
         }
     };
 
-    public FlashlightControllerImpl(Context context) {
+    @Inject
+    public FlashlightControllerImpl(Context context, DumpManager dumpManager) {
         this.mContext = context;
         this.mCameraManager = (CameraManager) context.getSystemService("camera");
+        dumpManager.registerDumpable(getClass().getSimpleName(), this);
         tryInitCamera();
     }
 
@@ -84,71 +98,65 @@ public class FlashlightControllerImpl implements FlashlightController {
         try {
             String cameraId = getCameraId();
             this.mCameraId = cameraId;
-            if (cameraId == null) {
-                return;
+            if (cameraId != null) {
+                ensureHandler();
+                this.mCameraManager.registerTorchCallback(this.mTorchCallback, this.mHandler);
             }
-            ensureHandler();
-            this.mCameraManager.registerTorchCallback(this.mTorchCallback, this.mHandler);
         } catch (Throwable th) {
-            Log.e("FlashlightController", "Couldn't initialize.", th);
+            Log.e(TAG, "Couldn't initialize.", th);
         }
     }
 
-    @Override // com.android.systemui.statusbar.policy.FlashlightController
     public void setFlashlight(boolean z) {
+        boolean z2;
         synchronized (this) {
             String str = this.mCameraId;
-            if (str == null) {
-                return;
-            }
-            boolean z2 = false;
-            if (this.mFlashlightEnabled != z) {
-                this.mFlashlightEnabled = z;
-                try {
-                    this.mCameraManager.setTorchMode(str, z);
-                } catch (CameraAccessException e) {
-                    Log.e("FlashlightController", "Couldn't set torch mode", e);
-                    this.mFlashlightEnabled = false;
-                    z2 = true;
+            if (str != null) {
+                z2 = false;
+                if (this.mFlashlightEnabled != z) {
+                    this.mFlashlightEnabled = z;
+                    try {
+                        this.mCameraManager.setTorchMode(str, z);
+                    } catch (CameraAccessException e) {
+                        Log.e(TAG, "Couldn't set torch mode", e);
+                        this.mFlashlightEnabled = false;
+                        z2 = true;
+                    }
                 }
-            }
-            dispatchModeChanged(this.mFlashlightEnabled);
-            if (!z2) {
+            } else {
                 return;
             }
+        }
+        dispatchModeChanged(this.mFlashlightEnabled);
+        if (z2) {
             dispatchError();
         }
     }
 
-    @Override // com.android.systemui.statusbar.policy.FlashlightController
     public boolean hasFlashlight() {
         return this.mContext.getPackageManager().hasSystemFeature("android.hardware.camera.flash");
     }
 
-    @Override // com.android.systemui.statusbar.policy.FlashlightController
     public synchronized boolean isEnabled() {
         return this.mFlashlightEnabled;
     }
 
-    @Override // com.android.systemui.statusbar.policy.FlashlightController
     public synchronized boolean isAvailable() {
         return this.mTorchAvailable;
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void addCallback(FlashlightController.FlashlightListener flashlightListener) {
         synchronized (this.mListeners) {
             if (this.mCameraId == null) {
                 tryInitCamera();
             }
             cleanUpListenersLocked(flashlightListener);
-            this.mListeners.add(new WeakReference<>(flashlightListener));
+            this.mListeners.add(new WeakReference(flashlightListener));
             flashlightListener.onFlashlightAvailabilityChanged(this.mTorchAvailable);
             flashlightListener.onFlashlightChanged(this.mFlashlightEnabled);
         }
     }
 
-    @Override // com.android.systemui.statusbar.policy.CallbackController
     public void removeCallback(FlashlightController.FlashlightListener flashlightListener) {
         synchronized (this.mListeners) {
             cleanUpListenersLocked(flashlightListener);
@@ -157,14 +165,13 @@ public class FlashlightControllerImpl implements FlashlightController {
 
     private synchronized void ensureHandler() {
         if (this.mHandler == null) {
-            HandlerThread handlerThread = new HandlerThread("FlashlightController", 10);
+            HandlerThread handlerThread = new HandlerThread(TAG, 10);
             handlerThread.start();
             this.mHandler = new Handler(handlerThread.getLooper());
         }
     }
 
     private String getCameraId() throws CameraAccessException {
-        String[] cameraIdList;
         for (String str : this.mCameraManager.getCameraIdList()) {
             CameraCharacteristics cameraCharacteristics = this.mCameraManager.getCameraCharacteristics(str);
             Boolean bool = (Boolean) cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
@@ -176,7 +183,7 @@ public class FlashlightControllerImpl implements FlashlightController {
         return null;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void dispatchModeChanged(boolean z) {
         dispatchListeners(1, z);
     }
@@ -185,7 +192,7 @@ public class FlashlightControllerImpl implements FlashlightController {
         dispatchListeners(1, false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void dispatchAvailabilityChanged(boolean z) {
         dispatchListeners(2, z);
     }
@@ -195,7 +202,7 @@ public class FlashlightControllerImpl implements FlashlightController {
             int size = this.mListeners.size();
             boolean z2 = false;
             for (int i2 = 0; i2 < size; i2++) {
-                FlashlightController.FlashlightListener flashlightListener = this.mListeners.get(i2).get();
+                FlashlightController.FlashlightListener flashlightListener = (FlashlightController.FlashlightListener) this.mListeners.get(i2).get();
                 if (flashlightListener == null) {
                     z2 = true;
                 } else if (i == 0) {
@@ -207,22 +214,21 @@ public class FlashlightControllerImpl implements FlashlightController {
                 }
             }
             if (z2) {
-                cleanUpListenersLocked(null);
+                cleanUpListenersLocked((FlashlightController.FlashlightListener) null);
             }
         }
     }
 
     private void cleanUpListenersLocked(FlashlightController.FlashlightListener flashlightListener) {
         for (int size = this.mListeners.size() - 1; size >= 0; size--) {
-            FlashlightController.FlashlightListener flashlightListener2 = this.mListeners.get(size).get();
+            FlashlightController.FlashlightListener flashlightListener2 = (FlashlightController.FlashlightListener) this.mListeners.get(size).get();
             if (flashlightListener2 == null || flashlightListener2 == flashlightListener) {
                 this.mListeners.remove(size);
             }
         }
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("FlashlightController state:");
         printWriter.print("  mCameraId=");
         printWriter.println(this.mCameraId);

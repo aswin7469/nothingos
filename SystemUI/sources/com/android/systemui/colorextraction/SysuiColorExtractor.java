@@ -3,78 +3,77 @@ package com.android.systemui.colorextraction;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.content.Context;
-import com.android.internal.annotations.VisibleForTesting;
+import android.os.Handler;
+import androidx.core.view.ViewCompat;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.colorextraction.types.ExtractionType;
 import com.android.internal.colorextraction.types.Tonal;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dumpable;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.statusbar.policy.ConfigurationController;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.Arrays;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class SysuiColorExtractor extends ColorExtractor implements Dumpable, ConfigurationController.ConfigurationListener {
+    private static final String TAG = "SysuiColorExtractor";
     private final ColorExtractor.GradientColors mBackdropColors;
     private boolean mHasMediaArtwork;
     private final ColorExtractor.GradientColors mNeutralColorsLock;
     private final Tonal mTonal;
 
-    public SysuiColorExtractor(Context context, ConfigurationController configurationController) {
-        this(context, new Tonal(context), configurationController, (WallpaperManager) context.getSystemService(WallpaperManager.class), false);
+    @Inject
+    public SysuiColorExtractor(Context context, ConfigurationController configurationController, DumpManager dumpManager) {
+        this(context, new Tonal(context), configurationController, (WallpaperManager) context.getSystemService(WallpaperManager.class), dumpManager, false);
     }
 
-    /* JADX WARN: Multi-variable type inference failed */
-    @VisibleForTesting
-    public SysuiColorExtractor(Context context, ExtractionType extractionType, ConfigurationController configurationController, WallpaperManager wallpaperManager, boolean z) {
+    /* JADX WARNING: type inference failed for: r0v0, types: [com.android.systemui.Dumpable, android.app.WallpaperManager$OnColorsChangedListener, java.lang.Object, com.android.systemui.colorextraction.SysuiColorExtractor] */
+    public SysuiColorExtractor(Context context, ExtractionType extractionType, ConfigurationController configurationController, WallpaperManager wallpaperManager, DumpManager dumpManager, boolean z) {
         super(context, extractionType, z, wallpaperManager);
         this.mTonal = extractionType instanceof Tonal ? (Tonal) extractionType : new Tonal(context);
         this.mNeutralColorsLock = new ColorExtractor.GradientColors();
         configurationController.addCallback(this);
+        dumpManager.registerDumpable(getClass().getSimpleName(), this);
         ColorExtractor.GradientColors gradientColors = new ColorExtractor.GradientColors();
         this.mBackdropColors = gradientColors;
-        gradientColors.setMainColor(-16777216);
+        gradientColors.setMainColor(ViewCompat.MEASURED_STATE_MASK);
         if (wallpaperManager.isWallpaperSupported()) {
             wallpaperManager.removeOnColorsChangedListener(this);
-            wallpaperManager.addOnColorsChangedListener(this, null, -1);
+            wallpaperManager.addOnColorsChangedListener(this, (Handler) null, -1);
         }
     }
 
-    protected void extractWallpaperColors() {
-        ColorExtractor.GradientColors gradientColors;
-        super.extractWallpaperColors();
+    /* access modifiers changed from: protected */
+    public void extractWallpaperColors() {
+        SysuiColorExtractor.super.extractWallpaperColors();
         Tonal tonal = this.mTonal;
-        if (tonal == null || (gradientColors = this.mNeutralColorsLock) == null) {
-            return;
+        if (tonal != null && this.mNeutralColorsLock != null) {
+            tonal.applyFallback(this.mLockColors == null ? this.mSystemColors : this.mLockColors, this.mNeutralColorsLock);
         }
-        WallpaperColors wallpaperColors = ((ColorExtractor) this).mLockColors;
-        if (wallpaperColors == null) {
-            wallpaperColors = ((ColorExtractor) this).mSystemColors;
-        }
-        tonal.applyFallback(wallpaperColors, gradientColors);
     }
 
     public void onColorsChanged(WallpaperColors wallpaperColors, int i, int i2) {
-        if (i2 != KeyguardUpdateMonitor.getCurrentUser()) {
-            return;
+        if (i2 == KeyguardUpdateMonitor.getCurrentUser()) {
+            if ((i & 2) != 0) {
+                this.mTonal.applyFallback(wallpaperColors, this.mNeutralColorsLock);
+            }
+            SysuiColorExtractor.super.onColorsChanged(wallpaperColors, i);
         }
-        if ((i & 2) != 0) {
-            this.mTonal.applyFallback(wallpaperColors, this.mNeutralColorsLock);
-        }
-        super.onColorsChanged(wallpaperColors, i);
     }
 
-    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
         extractWallpaperColors();
         triggerColorsChanged(3);
     }
 
     public ColorExtractor.GradientColors getColors(int i, int i2) {
-        if (this.mHasMediaArtwork && (i & 2) != 0) {
-            return this.mBackdropColors;
+        if (!this.mHasMediaArtwork || (i & 2) == 0) {
+            return SysuiColorExtractor.super.getColors(i, i2);
         }
-        return super.getColors(i, i2);
+        return this.mBackdropColors;
     }
 
     public ColorExtractor.GradientColors getNeutralColors() {
@@ -88,15 +87,14 @@ public class SysuiColorExtractor extends ColorExtractor implements Dumpable, Con
         }
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("SysuiColorExtractor:");
         printWriter.println("  Current wallpaper colors:");
-        printWriter.println("    system: " + ((ColorExtractor) this).mSystemColors);
-        printWriter.println("    lock: " + ((ColorExtractor) this).mLockColors);
+        printWriter.println("    system: " + this.mSystemColors);
+        printWriter.println("    lock: " + this.mLockColors);
         printWriter.println("  Gradients:");
-        printWriter.println("    system: " + Arrays.toString((ColorExtractor.GradientColors[]) ((ColorExtractor) this).mGradientColors.get(1)));
-        printWriter.println("    lock: " + Arrays.toString((ColorExtractor.GradientColors[]) ((ColorExtractor) this).mGradientColors.get(2)));
+        printWriter.println("    system: " + Arrays.toString((Object[]) (ColorExtractor.GradientColors[]) this.mGradientColors.get(1)));
+        printWriter.println("    lock: " + Arrays.toString((Object[]) (ColorExtractor.GradientColors[]) this.mGradientColors.get(2)));
         printWriter.println("  Neutral colors: " + this.mNeutralColorsLock);
         printWriter.println("  Has media backdrop: " + this.mHasMediaArtwork);
     }

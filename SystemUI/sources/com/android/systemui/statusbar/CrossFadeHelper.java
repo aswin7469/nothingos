@@ -1,26 +1,28 @@
 package com.android.systemui.statusbar;
 
+import android.graphics.Paint;
 import android.view.View;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
-/* loaded from: classes.dex */
+
 public class CrossFadeHelper {
+    public static final long ANIMATION_DURATION_LENGTH = 210;
+
     public static void fadeOut(View view) {
         fadeOut(view, (Runnable) null);
     }
 
     public static void fadeOut(View view, Runnable runnable) {
-        fadeOut(view, 210L, 0, runnable);
+        fadeOut(view, 210, 0, runnable);
     }
 
     public static void fadeOut(final View view, long j, int i, final Runnable runnable) {
         view.animate().cancel();
-        view.animate().alpha(0.0f).setDuration(j).setInterpolator(Interpolators.ALPHA_OUT).setStartDelay(i).withEndAction(new Runnable() { // from class: com.android.systemui.statusbar.CrossFadeHelper.1
-            @Override // java.lang.Runnable
+        view.animate().alpha(0.0f).setDuration(j).setInterpolator(Interpolators.ALPHA_OUT).setStartDelay((long) i).withEndAction(new Runnable() {
             public void run() {
-                Runnable runnable2 = runnable;
-                if (runnable2 != null) {
-                    runnable2.run();
+                Runnable runnable = Runnable.this;
+                if (runnable != null) {
+                    runnable.run();
                 }
                 if (view.getVisibility() != 8) {
                     view.setVisibility(4);
@@ -56,20 +58,18 @@ public class CrossFadeHelper {
     }
 
     private static void updateLayerType(View view, float f) {
-        if (view.hasOverlappingRendering() && f > 0.0f && f < 1.0f) {
-            if (view.getLayerType() == 2) {
-                return;
+        if (!view.hasOverlappingRendering() || f <= 0.0f || f >= 1.0f) {
+            if (view.getLayerType() == 2 && view.getTag(C1893R.C1897id.cross_fade_layer_type_changed_tag) != null) {
+                view.setLayerType(0, (Paint) null);
             }
-            view.setLayerType(2, null);
-            view.setTag(R$id.cross_fade_layer_type_changed_tag, Boolean.TRUE);
-        } else if (view.getLayerType() != 2 || view.getTag(R$id.cross_fade_layer_type_changed_tag) == null) {
-        } else {
-            view.setLayerType(0, null);
+        } else if (view.getLayerType() != 2) {
+            view.setLayerType(2, (Paint) null);
+            view.setTag(C1893R.C1897id.cross_fade_layer_type_changed_tag, true);
         }
     }
 
     public static void fadeIn(View view) {
-        fadeIn(view, 210L, 0);
+        fadeIn(view, 210, 0);
     }
 
     public static void fadeIn(View view, long j, int i) {
@@ -78,11 +78,10 @@ public class CrossFadeHelper {
             view.setAlpha(0.0f);
             view.setVisibility(0);
         }
-        view.animate().alpha(1.0f).setDuration(j).setStartDelay(i).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
-        if (!view.hasOverlappingRendering() || view.getLayerType() == 2) {
-            return;
+        view.animate().alpha(1.0f).setDuration(j).setStartDelay((long) i).setInterpolator(Interpolators.ALPHA_IN).withEndAction((Runnable) null);
+        if (view.hasOverlappingRendering() && view.getLayerType() != 2) {
+            view.animate().withLayer();
         }
-        view.animate().withLayer();
     }
 
     public static void fadeIn(View view, float f) {

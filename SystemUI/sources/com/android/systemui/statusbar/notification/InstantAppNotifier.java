@@ -21,54 +21,58 @@ import android.os.UserHandle;
 import android.service.notification.StatusBarNotification;
 import android.util.ArraySet;
 import android.util.Pair;
+import com.android.systemui.C1893R;
+import com.android.systemui.CoreStartable;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$color;
-import com.android.systemui.R$drawable;
-import com.android.systemui.R$string;
-import com.android.systemui.SystemUI;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.UiBackground;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.notification.InstantAppNotifier;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.NotificationChannels;
-import com.android.wm.shell.legacysplitscreen.LegacySplitScreen;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
-/* loaded from: classes.dex */
-public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbacks, KeyguardStateController.Callback {
-    private final CommandQueue mCommandQueue;
-    private boolean mDockedStackExists;
-    private KeyguardStateController mKeyguardStateController;
-    private final Optional<LegacySplitScreen> mSplitScreenOptional;
-    private final Executor mUiBgExecutor;
-    private final Handler mHandler = new Handler();
-    private final ArraySet<Pair<String, Integer>> mCurrentNotifs = new ArraySet<>();
-    private final SynchronousUserSwitchObserver mUserSwitchListener = new AnonymousClass1();
+import javax.inject.Inject;
 
-    public InstantAppNotifier(Context context, CommandQueue commandQueue, Executor executor, Optional<LegacySplitScreen> optional) {
+@SysUISingleton
+public class InstantAppNotifier extends CoreStartable implements CommandQueue.Callbacks, KeyguardStateController.Callback {
+    public static final int NUM_TASKS_FOR_INSTANT_APP_INFO = 5;
+    private static final String TAG = "InstantAppNotifier";
+    private final CommandQueue mCommandQueue;
+    private final ArraySet<Pair<String, Integer>> mCurrentNotifs = new ArraySet<>();
+    /* access modifiers changed from: private */
+    public final Handler mHandler = new Handler();
+    private KeyguardStateController mKeyguardStateController;
+    private final Executor mUiBgExecutor;
+    private final SynchronousUserSwitchObserver mUserSwitchListener = new SynchronousUserSwitchObserver() {
+        public void onUserSwitching(int i) throws RemoteException {
+        }
+
+        public void onUserSwitchComplete(int i) throws RemoteException {
+            InstantAppNotifier.this.mHandler.post(new InstantAppNotifier$1$$ExternalSyntheticLambda0(this));
+        }
+
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$onUserSwitchComplete$0$com-android-systemui-statusbar-notification-InstantAppNotifier$1 */
+        public /* synthetic */ void mo39685xe9b5432d() {
+            InstantAppNotifier.this.updateForegroundInstantApps();
+        }
+    };
+
+    @Inject
+    public InstantAppNotifier(Context context, CommandQueue commandQueue, @UiBackground Executor executor) {
         super(context);
-        this.mSplitScreenOptional = optional;
         this.mCommandQueue = commandQueue;
         this.mUiBgExecutor = executor;
     }
 
-    @Override // com.android.systemui.SystemUI
     public void start() {
-        StatusBarNotification[] activeNotifications;
         this.mKeyguardStateController = (KeyguardStateController) Dependency.get(KeyguardStateController.class);
         try {
-            ActivityManager.getService().registerUserSwitchObserver(this.mUserSwitchListener, "InstantAppNotifier");
+            ActivityManager.getService().registerUserSwitchObserver(this.mUserSwitchListener, TAG);
         } catch (RemoteException unused) {
         }
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
         this.mKeyguardStateController.addCallback(this);
-        this.mSplitScreenOptional.ifPresent(new Consumer() { // from class: com.android.systemui.statusbar.notification.InstantAppNotifier$$ExternalSyntheticLambda1
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                InstantAppNotifier.this.lambda$start$1((LegacySplitScreen) obj);
-            }
-        });
         NotificationManager notificationManager = (NotificationManager) this.mContext.getSystemService(NotificationManager.class);
         for (StatusBarNotification statusBarNotification : notificationManager.getActiveNotifications()) {
             if (statusBarNotification.getId() == 7) {
@@ -77,131 +81,58 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$start$1(LegacySplitScreen legacySplitScreen) {
-        legacySplitScreen.registerInSplitScreenListener(new Consumer() { // from class: com.android.systemui.statusbar.notification.InstantAppNotifier$$ExternalSyntheticLambda2
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                InstantAppNotifier.this.lambda$start$0((Boolean) obj);
-            }
-        });
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$start$0(Boolean bool) {
-        this.mDockedStackExists = bool.booleanValue();
-        updateForegroundInstantApps();
-    }
-
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void appTransitionStarting(int i, long j, long j2, boolean z) {
         if (this.mContext.getDisplayId() == i) {
             updateForegroundInstantApps();
         }
     }
 
-    @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
     public void onKeyguardShowingChanged() {
         updateForegroundInstantApps();
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void preloadRecentApps() {
         updateForegroundInstantApps();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* renamed from: com.android.systemui.statusbar.notification.InstantAppNotifier$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    public class AnonymousClass1 extends SynchronousUserSwitchObserver {
-        public void onUserSwitching(int i) throws RemoteException {
-        }
-
-        AnonymousClass1() {
-        }
-
-        public void onUserSwitchComplete(int i) throws RemoteException {
-            InstantAppNotifier.this.mHandler.post(new Runnable() { // from class: com.android.systemui.statusbar.notification.InstantAppNotifier$1$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    InstantAppNotifier.AnonymousClass1.this.lambda$onUserSwitchComplete$0();
-                }
-            });
-        }
-
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$onUserSwitchComplete$0() {
-            InstantAppNotifier.this.updateForegroundInstantApps();
-        }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void updateForegroundInstantApps() {
-        final NotificationManager notificationManager = (NotificationManager) this.mContext.getSystemService(NotificationManager.class);
-        final IPackageManager packageManager = AppGlobals.getPackageManager();
-        this.mUiBgExecutor.execute(new Runnable() { // from class: com.android.systemui.statusbar.notification.InstantAppNotifier$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                InstantAppNotifier.this.lambda$updateForegroundInstantApps$3(notificationManager, packageManager);
-            }
-        });
+        this.mUiBgExecutor.execute(new InstantAppNotifier$$ExternalSyntheticLambda1(this, (NotificationManager) this.mContext.getSystemService(NotificationManager.class), AppGlobals.getPackageManager()));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateForegroundInstantApps$3(final NotificationManager notificationManager, IPackageManager iPackageManager) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateForegroundInstantApps$1$com-android-systemui-statusbar-notification-InstantAppNotifier */
+    public /* synthetic */ void mo39684xfbaded69(NotificationManager notificationManager, IPackageManager iPackageManager) {
         int windowingMode;
-        ArraySet<Pair<String, Integer>> arraySet = new ArraySet<>(this.mCurrentNotifs);
+        ArraySet arraySet = new ArraySet(this.mCurrentNotifs);
         try {
             ActivityTaskManager.RootTaskInfo focusedRootTaskInfo = ActivityTaskManager.getService().getFocusedRootTaskInfo();
-            if (focusedRootTaskInfo != null && ((windowingMode = focusedRootTaskInfo.configuration.windowConfiguration.getWindowingMode()) == 1 || windowingMode == 4 || windowingMode == 5)) {
+            if (focusedRootTaskInfo != null && ((windowingMode = focusedRootTaskInfo.configuration.windowConfiguration.getWindowingMode()) == 1 || windowingMode == 6 || windowingMode == 5)) {
                 checkAndPostForStack(focusedRootTaskInfo, arraySet, notificationManager, iPackageManager);
-            }
-            if (this.mDockedStackExists) {
-                checkAndPostForPrimaryScreen(arraySet, notificationManager, iPackageManager);
             }
         } catch (RemoteException e) {
             e.rethrowFromSystemServer();
         }
-        arraySet.forEach(new Consumer() { // from class: com.android.systemui.statusbar.notification.InstantAppNotifier$$ExternalSyntheticLambda3
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                InstantAppNotifier.this.lambda$updateForegroundInstantApps$2(notificationManager, (Pair) obj);
-            }
-        });
+        arraySet.forEach(new InstantAppNotifier$$ExternalSyntheticLambda0(this, notificationManager));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateForegroundInstantApps$2(NotificationManager notificationManager, Pair pair) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateForegroundInstantApps$0$com-android-systemui-statusbar-notification-InstantAppNotifier */
+    public /* synthetic */ void mo39683x7d4ce98a(NotificationManager notificationManager, Pair pair) {
         this.mCurrentNotifs.remove(pair);
         notificationManager.cancelAsUser((String) pair.first, 7, new UserHandle(((Integer) pair.second).intValue()));
     }
 
-    private void checkAndPostForPrimaryScreen(ArraySet<Pair<String, Integer>> arraySet, NotificationManager notificationManager, IPackageManager iPackageManager) {
-        try {
-            checkAndPostForStack(ActivityTaskManager.getService().getRootTaskInfo(3, 0), arraySet, notificationManager, iPackageManager);
-        } catch (RemoteException e) {
-            e.rethrowFromSystemServer();
-        }
-    }
-
     private void checkAndPostForStack(ActivityTaskManager.RootTaskInfo rootTaskInfo, ArraySet<Pair<String, Integer>> arraySet, NotificationManager notificationManager, IPackageManager iPackageManager) {
+        ApplicationInfo applicationInfo;
         if (rootTaskInfo != null) {
             try {
-                ComponentName componentName = rootTaskInfo.topActivity;
-                if (componentName == null) {
-                    return;
+                if (rootTaskInfo.topActivity != null) {
+                    String packageName = rootTaskInfo.topActivity.getPackageName();
+                    if (!arraySet.remove(new Pair(packageName, Integer.valueOf(rootTaskInfo.userId))) && (applicationInfo = iPackageManager.getApplicationInfo(packageName, 8192, rootTaskInfo.userId)) != null && applicationInfo.isInstantApp()) {
+                        postInstantAppNotif(packageName, rootTaskInfo.userId, applicationInfo, notificationManager, rootTaskInfo.childTaskIds[rootTaskInfo.childTaskIds.length - 1]);
+                    }
                 }
-                String packageName = componentName.getPackageName();
-                if (arraySet.remove(new Pair(packageName, Integer.valueOf(rootTaskInfo.userId)))) {
-                    return;
-                }
-                ApplicationInfo applicationInfo = iPackageManager.getApplicationInfo(packageName, 8192, rootTaskInfo.userId);
-                if (!applicationInfo.isInstantApp()) {
-                    return;
-                }
-                int i = rootTaskInfo.userId;
-                int[] iArr = rootTaskInfo.childTaskIds;
-                postInstantAppNotif(packageName, i, applicationInfo, notificationManager, iArr[iArr.length - 1]);
             } catch (RemoteException e) {
                 e.rethrowFromSystemServer();
             }
@@ -209,61 +140,55 @@ public class InstantAppNotifier extends SystemUI implements CommandQueue.Callbac
     }
 
     private void postInstantAppNotif(String str, int i, ApplicationInfo applicationInfo, NotificationManager notificationManager, int i2) {
-        int i3;
-        String str2;
         Notification.Action action;
-        int i4;
         PendingIntent pendingIntent;
-        Notification.Builder builder;
+        String str2;
+        int i3;
         PendingIntent pendingIntent2;
+        Notification.Builder builder;
         ComponentName componentName;
+        String str3 = str;
+        int i4 = i;
+        ApplicationInfo applicationInfo2 = applicationInfo;
         Bundle bundle = new Bundle();
-        bundle.putString("android.substName", this.mContext.getString(R$string.instant_apps));
-        this.mCurrentNotifs.add(new Pair<>(str, Integer.valueOf(i)));
-        String string = this.mContext.getString(R$string.instant_apps_help_url);
+        bundle.putString("android.substName", this.mContext.getString(C1893R.string.instant_apps));
+        this.mCurrentNotifs.add(new Pair(str3, Integer.valueOf(i)));
+        String string = this.mContext.getString(C1893R.string.instant_apps_help_url);
         boolean z = !string.isEmpty();
-        Context context = this.mContext;
-        if (z) {
-            i3 = R$string.instant_apps_message_with_help;
-        } else {
-            i3 = R$string.instant_apps_message;
-        }
-        String string2 = context.getString(i3);
+        String string2 = this.mContext.getString(z ? C1893R.string.instant_apps_message_with_help : C1893R.string.instant_apps_message);
         UserHandle of = UserHandle.of(i);
-        Notification.Action build = new Notification.Action.Builder((Icon) null, this.mContext.getString(R$string.app_info), PendingIntent.getActivityAsUser(this.mContext, 0, new Intent("android.settings.APPLICATION_DETAILS_SETTINGS").setData(Uri.fromParts("package", str, null)), 67108864, null, of)).build();
+        Notification.Action build = new Notification.Action.Builder((Icon) null, this.mContext.getString(C1893R.string.app_info), PendingIntent.getActivityAsUser(this.mContext, 0, new Intent("android.settings.APPLICATION_DETAILS_SETTINGS").setData(Uri.fromParts("package", str3, (String) null)), 67108864, (Bundle) null, of)).build();
         if (z) {
             str2 = "android.intent.action.VIEW";
             action = build;
-            pendingIntent = PendingIntent.getActivityAsUser(this.mContext, 0, new Intent("android.intent.action.VIEW").setData(Uri.parse(string)), 67108864, null, of);
-            i4 = i2;
+            pendingIntent = PendingIntent.getActivityAsUser(this.mContext, 0, new Intent("android.intent.action.VIEW").setData(Uri.parse(string)), 67108864, (Bundle) null, of);
+            i3 = i2;
         } else {
             str2 = "android.intent.action.VIEW";
             action = build;
-            i4 = i2;
+            i3 = i2;
             pendingIntent = null;
         }
-        Intent taskIntent = getTaskIntent(i4, i);
+        Intent taskIntent = getTaskIntent(i3, i4);
         Notification.Builder builder2 = new Notification.Builder(this.mContext, NotificationChannels.GENERAL);
         if (taskIntent == null || !taskIntent.isWebIntent()) {
             builder = builder2;
             pendingIntent2 = pendingIntent;
         } else {
-            taskIntent.setComponent(null).setPackage(null).addFlags(512).addFlags(268435456);
+            taskIntent.setComponent((ComponentName) null).setPackage((String) null).addFlags(512).addFlags(268435456);
+            Notification.Builder builder3 = builder2;
             pendingIntent2 = pendingIntent;
-            PendingIntent activityAsUser = PendingIntent.getActivityAsUser(this.mContext, 0, taskIntent, 67108864, null, of);
+            PendingIntent activityAsUser = PendingIntent.getActivityAsUser(this.mContext, 0, taskIntent, 67108864, (Bundle) null, of);
             try {
                 componentName = AppGlobals.getPackageManager().getInstantAppInstallerComponent();
             } catch (RemoteException e) {
                 e.rethrowFromSystemServer();
                 componentName = null;
             }
-            Intent addCategory = new Intent().setComponent(componentName).setAction(str2).addCategory("android.intent.category.BROWSABLE");
-            builder = builder2;
-            builder.addAction(new Notification.Action.Builder((Icon) null, this.mContext.getString(R$string.go_to_web), PendingIntent.getActivityAsUser(this.mContext, 0, addCategory.addCategory("unique:" + System.currentTimeMillis()).putExtra("android.intent.extra.PACKAGE_NAME", applicationInfo.packageName).putExtra("android.intent.extra.VERSION_CODE", applicationInfo.versionCode & Integer.MAX_VALUE).putExtra("android.intent.extra.LONG_VERSION_CODE", applicationInfo.longVersionCode).putExtra("android.intent.extra.INSTANT_APP_FAILURE", activityAsUser), 67108864, null, of)).build());
+            builder = builder3;
+            builder.addAction(new Notification.Action.Builder((Icon) null, this.mContext.getString(C1893R.string.go_to_web), PendingIntent.getActivityAsUser(this.mContext, 0, new Intent().setComponent(componentName).setAction(str2).addCategory("android.intent.category.BROWSABLE").addCategory("unique:" + System.currentTimeMillis()).putExtra("android.intent.extra.PACKAGE_NAME", applicationInfo2.packageName).putExtra("android.intent.extra.VERSION_CODE", applicationInfo2.versionCode & Integer.MAX_VALUE).putExtra("android.intent.extra.LONG_VERSION_CODE", applicationInfo2.longVersionCode).putExtra("android.intent.extra.INSTANT_APP_FAILURE", activityAsUser), 67108864, (Bundle) null, of)).build());
         }
-        Notification.Builder color = builder.addExtras(bundle).addAction(action).setContentIntent(pendingIntent2).setColor(this.mContext.getColor(R$color.instant_apps_color));
-        Context context2 = this.mContext;
-        notificationManager.notifyAsUser(str, 7, color.setContentTitle(context2.getString(R$string.instant_apps_title, applicationInfo.loadLabel(context2.getPackageManager()))).setLargeIcon(Icon.createWithResource(str, applicationInfo.icon)).setSmallIcon(Icon.createWithResource(this.mContext.getPackageName(), R$drawable.instant_icon)).setContentText(string2).setStyle(new Notification.BigTextStyle().bigText(string2)).setOngoing(true).build(), new UserHandle(i));
+        notificationManager.notifyAsUser(str3, 7, builder.addExtras(bundle).addAction(action).setContentIntent(pendingIntent2).setColor(this.mContext.getColor(C1893R.C1894color.instant_apps_color)).setContentTitle(this.mContext.getString(C1893R.string.instant_apps_title, new Object[]{applicationInfo2.loadLabel(this.mContext.getPackageManager())})).setLargeIcon(Icon.createWithResource(str3, applicationInfo2.icon)).setSmallIcon(Icon.createWithResource(this.mContext.getPackageName(), C1893R.C1895drawable.instant_icon)).setContentText(string2).setStyle(new Notification.BigTextStyle().bigText(string2)).setOngoing(true).build(), new UserHandle(i4));
     }
 
     private Intent getTaskIntent(int i, int i2) {

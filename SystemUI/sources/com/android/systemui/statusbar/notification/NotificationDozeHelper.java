@@ -8,13 +8,31 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.R$id;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
 import java.util.function.Consumer;
-/* loaded from: classes.dex */
+
 public class NotificationDozeHelper {
-    private static final int DOZE_ANIMATOR_TAG = R$id.doze_intensity_tag;
+    private static final int DOZE_ANIMATOR_TAG = 2131427877;
     private final ColorMatrix mGrayscaleColorMatrix = new ColorMatrix();
+
+    public void fadeGrayscale(final ImageView imageView, final boolean z, long j) {
+        startIntensityAnimation(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                NotificationDozeHelper.this.updateGrayscale(imageView, ((Float) valueAnimator.getAnimatedValue()).floatValue());
+            }
+        }, z, j, new AnimatorListenerAdapter() {
+            public void onAnimationEnd(Animator animator) {
+                if (!z) {
+                    imageView.setColorFilter((ColorFilter) null);
+                }
+            }
+        });
+    }
+
+    public void updateGrayscale(ImageView imageView, boolean z) {
+        updateGrayscale(imageView, z ? 1.0f : 0.0f);
+    }
 
     public void updateGrayscale(ImageView imageView, float f) {
         if (f > 0.0f) {
@@ -31,9 +49,9 @@ public class NotificationDozeHelper {
         if (z) {
             f = 1.0f;
         }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(f2, f);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f2, f});
         ofFloat.addUpdateListener(animatorUpdateListener);
-        ofFloat.setDuration(500L);
+        ofFloat.setDuration(500);
         ofFloat.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
         ofFloat.setStartDelay(j);
         if (animatorListener != null) {
@@ -42,32 +60,20 @@ public class NotificationDozeHelper {
         ofFloat.start();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$setDozing$0(Consumer consumer, ValueAnimator valueAnimator) {
-        consumer.accept((Float) valueAnimator.getAnimatedValue());
-    }
-
-    public void setDozing(final Consumer<Float> consumer, boolean z, boolean z2, long j, final View view) {
+    public void setDozing(Consumer<Float> consumer, boolean z, boolean z2, long j, final View view) {
         if (z2) {
-            startIntensityAnimation(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.statusbar.notification.NotificationDozeHelper$$ExternalSyntheticLambda0
-                @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    NotificationDozeHelper.lambda$setDozing$0(consumer, valueAnimator);
-                }
-            }, z, j, new AnimatorListenerAdapter() { // from class: com.android.systemui.statusbar.notification.NotificationDozeHelper.3
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
+            startIntensityAnimation(new NotificationDozeHelper$$ExternalSyntheticLambda0(consumer), z, j, new AnimatorListenerAdapter() {
                 public void onAnimationEnd(Animator animator) {
-                    view.setTag(NotificationDozeHelper.DOZE_ANIMATOR_TAG, null);
+                    view.setTag(C1893R.C1897id.doze_intensity_tag, (Object) null);
                 }
 
-                @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
                 public void onAnimationStart(Animator animator) {
-                    view.setTag(NotificationDozeHelper.DOZE_ANIMATOR_TAG, animator);
+                    view.setTag(C1893R.C1897id.doze_intensity_tag, animator);
                 }
             });
             return;
         }
-        Animator animator = (Animator) view.getTag(DOZE_ANIMATOR_TAG);
+        Animator animator = (Animator) view.getTag(C1893R.C1897id.doze_intensity_tag);
         if (animator != null) {
             animator.cancel();
         }
@@ -76,5 +82,9 @@ public class NotificationDozeHelper {
 
     public void updateGrayscaleMatrix(float f) {
         this.mGrayscaleColorMatrix.setSaturation(1.0f - f);
+    }
+
+    public ColorMatrix getGrayscaleColorMatrix() {
+        return this.mGrayscaleColorMatrix;
     }
 }

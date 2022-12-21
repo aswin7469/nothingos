@@ -1,18 +1,16 @@
 package com.android.systemui.statusbar.phone;
 
-import com.android.systemui.plugins.IntentButtonProvider;
-import com.android.systemui.statusbar.policy.ExtensionController;
-/* loaded from: classes.dex */
-public final /* synthetic */ class KeyguardBottomAreaView$$ExternalSyntheticLambda3 implements ExtensionController.PluginConverter {
-    public static final /* synthetic */ KeyguardBottomAreaView$$ExternalSyntheticLambda3 INSTANCE = new KeyguardBottomAreaView$$ExternalSyntheticLambda3();
+import android.view.View;
 
-    private /* synthetic */ KeyguardBottomAreaView$$ExternalSyntheticLambda3() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class KeyguardBottomAreaView$$ExternalSyntheticLambda3 implements View.OnClickListener {
+    public final /* synthetic */ KeyguardBottomAreaView f$0;
+
+    public /* synthetic */ KeyguardBottomAreaView$$ExternalSyntheticLambda3(KeyguardBottomAreaView keyguardBottomAreaView) {
+        this.f$0 = keyguardBottomAreaView;
     }
 
-    @Override // com.android.systemui.statusbar.policy.ExtensionController.PluginConverter
-    public final Object getInterfaceFromPlugin(Object obj) {
-        IntentButtonProvider.IntentButton intentButton;
-        intentButton = ((IntentButtonProvider) obj).getIntentButton();
-        return intentButton;
+    public final void onClick(View view) {
+        this.f$0.onQRCodeScannerClicked(view);
     }
 }

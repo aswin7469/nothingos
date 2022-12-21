@@ -1,31 +1,24 @@
 package com.android.systemui.dump;
 
-import kotlin.collections.ArraysKt___ArraysKt;
+import kotlin.Metadata;
+import kotlin.collections.ArraysKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
-import org.jetbrains.annotations.NotNull;
-/* JADX INFO: Access modifiers changed from: package-private */
+
+@Metadata(mo64986d1 = {"\u0000\n\n\u0000\n\u0002\u0010\u000e\n\u0002\b\u0002\u0010\u0000\u001a\u00020\u00012\u0006\u0010\u0002\u001a\u00020\u0001H\n¢\u0006\u0002\b\u0003"}, mo64987d2 = {"<anonymous>", "", "it", "invoke"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: DumpHandler.kt */
-/* loaded from: classes.dex */
-public final class DumpHandler$parseArgs$1 extends Lambda implements Function1<String, String> {
+final class DumpHandler$parseArgs$1 extends Lambda implements Function1<String, String> {
     public static final DumpHandler$parseArgs$1 INSTANCE = new DumpHandler$parseArgs$1();
 
     DumpHandler$parseArgs$1() {
         super(1);
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    @NotNull
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final String mo1949invoke(@NotNull String it) {
-        String[] strArr;
-        boolean contains;
-        Intrinsics.checkNotNullParameter(it, "it");
-        strArr = DumpHandlerKt.PRIORITY_OPTIONS;
-        contains = ArraysKt___ArraysKt.contains(strArr, it);
-        if (contains) {
-            return it;
+    public final String invoke(String str) {
+        Intrinsics.checkNotNullParameter(str, "it");
+        if (ArraysKt.contains((T[]) DumpHandlerKt.PRIORITY_OPTIONS, str)) {
+            return str;
         }
         throw new IllegalArgumentException();
     }

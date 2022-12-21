@@ -1,17 +1,11 @@
 package com.android.systemui.people.widget;
 
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLambda14 implements Predicate {
-    public static final /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda14 INSTANCE = new PeopleSpaceWidgetManager$$ExternalSyntheticLambda14();
+import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import java.util.function.Function;
 
-    private /* synthetic */ PeopleSpaceWidgetManager$$ExternalSyntheticLambda14() {
-    }
-
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        boolean lambda$getNewWidgets$11;
-        lambda$getNewWidgets$11 = PeopleSpaceWidgetManager.lambda$getNewWidgets$11((String) obj);
-        return lambda$getNewWidgets$11;
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class PeopleSpaceWidgetManager$$ExternalSyntheticLambda14 implements Function {
+    public final Object apply(Object obj) {
+        return new PeopleTileKey((NotificationEntry) obj);
     }
 }

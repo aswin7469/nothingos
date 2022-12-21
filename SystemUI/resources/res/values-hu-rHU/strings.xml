@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="anc_noise_adaptive">Adaptív</string>
+    <string name="anc_noise_cancellation_single_line">Zajszűrés</string>
+    <string name="anc_noise_high">Magas</string>
+    <string name="anc_noise_low">Alacsony</string>
+    <string name="anc_noise_mid">Közepes</string>
+    <string name="anc_noise_off">Off</string>
+    <string name="anc_noise_transparency">Transparency</string>
+    <string name="bluetooth_device_context_connect">Kapcsolódás</string>
     <string name="camera_mode_portrait_mode">Portré mód</string>
-    <string name="click_again">Kattintás újra</string>
-    <string name="empty_shade_text">Nincs értesítés</string>
+    <string name="click_again">Kattintson újra</string>
+    <string name="critical_temperature_warning_content">a telefonnak le kell hűlnie, mielőtt újra használhatóvá válik</string>
+    <string name="critical_temperature_warning_title">Magas hőmérséklet</string>
+    <string name="empty_shade_text">Nincsenek értesítések</string>
     <string name="mic_mode_ambient_sound">Környezet</string>
     <string name="mic_mode_standard">Normál</string>
     <string name="mic_mode_voice_focus">Hangfókusz</string>
-    <string name="nt_face_recognition_error">Az arc nem azonosítható. Rendszerhiba.</string>
-    <string name="nt_face_recognition_fail">Az arc nem azonosítható. Próbálja újra.</string>
-    <string name="nt_face_recognition_timeout">Koppintson az ikonra, és próbálja újra</string>
-    <string name="quick_settings_batteryshare_label">Akkumulátor megosztás</string>
+    <string name="nt_face_recognition_error">Nem ismerte fel az arcot. Rendszerhiba.</string>
+    <string name="nt_face_recognition_fail">Nem ismerte fel az arcot. Próbálja újra.</string>
+    <string name="nt_face_recognition_timeout">Érintse meg az ikont és próbálja újra</string>
+    <string name="qs_tesla_def_label">Az Ön Teslája</string>
+    <string name="qs_tesla_def_second_label">Nincs hálózat</string>
+    <string name="quick_settings_batteryshare_label">Akkumulátor-megosztás</string>
     <string name="quick_settings_glyphs_label">Glyphs</string>
-    <string name="swipe_again">Pöccintés újra</string>
+    <string name="shutdown_temperature_warning_content">A biztonsága érdekében, a telefonja kikpacsol %ds időn belül.</string>
+    <string name="shutdown_temperature_warning_title">Magas hőmérsékleti figyelmeztetés</string>
+    <string name="swipe_again">Simítson újra</string>
+    <string name="temperature_turn_off_now">Kikapcsolás most</string>
 </resources>

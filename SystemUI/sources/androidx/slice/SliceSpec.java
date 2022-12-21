@@ -1,7 +1,7 @@
 package androidx.slice;
 
 import androidx.versionedparcelable.VersionedParcelable;
-/* loaded from: classes.dex */
+
 public final class SliceSpec implements VersionedParcelable {
     int mRevision;
     String mType;
@@ -10,10 +10,9 @@ public final class SliceSpec implements VersionedParcelable {
         this.mRevision = 1;
     }
 
-    public SliceSpec(String type, int revision) {
-        this.mRevision = 1;
-        this.mType = type;
-        this.mRevision = revision;
+    public SliceSpec(String str, int i) {
+        this.mType = str;
+        this.mRevision = i;
     }
 
     public String getType() {
@@ -24,8 +23,11 @@ public final class SliceSpec implements VersionedParcelable {
         return this.mRevision;
     }
 
-    public boolean canRender(SliceSpec candidate) {
-        return this.mType.equals(candidate.mType) && this.mRevision >= candidate.mRevision;
+    public boolean canRender(SliceSpec sliceSpec) {
+        if (this.mType.equals(sliceSpec.mType) && this.mRevision >= sliceSpec.mRevision) {
+            return true;
+        }
+        return false;
     }
 
     public boolean equals(Object obj) {
@@ -33,7 +35,10 @@ public final class SliceSpec implements VersionedParcelable {
             return false;
         }
         SliceSpec sliceSpec = (SliceSpec) obj;
-        return this.mType.equals(sliceSpec.mType) && this.mRevision == sliceSpec.mRevision;
+        if (!this.mType.equals(sliceSpec.mType) || this.mRevision != sliceSpec.mRevision) {
+            return false;
+        }
+        return true;
     }
 
     public int hashCode() {

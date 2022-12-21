@@ -18,56 +18,72 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.UserManager;
-import android.provider.ContactsContract;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.preference.PreferenceManager;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.util.ArrayUtils;
 import com.android.internal.widget.MessagingMessage;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.people.widget.PeopleSpaceWidgetManager;
 import com.android.systemui.people.widget.PeopleTileKey;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-import java.text.SimpleDateFormat;
+import com.android.systemui.statusbar.notification.stack.StackStateAnimator;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-/* loaded from: classes.dex */
-public class PeopleSpaceUtils {
-    public static final PeopleTileKey EMPTY_KEY = new PeopleTileKey("", -1, "");
 
-    /* loaded from: classes.dex */
+public class PeopleSpaceUtils {
+    public static final boolean DEBUG = false;
+    static final float DEFAULT_AFFINITY = 0.0f;
+    public static final PeopleTileKey EMPTY_KEY = new PeopleTileKey("", -1, "");
+    public static final String EMPTY_STRING = "";
+    public static final int INVALID_USER_ID = -1;
+    public static final String PACKAGE_NAME = "package_name";
+    public static final String SHORTCUT_ID = "shortcut_id";
+    static final float STARRED_CONTACT = 1.0f;
+    private static final String TAG = "PeopleSpaceUtils";
+    public static final String USER_ID = "user_id";
+    static final float VALID_CONTACT = 0.5f;
+
     public enum NotificationAction {
         POSTED,
         REMOVED
     }
 
-    public static void setSharedPreferencesStorageForTile(Context context, PeopleTileKey peopleTileKey, int i, Uri uri, BackupManager backupManager) {
+    public static Set<String> getStoredWidgetIds(SharedPreferences sharedPreferences, PeopleTileKey peopleTileKey) {
         if (!PeopleTileKey.isValid(peopleTileKey)) {
-            Log.e("PeopleSpaceUtils", "Not storing for invalid key");
+            return new HashSet();
+        }
+        return new HashSet(sharedPreferences.getStringSet(peopleTileKey.toString(), new HashSet()));
+    }
+
+    public static void setSharedPreferencesStorageForTile(Context context, PeopleTileKey peopleTileKey, int i, Uri uri, BackupManager backupManager) {
+        String str;
+        if (!PeopleTileKey.isValid(peopleTileKey)) {
+            Log.e(TAG, "Not storing for invalid key");
             return;
         }
         SharedPreferencesHelper.setPeopleTileKey(context.getSharedPreferences(String.valueOf(i), 0), peopleTileKey);
         SharedPreferences defaultSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor edit = defaultSharedPreferences.edit();
-        String uri2 = uri == null ? "" : uri.toString();
-        edit.putString(String.valueOf(i), uri2);
+        if (uri == null) {
+            str = "";
+        } else {
+            str = uri.toString();
+        }
+        edit.putString(String.valueOf(i), str);
         addAppWidgetIdForKey(defaultSharedPreferences, edit, i, peopleTileKey.toString());
-        if (!TextUtils.isEmpty(uri2)) {
-            addAppWidgetIdForKey(defaultSharedPreferences, edit, i, uri2);
+        if (!TextUtils.isEmpty(str)) {
+            addAppWidgetIdForKey(defaultSharedPreferences, edit, i, str);
         }
         edit.apply();
         backupManager.dataChanged();
@@ -82,7 +98,7 @@ public class PeopleSpaceUtils {
         edit.apply();
         SharedPreferences.Editor edit2 = context.getSharedPreferences(String.valueOf(i), 0).edit();
         edit2.remove("package_name");
-        edit2.remove("user_id");
+        edit2.remove(USER_ID);
         edit2.remove("shortcut_id");
         edit2.apply();
     }
@@ -99,35 +115,22 @@ public class PeopleSpaceUtils {
         editor.putStringSet(str, hashSet);
     }
 
-    public static List<NotificationEntry> getNotificationsByUri(final PackageManager packageManager, final String str, Map<PeopleTileKey, Set<NotificationEntry>> map) {
+    public static List<NotificationEntry> getNotificationsByUri(PackageManager packageManager, String str, Map<PeopleTileKey, Set<NotificationEntry>> map) {
         if (TextUtils.isEmpty(str)) {
             return new ArrayList();
         }
-        return (List) map.entrySet().stream().flatMap(PeopleSpaceUtils$$ExternalSyntheticLambda4.INSTANCE).filter(new Predicate() { // from class: com.android.systemui.people.PeopleSpaceUtils$$ExternalSyntheticLambda5
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getNotificationsByUri$1;
-                lambda$getNotificationsByUri$1 = PeopleSpaceUtils.lambda$getNotificationsByUri$1(packageManager, str, (NotificationEntry) obj);
-                return lambda$getNotificationsByUri$1;
-            }
-        }).collect(Collectors.toList());
+        return (List) map.entrySet().stream().flatMap(new PeopleSpaceUtils$$ExternalSyntheticLambda1()).filter(new PeopleSpaceUtils$$ExternalSyntheticLambda2(packageManager, str)).collect(Collectors.toList());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ Stream lambda$getNotificationsByUri$0(Map.Entry entry) {
-        return ((Set) entry.getValue()).stream();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$getNotificationsByUri$1(PackageManager packageManager, String str, NotificationEntry notificationEntry) {
+    static /* synthetic */ boolean lambda$getNotificationsByUri$1(PackageManager packageManager, String str, NotificationEntry notificationEntry) {
         return NotificationHelper.hasReadContactsPermission(packageManager, notificationEntry.getSbn()) && NotificationHelper.shouldMatchNotificationByUri(notificationEntry.getSbn()) && Objects.equals(str, NotificationHelper.getContactUri(notificationEntry.getSbn()));
     }
 
     public static int getMessagesCount(Set<NotificationEntry> set) {
         List<Notification.MessagingStyle.Message> messagingStyleMessages;
         int i = 0;
-        for (NotificationEntry notificationEntry : set) {
-            Notification notification = notificationEntry.getSbn().getNotification();
+        for (NotificationEntry sbn : set) {
+            Notification notification = sbn.getSbn().getNotification();
             if (!NotificationHelper.isMissedCall(notification) && (messagingStyleMessages = NotificationHelper.getMessagingStyleMessages(notification)) != null) {
                 i += messagingStyleMessages.size();
             }
@@ -167,68 +170,31 @@ public class PeopleSpaceUtils {
         if (message != null && !TextUtils.isEmpty(message.getText())) {
             z = true;
         }
-        CharSequence text = (!isMissedCall || z) ? message.getText() : context.getString(R$string.missed_call);
+        CharSequence text = (!isMissedCall || z) ? message.getText() : context.getString(C1893R.string.missed_call);
         if (message != null && MessagingMessage.hasImage(message)) {
             uri = message.getDataUri();
         }
         return builder.setLastInteractionTimestamp(sbn.getPostTime()).setNotificationKey(sbn.getKey()).setNotificationCategory(notification.category).setNotificationContent(text).setNotificationSender(NotificationHelper.getSenderIfGroupConversation(notification, message)).setNotificationDataUri(uri).setMessagesCount(i).build();
     }
 
-    public static List<PeopleSpaceTile> getSortedTiles(final IPeopleManager iPeopleManager, final LauncherApps launcherApps, final UserManager userManager, Stream<ShortcutInfo> stream) {
-        return (List) stream.filter(PeopleSpaceUtils$$ExternalSyntheticLambda8.INSTANCE).filter(new Predicate() { // from class: com.android.systemui.people.PeopleSpaceUtils$$ExternalSyntheticLambda6
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                boolean lambda$getSortedTiles$2;
-                lambda$getSortedTiles$2 = PeopleSpaceUtils.lambda$getSortedTiles$2(userManager, (ShortcutInfo) obj);
-                return lambda$getSortedTiles$2;
-            }
-        }).map(new Function() { // from class: com.android.systemui.people.PeopleSpaceUtils$$ExternalSyntheticLambda3
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                PeopleSpaceTile lambda$getSortedTiles$3;
-                lambda$getSortedTiles$3 = PeopleSpaceUtils.lambda$getSortedTiles$3(launcherApps, (ShortcutInfo) obj);
-                return lambda$getSortedTiles$3;
-            }
-        }).filter(PeopleSpaceUtils$$ExternalSyntheticLambda7.INSTANCE).map(new Function() { // from class: com.android.systemui.people.PeopleSpaceUtils$$ExternalSyntheticLambda2
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                PeopleSpaceTile lambda$getSortedTiles$5;
-                lambda$getSortedTiles$5 = PeopleSpaceUtils.lambda$getSortedTiles$5(iPeopleManager, (PeopleSpaceTile) obj);
-                return lambda$getSortedTiles$5;
-            }
-        }).sorted(PeopleSpaceUtils$$ExternalSyntheticLambda1.INSTANCE).collect(Collectors.toList());
+    public static List<PeopleSpaceTile> getSortedTiles(IPeopleManager iPeopleManager, LauncherApps launcherApps, UserManager userManager, Stream<ShortcutInfo> stream) {
+        return (List) stream.filter(new PeopleSpaceUtils$$ExternalSyntheticLambda3()).filter(new PeopleSpaceUtils$$ExternalSyntheticLambda4(userManager)).map(new PeopleSpaceUtils$$ExternalSyntheticLambda5(launcherApps)).filter(new PeopleSpaceUtils$$ExternalSyntheticLambda6()).map(new PeopleSpaceUtils$$ExternalSyntheticLambda7(iPeopleManager)).sorted(new PeopleSpaceUtils$$ExternalSyntheticLambda8()).collect(Collectors.toList());
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ boolean lambda$getSortedTiles$2(UserManager userManager, ShortcutInfo shortcutInfo) {
+    static /* synthetic */ boolean lambda$getSortedTiles$2(UserManager userManager, ShortcutInfo shortcutInfo) {
         return !userManager.isQuietModeEnabled(shortcutInfo.getUserHandle());
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ PeopleSpaceTile lambda$getSortedTiles$3(LauncherApps launcherApps, ShortcutInfo shortcutInfo) {
-        return new PeopleSpaceTile.Builder(shortcutInfo, launcherApps).build();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ PeopleSpaceTile lambda$getSortedTiles$5(IPeopleManager iPeopleManager, PeopleSpaceTile peopleSpaceTile) {
-        return peopleSpaceTile.toBuilder().setLastInteractionTimestamp(getLastInteraction(iPeopleManager, peopleSpaceTile).longValue()).build();
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ int lambda$getSortedTiles$6(PeopleSpaceTile peopleSpaceTile, PeopleSpaceTile peopleSpaceTile2) {
-        return new Long(peopleSpaceTile2.getLastInteractionTimestamp()).compareTo(new Long(peopleSpaceTile.getLastInteractionTimestamp()));
     }
 
     public static PeopleSpaceTile getTile(ConversationChannel conversationChannel, LauncherApps launcherApps) {
         if (conversationChannel == null) {
-            Log.i("PeopleSpaceUtils", "ConversationChannel is null");
+            Log.i(TAG, "ConversationChannel is null");
             return null;
         }
         PeopleSpaceTile build = new PeopleSpaceTile.Builder(conversationChannel, launcherApps).build();
         if (shouldKeepConversation(build)) {
             return build;
         }
-        Log.i("PeopleSpaceUtils", "PeopleSpaceTile is not valid");
+        Log.i(TAG, "PeopleSpaceTile is not valid");
         return null;
     }
 
@@ -236,13 +202,13 @@ public class PeopleSpaceUtils {
         try {
             return Long.valueOf(iPeopleManager.getLastInteraction(peopleSpaceTile.getPackageName(), getUserId(peopleSpaceTile), peopleSpaceTile.getId()));
         } catch (Exception e) {
-            Log.e("PeopleSpaceUtils", "Couldn't retrieve last interaction time", e);
+            Log.e(TAG, "Couldn't retrieve last interaction time", e);
             return 0L;
         }
     }
 
     public static Bitmap convertDrawableToBitmap(Drawable drawable) {
-        Bitmap createBitmap;
+        Bitmap bitmap;
         if (drawable == null) {
             return null;
         }
@@ -253,14 +219,14 @@ public class PeopleSpaceUtils {
             }
         }
         if (drawable.getIntrinsicWidth() <= 0 || drawable.getIntrinsicHeight() <= 0) {
-            createBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+            bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
         } else {
-            createBitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         }
-        Canvas canvas = new Canvas(createBitmap);
+        Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
-        return createBitmap;
+        return bitmap;
     }
 
     public static boolean shouldKeepConversation(PeopleSpaceTile peopleSpaceTile) {
@@ -268,30 +234,23 @@ public class PeopleSpaceUtils {
     }
 
     private static boolean hasBirthdayStatus(PeopleSpaceTile peopleSpaceTile, Context context) {
-        return peopleSpaceTile.getBirthdayText() != null && peopleSpaceTile.getBirthdayText().equals(context.getString(R$string.birthday_status));
+        return peopleSpaceTile.getBirthdayText() != null && peopleSpaceTile.getBirthdayText().equals(context.getString(C1893R.string.birthday_status));
     }
 
-    public static void getDataFromContactsOnBackgroundThread(final Context context, final PeopleSpaceWidgetManager peopleSpaceWidgetManager, final Map<Integer, PeopleSpaceTile> map, final int[] iArr) {
-        ThreadUtils.postOnBackgroundThread(new Runnable() { // from class: com.android.systemui.people.PeopleSpaceUtils$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                PeopleSpaceUtils.getDataFromContacts(context, peopleSpaceWidgetManager, map, iArr);
-            }
-        });
+    public static void getDataFromContactsOnBackgroundThread(Context context, PeopleSpaceWidgetManager peopleSpaceWidgetManager, Map<Integer, PeopleSpaceTile> map, int[] iArr) {
+        ThreadUtils.postOnBackgroundThread((Runnable) new PeopleSpaceUtils$$ExternalSyntheticLambda0(context, peopleSpaceWidgetManager, map, iArr));
     }
 
-    @VisibleForTesting
     public static void getDataFromContacts(Context context, PeopleSpaceWidgetManager peopleSpaceWidgetManager, Map<Integer, PeopleSpaceTile> map, int[] iArr) {
-        if (iArr.length == 0) {
-            return;
-        }
-        List<String> contactLookupKeysWithBirthdaysToday = getContactLookupKeysWithBirthdaysToday(context);
-        for (int i : iArr) {
-            PeopleSpaceTile peopleSpaceTile = map.get(Integer.valueOf(i));
-            if (peopleSpaceTile == null || peopleSpaceTile.getContactUri() == null) {
-                updateTileContactFields(peopleSpaceWidgetManager, context, peopleSpaceTile, i, 0.0f, null);
-            } else {
-                updateTileWithBirthdayAndUpdateAffinity(context, peopleSpaceWidgetManager, contactLookupKeysWithBirthdaysToday, peopleSpaceTile, i);
+        if (iArr.length != 0) {
+            List<String> contactLookupKeysWithBirthdaysToday = getContactLookupKeysWithBirthdaysToday(context);
+            for (int i : iArr) {
+                PeopleSpaceTile peopleSpaceTile = map.get(Integer.valueOf(i));
+                if (peopleSpaceTile == null || peopleSpaceTile.getContactUri() == null) {
+                    updateTileContactFields(peopleSpaceWidgetManager, context, peopleSpaceTile, i, 0.0f, (String) null);
+                } else {
+                    updateTileWithBirthdayAndUpdateAffinity(context, peopleSpaceWidgetManager, contactLookupKeysWithBirthdaysToday, peopleSpaceTile, i);
+                }
             }
         }
     }
@@ -304,102 +263,137 @@ public class PeopleSpaceUtils {
             z = false;
         }
         if (z) {
-            peopleSpaceWidgetManager.lambda$addNewWidget$5(i, peopleSpaceTile.toBuilder().setBirthdayText(str).setContactAffinity(f).build());
+            peopleSpaceWidgetManager.mo35176x9a3cfb8a(i, peopleSpaceTile.toBuilder().setBirthdayText(str).setContactAffinity(f).build());
         }
     }
 
     private static void updateTileWithBirthdayAndUpdateAffinity(Context context, PeopleSpaceWidgetManager peopleSpaceWidgetManager, List<String> list, PeopleSpaceTile peopleSpaceTile, int i) {
         Cursor cursor = null;
         try {
-            try {
-                cursor = context.getContentResolver().query(peopleSpaceTile.getContactUri(), null, null, null, null);
-                while (cursor != null) {
-                    if (!cursor.moveToNext()) {
-                        break;
-                    }
-                    String string = cursor.getString(cursor.getColumnIndex("lookup"));
-                    float contactAffinity = getContactAffinity(cursor);
-                    if (!string.isEmpty() && list.contains(string)) {
-                        updateTileContactFields(peopleSpaceWidgetManager, context, peopleSpaceTile, i, contactAffinity, context.getString(R$string.birthday_status));
-                    } else {
-                        updateTileContactFields(peopleSpaceWidgetManager, context, peopleSpaceTile, i, contactAffinity, null);
-                    }
-                }
-                if (cursor == null) {
-                    return;
-                }
-            } catch (SQLException e) {
-                Log.e("PeopleSpaceUtils", "Failed to query contact: " + e);
-                if (cursor == null) {
-                    return;
+            cursor = context.getContentResolver().query(peopleSpaceTile.getContactUri(), (String[]) null, (String) null, (String[]) null, (String) null);
+            while (cursor != null && cursor.moveToNext()) {
+                String string = cursor.getString(cursor.getColumnIndex("lookup"));
+                float contactAffinity = getContactAffinity(cursor);
+                if (string.isEmpty() || !list.contains(string)) {
+                    updateTileContactFields(peopleSpaceWidgetManager, context, peopleSpaceTile, i, contactAffinity, (String) null);
+                } else {
+                    updateTileContactFields(peopleSpaceWidgetManager, context, peopleSpaceTile, i, contactAffinity, context.getString(C1893R.string.birthday_status));
                 }
             }
-            cursor.close();
+            if (cursor == null) {
+                return;
+            }
+        } catch (SQLException e) {
+            Log.e(TAG, "Failed to query contact", e);
+            if (cursor == null) {
+                return;
+            }
         } catch (Throwable th) {
             if (cursor != null) {
                 cursor.close();
             }
             throw th;
         }
+        cursor.close();
     }
 
     private static float getContactAffinity(Cursor cursor) {
         int columnIndex = cursor.getColumnIndex("starred");
-        if (columnIndex >= 0) {
-            if (!(cursor.getInt(columnIndex) != 0)) {
-                return 0.5f;
-            }
+        if (columnIndex < 0) {
+            return 0.5f;
+        }
+        if (cursor.getInt(columnIndex) != 0) {
             return Math.max(0.5f, 1.0f);
         }
         return 0.5f;
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:11:0x0070, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:13:0x005b, code lost:
+        if (r1 == null) goto L_0x0060;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:14:0x005d, code lost:
+        r1.close();
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:15:0x0060, code lost:
         return r0;
      */
-    /* JADX WARN: Code restructure failed: missing block: B:17:0x006d, code lost:
-        if (r1 == null) goto L11;
+    /* JADX WARNING: Code restructure failed: missing block: B:7:0x004e, code lost:
+        if (r1 != null) goto L_0x005d;
      */
-    @VisibleForTesting
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public static List<String> getContactLookupKeysWithBirthdaysToday(Context context) {
-        ArrayList arrayList = new ArrayList(1);
-        String format = new SimpleDateFormat("MM-dd").format(new Date());
-        Cursor cursor = null;
-        try {
-            try {
-                cursor = context.getContentResolver().query(ContactsContract.Data.CONTENT_URI, new String[]{"lookup", "data1"}, "mimetype= ? AND data2=3 AND (substr(data1,6) = ? OR substr(data1,3) = ? )", new String[]{"vnd.android.cursor.item/contact_event", format, format}, null);
-                while (cursor != null) {
-                    if (!cursor.moveToNext()) {
-                        break;
-                    }
-                    arrayList.add(cursor.getString(cursor.getColumnIndex("lookup")));
-                }
-            } catch (SQLException e) {
-                Log.e("PeopleSpaceUtils", "Failed to query birthdays: " + e);
-            }
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public static java.util.List<java.lang.String> getContactLookupKeysWithBirthdaysToday(android.content.Context r11) {
+        /*
+            java.util.ArrayList r0 = new java.util.ArrayList
+            r1 = 1
+            r0.<init>((int) r1)
+            java.text.SimpleDateFormat r2 = new java.text.SimpleDateFormat
+            java.lang.String r3 = "MM-dd"
+            r2.<init>(r3)
+            java.util.Date r3 = new java.util.Date
+            r3.<init>()
+            java.lang.String r2 = r2.format(r3)
+            java.lang.String r3 = "data1"
+            java.lang.String r4 = "lookup"
+            java.lang.String[] r7 = new java.lang.String[]{r4, r3}
+            java.lang.String r8 = "mimetype= ? AND data2=3 AND (substr(data1,6) = ? OR substr(data1,3) = ? )"
+            r3 = 3
+            java.lang.String[] r9 = new java.lang.String[r3]
+            r3 = 0
+            java.lang.String r5 = "vnd.android.cursor.item/contact_event"
+            r9[r3] = r5
+            r9[r1] = r2
+            r1 = 2
+            r9[r1] = r2
+            r1 = 0
+            android.content.ContentResolver r5 = r11.getContentResolver()     // Catch:{ SQLException -> 0x0053 }
+            android.net.Uri r6 = android.provider.ContactsContract.Data.CONTENT_URI     // Catch:{ SQLException -> 0x0053 }
+            r10 = 0
+            android.database.Cursor r1 = r5.query(r6, r7, r8, r9, r10)     // Catch:{ SQLException -> 0x0053 }
+        L_0x003a:
+            if (r1 == 0) goto L_0x004e
+            boolean r11 = r1.moveToNext()     // Catch:{ SQLException -> 0x0053 }
+            if (r11 == 0) goto L_0x004e
+            int r11 = r1.getColumnIndex(r4)     // Catch:{ SQLException -> 0x0053 }
+            java.lang.String r11 = r1.getString(r11)     // Catch:{ SQLException -> 0x0053 }
+            r0.add(r11)     // Catch:{ SQLException -> 0x0053 }
+            goto L_0x003a
+        L_0x004e:
+            if (r1 == 0) goto L_0x0060
+            goto L_0x005d
+        L_0x0051:
+            r11 = move-exception
+            goto L_0x0061
+        L_0x0053:
+            r11 = move-exception
+            java.lang.String r2 = "PeopleSpaceUtils"
+            java.lang.String r3 = "Failed to query birthdays"
+            android.util.Log.e(r2, r3, r11)     // Catch:{ all -> 0x0051 }
+            if (r1 == 0) goto L_0x0060
+        L_0x005d:
+            r1.close()
+        L_0x0060:
+            return r0
+        L_0x0061:
+            if (r1 == 0) goto L_0x0066
+            r1.close()
+        L_0x0066:
+            throw r11
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.people.PeopleSpaceUtils.getContactLookupKeysWithBirthdaysToday(android.content.Context):java.util.List");
     }
 
     public static int getUserId(PeopleSpaceTile peopleSpaceTile) {
         return peopleSpaceTile.getUserHandle().getIdentifier();
     }
 
-    /* loaded from: classes.dex */
     public enum PeopleSpaceWidgetEvent implements UiEventLogger.UiEventEnum {
         PEOPLE_SPACE_WIDGET_DELETED(666),
-        PEOPLE_SPACE_WIDGET_ADDED(667),
+        PEOPLE_SPACE_WIDGET_ADDED(StackStateAnimator.ANIMATION_DURATION_WAKEUP_SCRIM),
         PEOPLE_SPACE_WIDGET_CLICKED(668);
         
         private final int mId;
 
-        PeopleSpaceWidgetEvent(int i) {
+        private PeopleSpaceWidgetEvent(int i) {
             this.mId = i;
         }
 

@@ -4,12 +4,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-/* loaded from: classes.dex */
+
 public abstract class ActionMode {
     private Object mTag;
     private boolean mTitleOptionalHint;
 
-    /* loaded from: classes.dex */
     public interface Callback {
         boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem);
 
@@ -34,7 +33,13 @@ public abstract class ActionMode {
 
     public abstract void invalidate();
 
-    public abstract boolean isTitleOptional();
+    public boolean isTitleOptional() {
+        return false;
+    }
+
+    public boolean isUiFocusable() {
+        return true;
+    }
 
     public abstract void setCustomView(View view);
 

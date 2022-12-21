@@ -11,42 +11,34 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dependency;
-import com.android.systemui.R$drawable;
-import com.android.systemui.R$string;
 import com.android.systemui.tuner.ShortcutParser;
 import com.android.systemui.tuner.TunerService;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-/* loaded from: classes2.dex */
+
 public class ShortcutPicker extends PreferenceFragment implements TunerService.Tunable {
     private String mKey;
     private SelectablePreference mNonePreference;
     private final ArrayList<SelectablePreference> mSelectablePreferences = new ArrayList<>();
     private TunerService mTunerService;
 
-    @Override // androidx.preference.PreferenceFragment
     public void onCreatePreferences(Bundle bundle, String str) {
-        final Context context = getPreferenceManager().getContext();
-        final PreferenceScreen createPreferenceScreen = getPreferenceManager().createPreferenceScreen(context);
+        Context context = getPreferenceManager().getContext();
+        PreferenceScreen createPreferenceScreen = getPreferenceManager().createPreferenceScreen(context);
         createPreferenceScreen.setOrderingAsAdded(true);
-        final PreferenceCategory preferenceCategory = new PreferenceCategory(context);
-        preferenceCategory.setTitle(R$string.tuner_other_apps);
+        PreferenceCategory preferenceCategory = new PreferenceCategory(context);
+        preferenceCategory.setTitle((int) C1893R.string.tuner_other_apps);
         SelectablePreference selectablePreference = new SelectablePreference(context);
         this.mNonePreference = selectablePreference;
         this.mSelectablePreferences.add(selectablePreference);
-        this.mNonePreference.setTitle(R$string.lockscreen_none);
-        this.mNonePreference.setIcon(R$drawable.ic_remove_circle);
+        this.mNonePreference.setTitle((int) C1893R.string.lockscreen_none);
+        this.mNonePreference.setIcon((int) C1893R.C1895drawable.ic_remove_circle);
         createPreferenceScreen.addPreference(this.mNonePreference);
-        List<LauncherActivityInfo> activityList = ((LauncherApps) getContext().getSystemService(LauncherApps.class)).getActivityList(null, Process.myUserHandle());
+        List<LauncherActivityInfo> activityList = ((LauncherApps) getContext().getSystemService(LauncherApps.class)).getActivityList((String) null, Process.myUserHandle());
         createPreferenceScreen.addPreference(preferenceCategory);
-        activityList.forEach(new Consumer() { // from class: com.android.systemui.tuner.ShortcutPicker$$ExternalSyntheticLambda1
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ShortcutPicker.this.lambda$onCreatePreferences$1(context, createPreferenceScreen, preferenceCategory, (LauncherActivityInfo) obj);
-            }
-        });
+        activityList.forEach(new ShortcutPicker$$ExternalSyntheticLambda2(this, context, createPreferenceScreen, preferenceCategory));
         createPreferenceScreen.removePreference(preferenceCategory);
         for (int i = 0; i < preferenceCategory.getPreferenceCount(); i++) {
             Preference preference = preferenceCategory.getPreference(0);
@@ -61,20 +53,16 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
         tunerService.addTunable(this, this.mKey);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCreatePreferences$1(final Context context, final PreferenceScreen preferenceScreen, PreferenceCategory preferenceCategory, final LauncherActivityInfo launcherActivityInfo) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onCreatePreferences$1$com-android-systemui-tuner-ShortcutPicker */
+    public /* synthetic */ void mo46438x56ec3030(Context context, PreferenceScreen preferenceScreen, PreferenceCategory preferenceCategory, LauncherActivityInfo launcherActivityInfo) {
         try {
             List<ShortcutParser.Shortcut> shortcuts = new ShortcutParser(getContext(), launcherActivityInfo.getComponentName()).getShortcuts();
             AppPreference appPreference = new AppPreference(context, launcherActivityInfo);
             this.mSelectablePreferences.add(appPreference);
             if (shortcuts.size() != 0) {
                 preferenceScreen.addPreference(appPreference);
-                shortcuts.forEach(new Consumer() { // from class: com.android.systemui.tuner.ShortcutPicker$$ExternalSyntheticLambda0
-                    @Override // java.util.function.Consumer
-                    public final void accept(Object obj) {
-                        ShortcutPicker.this.lambda$onCreatePreferences$0(context, launcherActivityInfo, preferenceScreen, (ShortcutParser.Shortcut) obj);
-                    }
-                });
+                shortcuts.forEach(new ShortcutPicker$$ExternalSyntheticLambda0(this, context, launcherActivityInfo, preferenceScreen));
                 return;
             }
             preferenceCategory.addPreference(appPreference);
@@ -82,68 +70,52 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onCreatePreferences$0(Context context, LauncherActivityInfo launcherActivityInfo, PreferenceScreen preferenceScreen, ShortcutParser.Shortcut shortcut) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onCreatePreferences$0$com-android-systemui-tuner-ShortcutPicker */
+    public /* synthetic */ void mo46437x71aac16f(Context context, LauncherActivityInfo launcherActivityInfo, PreferenceScreen preferenceScreen, ShortcutParser.Shortcut shortcut) {
         ShortcutPreference shortcutPreference = new ShortcutPreference(context, shortcut, launcherActivityInfo.getLabel());
         this.mSelectablePreferences.add(shortcutPreference);
         preferenceScreen.addPreference(shortcutPreference);
     }
 
-    @Override // androidx.preference.PreferenceFragment, androidx.preference.PreferenceManager.OnPreferenceTreeClickListener
     public boolean onPreferenceTreeClick(Preference preference) {
         this.mTunerService.setValue(this.mKey, preference.toString());
         getActivity().onBackPressed();
         return true;
     }
 
-    @Override // android.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
-        if ("sysui_keyguard_left".equals(this.mKey)) {
-            getActivity().setTitle(R$string.lockscreen_shortcut_left);
+        if (LockscreenFragment.LOCKSCREEN_LEFT_BUTTON.equals(this.mKey)) {
+            getActivity().setTitle(C1893R.string.lockscreen_shortcut_left);
         } else {
-            getActivity().setTitle(R$string.lockscreen_shortcut_right);
+            getActivity().setTitle(C1893R.string.lockscreen_shortcut_right);
         }
     }
 
-    @Override // android.app.Fragment
     public void onDestroy() {
         super.onDestroy();
         this.mTunerService.removeTunable(this);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$onTuningChanged$2(String str, SelectablePreference selectablePreference) {
-        selectablePreference.setChecked(str.equals(selectablePreference.toString()));
-    }
-
-    @Override // com.android.systemui.tuner.TunerService.Tunable
-    public void onTuningChanged(String str, final String str2) {
+    public void onTuningChanged(String str, String str2) {
         if (str2 == null) {
             str2 = "";
         }
-        this.mSelectablePreferences.forEach(new Consumer() { // from class: com.android.systemui.tuner.ShortcutPicker$$ExternalSyntheticLambda2
-            @Override // java.util.function.Consumer
-            public final void accept(Object obj) {
-                ShortcutPicker.lambda$onTuningChanged$2(str2, (SelectablePreference) obj);
-            }
-        });
+        this.mSelectablePreferences.forEach(new ShortcutPicker$$ExternalSyntheticLambda1(str2));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class AppPreference extends SelectablePreference {
+    private static class AppPreference extends SelectablePreference {
         private boolean mBinding;
         private final LauncherActivityInfo mInfo;
 
         public AppPreference(Context context, LauncherActivityInfo launcherActivityInfo) {
             super(context);
             this.mInfo = launcherActivityInfo;
-            setTitle(context.getString(R$string.tuner_launch_app, launcherActivityInfo.getLabel()));
-            setSummary(context.getString(R$string.tuner_app, launcherActivityInfo.getLabel()));
+            setTitle((CharSequence) context.getString(C1893R.string.tuner_launch_app, new Object[]{launcherActivityInfo.getLabel()}));
+            setSummary((CharSequence) context.getString(C1893R.string.tuner_app, new Object[]{launcherActivityInfo.getLabel()}));
         }
 
-        @Override // androidx.preference.CheckBoxPreference, androidx.preference.Preference
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
             this.mBinding = true;
             if (getIcon() == null) {
@@ -153,35 +125,29 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
             super.onBindViewHolder(preferenceViewHolder);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.preference.Preference
+        /* access modifiers changed from: protected */
         public void notifyChanged() {
-            if (this.mBinding) {
-                return;
+            if (!this.mBinding) {
+                super.notifyChanged();
             }
-            super.notifyChanged();
         }
 
-        @Override // com.android.systemui.tuner.SelectablePreference, androidx.preference.Preference
         public String toString() {
             return this.mInfo.getComponentName().flattenToString();
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public static class ShortcutPreference extends SelectablePreference {
+    private static class ShortcutPreference extends SelectablePreference {
         private boolean mBinding;
         private final ShortcutParser.Shortcut mShortcut;
 
         public ShortcutPreference(Context context, ShortcutParser.Shortcut shortcut, CharSequence charSequence) {
             super(context);
             this.mShortcut = shortcut;
-            setTitle(shortcut.label);
-            setSummary(context.getString(R$string.tuner_app, charSequence));
+            setTitle((CharSequence) shortcut.label);
+            setSummary((CharSequence) context.getString(C1893R.string.tuner_app, new Object[]{charSequence}));
         }
 
-        @Override // androidx.preference.CheckBoxPreference, androidx.preference.Preference
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
             this.mBinding = true;
             if (getIcon() == null) {
@@ -191,16 +157,13 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
             super.onBindViewHolder(preferenceViewHolder);
         }
 
-        /* JADX INFO: Access modifiers changed from: protected */
-        @Override // androidx.preference.Preference
+        /* access modifiers changed from: protected */
         public void notifyChanged() {
-            if (this.mBinding) {
-                return;
+            if (!this.mBinding) {
+                super.notifyChanged();
             }
-            super.notifyChanged();
         }
 
-        @Override // com.android.systemui.tuner.SelectablePreference, androidx.preference.Preference
         public String toString() {
             return this.mShortcut.toString();
         }

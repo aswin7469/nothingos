@@ -3,7 +3,7 @@ package com.android.systemui.classifier;
 import android.view.ViewConfiguration;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FalsingModule_ProvidesSingleTapTouchSlopFactory implements Factory<Float> {
     private final Provider<ViewConfiguration> viewConfigurationProvider;
 
@@ -11,10 +11,8 @@ public final class FalsingModule_ProvidesSingleTapTouchSlopFactory implements Fa
         this.viewConfigurationProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public Float mo1933get() {
-        return Float.valueOf(providesSingleTapTouchSlop(this.viewConfigurationProvider.mo1933get()));
+    public Float get() {
+        return Float.valueOf(providesSingleTapTouchSlop(this.viewConfigurationProvider.get()));
     }
 
     public static FalsingModule_ProvidesSingleTapTouchSlopFactory create(Provider<ViewConfiguration> provider) {

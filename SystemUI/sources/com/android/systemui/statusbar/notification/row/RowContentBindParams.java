@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.notification.row;
-/* loaded from: classes.dex */
+
 public final class RowContentBindParams {
+    private static final int DEFAULT_INFLATION_FLAGS = 3;
     private int mContentViews = 3;
     private int mDirtyContentViews = 3;
     private boolean mUseIncreasedHeadsUpHeight;
@@ -50,9 +51,9 @@ public final class RowContentBindParams {
 
     public void markContentViewsFreeable(int i) {
         int i2 = this.mContentViews;
-        int i3 = ~i;
-        this.mContentViews = i2 & i3;
-        this.mDirtyContentViews = i3 & this.mDirtyContentViews;
+        int i3 = i & i2;
+        this.mContentViews = i2 & (~i3);
+        this.mDirtyContentViews = i3 | this.mDirtyContentViews;
     }
 
     public int getContentViews() {
@@ -63,7 +64,7 @@ public final class RowContentBindParams {
         this.mDirtyContentViews = this.mContentViews;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void clearDirtyContentViews() {
         this.mDirtyContentViews = 0;
     }

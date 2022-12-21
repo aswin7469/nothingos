@@ -8,7 +8,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.tuner.TunerService;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardBypassController_Factory implements Factory<KeyguardBypassController> {
     private final Provider<Context> contextProvider;
     private final Provider<DumpManager> dumpManagerProvider;
@@ -26,10 +26,8 @@ public final class KeyguardBypassController_Factory implements Factory<KeyguardB
         this.dumpManagerProvider = provider6;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardBypassController mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.tunerServiceProvider.mo1933get(), this.statusBarStateControllerProvider.mo1933get(), this.lockscreenUserManagerProvider.mo1933get(), this.keyguardStateControllerProvider.mo1933get(), this.dumpManagerProvider.mo1933get());
+    public KeyguardBypassController get() {
+        return newInstance(this.contextProvider.get(), this.tunerServiceProvider.get(), this.statusBarStateControllerProvider.get(), this.lockscreenUserManagerProvider.get(), this.keyguardStateControllerProvider.get(), this.dumpManagerProvider.get());
     }
 
     public static KeyguardBypassController_Factory create(Provider<Context> provider, Provider<TunerService> provider2, Provider<StatusBarStateController> provider3, Provider<NotificationLockscreenUserManager> provider4, Provider<KeyguardStateController> provider5, Provider<DumpManager> provider6) {

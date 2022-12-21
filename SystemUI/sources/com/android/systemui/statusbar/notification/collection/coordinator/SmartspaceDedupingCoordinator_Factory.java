@@ -9,7 +9,7 @@ import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.time.SystemClock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class SmartspaceDedupingCoordinator_Factory implements Factory<SmartspaceDedupingCoordinator> {
     private final Provider<SystemClock> clockProvider;
     private final Provider<DelayableExecutor> executorProvider;
@@ -29,10 +29,8 @@ public final class SmartspaceDedupingCoordinator_Factory implements Factory<Smar
         this.clockProvider = provider7;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SmartspaceDedupingCoordinator mo1933get() {
-        return newInstance(this.statusBarStateControllerProvider.mo1933get(), this.smartspaceControllerProvider.mo1933get(), this.notificationEntryManagerProvider.mo1933get(), this.notificationLockscreenUserManagerProvider.mo1933get(), this.notifPipelineProvider.mo1933get(), this.executorProvider.mo1933get(), this.clockProvider.mo1933get());
+    public SmartspaceDedupingCoordinator get() {
+        return newInstance(this.statusBarStateControllerProvider.get(), this.smartspaceControllerProvider.get(), this.notificationEntryManagerProvider.get(), this.notificationLockscreenUserManagerProvider.get(), this.notifPipelineProvider.get(), this.executorProvider.get(), this.clockProvider.get());
     }
 
     public static SmartspaceDedupingCoordinator_Factory create(Provider<SysuiStatusBarStateController> provider, Provider<LockscreenSmartspaceController> provider2, Provider<NotificationEntryManager> provider3, Provider<NotificationLockscreenUserManager> provider4, Provider<NotifPipeline> provider5, Provider<DelayableExecutor> provider6, Provider<SystemClock> provider7) {

@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.policy;
 import android.service.quickaccesswallet.QuickAccessWalletClient;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class WalletControllerImpl_Factory implements Factory<WalletControllerImpl> {
     private final Provider<QuickAccessWalletClient> quickAccessWalletClientProvider;
 
@@ -11,10 +11,8 @@ public final class WalletControllerImpl_Factory implements Factory<WalletControl
         this.quickAccessWalletClientProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public WalletControllerImpl mo1933get() {
-        return newInstance(this.quickAccessWalletClientProvider.mo1933get());
+    public WalletControllerImpl get() {
+        return newInstance(this.quickAccessWalletClientProvider.get());
     }
 
     public static WalletControllerImpl_Factory create(Provider<QuickAccessWalletClient> provider) {

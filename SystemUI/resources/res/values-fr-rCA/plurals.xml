@@ -2,19 +2,26 @@
 <resources>
     <plurals name="abc_slice_duration_days">
         <item quantity="one">Il y a %d jour</item>
+        <item quantity="many">%d days ago</item>
         <item quantity="other">Il y a %d jours</item>
     </plurals>
     <plurals name="abc_slice_duration_min">
         <item quantity="one">Il y a %d minute</item>
+        <item quantity="many">%d min ago</item>
         <item quantity="other">Il y a %d minutes</item>
     </plurals>
     <plurals name="abc_slice_duration_years">
         <item quantity="one">Il y a %d an</item>
+        <item quantity="many">%d yr ago</item>
         <item quantity="other">Il y a %d ans</item>
     </plurals>
     <plurals name="controls_number_of_favorites">
         <item quantity="one">%s commande ajoutée.</item>
         <item quantity="other">%s commandes ajoutées.</item>
+    </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s application est active</item>
+        <item quantity="other">%s applications sont actives</item>
     </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">Entrez le NIP de votre carte SIM. Il vous reste %d tentative.</item>
@@ -31,22 +38,6 @@
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">Le code PUK de la carte SIM est incorrect. Il vous reste %d tentative avant que votre carte SIM devienne définitivement inutilisable.</item>
         <item quantity="other">Le code PUK de la carte SIM est incorrect. Il vous reste %d tentatives avant que votre carte SIM devienne définitivement inutilisable.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">L&apos;appareil n&apos;a pas été déverrouillé depuis %d heure. Confirmez le mot de passe.</item>
-        <item quantity="other">L&apos;appareil n&apos;a pas été déverrouillé depuis %d heures. Confirmez le mot de passe.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">L&apos;appareil n&apos;a pas été déverrouillé depuis %d heure. Confirmez le schéma.</item>
-        <item quantity="other">L&apos;appareil n&apos;a pas été déverrouillé depuis %d heures. Confirmez le schéma.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">L&apos;appareil n&apos;a pas été déverrouillé depuis %d heure. Confirmez le NIP.</item>
-        <item quantity="other">L&apos;appareil n&apos;a pas été déverrouillé depuis %d heures. Confirmez le NIP.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">Réessayer dans %d seconde.</item>
-        <item quantity="other">Réessayer dans %d secondes.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d nouvelle notification</item>
@@ -71,9 +62,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">Vous pouvez ajouter jusqu&apos;à %d utilisateur.</item>
         <item quantity="other">Vous pouvez ajouter jusqu&apos;à %d utilisateurs.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d appareil connecté</item>
-        <item quantity="other">%1$d appareils connectés</item>
     </plurals>
 </resources>

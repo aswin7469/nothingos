@@ -6,7 +6,7 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.tuner.TunerService;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class KeyguardSliceViewController_Factory implements Factory<KeyguardSliceViewController> {
     private final Provider<ActivityStarter> activityStarterProvider;
     private final Provider<ConfigurationController> configurationControllerProvider;
@@ -22,10 +22,8 @@ public final class KeyguardSliceViewController_Factory implements Factory<Keygua
         this.dumpManagerProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public KeyguardSliceViewController mo1933get() {
-        return newInstance(this.keyguardSliceViewProvider.mo1933get(), this.activityStarterProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.tunerServiceProvider.mo1933get(), this.dumpManagerProvider.mo1933get());
+    public KeyguardSliceViewController get() {
+        return newInstance(this.keyguardSliceViewProvider.get(), this.activityStarterProvider.get(), this.configurationControllerProvider.get(), this.tunerServiceProvider.get(), this.dumpManagerProvider.get());
     }
 
     public static KeyguardSliceViewController_Factory create(Provider<KeyguardSliceView> provider, Provider<ActivityStarter> provider2, Provider<ConfigurationController> provider3, Provider<TunerService> provider4, Provider<DumpManager> provider5) {

@@ -6,7 +6,7 @@ import com.android.systemui.log.LogcatEchoTracker;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class LogModule_ProvideLogcatEchoTrackerFactory implements Factory<LogcatEchoTracker> {
     private final Provider<ContentResolver> contentResolverProvider;
     private final Provider<Looper> looperProvider;
@@ -16,10 +16,8 @@ public final class LogModule_ProvideLogcatEchoTrackerFactory implements Factory<
         this.looperProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public LogcatEchoTracker mo1933get() {
-        return provideLogcatEchoTracker(this.contentResolverProvider.mo1933get(), this.looperProvider.mo1933get());
+    public LogcatEchoTracker get() {
+        return provideLogcatEchoTracker(this.contentResolverProvider.get(), this.looperProvider.get());
     }
 
     public static LogModule_ProvideLogcatEchoTrackerFactory create(Provider<ContentResolver> provider, Provider<Looper> provider2) {

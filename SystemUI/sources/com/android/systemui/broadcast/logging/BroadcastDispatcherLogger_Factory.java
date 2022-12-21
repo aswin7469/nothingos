@@ -3,7 +3,7 @@ package com.android.systemui.broadcast.logging;
 import com.android.systemui.log.LogBuffer;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class BroadcastDispatcherLogger_Factory implements Factory<BroadcastDispatcherLogger> {
     private final Provider<LogBuffer> bufferProvider;
 
@@ -11,10 +11,8 @@ public final class BroadcastDispatcherLogger_Factory implements Factory<Broadcas
         this.bufferProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public BroadcastDispatcherLogger mo1933get() {
-        return newInstance(this.bufferProvider.mo1933get());
+    public BroadcastDispatcherLogger get() {
+        return newInstance(this.bufferProvider.get());
     }
 
     public static BroadcastDispatcherLogger_Factory create(Provider<LogBuffer> provider) {

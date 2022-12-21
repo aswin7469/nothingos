@@ -1,0 +1,13 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/wifi/WifiManager;->LINK_CONFIGURATION_CHANGED_ACTION:Ljava/lang/String;,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,1246,5,1246,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/wifi/WifiManager;->MIN_RSSI:I,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,1442,5,1442,25,
+Landroid/net/wifi/WifiManager;->MAX_RSSI:I,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,1446,5,1446,25,
+Landroid/net/wifi/WifiManager;->RSSI_LEVELS:I,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,1456,5,1456,88,maxTargetSdk=30&trackingBug=170729553L
+Landroid/net/wifi/WifiManager;->WIFI_FREQUENCY_BAND_AUTO:I,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,1465,5,1465,25,
+Landroid/net/wifi/WifiManager;->WIFI_FREQUENCY_BAND_5GHZ:I,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,1472,5,1472,25,
+Landroid/net/wifi/WifiManager;->WIFI_FREQUENCY_BAND_2GHZ:I,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,1479,5,1479,25,
+Landroid/net/wifi/WifiManager;->mActiveLockCount:I,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,1535,5,1535,25,
+Landroid/net/wifi/WifiManager;->mService:Landroid/net/wifi/IWifiManager;,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,1539,5,1539,25,
+Landroid/net/wifi/WifiManager;->cancelLocalOnlyHotspotRequest()V,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,4824,5,4824,25,
+Landroid/net/wifi/WifiManager;->initializeMulticastFiltering()Z,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,6851,5,6851,25,
+Landroid/net/wifi/WifiManager;->enableVerboseLogging(I)V,packages/modules/Wifi/framework/java/android/net/wifi/WifiManager.java,6891,5,6894,6,maxTargetSdk=29&publicAlternatives=%22Use+%7B%40code+%23setVerboseLoggingEnabled%28boolean%29%7D+instead.%22

@@ -1,14 +1,26 @@
 package com.android.systemui.recents;
 
 import android.content.Context;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.dagger.ContextComponentHelper;
-/* loaded from: classes.dex */
+import dagger.Binds;
+import dagger.Module;
+import dagger.Provides;
+import dagger.multibindings.ClassKey;
+import dagger.multibindings.IntoMap;
+
+@Module
 public abstract class RecentsModule {
+    @IntoMap
+    @ClassKey(OverviewProxyRecentsImpl.class)
+    @Binds
+    public abstract RecentsImplementation bindOverviewProxyRecentsImpl(OverviewProxyRecentsImpl overviewProxyRecentsImpl);
+
+    @Provides
     public static RecentsImplementation provideRecentsImpl(Context context, ContextComponentHelper contextComponentHelper) {
-        String string = context.getString(R$string.config_recentsComponent);
+        String string = context.getString(C1893R.string.config_recentsComponent);
         if (string == null || string.length() == 0) {
-            throw new RuntimeException("No recents component configured", null);
+            throw new RuntimeException("No recents component configured", (Throwable) null);
         }
         RecentsImplementation resolveRecents = contextComponentHelper.resolveRecents(string);
         if (resolveRecents != null) {

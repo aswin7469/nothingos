@@ -1,11 +1,11 @@
 package com.android.systemui.statusbar.notification.row;
 
-import android.animation.TimeInterpolator;
 import android.app.INotificationManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationChannelGroup;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ShortcutInfo;
@@ -20,43 +20,53 @@ import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.transition.ChangeBounds;
 import android.transition.Fade;
-import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.transition.TransitionSet;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.notification.ConversationIconFactory;
-import com.android.systemui.R$drawable;
-import com.android.systemui.R$id;
-import com.android.systemui.R$string;
+import com.android.systemui.C1893R;
 import com.android.systemui.animation.Interpolators;
+import com.android.systemui.dagger.qualifiers.Background;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.people.widget.PeopleSpaceWidgetManager;
 import com.android.systemui.statusbar.notification.NotificationChannelHelper;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-import com.android.systemui.statusbar.notification.row.NotificationConversationInfo;
 import com.android.systemui.statusbar.notification.row.NotificationGuts;
 import com.android.systemui.statusbar.phone.ShadeController;
 import com.android.systemui.wmshell.BubblesManager;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Optional;
-/* loaded from: classes.dex */
+
 public class NotificationConversationInfo extends LinearLayout implements NotificationGuts.GutsContent {
+    static final int ACTION_DEFAULT = 0;
+    static final int ACTION_FAVORITE = 2;
+    static final int ACTION_HOME = 1;
+    static final int ACTION_MUTE = 4;
+    static final int ACTION_SETTINGS = 5;
+    static final int ACTION_SNOOZE = 3;
+    private static final String TAG = "ConversationGuts";
     private int mActualHeight;
-    private int mAppBubble;
+    /* access modifiers changed from: private */
+    public int mAppBubble;
     private String mAppName;
     private int mAppUid;
     private Handler mBgHandler;
     private Notification.BubbleMetadata mBubbleMetadata;
-    private Optional<BubblesManager> mBubblesManagerOptional;
+    /* access modifiers changed from: private */
+    public Optional<BubblesManager> mBubblesManagerOptional;
     private TextView mDefaultDescriptionView;
     private String mDelegatePkg;
-    private NotificationEntry mEntry;
+    /* access modifiers changed from: private */
+    public NotificationEntry mEntry;
     private NotificationGuts mGutsContainer;
     private INotificationManager mINotificationManager;
     private ConversationIconFactory mIconFactory;
@@ -64,6 +74,10 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
     private Handler mMainHandler;
     private NotificationChannel mNotificationChannel;
     private OnConversationSettingsClickListener mOnConversationSettingsClickListener;
+    private View.OnClickListener mOnDefaultClick = new NotificationConversationInfo$$ExternalSyntheticLambda5(this);
+    private View.OnClickListener mOnDone = new NotificationConversationInfo$$ExternalSyntheticLambda7(this);
+    private View.OnClickListener mOnFavoriteClick = new NotificationConversationInfo$$ExternalSyntheticLambda4(this);
+    private View.OnClickListener mOnMuteClick = new NotificationConversationInfo$$ExternalSyntheticLambda6(this);
     private OnSettingsClickListener mOnSettingsClickListener;
     private OnUserInteractionCallback mOnUserInteractionCallback;
     private String mPackageName;
@@ -72,88 +86,88 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
     private boolean mPressedApply;
     private TextView mPriorityDescriptionView;
     private StatusBarNotification mSbn;
+    private int mSelectedAction = -1;
     private ShadeController mShadeController;
     private ShortcutInfo mShortcutInfo;
     private ShortcutManager mShortcutManager;
     private TextView mSilentDescriptionView;
-    private Context mUserContext;
-    private int mSelectedAction = -1;
-    @VisibleForTesting
     boolean mSkipPost = false;
-    private View.OnClickListener mOnFavoriteClick = new View.OnClickListener() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$$ExternalSyntheticLambda1
-        @Override // android.view.View.OnClickListener
-        public final void onClick(View view) {
-            NotificationConversationInfo.this.lambda$new$0(view);
-        }
-    };
-    private View.OnClickListener mOnDefaultClick = new View.OnClickListener() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$$ExternalSyntheticLambda0
-        @Override // android.view.View.OnClickListener
-        public final void onClick(View view) {
-            NotificationConversationInfo.this.lambda$new$1(view);
-        }
-    };
-    private View.OnClickListener mOnMuteClick = new View.OnClickListener() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$$ExternalSyntheticLambda2
-        @Override // android.view.View.OnClickListener
-        public final void onClick(View view) {
-            NotificationConversationInfo.this.lambda$new$2(view);
-        }
-    };
-    private View.OnClickListener mOnDone = new View.OnClickListener() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$$ExternalSyntheticLambda3
-        @Override // android.view.View.OnClickListener
-        public final void onClick(View view) {
-            NotificationConversationInfo.this.lambda$new$3(view);
-        }
-    };
+    private Context mUserContext;
 
-    /* loaded from: classes.dex */
-    public interface OnConversationSettingsClickListener {
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface Action {
     }
 
-    /* loaded from: classes.dex */
+    public interface OnAppSettingsClickListener {
+        void onClick(View view, Intent intent);
+    }
+
+    public interface OnConversationSettingsClickListener {
+        void onClick();
+    }
+
     public interface OnSettingsClickListener {
         void onClick(View view, NotificationChannel notificationChannel, int i);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public View getContentView() {
         return this;
     }
 
-    @VisibleForTesting
     public boolean isAnimating() {
         return false;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean needsFalsingProtection() {
         return true;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean willBeRemoved() {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(View view) {
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        return super.generateLayoutParams(layoutParams);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-row-NotificationConversationInfo */
+    public /* synthetic */ void mo41536xcc6fd7da(View view) {
         setSelectedAction(2);
         updateToggleActions(this.mSelectedAction, true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$1(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$1$com-android-systemui-statusbar-notification-row-NotificationConversationInfo */
+    public /* synthetic */ void mo41537xe5712979(View view) {
         setSelectedAction(0);
         updateToggleActions(this.mSelectedAction, true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$2(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$2$com-android-systemui-statusbar-notification-row-NotificationConversationInfo */
+    public /* synthetic */ void mo41538xfe727b18(View view) {
         setSelectedAction(4);
         updateToggleActions(this.mSelectedAction, true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$3(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$3$com-android-systemui-statusbar-notification-row-NotificationConversationInfo */
+    public /* synthetic */ void mo41539x1773ccb7(View view) {
         this.mPressedApply = true;
         if (this.mSelectedAction == 2 && getPriority() != this.mSelectedAction) {
             this.mShadeController.animateCollapsePanels();
@@ -166,16 +180,14 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         super(context, attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    @VisibleForTesting
+    /* access modifiers changed from: package-private */
     public void setSelectedAction(int i) {
-        if (this.mSelectedAction == i) {
-            return;
+        if (this.mSelectedAction != i) {
+            this.mSelectedAction = i;
         }
-        this.mSelectedAction = i;
     }
 
-    public void bindNotification(int i, ShortcutManager shortcutManager, PackageManager packageManager, PeopleSpaceWidgetManager peopleSpaceWidgetManager, INotificationManager iNotificationManager, OnUserInteractionCallback onUserInteractionCallback, String str, NotificationChannel notificationChannel, NotificationEntry notificationEntry, Notification.BubbleMetadata bubbleMetadata, OnSettingsClickListener onSettingsClickListener, ConversationIconFactory conversationIconFactory, Context context, boolean z, Handler handler, Handler handler2, OnConversationSettingsClickListener onConversationSettingsClickListener, Optional<BubblesManager> optional, ShadeController shadeController) {
+    public void bindNotification(int i, ShortcutManager shortcutManager, PackageManager packageManager, PeopleSpaceWidgetManager peopleSpaceWidgetManager, INotificationManager iNotificationManager, OnUserInteractionCallback onUserInteractionCallback, String str, NotificationChannel notificationChannel, NotificationEntry notificationEntry, Notification.BubbleMetadata bubbleMetadata, OnSettingsClickListener onSettingsClickListener, ConversationIconFactory conversationIconFactory, Context context, boolean z, @Main Handler handler, @Background Handler handler2, OnConversationSettingsClickListener onConversationSettingsClickListener, Optional<BubblesManager> optional, ShadeController shadeController) {
         this.mPressedApply = false;
         this.mSelectedAction = i;
         this.mINotificationManager = iNotificationManager;
@@ -203,31 +215,32 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         this.mShortcutManager = shortcutManager;
         ShortcutInfo conversationShortcutInfo = notificationEntry.getRanking().getConversationShortcutInfo();
         this.mShortcutInfo = conversationShortcutInfo;
-        if (conversationShortcutInfo == null) {
-            throw new IllegalArgumentException("Does not have required information");
+        if (conversationShortcutInfo != null) {
+            this.mNotificationChannel = NotificationChannelHelper.createConversationChannelIfNeeded(getContext(), this.mINotificationManager, notificationEntry, this.mNotificationChannel);
+            try {
+                this.mAppBubble = this.mINotificationManager.getBubblePreferenceForPackage(this.mPackageName, this.mAppUid);
+            } catch (RemoteException e) {
+                Log.e(TAG, "can't reach OS", e);
+                this.mAppBubble = 2;
+            }
+            bindHeader();
+            bindActions();
+            View findViewById = findViewById(C1893R.C1897id.done);
+            findViewById.setOnClickListener(this.mOnDone);
+            findViewById.setAccessibilityDelegate(this.mGutsContainer.getAccessibilityDelegate());
+            return;
         }
-        this.mNotificationChannel = NotificationChannelHelper.createConversationChannelIfNeeded(getContext(), this.mINotificationManager, notificationEntry, this.mNotificationChannel);
-        try {
-            this.mAppBubble = this.mINotificationManager.getBubblePreferenceForPackage(this.mPackageName, this.mAppUid);
-        } catch (RemoteException e) {
-            Log.e("ConversationGuts", "can't reach OS", e);
-            this.mAppBubble = 2;
-        }
-        bindHeader();
-        bindActions();
-        View findViewById = findViewById(R$id.done);
-        findViewById.setOnClickListener(this.mOnDone);
-        findViewById.setAccessibilityDelegate(this.mGutsContainer.getAccessibilityDelegate());
+        throw new IllegalArgumentException("Does not have required information");
     }
 
     private void bindActions() {
         if (this.mAppBubble == 1) {
-            ((TextView) findViewById(R$id.default_summary)).setText(getResources().getString(R$string.notification_channel_summary_default_with_bubbles, this.mAppName));
+            ((TextView) findViewById(C1893R.C1897id.default_summary)).setText(getResources().getString(C1893R.string.notification_channel_summary_default_with_bubbles, new Object[]{this.mAppName}));
         }
-        findViewById(R$id.priority).setOnClickListener(this.mOnFavoriteClick);
-        findViewById(R$id.default_behavior).setOnClickListener(this.mOnDefaultClick);
-        findViewById(R$id.silence).setOnClickListener(this.mOnMuteClick);
-        View findViewById = findViewById(R$id.info);
+        findViewById(C1893R.C1897id.priority).setOnClickListener(this.mOnFavoriteClick);
+        findViewById(C1893R.C1897id.default_behavior).setOnClickListener(this.mOnDefaultClick);
+        findViewById(C1893R.C1897id.silence).setOnClickListener(this.mOnMuteClick);
+        View findViewById = findViewById(C1893R.C1897id.info);
         findViewById.setOnClickListener(getSettingsOnClickListener());
         findViewById.setVisibility(findViewById.hasOnClickListeners() ? 0 : 8);
         int i = this.mSelectedAction;
@@ -243,37 +256,33 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
     }
 
     private View.OnClickListener getSettingsOnClickListener() {
-        final int i = this.mAppUid;
+        int i = this.mAppUid;
         if (i < 0 || this.mOnSettingsClickListener == null || !this.mIsDeviceProvisioned) {
             return null;
         }
-        return new View.OnClickListener() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$$ExternalSyntheticLambda4
-            @Override // android.view.View.OnClickListener
-            public final void onClick(View view) {
-                NotificationConversationInfo.this.lambda$getSettingsOnClickListener$4(i, view);
-            }
-        };
+        return new NotificationConversationInfo$$ExternalSyntheticLambda0(this, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$getSettingsOnClickListener$4(int i, View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$getSettingsOnClickListener$4$com-android-systemui-statusbar-notification-row-NotificationConversationInfo */
+    public /* synthetic */ void mo41535x24e356f8(int i, View view) {
         this.mOnSettingsClickListener.onClick(view, this.mNotificationChannel, i);
     }
 
     private void bindConversationDetails() {
-        ((TextView) findViewById(R$id.parent_channel_name)).setText(this.mNotificationChannel.getName());
+        ((TextView) findViewById(C1893R.C1897id.parent_channel_name)).setText(this.mNotificationChannel.getName());
         bindGroup();
         bindPackage();
         bindIcon(this.mNotificationChannel.isImportantConversation());
-        this.mPriorityDescriptionView = (TextView) findViewById(R$id.priority_summary);
+        this.mPriorityDescriptionView = (TextView) findViewById(C1893R.C1897id.priority_summary);
         if (willShowAsBubble() && willBypassDnd()) {
-            this.mPriorityDescriptionView.setText(R$string.notification_channel_summary_priority_all);
+            this.mPriorityDescriptionView.setText(C1893R.string.notification_channel_summary_priority_all);
         } else if (willShowAsBubble()) {
-            this.mPriorityDescriptionView.setText(R$string.notification_channel_summary_priority_bubble);
+            this.mPriorityDescriptionView.setText(C1893R.string.notification_channel_summary_priority_bubble);
         } else if (willBypassDnd()) {
-            this.mPriorityDescriptionView.setText(R$string.notification_channel_summary_priority_dnd);
+            this.mPriorityDescriptionView.setText(C1893R.string.notification_channel_summary_priority_dnd);
         } else {
-            this.mPriorityDescriptionView.setText(R$string.notification_channel_summary_priority_baseline);
+            this.mPriorityDescriptionView.setText(C1893R.string.notification_channel_summary_priority_baseline);
         }
     }
 
@@ -281,15 +290,15 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         Drawable baseIconDrawable = this.mIconFactory.getBaseIconDrawable(this.mShortcutInfo);
         int i = 0;
         if (baseIconDrawable == null) {
-            baseIconDrawable = ((LinearLayout) this).mContext.getDrawable(R$drawable.ic_person).mutate();
-            TypedArray obtainStyledAttributes = ((LinearLayout) this).mContext.obtainStyledAttributes(new int[]{16843829});
+            baseIconDrawable = this.mContext.getDrawable(C1893R.C1895drawable.ic_person).mutate();
+            TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16843829});
             int color = obtainStyledAttributes.getColor(0, 0);
             obtainStyledAttributes.recycle();
             baseIconDrawable.setTint(color);
         }
-        ((ImageView) findViewById(R$id.conversation_icon)).setImageDrawable(baseIconDrawable);
-        ((ImageView) findViewById(R$id.conversation_icon_badge_icon)).setImageDrawable(this.mIconFactory.getAppBadge(this.mPackageName, UserHandle.getUserId(this.mSbn.getUid())));
-        View findViewById = findViewById(R$id.conversation_icon_badge_ring);
+        ((ImageView) findViewById(C1893R.C1897id.conversation_icon)).setImageDrawable(baseIconDrawable);
+        ((ImageView) findViewById(C1893R.C1897id.conversation_icon_badge_icon)).setImageDrawable(this.mIconFactory.getAppBadge(this.mPackageName, UserHandle.getUserId(this.mSbn.getUid())));
+        View findViewById = findViewById(C1893R.C1897id.conversation_icon_badge_ring);
         if (!z) {
             i = 8;
         }
@@ -300,15 +309,15 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         try {
             ApplicationInfo applicationInfo = this.mPm.getApplicationInfo(this.mPackageName, 795136);
             if (applicationInfo != null) {
-                this.mAppName = String.valueOf(this.mPm.getApplicationLabel(applicationInfo));
+                this.mAppName = String.valueOf((Object) this.mPm.getApplicationLabel(applicationInfo));
             }
         } catch (PackageManager.NameNotFoundException unused) {
         }
-        ((TextView) findViewById(R$id.pkg_name)).setText(this.mAppName);
+        ((TextView) findViewById(C1893R.C1897id.pkg_name)).setText(this.mAppName);
     }
 
     private void bindDelegate() {
-        TextView textView = (TextView) findViewById(R$id.delegate_name);
+        TextView textView = (TextView) findViewById(C1893R.C1897id.delegate_name);
         if (!TextUtils.equals(this.mPackageName, this.mDelegatePkg)) {
             textView.setVisibility(0);
         } else {
@@ -319,7 +328,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
     private void bindGroup() {
         NotificationChannel notificationChannel = this.mNotificationChannel;
         CharSequence charSequence = null;
-        if (notificationChannel != null && notificationChannel.getGroup() != null) {
+        if (!(notificationChannel == null || notificationChannel.getGroup() == null)) {
             try {
                 NotificationChannelGroup notificationChannelGroupForPackage = this.mINotificationManager.getNotificationChannelGroupForPackage(this.mNotificationChannel.getGroup(), this.mPackageName, this.mAppUid);
                 if (notificationChannelGroupForPackage != null) {
@@ -328,7 +337,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             } catch (RemoteException unused) {
             }
         }
-        TextView textView = (TextView) findViewById(R$id.group_name);
+        TextView textView = (TextView) findViewById(C1893R.C1897id.group_name);
         if (charSequence != null) {
             textView.setText(charSequence);
             textView.setVisibility(0);
@@ -337,178 +346,144 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         textView.setVisibility(8);
     }
 
-    @Override // android.view.View
     public boolean post(Runnable runnable) {
-        if (this.mSkipPost) {
-            runnable.run();
-            return true;
+        if (!this.mSkipPost) {
+            return super.post(runnable);
         }
-        return super.post(runnable);
+        runnable.run();
+        return true;
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         super.onFinishInflate();
-        this.mDefaultDescriptionView = (TextView) findViewById(R$id.default_summary);
-        this.mSilentDescriptionView = (TextView) findViewById(R$id.silence_summary);
+        this.mDefaultDescriptionView = (TextView) findViewById(C1893R.C1897id.default_summary);
+        this.mSilentDescriptionView = (TextView) findViewById(C1893R.C1897id.silence_summary);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void onFinishedClosing() {
         this.mSelectedAction = -1;
     }
 
-    @Override // android.view.View
     public void onInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         super.onInitializeAccessibilityEvent(accessibilityEvent);
-        if (this.mGutsContainer == null || accessibilityEvent.getEventType() != 32) {
-            return;
-        }
-        if (this.mGutsContainer.isExposed()) {
-            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(R$string.notification_channel_controls_opened_accessibility, this.mAppName));
-        } else {
-            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(R$string.notification_channel_controls_closed_accessibility, this.mAppName));
+        if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
+            if (this.mGutsContainer.isExposed()) {
+                accessibilityEvent.getText().add(this.mContext.getString(C1893R.string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
+                return;
+            }
+            accessibilityEvent.getText().add(this.mContext.getString(C1893R.string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
         }
     }
 
     private void updateToggleActions(int i, boolean z) {
-        int i2;
         boolean z2 = true;
         if (z) {
             TransitionSet transitionSet = new TransitionSet();
             transitionSet.setOrdering(0);
-            TransitionSet addTransition = transitionSet.addTransition(new Fade(2)).addTransition(new ChangeBounds());
-            Transition duration = new Fade(1).setStartDelay(150L).setDuration(200L);
-            Interpolator interpolator = Interpolators.FAST_OUT_SLOW_IN;
-            addTransition.addTransition(duration.setInterpolator(interpolator));
-            transitionSet.setDuration(350L);
-            transitionSet.setInterpolator((TimeInterpolator) interpolator);
+            transitionSet.addTransition(new Fade(2)).addTransition(new ChangeBounds()).addTransition(new Fade(1).setStartDelay(150).setDuration(200).setInterpolator(Interpolators.FAST_OUT_SLOW_IN));
+            transitionSet.setDuration(350);
+            transitionSet.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
             TransitionManager.beginDelayedTransition(this, transitionSet);
         }
-        final View findViewById = findViewById(R$id.priority);
-        final View findViewById2 = findViewById(R$id.default_behavior);
-        final View findViewById3 = findViewById(R$id.silence);
+        View findViewById = findViewById(C1893R.C1897id.priority);
+        View findViewById2 = findViewById(C1893R.C1897id.default_behavior);
+        View findViewById3 = findViewById(C1893R.C1897id.silence);
         if (i == 0) {
             this.mDefaultDescriptionView.setVisibility(0);
             this.mSilentDescriptionView.setVisibility(8);
             this.mPriorityDescriptionView.setVisibility(8);
-            post(new Runnable() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$$ExternalSyntheticLambda7
-                @Override // java.lang.Runnable
-                public final void run() {
-                    NotificationConversationInfo.lambda$updateToggleActions$7(findViewById, findViewById2, findViewById3);
-                }
-            });
+            post(new NotificationConversationInfo$$ExternalSyntheticLambda3(findViewById, findViewById2, findViewById3));
         } else if (i == 2) {
             this.mPriorityDescriptionView.setVisibility(0);
             this.mDefaultDescriptionView.setVisibility(8);
             this.mSilentDescriptionView.setVisibility(8);
-            post(new Runnable() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$$ExternalSyntheticLambda5
-                @Override // java.lang.Runnable
-                public final void run() {
-                    NotificationConversationInfo.lambda$updateToggleActions$5(findViewById, findViewById2, findViewById3);
-                }
-            });
+            post(new NotificationConversationInfo$$ExternalSyntheticLambda1(findViewById, findViewById2, findViewById3));
         } else if (i == 4) {
             this.mSilentDescriptionView.setVisibility(0);
             this.mDefaultDescriptionView.setVisibility(8);
             this.mPriorityDescriptionView.setVisibility(8);
-            post(new Runnable() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$$ExternalSyntheticLambda6
-                @Override // java.lang.Runnable
-                public final void run() {
-                    NotificationConversationInfo.lambda$updateToggleActions$6(findViewById, findViewById2, findViewById3);
-                }
-            });
+            post(new NotificationConversationInfo$$ExternalSyntheticLambda2(findViewById, findViewById2, findViewById3));
         } else {
             throw new IllegalArgumentException("Unrecognized behavior: " + this.mSelectedAction);
         }
-        boolean z3 = getPriority() != i;
-        TextView textView = (TextView) findViewById(R$id.done);
-        if (z3) {
-            i2 = R$string.inline_ok_button;
-        } else {
-            i2 = R$string.inline_done_button;
-        }
-        textView.setText(i2);
+        ((TextView) findViewById(C1893R.C1897id.done)).setText(getPriority() != i ? C1893R.string.inline_ok_button : C1893R.string.inline_done_button);
         if (i != 2) {
             z2 = false;
         }
         bindIcon(z2);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$updateToggleActions$5(View view, View view2, View view3) {
+    static /* synthetic */ void lambda$updateToggleActions$5(View view, View view2, View view3) {
         view.setSelected(true);
         view2.setSelected(false);
         view3.setSelected(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$updateToggleActions$6(View view, View view2, View view3) {
+    static /* synthetic */ void lambda$updateToggleActions$6(View view, View view2, View view3) {
         view.setSelected(false);
         view2.setSelected(false);
         view3.setSelected(true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public static /* synthetic */ void lambda$updateToggleActions$7(View view, View view2, View view3) {
+    static /* synthetic */ void lambda$updateToggleActions$7(View view, View view2, View view3) {
         view.setSelected(false);
         view2.setSelected(true);
         view3.setSelected(false);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getSelectedAction() {
         return this.mSelectedAction;
     }
 
     private int getPriority() {
-        if (this.mNotificationChannel.getImportance() > 2 || this.mNotificationChannel.getImportance() <= -1000) {
-            return this.mNotificationChannel.isImportantConversation() ? 2 : 0;
+        if (this.mNotificationChannel.getImportance() <= 2 && this.mNotificationChannel.getImportance() > -1000) {
+            return 4;
         }
-        return 4;
+        if (this.mNotificationChannel.isImportantConversation()) {
+            return 2;
+        }
+        return 0;
     }
 
     private void updateChannel() {
         this.mBgHandler.post(new UpdateChannelRunnable(this.mINotificationManager, this.mPackageName, this.mAppUid, this.mSelectedAction, this.mNotificationChannel));
         this.mEntry.markForUserTriggeredMovement(true);
-        this.mMainHandler.postDelayed(new Runnable() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$$ExternalSyntheticLambda8
-            @Override // java.lang.Runnable
-            public final void run() {
-                NotificationConversationInfo.this.lambda$updateChannel$8();
-            }
-        }, 360L);
+        this.mMainHandler.postDelayed(new NotificationConversationInfo$$ExternalSyntheticLambda8(this), 360);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateChannel$8() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateChannel$8$com-android-systemui-statusbar-notification-row-NotificationConversationInfo */
+    public /* synthetic */ void mo41540x560aeef8() {
         this.mOnUserInteractionCallback.onImportanceChanged(this.mEntry);
     }
 
     private boolean willBypassDnd() {
         try {
             int i = this.mINotificationManager.getConsolidatedNotificationPolicy().priorityConversationSenders;
-            return i == 2 || i == 1;
+            if (i == 2 || i == 1) {
+                return true;
+            }
+            return false;
         } catch (RemoteException e) {
-            Log.e("ConversationGuts", "Could not check conversation senders", e);
+            Log.e(TAG, "Could not check conversation senders", e);
             return false;
         }
     }
 
     private boolean willShowAsBubble() {
-        return this.mBubbleMetadata != null && BubblesManager.areBubblesEnabled(((LinearLayout) this).mContext, this.mSbn.getUser());
+        return this.mBubbleMetadata != null && BubblesManager.areBubblesEnabled(this.mContext, this.mSbn.getUser());
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void setGutsParent(NotificationGuts notificationGuts) {
         this.mGutsContainer = notificationGuts;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean shouldBeSaved() {
         return this.mPressedApply;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean handleCloseControls(boolean z, boolean z2) {
         if (!z || this.mSelectedAction <= -1) {
             return false;
@@ -517,20 +492,17 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         return false;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public int getActualHeight() {
         return this.mActualHeight;
     }
 
-    @Override // android.widget.LinearLayout, android.view.ViewGroup, android.view.View
-    protected void onLayout(boolean z, int i, int i2, int i3, int i4) {
+    /* access modifiers changed from: protected */
+    public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         this.mActualHeight = getHeight();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public class UpdateChannelRunnable implements Runnable {
+    class UpdateChannelRunnable implements Runnable {
         private final int mAction;
         private final String mAppPkg;
         private final int mAppUid;
@@ -545,7 +517,6 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             this.mAction = i2;
         }
 
-        @Override // java.lang.Runnable
         public void run() {
             try {
                 int i = this.mAction;
@@ -564,12 +535,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
                             this.mINotificationManager.setBubblesAllowed(this.mAppPkg, this.mAppUid, 2);
                         }
                         if (NotificationConversationInfo.this.mBubblesManagerOptional.isPresent()) {
-                            NotificationConversationInfo.this.post(new Runnable() { // from class: com.android.systemui.statusbar.notification.row.NotificationConversationInfo$UpdateChannelRunnable$$ExternalSyntheticLambda0
-                                @Override // java.lang.Runnable
-                                public final void run() {
-                                    NotificationConversationInfo.UpdateChannelRunnable.this.lambda$run$0();
-                                }
-                            });
+                            NotificationConversationInfo.this.post(new C2762xc525717e(this));
                         }
                     }
                     NotificationChannel notificationChannel2 = this.mChannelToUpdate;
@@ -585,12 +551,13 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
                 }
                 this.mINotificationManager.updateNotificationChannelForPackage(this.mAppPkg, this.mAppUid, this.mChannelToUpdate);
             } catch (RemoteException e) {
-                Log.e("ConversationGuts", "Unable to update notification channel", e);
+                Log.e(NotificationConversationInfo.TAG, "Unable to update notification channel", e);
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        public /* synthetic */ void lambda$run$0() {
+        /* access modifiers changed from: package-private */
+        /* renamed from: lambda$run$0$com-android-systemui-statusbar-notification-row-NotificationConversationInfo$UpdateChannelRunnable */
+        public /* synthetic */ void mo41550xc57ee9c2() {
             ((BubblesManager) NotificationConversationInfo.this.mBubblesManagerOptional.get()).onUserSetImportantConversation(NotificationConversationInfo.this.mEntry);
         }
     }

@@ -1,11 +1,13 @@
 package com.android.systemui.statusbar.phone;
 
 import android.view.MotionEvent;
-import com.android.internal.annotations.VisibleForTesting;
+import com.android.systemui.dagger.qualifiers.Main;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.util.concurrency.DelayableExecutor;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
 public class NotificationTapHelper {
+    public static final long DOUBLE_TAP_TIMEOUT_MS = 1200;
     private final ActivationListener mActivationListener;
     private final DoubleTapListener mDoubleTapListener;
     private final DelayableExecutor mExecutor;
@@ -15,19 +17,16 @@ public class NotificationTapHelper {
     private boolean mTrackTouch;
 
     @FunctionalInterface
-    /* loaded from: classes.dex */
     public interface ActivationListener {
         void onActiveChanged(boolean z);
     }
 
     @FunctionalInterface
-    /* loaded from: classes.dex */
     public interface DoubleTapListener {
         boolean onDoubleTap();
     }
 
     @FunctionalInterface
-    /* loaded from: classes.dex */
     public interface SlideBackListener {
         boolean onSlideBack();
     }
@@ -40,8 +39,8 @@ public class NotificationTapHelper {
         this.mSlideBackListener = slideBackListener;
     }
 
-    @VisibleForTesting
-    boolean onTouchEvent(MotionEvent motionEvent) {
+    /* access modifiers changed from: package-private */
+    public boolean onTouchEvent(MotionEvent motionEvent) {
         return onTouchEvent(motionEvent, Integer.MAX_VALUE);
     }
 
@@ -49,7 +48,7 @@ public class NotificationTapHelper {
         int actionMasked = motionEvent.getActionMasked();
         boolean z = true;
         if (actionMasked == 0) {
-            if (motionEvent.getY() > i) {
+            if (motionEvent.getY() > ((float) i)) {
                 z = false;
             }
             this.mTrackTouch = z;
@@ -87,16 +86,11 @@ public class NotificationTapHelper {
     }
 
     private void makeActive() {
-        this.mTimeoutCancel = this.mExecutor.executeDelayed(new Runnable() { // from class: com.android.systemui.statusbar.phone.NotificationTapHelper$$ExternalSyntheticLambda0
-            @Override // java.lang.Runnable
-            public final void run() {
-                NotificationTapHelper.this.makeInactive();
-            }
-        }, 1200L);
+        this.mTimeoutCancel = this.mExecutor.executeDelayed(new NotificationTapHelper$$ExternalSyntheticLambda0(this), DOUBLE_TAP_TIMEOUT_MS);
         this.mActivationListener.onActiveChanged(true);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void makeInactive() {
         this.mActivationListener.onActiveChanged(false);
         Runnable runnable = this.mTimeoutCancel;
@@ -106,12 +100,12 @@ public class NotificationTapHelper {
         }
     }
 
-    /* loaded from: classes.dex */
     public static class Factory {
         private final DelayableExecutor mDelayableExecutor;
         private final FalsingManager mFalsingManager;
 
-        public Factory(FalsingManager falsingManager, DelayableExecutor delayableExecutor) {
+        @Inject
+        public Factory(FalsingManager falsingManager, @Main DelayableExecutor delayableExecutor) {
             this.mFalsingManager = falsingManager;
             this.mDelayableExecutor = delayableExecutor;
         }

@@ -4,28 +4,29 @@ import android.app.Notification;
 import android.os.RemoteException;
 import android.util.ArraySet;
 import com.android.internal.statusbar.IStatusBarService;
-import com.android.internal.statusbar.NotificationVisibility;
-import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.Dumpable;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-import com.android.systemui.statusbar.notification.logging.NotificationLogger;
+import com.android.systemui.statusbar.notification.collection.render.NotificationVisibilityProvider;
+import java.p026io.PrintWriter;
 import java.util.Set;
-/* loaded from: classes.dex */
-public class SmartReplyController {
+
+public class SmartReplyController implements Dumpable {
     private final IStatusBarService mBarService;
     private Callback mCallback;
     private final NotificationClickNotifier mClickNotifier;
-    private final NotificationEntryManager mEntryManager;
-    private Set<String> mSendingKeys = new ArraySet();
+    private final Set<String> mSendingKeys = new ArraySet();
+    private final NotificationVisibilityProvider mVisibilityProvider;
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onSmartReplySent(NotificationEntry notificationEntry, CharSequence charSequence);
     }
 
-    public SmartReplyController(NotificationEntryManager notificationEntryManager, IStatusBarService iStatusBarService, NotificationClickNotifier notificationClickNotifier) {
+    public SmartReplyController(DumpManager dumpManager, NotificationVisibilityProvider notificationVisibilityProvider, IStatusBarService iStatusBarService, NotificationClickNotifier notificationClickNotifier) {
         this.mBarService = iStatusBarService;
-        this.mEntryManager = notificationEntryManager;
+        this.mVisibilityProvider = notificationVisibilityProvider;
         this.mClickNotifier = notificationClickNotifier;
+        dumpManager.registerDumpable(this);
     }
 
     public void setCallback(Callback callback) {
@@ -42,8 +43,7 @@ public class SmartReplyController {
     }
 
     public void smartActionClicked(NotificationEntry notificationEntry, int i, Notification.Action action, boolean z) {
-        int activeNotificationsCount = this.mEntryManager.getActiveNotificationsCount();
-        this.mClickNotifier.onNotificationActionClick(notificationEntry.getKey(), i, action, NotificationVisibility.obtain(notificationEntry.getKey(), notificationEntry.getRanking().getRank(), activeNotificationsCount, true, NotificationLogger.getNotificationLocation(notificationEntry)), z);
+        this.mClickNotifier.onNotificationActionClick(notificationEntry.getKey(), i, action, this.mVisibilityProvider.obtain(notificationEntry, true), z);
     }
 
     public boolean isSendingSmartReply(String str) {
@@ -60,6 +60,13 @@ public class SmartReplyController {
     public void stopSending(NotificationEntry notificationEntry) {
         if (notificationEntry != null) {
             this.mSendingKeys.remove(notificationEntry.getSbn().getKey());
+        }
+    }
+
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        printWriter.println("mSendingKeys: " + this.mSendingKeys.size());
+        for (String str : this.mSendingKeys) {
+            printWriter.println(" * " + str);
         }
     }
 }

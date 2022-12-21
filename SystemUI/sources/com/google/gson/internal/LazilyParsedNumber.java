@@ -1,8 +1,8 @@
 package com.google.gson.internal;
 
-import java.io.ObjectStreamException;
 import java.math.BigDecimal;
-/* loaded from: classes2.dex */
+import java.p026io.ObjectStreamException;
+
 public final class LazilyParsedNumber extends Number {
     private final String value;
 
@@ -10,20 +10,36 @@ public final class LazilyParsedNumber extends Number {
         this.value = str;
     }
 
-    @Override // java.lang.Number
+    /* JADX WARNING: Code restructure failed: missing block: B:6:0x000e, code lost:
+        return (int) java.lang.Long.parseLong(r2.value);
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:9:0x001a, code lost:
+        return new java.math.BigDecimal(r2.value).intValue();
+     */
+    /* JADX WARNING: Failed to process nested try/catch */
+    /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0007 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public int intValue() {
-        try {
-            try {
-                return Integer.parseInt(this.value);
-            } catch (NumberFormatException unused) {
-                return (int) Long.parseLong(this.value);
-            }
-        } catch (NumberFormatException unused2) {
-            return new BigDecimal(this.value).intValue();
-        }
+        /*
+            r2 = this;
+            java.lang.String r0 = r2.value     // Catch:{ NumberFormatException -> 0x0007 }
+            int r2 = java.lang.Integer.parseInt(r0)     // Catch:{ NumberFormatException -> 0x0007 }
+            return r2
+        L_0x0007:
+            java.lang.String r0 = r2.value     // Catch:{ NumberFormatException -> 0x000f }
+            long r0 = java.lang.Long.parseLong(r0)     // Catch:{ NumberFormatException -> 0x000f }
+            int r2 = (int) r0
+            return r2
+        L_0x000f:
+            java.math.BigDecimal r0 = new java.math.BigDecimal
+            java.lang.String r2 = r2.value
+            r0.<init>((java.lang.String) r2)
+            int r2 = r0.intValue()
+            return r2
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.google.gson.internal.LazilyParsedNumber.intValue():int");
     }
 
-    @Override // java.lang.Number
     public long longValue() {
         try {
             return Long.parseLong(this.value);
@@ -32,12 +48,10 @@ public final class LazilyParsedNumber extends Number {
         }
     }
 
-    @Override // java.lang.Number
     public float floatValue() {
         return Float.parseFloat(this.value);
     }
 
-    @Override // java.lang.Number
     public double doubleValue() {
         return Double.parseDouble(this.value);
     }
@@ -63,6 +77,9 @@ public final class LazilyParsedNumber extends Number {
         }
         String str = this.value;
         String str2 = ((LazilyParsedNumber) obj).value;
-        return str == str2 || str.equals(str2);
+        if (str == str2 || str.equals(str2)) {
+            return true;
+        }
+        return false;
     }
 }

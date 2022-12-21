@@ -7,7 +7,7 @@ import com.android.systemui.dump.LogBufferFreezer;
 import com.android.systemui.statusbar.policy.BatteryStateNotifier;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class SystemUIService_Factory implements Factory<SystemUIService> {
     private final Provider<BatteryStateNotifier> batteryStateNotifierProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
@@ -23,10 +23,8 @@ public final class SystemUIService_Factory implements Factory<SystemUIService> {
         this.batteryStateNotifierProvider = provider5;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SystemUIService mo1933get() {
-        return newInstance(this.mainHandlerProvider.mo1933get(), this.dumpHandlerProvider.mo1933get(), this.broadcastDispatcherProvider.mo1933get(), this.logBufferFreezerProvider.mo1933get(), this.batteryStateNotifierProvider.mo1933get());
+    public SystemUIService get() {
+        return newInstance(this.mainHandlerProvider.get(), this.dumpHandlerProvider.get(), this.broadcastDispatcherProvider.get(), this.logBufferFreezerProvider.get(), this.batteryStateNotifierProvider.get());
     }
 
     public static SystemUIService_Factory create(Provider<Handler> provider, Provider<DumpHandler> provider2, Provider<BroadcastDispatcher> provider3, Provider<LogBufferFreezer> provider4, Provider<BatteryStateNotifier> provider5) {

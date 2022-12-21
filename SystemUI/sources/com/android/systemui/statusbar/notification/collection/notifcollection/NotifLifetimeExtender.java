@@ -1,10 +1,9 @@
 package com.android.systemui.statusbar.notification.collection.notifcollection;
 
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-/* loaded from: classes.dex */
+
 public interface NotifLifetimeExtender {
 
-    /* loaded from: classes.dex */
     public interface OnEndLifetimeExtensionCallback {
         void onEndLifetimeExtension(NotifLifetimeExtender notifLifetimeExtender, NotificationEntry notificationEntry);
     }
@@ -13,7 +12,7 @@ public interface NotifLifetimeExtender {
 
     String getName();
 
-    void setCallback(OnEndLifetimeExtensionCallback onEndLifetimeExtensionCallback);
+    boolean maybeExtendLifetime(NotificationEntry notificationEntry, int i);
 
-    boolean shouldExtendLifetime(NotificationEntry notificationEntry, int i);
+    void setCallback(OnEndLifetimeExtensionCallback onEndLifetimeExtensionCallback);
 }

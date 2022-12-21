@@ -6,20 +6,23 @@ import com.airbnb.lottie.model.animatable.AnimatableColorValue;
 import com.airbnb.lottie.model.animatable.AnimatableIntegerValue;
 import com.airbnb.lottie.model.content.ShapeFill;
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class ShapeFillParser {
-    private static final JsonReader.Options NAMES = JsonReader.Options.of("nm", "c", "o", "fillEnabled", "r", "hd");
+import com.airbnb.lottie.value.Keyframe;
+import java.p026io.IOException;
+import java.util.Collections;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static ShapeFill parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+class ShapeFillParser {
+    private static final JsonReader.Options NAMES = JsonReader.Options.m137of("nm", "c", "o", "fillEnabled", "r", "hd");
+
+    private ShapeFillParser() {
+    }
+
+    static ShapeFill parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+        AnimatableIntegerValue animatableIntegerValue = null;
+        String str = null;
+        AnimatableColorValue animatableColorValue = null;
         boolean z = false;
         boolean z2 = false;
         int i = 1;
-        String str = null;
-        AnimatableColorValue animatableColorValue = null;
-        AnimatableIntegerValue animatableIntegerValue = null;
         while (jsonReader.hasNext()) {
             int selectName = jsonReader.selectName(NAMES);
             if (selectName == 0) {
@@ -32,12 +35,15 @@ public class ShapeFillParser {
                 z = jsonReader.nextBoolean();
             } else if (selectName == 4) {
                 i = jsonReader.nextInt();
-            } else if (selectName == 5) {
-                z2 = jsonReader.nextBoolean();
-            } else {
+            } else if (selectName != 5) {
                 jsonReader.skipName();
                 jsonReader.skipValue();
+            } else {
+                z2 = jsonReader.nextBoolean();
             }
+        }
+        if (animatableIntegerValue == null) {
+            animatableIntegerValue = new AnimatableIntegerValue(Collections.singletonList(new Keyframe(100)));
         }
         return new ShapeFill(str, z, i == 1 ? Path.FillType.WINDING : Path.FillType.EVEN_ODD, animatableColorValue, animatableIntegerValue, z2);
     }

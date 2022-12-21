@@ -1,57 +1,95 @@
 package androidx.core.widget;
 
 import android.content.Context;
-import android.os.Build;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.EdgeEffect;
-import androidx.core.os.BuildCompat;
-/* loaded from: classes.dex */
+
 public final class EdgeEffectCompat {
-    public static EdgeEffect create(Context context, AttributeSet attrs) {
-        if (BuildCompat.isAtLeastS()) {
-            return Api31Impl.create(context, attrs);
-        }
-        return new EdgeEffect(context);
+    private final EdgeEffect mEdgeEffect;
+
+    @Deprecated
+    public EdgeEffectCompat(Context context) {
+        this.mEdgeEffect = new EdgeEffect(context);
+    }
+
+    public static EdgeEffect create(Context context, AttributeSet attributeSet) {
+        return Api31Impl.create(context, attributeSet);
     }
 
     public static float getDistance(EdgeEffect edgeEffect) {
-        if (BuildCompat.isAtLeastS()) {
-            return Api31Impl.getDistance(edgeEffect);
-        }
-        return 0.0f;
+        return Api31Impl.getDistance(edgeEffect);
     }
 
-    public static void onPull(EdgeEffect edgeEffect, float deltaDistance, float displacement) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            edgeEffect.onPull(deltaDistance, displacement);
-        } else {
-            edgeEffect.onPull(deltaDistance);
-        }
+    @Deprecated
+    public void setSize(int i, int i2) {
+        this.mEdgeEffect.setSize(i, i2);
     }
 
-    public static float onPullDistance(EdgeEffect edgeEffect, float deltaDistance, float displacement) {
-        if (BuildCompat.isAtLeastS()) {
-            return Api31Impl.onPullDistance(edgeEffect, deltaDistance, displacement);
-        }
-        onPull(edgeEffect, deltaDistance, displacement);
-        return deltaDistance;
+    @Deprecated
+    public boolean isFinished() {
+        return this.mEdgeEffect.isFinished();
     }
 
-    /* loaded from: classes.dex */
+    @Deprecated
+    public void finish() {
+        this.mEdgeEffect.finish();
+    }
+
+    @Deprecated
+    public boolean onPull(float f) {
+        this.mEdgeEffect.onPull(f);
+        return true;
+    }
+
+    @Deprecated
+    public boolean onPull(float f, float f2) {
+        onPull(this.mEdgeEffect, f, f2);
+        return true;
+    }
+
+    public static void onPull(EdgeEffect edgeEffect, float f, float f2) {
+        Api21Impl.onPull(edgeEffect, f, f2);
+    }
+
+    public static float onPullDistance(EdgeEffect edgeEffect, float f, float f2) {
+        return Api31Impl.onPullDistance(edgeEffect, f, f2);
+    }
+
+    @Deprecated
+    public boolean onRelease() {
+        this.mEdgeEffect.onRelease();
+        return this.mEdgeEffect.isFinished();
+    }
+
+    @Deprecated
+    public boolean onAbsorb(int i) {
+        this.mEdgeEffect.onAbsorb(i);
+        return true;
+    }
+
+    @Deprecated
+    public boolean draw(Canvas canvas) {
+        return this.mEdgeEffect.draw(canvas);
+    }
+
     private static class Api31Impl {
-        public static EdgeEffect create(Context context, AttributeSet attrs) {
+        private Api31Impl() {
+        }
+
+        public static EdgeEffect create(Context context, AttributeSet attributeSet) {
             try {
-                return new EdgeEffect(context, attrs);
+                return new EdgeEffect(context, attributeSet);
             } catch (Throwable unused) {
                 return new EdgeEffect(context);
             }
         }
 
-        public static float onPullDistance(EdgeEffect edgeEffect, float deltaDistance, float displacement) {
+        public static float onPullDistance(EdgeEffect edgeEffect, float f, float f2) {
             try {
-                return edgeEffect.onPullDistance(deltaDistance, displacement);
+                return edgeEffect.onPullDistance(f, f2);
             } catch (Throwable unused) {
-                edgeEffect.onPull(deltaDistance, displacement);
+                edgeEffect.onPull(f, f2);
                 return 0.0f;
             }
         }
@@ -62,6 +100,15 @@ public final class EdgeEffectCompat {
             } catch (Throwable unused) {
                 return 0.0f;
             }
+        }
+    }
+
+    static class Api21Impl {
+        private Api21Impl() {
+        }
+
+        static void onPull(EdgeEffect edgeEffect, float f, float f2) {
+            edgeEffect.onPull(f, f2);
         }
     }
 }

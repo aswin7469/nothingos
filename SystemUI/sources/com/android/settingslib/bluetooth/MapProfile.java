@@ -9,72 +9,85 @@ import android.bluetooth.BluetoothUuid;
 import android.content.Context;
 import android.os.ParcelUuid;
 import android.util.Log;
+import com.android.settingslib.C1757R;
+import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes.dex */
-public class MapProfile implements LocalBluetoothProfile {
-    static final ParcelUuid[] UUIDS = {BluetoothUuid.MAP, BluetoothUuid.MNS, BluetoothUuid.MAS};
-    private final CachedBluetoothDeviceManager mDeviceManager;
-    private boolean mIsProfileReady;
-    private final LocalBluetoothProfileManager mProfileManager;
-    private BluetoothMap mService;
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+public class MapProfile implements LocalBluetoothProfile {
+    static final String NAME = "MAP";
+    private static final String TAG = "MapProfile";
+    static final ParcelUuid[] UUIDS = {BluetoothUuid.MAP, BluetoothUuid.MNS, BluetoothUuid.MAS};
+    /* access modifiers changed from: private */
+    public final CachedBluetoothDeviceManager mDeviceManager;
+    /* access modifiers changed from: private */
+    public boolean mIsProfileReady;
+    /* access modifiers changed from: private */
+    public final LocalBluetoothProfileManager mProfileManager;
+    /* access modifiers changed from: private */
+    public BluetoothMap mService;
+
     public boolean accessProfileEnabled() {
         return true;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getDrawableResource(BluetoothClass bluetoothClass) {
-        return 17302807;
+        return 17302817;
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public int getOrdinal() {
+        return 9;
+    }
+
     public int getProfileId() {
         return 9;
     }
 
-    public String toString() {
-        return "MAP";
+    public boolean isAutoConnectable() {
+        return true;
     }
 
-    /* loaded from: classes.dex */
+    public String toString() {
+        return NAME;
+    }
+
     private final class MapServiceListener implements BluetoothProfile.ServiceListener {
         private MapServiceListener() {
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceConnected(int i, BluetoothProfile bluetoothProfile) {
-            MapProfile.this.mService = (BluetoothMap) bluetoothProfile;
+            BluetoothMap unused = MapProfile.this.mService = (BluetoothMap) bluetoothProfile;
             List connectedDevices = MapProfile.this.mService.getConnectedDevices();
             while (!connectedDevices.isEmpty()) {
                 BluetoothDevice bluetoothDevice = (BluetoothDevice) connectedDevices.remove(0);
                 CachedBluetoothDevice findDevice = MapProfile.this.mDeviceManager.findDevice(bluetoothDevice);
                 if (findDevice == null) {
-                    Log.w("MapProfile", "MapProfile found new device: " + bluetoothDevice);
+                    Log.w(MapProfile.TAG, "MapProfile found new device: " + bluetoothDevice);
                     findDevice = MapProfile.this.mDeviceManager.addDevice(bluetoothDevice);
                 }
                 findDevice.onProfileStateChanged(MapProfile.this, 2);
                 findDevice.refresh();
             }
             MapProfile.this.mProfileManager.callServiceConnectedListeners();
-            MapProfile.this.mIsProfileReady = true;
+            boolean unused2 = MapProfile.this.mIsProfileReady = true;
         }
 
-        @Override // android.bluetooth.BluetoothProfile.ServiceListener
         public void onServiceDisconnected(int i) {
             MapProfile.this.mProfileManager.callServiceDisconnectedListeners();
-            MapProfile.this.mIsProfileReady = false;
+            boolean unused = MapProfile.this.mIsProfileReady = false;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public MapProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
+    public boolean isProfileReady() {
+        Log.d(TAG, "isProfileReady(): " + this.mIsProfileReady);
+        return this.mIsProfileReady;
+    }
+
+    MapProfile(Context context, CachedBluetoothDeviceManager cachedBluetoothDeviceManager, LocalBluetoothProfileManager localBluetoothProfileManager) {
         this.mDeviceManager = cachedBluetoothDeviceManager;
         this.mProfileManager = localBluetoothProfileManager;
         BluetoothAdapter.getDefaultAdapter().getProfileProxy(context, new MapServiceListener(), 9);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
     public int getConnectionStatus(BluetoothDevice bluetoothDevice) {
         BluetoothMap bluetoothMap = this.mService;
         if (bluetoothMap == null) {
@@ -83,29 +96,68 @@ public class MapProfile implements LocalBluetoothProfile {
         return bluetoothMap.getConnectionState(bluetoothDevice);
     }
 
-    @Override // com.android.settingslib.bluetooth.LocalBluetoothProfile
+    public boolean isEnabled(BluetoothDevice bluetoothDevice) {
+        BluetoothMap bluetoothMap = this.mService;
+        if (bluetoothMap != null && bluetoothMap.getConnectionPolicy(bluetoothDevice) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public int getConnectionPolicy(BluetoothDevice bluetoothDevice) {
+        BluetoothMap bluetoothMap = this.mService;
+        if (bluetoothMap == null) {
+            return 0;
+        }
+        return bluetoothMap.getConnectionPolicy(bluetoothDevice);
+    }
+
     public boolean setEnabled(BluetoothDevice bluetoothDevice, boolean z) {
         BluetoothMap bluetoothMap = this.mService;
         if (bluetoothMap == null) {
             return false;
         }
-        if (z) {
-            if (bluetoothMap.getConnectionPolicy(bluetoothDevice) >= 100) {
-                return false;
-            }
+        if (!z) {
+            return bluetoothMap.setConnectionPolicy(bluetoothDevice, 0);
+        }
+        if (bluetoothMap.getConnectionPolicy(bluetoothDevice) < 100) {
             return this.mService.setConnectionPolicy(bluetoothDevice, 100);
         }
-        return bluetoothMap.setConnectionPolicy(bluetoothDevice, 0);
+        return false;
     }
 
-    protected void finalize() {
-        Log.d("MapProfile", "finalize()");
+    public List<BluetoothDevice> getConnectedDevices() {
+        BluetoothMap bluetoothMap = this.mService;
+        if (bluetoothMap == null) {
+            return new ArrayList(0);
+        }
+        return bluetoothMap.getDevicesMatchingConnectionStates(new int[]{2, 1, 3});
+    }
+
+    public int getNameResource(BluetoothDevice bluetoothDevice) {
+        return C1757R.string.bluetooth_profile_map;
+    }
+
+    public int getSummaryResourceForDevice(BluetoothDevice bluetoothDevice) {
+        int connectionStatus = getConnectionStatus(bluetoothDevice);
+        if (connectionStatus == 0) {
+            return C1757R.string.bluetooth_map_profile_summary_use_for;
+        }
+        if (connectionStatus != 2) {
+            return BluetoothUtils.getConnectionStateSummary(connectionStatus);
+        }
+        return C1757R.string.bluetooth_map_profile_summary_connected;
+    }
+
+    /* access modifiers changed from: protected */
+    public void finalize() {
+        Log.d(TAG, "finalize()");
         if (this.mService != null) {
             try {
                 BluetoothAdapter.getDefaultAdapter().closeProfileProxy(9, this.mService);
                 this.mService = null;
             } catch (Throwable th) {
-                Log.w("MapProfile", "Error cleaning up MAP proxy", th);
+                Log.w(TAG, "Error cleaning up MAP proxy", th);
             }
         }
     }

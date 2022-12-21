@@ -1,6 +1,8 @@
 package androidx.slice;
 
 import android.app.slice.Slice;
+import android.app.slice.SliceItem;
+import android.app.slice.SliceSpec;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -8,11 +10,13 @@ import android.util.Log;
 import androidx.collection.ArraySet;
 import androidx.core.graphics.drawable.IconCompat;
 import androidx.slice.Slice;
+import androidx.slice.compat.SliceProviderCompat;
 import java.util.Set;
-/* loaded from: classes.dex */
+
 public class SliceConvert {
-    public static android.app.slice.Slice unwrap(Slice slice) {
-        SliceItem[] itemArray;
+    private static final String TAG = "SliceConvert";
+
+    public static Slice unwrap(Slice slice) {
         if (slice == null || slice.getUri() == null) {
             return null;
         }
@@ -66,7 +70,7 @@ public class SliceConvert {
                     }
                     break;
                 case 109526418:
-                    if (format.equals("slice")) {
+                    if (format.equals(SliceProviderCompat.EXTRA_SLICE)) {
                         c = 7;
                         break;
                     }
@@ -102,33 +106,32 @@ public class SliceConvert {
         return builder.build();
     }
 
-    private static android.app.slice.SliceSpec unwrap(SliceSpec spec) {
-        if (spec == null) {
+    private static SliceSpec unwrap(SliceSpec sliceSpec) {
+        if (sliceSpec == null) {
             return null;
         }
-        return new android.app.slice.SliceSpec(spec.getType(), spec.getRevision());
+        return new SliceSpec(sliceSpec.getType(), sliceSpec.getRevision());
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static Set<android.app.slice.SliceSpec> unwrap(Set<SliceSpec> supportedSpecs) {
+    static Set<SliceSpec> unwrap(Set<SliceSpec> set) {
         ArraySet arraySet = new ArraySet();
-        if (supportedSpecs != null) {
-            for (SliceSpec sliceSpec : supportedSpecs) {
-                arraySet.add(unwrap(sliceSpec));
+        if (set != null) {
+            for (SliceSpec unwrap : set) {
+                arraySet.add(unwrap(unwrap));
             }
         }
         return arraySet;
     }
 
-    public static Slice wrap(android.app.slice.Slice slice, Context context) {
+    public static Slice wrap(Slice slice, Context context) {
         if (slice == null || slice.getUri() == null) {
             return null;
         }
         Slice.Builder builder = new Slice.Builder(slice.getUri());
         builder.addHints(slice.getHints());
         builder.setSpec(wrap(slice.getSpec()));
-        for (android.app.slice.SliceItem sliceItem : slice.getItems()) {
-            String format = sliceItem.getFormat();
+        for (SliceItem next : slice.getItems()) {
+            String format = next.getFormat();
             format.hashCode();
             char c = 65535;
             switch (format.hashCode()) {
@@ -175,7 +178,7 @@ public class SliceConvert {
                     }
                     break;
                 case 109526418:
-                    if (format.equals("slice")) {
+                    if (format.equals(SliceProviderCompat.EXTRA_SLICE)) {
                         c = 7;
                         break;
                     }
@@ -183,56 +186,59 @@ public class SliceConvert {
             }
             switch (c) {
                 case 0:
-                    builder.addAction(sliceItem.getAction(), wrap(sliceItem.getSlice(), context), sliceItem.getSubType());
+                    builder.addAction(next.getAction(), wrap(next.getSlice(), context), next.getSubType());
                     break;
                 case 1:
-                    builder.addItem(new SliceItem(sliceItem.getBundle(), sliceItem.getFormat(), sliceItem.getSubType(), sliceItem.getHints()));
+                    builder.addItem(new SliceItem((Object) next.getBundle(), next.getFormat(), next.getSubType(), next.getHints()));
                     break;
                 case 2:
-                    builder.addInt(sliceItem.getInt(), sliceItem.getSubType(), sliceItem.getHints());
+                    builder.addInt(next.getInt(), next.getSubType(), next.getHints());
                     break;
                 case 3:
-                    builder.addLong(sliceItem.getLong(), sliceItem.getSubType(), sliceItem.getHints());
+                    builder.addLong(next.getLong(), next.getSubType(), next.getHints());
                     break;
                 case 4:
-                    builder.addText(sliceItem.getText(), sliceItem.getSubType(), sliceItem.getHints());
+                    builder.addText(next.getText(), next.getSubType(), next.getHints());
                     break;
                 case 5:
                     try {
-                        builder.addIcon(IconCompat.createFromIcon(context, sliceItem.getIcon()), sliceItem.getSubType(), sliceItem.getHints());
+                        builder.addIcon(IconCompat.createFromIcon(context, next.getIcon()), next.getSubType(), next.getHints());
                         break;
-                    } catch (Resources.NotFoundException e) {
-                        Log.w("SliceConvert", "The icon resource isn't available.", e);
+                    } catch (IllegalArgumentException e) {
+                        Log.w(TAG, "The icon resource isn't available.", e);
                         break;
-                    } catch (IllegalArgumentException e2) {
-                        Log.w("SliceConvert", "The icon resource isn't available.", e2);
+                    } catch (Resources.NotFoundException e2) {
+                        Log.w(TAG, "The icon resource isn't available.", e2);
                         break;
                     }
                 case 6:
-                    builder.addRemoteInput(sliceItem.getRemoteInput(), sliceItem.getSubType(), sliceItem.getHints());
+                    builder.addRemoteInput(next.getRemoteInput(), next.getSubType(), next.getHints());
                     break;
                 case 7:
-                    builder.addSubSlice(wrap(sliceItem.getSlice(), context), sliceItem.getSubType());
+                    builder.addSubSlice(wrap(next.getSlice(), context), next.getSubType());
                     break;
             }
         }
         return builder.build();
     }
 
-    private static SliceSpec wrap(android.app.slice.SliceSpec spec) {
-        if (spec == null) {
+    private static SliceSpec wrap(SliceSpec sliceSpec) {
+        if (sliceSpec == null) {
             return null;
         }
-        return new SliceSpec(spec.getType(), spec.getRevision());
+        return new SliceSpec(sliceSpec.getType(), sliceSpec.getRevision());
     }
 
-    public static Set<SliceSpec> wrap(Set<android.app.slice.SliceSpec> supportedSpecs) {
+    public static Set<SliceSpec> wrap(Set<SliceSpec> set) {
         ArraySet arraySet = new ArraySet();
-        if (supportedSpecs != null) {
-            for (android.app.slice.SliceSpec sliceSpec : supportedSpecs) {
-                arraySet.add(wrap(sliceSpec));
+        if (set != null) {
+            for (SliceSpec wrap : set) {
+                arraySet.add(wrap(wrap));
             }
         }
         return arraySet;
+    }
+
+    private SliceConvert() {
     }
 }

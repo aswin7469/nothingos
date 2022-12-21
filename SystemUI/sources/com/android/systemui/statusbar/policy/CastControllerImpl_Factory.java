@@ -4,7 +4,7 @@ import android.content.Context;
 import com.android.systemui.dump.DumpManager;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class CastControllerImpl_Factory implements Factory<CastControllerImpl> {
     private final Provider<Context> contextProvider;
     private final Provider<DumpManager> dumpManagerProvider;
@@ -14,10 +14,8 @@ public final class CastControllerImpl_Factory implements Factory<CastControllerI
         this.dumpManagerProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public CastControllerImpl mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.dumpManagerProvider.mo1933get());
+    public CastControllerImpl get() {
+        return newInstance(this.contextProvider.get(), this.dumpManagerProvider.get());
     }
 
     public static CastControllerImpl_Factory create(Provider<Context> provider, Provider<DumpManager> provider2) {

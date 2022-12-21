@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
-/* loaded from: classes.dex */
+
 final class AnimateLayoutChangeDetector {
     private static final ViewGroup.MarginLayoutParams ZERO_MARGIN_LAYOUT_PARAMS;
     private LinearLayoutManager mLayoutManager;
@@ -18,70 +18,84 @@ final class AnimateLayoutChangeDetector {
         marginLayoutParams.setMargins(0, 0, 0, 0);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AnimateLayoutChangeDetector(LinearLayoutManager linearLayoutManager) {
+    AnimateLayoutChangeDetector(LinearLayoutManager linearLayoutManager) {
         this.mLayoutManager = linearLayoutManager;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean mayHaveInterferingAnimations() {
-        return (!arePagesLaidOutContiguously() || this.mLayoutManager.getChildCount() <= 1) && hasRunningChangingLayoutTransition();
+        if ((!arePagesLaidOutContiguously() || this.mLayoutManager.getChildCount() <= 1) && hasRunningChangingLayoutTransition()) {
+            return true;
+        }
+        return false;
     }
 
     private boolean arePagesLaidOutContiguously() {
         ViewGroup.MarginLayoutParams marginLayoutParams;
-        int top;
         int i;
-        int bottom;
         int i2;
+        int i3;
+        int i4;
         int childCount = this.mLayoutManager.getChildCount();
         if (childCount == 0) {
             return true;
         }
         boolean z = this.mLayoutManager.getOrientation() == 0;
-        int[][] iArr = (int[][]) Array.newInstance(int.class, childCount, 2);
-        for (int i3 = 0; i3 < childCount; i3++) {
-            View childAt = this.mLayoutManager.getChildAt(i3);
-            if (childAt == null) {
+        int[] iArr = new int[2];
+        iArr[1] = 2;
+        iArr[0] = childCount;
+        int[][] iArr2 = (int[][]) Array.newInstance((Class<?>) Integer.TYPE, iArr);
+        int i5 = 0;
+        while (i5 < childCount) {
+            View childAt = this.mLayoutManager.getChildAt(i5);
+            if (childAt != null) {
+                ViewGroup.LayoutParams layoutParams = childAt.getLayoutParams();
+                if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
+                    marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
+                } else {
+                    marginLayoutParams = ZERO_MARGIN_LAYOUT_PARAMS;
+                }
+                int[] iArr3 = iArr2[i5];
+                if (z) {
+                    i2 = childAt.getLeft();
+                    i = marginLayoutParams.leftMargin;
+                } else {
+                    i2 = childAt.getTop();
+                    i = marginLayoutParams.topMargin;
+                }
+                iArr3[0] = i2 - i;
+                int[] iArr4 = iArr2[i5];
+                if (z) {
+                    i4 = childAt.getRight();
+                    i3 = marginLayoutParams.rightMargin;
+                } else {
+                    i4 = childAt.getBottom();
+                    i3 = marginLayoutParams.bottomMargin;
+                }
+                iArr4[1] = i4 + i3;
+                i5++;
+            } else {
                 throw new IllegalStateException("null view contained in the view hierarchy");
             }
-            ViewGroup.LayoutParams layoutParams = childAt.getLayoutParams();
-            if (layoutParams instanceof ViewGroup.MarginLayoutParams) {
-                marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-            } else {
-                marginLayoutParams = ZERO_MARGIN_LAYOUT_PARAMS;
-            }
-            int[] iArr2 = iArr[i3];
-            if (z) {
-                top = childAt.getLeft();
-                i = marginLayoutParams.leftMargin;
-            } else {
-                top = childAt.getTop();
-                i = marginLayoutParams.topMargin;
-            }
-            iArr2[0] = top - i;
-            int[] iArr3 = iArr[i3];
-            if (z) {
-                bottom = childAt.getRight();
-                i2 = marginLayoutParams.rightMargin;
-            } else {
-                bottom = childAt.getBottom();
-                i2 = marginLayoutParams.bottomMargin;
-            }
-            iArr3[1] = bottom + i2;
         }
-        Arrays.sort(iArr, new Comparator<int[]>() { // from class: androidx.viewpager2.widget.AnimateLayoutChangeDetector.1
-            @Override // java.util.Comparator
-            public int compare(int[] iArr4, int[] iArr5) {
-                return iArr4[0] - iArr5[0];
+        Arrays.sort(iArr2, new Comparator<int[]>() {
+            public int compare(int[] iArr, int[] iArr2) {
+                return iArr[0] - iArr2[0];
             }
         });
-        for (int i4 = 1; i4 < childCount; i4++) {
-            if (iArr[i4 - 1][1] != iArr[i4][0]) {
+        for (int i6 = 1; i6 < childCount; i6++) {
+            if (iArr2[i6 - 1][1] != iArr2[i6][0]) {
                 return false;
             }
         }
-        return iArr[0][0] <= 0 && iArr[childCount - 1][1] >= iArr[0][1] - iArr[0][0];
+        int[] iArr5 = iArr2[0];
+        int i7 = iArr5[1];
+        int i8 = iArr5[0];
+        int i9 = i7 - i8;
+        if (i8 > 0 || iArr2[childCount - 1][1] < i9) {
+            return false;
+        }
+        return true;
     }
 
     private boolean hasRunningChangingLayoutTransition() {

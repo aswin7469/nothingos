@@ -2,15 +2,20 @@ package com.android.systemui.telephony;
 
 import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyManager;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dagger.qualifiers.Main;
 import java.util.concurrent.Executor;
-/* loaded from: classes2.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class TelephonyListenerManager {
     private final Executor mExecutor;
     private boolean mListening = false;
     private final TelephonyCallback mTelephonyCallback;
     private final TelephonyManager mTelephonyManager;
 
-    public TelephonyListenerManager(TelephonyManager telephonyManager, Executor executor, TelephonyCallback telephonyCallback) {
+    @Inject
+    public TelephonyListenerManager(TelephonyManager telephonyManager, @Main Executor executor, TelephonyCallback telephonyCallback) {
         this.mTelephonyManager = telephonyManager;
         this.mExecutor = executor;
         this.mTelephonyCallback = telephonyCallback;
@@ -31,6 +36,11 @@ public class TelephonyListenerManager {
         updateListening();
     }
 
+    public void removeCallStateListener(TelephonyCallback.CallStateListener callStateListener) {
+        this.mTelephonyCallback.removeCallStateListener(callStateListener);
+        updateListening();
+    }
+
     public void addServiceStateListener(TelephonyCallback.ServiceStateListener serviceStateListener) {
         this.mTelephonyCallback.addServiceStateListener(serviceStateListener);
         updateListening();
@@ -45,8 +55,7 @@ public class TelephonyListenerManager {
         if (!this.mListening && this.mTelephonyCallback.hasAnyListeners()) {
             this.mListening = true;
             this.mTelephonyManager.registerTelephonyCallback(this.mExecutor, this.mTelephonyCallback);
-        } else if (!this.mListening || this.mTelephonyCallback.hasAnyListeners()) {
-        } else {
+        } else if (this.mListening && !this.mTelephonyCallback.hasAnyListeners()) {
             this.mTelephonyManager.unregisterTelephonyCallback(this.mTelephonyCallback);
             this.mListening = false;
         }

@@ -1,15 +1,14 @@
 package com.android.systemui.log;
 
+import kotlin.Metadata;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u0000N\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u000e\n\u0000\n\u0002\u0010\t\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0004\n\u0002\u0010\b\n\u0002\b\u0004\n\u0002\u0010\u0006\n\u0000\n\u0002\u0010\u000b\n\u0002\bE\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\u0002\n\u0002\b\u0004\b\b\u0018\u0000 b2\u00020\u0001:\u0001bB\u0001\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0017\u0010\b\u001a\u0013\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u00050\t¢\u0006\u0002\b\n\u0012\b\u0010\u000b\u001a\u0004\u0018\u00010\u0005\u0012\b\u0010\f\u001a\u0004\u0018\u00010\u0005\u0012\b\u0010\r\u001a\u0004\u0018\u00010\u0005\u0012\u0006\u0010\u000e\u001a\u00020\u000f\u0012\u0006\u0010\u0010\u001a\u00020\u000f\u0012\u0006\u0010\u0011\u001a\u00020\u0007\u0012\u0006\u0010\u0012\u001a\u00020\u0007\u0012\u0006\u0010\u0013\u001a\u00020\u0014\u0012\u0006\u0010\u0015\u001a\u00020\u0016\u0012\u0006\u0010\u0017\u001a\u00020\u0016\u0012\u0006\u0010\u0018\u001a\u00020\u0016\u0012\u0006\u0010\u0019\u001a\u00020\u0016¢\u0006\u0002\u0010\u001aJ\t\u0010I\u001a\u00020\u0003HÆ\u0003J\t\u0010J\u001a\u00020\u0007HÆ\u0003J\t\u0010K\u001a\u00020\u0007HÆ\u0003J\t\u0010L\u001a\u00020\u0014HÆ\u0003J\t\u0010M\u001a\u00020\u0016HÆ\u0003J\t\u0010N\u001a\u00020\u0016HÆ\u0003J\t\u0010O\u001a\u00020\u0016HÆ\u0003J\t\u0010P\u001a\u00020\u0016HÆ\u0003J\t\u0010Q\u001a\u00020\u0005HÆ\u0003J\t\u0010R\u001a\u00020\u0007HÆ\u0003J\u001a\u0010S\u001a\u0013\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u00050\t¢\u0006\u0002\b\nHÆ\u0003J\u000b\u0010T\u001a\u0004\u0018\u00010\u0005HÆ\u0003J\u000b\u0010U\u001a\u0004\u0018\u00010\u0005HÆ\u0003J\u000b\u0010V\u001a\u0004\u0018\u00010\u0005HÆ\u0003J\t\u0010W\u001a\u00020\u000fHÆ\u0003J\t\u0010X\u001a\u00020\u000fHÆ\u0003JÀ\u0001\u0010Y\u001a\u00020\u00002\b\b\u0002\u0010\u0002\u001a\u00020\u00032\b\b\u0002\u0010\u0004\u001a\u00020\u00052\b\b\u0002\u0010\u0006\u001a\u00020\u00072\u0019\b\u0002\u0010\b\u001a\u0013\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u00050\t¢\u0006\u0002\b\n2\n\b\u0002\u0010\u000b\u001a\u0004\u0018\u00010\u00052\n\b\u0002\u0010\f\u001a\u0004\u0018\u00010\u00052\n\b\u0002\u0010\r\u001a\u0004\u0018\u00010\u00052\b\b\u0002\u0010\u000e\u001a\u00020\u000f2\b\b\u0002\u0010\u0010\u001a\u00020\u000f2\b\b\u0002\u0010\u0011\u001a\u00020\u00072\b\b\u0002\u0010\u0012\u001a\u00020\u00072\b\b\u0002\u0010\u0013\u001a\u00020\u00142\b\b\u0002\u0010\u0015\u001a\u00020\u00162\b\b\u0002\u0010\u0017\u001a\u00020\u00162\b\b\u0002\u0010\u0018\u001a\u00020\u00162\b\b\u0002\u0010\u0019\u001a\u00020\u0016HÆ\u0001J\u0013\u0010Z\u001a\u00020\u00162\b\u0010[\u001a\u0004\u0018\u00010\\HÖ\u0003J\t\u0010]\u001a\u00020\u000fHÖ\u0001J7\u0010^\u001a\u00020_2\u0006\u0010\u0004\u001a\u00020\u00052\u0006\u0010\u0002\u001a\u00020\u00032\u0006\u0010\u0006\u001a\u00020\u00072\u0017\u0010`\u001a\u0013\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u00050\t¢\u0006\u0002\b\nJ\t\u0010a\u001a\u00020\u0005HÖ\u0001R\u001a\u0010\u0015\u001a\u00020\u0016X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001b\u0010\u001c\"\u0004\b\u001d\u0010\u001eR\u001a\u0010\u0017\u001a\u00020\u0016X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b\u001f\u0010\u001c\"\u0004\b \u0010\u001eR\u001a\u0010\u0018\u001a\u00020\u0016X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b!\u0010\u001c\"\u0004\b\"\u0010\u001eR\u001a\u0010\u0019\u001a\u00020\u0016X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b#\u0010\u001c\"\u0004\b$\u0010\u001eR\u001a\u0010\u0013\u001a\u00020\u0014X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b%\u0010&\"\u0004\b'\u0010(R\u001a\u0010\u000e\u001a\u00020\u000fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b)\u0010*\"\u0004\b+\u0010,R\u001a\u0010\u0010\u001a\u00020\u000fX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b-\u0010*\"\u0004\b.\u0010,R\u001a\u0010\u0002\u001a\u00020\u0003X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b/\u00100\"\u0004\b1\u00102R\u001a\u0010\u0011\u001a\u00020\u0007X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b3\u00104\"\u0004\b5\u00106R\u001a\u0010\u0012\u001a\u00020\u0007X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b7\u00104\"\u0004\b8\u00106R+\u0010\b\u001a\u0013\u0012\u0004\u0012\u00020\u0001\u0012\u0004\u0012\u00020\u00050\t¢\u0006\u0002\b\nX\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b9\u0010:\"\u0004\b;\u0010<R\u001c\u0010\u000b\u001a\u0004\u0018\u00010\u0005X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\b=\u0010>\"\u0004\b?\u0010@R\u001c\u0010\f\u001a\u0004\u0018\u00010\u0005X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bA\u0010>\"\u0004\bB\u0010@R\u001c\u0010\r\u001a\u0004\u0018\u00010\u0005X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bC\u0010>\"\u0004\bD\u0010@R\u001a\u0010\u0004\u001a\u00020\u0005X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bE\u0010>\"\u0004\bF\u0010@R\u001a\u0010\u0006\u001a\u00020\u0007X\u000e¢\u0006\u000e\n\u0000\u001a\u0004\bG\u00104\"\u0004\bH\u00106¨\u0006c"}, mo64987d2 = {"Lcom/android/systemui/log/LogMessageImpl;", "Lcom/android/systemui/log/LogMessage;", "level", "Lcom/android/systemui/log/LogLevel;", "tag", "", "timestamp", "", "printer", "Lkotlin/Function1;", "Lkotlin/ExtensionFunctionType;", "str1", "str2", "str3", "int1", "", "int2", "long1", "long2", "double1", "", "bool1", "", "bool2", "bool3", "bool4", "(Lcom/android/systemui/log/LogLevel;Ljava/lang/String;JLkotlin/jvm/functions/Function1;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;IIJJDZZZZ)V", "getBool1", "()Z", "setBool1", "(Z)V", "getBool2", "setBool2", "getBool3", "setBool3", "getBool4", "setBool4", "getDouble1", "()D", "setDouble1", "(D)V", "getInt1", "()I", "setInt1", "(I)V", "getInt2", "setInt2", "getLevel", "()Lcom/android/systemui/log/LogLevel;", "setLevel", "(Lcom/android/systemui/log/LogLevel;)V", "getLong1", "()J", "setLong1", "(J)V", "getLong2", "setLong2", "getPrinter", "()Lkotlin/jvm/functions/Function1;", "setPrinter", "(Lkotlin/jvm/functions/Function1;)V", "getStr1", "()Ljava/lang/String;", "setStr1", "(Ljava/lang/String;)V", "getStr2", "setStr2", "getStr3", "setStr3", "getTag", "setTag", "getTimestamp", "setTimestamp", "component1", "component10", "component11", "component12", "component13", "component14", "component15", "component16", "component2", "component3", "component4", "component5", "component6", "component7", "component8", "component9", "copy", "equals", "other", "", "hashCode", "reset", "", "renderer", "toString", "Factory", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: LogMessageImpl.kt */
-/* loaded from: classes.dex */
 public final class LogMessageImpl implements LogMessage {
-    @NotNull
-    public static final Factory Factory = new Factory(null);
+    public static final Factory Factory = new Factory((DefaultConstructorMarker) null);
     private boolean bool1;
     private boolean bool2;
     private boolean bool3;
@@ -17,23 +16,94 @@ public final class LogMessageImpl implements LogMessage {
     private double double1;
     private int int1;
     private int int2;
-    @NotNull
     private LogLevel level;
     private long long1;
     private long long2;
-    @NotNull
     private Function1<? super LogMessage, String> printer;
-    @Nullable
     private String str1;
-    @Nullable
     private String str2;
-    @Nullable
     private String str3;
-    @NotNull
     private String tag;
     private long timestamp;
 
-    public boolean equals(@Nullable Object obj) {
+    public static /* synthetic */ LogMessageImpl copy$default(LogMessageImpl logMessageImpl, LogLevel logLevel, String str, long j, Function1 function1, String str4, String str5, String str6, int i, int i2, long j2, long j3, double d, boolean z, boolean z2, boolean z3, boolean z4, int i3, Object obj) {
+        int i4 = i3;
+        return logMessageImpl.copy((i4 & 1) != 0 ? logMessageImpl.getLevel() : logLevel, (i4 & 2) != 0 ? logMessageImpl.getTag() : str, (i4 & 4) != 0 ? logMessageImpl.getTimestamp() : j, (i4 & 8) != 0 ? logMessageImpl.getPrinter() : function1, (i4 & 16) != 0 ? logMessageImpl.getStr1() : str4, (i4 & 32) != 0 ? logMessageImpl.getStr2() : str5, (i4 & 64) != 0 ? logMessageImpl.getStr3() : str6, (i4 & 128) != 0 ? logMessageImpl.getInt1() : i, (i4 & 256) != 0 ? logMessageImpl.getInt2() : i2, (i4 & 512) != 0 ? logMessageImpl.getLong1() : j2, (i4 & 1024) != 0 ? logMessageImpl.getLong2() : j3, (i4 & 2048) != 0 ? logMessageImpl.getDouble1() : d, (i4 & 4096) != 0 ? logMessageImpl.getBool1() : z, (i4 & 8192) != 0 ? logMessageImpl.getBool2() : z2, (i4 & 16384) != 0 ? logMessageImpl.getBool3() : z3, (i4 & 32768) != 0 ? logMessageImpl.getBool4() : z4);
+    }
+
+    public final LogLevel component1() {
+        return getLevel();
+    }
+
+    public final long component10() {
+        return getLong1();
+    }
+
+    public final long component11() {
+        return getLong2();
+    }
+
+    public final double component12() {
+        return getDouble1();
+    }
+
+    public final boolean component13() {
+        return getBool1();
+    }
+
+    public final boolean component14() {
+        return getBool2();
+    }
+
+    public final boolean component15() {
+        return getBool3();
+    }
+
+    public final boolean component16() {
+        return getBool4();
+    }
+
+    public final String component2() {
+        return getTag();
+    }
+
+    public final long component3() {
+        return getTimestamp();
+    }
+
+    public final Function1<LogMessage, String> component4() {
+        return getPrinter();
+    }
+
+    public final String component5() {
+        return getStr1();
+    }
+
+    public final String component6() {
+        return getStr2();
+    }
+
+    public final String component7() {
+        return getStr3();
+    }
+
+    public final int component8() {
+        return getInt1();
+    }
+
+    public final int component9() {
+        return getInt2();
+    }
+
+    public final LogMessageImpl copy(LogLevel logLevel, String str, long j, Function1<? super LogMessage, String> function1, String str4, String str5, String str6, int i, int i2, long j2, long j3, double d, boolean z, boolean z2, boolean z3, boolean z4) {
+        LogLevel logLevel2 = logLevel;
+        Intrinsics.checkNotNullParameter(logLevel2, "level");
+        Intrinsics.checkNotNullParameter(str, "tag");
+        Intrinsics.checkNotNullParameter(function1, "printer");
+        return new LogMessageImpl(logLevel2, str, j, function1, str4, str5, str6, i, i2, j2, j3, d, z, z2, z3, z4);
+    }
+
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -41,7 +111,7 @@ public final class LogMessageImpl implements LogMessage {
             return false;
         }
         LogMessageImpl logMessageImpl = (LogMessageImpl) obj;
-        return getLevel() == logMessageImpl.getLevel() && Intrinsics.areEqual(getTag(), logMessageImpl.getTag()) && getTimestamp() == logMessageImpl.getTimestamp() && Intrinsics.areEqual(getPrinter(), logMessageImpl.getPrinter()) && Intrinsics.areEqual(getStr1(), logMessageImpl.getStr1()) && Intrinsics.areEqual(getStr2(), logMessageImpl.getStr2()) && Intrinsics.areEqual(getStr3(), logMessageImpl.getStr3()) && getInt1() == logMessageImpl.getInt1() && getInt2() == logMessageImpl.getInt2() && getLong1() == logMessageImpl.getLong1() && getLong2() == logMessageImpl.getLong2() && Intrinsics.areEqual(Double.valueOf(getDouble1()), Double.valueOf(logMessageImpl.getDouble1())) && getBool1() == logMessageImpl.getBool1() && getBool2() == logMessageImpl.getBool2() && getBool3() == logMessageImpl.getBool3() && getBool4() == logMessageImpl.getBool4();
+        return getLevel() == logMessageImpl.getLevel() && Intrinsics.areEqual((Object) getTag(), (Object) logMessageImpl.getTag()) && getTimestamp() == logMessageImpl.getTimestamp() && Intrinsics.areEqual((Object) getPrinter(), (Object) logMessageImpl.getPrinter()) && Intrinsics.areEqual((Object) getStr1(), (Object) logMessageImpl.getStr1()) && Intrinsics.areEqual((Object) getStr2(), (Object) logMessageImpl.getStr2()) && Intrinsics.areEqual((Object) getStr3(), (Object) logMessageImpl.getStr3()) && getInt1() == logMessageImpl.getInt1() && getInt2() == logMessageImpl.getInt2() && getLong1() == logMessageImpl.getLong1() && getLong2() == logMessageImpl.getLong2() && Intrinsics.areEqual((Object) Double.valueOf(getDouble1()), (Object) Double.valueOf(logMessageImpl.getDouble1())) && getBool1() == logMessageImpl.getBool1() && getBool2() == logMessageImpl.getBool2() && getBool3() == logMessageImpl.getBool3() && getBool4() == logMessageImpl.getBool4();
     }
 
     public int hashCode() {
@@ -51,51 +121,47 @@ public final class LogMessageImpl implements LogMessage {
             i = getStr3().hashCode();
         }
         int hashCode2 = (((((((((((hashCode + i) * 31) + Integer.hashCode(getInt1())) * 31) + Integer.hashCode(getInt2())) * 31) + Long.hashCode(getLong1())) * 31) + Long.hashCode(getLong2())) * 31) + Double.hashCode(getDouble1())) * 31;
-        boolean bool1 = getBool1();
-        int i2 = 1;
-        if (bool1) {
-            bool1 = true;
+        boolean bool12 = getBool1();
+        boolean z = true;
+        if (bool12) {
+            bool12 = true;
         }
-        int i3 = bool1 ? 1 : 0;
-        int i4 = bool1 ? 1 : 0;
-        int i5 = (hashCode2 + i3) * 31;
-        boolean bool2 = getBool2();
-        if (bool2) {
-            bool2 = true;
+        int i2 = (hashCode2 + (bool12 ? 1 : 0)) * 31;
+        boolean bool22 = getBool2();
+        if (bool22) {
+            bool22 = true;
         }
-        int i6 = bool2 ? 1 : 0;
-        int i7 = bool2 ? 1 : 0;
-        int i8 = (i5 + i6) * 31;
-        boolean bool3 = getBool3();
-        if (bool3) {
-            bool3 = true;
+        int i3 = (i2 + (bool22 ? 1 : 0)) * 31;
+        boolean bool32 = getBool3();
+        if (bool32) {
+            bool32 = true;
         }
-        int i9 = bool3 ? 1 : 0;
-        int i10 = bool3 ? 1 : 0;
-        int i11 = (i8 + i9) * 31;
-        boolean bool4 = getBool4();
-        if (!bool4) {
-            i2 = bool4;
+        int i4 = (i3 + (bool32 ? 1 : 0)) * 31;
+        boolean bool42 = getBool4();
+        if (!bool42) {
+            z = bool42;
         }
-        return i11 + i2;
+        return i4 + (z ? 1 : 0);
     }
 
-    @NotNull
     public String toString() {
-        return "LogMessageImpl(level=" + getLevel() + ", tag=" + getTag() + ", timestamp=" + getTimestamp() + ", printer=" + getPrinter() + ", str1=" + ((Object) getStr1()) + ", str2=" + ((Object) getStr2()) + ", str3=" + ((Object) getStr3()) + ", int1=" + getInt1() + ", int2=" + getInt2() + ", long1=" + getLong1() + ", long2=" + getLong2() + ", double1=" + getDouble1() + ", bool1=" + getBool1() + ", bool2=" + getBool2() + ", bool3=" + getBool3() + ", bool4=" + getBool4() + ')';
+        StringBuilder sb = new StringBuilder("LogMessageImpl(level=");
+        sb.append((Object) getLevel()).append(", tag=").append(getTag()).append(", timestamp=").append(getTimestamp()).append(", printer=").append((Object) getPrinter()).append(", str1=").append(getStr1()).append(", str2=").append(getStr2()).append(", str3=").append(getStr3()).append(", int1=").append(getInt1()).append(", int2=").append(getInt2()).append(", long1=").append(getLong1()).append(", long2=").append(getLong2()).append(", double1=");
+        sb.append(getDouble1()).append(", bool1=").append(getBool1()).append(", bool2=").append(getBool2()).append(", bool3=").append(getBool3()).append(", bool4=").append(getBool4()).append(')');
+        return sb.toString();
     }
 
-    public LogMessageImpl(@NotNull LogLevel level, @NotNull String tag, long j, @NotNull Function1<? super LogMessage, String> printer, @Nullable String str, @Nullable String str2, @Nullable String str3, int i, int i2, long j2, long j3, double d, boolean z, boolean z2, boolean z3, boolean z4) {
-        Intrinsics.checkNotNullParameter(level, "level");
-        Intrinsics.checkNotNullParameter(tag, "tag");
-        Intrinsics.checkNotNullParameter(printer, "printer");
-        this.level = level;
-        this.tag = tag;
+    public LogMessageImpl(LogLevel logLevel, String str, long j, Function1<? super LogMessage, String> function1, String str4, String str5, String str6, int i, int i2, long j2, long j3, double d, boolean z, boolean z2, boolean z3, boolean z4) {
+        Intrinsics.checkNotNullParameter(logLevel, "level");
+        Intrinsics.checkNotNullParameter(str, "tag");
+        Intrinsics.checkNotNullParameter(function1, "printer");
+        this.level = logLevel;
+        this.tag = str;
         this.timestamp = j;
-        this.printer = printer;
-        this.str1 = str;
-        this.str2 = str2;
-        this.str3 = str3;
+        this.printer = function1;
+        this.str1 = str4;
+        this.str2 = str5;
+        this.str3 = str6;
         this.int1 = i;
         this.int2 = i2;
         this.long1 = j2;
@@ -107,29 +173,24 @@ public final class LogMessageImpl implements LogMessage {
         this.bool4 = z4;
     }
 
-    @Override // com.android.systemui.log.LogMessage
-    @NotNull
     public LogLevel getLevel() {
         return this.level;
     }
 
-    public void setLevel(@NotNull LogLevel logLevel) {
+    public void setLevel(LogLevel logLevel) {
         Intrinsics.checkNotNullParameter(logLevel, "<set-?>");
         this.level = logLevel;
     }
 
-    @Override // com.android.systemui.log.LogMessage
-    @NotNull
     public String getTag() {
         return this.tag;
     }
 
-    public void setTag(@NotNull String str) {
+    public void setTag(String str) {
         Intrinsics.checkNotNullParameter(str, "<set-?>");
         this.tag = str;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public long getTimestamp() {
         return this.timestamp;
     }
@@ -138,86 +199,67 @@ public final class LogMessageImpl implements LogMessage {
         this.timestamp = j;
     }
 
-    @Override // com.android.systemui.log.LogMessage
-    @NotNull
     public Function1<LogMessage, String> getPrinter() {
         return this.printer;
     }
 
-    public void setPrinter(@NotNull Function1<? super LogMessage, String> function1) {
+    public void setPrinter(Function1<? super LogMessage, String> function1) {
         Intrinsics.checkNotNullParameter(function1, "<set-?>");
         this.printer = function1;
     }
 
-    @Override // com.android.systemui.log.LogMessage
-    @Nullable
     public String getStr1() {
         return this.str1;
     }
 
-    @Override // com.android.systemui.log.LogMessage
-    public void setStr1(@Nullable String str) {
+    public void setStr1(String str) {
         this.str1 = str;
     }
 
-    @Override // com.android.systemui.log.LogMessage
-    @Nullable
     public String getStr2() {
         return this.str2;
     }
 
-    @Override // com.android.systemui.log.LogMessage
-    public void setStr2(@Nullable String str) {
+    public void setStr2(String str) {
         this.str2 = str;
     }
 
-    @Override // com.android.systemui.log.LogMessage
-    @Nullable
     public String getStr3() {
         return this.str3;
     }
 
-    @Override // com.android.systemui.log.LogMessage
-    public void setStr3(@Nullable String str) {
+    public void setStr3(String str) {
         this.str3 = str;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public int getInt1() {
         return this.int1;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public void setInt1(int i) {
         this.int1 = i;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public int getInt2() {
         return this.int2;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public void setInt2(int i) {
         this.int2 = i;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public long getLong1() {
         return this.long1;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public void setLong1(long j) {
         this.long1 = j;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public long getLong2() {
         return this.long2;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public void setLong2(long j) {
         this.long2 = j;
     }
@@ -230,61 +272,53 @@ public final class LogMessageImpl implements LogMessage {
         this.double1 = d;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public boolean getBool1() {
         return this.bool1;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public void setBool1(boolean z) {
         this.bool1 = z;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public boolean getBool2() {
         return this.bool2;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public void setBool2(boolean z) {
         this.bool2 = z;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public boolean getBool3() {
         return this.bool3;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public void setBool3(boolean z) {
         this.bool3 = z;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public boolean getBool4() {
         return this.bool4;
     }
 
-    @Override // com.android.systemui.log.LogMessage
     public void setBool4(boolean z) {
         this.bool4 = z;
     }
 
-    public final void reset(@NotNull String tag, @NotNull LogLevel level, long j, @NotNull Function1<? super LogMessage, String> renderer) {
-        Intrinsics.checkNotNullParameter(tag, "tag");
-        Intrinsics.checkNotNullParameter(level, "level");
-        Intrinsics.checkNotNullParameter(renderer, "renderer");
-        setLevel(level);
-        setTag(tag);
+    public final void reset(String str, LogLevel logLevel, long j, Function1<? super LogMessage, String> function1) {
+        Intrinsics.checkNotNullParameter(str, "tag");
+        Intrinsics.checkNotNullParameter(logLevel, "level");
+        Intrinsics.checkNotNullParameter(function1, "renderer");
+        setLevel(logLevel);
+        setTag(str);
         setTimestamp(j);
-        setPrinter(renderer);
-        setStr1(null);
-        setStr2(null);
-        setStr3(null);
+        setPrinter(function1);
+        setStr1((String) null);
+        setStr2((String) null);
+        setStr3((String) null);
         setInt1(0);
         setInt2(0);
-        setLong1(0L);
-        setLong2(0L);
+        setLong1(0);
+        setLong2(0);
         setDouble1(0.0d);
         setBool1(false);
         setBool2(false);
@@ -292,8 +326,8 @@ public final class LogMessageImpl implements LogMessage {
         setBool4(false);
     }
 
+    @Metadata(mo64986d1 = {"\u0000\u0012\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\b\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002¢\u0006\u0002\u0010\u0002J\u0006\u0010\u0003\u001a\u00020\u0004¨\u0006\u0005"}, mo64987d2 = {"Lcom/android/systemui/log/LogMessageImpl$Factory;", "", "()V", "create", "Lcom/android/systemui/log/LogMessageImpl;", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
     /* compiled from: LogMessageImpl.kt */
-    /* loaded from: classes.dex */
     public static final class Factory {
         public /* synthetic */ Factory(DefaultConstructorMarker defaultConstructorMarker) {
             this();
@@ -302,12 +336,8 @@ public final class LogMessageImpl implements LogMessage {
         private Factory() {
         }
 
-        @NotNull
         public final LogMessageImpl create() {
-            Function1 function1;
-            LogLevel logLevel = LogLevel.DEBUG;
-            function1 = LogMessageImplKt.DEFAULT_RENDERER;
-            return new LogMessageImpl(logLevel, "UnknownTag", 0L, function1, null, null, null, 0, 0, 0L, 0L, 0.0d, false, false, false, false);
+            return new LogMessageImpl(LogLevel.DEBUG, "UnknownTag", 0, LogMessageImplKt.DEFAULT_RENDERER, (String) null, (String) null, (String) null, 0, 0, 0, 0, 0.0d, false, false, false, false);
         }
     }
 }

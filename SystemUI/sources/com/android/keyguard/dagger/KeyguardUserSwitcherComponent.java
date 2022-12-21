@@ -2,12 +2,16 @@ package com.android.keyguard.dagger;
 
 import com.android.systemui.statusbar.policy.KeyguardUserSwitcherController;
 import com.android.systemui.statusbar.policy.KeyguardUserSwitcherView;
-/* loaded from: classes.dex */
+import dagger.BindsInstance;
+import dagger.Subcomponent;
+
+@Subcomponent(modules = {KeyguardUserSwitcherModule.class})
+@KeyguardUserSwitcherScope
 public interface KeyguardUserSwitcherComponent {
 
-    /* loaded from: classes.dex */
+    @Subcomponent.Factory
     public interface Factory {
-        KeyguardUserSwitcherComponent build(KeyguardUserSwitcherView keyguardUserSwitcherView);
+        KeyguardUserSwitcherComponent build(@BindsInstance KeyguardUserSwitcherView keyguardUserSwitcherView);
     }
 
     KeyguardUserSwitcherController getKeyguardUserSwitcherController();

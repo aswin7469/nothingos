@@ -2,7 +2,8 @@ package com.airbnb.lottie.model.content;
 
 import com.airbnb.lottie.utils.GammaEvaluator;
 import com.airbnb.lottie.utils.MiscUtils;
-/* loaded from: classes.dex */
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
+
 public class GradientColor {
     private final int[] colors;
     private final float[] positions;
@@ -25,12 +26,13 @@ public class GradientColor {
     }
 
     public void lerp(GradientColor gradientColor, GradientColor gradientColor2, float f) {
-        if (gradientColor.colors.length != gradientColor2.colors.length) {
-            throw new IllegalArgumentException("Cannot interpolate between gradients. Lengths vary (" + gradientColor.colors.length + " vs " + gradientColor2.colors.length + ")");
+        if (gradientColor.colors.length == gradientColor2.colors.length) {
+            for (int i = 0; i < gradientColor.colors.length; i++) {
+                this.positions[i] = MiscUtils.lerp(gradientColor.positions[i], gradientColor2.positions[i], f);
+                this.colors[i] = GammaEvaluator.evaluate(f, gradientColor.colors[i], gradientColor2.colors[i]);
+            }
+            return;
         }
-        for (int i = 0; i < gradientColor.colors.length; i++) {
-            this.positions[i] = MiscUtils.lerp(gradientColor.positions[i], gradientColor2.positions[i], f);
-            this.colors[i] = GammaEvaluator.evaluate(f, gradientColor.colors[i], gradientColor2.colors[i]);
-        }
+        throw new IllegalArgumentException("Cannot interpolate between gradients. Lengths vary (" + gradientColor.colors.length + " vs " + gradientColor2.colors.length + NavigationBarInflaterView.KEY_CODE_END);
     }
 }

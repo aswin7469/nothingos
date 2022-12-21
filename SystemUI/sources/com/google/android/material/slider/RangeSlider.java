@@ -3,155 +3,328 @@ package com.google.android.material.slider;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.AbsSavedState;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import com.google.android.material.R$attr;
-import com.google.android.material.R$styleable;
+import com.google.android.material.C3621R;
 import com.google.android.material.internal.ThemeEnforcement;
 import java.util.ArrayList;
 import java.util.List;
-/* loaded from: classes2.dex */
-public class RangeSlider extends BaseSlider<RangeSlider, ?, ?> {
+
+public class RangeSlider extends BaseSlider<RangeSlider, OnChangeListener, OnSliderTouchListener> {
     private float minSeparation;
     private int separationUnit;
 
-    @Override // com.google.android.material.slider.BaseSlider, android.view.View
+    public interface OnChangeListener extends BaseOnChangeListener<RangeSlider> {
+        void onValueChange(RangeSlider rangeSlider, float f, boolean z);
+    }
+
+    public interface OnSliderTouchListener extends BaseOnSliderTouchListener<RangeSlider> {
+        void onStartTrackingTouch(RangeSlider rangeSlider);
+
+        void onStopTrackingTouch(RangeSlider rangeSlider);
+    }
+
+    public /* bridge */ /* synthetic */ void addOnChangeListener(BaseOnChangeListener baseOnChangeListener) {
+        super.addOnChangeListener(baseOnChangeListener);
+    }
+
+    public /* bridge */ /* synthetic */ void addOnSliderTouchListener(BaseOnSliderTouchListener baseOnSliderTouchListener) {
+        super.addOnSliderTouchListener(baseOnSliderTouchListener);
+    }
+
+    public /* bridge */ /* synthetic */ void clearOnChangeListeners() {
+        super.clearOnChangeListeners();
+    }
+
+    public /* bridge */ /* synthetic */ void clearOnSliderTouchListeners() {
+        super.clearOnSliderTouchListeners();
+    }
+
     public /* bridge */ /* synthetic */ boolean dispatchHoverEvent(MotionEvent motionEvent) {
         return super.dispatchHoverEvent(motionEvent);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider, android.view.View
     public /* bridge */ /* synthetic */ boolean dispatchKeyEvent(KeyEvent keyEvent) {
         return super.dispatchKeyEvent(keyEvent);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider, android.view.View
     public /* bridge */ /* synthetic */ CharSequence getAccessibilityClassName() {
         return super.getAccessibilityClassName();
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
+    public /* bridge */ /* synthetic */ int getActiveThumbIndex() {
+        return super.getActiveThumbIndex();
+    }
+
+    public /* bridge */ /* synthetic */ int getFocusedThumbIndex() {
+        return super.getFocusedThumbIndex();
+    }
+
+    public /* bridge */ /* synthetic */ int getHaloRadius() {
+        return super.getHaloRadius();
+    }
+
+    public /* bridge */ /* synthetic */ ColorStateList getHaloTintList() {
+        return super.getHaloTintList();
+    }
+
+    public /* bridge */ /* synthetic */ int getLabelBehavior() {
+        return super.getLabelBehavior();
+    }
+
+    public /* bridge */ /* synthetic */ float getStepSize() {
+        return super.getStepSize();
+    }
+
+    public /* bridge */ /* synthetic */ float getThumbElevation() {
+        return super.getThumbElevation();
+    }
+
+    public /* bridge */ /* synthetic */ int getThumbRadius() {
+        return super.getThumbRadius();
+    }
+
+    public /* bridge */ /* synthetic */ ColorStateList getThumbStrokeColor() {
+        return super.getThumbStrokeColor();
+    }
+
+    public /* bridge */ /* synthetic */ float getThumbStrokeWidth() {
+        return super.getThumbStrokeWidth();
+    }
+
+    public /* bridge */ /* synthetic */ ColorStateList getThumbTintList() {
+        return super.getThumbTintList();
+    }
+
+    public /* bridge */ /* synthetic */ ColorStateList getTickActiveTintList() {
+        return super.getTickActiveTintList();
+    }
+
+    public /* bridge */ /* synthetic */ ColorStateList getTickInactiveTintList() {
+        return super.getTickInactiveTintList();
+    }
+
+    public /* bridge */ /* synthetic */ ColorStateList getTickTintList() {
+        return super.getTickTintList();
+    }
+
+    public /* bridge */ /* synthetic */ ColorStateList getTrackActiveTintList() {
+        return super.getTrackActiveTintList();
+    }
+
+    public /* bridge */ /* synthetic */ int getTrackHeight() {
+        return super.getTrackHeight();
+    }
+
+    public /* bridge */ /* synthetic */ ColorStateList getTrackInactiveTintList() {
+        return super.getTrackInactiveTintList();
+    }
+
+    public /* bridge */ /* synthetic */ int getTrackSidePadding() {
+        return super.getTrackSidePadding();
+    }
+
+    public /* bridge */ /* synthetic */ ColorStateList getTrackTintList() {
+        return super.getTrackTintList();
+    }
+
+    public /* bridge */ /* synthetic */ int getTrackWidth() {
+        return super.getTrackWidth();
+    }
+
     public /* bridge */ /* synthetic */ float getValueFrom() {
         return super.getValueFrom();
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
     public /* bridge */ /* synthetic */ float getValueTo() {
         return super.getValueTo();
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
     public /* bridge */ /* synthetic */ boolean hasLabelFormatter() {
         return super.hasLabelFormatter();
     }
 
-    @Override // com.google.android.material.slider.BaseSlider, android.view.View, android.view.KeyEvent.Callback
+    public /* bridge */ /* synthetic */ boolean isTickVisible() {
+        return super.isTickVisible();
+    }
+
     public /* bridge */ /* synthetic */ boolean onKeyDown(int i, KeyEvent keyEvent) {
         return super.onKeyDown(i, keyEvent);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider, android.view.View, android.view.KeyEvent.Callback
     public /* bridge */ /* synthetic */ boolean onKeyUp(int i, KeyEvent keyEvent) {
         return super.onKeyUp(i, keyEvent);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider, android.view.View
     public /* bridge */ /* synthetic */ boolean onTouchEvent(MotionEvent motionEvent) {
         return super.onTouchEvent(motionEvent);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider, android.view.View
+    public /* bridge */ /* synthetic */ void removeOnChangeListener(BaseOnChangeListener baseOnChangeListener) {
+        super.removeOnChangeListener(baseOnChangeListener);
+    }
+
+    public /* bridge */ /* synthetic */ void removeOnSliderTouchListener(BaseOnSliderTouchListener baseOnSliderTouchListener) {
+        super.removeOnSliderTouchListener(baseOnSliderTouchListener);
+    }
+
     public /* bridge */ /* synthetic */ void setEnabled(boolean z) {
         super.setEnabled(z);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
+    public /* bridge */ /* synthetic */ void setFocusedThumbIndex(int i) {
+        super.setFocusedThumbIndex(i);
+    }
+
     public /* bridge */ /* synthetic */ void setHaloRadius(int i) {
         super.setHaloRadius(i);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
+    public /* bridge */ /* synthetic */ void setHaloRadiusResource(int i) {
+        super.setHaloRadiusResource(i);
+    }
+
     public /* bridge */ /* synthetic */ void setHaloTintList(ColorStateList colorStateList) {
         super.setHaloTintList(colorStateList);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
+    public /* bridge */ /* synthetic */ void setLabelBehavior(int i) {
+        super.setLabelBehavior(i);
+    }
+
+    public /* bridge */ /* synthetic */ void setLabelFormatter(LabelFormatter labelFormatter) {
+        super.setLabelFormatter(labelFormatter);
+    }
+
+    public /* bridge */ /* synthetic */ void setStepSize(float f) {
+        super.setStepSize(f);
+    }
+
     public /* bridge */ /* synthetic */ void setThumbElevation(float f) {
         super.setThumbElevation(f);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
+    public /* bridge */ /* synthetic */ void setThumbElevationResource(int i) {
+        super.setThumbElevationResource(i);
+    }
+
     public /* bridge */ /* synthetic */ void setThumbRadius(int i) {
         super.setThumbRadius(i);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
+    public /* bridge */ /* synthetic */ void setThumbRadiusResource(int i) {
+        super.setThumbRadiusResource(i);
+    }
+
     public /* bridge */ /* synthetic */ void setThumbStrokeColor(ColorStateList colorStateList) {
         super.setThumbStrokeColor(colorStateList);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
+    public /* bridge */ /* synthetic */ void setThumbStrokeColorResource(int i) {
+        super.setThumbStrokeColorResource(i);
+    }
+
     public /* bridge */ /* synthetic */ void setThumbStrokeWidth(float f) {
         super.setThumbStrokeWidth(f);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
+    public /* bridge */ /* synthetic */ void setThumbStrokeWidthResource(int i) {
+        super.setThumbStrokeWidthResource(i);
+    }
+
+    public /* bridge */ /* synthetic */ void setThumbTintList(ColorStateList colorStateList) {
+        super.setThumbTintList(colorStateList);
+    }
+
     public /* bridge */ /* synthetic */ void setTickActiveTintList(ColorStateList colorStateList) {
         super.setTickActiveTintList(colorStateList);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
     public /* bridge */ /* synthetic */ void setTickInactiveTintList(ColorStateList colorStateList) {
         super.setTickInactiveTintList(colorStateList);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
+    public /* bridge */ /* synthetic */ void setTickTintList(ColorStateList colorStateList) {
+        super.setTickTintList(colorStateList);
+    }
+
+    public /* bridge */ /* synthetic */ void setTickVisible(boolean z) {
+        super.setTickVisible(z);
+    }
+
     public /* bridge */ /* synthetic */ void setTrackActiveTintList(ColorStateList colorStateList) {
         super.setTrackActiveTintList(colorStateList);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
     public /* bridge */ /* synthetic */ void setTrackHeight(int i) {
         super.setTrackHeight(i);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
     public /* bridge */ /* synthetic */ void setTrackInactiveTintList(ColorStateList colorStateList) {
         super.setTrackInactiveTintList(colorStateList);
     }
 
+    public /* bridge */ /* synthetic */ void setTrackTintList(ColorStateList colorStateList) {
+        super.setTrackTintList(colorStateList);
+    }
+
+    public /* bridge */ /* synthetic */ void setValueFrom(float f) {
+        super.setValueFrom(f);
+    }
+
+    public /* bridge */ /* synthetic */ void setValueTo(float f) {
+        super.setValueTo(f);
+    }
+
+    public RangeSlider(Context context) {
+        this(context, (AttributeSet) null);
+    }
+
     public RangeSlider(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, R$attr.sliderStyle);
+        this(context, attributeSet, C3621R.attr.sliderStyle);
     }
 
     public RangeSlider(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, R$styleable.RangeSlider, i, BaseSlider.DEF_STYLE_RES, new int[0]);
-        int i2 = R$styleable.RangeSlider_values;
-        if (obtainStyledAttributes.hasValue(i2)) {
-            setValues(convertToFloat(obtainStyledAttributes.getResources().obtainTypedArray(obtainStyledAttributes.getResourceId(i2, 0))));
+        TypedArray obtainStyledAttributes = ThemeEnforcement.obtainStyledAttributes(context, attributeSet, C3621R.styleable.RangeSlider, i, DEF_STYLE_RES, new int[0]);
+        if (obtainStyledAttributes.hasValue(C3621R.styleable.RangeSlider_values)) {
+            setValues(convertToFloat(obtainStyledAttributes.getResources().obtainTypedArray(obtainStyledAttributes.getResourceId(C3621R.styleable.RangeSlider_values, 0))));
         }
-        this.minSeparation = obtainStyledAttributes.getDimension(R$styleable.RangeSlider_minSeparation, 0.0f);
+        this.minSeparation = obtainStyledAttributes.getDimension(C3621R.styleable.RangeSlider_minSeparation, 0.0f);
         obtainStyledAttributes.recycle();
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
     public void setValues(Float... fArr) {
         super.setValues(fArr);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
     public void setValues(List<Float> list) {
         super.setValues(list);
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
     public List<Float> getValues() {
         return super.getValues();
+    }
+
+    public void setCustomThumbDrawable(int i) {
+        super.setCustomThumbDrawable(i);
+    }
+
+    public void setCustomThumbDrawable(Drawable drawable) {
+        super.setCustomThumbDrawable(drawable);
+    }
+
+    public void setCustomThumbDrawablesForValues(int... iArr) {
+        super.setCustomThumbDrawablesForValues(iArr);
+    }
+
+    public void setCustomThumbDrawablesForValues(Drawable... drawableArr) {
+        super.setCustomThumbDrawablesForValues(drawableArr);
     }
 
     private static List<Float> convertToFloat(TypedArray typedArray) {
@@ -162,50 +335,53 @@ public class RangeSlider extends BaseSlider<RangeSlider, ?, ?> {
         return arrayList;
     }
 
-    @Override // com.google.android.material.slider.BaseSlider
     public float getMinSeparation() {
         return this.minSeparation;
     }
 
-    @Override // com.google.android.material.slider.BaseSlider, android.view.View
+    public void setMinSeparation(float f) {
+        this.minSeparation = f;
+        this.separationUnit = 0;
+        setSeparationUnit(0);
+    }
+
+    public void setMinSeparationValue(float f) {
+        this.minSeparation = f;
+        this.separationUnit = 1;
+        setSeparationUnit(1);
+    }
+
     public Parcelable onSaveInstanceState() {
         RangeSliderState rangeSliderState = new RangeSliderState(super.onSaveInstanceState());
-        rangeSliderState.minSeparation = this.minSeparation;
-        rangeSliderState.separationUnit = this.separationUnit;
+        float unused = rangeSliderState.minSeparation = this.minSeparation;
+        int unused2 = rangeSliderState.separationUnit = this.separationUnit;
         return rangeSliderState;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // com.google.android.material.slider.BaseSlider, android.view.View
+    /* access modifiers changed from: protected */
     public void onRestoreInstanceState(Parcelable parcelable) {
         RangeSliderState rangeSliderState = (RangeSliderState) parcelable;
         super.onRestoreInstanceState(rangeSliderState.getSuperState());
         this.minSeparation = rangeSliderState.minSeparation;
-        int i = rangeSliderState.separationUnit;
-        this.separationUnit = i;
-        setSeparationUnit(i);
+        int access$100 = rangeSliderState.separationUnit;
+        this.separationUnit = access$100;
+        setSeparationUnit(access$100);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes2.dex */
-    public static class RangeSliderState extends AbsSavedState {
-        public static final Parcelable.Creator<RangeSliderState> CREATOR = new Parcelable.Creator<RangeSliderState>() { // from class: com.google.android.material.slider.RangeSlider.RangeSliderState.1
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: createFromParcel */
-            public RangeSliderState mo1861createFromParcel(Parcel parcel) {
+    static class RangeSliderState extends AbsSavedState {
+        public static final Parcelable.Creator<RangeSliderState> CREATOR = new Parcelable.Creator<RangeSliderState>() {
+            public RangeSliderState createFromParcel(Parcel parcel) {
                 return new RangeSliderState(parcel);
             }
 
-            /* JADX WARN: Can't rename method to resolve collision */
-            @Override // android.os.Parcelable.Creator
-            /* renamed from: newArray */
-            public RangeSliderState[] mo1862newArray(int i) {
+            public RangeSliderState[] newArray(int i) {
                 return new RangeSliderState[i];
             }
         };
-        private float minSeparation;
-        private int separationUnit;
+        /* access modifiers changed from: private */
+        public float minSeparation;
+        /* access modifiers changed from: private */
+        public int separationUnit;
 
         RangeSliderState(Parcelable parcelable) {
             super(parcelable);
@@ -217,7 +393,6 @@ public class RangeSlider extends BaseSlider<RangeSlider, ?, ?> {
             this.separationUnit = parcel.readInt();
         }
 
-        @Override // android.view.AbsSavedState, android.os.Parcelable
         public void writeToParcel(Parcel parcel, int i) {
             super.writeToParcel(parcel, i);
             parcel.writeFloat(this.minSeparation);

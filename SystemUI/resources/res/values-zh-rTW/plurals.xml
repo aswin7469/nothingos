@@ -16,6 +16,10 @@
         <item quantity="one">已新增 %s 個控制項。</item>
         <item quantity="other">已新增 %s 個控制項。</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s 個應用程式正在運作</item>
+        <item quantity="other">%s 個應用程式正在運作</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">請輸入 SIM 卡的 PIN 碼，你還可以再試 %d 次。如果仍然失敗，就必須請電信業者為裝置解鎖。</item>
         <item quantity="other">請輸入 SIM 卡的 PIN 碼，你還可以再試 %d 次。</item>
@@ -33,28 +37,12 @@
         <item quantity="other">SIM 卡的 PIN 碼輸入錯誤，你還可以再試 %d 次。</item>
     </plurals>
     <plurals name="kg_password_wrong_pin_code_multi_sim">
-        <item quantity="one">SIM 卡%d的 PIN 碼輸入錯誤，你還可以再試 %d 次。如果仍然失敗，就必須請電信業者為裝置解鎖。</item>
-        <item quantity="other">SIM 卡%d的 PIN 碼輸入錯誤，你還可以再試 %d 次。</item>
+        <item quantity="one">SIM%d PIN 碼不正確，您還剩 %d 次嘗試機會，若一直不正確，您需要聯絡電訊廠商解鎖裝置。</item>
+        <item quantity="other">SIM%d PIN 碼不正確，您還剩 %d 次嘗試機會。</item>
     </plurals>
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">SIM 卡的 PUK 碼輸入錯誤，你還可以再試 %d 次。如果仍然失敗，SIM 卡將永久無法使用。</item>
         <item quantity="other">SIM 卡的 PUK 碼輸入錯誤，你還可以再試 %d 次。如果仍然失敗，SIM 卡將永久無法使用。</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">裝置已有 %d 小時未解鎖。請確認密碼。</item>
-        <item quantity="other">裝置已有 %d 小時未解鎖。請確認密碼。</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">裝置已有 %d 小時未解鎖。請確認解鎖圖案。</item>
-        <item quantity="other">裝置已有 %d 小時未解鎖。請確認解鎖圖案。</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">裝置已有 %d 小時未解鎖。請確認 PIN 碼。</item>
-        <item quantity="other">裝置已有 %d 小時未解鎖。請確認 PIN 碼。</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">請於 1 秒後再試一次。</item>
-        <item quantity="other">請於 %d 秒後再試一次。</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d 則新通知</item>
@@ -79,9 +67,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">只能建立 1 位使用者。</item>
         <item quantity="other">最多可新增 %d 位使用者。</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d 個已連線的裝置</item>
-        <item quantity="other">%1$d 個已連線的裝置</item>
     </plurals>
 </resources>

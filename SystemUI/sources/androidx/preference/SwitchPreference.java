@@ -9,7 +9,7 @@ import android.widget.Checkable;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import androidx.core.content.res.TypedArrayUtils;
-/* loaded from: classes.dex */
+
 public class SwitchPreference extends TwoStatePreference {
     private final Listener mListener;
     private CharSequence mSwitchOff;
@@ -18,12 +18,12 @@ public class SwitchPreference extends TwoStatePreference {
     public SwitchPreference(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mListener = new Listener();
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.SwitchPreference, i, i2);
-        setSummaryOn(TypedArrayUtils.getString(obtainStyledAttributes, R$styleable.SwitchPreference_summaryOn, R$styleable.SwitchPreference_android_summaryOn));
-        setSummaryOff(TypedArrayUtils.getString(obtainStyledAttributes, R$styleable.SwitchPreference_summaryOff, R$styleable.SwitchPreference_android_summaryOff));
-        setSwitchTextOn(TypedArrayUtils.getString(obtainStyledAttributes, R$styleable.SwitchPreference_switchTextOn, R$styleable.SwitchPreference_android_switchTextOn));
-        setSwitchTextOff(TypedArrayUtils.getString(obtainStyledAttributes, R$styleable.SwitchPreference_switchTextOff, R$styleable.SwitchPreference_android_switchTextOff));
-        setDisableDependentsState(TypedArrayUtils.getBoolean(obtainStyledAttributes, R$styleable.SwitchPreference_disableDependentsState, R$styleable.SwitchPreference_android_disableDependentsState, false));
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C1246R.styleable.SwitchPreference, i, i2);
+        setSummaryOn((CharSequence) TypedArrayUtils.getString(obtainStyledAttributes, C1246R.styleable.SwitchPreference_summaryOn, C1246R.styleable.SwitchPreference_android_summaryOn));
+        setSummaryOff((CharSequence) TypedArrayUtils.getString(obtainStyledAttributes, C1246R.styleable.SwitchPreference_summaryOff, C1246R.styleable.SwitchPreference_android_summaryOff));
+        setSwitchTextOn((CharSequence) TypedArrayUtils.getString(obtainStyledAttributes, C1246R.styleable.SwitchPreference_switchTextOn, C1246R.styleable.SwitchPreference_android_switchTextOn));
+        setSwitchTextOff((CharSequence) TypedArrayUtils.getString(obtainStyledAttributes, C1246R.styleable.SwitchPreference_switchTextOff, C1246R.styleable.SwitchPreference_android_switchTextOff));
+        setDisableDependentsState(TypedArrayUtils.getBoolean(obtainStyledAttributes, C1246R.styleable.SwitchPreference_disableDependentsState, C1246R.styleable.SwitchPreference_android_disableDependentsState, false));
         obtainStyledAttributes.recycle();
     }
 
@@ -32,14 +32,13 @@ public class SwitchPreference extends TwoStatePreference {
     }
 
     public SwitchPreference(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, TypedArrayUtils.getAttr(context, R$attr.switchPreferenceStyle, 16843629));
+        this(context, attributeSet, TypedArrayUtils.getAttr(context, C1246R.attr.switchPreferenceStyle, 16843629));
     }
 
     public SwitchPreference(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
-    @Override // androidx.preference.Preference
     public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
         super.onBindViewHolder(preferenceViewHolder);
         syncSwitchView(preferenceViewHolder.findViewById(16908352));
@@ -56,44 +55,55 @@ public class SwitchPreference extends TwoStatePreference {
         notifyChanged();
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    @Override // androidx.preference.Preference
+    public CharSequence getSwitchTextOn() {
+        return this.mSwitchOn;
+    }
+
+    public void setSwitchTextOn(int i) {
+        setSwitchTextOn((CharSequence) getContext().getString(i));
+    }
+
+    public CharSequence getSwitchTextOff() {
+        return this.mSwitchOff;
+    }
+
+    public void setSwitchTextOff(int i) {
+        setSwitchTextOff((CharSequence) getContext().getString(i));
+    }
+
+    /* access modifiers changed from: protected */
     public void performClick(View view) {
         super.performClick(view);
         syncViewIfAccessibilityEnabled(view);
     }
 
     private void syncViewIfAccessibilityEnabled(View view) {
-        if (!((AccessibilityManager) getContext().getSystemService("accessibility")).isEnabled()) {
-            return;
+        if (((AccessibilityManager) getContext().getSystemService("accessibility")).isEnabled()) {
+            syncSwitchView(view.findViewById(16908352));
+            syncSummaryView(view.findViewById(16908304));
         }
-        syncSwitchView(view.findViewById(16908352));
-        syncSummaryView(view.findViewById(16908304));
     }
 
     private void syncSwitchView(View view) {
         boolean z = view instanceof Switch;
         if (z) {
-            ((Switch) view).setOnCheckedChangeListener(null);
+            ((Switch) view).setOnCheckedChangeListener((CompoundButton.OnCheckedChangeListener) null);
         }
         if (view instanceof Checkable) {
             ((Checkable) view).setChecked(this.mChecked);
         }
         if (z) {
-            Switch r4 = (Switch) view;
-            r4.setTextOn(this.mSwitchOn);
-            r4.setTextOff(this.mSwitchOff);
-            r4.setOnCheckedChangeListener(this.mListener);
+            Switch switchR = (Switch) view;
+            switchR.setTextOn(this.mSwitchOn);
+            switchR.setTextOff(this.mSwitchOff);
+            switchR.setOnCheckedChangeListener(this.mListener);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public class Listener implements CompoundButton.OnCheckedChangeListener {
+    private class Listener implements CompoundButton.OnCheckedChangeListener {
         Listener() {
         }
 
-        @Override // android.widget.CompoundButton.OnCheckedChangeListener
         public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
             if (!SwitchPreference.this.callChangeListener(Boolean.valueOf(z))) {
                 compoundButton.setChecked(!z);

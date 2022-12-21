@@ -1,69 +1,68 @@
 package com.android.systemui.statusbar.notification.collection.legacy;
 
+import android.icu.text.DateFormat;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
 import androidx.collection.ArraySet;
 import com.android.systemui.Dumpable;
+import com.android.systemui.dagger.qualifiers.Main;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.VisibilityLocationProvider;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.collection.provider.VisualStabilityProvider;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.p026io.PrintWriter;
 import java.util.ArrayList;
-/* loaded from: classes.dex */
+
 public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpable {
+    private static final long TEMPORARY_REORDERING_ALLOWED_DURATION = 1000;
+    private ArraySet<View> mAddedChildren = new ArraySet<>();
+    private ArraySet<View> mAllowedReorderViews = new ArraySet<>();
     private boolean mGroupChangedAllowed;
+    private final ArrayList<Callback> mGroupChangesAllowedCallbacks = new ArrayList<>();
     private final Handler mHandler;
     private boolean mIsTemporaryReorderingAllowed;
+    /* access modifiers changed from: private */
+    public ArraySet<NotificationEntry> mLowPriorityReorderingViews = new ArraySet<>();
+    private final Runnable mOnTemporaryReorderingExpired = new VisualStabilityManager$$ExternalSyntheticLambda0(this);
     private boolean mPanelExpanded;
+    private final ArraySet<Callback> mPersistentGroupCallbacks = new ArraySet<>();
+    private final ArraySet<Callback> mPersistentReorderingCallbacks = new ArraySet<>();
     private boolean mPulsing;
     private boolean mReorderingAllowed;
+    private final ArrayList<Callback> mReorderingAllowedCallbacks = new ArrayList<>();
     private boolean mScreenOn;
     private long mTemporaryReorderingStart;
     private VisibilityLocationProvider mVisibilityLocationProvider;
+    private final VisualStabilityProvider mVisualStabilityProvider;
     final WakefulnessLifecycle.Observer mWakefulnessObserver;
-    private final ArrayList<Callback> mReorderingAllowedCallbacks = new ArrayList<>();
-    private final ArraySet<Callback> mPersistentReorderingCallbacks = new ArraySet<>();
-    private final ArrayList<Callback> mGroupChangesAllowedCallbacks = new ArrayList<>();
-    private final ArraySet<Callback> mPersistentGroupCallbacks = new ArraySet<>();
-    private ArraySet<View> mAllowedReorderViews = new ArraySet<>();
-    private ArraySet<NotificationEntry> mLowPriorityReorderingViews = new ArraySet<>();
-    private ArraySet<View> mAddedChildren = new ArraySet<>();
-    private final Runnable mOnTemporaryReorderingExpired = new Runnable() { // from class: com.android.systemui.statusbar.notification.collection.legacy.VisualStabilityManager$$ExternalSyntheticLambda0
-        @Override // java.lang.Runnable
-        public final void run() {
-            VisualStabilityManager.this.lambda$new$0();
-        }
-    };
 
-    /* loaded from: classes.dex */
     public interface Callback {
         void onChangeAllowed();
     }
 
-    public VisualStabilityManager(NotificationEntryManager notificationEntryManager, Handler handler, StatusBarStateController statusBarStateController, WakefulnessLifecycle wakefulnessLifecycle) {
-        WakefulnessLifecycle.Observer observer = new WakefulnessLifecycle.Observer() { // from class: com.android.systemui.statusbar.notification.collection.legacy.VisualStabilityManager.3
-            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
+    public VisualStabilityManager(NotificationEntryManager notificationEntryManager, VisualStabilityProvider visualStabilityProvider, @Main Handler handler, StatusBarStateController statusBarStateController, WakefulnessLifecycle wakefulnessLifecycle, DumpManager dumpManager) {
+        C27043 r0 = new WakefulnessLifecycle.Observer() {
             public void onFinishedGoingToSleep() {
                 VisualStabilityManager.this.setScreenOn(false);
             }
 
-            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
             public void onStartedWakingUp() {
                 VisualStabilityManager.this.setScreenOn(true);
             }
         };
-        this.mWakefulnessObserver = observer;
+        this.mWakefulnessObserver = r0;
+        this.mVisualStabilityProvider = visualStabilityProvider;
         this.mHandler = handler;
+        dumpManager.registerDumpable(this);
         if (notificationEntryManager != null) {
-            notificationEntryManager.addNotificationEntryListener(new NotificationEntryListener() { // from class: com.android.systemui.statusbar.notification.collection.legacy.VisualStabilityManager.1
-                @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
+            notificationEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
                 public void onPreEntryUpdated(NotificationEntry notificationEntry) {
                     if (notificationEntry.isAmbient() != notificationEntry.getRow().isLowPriority()) {
                         VisualStabilityManager.this.mLowPriorityReorderingViews.add(notificationEntry);
@@ -73,20 +72,18 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         }
         if (statusBarStateController != null) {
             setPulsing(statusBarStateController.isPulsing());
-            statusBarStateController.addCallback(new StatusBarStateController.StateListener() { // from class: com.android.systemui.statusbar.notification.collection.legacy.VisualStabilityManager.2
-                @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
+            statusBarStateController.addCallback(new StatusBarStateController.StateListener() {
                 public void onPulsingChanged(boolean z) {
                     VisualStabilityManager.this.setPulsing(z);
                 }
 
-                @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
                 public void onExpandedChanged(boolean z) {
                     VisualStabilityManager.this.setPanelExpanded(z);
                 }
             });
         }
         if (wakefulnessLifecycle != null) {
-            wakefulnessLifecycle.addObserver(observer);
+            wakefulnessLifecycle.addObserver(r0);
         }
     }
 
@@ -94,41 +91,38 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         if (z) {
             this.mPersistentReorderingCallbacks.add(callback);
         }
-        if (this.mReorderingAllowedCallbacks.contains(callback)) {
-            return;
+        if (!this.mReorderingAllowedCallbacks.contains(callback)) {
+            this.mReorderingAllowedCallbacks.add(callback);
         }
-        this.mReorderingAllowedCallbacks.add(callback);
     }
 
     public void addGroupChangesAllowedCallback(Callback callback, boolean z) {
         if (z) {
             this.mPersistentGroupCallbacks.add(callback);
         }
-        if (this.mGroupChangesAllowedCallbacks.contains(callback)) {
-            return;
+        if (!this.mGroupChangesAllowedCallbacks.contains(callback)) {
+            this.mGroupChangesAllowedCallbacks.add(callback);
         }
-        this.mGroupChangesAllowedCallbacks.add(callback);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setScreenOn(boolean z) {
         this.mScreenOn = z;
         updateAllowedStates();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setPanelExpanded(boolean z) {
         this.mPanelExpanded = z;
         updateAllowedStates();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void setPulsing(boolean z) {
-        if (this.mPulsing == z) {
-            return;
+        if (this.mPulsing != z) {
+            this.mPulsing = z;
+            updateAllowedStates();
         }
-        this.mPulsing = z;
-        updateAllowedStates();
     }
 
     private void updateAllowedStates() {
@@ -139,6 +133,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         if (z3) {
             notifyChangeAllowed(this.mReorderingAllowedCallbacks, this.mPersistentReorderingCallbacks);
         }
+        this.mVisualStabilityProvider.setReorderingAllowed(z2);
         boolean z4 = (!this.mScreenOn || !this.mPanelExpanded) && !this.mPulsing;
         if (!z4 || this.mGroupChangedAllowed) {
             z = false;
@@ -155,7 +150,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
             Callback callback = arrayList.get(i);
             callback.onChangeAllowed();
             if (!arraySet.contains(callback)) {
-                arrayList.remove(callback);
+                arrayList.remove((Object) callback);
                 i--;
             }
             i++;
@@ -171,8 +166,11 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
     }
 
     public boolean canReorderNotification(ExpandableNotificationRow expandableNotificationRow) {
-        if (!this.mReorderingAllowed && !this.mAddedChildren.contains(expandableNotificationRow) && !this.mLowPriorityReorderingViews.contains(expandableNotificationRow.getEntry())) {
-            return this.mAllowedReorderViews.contains(expandableNotificationRow) && !this.mVisibilityLocationProvider.isInVisibleLocation(expandableNotificationRow.getEntry());
+        if (this.mReorderingAllowed || this.mAddedChildren.contains(expandableNotificationRow) || this.mLowPriorityReorderingViews.contains(expandableNotificationRow.getEntry())) {
+            return true;
+        }
+        if (!this.mAllowedReorderViews.contains(expandableNotificationRow) || this.mVisibilityLocationProvider.isInVisibleLocation(expandableNotificationRow.getEntry())) {
+            return false;
         }
         return true;
     }
@@ -187,7 +185,6 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         this.mLowPriorityReorderingViews.clear();
     }
 
-    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
         if (z) {
             this.mAllowedReorderViews.add(notificationEntry.getRow());
@@ -196,7 +193,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
 
     public void temporarilyAllowReordering() {
         this.mHandler.removeCallbacks(this.mOnTemporaryReorderingExpired);
-        this.mHandler.postDelayed(this.mOnTemporaryReorderingExpired, 1000L);
+        this.mHandler.postDelayed(this.mOnTemporaryReorderingExpired, 1000);
         if (!this.mIsTemporaryReorderingAllowed) {
             this.mTemporaryReorderingStart = SystemClock.elapsedRealtime();
         }
@@ -204,8 +201,9 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         updateAllowedStates();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-statusbar-notification-collection-legacy-VisualStabilityManager */
+    public /* synthetic */ void mo40399x506571a4() {
         this.mIsTemporaryReorderingAllowed = false;
         updateAllowedStates();
     }
@@ -214,8 +212,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         this.mAddedChildren.add(view);
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("VisualStabilityManager state:");
         printWriter.print("  mIsTemporaryReorderingAllowed=");
         printWriter.println(this.mIsTemporaryReorderingAllowed);
@@ -224,7 +221,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         long elapsedRealtime = SystemClock.elapsedRealtime();
         printWriter.print("    Temporary reordering window has been open for ");
         printWriter.print(elapsedRealtime - (this.mIsTemporaryReorderingAllowed ? this.mTemporaryReorderingStart : elapsedRealtime));
-        printWriter.println("ms");
+        printWriter.println(DateFormat.MINUTE_SECOND);
         printWriter.println();
     }
 }

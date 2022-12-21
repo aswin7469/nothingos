@@ -13,120 +13,131 @@ import com.airbnb.lottie.model.content.Repeater;
 import com.airbnb.lottie.model.layer.BaseLayer;
 import com.airbnb.lottie.utils.MiscUtils;
 import com.airbnb.lottie.value.LottieValueCallback;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
-/* loaded from: classes.dex */
+
 public class RepeaterContent implements DrawingContent, PathContent, GreedyContent, BaseKeyframeAnimation.AnimationListener, KeyPathElementContent {
     private ContentGroup contentGroup;
     private final BaseKeyframeAnimation<Float, Float> copies;
     private final boolean hidden;
     private final BaseLayer layer;
     private final LottieDrawable lottieDrawable;
+    private final Matrix matrix = new Matrix();
     private final String name;
     private final BaseKeyframeAnimation<Float, Float> offset;
-    private final TransformKeyframeAnimation transform;
-    private final Matrix matrix = new Matrix();
     private final Path path = new Path();
+    private final TransformKeyframeAnimation transform;
 
-    public RepeaterContent(LottieDrawable lottieDrawable, BaseLayer baseLayer, Repeater repeater) {
-        this.lottieDrawable = lottieDrawable;
+    public RepeaterContent(LottieDrawable lottieDrawable2, BaseLayer baseLayer, Repeater repeater) {
+        this.lottieDrawable = lottieDrawable2;
         this.layer = baseLayer;
         this.name = repeater.getName();
         this.hidden = repeater.isHidden();
-        BaseKeyframeAnimation<Float, Float> mo192createAnimation = repeater.getCopies().mo192createAnimation();
-        this.copies = mo192createAnimation;
-        baseLayer.addAnimation(mo192createAnimation);
-        mo192createAnimation.addUpdateListener(this);
-        BaseKeyframeAnimation<Float, Float> mo192createAnimation2 = repeater.getOffset().mo192createAnimation();
-        this.offset = mo192createAnimation2;
-        baseLayer.addAnimation(mo192createAnimation2);
-        mo192createAnimation2.addUpdateListener(this);
-        TransformKeyframeAnimation createAnimation = repeater.getTransform().createAnimation();
-        this.transform = createAnimation;
-        createAnimation.addAnimationsToLayer(baseLayer);
-        createAnimation.addListener(this);
+        BaseKeyframeAnimation<Float, Float> createAnimation = repeater.getCopies().createAnimation();
+        this.copies = createAnimation;
+        baseLayer.addAnimation(createAnimation);
+        createAnimation.addUpdateListener(this);
+        BaseKeyframeAnimation<Float, Float> createAnimation2 = repeater.getOffset().createAnimation();
+        this.offset = createAnimation2;
+        baseLayer.addAnimation(createAnimation2);
+        createAnimation2.addUpdateListener(this);
+        TransformKeyframeAnimation createAnimation3 = repeater.getTransform().createAnimation();
+        this.transform = createAnimation3;
+        createAnimation3.addAnimationsToLayer(baseLayer);
+        createAnimation3.addListener(this);
     }
 
-    @Override // com.airbnb.lottie.animation.content.GreedyContent
-    public void absorbContent(ListIterator<Content> listIterator) {
-        if (this.contentGroup != null) {
-            return;
-        }
-        while (listIterator.hasPrevious() && listIterator.previous() != this) {
-        }
-        ArrayList arrayList = new ArrayList();
-        while (listIterator.hasPrevious()) {
-            arrayList.add(listIterator.previous());
-            listIterator.remove();
-        }
-        Collections.reverse(arrayList);
-        this.contentGroup = new ContentGroup(this.lottieDrawable, this.layer, "Repeater", this.hidden, arrayList, null);
+    /* JADX WARNING: Removed duplicated region for block: B:3:0x0005 A[LOOP:0: B:3:0x0005->B:6:0x000f, LOOP_START] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void absorbContent(java.util.ListIterator<com.airbnb.lottie.animation.content.Content> r9) {
+        /*
+            r8 = this;
+            com.airbnb.lottie.animation.content.ContentGroup r0 = r8.contentGroup
+            if (r0 == 0) goto L_0x0005
+            return
+        L_0x0005:
+            boolean r0 = r9.hasPrevious()
+            if (r0 == 0) goto L_0x0012
+            java.lang.Object r0 = r9.previous()
+            if (r0 == r8) goto L_0x0012
+            goto L_0x0005
+        L_0x0012:
+            java.util.ArrayList r6 = new java.util.ArrayList
+            r6.<init>()
+        L_0x0017:
+            boolean r0 = r9.hasPrevious()
+            if (r0 == 0) goto L_0x0028
+            java.lang.Object r0 = r9.previous()
+            r6.add(r0)
+            r9.remove()
+            goto L_0x0017
+        L_0x0028:
+            java.util.Collections.reverse(r6)
+            com.airbnb.lottie.animation.content.ContentGroup r9 = new com.airbnb.lottie.animation.content.ContentGroup
+            com.airbnb.lottie.LottieDrawable r2 = r8.lottieDrawable
+            com.airbnb.lottie.model.layer.BaseLayer r3 = r8.layer
+            java.lang.String r4 = "Repeater"
+            boolean r5 = r8.hidden
+            r7 = 0
+            r1 = r9
+            r1.<init>(r2, r3, r4, r5, r6, r7)
+            r8.contentGroup = r9
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.airbnb.lottie.animation.content.RepeaterContent.absorbContent(java.util.ListIterator):void");
     }
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public String getName() {
         return this.name;
     }
 
-    @Override // com.airbnb.lottie.animation.content.Content
     public void setContents(List<Content> list, List<Content> list2) {
         this.contentGroup.setContents(list, list2);
     }
 
-    @Override // com.airbnb.lottie.animation.content.PathContent
     public Path getPath() {
-        Path path = this.contentGroup.getPath();
+        Path path2 = this.contentGroup.getPath();
         this.path.reset();
-        float floatValue = this.copies.mo189getValue().floatValue();
-        float floatValue2 = this.offset.mo189getValue().floatValue();
+        float floatValue = this.copies.getValue().floatValue();
+        float floatValue2 = this.offset.getValue().floatValue();
         for (int i = ((int) floatValue) - 1; i >= 0; i--) {
-            this.matrix.set(this.transform.getMatrixForRepeater(i + floatValue2));
-            this.path.addPath(path, this.matrix);
+            this.matrix.set(this.transform.getMatrixForRepeater(((float) i) + floatValue2));
+            this.path.addPath(path2, this.matrix);
         }
         return this.path;
     }
 
-    @Override // com.airbnb.lottie.animation.content.DrawingContent
-    public void draw(Canvas canvas, Matrix matrix, int i) {
-        float floatValue = this.copies.mo189getValue().floatValue();
-        float floatValue2 = this.offset.mo189getValue().floatValue();
-        float floatValue3 = this.transform.getStartOpacity().mo189getValue().floatValue() / 100.0f;
-        float floatValue4 = this.transform.getEndOpacity().mo189getValue().floatValue() / 100.0f;
+    public void draw(Canvas canvas, Matrix matrix2, int i) {
+        float floatValue = this.copies.getValue().floatValue();
+        float floatValue2 = this.offset.getValue().floatValue();
+        float floatValue3 = this.transform.getStartOpacity().getValue().floatValue() / 100.0f;
+        float floatValue4 = this.transform.getEndOpacity().getValue().floatValue() / 100.0f;
         for (int i2 = ((int) floatValue) - 1; i2 >= 0; i2--) {
-            this.matrix.set(matrix);
-            float f = i2;
+            this.matrix.set(matrix2);
+            float f = (float) i2;
             this.matrix.preConcat(this.transform.getMatrixForRepeater(f + floatValue2));
-            this.contentGroup.draw(canvas, this.matrix, (int) (i * MiscUtils.lerp(floatValue3, floatValue4, f / floatValue)));
+            this.contentGroup.draw(canvas, this.matrix, (int) (((float) i) * MiscUtils.lerp(floatValue3, floatValue4, f / floatValue)));
         }
     }
 
-    @Override // com.airbnb.lottie.animation.content.DrawingContent
-    public void getBounds(RectF rectF, Matrix matrix, boolean z) {
-        this.contentGroup.getBounds(rectF, matrix, z);
+    public void getBounds(RectF rectF, Matrix matrix2, boolean z) {
+        this.contentGroup.getBounds(rectF, matrix2, z);
     }
 
-    @Override // com.airbnb.lottie.animation.keyframe.BaseKeyframeAnimation.AnimationListener
     public void onValueChanged() {
         this.lottieDrawable.invalidateSelf();
     }
 
-    @Override // com.airbnb.lottie.model.KeyPathElement
     public void resolveKeyPath(KeyPath keyPath, int i, List<KeyPath> list, KeyPath keyPath2) {
         MiscUtils.resolveKeyPath(keyPath, i, list, keyPath2, this);
     }
 
-    @Override // com.airbnb.lottie.model.KeyPathElement
     public <T> void addValueCallback(T t, LottieValueCallback<T> lottieValueCallback) {
-        if (this.transform.applyValueCallback(t, lottieValueCallback)) {
-            return;
-        }
-        if (t == LottieProperty.REPEATER_COPIES) {
-            this.copies.setValueCallback(lottieValueCallback);
-        } else if (t != LottieProperty.REPEATER_OFFSET) {
-        } else {
-            this.offset.setValueCallback(lottieValueCallback);
+        if (!this.transform.applyValueCallback(t, lottieValueCallback)) {
+            if (t == LottieProperty.REPEATER_COPIES) {
+                this.copies.setValueCallback(lottieValueCallback);
+            } else if (t == LottieProperty.REPEATER_OFFSET) {
+                this.offset.setValueCallback(lottieValueCallback);
+            }
         }
     }
 }

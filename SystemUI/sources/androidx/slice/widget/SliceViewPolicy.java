@@ -1,21 +1,24 @@
 package androidx.slice.widget;
-/* loaded from: classes.dex */
+
 public class SliceViewPolicy {
     private PolicyChangeListener mListener;
     private int mMaxHeight = 0;
     private int mMaxSmallHeight = 0;
-    private boolean mScrollable = true;
     private int mMode = 2;
+    private boolean mScrollable = true;
 
-    /* loaded from: classes.dex */
     public interface PolicyChangeListener {
-        void onMaxHeightChanged(int newNewHeight);
+        void onMaxHeightChanged(int i);
 
-        void onMaxSmallChanged(int newMaxSmallHeight);
+        void onMaxSmallChanged(int i);
+
+        void onModeChanged(int i);
+
+        void onScrollingChanged(boolean z);
     }
 
-    public void setListener(PolicyChangeListener listener) {
-        this.mListener = listener;
+    public void setListener(PolicyChangeListener policyChangeListener) {
+        this.mListener = policyChangeListener;
     }
 
     public int getMaxHeight() {
@@ -34,25 +37,43 @@ public class SliceViewPolicy {
         return this.mMode;
     }
 
-    public void setMaxHeight(int max) {
-        if (max != this.mMaxHeight) {
-            this.mMaxHeight = max;
+    public void setMaxHeight(int i) {
+        if (i != this.mMaxHeight) {
+            this.mMaxHeight = i;
             PolicyChangeListener policyChangeListener = this.mListener;
-            if (policyChangeListener == null) {
-                return;
+            if (policyChangeListener != null) {
+                policyChangeListener.onMaxHeightChanged(i);
             }
-            policyChangeListener.onMaxHeightChanged(max);
         }
     }
 
-    public void setMaxSmallHeight(int maxSmallHeight) {
-        if (this.mMaxSmallHeight != maxSmallHeight) {
-            this.mMaxSmallHeight = maxSmallHeight;
+    public void setMaxSmallHeight(int i) {
+        if (this.mMaxSmallHeight != i) {
+            this.mMaxSmallHeight = i;
             PolicyChangeListener policyChangeListener = this.mListener;
-            if (policyChangeListener == null) {
-                return;
+            if (policyChangeListener != null) {
+                policyChangeListener.onMaxSmallChanged(i);
             }
-            policyChangeListener.onMaxSmallChanged(maxSmallHeight);
+        }
+    }
+
+    public void setScrollable(boolean z) {
+        if (z != this.mScrollable) {
+            this.mScrollable = z;
+            PolicyChangeListener policyChangeListener = this.mListener;
+            if (policyChangeListener != null) {
+                policyChangeListener.onScrollingChanged(z);
+            }
+        }
+    }
+
+    public void setMode(int i) {
+        if (this.mMode != i) {
+            this.mMode = i;
+            PolicyChangeListener policyChangeListener = this.mListener;
+            if (policyChangeListener != null) {
+                policyChangeListener.onModeChanged(i);
+            }
         }
     }
 }

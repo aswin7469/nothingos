@@ -2,7 +2,7 @@ package com.android.systemui.classifier;
 
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class SingleTapClassifier_Factory implements Factory<SingleTapClassifier> {
     private final Provider<FalsingDataProvider> dataProvider;
     private final Provider<Float> touchSlopProvider;
@@ -12,10 +12,8 @@ public final class SingleTapClassifier_Factory implements Factory<SingleTapClass
         this.touchSlopProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SingleTapClassifier mo1933get() {
-        return newInstance(this.dataProvider.mo1933get(), this.touchSlopProvider.mo1933get().floatValue());
+    public SingleTapClassifier get() {
+        return newInstance(this.dataProvider.get(), this.touchSlopProvider.get().floatValue());
     }
 
     public static SingleTapClassifier_Factory create(Provider<FalsingDataProvider> provider, Provider<Float> provider2) {

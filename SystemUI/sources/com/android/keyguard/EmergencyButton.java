@@ -9,9 +9,8 @@ import android.widget.Button;
 import com.android.internal.util.EmergencyAffordanceManager;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.settingslib.Utils;
-import com.android.systemui.R$bool;
-import com.android.systemui.R$drawable;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+
 public class EmergencyButton extends Button {
     private int mDownX;
     private int mDownY;
@@ -21,33 +20,27 @@ public class EmergencyButton extends Button {
     private boolean mLongPressWasDragged;
 
     public EmergencyButton(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public EmergencyButton(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mEnableEmergencyCallWhileSimLocked = ((Button) this).mContext.getResources().getBoolean(17891553);
+        this.mEnableEmergencyCallWhileSimLocked = this.mContext.getResources().getBoolean(17891654);
         this.mEmergencyAffordanceManager = new EmergencyAffordanceManager(context);
     }
 
-    @Override // android.view.View
-    protected void onFinishInflate() {
+    /* access modifiers changed from: protected */
+    public void onFinishInflate() {
         super.onFinishInflate();
-        this.mLockPatternUtils = new LockPatternUtils(((Button) this).mContext);
+        this.mLockPatternUtils = new LockPatternUtils(this.mContext);
         if (this.mEmergencyAffordanceManager.needsEmergencyAffordance()) {
-            setOnLongClickListener(new View.OnLongClickListener() { // from class: com.android.keyguard.EmergencyButton$$ExternalSyntheticLambda0
-                @Override // android.view.View.OnLongClickListener
-                public final boolean onLongClick(View view) {
-                    boolean lambda$onFinishInflate$0;
-                    lambda$onFinishInflate$0 = EmergencyButton.this.lambda$onFinishInflate$0(view);
-                    return lambda$onFinishInflate$0;
-                }
-            });
+            setOnLongClickListener(new EmergencyButton$$ExternalSyntheticLambda0(this));
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ boolean lambda$onFinishInflate$0(View view) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onFinishInflate$0$com-android-keyguard-EmergencyButton  reason: not valid java name */
+    public /* synthetic */ boolean m2281lambda$onFinishInflate$0$comandroidkeyguardEmergencyButton(View view) {
         if (this.mLongPressWasDragged || !this.mEmergencyAffordanceManager.needsEmergencyAffordance()) {
             return false;
         }
@@ -55,7 +48,6 @@ public class EmergencyButton extends Button {
         return true;
     }
 
-    @Override // android.widget.TextView, android.view.View
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int x = (int) motionEvent.getX();
         int y = (int) motionEvent.getY();
@@ -66,7 +58,7 @@ public class EmergencyButton extends Button {
         } else {
             int abs = Math.abs(x - this.mDownX);
             int abs2 = Math.abs(y - this.mDownY);
-            int scaledTouchSlop = ViewConfiguration.get(((Button) this).mContext).getScaledTouchSlop();
+            int scaledTouchSlop = ViewConfiguration.get(this.mContext).getScaledTouchSlop();
             if (Math.abs(abs2) > scaledTouchSlop || Math.abs(abs) > scaledTouchSlop) {
                 this.mLongPressWasDragged = true;
             }
@@ -75,48 +67,79 @@ public class EmergencyButton extends Button {
     }
 
     public void reloadColors() {
-        setTextColor(Utils.getColorAttrDefaultColor(getContext(), 16842809));
-        setBackground(getContext().getDrawable(R$drawable.kg_emergency_button_background));
+        setTextColor(Utils.getColorAttrDefaultColor(getContext(), 17957103));
+        setBackground(getContext().getDrawable(C1893R.C1895drawable.kg_emergency_button_background));
     }
 
-    @Override // android.widget.TextView, android.view.View
     public boolean performLongClick() {
         return super.performLongClick();
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:9:0x003a, code lost:
-        if (r7 != false) goto L17;
+    /* JADX WARNING: Code restructure failed: missing block: B:15:0x003c, code lost:
+        if (r7 != false) goto L_0x0042;
      */
-    /* JADX WARN: Removed duplicated region for block: B:18:0x0042  */
-    /* JADX WARN: Removed duplicated region for block: B:25:0x0052  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    public void updateEmergencyCallButton(boolean z, boolean z2, boolean z3, boolean z4) {
-        boolean z5;
-        boolean z6 = true;
-        if (z2) {
-            if (!z) {
-                if (z3) {
-                    z5 = this.mEnableEmergencyCallWhileSimLocked;
-                } else {
-                    z5 = this.mLockPatternUtils.isSecure(KeyguardUpdateMonitor.getCurrentUser()) || ((Button) this).mContext.getResources().getBoolean(R$bool.config_showEmergencyButton);
-                }
-                if (!((Button) this).mContext.getResources().getBoolean(R$bool.kg_hide_emgcy_btn_when_oos)) {
-                    z6 = z5;
-                } else if (z5) {
-                }
-            }
-            if (!z6) {
-                setVisibility(0);
-                setText(z ? 17040556 : 17040529);
-                return;
-            }
-            setVisibility(8);
-            return;
-        }
-        z6 = false;
-        if (!z6) {
-        }
+    /* JADX WARNING: Removed duplicated region for block: B:19:0x0044  */
+    /* JADX WARNING: Removed duplicated region for block: B:24:0x0054  */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public void updateEmergencyCallButton(boolean r4, boolean r5, boolean r6, boolean r7) {
+        /*
+            r3 = this;
+            r0 = 0
+            if (r5 == 0) goto L_0x0041
+            r5 = 1
+            if (r4 == 0) goto L_0x0007
+            goto L_0x0042
+        L_0x0007:
+            if (r6 == 0) goto L_0x000c
+            boolean r6 = r3.mEnableEmergencyCallWhileSimLocked
+            goto L_0x002b
+        L_0x000c:
+            com.android.internal.widget.LockPatternUtils r6 = r3.mLockPatternUtils
+            int r1 = com.android.keyguard.KeyguardUpdateMonitor.getCurrentUser()
+            boolean r6 = r6.isSecure(r1)
+            if (r6 != 0) goto L_0x002a
+            android.content.Context r6 = r3.mContext
+            android.content.res.Resources r6 = r6.getResources()
+            r1 = 2131034164(0x7f050034, float:1.7678838E38)
+            boolean r6 = r6.getBoolean(r1)
+            if (r6 == 0) goto L_0x0028
+            goto L_0x002a
+        L_0x0028:
+            r6 = r0
+            goto L_0x002b
+        L_0x002a:
+            r6 = r5
+        L_0x002b:
+            android.content.Context r1 = r3.mContext
+            android.content.res.Resources r1 = r1.getResources()
+            r2 = 2131034207(0x7f05005f, float:1.7678925E38)
+            boolean r1 = r1.getBoolean(r2)
+            if (r1 == 0) goto L_0x003f
+            if (r6 == 0) goto L_0x0041
+            if (r7 == 0) goto L_0x0041
+            goto L_0x0042
+        L_0x003f:
+            r5 = r6
+            goto L_0x0042
+        L_0x0041:
+            r5 = r0
+        L_0x0042:
+            if (r5 == 0) goto L_0x0054
+            r3.setVisibility(r0)
+            if (r4 == 0) goto L_0x004d
+            r4 = 17040633(0x10404f9, float:2.424814E-38)
+            goto L_0x0050
+        L_0x004d:
+            r4 = 17040606(0x10404de, float:2.4248063E-38)
+        L_0x0050:
+            r3.setText(r4)
+            goto L_0x0059
+        L_0x0054:
+            r4 = 8
+            r3.setVisibility(r4)
+        L_0x0059:
+            return
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.EmergencyButton.updateEmergencyCallButton(boolean, boolean, boolean, boolean):void");
     }
 }

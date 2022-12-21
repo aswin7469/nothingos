@@ -6,56 +6,107 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dumpable;
-import com.android.systemui.R$color;
-import com.android.systemui.R$id;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-/* loaded from: classes.dex */
-public class LockIconView extends FrameLayout implements Dumpable {
-    private ImageView mBgView;
-    private ImageView mLockIcon;
-    private int mLockIconColor;
-    private int mRadius;
-    private PointF mLockIconCenter = new PointF(0.0f, 0.0f);
-    private boolean mUseBackground = false;
-    private final RectF mSensorRect = new RectF();
+import com.android.systemui.navigationbar.NavigationBarInflaterView;
+import java.p026io.PrintWriter;
 
-    @Override // android.view.View
+public class LockIconView extends FrameLayout implements Dumpable {
+    public static final int ICON_FINGERPRINT = 1;
+    public static final int ICON_LOCK = 0;
+    public static final int ICON_NONE = -1;
+    public static final int ICON_UNLOCK = 2;
+    private boolean mAod;
+    private ImageView mBgView;
+    private float mDozeAmount = 0.0f;
+    private int mIconType;
+    private ImageView mLockIcon;
+    private PointF mLockIconCenter = new PointF(0.0f, 0.0f);
+    private int mLockIconColor;
+    private int mLockIconPadding;
+    private float mRadius;
+    private final RectF mSensorRect = new RectF();
+    private boolean mUseBackground = false;
+
+    public @interface IconType {
+    }
+
+    private static int[] getLockIconState(int i, boolean z) {
+        if (i == -1) {
+            return new int[0];
+        }
+        int[] iArr = new int[2];
+        if (i == 0) {
+            iArr[0] = 16842916;
+        } else if (i == 1) {
+            iArr[0] = 16842917;
+        } else if (i == 2) {
+            iArr[0] = 16842918;
+        }
+        if (z) {
+            iArr[1] = 16842915;
+        } else {
+            iArr[1] = -16842915;
+        }
+        return iArr;
+    }
+
+    private String typeToString(int i) {
+        return i != -1 ? i != 0 ? i != 1 ? i != 2 ? "invalid" : "unlock" : "fingerprint" : "lock" : "none";
+    }
+
     public boolean hasOverlappingRendering() {
         return false;
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
     }
 
     public LockIconView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    @Override // android.view.View
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mLockIcon = (ImageView) findViewById(R$id.lock_icon);
-        this.mBgView = (ImageView) findViewById(R$id.lock_icon_bg);
+        this.mLockIcon = (ImageView) findViewById(C1893R.C1897id.lock_icon);
+        this.mBgView = (ImageView) findViewById(C1893R.C1897id.lock_icon_bg);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
+    public void setDozeAmount(float f) {
+        this.mDozeAmount = f;
+        updateColorAndBackgroundVisibility();
+    }
+
+    /* access modifiers changed from: package-private */
     public void updateColorAndBackgroundVisibility() {
-        this.mLockIconColor = getContext().getColor(R$color.nothingDefaultTextColor);
+        this.mLockIconColor = getContext().getColor(C1893R.C1894color.nt_default_text_color);
         this.mBgView.setVisibility(8);
         this.mLockIcon.setImageTintList(ColorStateList.valueOf(this.mLockIconColor));
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
     public void setImageDrawable(Drawable drawable) {
         this.mLockIcon.setImageDrawable(drawable);
-        if (!this.mUseBackground) {
-            return;
-        }
-        if (drawable == null) {
-            this.mBgView.setVisibility(4);
-        } else {
-            this.mBgView.setVisibility(0);
+        if (this.mUseBackground) {
+            if (drawable == null) {
+                this.mBgView.setVisibility(4);
+            } else {
+                this.mBgView.setVisibility(0);
+            }
         }
     }
 
@@ -64,38 +115,44 @@ public class LockIconView extends FrameLayout implements Dumpable {
         updateColorAndBackgroundVisibility();
     }
 
-    public void setCenterLocation(PointF pointF, int i) {
+    public void setCenterLocation(PointF pointF, float f, int i) {
         this.mLockIconCenter = pointF;
-        this.mRadius = i;
-        RectF rectF = this.mSensorRect;
-        float f = pointF.x;
-        float f2 = pointF.y;
-        rectF.set(f - i, f2 - i, f + i, f2 + i);
+        this.mRadius = f;
+        this.mLockIconPadding = i;
+        this.mLockIcon.setPadding(i, i, i, i);
+        this.mSensorRect.set(this.mLockIconCenter.x - this.mRadius, this.mLockIconCenter.y - this.mRadius, this.mLockIconCenter.x + this.mRadius, this.mLockIconCenter.y + this.mRadius);
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) getLayoutParams();
-        RectF rectF2 = this.mSensorRect;
-        float f3 = rectF2.right;
-        float f4 = rectF2.left;
-        layoutParams.width = (int) (f3 - f4);
-        float f5 = rectF2.bottom;
-        float f6 = rectF2.top;
-        layoutParams.height = (int) (f5 - f6);
-        layoutParams.topMargin = (int) f6;
-        layoutParams.setMarginStart((int) f4);
+        layoutParams.width = (int) (this.mSensorRect.right - this.mSensorRect.left);
+        layoutParams.height = (int) (this.mSensorRect.bottom - this.mSensorRect.top);
+        layoutParams.topMargin = (int) this.mSensorRect.top;
+        layoutParams.setMarginStart((int) this.mSensorRect.left);
         setLayoutParams(layoutParams);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public float getLocationTop() {
         return this.mLockIconCenter.y - this.mRadius;
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        printWriter.println("Center in px (x, y)= (" + this.mLockIconCenter.x + ", " + this.mLockIconCenter.y + ")");
-        StringBuilder sb = new StringBuilder();
-        sb.append("Radius in pixels: ");
-        sb.append(this.mRadius);
-        printWriter.println(sb.toString());
-        printWriter.println("topLeft= (" + getX() + ", " + getY() + ")");
+    public void clearIcon() {
+        updateIcon(-1, false);
+    }
+
+    public void updateIcon(int i, boolean z) {
+        this.mIconType = i;
+        this.mAod = z;
+        this.mLockIcon.setImageState(getLockIconState(i, z), true);
+    }
+
+    public void dump(PrintWriter printWriter, String[] strArr) {
+        printWriter.println("Lock Icon View Parameters:");
+        printWriter.println("    Center in px (x, y)= (" + this.mLockIconCenter.x + ", " + this.mLockIconCenter.y + NavigationBarInflaterView.KEY_CODE_END);
+        printWriter.println("    Radius in pixels: " + this.mRadius);
+        printWriter.println("    Drawable padding: " + this.mLockIconPadding);
+        printWriter.println("    mIconType=" + typeToString(this.mIconType));
+        printWriter.println("    mAod=" + this.mAod);
+        printWriter.println("Lock Icon View actual measurements:");
+        printWriter.println("    topLeft= (" + getX() + ", " + getY() + NavigationBarInflaterView.KEY_CODE_END);
+        printWriter.println("    width=" + getWidth() + " height=" + getHeight());
     }
 }

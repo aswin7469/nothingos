@@ -1,60 +1,59 @@
 package com.android.systemui.statusbar.notification.row;
 
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.BindStage;
 import com.android.systemui.statusbar.notification.row.NotificationRowContentBinder;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class RowContentBindStage extends BindStage<RowContentBindParams> {
     private final NotificationRowContentBinder mBinder;
     private final RowContentBindStageLogger mLogger;
-    private final NotifInflationErrorManager mNotifInflationErrorManager;
+    /* access modifiers changed from: private */
+    public final NotifInflationErrorManager mNotifInflationErrorManager;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public RowContentBindStage(NotificationRowContentBinder notificationRowContentBinder, NotifInflationErrorManager notifInflationErrorManager, RowContentBindStageLogger rowContentBindStageLogger) {
+    @Inject
+    RowContentBindStage(NotificationRowContentBinder notificationRowContentBinder, NotifInflationErrorManager notifInflationErrorManager, RowContentBindStageLogger rowContentBindStageLogger) {
         this.mBinder = notificationRowContentBinder;
         this.mNotifInflationErrorManager = notifInflationErrorManager;
         this.mLogger = rowContentBindStageLogger;
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.BindStage
-    protected void executeStage(NotificationEntry notificationEntry, ExpandableNotificationRow expandableNotificationRow, final BindStage.StageCallback stageCallback) {
-        RowContentBindParams stageParams = getStageParams(notificationEntry);
-        this.mLogger.logStageParams(notificationEntry.getKey(), stageParams.toString());
-        int contentViews = stageParams.getContentViews();
-        int dirtyContentViews = stageParams.getDirtyContentViews() & contentViews;
+    /* access modifiers changed from: protected */
+    public void executeStage(NotificationEntry notificationEntry, ExpandableNotificationRow expandableNotificationRow, final BindStage.StageCallback stageCallback) {
+        RowContentBindParams rowContentBindParams = (RowContentBindParams) getStageParams(notificationEntry);
+        this.mLogger.logStageParams(notificationEntry.getKey(), rowContentBindParams.toString());
+        int contentViews = rowContentBindParams.getContentViews();
+        int dirtyContentViews = rowContentBindParams.getDirtyContentViews() & contentViews;
         this.mBinder.unbindContent(notificationEntry, expandableNotificationRow, contentViews ^ 15);
         NotificationRowContentBinder.BindParams bindParams = new NotificationRowContentBinder.BindParams();
-        bindParams.isLowPriority = stageParams.useLowPriority();
-        bindParams.usesIncreasedHeight = stageParams.useIncreasedHeight();
-        bindParams.usesIncreasedHeadsUpHeight = stageParams.useIncreasedHeadsUpHeight();
-        boolean needsReinflation = stageParams.needsReinflation();
-        NotificationRowContentBinder.InflationCallback inflationCallback = new NotificationRowContentBinder.InflationCallback() { // from class: com.android.systemui.statusbar.notification.row.RowContentBindStage.1
-            @Override // com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback
-            public void handleInflationException(NotificationEntry notificationEntry2, Exception exc) {
-                RowContentBindStage.this.mNotifInflationErrorManager.setInflationError(notificationEntry2, exc);
+        bindParams.isLowPriority = rowContentBindParams.useLowPriority();
+        bindParams.usesIncreasedHeight = rowContentBindParams.useIncreasedHeight();
+        bindParams.usesIncreasedHeadsUpHeight = rowContentBindParams.useIncreasedHeadsUpHeight();
+        boolean needsReinflation = rowContentBindParams.needsReinflation();
+        C27691 r9 = new NotificationRowContentBinder.InflationCallback() {
+            public void handleInflationException(NotificationEntry notificationEntry, Exception exc) {
+                RowContentBindStage.this.mNotifInflationErrorManager.setInflationError(notificationEntry, exc);
             }
 
-            @Override // com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback
-            public void onAsyncInflationFinished(NotificationEntry notificationEntry2) {
-                RowContentBindStage.this.mNotifInflationErrorManager.clearInflationError(notificationEntry2);
-                RowContentBindStage.this.getStageParams(notificationEntry2).clearDirtyContentViews();
-                stageCallback.onStageFinished(notificationEntry2);
+            public void onAsyncInflationFinished(NotificationEntry notificationEntry) {
+                RowContentBindStage.this.mNotifInflationErrorManager.clearInflationError(notificationEntry);
+                ((RowContentBindParams) RowContentBindStage.this.getStageParams(notificationEntry)).clearDirtyContentViews();
+                stageCallback.onStageFinished(notificationEntry);
             }
         };
         this.mBinder.cancelBind(notificationEntry, expandableNotificationRow);
-        this.mBinder.bindContent(notificationEntry, expandableNotificationRow, dirtyContentViews, bindParams, needsReinflation, inflationCallback);
+        this.mBinder.bindContent(notificationEntry, expandableNotificationRow, dirtyContentViews, bindParams, needsReinflation, r9);
     }
 
-    @Override // com.android.systemui.statusbar.notification.row.BindStage
-    protected void abortStage(NotificationEntry notificationEntry, ExpandableNotificationRow expandableNotificationRow) {
+    /* access modifiers changed from: protected */
+    public void abortStage(NotificationEntry notificationEntry, ExpandableNotificationRow expandableNotificationRow) {
         this.mBinder.cancelBind(notificationEntry, expandableNotificationRow);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    /* JADX WARN: Can't rename method to resolve collision */
-    @Override // com.android.systemui.statusbar.notification.row.BindStage
-    /* renamed from: newStageParams */
-    public RowContentBindParams mo1156newStageParams() {
+    /* access modifiers changed from: protected */
+    public RowContentBindParams newStageParams() {
         return new RowContentBindParams();
     }
 }

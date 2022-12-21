@@ -1,13 +1,13 @@
 package kotlin.jvm.internal;
 
 import java.util.Iterator;
-import org.jetbrains.annotations.NotNull;
+import kotlin.Metadata;
+
+@Metadata(mo64986d1 = {"\u0000\u0012\n\u0000\n\u0002\u0010(\n\u0002\b\u0002\n\u0002\u0010\u0011\n\u0002\b\u0002\u001a%\u0010\u0000\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0001\"\u0004\b\u0000\u0010\u00022\f\u0010\u0003\u001a\b\u0012\u0004\u0012\u0002H\u00020\u0004¢\u0006\u0002\u0010\u0005¨\u0006\u0006"}, mo64987d2 = {"iterator", "", "T", "array", "", "([Ljava/lang/Object;)Ljava/util/Iterator;", "kotlin-stdlib"}, mo64988k = 2, mo64989mv = {1, 7, 1}, mo64991xi = 48)
 /* compiled from: ArrayIterator.kt */
-/* loaded from: classes2.dex */
 public final class ArrayIteratorKt {
-    @NotNull
-    public static final <T> Iterator<T> iterator(@NotNull T[] array) {
-        Intrinsics.checkNotNullParameter(array, "array");
-        return new ArrayIterator(array);
+    public static final <T> Iterator<T> iterator(T[] tArr) {
+        Intrinsics.checkNotNullParameter(tArr, "array");
+        return new ArrayIterator<>(tArr);
     }
 }

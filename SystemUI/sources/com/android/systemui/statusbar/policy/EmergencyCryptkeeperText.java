@@ -14,22 +14,19 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.systemui.Dependency;
 import java.util.List;
-/* loaded from: classes2.dex */
+
 public class EmergencyCryptkeeperText extends TextView {
-    private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
-    private final KeyguardUpdateMonitorCallback mCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.systemui.statusbar.policy.EmergencyCryptkeeperText.1
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+    private final KeyguardUpdateMonitorCallback mCallback = new KeyguardUpdateMonitorCallback() {
         public void onPhoneStateChanged(int i) {
             EmergencyCryptkeeperText.this.update();
         }
 
-        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onRefreshCarrierInfo() {
             EmergencyCryptkeeperText.this.update();
         }
     };
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() { // from class: com.android.systemui.statusbar.policy.EmergencyCryptkeeperText.2
-        @Override // android.content.BroadcastReceiver
+    private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.AIRPLANE_MODE".equals(intent.getAction())) {
                 EmergencyCryptkeeperText.this.update();
@@ -46,8 +43,8 @@ public class EmergencyCryptkeeperText extends TextView {
         setVisibility(8);
     }
 
-    @Override // android.widget.TextView, android.view.View
-    protected void onAttachedToWindow() {
+    /* access modifiers changed from: protected */
+    public void onAttachedToWindow() {
         super.onAttachedToWindow();
         KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
@@ -56,8 +53,8 @@ public class EmergencyCryptkeeperText extends TextView {
         update();
     }
 
-    @Override // android.view.View
-    protected void onDetachedFromWindow() {
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         KeyguardUpdateMonitor keyguardUpdateMonitor = this.mKeyguardUpdateMonitor;
         if (keyguardUpdateMonitor != null) {
@@ -67,10 +64,10 @@ public class EmergencyCryptkeeperText extends TextView {
     }
 
     public void update() {
-        boolean isDataCapable = ((TelephonyManager) ((TextView) this).mContext.getSystemService(TelephonyManager.class)).isDataCapable();
+        boolean isDataCapable = ((TelephonyManager) this.mContext.getSystemService(TelephonyManager.class)).isDataCapable();
         int i = 0;
         boolean z = true;
-        boolean z2 = Settings.Global.getInt(((TextView) this).mContext.getContentResolver(), "airplane_mode_on", 0) == 1;
+        boolean z2 = Settings.Global.getInt(this.mContext.getContentResolver(), "airplane_mode_on", 0) == 1;
         if (!isDataCapable || z2) {
             setText((CharSequence) null);
             setVisibility(8);
@@ -91,8 +88,8 @@ public class EmergencyCryptkeeperText extends TextView {
             if (size != 0) {
                 charSequence = filteredSubscriptionInfo.get(0).getCarrierName();
             } else {
-                charSequence = getContext().getText(17040142);
-                Intent registerReceiver = getContext().registerReceiver(null, new IntentFilter("android.telephony.action.SERVICE_PROVIDERS_UPDATED"));
+                charSequence = getContext().getText(17040205);
+                Intent registerReceiver = getContext().registerReceiver((BroadcastReceiver) null, new IntentFilter("android.telephony.action.SERVICE_PROVIDERS_UPDATED"));
                 if (registerReceiver != null) {
                     charSequence = registerReceiver.getStringExtra("android.telephony.extra.PLMN");
                 }

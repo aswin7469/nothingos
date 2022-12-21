@@ -5,31 +5,47 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.LinearLayout;
 import com.android.internal.jank.InteractionJankMonitor;
-/* loaded from: classes.dex */
+
 public abstract class KeyguardInputView extends LinearLayout {
     private Runnable mOnFinishImeAnimationRunnable;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public void animateForIme(float f, boolean z) {
-    }
-
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean disallowInterceptTouch(MotionEvent motionEvent) {
         return false;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public abstract CharSequence getTitle();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void startAppearAnimation() {
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean startDisappearAnimation(Runnable runnable) {
         return false;
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
+        return super.generateLayoutParams(layoutParams);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
     }
 
     public KeyguardInputView(Context context) {
@@ -44,17 +60,15 @@ public abstract class KeyguardInputView extends LinearLayout {
         super(context, attributeSet, i);
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public AnimatorListenerAdapter getAnimationListener(final int i) {
-        return new AnimatorListenerAdapter() { // from class: com.android.keyguard.KeyguardInputView.1
+        return new AnimatorListenerAdapter() {
             private boolean mIsCancel;
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationCancel(Animator animator) {
                 this.mIsCancel = true;
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationEnd(Animator animator) {
                 if (this.mIsCancel) {
                     InteractionJankMonitor.getInstance().cancel(i);
@@ -63,7 +77,6 @@ public abstract class KeyguardInputView extends LinearLayout {
                 }
             }
 
-            @Override // android.animation.AnimatorListenerAdapter, android.animation.Animator.AnimatorListener
             public void onAnimationStart(Animator animator) {
                 InteractionJankMonitor.getInstance().begin(KeyguardInputView.this, i);
             }

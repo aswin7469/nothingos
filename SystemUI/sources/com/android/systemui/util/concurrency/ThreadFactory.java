@@ -3,9 +3,13 @@ package com.android.systemui.util.concurrency;
 import android.os.Handler;
 import android.os.Looper;
 import java.util.concurrent.Executor;
-/* loaded from: classes2.dex */
+
 public interface ThreadFactory {
     DelayableExecutor buildDelayableExecutorOnHandler(Handler handler);
+
+    DelayableExecutor buildDelayableExecutorOnLooper(Looper looper);
+
+    DelayableExecutor buildDelayableExecutorOnNewThread(String str);
 
     Executor buildExecutorOnNewThread(String str);
 

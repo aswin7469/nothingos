@@ -3,15 +3,14 @@ package com.android.systemui.statusbar;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.ImageView;
-/* loaded from: classes.dex */
+
 public class AlphaOptimizedImageView extends ImageView {
-    @Override // android.widget.ImageView, android.view.View
     public boolean hasOverlappingRendering() {
         return false;
     }
 
     public AlphaOptimizedImageView(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
     }
 
     public AlphaOptimizedImageView(Context context, AttributeSet attributeSet) {

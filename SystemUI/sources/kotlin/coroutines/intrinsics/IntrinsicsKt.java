@@ -1,18 +1,9 @@
 package kotlin.coroutines.intrinsics;
 
-import kotlin.Unit;
-import kotlin.coroutines.Continuation;
-import kotlin.jvm.functions.Function2;
-import org.jetbrains.annotations.NotNull;
-/* loaded from: classes2.dex */
-public final class IntrinsicsKt extends IntrinsicsKt__IntrinsicsKt {
-    @NotNull
-    public static /* bridge */ /* synthetic */ <R, T> Continuation<Unit> createCoroutineUnintercepted(@NotNull Function2<? super R, ? super Continuation<? super T>, ? extends Object> function2, R r, @NotNull Continuation<? super T> continuation) {
-        return IntrinsicsKt__IntrinsicsJvmKt.createCoroutineUnintercepted(function2, r, continuation);
-    }
+import kotlin.Metadata;
 
-    @NotNull
-    public static /* bridge */ /* synthetic */ Object getCOROUTINE_SUSPENDED() {
-        return IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED();
+@Metadata(mo64986d1 = {"kotlin/coroutines/intrinsics/IntrinsicsKt__IntrinsicsJvmKt", "kotlin/coroutines/intrinsics/IntrinsicsKt__IntrinsicsKt"}, mo64988k = 4, mo64989mv = {1, 7, 1}, mo64991xi = 49)
+public final class IntrinsicsKt extends IntrinsicsKt__IntrinsicsKt {
+    private IntrinsicsKt() {
     }
 }

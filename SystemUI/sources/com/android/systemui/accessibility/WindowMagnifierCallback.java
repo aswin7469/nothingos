@@ -1,10 +1,11 @@
 package com.android.systemui.accessibility;
 
 import android.graphics.Rect;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public interface WindowMagnifierCallback {
+
+interface WindowMagnifierCallback {
     void onAccessibilityActionPerformed(int i);
+
+    void onMove(int i);
 
     void onPerformScaleAction(int i, float f);
 

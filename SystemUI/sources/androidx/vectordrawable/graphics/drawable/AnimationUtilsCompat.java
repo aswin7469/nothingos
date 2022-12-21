@@ -2,8 +2,6 @@ package androidx.vectordrawable.graphics.drawable;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
-import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Xml;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -17,61 +15,17 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.OvershootInterpolator;
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
-import java.io.IOException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-/* loaded from: classes.dex */
+import java.p026io.IOException;
+import org.xmlpull.p032v1.XmlPullParser;
+import org.xmlpull.p032v1.XmlPullParserException;
+
 public class AnimationUtilsCompat {
     public static Interpolator loadInterpolator(Context context, int i) throws Resources.NotFoundException {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return AnimationUtils.loadInterpolator(context, i);
-        }
-        XmlResourceParser xmlResourceParser = null;
-        try {
-            try {
-                if (i == 17563663) {
-                    return new FastOutLinearInInterpolator();
-                }
-                if (i == 17563661) {
-                    return new FastOutSlowInInterpolator();
-                }
-                if (i == 17563662) {
-                    return new LinearOutSlowInInterpolator();
-                }
-                XmlResourceParser animation = context.getResources().getAnimation(i);
-                Interpolator createInterpolatorFromXml = createInterpolatorFromXml(context, animation);
-                if (animation != null) {
-                    animation.close();
-                }
-                return createInterpolatorFromXml;
-            } catch (IOException e) {
-                Resources.NotFoundException notFoundException = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(i));
-                notFoundException.initCause(e);
-                throw notFoundException;
-            } catch (XmlPullParserException e2) {
-                Resources.NotFoundException notFoundException2 = new Resources.NotFoundException("Can't load animation resource ID #0x" + Integer.toHexString(i));
-                notFoundException2.initCause(e2);
-                throw notFoundException2;
-            }
-        } catch (Throwable th) {
-            if (0 != 0) {
-                xmlResourceParser.close();
-            }
-            throw th;
-        }
+        return AnimationUtils.loadInterpolator(context, i);
     }
 
-    /* JADX WARN: Code restructure failed: missing block: B:7:0x00ca, code lost:
-        return r1;
-     */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
-    private static Interpolator createInterpolatorFromXml(Context context, XmlPullParser xmlPullParser) throws XmlPullParserException, IOException {
-        Interpolator accelerateInterpolator;
+    private static Interpolator createInterpolatorFromXml(Context context, Resources resources, Resources.Theme theme, XmlPullParser xmlPullParser) throws XmlPullParserException, IOException {
+        Interpolator pathInterpolatorCompat;
         int depth = xmlPullParser.getDepth();
         Interpolator interpolator = null;
         while (true) {
@@ -84,30 +38,34 @@ public class AnimationUtilsCompat {
                         interpolator = new LinearInterpolator();
                     } else {
                         if (name.equals("accelerateInterpolator")) {
-                            accelerateInterpolator = new AccelerateInterpolator(context, asAttributeSet);
+                            pathInterpolatorCompat = new AccelerateInterpolator(context, asAttributeSet);
                         } else if (name.equals("decelerateInterpolator")) {
-                            accelerateInterpolator = new DecelerateInterpolator(context, asAttributeSet);
+                            pathInterpolatorCompat = new DecelerateInterpolator(context, asAttributeSet);
                         } else if (name.equals("accelerateDecelerateInterpolator")) {
                             interpolator = new AccelerateDecelerateInterpolator();
                         } else if (name.equals("cycleInterpolator")) {
-                            accelerateInterpolator = new CycleInterpolator(context, asAttributeSet);
+                            pathInterpolatorCompat = new CycleInterpolator(context, asAttributeSet);
                         } else if (name.equals("anticipateInterpolator")) {
-                            accelerateInterpolator = new AnticipateInterpolator(context, asAttributeSet);
+                            pathInterpolatorCompat = new AnticipateInterpolator(context, asAttributeSet);
                         } else if (name.equals("overshootInterpolator")) {
-                            accelerateInterpolator = new OvershootInterpolator(context, asAttributeSet);
+                            pathInterpolatorCompat = new OvershootInterpolator(context, asAttributeSet);
                         } else if (name.equals("anticipateOvershootInterpolator")) {
-                            accelerateInterpolator = new AnticipateOvershootInterpolator(context, asAttributeSet);
+                            pathInterpolatorCompat = new AnticipateOvershootInterpolator(context, asAttributeSet);
                         } else if (name.equals("bounceInterpolator")) {
                             interpolator = new BounceInterpolator();
                         } else if (name.equals("pathInterpolator")) {
-                            accelerateInterpolator = new PathInterpolatorCompat(context, asAttributeSet, xmlPullParser);
+                            pathInterpolatorCompat = new PathInterpolatorCompat(context, asAttributeSet, xmlPullParser);
                         } else {
                             throw new RuntimeException("Unknown interpolator name: " + xmlPullParser.getName());
                         }
-                        interpolator = accelerateInterpolator;
+                        interpolator = pathInterpolatorCompat;
                     }
                 }
             }
         }
+        return interpolator;
+    }
+
+    private AnimationUtilsCompat() {
     }
 }

@@ -1,0 +1,2 @@
+signature,file,startline,startcol,endline,endcol,properties
+Landroid/net/nsd/NsdServiceInfo;->setAttribute(Ljava/lang/String;[B)V,packages/modules/Connectivity/framework-t/src/android/net/nsd/NsdServiceInfo.java,193,5,193,25,

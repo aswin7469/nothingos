@@ -16,6 +16,10 @@
         <item quantity="one">เพิ่มตัวควบคุม %s ตัวแล้ว</item>
         <item quantity="other">เพิ่มตัวควบคุม %s ตัวแล้ว</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">ทำงานอยู่ %s แอป</item>
+        <item quantity="other">ทำงานอยู่ %s แอป</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">โปรดป้อน PIN ของซิม คุณพยายามได้อีก %d ครั้งก่อนที่จะต้องติดต่อผู้ให้บริการเพื่อปลดล็อกอุปกรณ์</item>
         <item quantity="other">โปรดป้อน PIN ของซิม คุณพยายามได้อีก %d ครั้ง</item>
@@ -28,25 +32,13 @@
         <item quantity="one">รหัส PIN ของซิมไม่ถูกต้อง คุณพยายามได้อีก %d ครั้งก่อนที่จะต้องติดต่อผู้ให้บริการเพื่อปลดล็อกอุปกรณ์ของคุณ</item>
         <item quantity="other">รหัส PIN ของซิมไม่ถูกต้อง คุณพยายามได้อีก %d ครั้ง</item>
     </plurals>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">รหัส PIN ของ SIM%d ไม่ถูกต้อง คุณลองได้อีก %d ครั้ง ก่อนที่จะต้องติดต่อผู้ให้บริการเพื่อปลดล็อกอุปกรณ์</item>
+        <item quantity="other">รหัส PIN ของ SIM%d ไม่ถูกต้อง คุณลองได้อีก %d ครั้ง</item>
+    </plurals>
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">รหัส PUK ของซิมไม่ถูกต้อง คุณพยายามได้อีก %d ครั้งก่อนที่ซิมจะไม่สามารถใช้งานได้อย่างถาวร</item>
         <item quantity="other">รหัส PUK ของซิมไม่ถูกต้อง คุณพยายามได้อีก %d ครั้งก่อนที่ซิมจะไม่สามารถใช้งานได้อย่างถาวร</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">ไม่มีการปลดล็อกอุปกรณ์มา %d ชั่วโมงแล้ว ยืนยันรหัสผ่าน</item>
-        <item quantity="other">ไม่มีการปลดล็อกอุปกรณ์มา %d ชั่วโมงแล้ว ยืนยันรหัสผ่าน</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">ไม่มีการปลดล็อกอุปกรณ์มา %d ชั่วโมงแล้ว ยืนยันรูปแบบ</item>
-        <item quantity="other">ไม่มีการปลดล็อกอุปกรณ์มา %d ชั่วโมงแล้ว ยืนยันรูปแบบ</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">ไม่มีการปลดล็อกอุปกรณ์มา %d ชั่วโมงแล้ว ยืนยัน PIN</item>
-        <item quantity="other">ไม่มีการปลดล็อกอุปกรณ์มา %d ชั่วโมงแล้ว ยืนยัน PIN</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">ลองอีกครั้งใน 1 วินาที</item>
-        <item quantity="other">ลองอีกครั้งใน %d วินาที</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">การแจ้งเตือนใหม่ %d รายการ</item>
@@ -71,9 +63,5 @@
     <plurals name="user_limit_reached_message">
         <item quantity="one">สร้างผู้ใช้ได้เพียง 1 คนเท่านั้น</item>
         <item quantity="other">คุณเพิ่มผู้ใช้ได้สูงสุด %d คน</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">มีอุปกรณ์ที่เชื่อมต่อ %1$d เครื่อง</item>
-        <item quantity="other">มีอุปกรณ์ที่เชื่อมต่อ %1$d เครื่อง</item>
     </plurals>
 </resources>

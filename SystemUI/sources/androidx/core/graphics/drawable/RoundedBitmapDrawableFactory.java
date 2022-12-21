@@ -2,29 +2,58 @@ package androidx.core.graphics.drawable;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.os.Build;
+import android.util.Log;
+import androidx.core.graphics.BitmapCompat;
 import androidx.core.view.GravityCompat;
-/* loaded from: classes.dex */
-public final class RoundedBitmapDrawableFactory {
+import java.p026io.InputStream;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes.dex */
-    public static class DefaultRoundedBitmapDrawable extends RoundedBitmapDrawable {
-        DefaultRoundedBitmapDrawable(Resources res, Bitmap bitmap) {
-            super(res, bitmap);
+public final class RoundedBitmapDrawableFactory {
+    private static final String TAG = "RoundedBitmapDrawableFa";
+
+    private static class DefaultRoundedBitmapDrawable extends RoundedBitmapDrawable {
+        DefaultRoundedBitmapDrawable(Resources resources, Bitmap bitmap) {
+            super(resources, bitmap);
         }
 
-        @Override // androidx.core.graphics.drawable.RoundedBitmapDrawable
-        void gravityCompatApply(int gravity, int bitmapWidth, int bitmapHeight, Rect bounds, Rect outRect) {
-            GravityCompat.apply(gravity, bitmapWidth, bitmapHeight, bounds, outRect, 0);
+        public void setMipMap(boolean z) {
+            if (this.mBitmap != null) {
+                BitmapCompat.setHasMipMap(this.mBitmap, z);
+                invalidateSelf();
+            }
+        }
+
+        public boolean hasMipMap() {
+            return this.mBitmap != null && BitmapCompat.hasMipMap(this.mBitmap);
+        }
+
+        /* access modifiers changed from: package-private */
+        public void gravityCompatApply(int i, int i2, int i3, Rect rect, Rect rect2) {
+            GravityCompat.apply(i, i2, i3, rect, rect2, 0);
         }
     }
 
-    public static RoundedBitmapDrawable create(Resources res, Bitmap bitmap) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            return new RoundedBitmapDrawable21(res, bitmap);
+    public static RoundedBitmapDrawable create(Resources resources, Bitmap bitmap) {
+        return new RoundedBitmapDrawable21(resources, bitmap);
+    }
+
+    public static RoundedBitmapDrawable create(Resources resources, String str) {
+        RoundedBitmapDrawable create = create(resources, BitmapFactory.decodeFile(str));
+        if (create.getBitmap() == null) {
+            Log.w(TAG, "RoundedBitmapDrawable cannot decode " + str);
         }
-        return new DefaultRoundedBitmapDrawable(res, bitmap);
+        return create;
+    }
+
+    public static RoundedBitmapDrawable create(Resources resources, InputStream inputStream) {
+        RoundedBitmapDrawable create = create(resources, BitmapFactory.decodeStream(inputStream));
+        if (create.getBitmap() == null) {
+            Log.w(TAG, "RoundedBitmapDrawable cannot decode " + inputStream);
+        }
+        return create;
+    }
+
+    private RoundedBitmapDrawableFactory() {
     }
 }

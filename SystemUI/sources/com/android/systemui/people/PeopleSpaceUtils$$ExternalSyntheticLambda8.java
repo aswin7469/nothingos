@@ -1,17 +1,11 @@
 package com.android.systemui.people;
 
-import android.content.pm.ShortcutInfo;
-import java.util.Objects;
-import java.util.function.Predicate;
-/* loaded from: classes.dex */
-public final /* synthetic */ class PeopleSpaceUtils$$ExternalSyntheticLambda8 implements Predicate {
-    public static final /* synthetic */ PeopleSpaceUtils$$ExternalSyntheticLambda8 INSTANCE = new PeopleSpaceUtils$$ExternalSyntheticLambda8();
+import android.app.people.PeopleSpaceTile;
+import java.util.Comparator;
 
-    private /* synthetic */ PeopleSpaceUtils$$ExternalSyntheticLambda8() {
-    }
-
-    @Override // java.util.function.Predicate
-    public final boolean test(Object obj) {
-        return Objects.nonNull((ShortcutInfo) obj);
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class PeopleSpaceUtils$$ExternalSyntheticLambda8 implements Comparator {
+    public final int compare(Object obj, Object obj2) {
+        return new Long(((PeopleSpaceTile) obj2).getLastInteractionTimestamp()).compareTo(new Long(((PeopleSpaceTile) obj).getLastInteractionTimestamp()));
     }
 }

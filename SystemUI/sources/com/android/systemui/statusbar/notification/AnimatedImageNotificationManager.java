@@ -1,108 +1,69 @@
 package com.android.systemui.statusbar.notification;
 
 import android.graphics.drawable.AnimatedImageDrawable;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.collection.inflation.BindEventManager;
+import com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.NotificationContentView;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
-import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
-import java.util.List;
-import kotlin.collections.ArraysKt___ArraysKt;
+import javax.inject.Inject;
+import kotlin.Metadata;
+import kotlin.Unit;
+import kotlin.collections.ArraysKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt;
-import org.jetbrains.annotations.NotNull;
+
+@SysUISingleton
+@Metadata(mo64986d1 = {"\u0000B\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0007\u0018\u00002\u00020\u0001B'\b\u0007\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u0012\u0006\u0010\u0004\u001a\u00020\u0005\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t¢\u0006\u0002\u0010\nJ\u0006\u0010\r\u001a\u00020\u000eJ\u0017\u0010\u000f\u001a\u0004\u0018\u00010\u000e2\u0006\u0010\u0010\u001a\u00020\u0011H\u0002¢\u0006\u0002\u0010\u0012J\u0018\u0010\u000f\u001a\u00020\u000e2\u0006\u0010\u0013\u001a\u00020\u00142\u0006\u0010\u0015\u001a\u00020\fH\u0002R\u000e\u0010\u0004\u001a\u00020\u0005X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0007X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u000e¢\u0006\u0002\n\u0000R\u000e\u0010\u0002\u001a\u00020\u0003X\u0004¢\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\tX\u0004¢\u0006\u0002\n\u0000¨\u0006\u0016"}, mo64987d2 = {"Lcom/android/systemui/statusbar/notification/AnimatedImageNotificationManager;", "", "notifCollection", "Lcom/android/systemui/statusbar/notification/collection/notifcollection/CommonNotifCollection;", "bindEventManager", "Lcom/android/systemui/statusbar/notification/collection/inflation/BindEventManager;", "headsUpManager", "Lcom/android/systemui/statusbar/policy/HeadsUpManager;", "statusBarStateController", "Lcom/android/systemui/plugins/statusbar/StatusBarStateController;", "(Lcom/android/systemui/statusbar/notification/collection/notifcollection/CommonNotifCollection;Lcom/android/systemui/statusbar/notification/collection/inflation/BindEventManager;Lcom/android/systemui/statusbar/policy/HeadsUpManager;Lcom/android/systemui/plugins/statusbar/StatusBarStateController;)V", "isStatusBarExpanded", "", "bind", "", "updateAnimatedImageDrawables", "entry", "Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;", "(Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;)Lkotlin/Unit;", "row", "Lcom/android/systemui/statusbar/notification/row/ExpandableNotificationRow;", "animating", "SystemUI_nothingRelease"}, mo64988k = 1, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ConversationNotifications.kt */
-/* loaded from: classes.dex */
 public final class AnimatedImageNotificationManager {
-    @NotNull
+    private final BindEventManager bindEventManager;
     private final HeadsUpManager headsUpManager;
-    private boolean isStatusBarExpanded;
-    @NotNull
-    private final NotificationEntryManager notificationEntryManager;
-    @NotNull
+    /* access modifiers changed from: private */
+    public boolean isStatusBarExpanded;
+    /* access modifiers changed from: private */
+    public final CommonNotifCollection notifCollection;
     private final StatusBarStateController statusBarStateController;
 
-    public AnimatedImageNotificationManager(@NotNull NotificationEntryManager notificationEntryManager, @NotNull HeadsUpManager headsUpManager, @NotNull StatusBarStateController statusBarStateController) {
-        Intrinsics.checkNotNullParameter(notificationEntryManager, "notificationEntryManager");
-        Intrinsics.checkNotNullParameter(headsUpManager, "headsUpManager");
-        Intrinsics.checkNotNullParameter(statusBarStateController, "statusBarStateController");
-        this.notificationEntryManager = notificationEntryManager;
-        this.headsUpManager = headsUpManager;
-        this.statusBarStateController = statusBarStateController;
+    @Inject
+    public AnimatedImageNotificationManager(CommonNotifCollection commonNotifCollection, BindEventManager bindEventManager2, HeadsUpManager headsUpManager2, StatusBarStateController statusBarStateController2) {
+        Intrinsics.checkNotNullParameter(commonNotifCollection, "notifCollection");
+        Intrinsics.checkNotNullParameter(bindEventManager2, "bindEventManager");
+        Intrinsics.checkNotNullParameter(headsUpManager2, "headsUpManager");
+        Intrinsics.checkNotNullParameter(statusBarStateController2, "statusBarStateController");
+        this.notifCollection = commonNotifCollection;
+        this.bindEventManager = bindEventManager2;
+        this.headsUpManager = headsUpManager2;
+        this.statusBarStateController = statusBarStateController2;
     }
 
     public final void bind() {
-        this.headsUpManager.addListener(new OnHeadsUpChangedListener() { // from class: com.android.systemui.statusbar.notification.AnimatedImageNotificationManager$bind$1
-            @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
-            public void onHeadsUpStateChanged(@NotNull NotificationEntry entry, boolean z) {
-                boolean z2;
-                boolean z3;
-                Intrinsics.checkNotNullParameter(entry, "entry");
-                ExpandableNotificationRow row = entry.getRow();
-                if (row == null) {
-                    return;
-                }
-                AnimatedImageNotificationManager animatedImageNotificationManager = AnimatedImageNotificationManager.this;
-                if (!z) {
-                    z3 = animatedImageNotificationManager.isStatusBarExpanded;
-                    if (!z3) {
-                        z2 = false;
-                        animatedImageNotificationManager.updateAnimatedImageDrawables(row, z2);
-                    }
-                }
-                z2 = true;
-                animatedImageNotificationManager.updateAnimatedImageDrawables(row, z2);
-            }
-        });
-        this.statusBarStateController.addCallback(new StatusBarStateController.StateListener() { // from class: com.android.systemui.statusbar.notification.AnimatedImageNotificationManager$bind$2
-            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
-            public void onExpandedChanged(boolean z) {
-                NotificationEntryManager notificationEntryManager;
-                AnimatedImageNotificationManager.this.isStatusBarExpanded = z;
-                notificationEntryManager = AnimatedImageNotificationManager.this.notificationEntryManager;
-                List<NotificationEntry> activeNotificationsForCurrentUser = notificationEntryManager.getActiveNotificationsForCurrentUser();
-                Intrinsics.checkNotNullExpressionValue(activeNotificationsForCurrentUser, "notificationEntryManager.activeNotificationsForCurrentUser");
-                AnimatedImageNotificationManager animatedImageNotificationManager = AnimatedImageNotificationManager.this;
-                for (NotificationEntry notificationEntry : activeNotificationsForCurrentUser) {
-                    ExpandableNotificationRow row = notificationEntry.getRow();
-                    if (row != null) {
-                        animatedImageNotificationManager.updateAnimatedImageDrawables(row, z || row.isHeadsUp());
-                    }
-                }
-            }
-        });
-        this.notificationEntryManager.addNotificationEntryListener(new NotificationEntryListener() { // from class: com.android.systemui.statusbar.notification.AnimatedImageNotificationManager$bind$3
-            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
-            public void onEntryInflated(@NotNull NotificationEntry entry) {
-                boolean z;
-                Intrinsics.checkNotNullParameter(entry, "entry");
-                ExpandableNotificationRow row = entry.getRow();
-                if (row == null) {
-                    return;
-                }
-                AnimatedImageNotificationManager animatedImageNotificationManager = AnimatedImageNotificationManager.this;
-                z = animatedImageNotificationManager.isStatusBarExpanded;
-                animatedImageNotificationManager.updateAnimatedImageDrawables(row, z || row.isHeadsUp());
-            }
-
-            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
-            public void onEntryReinflated(@NotNull NotificationEntry entry) {
-                Intrinsics.checkNotNullParameter(entry, "entry");
-                onEntryInflated(entry);
-            }
-        });
+        this.headsUpManager.addListener(new AnimatedImageNotificationManager$bind$1(this));
+        this.statusBarStateController.addCallback(new AnimatedImageNotificationManager$bind$2(this));
+        this.bindEventManager.addListener(new AnimatedImageNotificationManager$bind$3(this));
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public final void updateAnimatedImageDrawables(ExpandableNotificationRow expandableNotificationRow, boolean z) {
-        NotificationContentView[] layouts = expandableNotificationRow.getLayouts();
-        Sequence asSequence = layouts == null ? null : ArraysKt___ArraysKt.asSequence(layouts);
-        if (asSequence == null) {
-            asSequence = SequencesKt.emptySequence();
+    /* access modifiers changed from: private */
+    public final Unit updateAnimatedImageDrawables(NotificationEntry notificationEntry) {
+        ExpandableNotificationRow row = notificationEntry.getRow();
+        if (row == null) {
+            return null;
         }
-        for (AnimatedImageDrawable animatedImageDrawable : SequencesKt.mapNotNull(SequencesKt.flatMap(SequencesKt.flatMap(SequencesKt.flatMap(asSequence, AnimatedImageNotificationManager$updateAnimatedImageDrawables$1.INSTANCE), AnimatedImageNotificationManager$updateAnimatedImageDrawables$2.INSTANCE), AnimatedImageNotificationManager$updateAnimatedImageDrawables$3.INSTANCE), AnimatedImageNotificationManager$updateAnimatedImageDrawables$4.INSTANCE)) {
+        updateAnimatedImageDrawables(row, row.isHeadsUp() || this.isStatusBarExpanded);
+        return Unit.INSTANCE;
+    }
+
+    private final void updateAnimatedImageDrawables(ExpandableNotificationRow expandableNotificationRow, boolean z) {
+        Sequence sequence;
+        NotificationContentView[] layouts = expandableNotificationRow.getLayouts();
+        if (layouts == null || (sequence = ArraysKt.asSequence((T[]) layouts)) == null) {
+            sequence = SequencesKt.emptySequence();
+        }
+        for (AnimatedImageDrawable animatedImageDrawable : SequencesKt.mapNotNull(SequencesKt.flatMap(SequencesKt.flatMap(SequencesKt.flatMap(sequence, AnimatedImageNotificationManager$updateAnimatedImageDrawables$2.INSTANCE), AnimatedImageNotificationManager$updateAnimatedImageDrawables$3.INSTANCE), AnimatedImageNotificationManager$updateAnimatedImageDrawables$4.INSTANCE), AnimatedImageNotificationManager$updateAnimatedImageDrawables$5.INSTANCE)) {
             if (z) {
                 animatedImageDrawable.start();
             } else {

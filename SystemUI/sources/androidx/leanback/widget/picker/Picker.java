@@ -1,6 +1,5 @@
 package androidx.leanback.widget.picker;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
@@ -15,18 +14,14 @@ import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
-import androidx.leanback.R$attr;
-import androidx.leanback.R$dimen;
-import androidx.leanback.R$id;
-import androidx.leanback.R$layout;
-import androidx.leanback.R$styleable;
+import androidx.leanback.C0742R;
 import androidx.leanback.widget.OnChildViewHolderSelectedListener;
 import androidx.leanback.widget.VerticalGridView;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class Picker extends FrameLayout {
     private int mAlphaAnimDuration;
     private final OnChildViewHolderSelectedListener mColumnChangeListener;
@@ -46,59 +41,72 @@ public class Picker extends FrameLayout {
     private float mVisibleItems;
     private float mVisibleItemsActivated;
 
-    /* loaded from: classes.dex */
     public interface PickerValueListener {
-        void onValueChanged(Picker picker, int column);
+        void onValueChanged(Picker picker, int i);
     }
 
     public float getVisibleItemCount() {
         return 1.0f;
     }
 
-    public final void setSeparator(CharSequence separator) {
-        setSeparators(Arrays.asList(separator));
+    @Deprecated
+    public final CharSequence getSeparator() {
+        return this.mSeparators.get(0);
     }
 
-    public final void setSeparators(List<CharSequence> separators) {
+    public final void setSeparator(CharSequence charSequence) {
+        setSeparators(Arrays.asList(charSequence));
+    }
+
+    public final List<CharSequence> getSeparators() {
+        return this.mSeparators;
+    }
+
+    public final void setSeparators(List<CharSequence> list) {
         this.mSeparators.clear();
-        this.mSeparators.addAll(separators);
+        this.mSeparators.addAll(list);
     }
 
     public final int getPickerItemLayoutId() {
         return this.mPickerItemLayoutId;
     }
 
+    public final void setPickerItemLayoutId(int i) {
+        this.mPickerItemLayoutId = i;
+    }
+
     public final int getPickerItemTextViewId() {
         return this.mPickerItemTextViewId;
     }
 
-    public Picker(Context context, AttributeSet attributeSet) {
-        this(context, attributeSet, R$attr.pickerStyle);
+    public final void setPickerItemTextViewId(int i) {
+        this.mPickerItemTextViewId = i;
     }
 
-    @SuppressLint({"CustomViewStyleable"})
-    public Picker(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public Picker(Context context, AttributeSet attributeSet) {
+        this(context, attributeSet, C0742R.attr.pickerStyle);
+    }
+
+    public Picker(Context context, AttributeSet attributeSet, int i) {
+        super(context, attributeSet, i);
         this.mColumnViews = new ArrayList();
         this.mVisibleItemsActivated = 3.0f;
         this.mVisibleItems = 1.0f;
         this.mSelectedColumn = 0;
         this.mSeparators = new ArrayList();
-        this.mColumnChangeListener = new OnChildViewHolderSelectedListener() { // from class: androidx.leanback.widget.picker.Picker.1
-            @Override // androidx.leanback.widget.OnChildViewHolderSelectedListener
-            public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
-                int indexOf = Picker.this.mColumnViews.indexOf((VerticalGridView) parent);
+        this.mColumnChangeListener = new OnChildViewHolderSelectedListener() {
+            public void onChildViewHolderSelected(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, int i, int i2) {
+                int indexOf = Picker.this.mColumnViews.indexOf((VerticalGridView) recyclerView);
                 Picker.this.updateColumnAlpha(indexOf, true);
-                if (child != null) {
-                    Picker.this.onColumnValueChanged(indexOf, Picker.this.mColumns.get(indexOf).getMinValue() + position);
+                if (viewHolder != null) {
+                    Picker.this.onColumnValueChanged(indexOf, Picker.this.mColumns.get(indexOf).getMinValue() + i);
                 }
             }
         };
-        int[] iArr = R$styleable.lbPicker;
-        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attrs, iArr, defStyleAttr, 0);
-        ViewCompat.saveAttributeDataForStyleable(this, context, iArr, attrs, obtainStyledAttributes, defStyleAttr, 0);
-        this.mPickerItemLayoutId = obtainStyledAttributes.getResourceId(R$styleable.lbPicker_pickerItemLayout, R$layout.lb_picker_item);
-        this.mPickerItemTextViewId = obtainStyledAttributes.getResourceId(R$styleable.lbPicker_pickerItemTextViewId, 0);
+        TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, C0742R.styleable.lbPicker, i, 0);
+        ViewCompat.saveAttributeDataForStyleable(this, context, C0742R.styleable.lbPicker, attributeSet, obtainStyledAttributes, i, 0);
+        this.mPickerItemLayoutId = obtainStyledAttributes.getResourceId(C0742R.styleable.lbPicker_pickerItemLayout, C0742R.layout.lb_picker_item);
+        this.mPickerItemTextViewId = obtainStyledAttributes.getResourceId(C0742R.styleable.lbPicker_pickerItemTextViewId, 0);
         obtainStyledAttributes.recycle();
         setEnabled(true);
         setDescendantFocusability(262144);
@@ -108,15 +116,15 @@ public class Picker extends FrameLayout {
         this.mInvisibleColumnAlpha = 0.0f;
         this.mAlphaAnimDuration = 200;
         this.mDecelerateInterpolator = new DecelerateInterpolator(2.5f);
-        this.mPickerView = (ViewGroup) ((ViewGroup) LayoutInflater.from(getContext()).inflate(R$layout.lb_picker, (ViewGroup) this, true)).findViewById(R$id.picker);
+        this.mPickerView = (ViewGroup) ((ViewGroup) LayoutInflater.from(getContext()).inflate(C0742R.layout.lb_picker, this, true)).findViewById(C0742R.C0745id.picker);
     }
 
-    public PickerColumn getColumnAt(int colIndex) {
+    public PickerColumn getColumnAt(int i) {
         ArrayList<PickerColumn> arrayList = this.mColumns;
         if (arrayList == null) {
             return null;
         }
-        return arrayList.get(colIndex);
+        return arrayList.get(i);
     }
 
     public int getColumnsCount() {
@@ -127,199 +135,205 @@ public class Picker extends FrameLayout {
         return arrayList.size();
     }
 
-    public void setColumns(List<PickerColumn> columns) {
-        if (this.mSeparators.size() == 0) {
-            throw new IllegalStateException("Separators size is: " + this.mSeparators.size() + ". At least one separator must be provided");
-        }
-        if (this.mSeparators.size() == 1) {
-            CharSequence charSequence = this.mSeparators.get(0);
-            this.mSeparators.clear();
-            this.mSeparators.add("");
-            for (int i = 0; i < columns.size() - 1; i++) {
-                this.mSeparators.add(charSequence);
+    public void setColumns(List<PickerColumn> list) {
+        if (this.mSeparators.size() != 0) {
+            if (this.mSeparators.size() == 1) {
+                CharSequence charSequence = this.mSeparators.get(0);
+                this.mSeparators.clear();
+                this.mSeparators.add("");
+                for (int i = 0; i < list.size() - 1; i++) {
+                    this.mSeparators.add(charSequence);
+                }
+                this.mSeparators.add("");
+            } else if (this.mSeparators.size() != list.size() + 1) {
+                throw new IllegalStateException("Separators size: " + this.mSeparators.size() + " mustequal the size of columns: " + list.size() + " + 1");
             }
-            this.mSeparators.add("");
-        } else if (this.mSeparators.size() != columns.size() + 1) {
-            throw new IllegalStateException("Separators size: " + this.mSeparators.size() + " mustequal the size of columns: " + columns.size() + " + 1");
-        }
-        this.mColumnViews.clear();
-        this.mPickerView.removeAllViews();
-        ArrayList<PickerColumn> arrayList = new ArrayList<>(columns);
-        this.mColumns = arrayList;
-        if (this.mSelectedColumn > arrayList.size() - 1) {
-            this.mSelectedColumn = this.mColumns.size() - 1;
-        }
-        LayoutInflater from = LayoutInflater.from(getContext());
-        int columnsCount = getColumnsCount();
-        if (!TextUtils.isEmpty(this.mSeparators.get(0))) {
-            TextView textView = (TextView) from.inflate(R$layout.lb_picker_separator, this.mPickerView, false);
-            textView.setText(this.mSeparators.get(0));
-            this.mPickerView.addView(textView);
-        }
-        int i2 = 0;
-        while (i2 < columnsCount) {
-            VerticalGridView verticalGridView = (VerticalGridView) from.inflate(R$layout.lb_picker_column, this.mPickerView, false);
-            updateColumnSize(verticalGridView);
-            verticalGridView.setWindowAlignment(0);
-            verticalGridView.setHasFixedSize(false);
-            verticalGridView.setFocusable(isActivated());
-            verticalGridView.setItemViewCacheSize(0);
-            this.mColumnViews.add(verticalGridView);
-            this.mPickerView.addView(verticalGridView);
-            int i3 = i2 + 1;
-            if (!TextUtils.isEmpty(this.mSeparators.get(i3))) {
-                TextView textView2 = (TextView) from.inflate(R$layout.lb_picker_separator, this.mPickerView, false);
-                textView2.setText(this.mSeparators.get(i3));
-                this.mPickerView.addView(textView2);
+            this.mColumnViews.clear();
+            this.mPickerView.removeAllViews();
+            ArrayList<PickerColumn> arrayList = new ArrayList<>(list);
+            this.mColumns = arrayList;
+            if (this.mSelectedColumn > arrayList.size() - 1) {
+                this.mSelectedColumn = this.mColumns.size() - 1;
             }
-            verticalGridView.setAdapter(new PickerScrollArrayAdapter(getPickerItemLayoutId(), getPickerItemTextViewId(), i2));
-            verticalGridView.setOnChildViewHolderSelectedListener(this.mColumnChangeListener);
-            i2 = i3;
+            LayoutInflater from = LayoutInflater.from(getContext());
+            int columnsCount = getColumnsCount();
+            if (!TextUtils.isEmpty(this.mSeparators.get(0))) {
+                TextView textView = (TextView) from.inflate(C0742R.layout.lb_picker_separator, this.mPickerView, false);
+                textView.setText(this.mSeparators.get(0));
+                this.mPickerView.addView(textView);
+            }
+            int i2 = 0;
+            while (i2 < columnsCount) {
+                VerticalGridView verticalGridView = (VerticalGridView) from.inflate(C0742R.layout.lb_picker_column, this.mPickerView, false);
+                updateColumnSize(verticalGridView);
+                verticalGridView.setWindowAlignment(0);
+                verticalGridView.setHasFixedSize(false);
+                verticalGridView.setFocusable(isActivated());
+                verticalGridView.setItemViewCacheSize(0);
+                this.mColumnViews.add(verticalGridView);
+                this.mPickerView.addView(verticalGridView);
+                int i3 = i2 + 1;
+                if (!TextUtils.isEmpty(this.mSeparators.get(i3))) {
+                    TextView textView2 = (TextView) from.inflate(C0742R.layout.lb_picker_separator, this.mPickerView, false);
+                    textView2.setText(this.mSeparators.get(i3));
+                    this.mPickerView.addView(textView2);
+                }
+                verticalGridView.setAdapter(new PickerScrollArrayAdapter(getPickerItemLayoutId(), getPickerItemTextViewId(), i2));
+                verticalGridView.setOnChildViewHolderSelectedListener(this.mColumnChangeListener);
+                i2 = i3;
+            }
+            return;
         }
+        throw new IllegalStateException("Separators size is: " + this.mSeparators.size() + ". At least one separator must be provided");
     }
 
-    public void setColumnAt(int columnIndex, PickerColumn column) {
-        this.mColumns.set(columnIndex, column);
-        VerticalGridView verticalGridView = this.mColumnViews.get(columnIndex);
+    public void setColumnAt(int i, PickerColumn pickerColumn) {
+        this.mColumns.set(i, pickerColumn);
+        VerticalGridView verticalGridView = this.mColumnViews.get(i);
         PickerScrollArrayAdapter pickerScrollArrayAdapter = (PickerScrollArrayAdapter) verticalGridView.getAdapter();
         if (pickerScrollArrayAdapter != null) {
             pickerScrollArrayAdapter.notifyDataSetChanged();
         }
-        verticalGridView.setSelectedPosition(column.getCurrentValue() - column.getMinValue());
+        verticalGridView.setSelectedPosition(pickerColumn.getCurrentValue() - pickerColumn.getMinValue());
     }
 
-    public void setColumnValue(int columnIndex, int value, boolean runAnimation) {
-        PickerColumn pickerColumn = this.mColumns.get(columnIndex);
-        if (pickerColumn.getCurrentValue() != value) {
-            pickerColumn.setCurrentValue(value);
-            notifyValueChanged(columnIndex);
-            VerticalGridView verticalGridView = this.mColumnViews.get(columnIndex);
-            if (verticalGridView == null) {
-                return;
-            }
-            int minValue = value - this.mColumns.get(columnIndex).getMinValue();
-            if (runAnimation) {
-                verticalGridView.setSelectedPositionSmooth(minValue);
-            } else {
-                verticalGridView.setSelectedPosition(minValue);
+    public void setColumnValue(int i, int i2, boolean z) {
+        PickerColumn pickerColumn = this.mColumns.get(i);
+        if (pickerColumn.getCurrentValue() != i2) {
+            pickerColumn.setCurrentValue(i2);
+            notifyValueChanged(i);
+            VerticalGridView verticalGridView = this.mColumnViews.get(i);
+            if (verticalGridView != null) {
+                int minValue = i2 - this.mColumns.get(i).getMinValue();
+                if (z) {
+                    verticalGridView.setSelectedPositionSmooth(minValue);
+                } else {
+                    verticalGridView.setSelectedPosition(minValue);
+                }
             }
         }
     }
 
-    private void notifyValueChanged(int columnIndex) {
+    private void notifyValueChanged(int i) {
         ArrayList<PickerValueListener> arrayList = this.mListeners;
         if (arrayList != null) {
             for (int size = arrayList.size() - 1; size >= 0; size--) {
-                this.mListeners.get(size).onValueChanged(this, columnIndex);
+                this.mListeners.get(size).onValueChanged(this, i);
             }
         }
     }
 
-    void updateColumnAlpha(int colIndex, boolean animate) {
-        VerticalGridView verticalGridView = this.mColumnViews.get(colIndex);
+    public void addOnValueChangedListener(PickerValueListener pickerValueListener) {
+        if (this.mListeners == null) {
+            this.mListeners = new ArrayList<>();
+        }
+        this.mListeners.add(pickerValueListener);
+    }
+
+    public void removeOnValueChangedListener(PickerValueListener pickerValueListener) {
+        ArrayList<PickerValueListener> arrayList = this.mListeners;
+        if (arrayList != null) {
+            arrayList.remove((Object) pickerValueListener);
+        }
+    }
+
+    /* access modifiers changed from: package-private */
+    public void updateColumnAlpha(int i, boolean z) {
+        VerticalGridView verticalGridView = this.mColumnViews.get(i);
         int selectedPosition = verticalGridView.getSelectedPosition();
-        int i = 0;
-        while (i < verticalGridView.getAdapter().getItemCount()) {
-            View findViewByPosition = verticalGridView.getLayoutManager().findViewByPosition(i);
+        int i2 = 0;
+        while (i2 < verticalGridView.getAdapter().getItemCount()) {
+            View findViewByPosition = verticalGridView.getLayoutManager().findViewByPosition(i2);
             if (findViewByPosition != null) {
-                setOrAnimateAlpha(findViewByPosition, selectedPosition == i, colIndex, animate);
+                setOrAnimateAlpha(findViewByPosition, selectedPosition == i2, i, z);
             }
-            i++;
+            i2++;
         }
     }
 
-    void setOrAnimateAlpha(View view, boolean selected, int colIndex, boolean animate) {
-        boolean z = colIndex == this.mSelectedColumn || !hasFocus();
-        if (selected) {
-            if (z) {
-                setOrAnimateAlpha(view, animate, this.mFocusedAlpha, -1.0f, this.mDecelerateInterpolator);
+    /* access modifiers changed from: package-private */
+    public void setOrAnimateAlpha(View view, boolean z, int i, boolean z2) {
+        boolean z3 = i == this.mSelectedColumn || !hasFocus();
+        if (z) {
+            if (z3) {
+                setOrAnimateAlpha(view, z2, this.mFocusedAlpha, -1.0f, this.mDecelerateInterpolator);
             } else {
-                setOrAnimateAlpha(view, animate, this.mUnfocusedAlpha, -1.0f, this.mDecelerateInterpolator);
+                setOrAnimateAlpha(view, z2, this.mUnfocusedAlpha, -1.0f, this.mDecelerateInterpolator);
             }
-        } else if (z) {
-            setOrAnimateAlpha(view, animate, this.mVisibleColumnAlpha, -1.0f, this.mDecelerateInterpolator);
+        } else if (z3) {
+            setOrAnimateAlpha(view, z2, this.mVisibleColumnAlpha, -1.0f, this.mDecelerateInterpolator);
         } else {
-            setOrAnimateAlpha(view, animate, this.mInvisibleColumnAlpha, -1.0f, this.mDecelerateInterpolator);
+            setOrAnimateAlpha(view, z2, this.mInvisibleColumnAlpha, -1.0f, this.mDecelerateInterpolator);
         }
     }
 
-    private void setOrAnimateAlpha(View view, boolean animate, float destAlpha, float startAlpha, Interpolator interpolator) {
+    private void setOrAnimateAlpha(View view, boolean z, float f, float f2, Interpolator interpolator) {
         view.animate().cancel();
-        if (!animate) {
-            view.setAlpha(destAlpha);
+        if (!z) {
+            view.setAlpha(f);
             return;
         }
-        if (startAlpha >= 0.0f) {
-            view.setAlpha(startAlpha);
+        if (f2 >= 0.0f) {
+            view.setAlpha(f2);
         }
-        view.animate().alpha(destAlpha).setDuration(this.mAlphaAnimDuration).setInterpolator(interpolator).start();
+        view.animate().alpha(f).setDuration((long) this.mAlphaAnimDuration).setInterpolator(interpolator).start();
     }
 
-    public void onColumnValueChanged(int columnIndex, int newValue) {
-        PickerColumn pickerColumn = this.mColumns.get(columnIndex);
-        if (pickerColumn.getCurrentValue() != newValue) {
-            pickerColumn.setCurrentValue(newValue);
-            notifyValueChanged(columnIndex);
+    public void onColumnValueChanged(int i, int i2) {
+        PickerColumn pickerColumn = this.mColumns.get(i);
+        if (pickerColumn.getCurrentValue() != i2) {
+            pickerColumn.setCurrentValue(i2);
+            notifyValueChanged(i);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    /* loaded from: classes.dex */
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView textView;
 
-        ViewHolder(View v, TextView textView) {
-            super(v);
-            this.textView = textView;
+        ViewHolder(View view, TextView textView2) {
+            super(view);
+            this.textView = textView2;
         }
     }
 
-    /* loaded from: classes.dex */
     class PickerScrollArrayAdapter extends RecyclerView.Adapter<ViewHolder> {
         private final int mColIndex;
         private PickerColumn mData;
         private final int mResource;
         private final int mTextViewResourceId;
 
-        PickerScrollArrayAdapter(int resource, int textViewResourceId, int colIndex) {
-            this.mResource = resource;
-            this.mColIndex = colIndex;
-            this.mTextViewResourceId = textViewResourceId;
-            this.mData = Picker.this.mColumns.get(colIndex);
+        PickerScrollArrayAdapter(int i, int i2, int i3) {
+            this.mResource = i;
+            this.mColIndex = i3;
+            this.mTextViewResourceId = i2;
+            this.mData = Picker.this.mColumns.get(i3);
         }
 
-        /* JADX WARN: Can't rename method to resolve collision */
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        /* renamed from: onCreateViewHolder */
-        public ViewHolder mo1838onCreateViewHolder(ViewGroup parent, int viewType) {
+        public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             TextView textView;
-            View inflate = LayoutInflater.from(parent.getContext()).inflate(this.mResource, parent, false);
-            int i = this.mTextViewResourceId;
-            if (i != 0) {
-                textView = (TextView) inflate.findViewById(i);
+            View inflate = LayoutInflater.from(viewGroup.getContext()).inflate(this.mResource, viewGroup, false);
+            int i2 = this.mTextViewResourceId;
+            if (i2 != 0) {
+                textView = (TextView) inflate.findViewById(i2);
             } else {
                 textView = (TextView) inflate;
             }
             return new ViewHolder(inflate, textView);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            PickerColumn pickerColumn;
-            TextView textView = holder.textView;
-            if (textView != null && (pickerColumn = this.mData) != null) {
-                textView.setText(pickerColumn.getLabelFor(pickerColumn.getMinValue() + position));
+        public void onBindViewHolder(ViewHolder viewHolder, int i) {
+            if (!(viewHolder.textView == null || this.mData == null)) {
+                TextView textView = viewHolder.textView;
+                PickerColumn pickerColumn = this.mData;
+                textView.setText(pickerColumn.getLabelFor(pickerColumn.getMinValue() + i));
             }
-            Picker picker = Picker.this;
-            picker.setOrAnimateAlpha(holder.itemView, picker.mColumnViews.get(this.mColIndex).getSelectedPosition() == position, this.mColIndex, false);
+            Picker.this.setOrAnimateAlpha(viewHolder.itemView, Picker.this.mColumnViews.get(this.mColIndex).getSelectedPosition() == i, this.mColIndex, false);
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-        public void onViewAttachedToWindow(ViewHolder holder) {
-            holder.itemView.setFocusable(Picker.this.isActivated());
+        public void onViewAttachedToWindow(ViewHolder viewHolder) {
+            viewHolder.itemView.setFocusable(Picker.this.isActivated());
         }
 
-        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
         public int getItemCount() {
             PickerColumn pickerColumn = this.mData;
             if (pickerColumn == null) {
@@ -329,32 +343,32 @@ public class Picker extends FrameLayout {
         }
     }
 
-    @Override // android.view.ViewGroup, android.view.View
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        if (isActivated()) {
-            int keyCode = event.getKeyCode();
-            if (keyCode == 23 || keyCode == 66) {
-                if (event.getAction() == 1) {
-                    performClick();
-                }
-                return true;
-            }
-            return super.dispatchKeyEvent(event);
+    public boolean dispatchKeyEvent(KeyEvent keyEvent) {
+        if (!isActivated()) {
+            return super.dispatchKeyEvent(keyEvent);
         }
-        return super.dispatchKeyEvent(event);
+        int keyCode = keyEvent.getKeyCode();
+        if (keyCode != 23 && keyCode != 66) {
+            return super.dispatchKeyEvent(keyEvent);
+        }
+        if (keyEvent.getAction() == 1) {
+            performClick();
+        }
+        return true;
     }
 
-    @Override // android.view.ViewGroup
-    protected boolean onRequestFocusInDescendants(int direction, Rect previouslyFocusedRect) {
+    /* access modifiers changed from: protected */
+    public boolean onRequestFocusInDescendants(int i, Rect rect) {
         int selectedColumn = getSelectedColumn();
         if (selectedColumn < 0 || selectedColumn >= this.mColumnViews.size()) {
             return false;
         }
-        return this.mColumnViews.get(selectedColumn).requestFocus(direction, previouslyFocusedRect);
+        return this.mColumnViews.get(selectedColumn).requestFocus(i, rect);
     }
 
-    protected int getPickerItemHeightPixels() {
-        return getContext().getResources().getDimensionPixelSize(R$dimen.picker_item_height);
+    /* access modifiers changed from: protected */
+    public int getPickerItemHeightPixels() {
+        return getContext().getResources().getDimensionPixelSize(C0742R.dimen.picker_item_height);
     }
 
     private void updateColumnSize() {
@@ -363,11 +377,11 @@ public class Picker extends FrameLayout {
         }
     }
 
-    private void updateColumnSize(VerticalGridView columnView) {
-        ViewGroup.LayoutParams layoutParams = columnView.getLayoutParams();
+    private void updateColumnSize(VerticalGridView verticalGridView) {
+        ViewGroup.LayoutParams layoutParams = verticalGridView.getLayoutParams();
         float activatedVisibleItemCount = isActivated() ? getActivatedVisibleItemCount() : getVisibleItemCount();
-        layoutParams.height = (int) ((getPickerItemHeightPixels() * activatedVisibleItemCount) + (columnView.getVerticalSpacing() * (activatedVisibleItemCount - 1.0f)));
-        columnView.setLayoutParams(layoutParams);
+        layoutParams.height = (int) ((((float) getPickerItemHeightPixels()) * activatedVisibleItemCount) + (((float) verticalGridView.getVerticalSpacing()) * (activatedVisibleItemCount - 1.0f)));
+        verticalGridView.setLayoutParams(layoutParams);
     }
 
     private void updateItemFocusable() {
@@ -384,33 +398,53 @@ public class Picker extends FrameLayout {
         return this.mVisibleItemsActivated;
     }
 
-    @Override // android.view.View
-    public void setActivated(boolean activated) {
-        if (activated == isActivated()) {
-            super.setActivated(activated);
+    public void setActivatedVisibleItemCount(float f) {
+        if (f <= 0.0f) {
+            throw new IllegalArgumentException();
+        } else if (this.mVisibleItemsActivated != f) {
+            this.mVisibleItemsActivated = f;
+            if (isActivated()) {
+                updateColumnSize();
+            }
+        }
+    }
+
+    public void setVisibleItemCount(float f) {
+        if (f <= 0.0f) {
+            throw new IllegalArgumentException();
+        } else if (this.mVisibleItems != f) {
+            this.mVisibleItems = f;
+            if (!isActivated()) {
+                updateColumnSize();
+            }
+        }
+    }
+
+    public void setActivated(boolean z) {
+        if (z == isActivated()) {
+            super.setActivated(z);
             return;
         }
-        super.setActivated(activated);
+        super.setActivated(z);
         boolean hasFocus = hasFocus();
         int selectedColumn = getSelectedColumn();
         setDescendantFocusability(131072);
-        if (!activated && hasFocus && isFocusable()) {
+        if (!z && hasFocus && isFocusable()) {
             requestFocus();
         }
         for (int i = 0; i < getColumnsCount(); i++) {
-            this.mColumnViews.get(i).setFocusable(activated);
+            this.mColumnViews.get(i).setFocusable(z);
         }
         updateColumnSize();
         updateItemFocusable();
-        if (activated && hasFocus && selectedColumn >= 0) {
+        if (z && hasFocus && selectedColumn >= 0) {
             this.mColumnViews.get(selectedColumn).requestFocus();
         }
         setDescendantFocusability(262144);
     }
 
-    @Override // android.view.ViewGroup, android.view.ViewParent
-    public void requestChildFocus(View child, View focused) {
-        super.requestChildFocus(child, focused);
+    public void requestChildFocus(View view, View view2) {
+        super.requestChildFocus(view, view2);
         for (int i = 0; i < this.mColumnViews.size(); i++) {
             if (this.mColumnViews.get(i).hasFocus()) {
                 setSelectedColumn(i);
@@ -418,18 +452,17 @@ public class Picker extends FrameLayout {
         }
     }
 
-    public void setSelectedColumn(int columnIndex) {
-        if (this.mSelectedColumn != columnIndex) {
-            this.mSelectedColumn = columnIndex;
-            for (int i = 0; i < this.mColumnViews.size(); i++) {
-                updateColumnAlpha(i, true);
+    public void setSelectedColumn(int i) {
+        if (this.mSelectedColumn != i) {
+            this.mSelectedColumn = i;
+            for (int i2 = 0; i2 < this.mColumnViews.size(); i2++) {
+                updateColumnAlpha(i2, true);
             }
         }
-        VerticalGridView verticalGridView = this.mColumnViews.get(columnIndex);
-        if (!hasFocus() || verticalGridView.hasFocus()) {
-            return;
+        VerticalGridView verticalGridView = this.mColumnViews.get(i);
+        if (hasFocus() && !verticalGridView.hasFocus()) {
+            verticalGridView.requestFocus();
         }
-        verticalGridView.requestFocus();
     }
 
     public int getSelectedColumn() {

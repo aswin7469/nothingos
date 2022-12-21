@@ -5,7 +5,7 @@ import android.os.Looper;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class SysUIConcurrencyModule_ProvideBgHandlerFactory implements Factory<Handler> {
     private final Provider<Looper> bgLooperProvider;
 
@@ -13,10 +13,8 @@ public final class SysUIConcurrencyModule_ProvideBgHandlerFactory implements Fac
         this.bgLooperProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public Handler mo1933get() {
-        return provideBgHandler(this.bgLooperProvider.mo1933get());
+    public Handler get() {
+        return provideBgHandler(this.bgLooperProvider.get());
     }
 
     public static SysUIConcurrencyModule_ProvideBgHandlerFactory create(Provider<Looper> provider) {

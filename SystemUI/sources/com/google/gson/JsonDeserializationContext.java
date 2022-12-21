@@ -1,4 +1,7 @@
 package com.google.gson;
-/* loaded from: classes2.dex */
+
+import java.lang.reflect.Type;
+
 public interface JsonDeserializationContext {
+    <T> T deserialize(JsonElement jsonElement, Type type) throws JsonParseException;
 }

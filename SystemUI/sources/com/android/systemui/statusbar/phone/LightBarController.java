@@ -1,21 +1,28 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.view.InsetsFlags;
 import android.view.ViewDebug;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.view.AppearanceRegion;
+import com.android.systemui.C1893R;
 import com.android.systemui.Dumpable;
-import com.android.systemui.R$color;
+import com.android.systemui.dagger.SysUISingleton;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.navigationbar.NavigationModeController;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.shared.system.QuickStepContract;
 import com.android.systemui.statusbar.policy.BatteryController;
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-/* loaded from: classes.dex */
+import java.p026io.PrintWriter;
+import java.util.ArrayList;
+import javax.inject.Inject;
+
+@SysUISingleton
 public class LightBarController implements BatteryController.BatteryStateChangeCallback, Dumpable {
+    private static final float NAV_BAR_INVERSION_SCRIM_ALPHA_THRESHOLD = 0.1f;
     private int mAppearance;
     private AppearanceRegion[] mAppearanceRegions = new AppearanceRegion[0];
     private final BatteryController mBatteryController;
@@ -30,6 +37,7 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
     private boolean mNavigationLight;
     private int mNavigationMode;
     private boolean mQsCustomizing;
+    private Resources mResources;
     private final SysuiDarkIconDispatcher mStatusBarIconController;
     private int mStatusBarMode;
 
@@ -37,21 +45,22 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
         return (i2 == 0 || i2 == 6) && ((i & i3) != 0);
     }
 
-    public LightBarController(Context context, DarkIconDispatcher darkIconDispatcher, BatteryController batteryController, NavigationModeController navigationModeController) {
-        this.mDarkModeColor = Color.valueOf(context.getColor(R$color.dark_mode_icon_color_single_tone));
+    @Inject
+    public LightBarController(Context context, DarkIconDispatcher darkIconDispatcher, BatteryController batteryController, NavigationModeController navigationModeController, DumpManager dumpManager) {
+        this.mDarkModeColor = Color.valueOf(context.getColor(C1893R.C1894color.dark_mode_icon_color_single_tone));
         this.mStatusBarIconController = (SysuiDarkIconDispatcher) darkIconDispatcher;
         this.mBatteryController = batteryController;
         batteryController.addCallback(this);
-        this.mNavigationMode = navigationModeController.addListener(new NavigationModeController.ModeChangedListener() { // from class: com.android.systemui.statusbar.phone.LightBarController$$ExternalSyntheticLambda0
-            @Override // com.android.systemui.navigationbar.NavigationModeController.ModeChangedListener
-            public final void onNavigationModeChanged(int i) {
-                LightBarController.this.lambda$new$0(i);
-            }
-        });
+        this.mNavigationMode = navigationModeController.addListener(new LightBarController$$ExternalSyntheticLambda0(this));
+        if (context.getDisplayId() == 0) {
+            dumpManager.registerDumpable(getClass().getSimpleName(), this);
+        }
+        this.mResources = context.getResources();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$new$0(int i) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$new$0$com-android-systemui-statusbar-phone-LightBarController */
+    public /* synthetic */ void mo44370x3a2764af(int i) {
         this.mNavigationMode = i;
     }
 
@@ -64,7 +73,7 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
         this.mBiometricUnlockController = biometricUnlockController;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onStatusBarAppearanceChanged(AppearanceRegion[] appearanceRegionArr, boolean z, int i, boolean z2) {
         int length = appearanceRegionArr.length;
         boolean z3 = this.mAppearanceRegions.length != length;
@@ -78,26 +87,26 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
         this.mNavbarColorManagedByIme = z2;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onStatusBarModeChanged(int i) {
         this.mStatusBarMode = i;
         updateStatus();
     }
 
     public void onNavigationBarAppearanceChanged(int i, boolean z, int i2, boolean z2) {
-        if (((this.mAppearance ^ i) & 16) != 0 || z) {
-            boolean z3 = this.mNavigationLight;
-            boolean isLight = isLight(i, i2, 16);
-            this.mHasLightNavigationBar = isLight;
-            boolean z4 = isLight && ((this.mDirectReplying && this.mNavbarColorManagedByIme) || !this.mForceDarkForScrim) && !this.mQsCustomizing;
-            this.mNavigationLight = z4;
-            if (z4 != z3) {
-                updateNavigation();
-            }
+        if (i2 == 4) {
+            updateOpaqueNavigation();
         }
         this.mAppearance = i;
         this.mNavigationBarMode = i2;
         this.mNavbarColorManagedByIme = z2;
+    }
+
+    private void updateOpaqueNavigation() {
+        if (!QuickStepContract.isGesturalMode(this.mNavigationMode)) {
+            this.mNavigationLight = !((this.mResources.getConfiguration().uiMode & 48) == 32);
+            updateNavigation();
+        }
     }
 
     public void onNavigationBarModeChanged(int i) {
@@ -110,72 +119,67 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
     }
 
     public void setQsCustomizing(boolean z) {
-        if (this.mQsCustomizing == z) {
-            return;
+        if (this.mQsCustomizing != z) {
+            this.mQsCustomizing = z;
+            reevaluate();
         }
-        this.mQsCustomizing = z;
-        reevaluate();
     }
 
     public void setDirectReplying(boolean z) {
-        if (this.mDirectReplying == z) {
-            return;
+        if (this.mDirectReplying != z) {
+            this.mDirectReplying = z;
+            reevaluate();
         }
-        this.mDirectReplying = z;
-        reevaluate();
     }
 
     public void setScrimState(ScrimState scrimState, float f, ColorExtractor.GradientColors gradientColors) {
         boolean z = this.mForceDarkForScrim;
         boolean z2 = scrimState != ScrimState.BOUNCER && scrimState != ScrimState.BOUNCER_SCRIMMED && f >= 0.1f && !gradientColors.supportsDarkText();
         this.mForceDarkForScrim = z2;
-        if (!this.mHasLightNavigationBar || z2 == z) {
-            return;
+        if (this.mHasLightNavigationBar && z2 != z) {
+            reevaluate();
         }
-        reevaluate();
     }
 
     private boolean animateChange() {
         int mode;
         BiometricUnlockController biometricUnlockController = this.mBiometricUnlockController;
-        return (biometricUnlockController == null || (mode = biometricUnlockController.getMode()) == 2 || mode == 1) ? false : true;
+        if (biometricUnlockController == null || (mode = biometricUnlockController.getMode()) == 2 || mode == 1) {
+            return false;
+        }
+        return true;
     }
 
     private void updateStatus() {
-        int length = this.mAppearanceRegions.length;
-        int i = -1;
-        int i2 = 0;
-        for (int i3 = 0; i3 < length; i3++) {
-            if (isLight(this.mAppearanceRegions[i3].getAppearance(), this.mStatusBarMode, 8)) {
-                i2++;
-                i = i3;
+        ArrayList arrayList = new ArrayList();
+        for (AppearanceRegion appearanceRegion : this.mAppearanceRegions) {
+            if (isLight(appearanceRegion.getAppearance(), this.mStatusBarMode, 8)) {
+                arrayList.add(appearanceRegion.getBounds());
             }
         }
-        if (i2 == length) {
-            this.mStatusBarIconController.setIconsDarkArea(null);
-            this.mStatusBarIconController.getTransitionsController().setIconsDark(true, animateChange());
-        } else if (i2 == 0) {
+        if (arrayList.isEmpty()) {
             this.mStatusBarIconController.getTransitionsController().setIconsDark(false, animateChange());
+        } else if (arrayList.size() == r0) {
+            this.mStatusBarIconController.setIconsDarkArea((ArrayList<Rect>) null);
+            this.mStatusBarIconController.getTransitionsController().setIconsDark(true, animateChange());
         } else {
-            this.mStatusBarIconController.setIconsDarkArea(this.mAppearanceRegions[i].getBounds());
+            this.mStatusBarIconController.setIconsDarkArea(arrayList);
             this.mStatusBarIconController.getTransitionsController().setIconsDark(true, animateChange());
         }
     }
 
     private void updateNavigation() {
-        if (this.mNavigationBarController == null || QuickStepContract.isGesturalMode(this.mNavigationMode)) {
-            return;
+        LightBarTransitionsController lightBarTransitionsController = this.mNavigationBarController;
+        if (lightBarTransitionsController != null && lightBarTransitionsController.supportsIconTintForNavMode(this.mNavigationMode)) {
+            this.mNavigationBarController.setIconsDark(this.mNavigationLight, animateChange());
         }
-        this.mNavigationBarController.setIconsDark(this.mNavigationLight, animateChange());
     }
 
-    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onPowerSaveChanged(boolean z) {
         reevaluate();
     }
 
-    @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(PrintWriter printWriter, String[] strArr) {
         printWriter.println("LightBarController: ");
         printWriter.print(" mAppearance=");
         printWriter.println(ViewDebug.flagsToString(InsetsFlags.class, "appearance", this.mAppearance));
@@ -209,13 +213,32 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
         LightBarTransitionsController transitionsController = this.mStatusBarIconController.getTransitionsController();
         if (transitionsController != null) {
             printWriter.println(" StatusBarTransitionsController:");
-            transitionsController.dump(fileDescriptor, printWriter, strArr);
+            transitionsController.dump(printWriter, strArr);
             printWriter.println();
         }
         if (this.mNavigationBarController != null) {
             printWriter.println(" NavigationBarTransitionsController:");
-            this.mNavigationBarController.dump(fileDescriptor, printWriter, strArr);
+            this.mNavigationBarController.dump(printWriter, strArr);
             printWriter.println();
+        }
+    }
+
+    public static class Factory {
+        private final BatteryController mBatteryController;
+        private final DarkIconDispatcher mDarkIconDispatcher;
+        private final DumpManager mDumpManager;
+        private final NavigationModeController mNavModeController;
+
+        @Inject
+        public Factory(DarkIconDispatcher darkIconDispatcher, BatteryController batteryController, NavigationModeController navigationModeController, DumpManager dumpManager) {
+            this.mDarkIconDispatcher = darkIconDispatcher;
+            this.mBatteryController = batteryController;
+            this.mNavModeController = navigationModeController;
+            this.mDumpManager = dumpManager;
+        }
+
+        public LightBarController create(Context context) {
+            return new LightBarController(context, this.mDarkIconDispatcher, this.mBatteryController, this.mNavModeController, this.mDumpManager);
         }
     }
 }

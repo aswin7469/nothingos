@@ -24,6 +24,12 @@
         <item quantity="many">Дададзена %s элементаў кіравання.</item>
         <item quantity="other">Дададзена %s элемента кіравання.</item>
     </plurals>
+    <plurals name="fgs_manager_footer_label">
+        <item quantity="one">%s праграма актыўная</item>
+        <item quantity="few">%s праграмы актыўныя</item>
+        <item quantity="many">%s праграм актыўныя</item>
+        <item quantity="other">%s праграмы актыўныя</item>
+    </plurals>
     <plurals name="kg_password_default_pin_message">
         <item quantity="one">Увядзіце PIN-код SIM-карты. У вас засталася %d спроба.</item>
         <item quantity="few">Увядзіце PIN-код SIM-карты. У вас засталося %d спробы.</item>
@@ -42,35 +48,15 @@
         <item quantity="many">Няправільны PIN-код SIM-карты, у вас засталіся %d спроб.</item>
         <item quantity="other">Няправільны PIN-код SIM-карты, у вас засталіся %d спробы.</item>
     </plurals>
+    <plurals name="kg_password_wrong_pin_code_multi_sim">
+        <item quantity="one">Няправільны PIN-код SIM-карты%d, у вас засталося яшчэ %d спроба, перш чым вам трэба будзе звязацца са сваім аператарам, каб разблакіраваць прыладу.</item>
+        <item quantity="other">Няправільны PIN-код SIM-карты%d , у вас засталося %d спробаў.</item>
+    </plurals>
     <plurals name="kg_password_wrong_puk_code">
         <item quantity="one">Няправільны PUK-код SIM-карты, у вас засталася %d спроба перад тым, як SIM-карта перастане працаваць назаўжды.</item>
         <item quantity="few">Няправільны PUK-код SIM-карты, у вас засталіся %d спробы перад тым, як SIM-карта перастане працаваць назаўжды.</item>
         <item quantity="many">Няправільны PUK-код SIM-карты, у вас засталіся %d спроб перад тым, як SIM-карта перастане працаваць назаўжды.</item>
         <item quantity="other">Няправільны PUK-код SIM-карты, у вас засталіся %d спробы перад тым, як SIM-карта перастане працаваць назаўжды.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_password">
-        <item quantity="one">Прылада не была разблакіравана на працягу %d гадзіны. Увядзіце пароль.</item>
-        <item quantity="few">Прылада не была разблакіравана на працягу %d гадзін. Увядзіце пароль.</item>
-        <item quantity="many">Прылада не была разблакіравана на працягу %d гадзін. Увядзіце пароль.</item>
-        <item quantity="other">Прылада не была разблакіравана на працягу %d гадзіны. Увядзіце пароль.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pattern">
-        <item quantity="one">Прылада не была разблакіравана на працягу %d гадзіны. Увядзіце ўзор.</item>
-        <item quantity="few">Прылада не была разблакіравана на працягу %d гадзін. Увядзіце ўзор.</item>
-        <item quantity="many">Прылада не была разблакіравана на працягу %d гадзін. Увядзіце ўзор.</item>
-        <item quantity="other">Прылада не была разблакіравана на працягу %d гадзіны. Увядзіце ўзор.</item>
-    </plurals>
-    <plurals name="kg_prompt_reason_time_pin">
-        <item quantity="one">Прылада не была разблакіравана на працягу %d гадзіны. Увядзіце PIN-код.</item>
-        <item quantity="few">Прылада не была разблакіравана на працягу %d гадзін. Увядзіце PIN-код.</item>
-        <item quantity="many">Прылада не была разблакіравана на працягу %d гадзін. Увядзіце PIN-код.</item>
-        <item quantity="other">Прылада не была разблакіравана на працягу %d гадзіны. Увядзіце PIN-код.</item>
-    </plurals>
-    <plurals name="kg_too_many_failed_attempts_countdown">
-        <item quantity="one">Паўтарыце спробу праз %d секунду.</item>
-        <item quantity="few">Паўтарыце спробу праз %d секунды.</item>
-        <item quantity="many">Паўтарыце спробу праз %d секунд.</item>
-        <item quantity="other">Паўтарыце спробу праз %d секунды.</item>
     </plurals>
     <plurals name="mtrl_badge_content_description">
         <item quantity="one">%d новае апавяшчэнне</item>
@@ -107,11 +93,5 @@
         <item quantity="few">Можна дадаць %d карыстальнікаў.</item>
         <item quantity="many">Можна дадаць %d карыстальнікаў.</item>
         <item quantity="other">Можна дадаць %d карыстальніка.</item>
-    </plurals>
-    <plurals name="wifi_tether_connected_summary">
-        <item quantity="one">%1$d прылада падключана</item>
-        <item quantity="few">%1$d прылады падключаны</item>
-        <item quantity="many">%1$d прылад падключана</item>
-        <item quantity="other">%1$d прылады падключана</item>
     </plurals>
 </resources>

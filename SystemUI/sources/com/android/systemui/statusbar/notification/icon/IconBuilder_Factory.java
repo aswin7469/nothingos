@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.icon;
 import android.content.Context;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class IconBuilder_Factory implements Factory<IconBuilder> {
     private final Provider<Context> contextProvider;
 
@@ -11,10 +11,8 @@ public final class IconBuilder_Factory implements Factory<IconBuilder> {
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public IconBuilder mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public IconBuilder get() {
+        return newInstance(this.contextProvider.get());
     }
 
     public static IconBuilder_Factory create(Provider<Context> provider) {

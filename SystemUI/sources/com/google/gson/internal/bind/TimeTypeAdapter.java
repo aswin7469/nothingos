@@ -8,16 +8,14 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
-import java.io.IOException;
+import java.p026io.IOException;
 import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-/* loaded from: classes2.dex */
+
 public final class TimeTypeAdapter extends TypeAdapter<Time> {
-    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() { // from class: com.google.gson.internal.bind.TimeTypeAdapter.1
-        @Override // com.google.gson.TypeAdapterFactory
+    public static final TypeAdapterFactory FACTORY = new TypeAdapterFactory() {
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> typeToken) {
             if (typeToken.getRawType() == Time.class) {
                 return new TimeTypeAdapter();
@@ -27,9 +25,7 @@ public final class TimeTypeAdapter extends TypeAdapter<Time> {
     };
     private final DateFormat format = new SimpleDateFormat("hh:mm:ss a");
 
-    @Override // com.google.gson.TypeAdapter
-    /* renamed from: read  reason: collision with other method in class */
-    public synchronized Time mo1911read(JsonReader jsonReader) throws IOException {
+    public synchronized Time read(JsonReader jsonReader) throws IOException {
         if (jsonReader.peek() == JsonToken.NULL) {
             jsonReader.nextNull();
             return null;
@@ -37,12 +33,11 @@ public final class TimeTypeAdapter extends TypeAdapter<Time> {
         try {
             return new Time(this.format.parse(jsonReader.nextString()).getTime());
         } catch (ParseException e) {
-            throw new JsonSyntaxException(e);
+            throw new JsonSyntaxException((Throwable) e);
         }
     }
 
-    @Override // com.google.gson.TypeAdapter
     public synchronized void write(JsonWriter jsonWriter, Time time) throws IOException {
-        jsonWriter.value(time == null ? null : this.format.format((Date) time));
+        jsonWriter.value(time == null ? null : this.format.format(time));
     }
 }

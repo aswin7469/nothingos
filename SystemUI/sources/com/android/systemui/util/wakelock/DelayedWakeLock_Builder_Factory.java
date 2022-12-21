@@ -4,7 +4,7 @@ import android.content.Context;
 import com.android.systemui.util.wakelock.DelayedWakeLock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class DelayedWakeLock_Builder_Factory implements Factory<DelayedWakeLock.Builder> {
     private final Provider<Context> contextProvider;
 
@@ -12,10 +12,8 @@ public final class DelayedWakeLock_Builder_Factory implements Factory<DelayedWak
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DelayedWakeLock.Builder mo1933get() {
-        return newInstance(this.contextProvider.mo1933get());
+    public DelayedWakeLock.Builder get() {
+        return newInstance(this.contextProvider.get());
     }
 
     public static DelayedWakeLock_Builder_Factory create(Provider<Context> provider) {

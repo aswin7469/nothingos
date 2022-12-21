@@ -1,7 +1,7 @@
 package com.android.systemui.statusbar.policy;
 
 import com.android.systemui.Dumpable;
-/* loaded from: classes2.dex */
+
 public interface HotspotController extends CallbackController<Callback>, Dumpable {
     int getNumConnectedDevices();
 
@@ -11,14 +11,15 @@ public interface HotspotController extends CallbackController<Callback>, Dumpabl
 
     boolean isHotspotTransient();
 
-    /* loaded from: classes2.dex */
+    void setHotspotEnabled(boolean z);
+
     public interface Callback {
-        default void onHotspotAvailabilityChanged(boolean z) {
+        void onHotspotAvailabilityChanged(boolean z) {
         }
 
         void onHotspotChanged(boolean z, int i);
 
-        default void onHotspotChanged(boolean z, int i, int i2) {
+        void onHotspotChanged(boolean z, int i, int i2) {
             onHotspotChanged(z, i);
         }
     }

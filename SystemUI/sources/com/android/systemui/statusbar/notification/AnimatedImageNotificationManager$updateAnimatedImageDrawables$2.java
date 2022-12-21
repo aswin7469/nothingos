@@ -1,47 +1,26 @@
 package com.android.systemui.statusbar.notification;
 
 import android.view.View;
-import com.android.internal.widget.ConversationLayout;
-import com.android.internal.widget.MessagingGroup;
-import com.android.internal.widget.MessagingLayout;
-import java.util.ArrayList;
-import kotlin.collections.CollectionsKt___CollectionsKt;
+import com.android.systemui.statusbar.notification.row.NotificationContentView;
+import kotlin.Metadata;
+import kotlin.collections.ArraysKt;
 import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt__SequencesKt;
-import org.jetbrains.annotations.NotNull;
-/* JADX INFO: Access modifiers changed from: package-private */
+
+@Metadata(mo64986d1 = {"\u0000\u0014\n\u0000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\u0010\u0000\u001a\u0010\u0012\f\u0012\n \u0003*\u0004\u0018\u00010\u00020\u00020\u00012\u000e\u0010\u0004\u001a\n \u0003*\u0004\u0018\u00010\u00050\u0005H\n¢\u0006\u0002\b\u0006"}, mo64987d2 = {"<anonymous>", "Lkotlin/sequences/Sequence;", "Landroid/view/View;", "kotlin.jvm.PlatformType", "layout", "Lcom/android/systemui/statusbar/notification/row/NotificationContentView;", "invoke"}, mo64988k = 3, mo64989mv = {1, 6, 0}, mo64991xi = 48)
 /* compiled from: ConversationNotifications.kt */
-/* loaded from: classes.dex */
-public final class AnimatedImageNotificationManager$updateAnimatedImageDrawables$2 extends Lambda implements Function1<View, Sequence<? extends MessagingGroup>> {
+final class AnimatedImageNotificationManager$updateAnimatedImageDrawables$2 extends Lambda implements Function1<NotificationContentView, Sequence<? extends View>> {
     public static final AnimatedImageNotificationManager$updateAnimatedImageDrawables$2 INSTANCE = new AnimatedImageNotificationManager$updateAnimatedImageDrawables$2();
 
     AnimatedImageNotificationManager$updateAnimatedImageDrawables$2() {
         super(1);
     }
 
-    @Override // kotlin.jvm.functions.Function1
-    @NotNull
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public final Sequence<MessagingGroup> mo1949invoke(View view) {
-        ArrayList messagingGroups;
-        Sequence<MessagingGroup> emptySequence;
-        ArrayList messagingGroups2;
-        Sequence<MessagingGroup> sequence = null;
-        ConversationLayout conversationLayout = view instanceof ConversationLayout ? (ConversationLayout) view : null;
-        Sequence<MessagingGroup> asSequence = (conversationLayout == null || (messagingGroups = conversationLayout.getMessagingGroups()) == null) ? null : CollectionsKt___CollectionsKt.asSequence(messagingGroups);
-        if (asSequence == null) {
-            MessagingLayout messagingLayout = view instanceof MessagingLayout ? (MessagingLayout) view : null;
-            if (messagingLayout != null && (messagingGroups2 = messagingLayout.getMessagingGroups()) != null) {
-                sequence = CollectionsKt___CollectionsKt.asSequence(messagingGroups2);
-            }
-            if (sequence != null) {
-                return sequence;
-            }
-            emptySequence = SequencesKt__SequencesKt.emptySequence();
-            return emptySequence;
-        }
-        return asSequence;
+    public final Sequence<View> invoke(NotificationContentView notificationContentView) {
+        View[] allViews = notificationContentView.getAllViews();
+        Intrinsics.checkNotNullExpressionValue(allViews, "layout.allViews");
+        return ArraysKt.asSequence((T[]) (Object[]) allViews);
     }
 }

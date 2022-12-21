@@ -4,29 +4,29 @@ import android.content.Context;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class MediaViewController_Factory implements Factory<MediaViewController> {
     private final Provider<ConfigurationController> configurationControllerProvider;
     private final Provider<Context> contextProvider;
+    private final Provider<MediaViewLogger> loggerProvider;
     private final Provider<MediaHostStatesManager> mediaHostStatesManagerProvider;
 
-    public MediaViewController_Factory(Provider<Context> provider, Provider<ConfigurationController> provider2, Provider<MediaHostStatesManager> provider3) {
+    public MediaViewController_Factory(Provider<Context> provider, Provider<ConfigurationController> provider2, Provider<MediaHostStatesManager> provider3, Provider<MediaViewLogger> provider4) {
         this.contextProvider = provider;
         this.configurationControllerProvider = provider2;
         this.mediaHostStatesManagerProvider = provider3;
+        this.loggerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public MediaViewController mo1933get() {
-        return newInstance(this.contextProvider.mo1933get(), this.configurationControllerProvider.mo1933get(), this.mediaHostStatesManagerProvider.mo1933get());
+    public MediaViewController get() {
+        return newInstance(this.contextProvider.get(), this.configurationControllerProvider.get(), this.mediaHostStatesManagerProvider.get(), this.loggerProvider.get());
     }
 
-    public static MediaViewController_Factory create(Provider<Context> provider, Provider<ConfigurationController> provider2, Provider<MediaHostStatesManager> provider3) {
-        return new MediaViewController_Factory(provider, provider2, provider3);
+    public static MediaViewController_Factory create(Provider<Context> provider, Provider<ConfigurationController> provider2, Provider<MediaHostStatesManager> provider3, Provider<MediaViewLogger> provider4) {
+        return new MediaViewController_Factory(provider, provider2, provider3, provider4);
     }
 
-    public static MediaViewController newInstance(Context context, ConfigurationController configurationController, MediaHostStatesManager mediaHostStatesManager) {
-        return new MediaViewController(context, configurationController, mediaHostStatesManager);
+    public static MediaViewController newInstance(Context context, ConfigurationController configurationController, MediaHostStatesManager mediaHostStatesManager, MediaViewLogger mediaViewLogger) {
+        return new MediaViewController(context, configurationController, mediaHostStatesManager, mediaViewLogger);
     }
 }

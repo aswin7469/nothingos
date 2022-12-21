@@ -4,7 +4,7 @@ import android.content.Context;
 import com.android.systemui.util.DeviceConfigProxy;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationSectionsFeatureManager_Factory implements Factory<NotificationSectionsFeatureManager> {
     private final Provider<Context> contextProvider;
     private final Provider<DeviceConfigProxy> proxyProvider;
@@ -14,10 +14,8 @@ public final class NotificationSectionsFeatureManager_Factory implements Factory
         this.contextProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationSectionsFeatureManager mo1933get() {
-        return newInstance(this.proxyProvider.mo1933get(), this.contextProvider.mo1933get());
+    public NotificationSectionsFeatureManager get() {
+        return newInstance(this.proxyProvider.get(), this.contextProvider.get());
     }
 
     public static NotificationSectionsFeatureManager_Factory create(Provider<DeviceConfigProxy> provider, Provider<Context> provider2) {

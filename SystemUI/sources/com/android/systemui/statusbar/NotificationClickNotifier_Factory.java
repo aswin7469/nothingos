@@ -4,7 +4,7 @@ import com.android.internal.statusbar.IStatusBarService;
 import dagger.internal.Factory;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class NotificationClickNotifier_Factory implements Factory<NotificationClickNotifier> {
     private final Provider<IStatusBarService> barServiceProvider;
     private final Provider<Executor> mainExecutorProvider;
@@ -14,10 +14,8 @@ public final class NotificationClickNotifier_Factory implements Factory<Notifica
         this.mainExecutorProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public NotificationClickNotifier mo1933get() {
-        return newInstance(this.barServiceProvider.mo1933get(), this.mainExecutorProvider.mo1933get());
+    public NotificationClickNotifier get() {
+        return newInstance(this.barServiceProvider.get(), this.mainExecutorProvider.get());
     }
 
     public static NotificationClickNotifier_Factory create(Provider<IStatusBarService> provider, Provider<Executor> provider2) {

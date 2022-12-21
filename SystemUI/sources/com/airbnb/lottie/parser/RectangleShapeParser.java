@@ -1,20 +1,22 @@
 package com.airbnb.lottie.parser;
 
 import android.graphics.PointF;
+import android.icu.text.DateFormat;
 import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.animatable.AnimatablePointValue;
 import com.airbnb.lottie.model.animatable.AnimatableValue;
 import com.airbnb.lottie.model.content.RectangleShape;
 import com.airbnb.lottie.parser.moshi.JsonReader;
-import java.io.IOException;
-/* JADX INFO: Access modifiers changed from: package-private */
-/* loaded from: classes.dex */
-public class RectangleShapeParser {
-    private static JsonReader.Options NAMES = JsonReader.Options.of("nm", "p", "s", "r", "hd");
+import java.p026io.IOException;
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static RectangleShape parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
+class RectangleShapeParser {
+    private static JsonReader.Options NAMES = JsonReader.Options.m137of("nm", "p", DateFormat.SECOND, "r", "hd");
+
+    private RectangleShapeParser() {
+    }
+
+    static RectangleShape parse(JsonReader jsonReader, LottieComposition lottieComposition) throws IOException {
         String str = null;
         AnimatableValue<PointF, PointF> animatableValue = null;
         AnimatablePointValue animatablePointValue = null;
@@ -30,10 +32,10 @@ public class RectangleShapeParser {
                 animatablePointValue = AnimatableValueParser.parsePoint(jsonReader, lottieComposition);
             } else if (selectName == 3) {
                 animatableFloatValue = AnimatableValueParser.parseFloat(jsonReader, lottieComposition);
-            } else if (selectName == 4) {
-                z = jsonReader.nextBoolean();
-            } else {
+            } else if (selectName != 4) {
                 jsonReader.skipValue();
+            } else {
+                z = jsonReader.nextBoolean();
             }
         }
         return new RectangleShape(str, animatableValue, animatablePointValue, animatableFloatValue, z);

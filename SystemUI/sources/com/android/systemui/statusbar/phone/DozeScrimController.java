@@ -2,134 +2,129 @@ package com.android.systemui.statusbar.phone;
 
 import android.os.Handler;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.Dependency;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.doze.DozeHost;
 import com.android.systemui.doze.DozeLog;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.phone.ScrimController;
-/* loaded from: classes.dex */
+import javax.inject.Inject;
+
+@SysUISingleton
 public class DozeScrimController implements StatusBarStateController.StateListener {
-    private static final boolean DEBUG = Log.isLoggable("DozeScrimController", 3);
+    /* access modifiers changed from: private */
+    public static final boolean DEBUG = Log.isLoggable(TAG, 3);
+    private static final String TAG = "DozeScrimController";
     private final DozeLog mDozeLog;
-    private final DozeParameters mDozeParameters;
-    private boolean mDozing;
-    private boolean mFullyPulsing;
+    /* access modifiers changed from: private */
+    public final DozeParameters mDozeParameters;
+    /* access modifiers changed from: private */
+    public boolean mDozing;
+    /* access modifiers changed from: private */
+    public boolean mFullyPulsing;
+    /* access modifiers changed from: private */
+    public final Handler mHandler = new Handler();
     private DozeHost.PulseCallback mPulseCallback;
-    private int mPulseReason;
-    private final Handler mHandler = new Handler();
-    private final ScrimController.Callback mScrimCallback = new ScrimController.Callback() { // from class: com.android.systemui.statusbar.phone.DozeScrimController.1
-        @Override // com.android.systemui.statusbar.phone.ScrimController.Callback
-        public void onDisplayBlanked() {
+    /* access modifiers changed from: private */
+    public final Runnable mPulseOut = new Runnable() {
+        public void run() {
+            boolean unused = DozeScrimController.this.mFullyPulsing = false;
+            DozeScrimController.this.mHandler.removeCallbacks(DozeScrimController.this.mPulseOut);
+            DozeScrimController.this.mHandler.removeCallbacks(DozeScrimController.this.mPulseOutExtended);
             if (DozeScrimController.DEBUG) {
-                Log.d("DozeScrimController", "Pulse in, mDozing=" + DozeScrimController.this.mDozing + " mPulseReason=" + DozeLog.reasonToString(DozeScrimController.this.mPulseReason));
+                Log.d(DozeScrimController.TAG, "Pulse out, mDozing=" + DozeScrimController.this.mDozing);
             }
-            if (!DozeScrimController.this.mDozing) {
-                return;
+            if (DozeScrimController.this.mDozing) {
+                DozeScrimController.this.pulseFinished();
             }
-            DozeScrimController.this.pulseStarted();
-        }
-
-        @Override // com.android.systemui.statusbar.phone.ScrimController.Callback
-        public void onFinished() {
-            if (DozeScrimController.DEBUG) {
-                Log.d("DozeScrimController", "Pulse in finished, mDozing=" + DozeScrimController.this.mDozing);
-            }
-            if (!DozeScrimController.this.mDozing) {
-                return;
-            }
-            if (DozeScrimController.this.mPulseReason != 1 && DozeScrimController.this.mPulseReason != 6) {
-                DozeScrimController.this.mHandler.postDelayed(DozeScrimController.this.mPulseOut, DozeScrimController.this.mDozeParameters.getPulseVisibleDuration());
-                DozeScrimController.this.mHandler.postDelayed(DozeScrimController.this.mPulseOutExtended, DozeScrimController.this.mDozeParameters.getPulseVisibleDurationExtended());
-            }
-            DozeScrimController.this.mFullyPulsing = true;
-        }
-
-        @Override // com.android.systemui.statusbar.phone.ScrimController.Callback
-        public void onCancelled() {
-            DozeScrimController.this.pulseFinished();
         }
     };
-    private final Runnable mPulseOutExtended = new Runnable() { // from class: com.android.systemui.statusbar.phone.DozeScrimController.2
-        @Override // java.lang.Runnable
+    /* access modifiers changed from: private */
+    public final Runnable mPulseOutExtended = new Runnable() {
         public void run() {
             DozeScrimController.this.mHandler.removeCallbacks(DozeScrimController.this.mPulseOut);
             DozeScrimController.this.mPulseOut.run();
         }
     };
-    private final Runnable mPulseOut = new Runnable() { // from class: com.android.systemui.statusbar.phone.DozeScrimController.3
-        @Override // java.lang.Runnable
-        public void run() {
-            DozeScrimController.this.mFullyPulsing = false;
-            DozeScrimController.this.mHandler.removeCallbacks(DozeScrimController.this.mPulseOut);
-            DozeScrimController.this.mHandler.removeCallbacks(DozeScrimController.this.mPulseOutExtended);
+    /* access modifiers changed from: private */
+    public int mPulseReason;
+    private final ScrimController.Callback mScrimCallback = new ScrimController.Callback() {
+        public void onDisplayBlanked() {
             if (DozeScrimController.DEBUG) {
-                Log.d("DozeScrimController", "Pulse out, mDozing=" + DozeScrimController.this.mDozing);
+                Log.d(DozeScrimController.TAG, "Pulse in, mDozing=" + DozeScrimController.this.mDozing + " mPulseReason=" + DozeLog.reasonToString(DozeScrimController.this.mPulseReason));
             }
-            if (!DozeScrimController.this.mDozing) {
-                return;
+            if (DozeScrimController.this.mDozing) {
+                DozeScrimController.this.pulseStarted();
             }
+        }
+
+        public void onFinished() {
+            if (DozeScrimController.DEBUG) {
+                Log.d(DozeScrimController.TAG, "Pulse in finished, mDozing=" + DozeScrimController.this.mDozing);
+            }
+            if (DozeScrimController.this.mDozing) {
+                if (!(DozeScrimController.this.mPulseReason == 1 || DozeScrimController.this.mPulseReason == 6)) {
+                    DozeScrimController.this.mHandler.postDelayed(DozeScrimController.this.mPulseOut, (long) DozeScrimController.this.mDozeParameters.getPulseVisibleDuration());
+                    DozeScrimController.this.mHandler.postDelayed(DozeScrimController.this.mPulseOutExtended, (long) DozeScrimController.this.mDozeParameters.getPulseVisibleDurationExtended());
+                }
+                boolean unused = DozeScrimController.this.mFullyPulsing = true;
+            }
+        }
+
+        public void onCancelled() {
             DozeScrimController.this.pulseFinished();
         }
     };
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStateChanged(int i) {
     }
 
-    public DozeScrimController(DozeParameters dozeParameters, DozeLog dozeLog) {
+    @Inject
+    public DozeScrimController(DozeParameters dozeParameters, DozeLog dozeLog, StatusBarStateController statusBarStateController) {
         this.mDozeParameters = dozeParameters;
-        ((StatusBarStateController) Dependency.get(StatusBarStateController.class)).addCallback(this);
+        statusBarStateController.addCallback(this);
         this.mDozeLog = dozeLog;
     }
 
-    @VisibleForTesting
     public void setDozing(boolean z) {
-        if (this.mDozing == z) {
-            return;
+        if (this.mDozing != z) {
+            this.mDozing = z;
+            if (!z) {
+                cancelPulsing();
+            }
         }
-        this.mDozing = z;
-        if (z) {
-            return;
-        }
-        cancelPulsing();
     }
 
     public void pulse(DozeHost.PulseCallback pulseCallback, int i) {
         if (pulseCallback == null) {
             throw new IllegalArgumentException("callback must not be null");
-        }
-        if (!this.mDozing || this.mPulseCallback != null) {
+        } else if (!this.mDozing || this.mPulseCallback != null) {
             if (DEBUG) {
-                StringBuilder sb = new StringBuilder();
-                sb.append("Pulse suppressed. Dozing: ");
-                sb.append(this.mDozeParameters);
-                sb.append(" had callback? ");
-                sb.append(this.mPulseCallback != null);
-                Log.d("DozeScrimController", sb.toString());
+                Log.d(TAG, "Pulse suppressed. Dozing: " + this.mDozeParameters + " had callback? " + (this.mPulseCallback != null));
             }
             pulseCallback.onPulseFinished();
             if (!this.mDozing) {
                 this.mDozeLog.tracePulseDropped("device isn't dozing");
-                return;
+            } else {
+                this.mDozeLog.tracePulseDropped("already has pulse callback mPulseCallback=" + this.mPulseCallback);
             }
-            DozeLog dozeLog = this.mDozeLog;
-            dozeLog.tracePulseDropped("already has pulse callback mPulseCallback=" + this.mPulseCallback);
-            return;
+        } else {
+            this.mPulseCallback = pulseCallback;
+            this.mPulseReason = i;
         }
-        this.mPulseCallback = pulseCallback;
-        this.mPulseReason = i;
     }
 
     public void pulseOutNow() {
-        if (this.mPulseCallback == null || !this.mFullyPulsing) {
-            return;
+        if (this.mPulseCallback != null && this.mFullyPulsing) {
+            this.mPulseOut.run();
         }
-        this.mPulseOut.run();
     }
 
     public boolean isPulsing() {
         return this.mPulseCallback != null;
+    }
+
+    public boolean isDozing() {
+        return this.mDozing;
     }
 
     public void extendPulse() {
@@ -144,7 +139,7 @@ public class DozeScrimController implements StatusBarStateController.StateListen
     private void cancelPulsing() {
         if (this.mPulseCallback != null) {
             if (DEBUG) {
-                Log.d("DozeScrimController", "Cancel pulsing");
+                Log.d(TAG, "Cancel pulsing");
             }
             this.mFullyPulsing = false;
             this.mHandler.removeCallbacks(this.mPulseOut);
@@ -153,7 +148,7 @@ public class DozeScrimController implements StatusBarStateController.StateListen
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void pulseStarted() {
         this.mDozeLog.tracePulseStart(this.mPulseReason);
         DozeHost.PulseCallback pulseCallback = this.mPulseCallback;
@@ -162,7 +157,7 @@ public class DozeScrimController implements StatusBarStateController.StateListen
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
+    /* access modifiers changed from: private */
     public void pulseFinished() {
         this.mDozeLog.tracePulseFinish();
         DozeHost.PulseCallback pulseCallback = this.mPulseCallback;
@@ -176,8 +171,10 @@ public class DozeScrimController implements StatusBarStateController.StateListen
         return this.mScrimCallback;
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozingChanged(boolean z) {
+        if (this.mDozing != z) {
+            this.mDozeLog.traceDozingChanged(z);
+        }
         setDozing(z);
     }
 }

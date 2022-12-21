@@ -1,5 +1,6 @@
 package com.android.systemui.biometrics;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -8,9 +9,16 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import com.android.systemui.R$dimen;
-/* loaded from: classes.dex */
+import com.android.systemui.C1893R;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class AuthPanelController extends ViewOutlineProvider {
+    private static final boolean DEBUG = false;
+    public static final int POSITION_BOTTOM = 1;
+    public static final int POSITION_LEFT = 2;
+    public static final int POSITION_RIGHT = 3;
+    private static final String TAG = "BiometricPrompt/AuthPanelController";
     private int mContainerHeight;
     private int mContainerWidth;
     private int mContentHeight;
@@ -22,26 +30,31 @@ public class AuthPanelController extends ViewOutlineProvider {
     private int mPosition = 1;
     private boolean mUseFullScreen;
 
-    @Override // android.view.ViewOutlineProvider
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Position {
+    }
+
     public void getOutline(View view, Outline outline) {
         int leftBound = getLeftBound(this.mPosition);
         int i = leftBound + this.mContentWidth;
         int topBound = getTopBound(this.mPosition);
-        outline.setRoundRect(leftBound, topBound, i, Math.min(this.mContentHeight + topBound, this.mContainerHeight - this.mMargin), this.mCornerRadius);
+        int min = Math.min(this.mContentHeight + topBound, this.mContainerHeight - this.mMargin);
+        float f = this.mCornerRadius;
+        outline.setRoundRect(leftBound, topBound, i, min + ((int) f), f);
     }
 
     private int getLeftBound(int i) {
-        if (i != 1) {
-            if (i == 2) {
-                return this.mMargin;
-            }
-            if (i == 3) {
-                return (this.mContainerWidth - this.mContentWidth) - this.mMargin;
-            }
-            Log.e("BiometricPrompt/AuthPanelController", "Unrecognized position: " + i);
-            return getLeftBound(1);
+        if (i == 1) {
+            return (this.mContainerWidth - this.mContentWidth) / 2;
         }
-        return (this.mContainerWidth - this.mContentWidth) / 2;
+        if (i == 2) {
+            return this.mMargin;
+        }
+        if (i == 3) {
+            return (this.mContainerWidth - this.mContentWidth) - this.mMargin;
+        }
+        Log.e(TAG, "Unrecognized position: " + i);
+        return getLeftBound(1);
     }
 
     private int getTopBound(int i) {
@@ -51,7 +64,7 @@ public class AuthPanelController extends ViewOutlineProvider {
         } else if (i == 2 || i == 3) {
             return Math.max((this.mContainerHeight - this.mContentHeight) / 2, this.mMargin);
         } else {
-            Log.e("BiometricPrompt/AuthPanelController", "Unrecognized position: " + i);
+            Log.e(TAG, "Unrecognized position: " + i);
             return getTopBound(1);
         }
     }
@@ -70,92 +83,85 @@ public class AuthPanelController extends ViewOutlineProvider {
     }
 
     public void updateForContentDimensions(int i, int i2, int i3) {
+        int i4;
+        float f;
         if (this.mContainerWidth == 0 || this.mContainerHeight == 0) {
-            Log.w("BiometricPrompt/AuthPanelController", "Not done measuring yet");
+            Log.w(TAG, "Not done measuring yet");
             return;
         }
-        int dimension = this.mUseFullScreen ? 0 : (int) this.mContext.getResources().getDimension(R$dimen.biometric_dialog_border_padding);
-        float dimension2 = this.mUseFullScreen ? 0.0f : this.mContext.getResources().getDimension(R$dimen.biometric_dialog_corner_size);
+        if (this.mUseFullScreen) {
+            i4 = 0;
+        } else {
+            i4 = (int) this.mContext.getResources().getDimension(C1893R.dimen.biometric_dialog_border_padding);
+        }
+        if (this.mUseFullScreen) {
+            f = 0.0f;
+        } else {
+            f = this.mContext.getResources().getDimension(C1893R.dimen.biometric_dialog_corner_size);
+        }
         if (i3 > 0) {
-            ValueAnimator ofInt = ValueAnimator.ofInt(this.mMargin, dimension);
-            ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.biometrics.AuthPanelController$$ExternalSyntheticLambda2
-                @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    AuthPanelController.this.lambda$updateForContentDimensions$2(valueAnimator);
-                }
-            });
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mCornerRadius, dimension2);
-            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.biometrics.AuthPanelController$$ExternalSyntheticLambda3
-                @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    AuthPanelController.this.lambda$updateForContentDimensions$3(valueAnimator);
-                }
-            });
-            ValueAnimator ofInt2 = ValueAnimator.ofInt(this.mContentHeight, i2);
-            ofInt2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.biometrics.AuthPanelController$$ExternalSyntheticLambda1
-                @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    AuthPanelController.this.lambda$updateForContentDimensions$4(valueAnimator);
-                }
-            });
-            ValueAnimator ofInt3 = ValueAnimator.ofInt(this.mContentWidth, i);
-            ofInt3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.android.systemui.biometrics.AuthPanelController$$ExternalSyntheticLambda0
-                @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    AuthPanelController.this.lambda$updateForContentDimensions$5(valueAnimator);
-                }
-            });
+            ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{this.mMargin, i4});
+            ofInt.addUpdateListener(new AuthPanelController$$ExternalSyntheticLambda0(this));
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mCornerRadius, f});
+            ofFloat.addUpdateListener(new AuthPanelController$$ExternalSyntheticLambda1(this));
+            ValueAnimator ofInt2 = ValueAnimator.ofInt(new int[]{this.mContentHeight, i2});
+            ofInt2.addUpdateListener(new AuthPanelController$$ExternalSyntheticLambda2(this));
+            ValueAnimator ofInt3 = ValueAnimator.ofInt(new int[]{this.mContentWidth, i});
+            ofInt3.addUpdateListener(new AuthPanelController$$ExternalSyntheticLambda3(this));
             AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.setDuration(i3);
+            animatorSet.setDuration((long) i3);
             animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-            animatorSet.playTogether(ofFloat, ofInt2, ofInt3, ofInt);
+            animatorSet.playTogether(new Animator[]{ofFloat, ofInt2, ofInt3, ofInt});
             animatorSet.start();
             return;
         }
-        this.mMargin = dimension;
-        this.mCornerRadius = dimension2;
+        this.mMargin = i4;
+        this.mCornerRadius = f;
         this.mContentWidth = i;
         this.mContentHeight = i2;
         this.mPanelView.invalidateOutline();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateForContentDimensions$2(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateForContentDimensions$0$com-android-systemui-biometrics-AuthPanelController */
+    public /* synthetic */ void mo30692x56827c91(ValueAnimator valueAnimator) {
         this.mMargin = ((Integer) valueAnimator.getAnimatedValue()).intValue();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateForContentDimensions$3(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateForContentDimensions$1$com-android-systemui-biometrics-AuthPanelController */
+    public /* synthetic */ void mo30693xe3bd2e12(ValueAnimator valueAnimator) {
         this.mCornerRadius = ((Float) valueAnimator.getAnimatedValue()).floatValue();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateForContentDimensions$4(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateForContentDimensions$2$com-android-systemui-biometrics-AuthPanelController */
+    public /* synthetic */ void mo30694x70f7df93(ValueAnimator valueAnimator) {
         this.mContentHeight = ((Integer) valueAnimator.getAnimatedValue()).intValue();
         this.mPanelView.invalidateOutline();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$updateForContentDimensions$5(ValueAnimator valueAnimator) {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$updateForContentDimensions$3$com-android-systemui-biometrics-AuthPanelController */
+    public /* synthetic */ void mo30695xfe329114(ValueAnimator valueAnimator) {
         this.mContentWidth = ((Integer) valueAnimator.getAnimatedValue()).intValue();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getContainerWidth() {
         return this.mContainerWidth;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public int getContainerHeight() {
         return this.mContainerHeight;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public AuthPanelController(Context context, View view) {
+    AuthPanelController(Context context, View view) {
         this.mContext = context;
         this.mPanelView = view;
-        this.mCornerRadius = context.getResources().getDimension(R$dimen.biometric_dialog_corner_size);
-        this.mMargin = (int) context.getResources().getDimension(R$dimen.biometric_dialog_border_padding);
+        this.mCornerRadius = context.getResources().getDimension(C1893R.dimen.biometric_dialog_corner_size);
+        this.mMargin = (int) context.getResources().getDimension(C1893R.dimen.biometric_dialog_border_padding);
         view.setOutlineProvider(this);
         view.setClipToOutline(true);
     }

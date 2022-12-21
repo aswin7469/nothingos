@@ -1,0 +1,5 @@
+signature,file,startline,startcol,endline,endcol,properties
+Ldalvik/system/VMStack;->getCallingClassLoader()Ljava/lang/ClassLoader;,libcore/libart/src/main/java/dalvik/system/VMStack.java,51,5,51,25,
+Ldalvik/system/VMStack;->getStackClass2()Ljava/lang/Class;,libcore/libart/src/main/java/dalvik/system/VMStack.java,76,5,76,25,
+Ldalvik/system/VMStack;->getThreadStackTrace(Ljava/lang/Thread;)[Ljava/lang/StackTraceElement;,libcore/libart/src/main/java/dalvik/system/VMStack.java,99,5,99,25,
+Ldalvik/system/VMStack;->fillStackTraceElements(Ljava/lang/Thread;[Ljava/lang/StackTraceElement;)I,libcore/libart/src/main/java/dalvik/system/VMStack.java,131,5,131,25,

@@ -9,7 +9,7 @@ import com.airbnb.lottie.model.animatable.AnimatableFloatValue;
 import com.airbnb.lottie.model.animatable.AnimatableIntegerValue;
 import com.airbnb.lottie.model.layer.BaseLayer;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public class ShapeStroke implements ContentModel {
     private final LineCapType capType;
     private final AnimatableColorValue color;
@@ -22,80 +22,104 @@ public class ShapeStroke implements ContentModel {
     private final AnimatableIntegerValue opacity;
     private final AnimatableFloatValue width;
 
-    /* loaded from: classes.dex */
     public enum LineCapType {
         BUTT,
         ROUND,
         UNKNOWN;
 
         public Paint.Cap toPaintCap() {
-            int i = AnonymousClass1.$SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineCapType[ordinal()];
-            if (i != 1) {
-                if (i == 2) {
-                    return Paint.Cap.ROUND;
-                }
+            int i = C15401.f178xd9891597[ordinal()];
+            if (i == 1) {
+                return Paint.Cap.BUTT;
+            }
+            if (i != 2) {
                 return Paint.Cap.SQUARE;
             }
-            return Paint.Cap.BUTT;
+            return Paint.Cap.ROUND;
         }
     }
 
-    /* renamed from: com.airbnb.lottie.model.content.ShapeStroke$1  reason: invalid class name */
-    /* loaded from: classes.dex */
-    static /* synthetic */ class AnonymousClass1 {
-        static final /* synthetic */ int[] $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineCapType;
-        static final /* synthetic */ int[] $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineJoinType;
+    /* renamed from: com.airbnb.lottie.model.content.ShapeStroke$1 */
+    static /* synthetic */ class C15401 {
 
+        /* renamed from: $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineCapType */
+        static final /* synthetic */ int[] f178xd9891597;
+
+        /* renamed from: $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineJoinType */
+        static final /* synthetic */ int[] f179x8c4dd79;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(15:0|(2:1|2)|3|(2:5|6)|7|9|10|11|13|14|15|16|17|18|20) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(17:0|1|2|3|5|6|7|9|10|11|13|14|15|16|17|18|20) */
+        /* JADX WARNING: Code restructure failed: missing block: B:21:?, code lost:
+            return;
+         */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x0039 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:17:0x0043 */
         static {
-            int[] iArr = new int[LineJoinType.values().length];
-            $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineJoinType = iArr;
-            try {
-                iArr[LineJoinType.BEVEL.ordinal()] = 1;
-            } catch (NoSuchFieldError unused) {
-            }
-            try {
-                $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineJoinType[LineJoinType.MITER.ordinal()] = 2;
-            } catch (NoSuchFieldError unused2) {
-            }
-            try {
-                $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineJoinType[LineJoinType.ROUND.ordinal()] = 3;
-            } catch (NoSuchFieldError unused3) {
-            }
-            int[] iArr2 = new int[LineCapType.values().length];
-            $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineCapType = iArr2;
-            try {
-                iArr2[LineCapType.BUTT.ordinal()] = 1;
-            } catch (NoSuchFieldError unused4) {
-            }
-            try {
-                $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineCapType[LineCapType.ROUND.ordinal()] = 2;
-            } catch (NoSuchFieldError unused5) {
-            }
-            try {
-                $SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineCapType[LineCapType.UNKNOWN.ordinal()] = 3;
-            } catch (NoSuchFieldError unused6) {
-            }
+            /*
+                com.airbnb.lottie.model.content.ShapeStroke$LineJoinType[] r0 = com.airbnb.lottie.model.content.ShapeStroke.LineJoinType.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                f179x8c4dd79 = r0
+                r1 = 1
+                com.airbnb.lottie.model.content.ShapeStroke$LineJoinType r2 = com.airbnb.lottie.model.content.ShapeStroke.LineJoinType.BEVEL     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r2 = r2.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r0[r2] = r1     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                r0 = 2
+                int[] r2 = f179x8c4dd79     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.airbnb.lottie.model.content.ShapeStroke$LineJoinType r3 = com.airbnb.lottie.model.content.ShapeStroke.LineJoinType.MITER     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2[r3] = r0     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                r2 = 3
+                int[] r3 = f179x8c4dd79     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.airbnb.lottie.model.content.ShapeStroke$LineJoinType r4 = com.airbnb.lottie.model.content.ShapeStroke.LineJoinType.ROUND     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r4 = r4.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r3[r4] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                com.airbnb.lottie.model.content.ShapeStroke$LineCapType[] r3 = com.airbnb.lottie.model.content.ShapeStroke.LineCapType.values()
+                int r3 = r3.length
+                int[] r3 = new int[r3]
+                f178xd9891597 = r3
+                com.airbnb.lottie.model.content.ShapeStroke$LineCapType r4 = com.airbnb.lottie.model.content.ShapeStroke.LineCapType.BUTT     // Catch:{ NoSuchFieldError -> 0x0039 }
+                int r4 = r4.ordinal()     // Catch:{ NoSuchFieldError -> 0x0039 }
+                r3[r4] = r1     // Catch:{ NoSuchFieldError -> 0x0039 }
+            L_0x0039:
+                int[] r1 = f178xd9891597     // Catch:{ NoSuchFieldError -> 0x0043 }
+                com.airbnb.lottie.model.content.ShapeStroke$LineCapType r3 = com.airbnb.lottie.model.content.ShapeStroke.LineCapType.ROUND     // Catch:{ NoSuchFieldError -> 0x0043 }
+                int r3 = r3.ordinal()     // Catch:{ NoSuchFieldError -> 0x0043 }
+                r1[r3] = r0     // Catch:{ NoSuchFieldError -> 0x0043 }
+            L_0x0043:
+                int[] r0 = f178xd9891597     // Catch:{ NoSuchFieldError -> 0x004d }
+                com.airbnb.lottie.model.content.ShapeStroke$LineCapType r1 = com.airbnb.lottie.model.content.ShapeStroke.LineCapType.UNKNOWN     // Catch:{ NoSuchFieldError -> 0x004d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x004d }
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x004d }
+            L_0x004d:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.airbnb.lottie.model.content.ShapeStroke.C15401.<clinit>():void");
         }
     }
 
-    /* loaded from: classes.dex */
     public enum LineJoinType {
         MITER,
         ROUND,
         BEVEL;
 
         public Paint.Join toPaintJoin() {
-            int i = AnonymousClass1.$SwitchMap$com$airbnb$lottie$model$content$ShapeStroke$LineJoinType[ordinal()];
-            if (i != 1) {
-                if (i == 2) {
-                    return Paint.Join.MITER;
-                }
-                if (i == 3) {
-                    return Paint.Join.ROUND;
-                }
+            int i = C15401.f179x8c4dd79[ordinal()];
+            if (i == 1) {
+                return Paint.Join.BEVEL;
+            }
+            if (i == 2) {
+                return Paint.Join.MITER;
+            }
+            if (i != 3) {
                 return null;
             }
-            return Paint.Join.BEVEL;
+            return Paint.Join.ROUND;
         }
     }
 
@@ -112,7 +136,6 @@ public class ShapeStroke implements ContentModel {
         this.hidden = z;
     }
 
-    @Override // com.airbnb.lottie.model.content.ContentModel
     public Content toContent(LottieDrawable lottieDrawable, BaseLayer baseLayer) {
         return new StrokeContent(lottieDrawable, baseLayer, this);
     }

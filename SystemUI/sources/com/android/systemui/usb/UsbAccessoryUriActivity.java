@@ -10,45 +10,51 @@ import android.os.UserHandle;
 import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.R$string;
-/* loaded from: classes2.dex */
+import com.android.settingslib.SliceBroadcastRelay;
+import com.android.systemui.C1893R;
+
 public class UsbAccessoryUriActivity extends AlertActivity implements DialogInterface.OnClickListener {
+    private static final String TAG = "UsbAccessoryUriActivity";
     private UsbAccessory mAccessory;
     private Uri mUri;
 
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+        Uri uri;
+        getWindow().addSystemFlags(524288);
+        UsbAccessoryUriActivity.super.onCreate(bundle);
         Intent intent = getIntent();
         this.mAccessory = (UsbAccessory) intent.getParcelableExtra("accessory");
-        String stringExtra = intent.getStringExtra("uri");
-        Uri parse = stringExtra == null ? null : Uri.parse(stringExtra);
-        this.mUri = parse;
-        if (parse == null) {
-            Log.e("UsbAccessoryUriActivity", "could not parse Uri " + stringExtra);
+        String stringExtra = intent.getStringExtra(SliceBroadcastRelay.EXTRA_URI);
+        if (stringExtra == null) {
+            uri = null;
+        } else {
+            uri = Uri.parse(stringExtra);
+        }
+        this.mUri = uri;
+        if (uri == null) {
+            Log.e(TAG, "could not parse Uri " + stringExtra);
             finish();
             return;
         }
-        String scheme = parse.getScheme();
-        if (!"http".equals(scheme) && !"https".equals(scheme)) {
-            Log.e("UsbAccessoryUriActivity", "Uri not http or https: " + this.mUri);
-            finish();
+        String scheme = uri.getScheme();
+        if ("http".equals(scheme) || "https".equals(scheme)) {
+            AlertController.AlertParams alertParams = this.mAlertParams;
+            alertParams.mTitle = this.mAccessory.getDescription();
+            if (alertParams.mTitle == null || alertParams.mTitle.length() == 0) {
+                alertParams.mTitle = getString(C1893R.string.title_usb_accessory);
+            }
+            alertParams.mMessage = getString(C1893R.string.usb_accessory_uri_prompt, new Object[]{this.mUri});
+            alertParams.mPositiveButtonText = getString(C1893R.string.label_view);
+            alertParams.mNegativeButtonText = getString(17039360);
+            alertParams.mPositiveButtonListener = this;
+            alertParams.mNegativeButtonListener = this;
+            setupAlert();
             return;
         }
-        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        String description = this.mAccessory.getDescription();
-        alertParams.mTitle = description;
-        if (description == null || description.length() == 0) {
-            alertParams.mTitle = getString(R$string.title_usb_accessory);
-        }
-        alertParams.mMessage = getString(R$string.usb_accessory_uri_prompt, new Object[]{this.mUri});
-        alertParams.mPositiveButtonText = getString(R$string.label_view);
-        alertParams.mNegativeButtonText = getString(17039360);
-        alertParams.mPositiveButtonListener = this;
-        alertParams.mNegativeButtonListener = this;
-        setupAlert();
+        Log.e(TAG, "Uri not http or https: " + this.mUri);
+        finish();
     }
 
-    @Override // android.content.DialogInterface.OnClickListener
     public void onClick(DialogInterface dialogInterface, int i) {
         if (i == -1) {
             Intent intent = new Intent("android.intent.action.VIEW", this.mUri);
@@ -57,7 +63,7 @@ public class UsbAccessoryUriActivity extends AlertActivity implements DialogInte
             try {
                 startActivityAsUser(intent, UserHandle.CURRENT);
             } catch (ActivityNotFoundException unused) {
-                Log.e("UsbAccessoryUriActivity", "startActivity failed for " + this.mUri);
+                Log.e(TAG, "startActivity failed for " + this.mUri);
             }
         }
         finish();

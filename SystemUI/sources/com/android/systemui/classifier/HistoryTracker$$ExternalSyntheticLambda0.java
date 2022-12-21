@@ -1,17 +1,17 @@
 package com.android.systemui.classifier;
 
-import java.util.function.BinaryOperator;
-/* loaded from: classes.dex */
-public final /* synthetic */ class HistoryTracker$$ExternalSyntheticLambda0 implements BinaryOperator {
-    public static final /* synthetic */ HistoryTracker$$ExternalSyntheticLambda0 INSTANCE = new HistoryTracker$$ExternalSyntheticLambda0();
+import com.android.systemui.classifier.HistoryTracker;
+import java.util.function.Function;
 
-    private /* synthetic */ HistoryTracker$$ExternalSyntheticLambda0() {
+/* compiled from: D8$$SyntheticClass */
+public final /* synthetic */ class HistoryTracker$$ExternalSyntheticLambda0 implements Function {
+    public final /* synthetic */ long f$0;
+
+    public /* synthetic */ HistoryTracker$$ExternalSyntheticLambda0(long j) {
+        this.f$0 = j;
     }
 
-    @Override // java.util.function.BiFunction
-    public final Object apply(Object obj, Object obj2) {
-        Double lambda$falseBelief$1;
-        lambda$falseBelief$1 = HistoryTracker.lambda$falseBelief$1((Double) obj, (Double) obj2);
-        return lambda$falseBelief$1;
+    public final Object apply(Object obj) {
+        return Double.valueOf(((HistoryTracker.CombinedResult) obj).getDecayedScore(this.f$0));
     }
 }

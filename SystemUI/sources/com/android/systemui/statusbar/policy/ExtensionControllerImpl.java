@@ -1,10 +1,14 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Handler;
 import android.util.ArrayMap;
+import com.android.systemui.dagger.SysUISingleton;
 import com.android.systemui.plugins.Plugin;
 import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.shared.plugins.PluginManager;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.ExtensionController;
 import com.android.systemui.tuner.TunerService;
 import com.android.systemui.util.leak.LeakDetector;
@@ -13,28 +17,37 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-/* loaded from: classes2.dex */
-public class ExtensionControllerImpl implements ExtensionController {
-    private final ConfigurationController mConfigurationController;
-    private final Context mDefaultContext;
-    private final LeakDetector mLeakDetector;
-    private final PluginManager mPluginManager;
-    private final TunerService mTunerService;
+import javax.inject.Inject;
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public interface Item<T> extends Producer<T> {
+@SysUISingleton
+public class ExtensionControllerImpl implements ExtensionController {
+    public static final int SORT_ORDER_DEFAULT = 4;
+    public static final int SORT_ORDER_FEATURE = 2;
+    public static final int SORT_ORDER_PLUGIN = 0;
+    public static final int SORT_ORDER_TUNER = 1;
+    public static final int SORT_ORDER_UI_MODE = 3;
+    /* access modifiers changed from: private */
+    public final ConfigurationController mConfigurationController;
+    /* access modifiers changed from: private */
+    public final Context mDefaultContext;
+    /* access modifiers changed from: private */
+    public final LeakDetector mLeakDetector;
+    /* access modifiers changed from: private */
+    public final PluginManager mPluginManager;
+    /* access modifiers changed from: private */
+    public final TunerService mTunerService;
+
+    private interface Item<T> extends Producer<T> {
         int sortOrder();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public interface Producer<T> {
+    private interface Producer<T> {
         void destroy();
 
         T get();
     }
 
+    @Inject
     public ExtensionControllerImpl(Context context, LeakDetector leakDetector, PluginManager pluginManager, TunerService tunerService, ConfigurationController configurationController) {
         this.mDefaultContext = context;
         this.mLeakDetector = leakDetector;
@@ -43,99 +56,100 @@ public class ExtensionControllerImpl implements ExtensionController {
         this.mConfigurationController = configurationController;
     }
 
-    @Override // com.android.systemui.statusbar.policy.ExtensionController
-    /* renamed from: newExtension  reason: collision with other method in class */
-    public <T> ExtensionBuilder<T> mo1298newExtension(Class<T> cls) {
+    public <T> ExtensionBuilder<T> newExtension(Class<T> cls) {
         return new ExtensionBuilder<>();
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public class ExtensionBuilder<T> implements ExtensionController.ExtensionBuilder<T> {
+    private class ExtensionBuilder<T> implements ExtensionController.ExtensionBuilder<T> {
         private ExtensionImpl<T> mExtension;
 
         private ExtensionBuilder() {
             this.mExtension = new ExtensionImpl<>();
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.ExtensionBuilder
         public ExtensionController.ExtensionBuilder<T> withTunerFactory(ExtensionController.TunerFactory<T> tunerFactory) {
             this.mExtension.addTunerFactory(tunerFactory, tunerFactory.keys());
             return this;
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.ExtensionBuilder
         public <P extends T> ExtensionController.ExtensionBuilder<T> withPlugin(Class<P> cls) {
             return withPlugin(cls, PluginManager.Helper.getAction(cls));
         }
 
         public <P extends T> ExtensionController.ExtensionBuilder<T> withPlugin(Class<P> cls, String str) {
-            return withPlugin(cls, str, null);
+            return withPlugin(cls, str, (ExtensionController.PluginConverter) null);
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.ExtensionBuilder
         public <P> ExtensionController.ExtensionBuilder<T> withPlugin(Class<P> cls, String str, ExtensionController.PluginConverter<T, P> pluginConverter) {
             this.mExtension.addPlugin(str, cls, pluginConverter);
             return this;
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.ExtensionBuilder
         public ExtensionController.ExtensionBuilder<T> withDefault(Supplier<T> supplier) {
             this.mExtension.addDefault(supplier);
             return this;
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.ExtensionBuilder
-        public ExtensionController.ExtensionBuilder<T> withCallback(Consumer<T> consumer) {
-            ((ExtensionImpl) this.mExtension).mCallbacks.add(consumer);
+        public ExtensionController.ExtensionBuilder<T> withUiMode(int i, Supplier<T> supplier) {
+            this.mExtension.addUiMode(i, supplier);
             return this;
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.ExtensionBuilder
+        public ExtensionController.ExtensionBuilder<T> withFeature(String str, Supplier<T> supplier) {
+            this.mExtension.addFeature(str, supplier);
+            return this;
+        }
+
+        public ExtensionController.ExtensionBuilder<T> withCallback(Consumer<T> consumer) {
+            this.mExtension.mCallbacks.add(consumer);
+            return this;
+        }
+
         public ExtensionController.Extension<T> build() {
-            Collections.sort(((ExtensionImpl) this.mExtension).mProducers, Comparator.comparingInt(ExtensionControllerImpl$ExtensionBuilder$$ExternalSyntheticLambda0.INSTANCE));
+            Collections.sort(this.mExtension.mProducers, Comparator.comparingInt(new C3151xb62966b4()));
             this.mExtension.notifyChanged();
             return this.mExtension;
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    /* loaded from: classes2.dex */
-    public class ExtensionImpl<T> implements ExtensionController.Extension<T> {
-        private final ArrayList<Consumer<T>> mCallbacks;
+    private class ExtensionImpl<T> implements ExtensionController.Extension<T> {
+        /* access modifiers changed from: private */
+        public final ArrayList<Consumer<T>> mCallbacks;
         private T mItem;
-        private Context mPluginContext;
-        private final ArrayList<Item<T>> mProducers;
+        /* access modifiers changed from: private */
+        public Context mPluginContext;
+        /* access modifiers changed from: private */
+        public final ArrayList<Item<T>> mProducers;
 
         private ExtensionImpl() {
             this.mProducers = new ArrayList<>();
             this.mCallbacks = new ArrayList<>();
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.Extension
         public void addCallback(Consumer<T> consumer) {
             this.mCallbacks.add(consumer);
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.Extension
         public T get() {
             return this.mItem;
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.Extension
         public Context getContext() {
             Context context = this.mPluginContext;
             return context != null ? context : ExtensionControllerImpl.this.mDefaultContext;
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.Extension
         public void destroy() {
             for (int i = 0; i < this.mProducers.size(); i++) {
                 this.mProducers.get(i).destroy();
             }
         }
 
-        @Override // com.android.systemui.statusbar.policy.ExtensionController.Extension
+        public T reload() {
+            notifyChanged();
+            return get();
+        }
+
         public void clearItem(boolean z) {
             if (z && this.mItem != null) {
                 ExtensionControllerImpl.this.mLeakDetector.trackGarbage(this.mItem);
@@ -143,7 +157,7 @@ public class ExtensionControllerImpl implements ExtensionController {
             this.mItem = null;
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
+        /* access modifiers changed from: private */
         public void notifyChanged() {
             if (this.mItem != null) {
                 ExtensionControllerImpl.this.mLeakDetector.trackGarbage(this.mItem);
@@ -178,61 +192,70 @@ public class ExtensionControllerImpl implements ExtensionController {
             this.mProducers.add(new TunerItem(tunerFactory, strArr));
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* loaded from: classes2.dex */
-        public class PluginItem<P extends Plugin> implements Item<T>, PluginListener<P> {
+        public void addUiMode(int i, Supplier<T> supplier) {
+            this.mProducers.add(new UiModeItem(i, supplier));
+        }
+
+        public void addFeature(String str, Supplier<T> supplier) {
+            this.mProducers.add(new FeatureItem(str, supplier));
+        }
+
+        private class PluginItem<P extends Plugin> implements Item<T>, PluginListener<P> {
             private final ExtensionController.PluginConverter<T, P> mConverter;
             private T mItem;
 
-            @Override // com.android.systemui.statusbar.policy.ExtensionControllerImpl.Item
             public int sortOrder() {
                 return 0;
             }
 
             public PluginItem(String str, Class<P> cls, ExtensionController.PluginConverter<T, P> pluginConverter) {
                 this.mConverter = pluginConverter;
-                ExtensionControllerImpl.this.mPluginManager.addPluginListener(str, (PluginListener) this, (Class<?>) cls);
+                ExtensionControllerImpl.this.mPluginManager.addPluginListener(str, this, cls);
             }
 
-            /* JADX WARN: Multi-variable type inference failed */
-            @Override // com.android.systemui.plugins.PluginListener
-            public void onPluginConnected(P p, Context context) {
-                ExtensionImpl.this.mPluginContext = context;
-                ExtensionController.PluginConverter<T, P> pluginConverter = this.mConverter;
-                if (pluginConverter != null) {
-                    this.mItem = pluginConverter.getInterfaceFromPlugin(p);
-                } else {
-                    this.mItem = p;
-                }
-                ExtensionImpl.this.notifyChanged();
+            /* JADX WARNING: type inference failed for: r2v0, types: [P, T, java.lang.Object] */
+            /* JADX WARNING: Unknown variable types count: 1 */
+            /* Code decompiled incorrectly, please refer to instructions dump. */
+            public void onPluginConnected(P r2, android.content.Context r3) {
+                /*
+                    r1 = this;
+                    com.android.systemui.statusbar.policy.ExtensionControllerImpl$ExtensionImpl r0 = com.android.systemui.statusbar.policy.ExtensionControllerImpl.ExtensionImpl.this
+                    android.content.Context unused = r0.mPluginContext = r3
+                    com.android.systemui.statusbar.policy.ExtensionController$PluginConverter<T, P> r3 = r1.mConverter
+                    if (r3 == 0) goto L_0x0010
+                    java.lang.Object r2 = r3.getInterfaceFromPlugin(r2)
+                    r1.mItem = r2
+                    goto L_0x0012
+                L_0x0010:
+                    r1.mItem = r2
+                L_0x0012:
+                    com.android.systemui.statusbar.policy.ExtensionControllerImpl$ExtensionImpl r1 = com.android.systemui.statusbar.policy.ExtensionControllerImpl.ExtensionImpl.this
+                    r1.notifyChanged()
+                    return
+                */
+                throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.ExtensionControllerImpl.ExtensionImpl.PluginItem.onPluginConnected(com.android.systemui.plugins.Plugin, android.content.Context):void");
             }
 
-            @Override // com.android.systemui.plugins.PluginListener
             public void onPluginDisconnected(P p) {
-                ExtensionImpl.this.mPluginContext = null;
+                Context unused = ExtensionImpl.this.mPluginContext = null;
                 this.mItem = null;
                 ExtensionImpl.this.notifyChanged();
             }
 
-            @Override // com.android.systemui.statusbar.policy.ExtensionControllerImpl.Producer
             public T get() {
                 return this.mItem;
             }
 
-            @Override // com.android.systemui.statusbar.policy.ExtensionControllerImpl.Producer
             public void destroy() {
                 ExtensionControllerImpl.this.mPluginManager.removePluginListener(this);
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* loaded from: classes2.dex */
-        public class TunerItem<T> implements Item<T>, TunerService.Tunable {
+        private class TunerItem<T> implements Item<T>, TunerService.Tunable {
             private final ExtensionController.TunerFactory<T> mFactory;
             private T mItem;
             private final ArrayMap<String, String> mSettings = new ArrayMap<>();
 
-            @Override // com.android.systemui.statusbar.policy.ExtensionControllerImpl.Item
             public int sortOrder() {
                 return 1;
             }
@@ -242,34 +265,88 @@ public class ExtensionControllerImpl implements ExtensionController {
                 ExtensionControllerImpl.this.mTunerService.addTunable(this, strArr);
             }
 
-            @Override // com.android.systemui.statusbar.policy.ExtensionControllerImpl.Producer
             public T get() {
                 return this.mItem;
             }
 
-            @Override // com.android.systemui.statusbar.policy.ExtensionControllerImpl.Producer
             public void destroy() {
                 ExtensionControllerImpl.this.mTunerService.removeTunable(this);
             }
 
-            @Override // com.android.systemui.tuner.TunerService.Tunable
             public void onTuningChanged(String str, String str2) {
                 this.mSettings.put(str, str2);
-                this.mItem = this.mFactory.mo1367create(this.mSettings);
+                this.mItem = this.mFactory.create(this.mSettings);
                 ExtensionImpl.this.notifyChanged();
             }
         }
 
-        /* JADX INFO: Access modifiers changed from: private */
-        /* loaded from: classes2.dex */
-        public class Default<T> implements Item<T> {
+        private class UiModeItem<T> implements Item<T>, ConfigurationController.ConfigurationListener {
+            private final int mDesiredUiMode;
+            private Handler mHandler = new Handler();
+            private final Supplier<T> mSupplier;
+            private int mUiMode;
+
+            public int sortOrder() {
+                return 3;
+            }
+
+            public UiModeItem(int i, Supplier<T> supplier) {
+                this.mDesiredUiMode = i;
+                this.mSupplier = supplier;
+                this.mUiMode = ExtensionControllerImpl.this.mDefaultContext.getResources().getConfiguration().uiMode & 15;
+                ExtensionControllerImpl.this.mConfigurationController.addCallback(this);
+            }
+
+            public void onConfigChanged(Configuration configuration) {
+                int i = configuration.uiMode & 15;
+                if (i != this.mUiMode) {
+                    this.mUiMode = i;
+                    this.mHandler.post(new C3152xc839f287(ExtensionImpl.this));
+                }
+            }
+
+            public T get() {
+                if (this.mUiMode == this.mDesiredUiMode) {
+                    return this.mSupplier.get();
+                }
+                return null;
+            }
+
+            public void destroy() {
+                ExtensionControllerImpl.this.mConfigurationController.removeCallback(this);
+            }
+        }
+
+        private class FeatureItem<T> implements Item<T> {
+            private final String mFeature;
             private final Supplier<T> mSupplier;
 
-            @Override // com.android.systemui.statusbar.policy.ExtensionControllerImpl.Producer
             public void destroy() {
             }
 
-            @Override // com.android.systemui.statusbar.policy.ExtensionControllerImpl.Item
+            public int sortOrder() {
+                return 2;
+            }
+
+            public FeatureItem(String str, Supplier<T> supplier) {
+                this.mSupplier = supplier;
+                this.mFeature = str;
+            }
+
+            public T get() {
+                if (ExtensionControllerImpl.this.mDefaultContext.getPackageManager().hasSystemFeature(this.mFeature)) {
+                    return this.mSupplier.get();
+                }
+                return null;
+            }
+        }
+
+        private class Default<T> implements Item<T> {
+            private final Supplier<T> mSupplier;
+
+            public void destroy() {
+            }
+
             public int sortOrder() {
                 return 4;
             }
@@ -278,7 +355,6 @@ public class ExtensionControllerImpl implements ExtensionController {
                 this.mSupplier = supplier;
             }
 
-            @Override // com.android.systemui.statusbar.policy.ExtensionControllerImpl.Producer
             public T get() {
                 return this.mSupplier.get();
             }

@@ -3,10 +3,9 @@ package com.android.systemui.statusbar.notification.logging;
 import android.service.notification.StatusBarNotification;
 import com.android.internal.logging.UiEventLogger;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
-import com.android.systemui.statusbar.notification.logging.nano.Notifications$Notification;
-import com.android.systemui.statusbar.notification.logging.nano.Notifications$NotificationList;
+import com.android.systemui.statusbar.notification.logging.nano.Notifications;
 import java.util.List;
-/* loaded from: classes.dex */
+
 public interface NotificationPanelLogger {
     static int toNotificationSection(int i) {
         switch (i) {
@@ -29,14 +28,13 @@ public interface NotificationPanelLogger {
 
     void logPanelShown(boolean z, List<NotificationEntry> list);
 
-    /* loaded from: classes.dex */
     public enum NotificationPanelEvent implements UiEventLogger.UiEventEnum {
         NOTIFICATION_PANEL_OPEN_STATUS_BAR(200),
         NOTIFICATION_PANEL_OPEN_LOCKSCREEN(201);
         
         private final int mId;
 
-        NotificationPanelEvent(int i) {
+        private NotificationPanelEvent(int i) {
             this.mId = i;
         }
 
@@ -52,31 +50,31 @@ public interface NotificationPanelLogger {
         }
     }
 
-    static Notifications$NotificationList toNotificationProto(List<NotificationEntry> list) {
-        Notifications$NotificationList notifications$NotificationList = new Notifications$NotificationList();
+    static Notifications.NotificationList toNotificationProto(List<NotificationEntry> list) {
+        Notifications.NotificationList notificationList = new Notifications.NotificationList();
         if (list == null) {
-            return notifications$NotificationList;
+            return notificationList;
         }
-        Notifications$Notification[] notifications$NotificationArr = new Notifications$Notification[list.size()];
+        Notifications.Notification[] notificationArr = new Notifications.Notification[list.size()];
         int i = 0;
-        for (NotificationEntry notificationEntry : list) {
-            StatusBarNotification sbn = notificationEntry.getSbn();
+        for (NotificationEntry next : list) {
+            StatusBarNotification sbn = next.getSbn();
             if (sbn != null) {
-                Notifications$Notification notifications$Notification = new Notifications$Notification();
-                notifications$Notification.uid = sbn.getUid();
-                notifications$Notification.packageName = sbn.getPackageName();
+                Notifications.Notification notification = new Notifications.Notification();
+                notification.uid = sbn.getUid();
+                notification.packageName = sbn.getPackageName();
                 if (sbn.getInstanceId() != null) {
-                    notifications$Notification.instanceId = sbn.getInstanceId().getId();
+                    notification.instanceId = sbn.getInstanceId().getId();
                 }
                 if (sbn.getNotification() != null) {
-                    notifications$Notification.isGroupSummary = sbn.getNotification().isGroupSummary();
+                    notification.isGroupSummary = sbn.getNotification().isGroupSummary();
                 }
-                notifications$Notification.section = toNotificationSection(notificationEntry.getBucket());
-                notifications$NotificationArr[i] = notifications$Notification;
+                notification.section = toNotificationSection(next.getBucket());
+                notificationArr[i] = notification;
             }
             i++;
         }
-        notifications$NotificationList.notifications = notifications$NotificationArr;
-        return notifications$NotificationList;
+        notificationList.notifications = notificationArr;
+        return notificationList;
     }
 }

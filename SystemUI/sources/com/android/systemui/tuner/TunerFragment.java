@@ -1,6 +1,5 @@
 package com.android.systemui.tuner;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -15,37 +14,38 @@ import android.view.MenuItem;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.R$string;
-import com.android.systemui.R$xml;
+import com.android.systemui.C1893R;
 import com.android.systemui.shared.plugins.PluginPrefs;
-/* loaded from: classes2.dex */
-public class TunerFragment extends PreferenceFragment {
-    private final TunerService mTunerService;
-    private static final CharSequence KEY_DOZE = "doze";
-    private static final String[] DEBUG_ONLY = {"nav_bar", "lockscreen", "picture_in_picture"};
 
-    @SuppressLint({"ValidFragment"})
+public class TunerFragment extends PreferenceFragment {
+    private static final String[] DEBUG_ONLY = {"nav_bar", "lockscreen", "picture_in_picture"};
+    private static final String KEY_BATTERY_PCT = "battery_pct";
+    private static final CharSequence KEY_DOZE = "doze";
+    private static final String KEY_PLUGINS = "plugins";
+    private static final int MENU_REMOVE = 2;
+    public static final String SETTING_SEEN_TUNER_WARNING = "seen_tuner_warning";
+    private static final String TAG = "TunerFragment";
+    private static final String WARNING_TAG = "tuner_warning";
+    private final TunerService mTunerService;
+
     public TunerFragment(TunerService tunerService) {
         this.mTunerService = tunerService;
     }
 
-    @Override // androidx.preference.PreferenceFragment, android.app.Fragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setHasOptionsMenu(true);
     }
 
-    @Override // android.app.Fragment
     public void onActivityCreated(Bundle bundle) {
         super.onActivityCreated(bundle);
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    @Override // androidx.preference.PreferenceFragment
     public void onCreatePreferences(Bundle bundle, String str) {
-        addPreferencesFromResource(R$xml.tuner_prefs);
+        addPreferencesFromResource(C1893R.C1901xml.tuner_prefs);
         if (!PluginPrefs.hasPlugins(getContext())) {
-            getPreferenceScreen().removePreference(findPreference("plugins"));
+            getPreferenceScreen().removePreference(findPreference(KEY_PLUGINS));
         }
         if (!alwaysOnAvailable()) {
             getPreferenceScreen().removePreference(findPreference(KEY_DOZE));
@@ -64,8 +64,8 @@ public class TunerFragment extends PreferenceFragment {
                 i++;
             }
         }
-        if (Settings.Secure.getInt(getContext().getContentResolver(), "seen_tuner_warning", 0) == 0 && getFragmentManager().findFragmentByTag("tuner_warning") == null) {
-            new TunerWarningFragment().show(getFragmentManager(), "tuner_warning");
+        if (Settings.Secure.getInt(getContext().getContentResolver(), SETTING_SEEN_TUNER_WARNING, 0) == 0 && getFragmentManager().findFragmentByTag(WARNING_TAG) == null) {
+            new TunerWarningFragment().show(getFragmentManager(), WARNING_TAG);
         }
     }
 
@@ -73,58 +73,47 @@ public class TunerFragment extends PreferenceFragment {
         return new AmbientDisplayConfiguration(getContext()).alwaysOnAvailable();
     }
 
-    @Override // android.app.Fragment
     public void onResume() {
         super.onResume();
-        getActivity().setTitle(R$string.system_ui_tuner);
+        getActivity().setTitle(C1893R.string.system_ui_tuner);
         MetricsLogger.visibility(getContext(), 227, true);
     }
 
-    @Override // android.app.Fragment
     public void onPause() {
         super.onPause();
         MetricsLogger.visibility(getContext(), 227, false);
     }
 
-    @Override // android.app.Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        menu.add(0, 2, 0, R$string.remove_from_settings);
+        menu.add(0, 2, 0, C1893R.string.remove_from_settings);
     }
 
-    @Override // android.app.Fragment
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         int itemId = menuItem.getItemId();
         if (itemId == 2) {
-            this.mTunerService.showResetRequest(new Runnable() { // from class: com.android.systemui.tuner.TunerFragment$$ExternalSyntheticLambda0
-                @Override // java.lang.Runnable
-                public final void run() {
-                    TunerFragment.this.lambda$onOptionsItemSelected$0();
-                }
-            });
+            this.mTunerService.showResetRequest(new TunerFragment$$ExternalSyntheticLambda0(this));
             return true;
-        } else if (itemId == 16908332) {
+        } else if (itemId != 16908332) {
+            return super.onOptionsItemSelected(menuItem);
+        } else {
             getActivity().finish();
             return true;
-        } else {
-            return super.onOptionsItemSelected(menuItem);
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
-    public /* synthetic */ void lambda$onOptionsItemSelected$0() {
+    /* access modifiers changed from: package-private */
+    /* renamed from: lambda$onOptionsItemSelected$0$com-android-systemui-tuner-TunerFragment */
+    public /* synthetic */ void mo46448x848f5a5f() {
         if (getActivity() != null) {
             getActivity().finish();
         }
     }
 
-    /* loaded from: classes2.dex */
     public static class TunerWarningFragment extends DialogFragment {
-        @Override // android.app.DialogFragment
         public Dialog onCreateDialog(Bundle bundle) {
-            return new AlertDialog.Builder(getContext()).setTitle(R$string.tuner_warning_title).setMessage(R$string.tuner_warning).setPositiveButton(R$string.got_it, new DialogInterface.OnClickListener() { // from class: com.android.systemui.tuner.TunerFragment.TunerWarningFragment.1
-                @Override // android.content.DialogInterface.OnClickListener
+            return new AlertDialog.Builder(getContext()).setTitle(C1893R.string.tuner_warning_title).setMessage(C1893R.string.tuner_warning).setPositiveButton(C1893R.string.got_it, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    Settings.Secure.putInt(TunerWarningFragment.this.getContext().getContentResolver(), "seen_tuner_warning", 1);
+                    Settings.Secure.putInt(TunerWarningFragment.this.getContext().getContentResolver(), TunerFragment.SETTING_SEEN_TUNER_WARNING, 1);
                 }
             }).show();
         }

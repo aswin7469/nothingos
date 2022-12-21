@@ -5,99 +5,94 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.leanback.widget.GridLayoutManager;
 import androidx.leanback.widget.ItemAlignmentFacet;
-/* loaded from: classes.dex */
+
 class ItemAlignmentFacetHelper {
     private static Rect sRect = new Rect();
 
-    /* JADX INFO: Access modifiers changed from: package-private */
-    public static int getAlignmentPosition(View itemView, ItemAlignmentFacet.ItemAlignmentDef facet, int orientation) {
-        View view;
-        int i;
-        int width;
-        int width2;
-        int width3;
-        GridLayoutManager.LayoutParams layoutParams = (GridLayoutManager.LayoutParams) itemView.getLayoutParams();
-        int i2 = facet.mViewId;
-        if (i2 == 0 || (view = itemView.findViewById(i2)) == null) {
-            view = itemView;
+    static int getAlignmentPosition(View view, ItemAlignmentFacet.ItemAlignmentDef itemAlignmentDef, int i) {
+        View view2;
+        int i2;
+        int i3;
+        int i4;
+        int i5;
+        GridLayoutManager.LayoutParams layoutParams = (GridLayoutManager.LayoutParams) view.getLayoutParams();
+        if (itemAlignmentDef.mViewId == 0 || (view2 = view.findViewById(itemAlignmentDef.mViewId)) == null) {
+            view2 = view;
         }
-        int i3 = facet.mOffset;
-        if (orientation == 0) {
-            if (itemView.getLayoutDirection() == 1) {
-                if (view == itemView) {
-                    width2 = layoutParams.getOpticalWidth(view);
+        int i6 = itemAlignmentDef.mOffset;
+        if (i != 0) {
+            if (itemAlignmentDef.mOffsetWithPadding) {
+                if (itemAlignmentDef.mOffsetPercent == 0.0f) {
+                    i6 += view2.getPaddingTop();
+                } else if (itemAlignmentDef.mOffsetPercent == 100.0f) {
+                    i6 -= view2.getPaddingBottom();
+                }
+            }
+            if (itemAlignmentDef.mOffsetPercent != -1.0f) {
+                i6 += (int) ((((float) (view2 == view ? layoutParams.getOpticalHeight(view2) : view2.getHeight())) * itemAlignmentDef.mOffsetPercent) / 100.0f);
+            }
+            if (view != view2) {
+                sRect.top = i6;
+                ((ViewGroup) view).offsetDescendantRectToMyCoords(view2, sRect);
+                i2 = sRect.top - layoutParams.getOpticalTopInset();
+            } else {
+                i2 = i6;
+            }
+            return itemAlignmentDef.isAlignedToTextViewBaseLine() ? i2 + view2.getBaseline() : i2;
+        } else if (view.getLayoutDirection() == 1) {
+            if (view2 == view) {
+                i4 = layoutParams.getOpticalWidth(view2);
+            } else {
+                i4 = view2.getWidth();
+            }
+            int i7 = i4 - i6;
+            if (itemAlignmentDef.mOffsetWithPadding) {
+                if (itemAlignmentDef.mOffsetPercent == 0.0f) {
+                    i7 -= view2.getPaddingRight();
+                } else if (itemAlignmentDef.mOffsetPercent == 100.0f) {
+                    i7 += view2.getPaddingLeft();
+                }
+            }
+            if (itemAlignmentDef.mOffsetPercent != -1.0f) {
+                if (view2 == view) {
+                    i5 = layoutParams.getOpticalWidth(view2);
                 } else {
-                    width2 = view.getWidth();
+                    i5 = view2.getWidth();
                 }
-                int i4 = width2 - i3;
-                if (facet.mOffsetWithPadding) {
-                    float f = facet.mOffsetPercent;
-                    if (f == 0.0f) {
-                        i4 -= view.getPaddingRight();
-                    } else if (f == 100.0f) {
-                        i4 += view.getPaddingLeft();
-                    }
-                }
-                if (facet.mOffsetPercent != -1.0f) {
-                    if (view == itemView) {
-                        width3 = layoutParams.getOpticalWidth(view);
-                    } else {
-                        width3 = view.getWidth();
-                    }
-                    i4 -= (int) ((width3 * facet.mOffsetPercent) / 100.0f);
-                }
-                if (itemView == view) {
-                    return i4;
-                }
-                Rect rect = sRect;
-                rect.right = i4;
-                ((ViewGroup) itemView).offsetDescendantRectToMyCoords(view, rect);
-                return sRect.right + layoutParams.getOpticalRightInset();
+                i7 -= (int) ((((float) i5) * itemAlignmentDef.mOffsetPercent) / 100.0f);
             }
-            if (facet.mOffsetWithPadding) {
-                float f2 = facet.mOffsetPercent;
-                if (f2 == 0.0f) {
-                    i3 += view.getPaddingLeft();
-                } else if (f2 == 100.0f) {
-                    i3 -= view.getPaddingRight();
+            if (view == view2) {
+                return i7;
+            }
+            sRect.right = i7;
+            ((ViewGroup) view).offsetDescendantRectToMyCoords(view2, sRect);
+            return sRect.right + layoutParams.getOpticalRightInset();
+        } else {
+            if (itemAlignmentDef.mOffsetWithPadding) {
+                if (itemAlignmentDef.mOffsetPercent == 0.0f) {
+                    i6 += view2.getPaddingLeft();
+                } else if (itemAlignmentDef.mOffsetPercent == 100.0f) {
+                    i6 -= view2.getPaddingRight();
                 }
             }
-            if (facet.mOffsetPercent != -1.0f) {
-                if (view == itemView) {
-                    width = layoutParams.getOpticalWidth(view);
+            if (itemAlignmentDef.mOffsetPercent != -1.0f) {
+                if (view2 == view) {
+                    i3 = layoutParams.getOpticalWidth(view2);
                 } else {
-                    width = view.getWidth();
+                    i3 = view2.getWidth();
                 }
-                i3 += (int) ((width * facet.mOffsetPercent) / 100.0f);
+                i6 += (int) ((((float) i3) * itemAlignmentDef.mOffsetPercent) / 100.0f);
             }
-            int i5 = i3;
-            if (itemView == view) {
-                return i5;
+            int i8 = i6;
+            if (view == view2) {
+                return i8;
             }
-            Rect rect2 = sRect;
-            rect2.left = i5;
-            ((ViewGroup) itemView).offsetDescendantRectToMyCoords(view, rect2);
+            sRect.left = i8;
+            ((ViewGroup) view).offsetDescendantRectToMyCoords(view2, sRect);
             return sRect.left - layoutParams.getOpticalLeftInset();
         }
-        if (facet.mOffsetWithPadding) {
-            float f3 = facet.mOffsetPercent;
-            if (f3 == 0.0f) {
-                i3 += view.getPaddingTop();
-            } else if (f3 == 100.0f) {
-                i3 -= view.getPaddingBottom();
-            }
-        }
-        if (facet.mOffsetPercent != -1.0f) {
-            i3 += (int) (((view == itemView ? layoutParams.getOpticalHeight(view) : view.getHeight()) * facet.mOffsetPercent) / 100.0f);
-        }
-        if (itemView != view) {
-            Rect rect3 = sRect;
-            rect3.top = i3;
-            ((ViewGroup) itemView).offsetDescendantRectToMyCoords(view, rect3);
-            i = sRect.top - layoutParams.getOpticalTopInset();
-        } else {
-            i = i3;
-        }
-        return facet.isAlignedToTextViewBaseLine() ? i + view.getBaseline() : i;
+    }
+
+    private ItemAlignmentFacetHelper() {
     }
 }

@@ -8,7 +8,7 @@ import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.util.wakelock.WakeLock;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DozeMachine_Factory implements Factory<DozeMachine> {
     private final Provider<BatteryController> batteryControllerProvider;
     private final Provider<AmbientDisplayConfiguration> configProvider;
@@ -32,10 +32,8 @@ public final class DozeMachine_Factory implements Factory<DozeMachine> {
         this.partsProvider = provider9;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DozeMachine mo1933get() {
-        return newInstance(this.serviceProvider.mo1933get(), this.configProvider.mo1933get(), this.wakeLockProvider.mo1933get(), this.wakefulnessLifecycleProvider.mo1933get(), this.batteryControllerProvider.mo1933get(), this.dozeLogProvider.mo1933get(), this.dockManagerProvider.mo1933get(), this.dozeHostProvider.mo1933get(), this.partsProvider.mo1933get());
+    public DozeMachine get() {
+        return newInstance(this.serviceProvider.get(), this.configProvider.get(), this.wakeLockProvider.get(), this.wakefulnessLifecycleProvider.get(), this.batteryControllerProvider.get(), this.dozeLogProvider.get(), this.dockManagerProvider.get(), this.dozeHostProvider.get(), this.partsProvider.get());
     }
 
     public static DozeMachine_Factory create(Provider<DozeMachine.Service> provider, Provider<AmbientDisplayConfiguration> provider2, Provider<WakeLock> provider3, Provider<WakefulnessLifecycle> provider4, Provider<BatteryController> provider5, Provider<DozeLog> provider6, Provider<DockManager> provider7, Provider<DozeHost> provider8, Provider<DozeMachine.Part[]> provider9) {

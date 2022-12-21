@@ -9,28 +9,32 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.util.Pair;
 import android.view.NotificationHeaderView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.android.internal.annotations.VisibleForTesting;
+import androidx.core.app.NotificationCompat;
 import com.android.internal.graphics.ColorUtils;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.internal.widget.CachingIconView;
 import com.android.settingslib.Utils;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.TransformableView;
+import com.android.systemui.statusbar.notification.FeedbackIcon;
+import com.android.systemui.statusbar.notification.NotificationFadeAware;
 import com.android.systemui.statusbar.notification.TransformState;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
-/* loaded from: classes.dex */
-public abstract class NotificationViewWrapper implements TransformableView {
-    protected final ExpandableNotificationRow mRow;
-    protected final View mView;
-    private final Rect mTmpRect = new Rect();
-    protected int mBackgroundColor = 0;
 
-    @Override // com.android.systemui.statusbar.TransformableView
+public abstract class NotificationViewWrapper implements TransformableView {
+    protected int mBackgroundColor = 0;
+    protected final ExpandableNotificationRow mRow;
+    private final Rect mTmpRect = new Rect();
+    protected final View mView;
+
+    public boolean disallowSingleClick(float f, float f2) {
+        return false;
+    }
+
     public TransformState getCurrentState(int i) {
         return null;
     }
@@ -67,6 +71,10 @@ public abstract class NotificationViewWrapper implements TransformableView {
         return null;
     }
 
+    public boolean isDimmable() {
+        return true;
+    }
+
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
     }
 
@@ -74,6 +82,9 @@ public abstract class NotificationViewWrapper implements TransformableView {
     }
 
     public void setExpanded(boolean z) {
+    }
+
+    public void setFeedbackIcon(FeedbackIcon feedbackIcon) {
     }
 
     public void setHeaderVisibleAmount(float f) {
@@ -94,7 +105,8 @@ public abstract class NotificationViewWrapper implements TransformableView {
     public void setRemoved() {
     }
 
-    protected boolean shouldClearBackgroundOnReapply() {
+    /* access modifiers changed from: protected */
+    public boolean shouldClearBackgroundOnReapply() {
         return true;
     }
 
@@ -102,14 +114,11 @@ public abstract class NotificationViewWrapper implements TransformableView {
         return false;
     }
 
-    public void showFeedbackIcon(boolean z, Pair<Integer, Integer> pair) {
-    }
-
     public void updateExpandability(boolean z, View.OnClickListener onClickListener, boolean z2) {
     }
 
     public static NotificationViewWrapper wrap(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
-        if (view.getId() == 16909501) {
+        if (view.getId() == 16909547) {
             if ("bigPicture".equals(view.getTag())) {
                 return new NotificationBigPictureTemplateViewWrapper(context, view, expandableNotificationRow);
             }
@@ -125,7 +134,7 @@ public abstract class NotificationViewWrapper implements TransformableView {
             if ("conversation".equals(view.getTag())) {
                 return new NotificationConversationTemplateViewWrapper(context, view, expandableNotificationRow);
             }
-            if ("call".equals(view.getTag())) {
+            if (NotificationCompat.CATEGORY_CALL.equals(view.getTag())) {
                 return new NotificationCallTemplateViewWrapper(context, view, expandableNotificationRow);
             }
             if (expandableNotificationRow.getEntry().getSbn().getNotification().isStyle(Notification.DecoratedCustomViewStyle.class)) {
@@ -142,8 +151,7 @@ public abstract class NotificationViewWrapper implements TransformableView {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
-    public NotificationViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
+    protected NotificationViewWrapper(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
         this.mView = view;
         this.mRow = expandableNotificationRow;
         onReinflated();
@@ -160,7 +168,7 @@ public abstract class NotificationViewWrapper implements TransformableView {
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public boolean needsInversion(int i, View view) {
         if (view == null) {
             return false;
@@ -177,20 +185,21 @@ public abstract class NotificationViewWrapper implements TransformableView {
         }
         float[] fArr = {0.0f, 0.0f, 0.0f};
         ColorUtils.colorToHSL(i, fArr);
-        if (fArr[1] != 0.0f) {
+        float f = fArr[1];
+        if (f != 0.0f) {
             return false;
         }
-        if (fArr[1] == 0.0f && ((double) fArr[2]) > 0.5d) {
+        if (f == 0.0f && ((double) fArr[2]) > 0.5d) {
             return true;
         }
-        if (!(view instanceof ViewGroup)) {
-            return false;
+        if (view instanceof ViewGroup) {
+            return childrenNeedInversion(i, (ViewGroup) view);
         }
-        return childrenNeedInversion(i, (ViewGroup) view);
+        return false;
     }
 
-    @VisibleForTesting
-    boolean childrenNeedInversion(int i, ViewGroup viewGroup) {
+    /* access modifiers changed from: package-private */
+    public boolean childrenNeedInversion(int i, ViewGroup viewGroup) {
         if (viewGroup == null) {
             return false;
         }
@@ -211,18 +220,19 @@ public abstract class NotificationViewWrapper implements TransformableView {
         return false;
     }
 
-    protected int getBackgroundColor(View view) {
+    /* access modifiers changed from: protected */
+    public int getBackgroundColor(View view) {
         if (view == null) {
             return 0;
         }
         Drawable background = view.getBackground();
-        if (!(background instanceof ColorDrawable)) {
-            return 0;
+        if (background instanceof ColorDrawable) {
+            return ((ColorDrawable) background).getColor();
         }
-        return ((ColorDrawable) background).getColor();
+        return 0;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public void invertViewLuminosity(View view) {
         Paint paint = new Paint();
         ColorMatrix colorMatrix = new ColorMatrix();
@@ -236,27 +246,22 @@ public abstract class NotificationViewWrapper implements TransformableView {
         view.setLayerType(2, paint);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, Runnable runnable) {
         CrossFadeHelper.fadeOut(this.mView, runnable);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, float f) {
         CrossFadeHelper.fadeOut(this.mView, f);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView) {
         CrossFadeHelper.fadeIn(this.mView);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView, float f) {
         CrossFadeHelper.fadeIn(this.mView, f, true);
     }
 
-    @Override // com.android.systemui.statusbar.TransformableView
     public void setVisible(boolean z) {
         this.mView.animate().cancel();
         this.mView.setVisibility(z ? 0 : 4);
@@ -269,9 +274,30 @@ public abstract class NotificationViewWrapper implements TransformableView {
         return this.mBackgroundColor;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int resolveBackgroundColor() {
         int customBackgroundColor = getCustomBackgroundColor();
-        return customBackgroundColor != 0 ? customBackgroundColor : Utils.getColorAttr(this.mView.getContext(), 16842801).getDefaultColor();
+        if (customBackgroundColor != 0) {
+            return customBackgroundColor;
+        }
+        return Utils.getColorAttr(this.mView.getContext(), 16842801).getDefaultColor();
+    }
+
+    /* access modifiers changed from: protected */
+    public boolean isOnView(View view, float f, float f2) {
+        View view2 = (View) view.getParent();
+        while (view2 != null && !(view2 instanceof ExpandableNotificationRow)) {
+            view2.getHitRect(this.mTmpRect);
+            f -= (float) this.mTmpRect.left;
+            f2 -= (float) this.mTmpRect.top;
+            view2 = (View) view2.getParent();
+        }
+        view.getHitRect(this.mTmpRect);
+        return this.mTmpRect.contains((int) f, (int) f2);
+    }
+
+    public void setNotificationFaded(boolean z) {
+        NotificationFadeAware.setLayerTypeForFaded(getIcon(), z);
+        NotificationFadeAware.setLayerTypeForFaded(getExpandButton(), z);
     }
 }

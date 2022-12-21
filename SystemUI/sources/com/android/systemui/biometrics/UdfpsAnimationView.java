@@ -4,10 +4,13 @@ import android.content.Context;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.view.ViewOverlay;
 import android.widget.FrameLayout;
-/* loaded from: classes.dex */
-abstract class UdfpsAnimationView extends FrameLayout {
+
+public abstract class UdfpsAnimationView extends FrameLayout {
     private int mAlpha;
+    private float mDialogSuggestedAlpha = 1.0f;
+    private float mNotificationShadeExpansion = 0.0f;
     boolean mPauseAuth;
 
     private int expansionToAlpha(float f) {
@@ -17,70 +20,96 @@ abstract class UdfpsAnimationView extends FrameLayout {
         return (int) ((1.0f - (f / 0.4f)) * 255.0f);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean dozeTimeTick() {
         return false;
     }
 
-    abstract UdfpsDrawable getDrawable();
+    /* access modifiers changed from: package-private */
+    public abstract UdfpsDrawable getDrawable();
+
+    /* access modifiers changed from: protected */
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateDefaultLayoutParams() {
+        return super.generateDefaultLayoutParams();
+    }
+
+    public /* bridge */ /* synthetic */ ViewGroup.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
+        return super.generateLayoutParams(attributeSet);
+    }
+
+    public /* bridge */ /* synthetic */ ViewOverlay getOverlay() {
+        return super.getOverlay();
+    }
 
     public UdfpsAnimationView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onSensorRectUpdated(RectF rectF) {
         getDrawable().onSensorRectUpdated(rectF);
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onIlluminationStarting() {
         getDrawable().setIlluminationShowing(true);
         getDrawable().invalidateSelf();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public void onIlluminationStopped() {
         getDrawable().setIlluminationShowing(false);
         getDrawable().invalidateSelf();
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean setPauseAuth(boolean z) {
-        if (z != this.mPauseAuth) {
-            this.mPauseAuth = z;
-            updateAlpha();
-            return true;
+        if (z == this.mPauseAuth) {
+            return false;
         }
-        return false;
+        this.mPauseAuth = z;
+        updateAlpha();
+        return true;
     }
 
-    /* JADX INFO: Access modifiers changed from: protected */
+    /* access modifiers changed from: protected */
     public int updateAlpha() {
         int calculateAlpha = calculateAlpha();
         getDrawable().setAlpha(calculateAlpha);
-        if (this.mPauseAuth && calculateAlpha == 0 && getParent() != null) {
-            ((ViewGroup) getParent()).setVisibility(4);
-        } else {
+        if (!this.mPauseAuth || calculateAlpha != 0 || getParent() == null) {
             ((ViewGroup) getParent()).setVisibility(0);
+        } else {
+            ((ViewGroup) getParent()).setVisibility(4);
         }
         return calculateAlpha;
     }
 
-    int calculateAlpha() {
+    /* access modifiers changed from: package-private */
+    public int calculateAlpha() {
+        int expansionToAlpha = (int) (((float) expansionToAlpha(this.mNotificationShadeExpansion)) * this.mDialogSuggestedAlpha);
+        this.mAlpha = expansionToAlpha;
         if (this.mPauseAuth) {
-            return this.mAlpha;
+            return expansionToAlpha;
         }
         return 255;
     }
 
-    /* JADX INFO: Access modifiers changed from: package-private */
+    /* access modifiers changed from: package-private */
     public boolean isPauseAuth() {
         return this.mPauseAuth;
     }
 
-    public void onExpansionChanged(float f, boolean z) {
-        this.mAlpha = expansionToAlpha(f);
+    public void setDialogSuggestedAlpha(float f) {
+        this.mDialogSuggestedAlpha = f;
+        updateAlpha();
+    }
+
+    public float getDialogSuggestedAlpha() {
+        return this.mDialogSuggestedAlpha;
+    }
+
+    public void onExpansionChanged(float f) {
+        this.mNotificationShadeExpansion = f;
         updateAlpha();
     }
 }

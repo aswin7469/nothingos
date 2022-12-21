@@ -5,7 +5,7 @@ import android.content.Context;
 import dagger.internal.Factory;
 import dagger.internal.Preconditions;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class FrameworkServicesModule_ProvideDevicePolicyManagerFactory implements Factory<DevicePolicyManager> {
     private final Provider<Context> contextProvider;
 
@@ -13,10 +13,8 @@ public final class FrameworkServicesModule_ProvideDevicePolicyManagerFactory imp
         this.contextProvider = provider;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DevicePolicyManager mo1933get() {
-        return provideDevicePolicyManager(this.contextProvider.mo1933get());
+    public DevicePolicyManager get() {
+        return provideDevicePolicyManager(this.contextProvider.get());
     }
 
     public static FrameworkServicesModule_ProvideDevicePolicyManagerFactory create(Provider<Context> provider) {

@@ -4,7 +4,7 @@ import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.SmartReplyController;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes2.dex */
+
 public final class SmartActionInflaterImpl_Factory implements Factory<SmartActionInflaterImpl> {
     private final Provider<ActivityStarter> activityStarterProvider;
     private final Provider<SmartReplyConstants> constantsProvider;
@@ -18,10 +18,8 @@ public final class SmartActionInflaterImpl_Factory implements Factory<SmartActio
         this.headsUpManagerProvider = provider4;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public SmartActionInflaterImpl mo1933get() {
-        return newInstance(this.constantsProvider.mo1933get(), this.activityStarterProvider.mo1933get(), this.smartReplyControllerProvider.mo1933get(), this.headsUpManagerProvider.mo1933get());
+    public SmartActionInflaterImpl get() {
+        return newInstance(this.constantsProvider.get(), this.activityStarterProvider.get(), this.smartReplyControllerProvider.get(), this.headsUpManagerProvider.get());
     }
 
     public static SmartActionInflaterImpl_Factory create(Provider<SmartReplyConstants> provider, Provider<ActivityStarter> provider2, Provider<SmartReplyController> provider3, Provider<HeadsUpManager> provider4) {

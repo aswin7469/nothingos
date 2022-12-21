@@ -1,45 +1,31 @@
 package kotlinx.coroutines;
 
+import kotlin.Metadata;
 import kotlin.Unit;
-import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+
+@Metadata(mo64986d1 = {"\u00000\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0010\u000b\n\u0000\n\u0002\u0010\u0003\n\u0000\n\u0002\u0010\u0002\n\u0000\b\u0000\u0018\u00002\u00020\u00012\u00020\u0002B\r\u0012\u0006\u0010\u0003\u001a\u00020\u0004¢\u0006\u0002\u0010\u0005J\u0010\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\rH\u0016J\u0013\u0010\u000e\u001a\u00020\u000f2\b\u0010\f\u001a\u0004\u0018\u00010\rH\u0002R\u0010\u0010\u0003\u001a\u00020\u00048\u0006X\u0004¢\u0006\u0002\n\u0000R\u0014\u0010\u0006\u001a\u00020\u00078VX\u0004¢\u0006\u0006\u001a\u0004\b\b\u0010\t¨\u0006\u0010"}, mo64987d2 = {"Lkotlinx/coroutines/ChildHandleNode;", "Lkotlinx/coroutines/JobCancellingNode;", "Lkotlinx/coroutines/ChildHandle;", "childJob", "Lkotlinx/coroutines/ChildJob;", "(Lkotlinx/coroutines/ChildJob;)V", "parent", "Lkotlinx/coroutines/Job;", "getParent", "()Lkotlinx/coroutines/Job;", "childCancelled", "", "cause", "", "invoke", "", "kotlinx-coroutines-core"}, mo64988k = 1, mo64989mv = {1, 5, 1}, mo64991xi = 48)
 /* compiled from: JobSupport.kt */
-/* loaded from: classes2.dex */
-public final class ChildHandleNode extends JobCancellingNode<JobSupport> implements ChildHandle {
-    @NotNull
+public final class ChildHandleNode extends JobCancellingNode implements ChildHandle {
     public final ChildJob childJob;
 
-    @Override // kotlin.jvm.functions.Function1
-    /* renamed from: invoke */
-    public /* bridge */ /* synthetic */ Unit mo1949invoke(Throwable th) {
-        invoke2(th);
+    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
+        invoke((Throwable) obj);
         return Unit.INSTANCE;
     }
 
-    /* JADX WARN: 'super' call moved to the top of the method (can break code semantics) */
-    public ChildHandleNode(@NotNull JobSupport parent, @NotNull ChildJob childJob) {
-        super(parent);
-        Intrinsics.checkParameterIsNotNull(parent, "parent");
-        Intrinsics.checkParameterIsNotNull(childJob, "childJob");
-        this.childJob = childJob;
+    public ChildHandleNode(ChildJob childJob2) {
+        this.childJob = childJob2;
     }
 
-    @Override // kotlinx.coroutines.CompletionHandlerBase
-    /* renamed from: invoke  reason: avoid collision after fix types in other method */
-    public void invoke2(@Nullable Throwable th) {
-        this.childJob.parentCancelled((ParentJob) this.job);
+    public Job getParent() {
+        return getJob();
     }
 
-    @Override // kotlinx.coroutines.ChildHandle
-    public boolean childCancelled(@NotNull Throwable cause) {
-        Intrinsics.checkParameterIsNotNull(cause, "cause");
-        return ((JobSupport) this.job).childCancelled(cause);
+    public void invoke(Throwable th) {
+        this.childJob.parentCancelled(getJob());
     }
 
-    @Override // kotlinx.coroutines.internal.LockFreeLinkedListNode
-    @NotNull
-    public String toString() {
-        return "ChildHandle[" + this.childJob + ']';
+    public boolean childCancelled(Throwable th) {
+        return getJob().childCancelled(th);
     }
 }

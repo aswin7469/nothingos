@@ -3,7 +3,7 @@ package com.android.systemui.classifier;
 import com.android.systemui.util.DeviceConfigProxy;
 import dagger.internal.Factory;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class ZigZagClassifier_Factory implements Factory<ZigZagClassifier> {
     private final Provider<FalsingDataProvider> dataProvider;
     private final Provider<DeviceConfigProxy> deviceConfigProxyProvider;
@@ -13,10 +13,8 @@ public final class ZigZagClassifier_Factory implements Factory<ZigZagClassifier>
         this.deviceConfigProxyProvider = provider2;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public ZigZagClassifier mo1933get() {
-        return newInstance(this.dataProvider.mo1933get(), this.deviceConfigProxyProvider.mo1933get());
+    public ZigZagClassifier get() {
+        return newInstance(this.dataProvider.get(), this.deviceConfigProxyProvider.get());
     }
 
     public static ZigZagClassifier_Factory create(Provider<FalsingDataProvider> provider, Provider<DeviceConfigProxy> provider2) {

@@ -1,50 +1,69 @@
 package com.android.systemui.statusbar.phone;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.hardware.display.AmbientDisplayConfiguration;
+import android.os.Handler;
 import android.os.PowerManager;
+import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.doze.AlwaysOnDisplayPolicy;
 import com.android.systemui.dump.DumpManager;
-import com.android.systemui.statusbar.FeatureFlags;
+import com.android.systemui.flags.FeatureFlags;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.policy.BatteryController;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.tuner.TunerService;
+import com.android.systemui.unfold.SysUIUnfoldComponent;
 import dagger.internal.Factory;
+import java.util.Optional;
 import javax.inject.Provider;
-/* loaded from: classes.dex */
+
 public final class DozeParameters_Factory implements Factory<DozeParameters> {
     private final Provider<AlwaysOnDisplayPolicy> alwaysOnDisplayPolicyProvider;
     private final Provider<AmbientDisplayConfiguration> ambientDisplayConfigurationProvider;
     private final Provider<BatteryController> batteryControllerProvider;
+    private final Provider<ConfigurationController> configurationControllerProvider;
+    private final Provider<Context> contextProvider;
     private final Provider<DumpManager> dumpManagerProvider;
     private final Provider<FeatureFlags> featureFlagsProvider;
+    private final Provider<Handler> handlerProvider;
+    private final Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
     private final Provider<PowerManager> powerManagerProvider;
     private final Provider<Resources> resourcesProvider;
+    private final Provider<ScreenOffAnimationController> screenOffAnimationControllerProvider;
+    private final Provider<StatusBarStateController> statusBarStateControllerProvider;
+    private final Provider<Optional<SysUIUnfoldComponent>> sysUiUnfoldComponentProvider;
     private final Provider<TunerService> tunerServiceProvider;
     private final Provider<UnlockedScreenOffAnimationController> unlockedScreenOffAnimationControllerProvider;
 
-    public DozeParameters_Factory(Provider<Resources> provider, Provider<AmbientDisplayConfiguration> provider2, Provider<AlwaysOnDisplayPolicy> provider3, Provider<PowerManager> provider4, Provider<BatteryController> provider5, Provider<TunerService> provider6, Provider<DumpManager> provider7, Provider<FeatureFlags> provider8, Provider<UnlockedScreenOffAnimationController> provider9) {
-        this.resourcesProvider = provider;
-        this.ambientDisplayConfigurationProvider = provider2;
-        this.alwaysOnDisplayPolicyProvider = provider3;
-        this.powerManagerProvider = provider4;
-        this.batteryControllerProvider = provider5;
-        this.tunerServiceProvider = provider6;
-        this.dumpManagerProvider = provider7;
-        this.featureFlagsProvider = provider8;
-        this.unlockedScreenOffAnimationControllerProvider = provider9;
+    public DozeParameters_Factory(Provider<Context> provider, Provider<Handler> provider2, Provider<Resources> provider3, Provider<AmbientDisplayConfiguration> provider4, Provider<AlwaysOnDisplayPolicy> provider5, Provider<PowerManager> provider6, Provider<BatteryController> provider7, Provider<TunerService> provider8, Provider<DumpManager> provider9, Provider<FeatureFlags> provider10, Provider<ScreenOffAnimationController> provider11, Provider<Optional<SysUIUnfoldComponent>> provider12, Provider<UnlockedScreenOffAnimationController> provider13, Provider<KeyguardUpdateMonitor> provider14, Provider<ConfigurationController> provider15, Provider<StatusBarStateController> provider16) {
+        this.contextProvider = provider;
+        this.handlerProvider = provider2;
+        this.resourcesProvider = provider3;
+        this.ambientDisplayConfigurationProvider = provider4;
+        this.alwaysOnDisplayPolicyProvider = provider5;
+        this.powerManagerProvider = provider6;
+        this.batteryControllerProvider = provider7;
+        this.tunerServiceProvider = provider8;
+        this.dumpManagerProvider = provider9;
+        this.featureFlagsProvider = provider10;
+        this.screenOffAnimationControllerProvider = provider11;
+        this.sysUiUnfoldComponentProvider = provider12;
+        this.unlockedScreenOffAnimationControllerProvider = provider13;
+        this.keyguardUpdateMonitorProvider = provider14;
+        this.configurationControllerProvider = provider15;
+        this.statusBarStateControllerProvider = provider16;
     }
 
-    @Override // javax.inject.Provider
-    /* renamed from: get */
-    public DozeParameters mo1933get() {
-        return newInstance(this.resourcesProvider.mo1933get(), this.ambientDisplayConfigurationProvider.mo1933get(), this.alwaysOnDisplayPolicyProvider.mo1933get(), this.powerManagerProvider.mo1933get(), this.batteryControllerProvider.mo1933get(), this.tunerServiceProvider.mo1933get(), this.dumpManagerProvider.mo1933get(), this.featureFlagsProvider.mo1933get(), this.unlockedScreenOffAnimationControllerProvider.mo1933get());
+    public DozeParameters get() {
+        return newInstance(this.contextProvider.get(), this.handlerProvider.get(), this.resourcesProvider.get(), this.ambientDisplayConfigurationProvider.get(), this.alwaysOnDisplayPolicyProvider.get(), this.powerManagerProvider.get(), this.batteryControllerProvider.get(), this.tunerServiceProvider.get(), this.dumpManagerProvider.get(), this.featureFlagsProvider.get(), this.screenOffAnimationControllerProvider.get(), this.sysUiUnfoldComponentProvider.get(), this.unlockedScreenOffAnimationControllerProvider.get(), this.keyguardUpdateMonitorProvider.get(), this.configurationControllerProvider.get(), this.statusBarStateControllerProvider.get());
     }
 
-    public static DozeParameters_Factory create(Provider<Resources> provider, Provider<AmbientDisplayConfiguration> provider2, Provider<AlwaysOnDisplayPolicy> provider3, Provider<PowerManager> provider4, Provider<BatteryController> provider5, Provider<TunerService> provider6, Provider<DumpManager> provider7, Provider<FeatureFlags> provider8, Provider<UnlockedScreenOffAnimationController> provider9) {
-        return new DozeParameters_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9);
+    public static DozeParameters_Factory create(Provider<Context> provider, Provider<Handler> provider2, Provider<Resources> provider3, Provider<AmbientDisplayConfiguration> provider4, Provider<AlwaysOnDisplayPolicy> provider5, Provider<PowerManager> provider6, Provider<BatteryController> provider7, Provider<TunerService> provider8, Provider<DumpManager> provider9, Provider<FeatureFlags> provider10, Provider<ScreenOffAnimationController> provider11, Provider<Optional<SysUIUnfoldComponent>> provider12, Provider<UnlockedScreenOffAnimationController> provider13, Provider<KeyguardUpdateMonitor> provider14, Provider<ConfigurationController> provider15, Provider<StatusBarStateController> provider16) {
+        return new DozeParameters_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16);
     }
 
-    public static DozeParameters newInstance(Resources resources, AmbientDisplayConfiguration ambientDisplayConfiguration, AlwaysOnDisplayPolicy alwaysOnDisplayPolicy, PowerManager powerManager, BatteryController batteryController, TunerService tunerService, DumpManager dumpManager, FeatureFlags featureFlags, UnlockedScreenOffAnimationController unlockedScreenOffAnimationController) {
-        return new DozeParameters(resources, ambientDisplayConfiguration, alwaysOnDisplayPolicy, powerManager, batteryController, tunerService, dumpManager, featureFlags, unlockedScreenOffAnimationController);
+    public static DozeParameters newInstance(Context context, Handler handler, Resources resources, AmbientDisplayConfiguration ambientDisplayConfiguration, AlwaysOnDisplayPolicy alwaysOnDisplayPolicy, PowerManager powerManager, BatteryController batteryController, TunerService tunerService, DumpManager dumpManager, FeatureFlags featureFlags, ScreenOffAnimationController screenOffAnimationController, Optional<SysUIUnfoldComponent> optional, UnlockedScreenOffAnimationController unlockedScreenOffAnimationController, KeyguardUpdateMonitor keyguardUpdateMonitor, ConfigurationController configurationController, StatusBarStateController statusBarStateController) {
+        return new DozeParameters(context, handler, resources, ambientDisplayConfiguration, alwaysOnDisplayPolicy, powerManager, batteryController, tunerService, dumpManager, featureFlags, screenOffAnimationController, optional, unlockedScreenOffAnimationController, keyguardUpdateMonitor, configurationController, statusBarStateController);
     }
 }
